@@ -19,5 +19,3 @@ add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 
 add_library( extensionsystem SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} )
 target_link_libraries( extensionsystem ${QT_LIBRARIES} )
-
-add_subdirectory( test )
