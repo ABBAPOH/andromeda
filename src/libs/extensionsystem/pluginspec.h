@@ -38,12 +38,17 @@ public:
     QString libraryPath() const; // path to library
     bool isStatic() const;
 
+    QString errorString();
+    bool hasError();
+
     IPlugin *plugin() const;
+
+    bool provides(const QString &pluginName, const QString &pluginVersion) const;
 
 protected:
     PluginSpec();
     PluginSpec(IPlugin * plugin, const QString & path);
-    PluginSpec(IPlugin * plugin);
+    explicit PluginSpec(IPlugin * plugin);
 
     PluginSpecPrivate *d_ptr;
 //    friend class PluginManager;

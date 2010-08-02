@@ -15,4 +15,9 @@ QString TestPlugin::property(Properties property)
     }
 }
 
+QList<ExtensionSystem::PluginDependency> TestPlugin::dependencies()
+{
+    return QList<ExtensionSystem::PluginDependency>() << ExtensionSystem::PluginDependency("Third Test Plugin", "2.0.2");
+}
+
 Q_EXPORT_PLUGIN(TestPlugin)

@@ -1,7 +1,8 @@
 #include "pluginspec.h"
 #include "pluginspec_p.h"
 
-#include <QtCore/QVariant>
+#include <QtCore/QRegExp>
+#include <QDebug>
 
 #include "iplugin_p.h"
 
@@ -156,13 +157,38 @@ bool PluginSpec::isStatic() const
     return d_func()->isStatic;
 }
 
+QString PluginSpec::errorString()
+{
+    return d_func()->errorString;
+}
+
+bool PluginSpec::hasError()
+{
+    return d_func()->hasError;
+}
+
 IPlugin *PluginSpec::plugin() const
 {
     return d_func()->plugin;
 }
 
+/*!
+    \fn bool PluginSpec::provides(const QString &pluginName, const QString &pluginVersion) const
+    Returns if this plugin can be used to fill in a dependency of the given \a pluginName and \a version.
+    \sa PluginSpec::dependencies()
+*/
+bool PluginSpec::provides(const QString &pluginName, const QString &pluginVersion) const
+{
+    if (QString::compare(pluginName, name(), Qt::CaseInsensitive) != 0)
+         return false;
+    return (PluginSpecPrivate::compareVersion(version(), pluginVersion) >= 0) &&
+           (PluginSpecPrivate::compareVersion(compatibilityVersion(), pluginVersion) <= 0);
+}
+
 // ============= PluginSpecPrivate =============
-PluginSpecPrivate::PluginSpecPrivate()
+PluginSpecPrivate::PluginSpecPrivate():
+        isStatic(false),
+        hasError(false)
 {
 }
 
@@ -175,12 +201,51 @@ void PluginSpecPrivate::init(IPlugin * plugin)
     dependencies = plugin->dependencies();
 }
 
-void PluginSpecPrivate::resolveDependencies(const QList<PluginSpec*> &specs)
+bool PluginSpecPrivate::resolveDependencies(const QList<PluginSpec*> &specs)
 {
-    foreach (PluginSpec *spec, specs) {
-        if (dependencies.contains(PluginDependency(spec->name(), spec->version()))) {
-            dependencySpecs.append(spec);
+    PluginSpec * dependencySpec = 0;
+    foreach (PluginDependency dep, dependencies) {
+        dependencySpec = 0;
+        foreach (PluginSpec *spec, specs) {
+            if (spec->provides(dep.name(), dep.version())) {
+                dependencySpec = spec;
+                break;
+            }
+        }
+        if (dependencySpec == 0) {
+            hasError = true;
+            errorString.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
+                                .arg(dep.name()).arg(dep.version()));
+//            break; // don't break to find ALL unresolved dependencies
+        } else {
+            dependencySpecs.append(dependencySpec);
         }
     }
+
+    if (hasError)
+        return false;
+    return true;
 }
+
+// from Qt Creator
+int PluginSpecPrivate::compareVersion(const QString &version1, const QString &version2)
+{
+    static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?"); // mathes to Major.Minor.Patch version
+    QRegExp gerExp1 = regExp;
+    QRegExp gerExp2 = regExp;
+    if ( !gerExp1.exactMatch(version1) || !gerExp2.exactMatch(version2) )
+        return 0;
+    int number1;
+    int number2;
+    for (int i = 0; i < 3; ++i) {
+        number1 = gerExp1.cap(i+1).toInt();
+        number2 = gerExp2.cap(i+1).toInt();
+        if (number1 < number2)
+            return -1;
+        if (number1 > number2)
+            return 1;
+    }
+    return 0;
+}
+
 

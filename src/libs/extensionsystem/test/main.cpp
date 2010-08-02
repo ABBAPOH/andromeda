@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
         qDebug() << spec->version();
         qDebug() << spec->compatibilityVersion();
         qDebug() << spec->vendor();
+        qDebug() << spec->hasError();
+        qDebug() << spec->errorString();
     }
     qDebug() << "Starting Main Loop";
 

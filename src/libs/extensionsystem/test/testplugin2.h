@@ -1,19 +1,17 @@
-#ifndef TESTPLUGIN_H
-#define TESTPLUGIN_H
+#ifndef TESTPLUGIN2_H
+#define TESTPLUGIN2_H
 
 #include <QtPlugin>
 #include <iplugin.h>
 
-class TestPlugin : public ExtensionSystem::IPlugin
+class TestPlugin2 : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 public:
-    TestPlugin();
+    TestPlugin2();
     virtual bool initialize() { return true; }
     virtual void extensionsInitialized() {}
     virtual QString property(Properties property);
-    virtual QList<ExtensionSystem::PluginDependency> dependencies();
-
 };
 
-#endif // TESTPLUGIN_H
+#endif // TESTPLUGIN2_H
