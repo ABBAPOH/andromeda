@@ -4,7 +4,7 @@
 #include <QtPlugin>
 #include <iplugin.h>
 
-class EXTENSIONSYSTEM_EXPORT TestPlugin : public ExtensionSystem::IPlugin
+class TestPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 public:
