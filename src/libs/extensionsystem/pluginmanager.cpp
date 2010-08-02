@@ -46,7 +46,6 @@ PluginManager::~PluginManager()
 void PluginManager::loadPlugins()
 {
     Q_D(PluginManager);
-    qDebug() << "PluginManager::load";
 
     // loadSettings()
 
@@ -93,6 +92,8 @@ QList<PluginSpec *> PluginManagerPrivate::loadQueue()
 {
     QList<PluginSpec *> result;
     foreach (PluginSpec* spec, pluginSpecs) {
+        if (result.contains(spec))
+            continue;
         QList<PluginSpec *> circularCheck;
         QList<PluginSpec *> specsForCheck;
         specsForCheck.append(spec);
@@ -100,6 +101,8 @@ QList<PluginSpec *> PluginManagerPrivate::loadQueue()
         while (!specsForCheck.isEmpty()) {
             currentSpec = specsForCheck.takeFirst();
             if (circularCheck.contains(currentSpec)) {
+                spec->d_ptr->errorString = "circular inclusion detected";
+                spec->d_ptr->hasError = true;
                 qWarning() << "circular inclusion detected";
                 circularCheck.clear();
                 break;
@@ -136,7 +139,6 @@ void PluginManagerPrivate::loadSpecs()
                 continue;
 
         foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-            qDebug() << "loading" << fileName;
             QString libraryPath = pluginsDir.absoluteFilePath(fileName);
             QPluginLoader loader(libraryPath);
             QObject * object = loader.instance();

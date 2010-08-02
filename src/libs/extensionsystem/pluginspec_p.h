@@ -21,8 +21,12 @@ namespace ExtensionSystem {
         QString libraryLocation;
         bool isStatic;
 
+        QString errorString;
+        bool hasError;
+
         void init(IPlugin * plugin);
-        void resolveDependencies(const QList<PluginSpec*> &specs);
+        bool resolveDependencies(const QList<PluginSpec*> &specs);
+        static int compareVersion(const QString &version1, const QString &version2);
     };
 } // namespace ExtensionSystem
 
