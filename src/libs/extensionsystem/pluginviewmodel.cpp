@@ -1,5 +1,6 @@
 #include "pluginviewmodel.h"
 #include "pluginviewmodel_p.h"
+
 #include <QDebug>
 
 using namespace ExtensionSystem;
@@ -23,7 +24,7 @@ PluginViewModel::~PluginViewModel()
 
 int PluginViewModel::columnCount(const QModelIndex &parent) const
 {
-    return 4;
+    return 11;
 }
 
 QVariant PluginViewModel::data(const QModelIndex &index, int role) const
@@ -34,11 +35,28 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
         Node *node = static_cast<Node*>(index.internalPointer());
-        switch (index.column()) {
-        case 0: if (node->isCategory) return node->categoryName; else return node->spec->name();
-        case 1: if (node->isCategory) return QVariant(); else return node->spec->version();
-        case 2: if (node->isCategory) return QVariant(); else return node->spec->compatibilityVersion();
-        case 3: if (node->isCategory) return QVariant(); else return node->spec->vendor();
+        if (node->isCategory) {
+            if (index.column() == 0) {
+                return node->categoryName;
+            }
+        } else {
+            switch (index.column()) {
+            case 0: return node->spec->name();
+            case 1: return node->spec->enabled();
+            case 2: return node->spec->version();
+            case 3: return node->spec->compatibilityVersion();
+            case 4: return node->spec->vendor();
+            case 5: return node->spec->url();
+            case 6: return node->spec->libraryPath();
+            case 7: return node->spec->description();
+            case 8: return node->spec->copyright();
+            case 9: return node->spec->license();
+            case 10: QString result;
+                foreach (PluginDependency dep, node->spec->dependencies()) {
+                    result += dep.name() + ' ' + '(' + dep.version() + ')' + '\n';
+                }
+                return result.mid(0, result.length()-2);
+            }
         }
     }
     return QVariant();
@@ -57,9 +75,16 @@ QVariant PluginViewModel::headerData(int section, Qt::Orientation orientation, i
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
         case 0: return tr("Name");
-        case 1: return tr("Version");
-        case 2: return tr("Compatibility Version");
-        case 3: return tr("Vendor");
+        case 1: return tr("Enabled");
+        case 2: return tr("Version");
+        case 3: return tr("Compatibility Version");
+        case 4: return tr("Vendor");
+        case 5: return tr("Url");
+        case 6: return tr("Library Path");
+        case 7: return tr("Description");
+        case 8: return tr("Copyright");
+        case 9: return tr("license");
+        case 10: return tr("Dependencies");
         }
     }
 

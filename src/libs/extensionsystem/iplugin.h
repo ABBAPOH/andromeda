@@ -17,7 +17,8 @@ class EXTENSIONSYSTEM_EXPORT IPlugin : public QObject
     Q_DECLARE_PRIVATE(IPlugin)
 
 public:
-    enum Properties{ Name, Version, CompatibilityVersion, Vendor, Category  };
+    enum Properties { Name, Version, CompatibilityVersion, Vendor, Category,
+                      Copyright, License, Description, Url };
     IPlugin();
     virtual ~IPlugin();
 

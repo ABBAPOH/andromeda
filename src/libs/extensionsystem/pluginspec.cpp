@@ -125,6 +125,42 @@ QString PluginSpec::category() const
 }
 
 /*!
+    \fn QString PluginSpec::copyright() const
+    \brief Returns copyright.
+*/
+QString PluginSpec::copyright() const
+{
+    return d_func()->copyright;
+}
+
+/*!
+    \fn QString PluginSpec::license() const
+    \brief Returns full licence of the plugin.
+*/
+QString PluginSpec::license() const
+{
+    return d_func()->license;
+}
+
+/*!
+    \fn QString PluginSpec::description() const
+    \brief Returns description of the plugin.
+*/
+QString PluginSpec::description() const
+{
+    return d_func()->description;
+}
+
+/*!
+    \fn QString PluginSpec::url() const
+    \brief Returns vendor's site url.
+*/
+QString PluginSpec::url() const
+{
+    return d_func()->url;
+}
+
+/*!
     \fn QList<PluginDependency> PluginSpec::dependencies() const
     \brief Returns list of dependencies that are needed for this plugin.
 */
@@ -172,10 +208,12 @@ void PluginSpec::setEnabled(bool enabled)
     if (enabled) {
         if (d->loadLibrary()) {
             d->enabled = true;
+            emit enabledChanged(enabled);
         }
     } else {
         if (d->unloadLibrary()) {
             d->enabled = false;
+            emit enabledChanged(enabled);
         }
     }
 }
@@ -225,9 +263,15 @@ void PluginSpecPrivate::init(IPlugin * plugin)
     this->plugin = plugin;
     name = plugin->property(IPlugin::Name);
     version = plugin->property(IPlugin::Version);
+    compatibilityVersion = plugin->property(IPlugin::CompatibilityVersion);
     vendor = plugin->property(IPlugin::Vendor);
     category = plugin->property(IPlugin::Category);
+    copyright = plugin->property(IPlugin::Copyright);
+    license = plugin->property(IPlugin::License);
+    description = plugin->property(IPlugin::Description);
+    url = plugin->property(IPlugin::Url);
     dependencies = plugin->dependencies();
+
     enabled = true;
 }
 

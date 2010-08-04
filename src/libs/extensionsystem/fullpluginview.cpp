@@ -22,14 +22,19 @@ FullPluginView::~FullPluginView()
 
 void FullPluginView::setModel(PluginViewModel * model)
 {
-    qDebug("FullPluginView::setModel");
     this->model = model;
     mapper->setModel(model);
     mapper->setRootIndex(model->index(0,0));
     mapper->addMapping(ui->label_Name, 0, "text");
-    mapper->addMapping(ui->label_Version, 1, "text");
-    mapper->addMapping(ui->label_CompatibilityVersion, 2, "text");
-    mapper->addMapping(ui->label_Vendor, 3, "text");
+    mapper->addMapping(ui->label_Version, 2, "text");
+    mapper->addMapping(ui->label_CompatibilityVersion, 3, "text");
+    mapper->addMapping(ui->label_Vendor, 4, "text");
+    mapper->addMapping(ui->label_Url, 5, "text");
+    mapper->addMapping(ui->label_Location, 6, "text");
+    mapper->addMapping(ui->textBrowser_Description, 7, "plainText");
+    mapper->addMapping(ui->label_Copyright, 8, "text");
+    mapper->addMapping(ui->textBrowser_License, 9, "plainText");
+    mapper->addMapping(ui->textBrowser_Dependencies, 10, "plainText");
 }
 
 void FullPluginView::setIndex(const QModelIndex &index)
