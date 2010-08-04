@@ -14,6 +14,7 @@ namespace ExtensionSystem {
         QString version;
         QString compatibilityVersion;
         QString vendor;
+        QString category;
         QList<PluginDependency> dependencies;
         QList<PluginSpec*> dependencySpecs;
 

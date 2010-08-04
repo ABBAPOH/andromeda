@@ -2,6 +2,7 @@
 #include <QDebug>
 
 #include <pluginmanager.h>
+#include <pluginview.h>
 
 using namespace ExtensionSystem;
 
@@ -21,6 +22,10 @@ int main(int argc, char *argv[])
         qDebug() << spec->hasError();
         qDebug() << spec->errorString();
     }
+
+    qDebug() << "Creating view";
+    PluginView view;
+    view.show();
     qDebug() << "Starting Main Loop";
 
     return app.exec();

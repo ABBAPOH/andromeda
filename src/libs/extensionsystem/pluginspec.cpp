@@ -119,6 +119,14 @@ QString PluginSpec::vendor() const
 }
 
 /*!
+    \fn QString PluginSpec::category() const
+    \brief Returns category (i.e. group) that plugin belongs to.
+*/
+QString PluginSpec::category() const
+{
+    return d_func()->category;
+}
+/*!
     \fn QList<PluginDependency> PluginSpec::dependencies() const
     \brief Returns list of dependencies that are needed for this plugin.
 */
@@ -198,6 +206,7 @@ void PluginSpecPrivate::init(IPlugin * plugin)
     name = plugin->property(IPlugin::Name);
     version = plugin->property(IPlugin::Version);
     vendor = plugin->property(IPlugin::Vendor);
+    category = plugin->property(IPlugin::Category);
     dependencies = plugin->dependencies();
 }
 
