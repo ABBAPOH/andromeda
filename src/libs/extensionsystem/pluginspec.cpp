@@ -64,6 +64,11 @@ PluginSpec::PluginSpec(IPlugin * plugin) :
     d->isStatic = true;
 }
 
+/*!
+    \fn PluginSpec::PluginSpec(const QString & path)
+    \internal
+    Constructs static PluginSpec using data received from library located at \a path.
+*/
 PluginSpec::PluginSpec(const QString & path) :
         d_ptr(new PluginSpecPrivate)
 {
@@ -198,6 +203,11 @@ bool PluginSpec::isStatic() const
     return d_func()->isStatic;
 }
 
+/*!
+    \fn void PluginSpec::setEnabled(bool enabled)
+    \brief Enables or disables plugin.
+    Note that library is loaded or unloaded when necessary.
+*/
 void PluginSpec::setEnabled(bool enabled)
 {
     Q_D(PluginSpec);
@@ -217,21 +227,37 @@ void PluginSpec::setEnabled(bool enabled)
     }
 }
 
+/*!
+    \fn bool PluginSpec::enabled() const
+    \brief Returns if plugin enabled.
+*/
 bool PluginSpec::enabled() const
 {
     return d_func()->enabled;
 }
 
+/*!
+    \fn QString PluginSpec::errorString()
+    \brief Returns message of last occured error.
+*/
 QString PluginSpec::errorString()
 {
     return d_func()->errorString;
 }
 
+/*!
+    \fn bool PluginSpec::hasError()
+    \brief Returns true if error occured.
+*/
 bool PluginSpec::hasError()
 {
     return d_func()->hasError;
 }
 
+/*!
+    \fn IPlugin *PluginSpec::plugin() const
+    \brief Returnes pointer to IPlugin implementation.
+*/
 IPlugin *PluginSpec::plugin() const
 {
     return d_func()->plugin;
