@@ -32,6 +32,7 @@ public:
     QString version() const;
     QString compatibilityVersion() const;
     QString vendor() const;
+    QString category() const;
     QList<PluginDependency> dependencies() const;
     QList<PluginSpec*> dependencySpecs() const;
 
