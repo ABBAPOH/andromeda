@@ -65,9 +65,7 @@ protected:
     explicit PluginSpec(IPlugin * plugin);
 
     PluginSpecPrivate *d_ptr;
-//    friend class PluginManager;
     friend class PluginManagerPrivate;
-    friend class IPlugin;
 };
 
 } // namespace ExtensionSystem

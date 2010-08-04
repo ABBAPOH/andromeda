@@ -60,7 +60,6 @@ PluginSpec::PluginSpec(IPlugin * plugin) :
 {
     Q_D(PluginSpec);
 
-    plugin->d_ptr->spec = this;
     d->init(plugin);
     d->isStatic = true;
 }

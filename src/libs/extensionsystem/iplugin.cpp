@@ -21,17 +21,6 @@ IPlugin::IPlugin() :
 */
 IPlugin::~IPlugin()
 {
-    d_func()->spec->d_ptr->plugin = 0;
-}
-
-/*!
-    \fn PluginSpec *IPlugin::pluginSpec() const
-    \brief Returns PluginSpec that corresponds to this plugin.
-*/
-PluginSpec *IPlugin::pluginSpec() const
-{
-    Q_D(const IPlugin);
-    return d->spec;
 }
 
 /*!
@@ -57,3 +46,8 @@ void removeObject(QObject * object)
 IPluginPrivate::IPluginPrivate()
 {
 }
+
+IPluginPrivate::~IPluginPrivate()
+{
+}
+
