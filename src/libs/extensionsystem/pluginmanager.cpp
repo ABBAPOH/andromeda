@@ -129,7 +129,7 @@ void PluginManagerPrivate::loadSpecs()
 
     // Second retrieve specs from plugins
     foreach (QObject *object, QPluginLoader::staticInstances()) {
-        specFromPlugin(object, "");
+        specFromPlugin(object);
     }
 
     foreach (QString folder, qApp->libraryPaths()) {
@@ -140,12 +140,11 @@ void PluginManagerPrivate::loadSpecs()
 
         foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
             QString libraryPath = pluginsDir.absoluteFilePath(fileName);
-            QPluginLoader loader(libraryPath);
-            QObject * object = loader.instance();
-            if (!object)
-                qWarning() << "can't load library" << loader.errorString();
-            else
-                specFromPlugin(object, libraryPath);
+            PluginSpec * spec = new PluginSpec(libraryPath);
+            if (!spec->hasError()) {
+                pluginSpecs.append(spec);
+            } else
+                delete spec;
         }
     }
 
@@ -159,7 +158,7 @@ void PluginManagerPrivate::resolveDependencies()
     }
 }
 
-void PluginManagerPrivate::specFromPlugin(QObject * object, const QString & path)
+void PluginManagerPrivate::specFromPlugin(QObject * object)
 {
     IPlugin *plugin = qobject_cast<IPlugin *>(object);
     if (!plugin) {
@@ -167,11 +166,7 @@ void PluginManagerPrivate::specFromPlugin(QObject * object, const QString & path
         return;
     }
 
-    PluginSpec * spec = 0;
-    if (path != "")
-        spec = new PluginSpec(plugin, path); // dynamic plugin
-    else
-        spec = new PluginSpec(plugin); // static plugin
+    PluginSpec * spec = new PluginSpec(plugin); // static plugin
     pluginSpecs.append(spec);
 }
 

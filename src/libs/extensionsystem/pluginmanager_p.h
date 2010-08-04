@@ -16,7 +16,7 @@ public:
     QList<PluginSpec *> loadQueue();
     void loadSpecs();
     void resolveDependencies();
-    void specFromPlugin(QObject * object, const QString & path);
+    void specFromPlugin(QObject * object);
 };
 
 } // namespace ExtensionSystem
