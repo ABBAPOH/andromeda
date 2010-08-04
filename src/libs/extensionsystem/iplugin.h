@@ -28,8 +28,6 @@ public:
     virtual QList<PluginDependency> dependencies() { return QList<PluginDependency>(); }
     virtual void shutdown() {}
 
-    PluginSpec *pluginSpec() const;
-
     void addObject(QObject * object);
     void removeObject(QObject * object);
 

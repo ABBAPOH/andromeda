@@ -8,8 +8,8 @@ namespace ExtensionSystem {
     {
     public:
         IPluginPrivate();
+        virtual ~IPluginPrivate();
 
-        PluginSpec * spec;
     };
 } // namespace ExtensionSystem
 
