@@ -39,6 +39,9 @@ public:
     QString libraryPath() const; // path to library
     bool isStatic() const;
 
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
     QString errorString();
     bool hasError();
 
@@ -48,7 +51,7 @@ public:
 
 protected:
     PluginSpec();
-    PluginSpec(IPlugin * plugin, const QString & path);
+    PluginSpec(const QString & path);
     explicit PluginSpec(IPlugin * plugin);
 
     PluginSpecPrivate *d_ptr;

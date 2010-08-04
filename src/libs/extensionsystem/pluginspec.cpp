@@ -2,6 +2,7 @@
 #include "pluginspec_p.h"
 
 #include <QtCore/QRegExp>
+#include <QtCore/QPluginLoader>
 #include <QDebug>
 
 #include "iplugin_p.h"
@@ -64,20 +65,16 @@ PluginSpec::PluginSpec(IPlugin * plugin) :
     d->isStatic = true;
 }
 
-/*!
-    \fn PluginSpec::PluginSpec(IPlugin * plugin, const QString &path)
-    \internal
-    Constructs dynamic PluginSpec using data received from IPlugin::property function.
-*/
-PluginSpec::PluginSpec(IPlugin * plugin, const QString &path) :
+PluginSpec::PluginSpec(const QString & path) :
         d_ptr(new PluginSpecPrivate)
 {
     Q_D(PluginSpec);
-
-    plugin->d_ptr->spec = this;
-    d->init(plugin);
-    d->isStatic = false;
     d->libraryPath = path;
+    if (!d->loadLibrary()) {
+        return;
+    }
+    d->isStatic = false;
+    d->init(d->plugin);
 }
 
 /*!
@@ -126,6 +123,7 @@ QString PluginSpec::category() const
 {
     return d_func()->category;
 }
+
 /*!
     \fn QList<PluginDependency> PluginSpec::dependencies() const
     \brief Returns list of dependencies that are needed for this plugin.
@@ -163,6 +161,28 @@ QString PluginSpec::libraryPath() const
 bool PluginSpec::isStatic() const
 {
     return d_func()->isStatic;
+}
+
+void PluginSpec::setEnabled(bool enabled)
+{
+    Q_D(PluginSpec);
+    if (enabled == d->enabled)
+        return;
+
+    if (enabled) {
+        if (d->loadLibrary()) {
+            d->enabled = true;
+        }
+    } else {
+        if (d->unloadLibrary()) {
+            d->enabled = false;
+        }
+    }
+}
+
+bool PluginSpec::enabled() const
+{
+    return d_func()->enabled;
 }
 
 QString PluginSpec::errorString()
@@ -208,6 +228,35 @@ void PluginSpecPrivate::init(IPlugin * plugin)
     vendor = plugin->property(IPlugin::Vendor);
     category = plugin->property(IPlugin::Category);
     dependencies = plugin->dependencies();
+    enabled = true;
+}
+
+bool PluginSpecPrivate::loadLibrary()
+{
+    QPluginLoader loader(libraryPath);
+    QObject * object = loader.instance();
+    if (!object) {
+        hasError = true;
+        errorString = QObject::tr("PluginSpec", "Can't load plugin: ") + loader.errorString();
+        qWarning () << "Can't load plugin: " + loader.errorString();
+        return false;
+    }
+
+    IPlugin *plugin = qobject_cast<IPlugin *>(object);
+    if (!plugin) {
+        hasError = true;
+        errorString = QObject::tr("PluginSpec", "Can't load plugin: not a valid plugin" );
+        qWarning () << "not a plugin";
+        return false;
+    }
+
+    this->plugin = plugin;
+    return true;
+}
+
+bool PluginSpecPrivate::unloadLibrary()
+{
+    return true;
 }
 
 bool PluginSpecPrivate::resolveDependencies(const QList<PluginSpec*> &specs)
