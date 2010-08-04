@@ -21,9 +21,11 @@ public:
     bool operator==(const PluginDependency &other);
 };
 
-class EXTENSIONSYSTEM_EXPORT PluginSpec
+class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
 {
+    Q_OBJECT
     Q_DECLARE_PRIVATE(PluginSpec)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
 
 public:
     ~PluginSpec();
@@ -33,6 +35,11 @@ public:
     QString compatibilityVersion() const;
     QString vendor() const;
     QString category() const;
+    QString copyright() const;
+    QString license() const;
+    QString description() const;
+    QString url() const;
+
     QList<PluginDependency> dependencies() const;
     QList<PluginSpec*> dependencySpecs() const;
 
@@ -48,6 +55,9 @@ public:
     IPlugin *plugin() const;
 
     bool provides(const QString &pluginName, const QString &pluginVersion) const;
+
+signals:
+    void enabledChanged(bool enabled);
 
 protected:
     PluginSpec();
