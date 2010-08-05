@@ -13,9 +13,7 @@ public:
     QString pluginsFolder;
     QList<PluginSpec *> pluginSpecs;
 
-    QList<PluginSpec *> loadQueue();
     void loadSpecs();
-    void resolveDependencies();
     void specFromPlugin(QObject * object);
 };
 

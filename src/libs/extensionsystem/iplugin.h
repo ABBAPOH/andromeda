@@ -23,7 +23,6 @@ public:
     virtual ~IPlugin();
 
     virtual bool initialize() = 0;
-    virtual void extensionsInitialized() = 0;
     virtual QString property(Properties property) = 0;
     virtual QList<PluginDependency> dependencies() { return QList<PluginDependency>(); }
     virtual void shutdown() {}
