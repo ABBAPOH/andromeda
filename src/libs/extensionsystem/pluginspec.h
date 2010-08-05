@@ -16,9 +16,10 @@ class EXTENSIONSYSTEM_EXPORT PluginDependency
     QString m_version;
 
 public:
+    PluginDependency() {}
     PluginDependency(const QString &name, const QString &version);
-    inline QString name() { return m_name; }
-    inline QString version() { return m_version; }
+    inline QString name() const { return m_name; }
+    inline QString version() const { return m_version; }
     bool operator==(const PluginDependency &other);
 };
 
@@ -66,8 +67,14 @@ protected:
     explicit PluginSpec(IPlugin * plugin);
 
     PluginSpecPrivate *d_ptr;
+
     friend class PluginManagerPrivate;
+    friend QDataStream &operator>>(QDataStream &s, PluginSpec &pluginSpec);
+    friend QDataStream &operator<<(QDataStream &s, const PluginSpec &pluginSpec);
 };
+
+QDataStream & operator>>(QDataStream &s, PluginSpec &pluginSpec);
+QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec);
 
 } // namespace ExtensionSystem
 
