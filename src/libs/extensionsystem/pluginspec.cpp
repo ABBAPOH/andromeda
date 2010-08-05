@@ -276,6 +276,60 @@ bool PluginSpec::provides(const QString &pluginName, const QString &pluginVersio
            (PluginSpecPrivate::compareVersion(compatibilityVersion(), pluginVersion) <= 0);
 }
 
+namespace ExtensionSystem {
+QDataStream & operator>>(QDataStream &s, PluginDependency &dependency)
+{
+    QString a, b;
+    s >> a;
+    s >> b;
+    dependency = PluginDependency(a, b);
+    return s;
+}
+
+QDataStream & operator<<(QDataStream &s, const PluginDependency &dependency)
+{
+    s << dependency.name();
+    s << dependency.version();
+    return s;
+}
+
+QDataStream & operator>>(QDataStream &s, PluginSpec &pluginSpec)
+{
+    PluginSpecPrivate * d = pluginSpec.d_func();
+    quint32 magic;
+    s >> magic;
+    s >> d->name;
+    s >> d->version;
+    s >> d->compatibilityVersion;
+    s >> d->vendor;
+    s >> d->category;
+    s >> d->copyright;
+    s >> d->license;
+    s >> d->url;
+    s >> d->dependencies;
+    s >> d->libraryPath;
+    return s;
+}
+
+QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
+{
+    const PluginSpecPrivate * d = pluginSpec.d_func();
+    quint32 magic = *((quint32*)"SPEC");
+    s << magic;
+    s << d->name;
+    s << d->version;
+    s << d->compatibilityVersion;
+    s << d->vendor;
+    s << d->category;
+    s << d->copyright;
+    s << d->license;
+    s << d->url;
+    s << d->dependencies;
+    s << d->libraryPath;
+    return s;
+}
+}
+
 // ============= PluginSpecPrivate =============
 PluginSpecPrivate::PluginSpecPrivate():
         isStatic(false),
