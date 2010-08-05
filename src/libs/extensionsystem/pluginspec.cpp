@@ -236,6 +236,20 @@ bool PluginSpec::enabled() const
     return d_func()->enabled;
 }
 
+void PluginSpec::setLoadsOnStartup(bool on)
+{
+    Q_D(PluginSpec);
+    if (d->loadsOnStartup == on)
+        return;
+    d->loadsOnStartup = on;
+    emit loadsOnStartupChanged(on);
+}
+
+bool PluginSpec::loadsOnStartup() const
+{
+    return d_func()->enabled;
+}
+
 /*!
     \fn QString PluginSpec::errorString()
     \brief Returns message of last occured error.

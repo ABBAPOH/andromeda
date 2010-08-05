@@ -25,9 +25,10 @@ namespace ExtensionSystem {
 
         QString libraryPath;
         QString libraryLocation;
-        bool isStatic;
 
+        bool isStatic;
         bool enabled;
+        bool loadsOnStartup;
 
         QString errorString;
         bool hasError;
