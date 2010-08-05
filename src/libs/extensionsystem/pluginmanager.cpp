@@ -51,20 +51,12 @@ void PluginManager::loadPlugins()
 
     // get all specs from files and libraries
     d->loadSpecs();
-    // fill specs dependency lists
-    d->resolveDependencies();
 
-    // get loadQueue in correct order
-    QList<PluginSpec *> loadQueue = d->loadQueue();
-
-    // initialize plugins
-    foreach (PluginSpec *spec, loadQueue) {
-        spec->plugin()->initialize();
-    }
-
-    // initialize using extensions
-    foreach (PluginSpec *spec, loadQueue) {
-        spec->plugin()->extensionsInitialized();
+    // enables all plugins
+    foreach (PluginSpec *spec, plugins()) {
+        if (spec->loadsOnStartup()) {
+            spec->setEnabled(true);
+        }
     }
 }
 
@@ -86,36 +78,6 @@ QList<PluginSpec *> PluginManager::plugins() const
 // ============= PluginManagerPrivate =============
 PluginManagerPrivate::PluginManagerPrivate()
 {
-}
-
-QList<PluginSpec *> PluginManagerPrivate::loadQueue()
-{
-    QList<PluginSpec *> result;
-    foreach (PluginSpec* spec, pluginSpecs) {
-        if (result.contains(spec))
-            continue;
-        QList<PluginSpec *> circularCheck;
-        QList<PluginSpec *> specsForCheck;
-        specsForCheck.append(spec);
-        PluginSpec* currentSpec = 0;
-        while (!specsForCheck.isEmpty()) {
-            currentSpec = specsForCheck.takeFirst();
-            if (circularCheck.contains(currentSpec)) {
-                spec->d_ptr->errorString = "circular inclusion detected";
-                spec->d_ptr->hasError = true;
-                qWarning() << "circular inclusion detected";
-                circularCheck.clear();
-                break;
-            }
-            circularCheck.append(currentSpec);
-            specsForCheck.append(currentSpec->dependencySpecs());
-        }
-
-        for (int i = circularCheck.size() - 1; i >= 0; i--) {
-            result.append(circularCheck.at(i));
-        }
-    }
-    return result;
 }
 
 static bool lessThanByPluginName(const PluginSpec *first, const PluginSpec *second)
@@ -149,13 +111,6 @@ void PluginManagerPrivate::loadSpecs()
     }
 
     qSort(pluginSpecs.begin(), pluginSpecs.end(), lessThanByPluginName);
-}
-
-void PluginManagerPrivate::resolveDependencies()
-{
-    foreach (PluginSpec * spec, pluginSpecs) {
-        spec->d_ptr->resolveDependencies(pluginSpecs);
-    }
 }
 
 void PluginManagerPrivate::specFromPlugin(QObject * object)

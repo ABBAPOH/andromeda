@@ -33,11 +33,12 @@ namespace ExtensionSystem {
         QString errorString;
         bool hasError;
 
-        bool loadLibrary();
-        bool unloadLibrary();
-
         void init(IPlugin * plugin);
-        bool resolveDependencies(const QList<PluginSpec*> &specs);
+        bool load();
+        bool loadLibrary();
+        bool resolveDependencies();
+        bool unload();
+        bool unloadLibrary();
         static int compareVersion(const QString &version1, const QString &version2);
     };
 } // namespace ExtensionSystem
