@@ -36,7 +36,7 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
         Node *node = static_cast<Node*>(index.internalPointer());
         if (!node->isCategory) {
             if (index.column() == 1) {
-                return node->spec->loadsOnStartup() ? 2 : 0;
+                return node->spec->loadOnStartup() ? 2 : 0;
             }
             if (index.column() == 2) {
                 return node->spec->enabled() ? 2 : 0;
@@ -166,14 +166,15 @@ bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, i
         if (index.column() == 1) {
             Node *node = static_cast<Node *>(index.internalPointer());
             // in fact we receive 0, 1 or 2 but 0 is false and 2 is true so everything ok
-            node->spec->setLoadsOnStartup(value.toBool());
+            node->spec->setLoadOnStartup(value.toBool());
             return true;
         }
         if (index.column() == 2) {
             Node *node = static_cast<Node *>(index.internalPointer());
             node->spec->setEnabled(value.toBool());
+            qDebug() << "enabled:" << node->spec->enabled();
             qDebug() << node->spec->errorString();
-            return !node->spec->hasError();
+            return !node->spec->enabled();
         }
     }
     return false;
