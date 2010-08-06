@@ -7,8 +7,10 @@ class QPluginLoader;
 namespace ExtensionSystem {
     class PluginSpecPrivate
     {
+        Q_DECLARE_PUBLIC(PluginSpec)
+        PluginSpec *q_ptr;
     public:
-        PluginSpecPrivate();
+        PluginSpecPrivate(PluginSpec *qq);
 
         IPlugin *plugin;
         QPluginLoader * loader;
@@ -24,7 +26,9 @@ namespace ExtensionSystem {
         QString url;
 
         QList<PluginDependency> dependencies;
+
         QList<PluginSpec*> dependencySpecs;
+        QList<PluginSpec*> dependentSpecs;
 
         QString libraryPath;
         QString libraryLocation;
