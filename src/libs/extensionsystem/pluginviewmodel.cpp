@@ -66,7 +66,7 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
             case 10: return node->spec->license();
             case 11: QString result;
                 foreach (PluginDependency dep, node->spec->dependencies()) {
-                    result += dep.name() + ' ' + '(' + dep.version() + ')' + '\n';
+                    result += dep.name() + ' ' + '(' + dep.version() + ") \n";
                 }
                 return result.mid(0, result.length()-2);
             }
