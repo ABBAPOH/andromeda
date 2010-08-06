@@ -16,22 +16,29 @@ PluginView::PluginView(QWidget *parent) :
     ui->setupUi(this);
     PluginViewModel* model = new PluginViewModel(this);
     ui->treeView->setModel(model);
-    ui->treeView->setColumnWidth(0, 200);
+    ui->treeView->setColumnWidth(0, 190);
     fullPluginView->setModel(model);
 
+    ui->treeView->hideColumn(4);
+    ui->treeView->hideColumn(6);
+    ui->treeView->hideColumn(7);
+    ui->treeView->hideColumn(8);
+    ui->treeView->hideColumn(9);
+    ui->treeView->hideColumn(10);
+    ui->treeView->hideColumn(11);
+
     connect(ui->pushButton_More, SIGNAL(clicked()), SLOT(showFullInfo()));
-//    connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showFullInfo(QModelIndex)));
+    connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showFullInfo(QModelIndex)));
 }
 
 PluginView::~PluginView()
 {
     delete ui;
 }
-#include <QDebug>
+
 void PluginView::showFullInfo(const QModelIndex & i)
 {
     QModelIndex index;
-    qDebug() << i;
     if (!i.isValid()) {
         QModelIndexList rows = ui->treeView->selectionModel()->selectedRows();
         if (rows.isEmpty())
@@ -40,7 +47,6 @@ void PluginView::showFullInfo(const QModelIndex & i)
     } else {
         index = i;
     }
-            qDebug() << index;
     if (index.parent() == QModelIndex()) { // we're at top level index
 
         return;
