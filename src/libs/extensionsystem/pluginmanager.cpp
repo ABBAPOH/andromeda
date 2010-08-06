@@ -54,7 +54,7 @@ void PluginManager::loadPlugins()
 
     // enables all plugins
     foreach (PluginSpec *spec, plugins()) {
-        if (spec->loadsOnStartup()) {
+        if (spec->loadOnStartup()) {
             spec->setEnabled(true);
         }
     }

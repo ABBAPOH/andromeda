@@ -35,7 +35,7 @@ namespace ExtensionSystem {
 
         bool isStatic;
         bool enabled;
-        bool loadsOnStartup;
+        bool loadOnStartup;
 
         QString errorString;
         bool hasError;

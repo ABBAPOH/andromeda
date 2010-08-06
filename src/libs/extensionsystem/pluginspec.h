@@ -29,7 +29,8 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
     Q_DECLARE_PRIVATE(PluginSpec)
     Q_DISABLE_COPY(PluginSpec)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool loadsOnStartup READ loadsOnStartup WRITE setLoadsOnStartup NOTIFY loadsOnStartupChanged)
+    Q_PROPERTY(bool loadOnStartup READ loadOnStartup WRITE setLoadOnStartup NOTIFY loadOnStartupChanged)
+    Q_PROPERTY(bool canBeUnloaded READ canBeUnloaded)
 
 public:
     ~PluginSpec();
@@ -54,7 +55,8 @@ public:
 
     bool isStatic() const;
     bool enabled() const;
-    bool loadsOnStartup() const;
+    bool loadOnStartup() const;
+    bool canBeUnloaded() const;
 
     QString errorString();
     bool hasError();
@@ -65,7 +67,7 @@ public:
 
 public slots:
     void setEnabled(bool enabled);
-    void setLoadsOnStartup(bool on);
+    void setLoadOnStartup(bool on);
 
 signals:
     void enabledChanged(bool enabled);

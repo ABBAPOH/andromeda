@@ -183,6 +183,11 @@ QList<PluginSpec*> PluginSpec::dependencySpecs() const
     return d_func()->dependencySpecs;
 }
 
+QList<PluginSpec*> PluginSpec::dependentSpecs() const
+{
+    return d_func()->dependentSpecs;
+}
+
 /*!
     \fn QString PluginSpec::libraryPath() const
     \brief Returns path to dynamic library.
@@ -221,6 +226,9 @@ void PluginSpec::setEnabled(bool enabled)
             emit enabledChanged(enabled);
         }
     } else {
+        if (!canBeUnloaded()) {
+            return;
+        }
         if (d->unload()) {
             d->enabled = false;
             emit enabledChanged(enabled);
@@ -237,18 +245,27 @@ bool PluginSpec::enabled() const
     return d_func()->enabled;
 }
 
-void PluginSpec::setLoadsOnStartup(bool on)
+void PluginSpec::setLoadOnStartup(bool on)
 {
     Q_D(PluginSpec);
-    if (d->loadsOnStartup == on)
+    if (d->loadOnStartup == on)
         return;
-    d->loadsOnStartup = on;
+    d->loadOnStartup = on;
     emit loadsOnStartupChanged(on);
 }
 
-bool PluginSpec::loadsOnStartup() const
+bool PluginSpec::loadOnStartup() const
 {
-    return d_func()->loadsOnStartup;
+    return d_func()->loadOnStartup;
+}
+
+bool PluginSpec::canBeUnloaded() const
+{
+    foreach (PluginSpec *spec, dependentSpecs()) {
+        if (spec->enabled())
+            return false;
+    }
+    return true;
 }
 
 /*!
@@ -353,7 +370,7 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
         isStatic(false),
         hasError(false),
         enabled(false),
-        loadsOnStartup(true)
+        loadOnStartup(true)
 {
 }
 
