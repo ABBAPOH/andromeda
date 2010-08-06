@@ -248,7 +248,7 @@ void PluginSpec::setLoadsOnStartup(bool on)
 
 bool PluginSpec::loadsOnStartup() const
 {
-    return d_func()->enabled;
+    return d_func()->loadsOnStartup;
 }
 
 /*!
@@ -348,6 +348,7 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
 // ============= PluginSpecPrivate =============
 PluginSpecPrivate::PluginSpecPrivate():
         plugin(0),
+        loader(0),
         isStatic(false),
         hasError(false),
         enabled(false),
@@ -402,15 +403,16 @@ bool PluginSpecPrivate::load()
 
 bool PluginSpecPrivate::loadLibrary()
 {
-    QPluginLoader loader(libraryPath);
-    QObject * object = loader.instance();
+    if (!loader)
+        loader = new QPluginLoader(libraryPath);
+    QObject * object = loader->instance();
     if (plugin)
         return true;
 
     if (!object) {
         hasError = true;
-        errorString = QObject::tr("PluginSpec", "Can't load plugin: ") + loader.errorString();
-        qWarning () << "Can't load plugin: " + loader.errorString();
+        errorString = QObject::tr("PluginSpec", "Can't load plugin: ") + loader->errorString();
+        qWarning () << "Can't load plugin: " + loader->errorString();
         return false;
     }
 
@@ -428,13 +430,13 @@ bool PluginSpecPrivate::loadLibrary()
 
 bool PluginSpecPrivate::unload()
 {
-    foreach (PluginSpec *spec, dependencySpecs) {
-        spec->setEnabled(false);
-        if (!spec->enabled()) {
-            hasError = true;
-            errorString += "Can't unload plugin: " + spec->name() + " is not unloaded";
-        }
-    }
+//    foreach (PluginSpec *spec, dependencySpecs) {
+//        spec->setEnabled(false);
+//        if (!spec->enabled()) {
+//            hasError = true;
+//            errorString += "Can't unload plugin: " + spec->name() + " is not unloaded";
+//        }
+//    }
 
     plugin->shutdown();
 
@@ -446,12 +448,12 @@ bool PluginSpecPrivate::unload()
 
 bool PluginSpecPrivate::unloadLibrary()
 {
-    QPluginLoader loader(libraryPath);
-    if (!loader.unload()) {
+    if (!loader->unload()) {
         hasError = true;
-        errorString += "Can't unload plugin library: " + loader.errorString();
+        errorString += "Can't unload plugin library: " + loader->errorString();
         return false;
     }
+    plugin = 0;
     return true;
 }
 

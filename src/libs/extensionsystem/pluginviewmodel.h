@@ -25,6 +25,7 @@ public:
                       const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
 signals:
 

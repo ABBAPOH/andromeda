@@ -20,7 +20,7 @@ PluginView::PluginView(QWidget *parent) :
     fullPluginView->setModel(model);
 
     connect(ui->pushButton_More, SIGNAL(clicked()), SLOT(showFullInfo()));
-    connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showFullInfo(QModelIndex)));
+//    connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showFullInfo(QModelIndex)));
 }
 
 PluginView::~PluginView()

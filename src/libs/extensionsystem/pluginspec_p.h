@@ -3,6 +3,7 @@
 
 #include "iplugin.h"
 
+class QPluginLoader;
 namespace ExtensionSystem {
     class PluginSpecPrivate
     {
@@ -10,6 +11,8 @@ namespace ExtensionSystem {
         PluginSpecPrivate();
 
         IPlugin *plugin;
+        QPluginLoader * loader;
+
         QString name;
         QString version;
         QString compatibilityVersion;

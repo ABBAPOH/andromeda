@@ -24,13 +24,25 @@ PluginViewModel::~PluginViewModel()
 
 int PluginViewModel::columnCount(const QModelIndex &parent) const
 {
-    return 11;
+    return 12;
 }
 
 QVariant PluginViewModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+
+    if (role == Qt::CheckStateRole) {
+        Node *node = static_cast<Node*>(index.internalPointer());
+        if (!node->isCategory) {
+            if (index.column() == 1) {
+                return node->spec->loadsOnStartup() ? 2 : 0;
+            }
+            if (index.column() == 2) {
+                return node->spec->enabled() ? 2 : 0;
+            }
+        }
+    }
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
@@ -42,16 +54,17 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
         } else {
             switch (index.column()) {
             case 0: return node->spec->name();
-            case 1: return node->spec->enabled();
-            case 2: return node->spec->version();
-            case 3: return node->spec->compatibilityVersion();
-            case 4: return node->spec->vendor();
-            case 5: return node->spec->url();
-            case 6: return node->spec->libraryPath();
-            case 7: return node->spec->description();
-            case 8: return node->spec->copyright();
-            case 9: return node->spec->license();
-            case 10: QString result;
+//            case 1: return node->spec->loadsOnStartup();
+//            case 2: return node->spec->enabled();
+            case 3: return node->spec->version();
+            case 4: return node->spec->compatibilityVersion();
+            case 5: return node->spec->vendor();
+            case 6: return node->spec->url();
+            case 7: return node->spec->libraryPath();
+            case 8: return node->spec->description();
+            case 9: return node->spec->copyright();
+            case 10: return node->spec->license();
+            case 11: QString result;
                 foreach (PluginDependency dep, node->spec->dependencies()) {
                     result += dep.name() + ' ' + '(' + dep.version() + ')' + '\n';
                 }
@@ -67,7 +80,11 @@ Qt::ItemFlags PluginViewModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return 0;
 
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    if (index.column() == 1 || index.column() == 2) {
+        flags |= /*Qt::ItemIsEditable |*/ Qt::ItemIsUserCheckable;
+    }
+    return flags;
 }
 
 QVariant PluginViewModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -75,16 +92,17 @@ QVariant PluginViewModel::headerData(int section, Qt::Orientation orientation, i
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
         case 0: return tr("Name");
-        case 1: return tr("Enabled");
-        case 2: return tr("Version");
-        case 3: return tr("Compatibility Version");
-        case 4: return tr("Vendor");
-        case 5: return tr("Url");
-        case 6: return tr("Library Path");
-        case 7: return tr("Description");
-        case 8: return tr("Copyright");
-        case 9: return tr("license");
-        case 10: return tr("Dependencies");
+        case 1: return tr("Loads on Startup");
+        case 2: return tr("Enabled");
+        case 3: return tr("Version");
+        case 4: return tr("Compatibility Version");
+        case 5: return tr("Vendor");
+        case 6: return tr("Url");
+        case 7: return tr("Library Path");
+        case 8: return tr("Description");
+        case 9: return tr("Copyright");
+        case 10: return tr("license");
+        case 11: return tr("Dependencies");
         }
     }
 
@@ -138,6 +156,27 @@ int PluginViewModel::rowCount(const QModelIndex &parent) const
         parentNode = static_cast<Node *>(parent.internalPointer());
 
     return parentNode->childCount();
+}
+
+bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid())
+        return true;
+    if (role == Qt::CheckStateRole) {
+        if (index.column() == 1) {
+            Node *node = static_cast<Node *>(index.internalPointer());
+            // in fact we receive 0, 1 or 2 but 0 is false and 2 is true so everything ok
+            node->spec->setLoadsOnStartup(value.toBool());
+            return true;
+        }
+        if (index.column() == 2) {
+            Node *node = static_cast<Node *>(index.internalPointer());
+            node->spec->setEnabled(value.toBool());
+            qDebug() << node->spec->errorString();
+            return !node->spec->hasError();
+        }
+    }
+    return false;
 }
 
 // ============= PluginViewModelPrivate =============
