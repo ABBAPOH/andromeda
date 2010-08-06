@@ -37,7 +37,7 @@ bool PluginDependency::operator==(const PluginDependency &other)
     \internal
 */
 PluginSpec::PluginSpec() :
-        d_ptr(new PluginSpecPrivate)
+        d_ptr(new PluginSpecPrivate(this))
 {
 
 }
@@ -57,7 +57,7 @@ PluginSpec::~PluginSpec()
     Constructs static PluginSpec using data received from IPlugin::property function.
 */
 PluginSpec::PluginSpec(IPlugin * plugin) :
-        d_ptr(new PluginSpecPrivate)
+        d_ptr(new PluginSpecPrivate(this))
 {
     Q_D(PluginSpec);
 
@@ -71,7 +71,7 @@ PluginSpec::PluginSpec(IPlugin * plugin) :
     Constructs static PluginSpec using data received from library located at \a path.
 */
 PluginSpec::PluginSpec(const QString & path) :
-        d_ptr(new PluginSpecPrivate)
+        d_ptr(new PluginSpecPrivate(this))
 {
     Q_D(PluginSpec);
     d->libraryPath = path;
@@ -346,7 +346,8 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
 }
 
 // ============= PluginSpecPrivate =============
-PluginSpecPrivate::PluginSpecPrivate():
+PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
+        q_ptr(qq),
         plugin(0),
         loader(0),
         isStatic(false),
@@ -459,6 +460,8 @@ bool PluginSpecPrivate::unloadLibrary()
 
 bool PluginSpecPrivate::resolveDependencies()
 {
+    Q_Q(PluginSpec);
+
     QList<PluginSpec*> specs = PluginManager::instance()->plugins();
     QList<PluginSpec*> resolvedSpecs;
 
@@ -483,6 +486,11 @@ bool PluginSpecPrivate::resolveDependencies()
 
     if (hasError)
         return false;
+
+    foreach (PluginSpec *spec, resolvedSpecs) {
+        if (!spec->d_ptr->dependentSpecs.contains(q))
+            spec->d_ptr->dependentSpecs.append(q);
+    }
 
     dependencySpecs = resolvedSpecs;
     return true;

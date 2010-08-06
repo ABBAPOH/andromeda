@@ -45,7 +45,10 @@ public:
     QString url() const;
 
     QList<PluginDependency> dependencies() const;
+    // plugins that are requied for this plugin
     QList<PluginSpec*> dependencySpecs() const;
+    // plugins that require this plugin
+    QList<PluginSpec*> dependentSpecs() const;
 
     QString libraryPath() const; // path to library
 
