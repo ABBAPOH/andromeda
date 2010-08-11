@@ -12,6 +12,7 @@ PluginViewModel::PluginViewModel(QObject *parent) :
     d_ptr(new PluginViewModelPrivate)
 {
     Q_D(PluginViewModel);
+    connect(d->manager, SIGNAL(pluginsChanged()), this, SLOT(updateModel()));
     foreach (PluginSpec *spec, d->manager->plugins()) {
         d->node(spec);
     }
@@ -178,6 +179,29 @@ bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, i
         }
     }
     return false;
+}
+
+void PluginViewModel::updateModel()
+{
+    Q_D(PluginViewModel);
+
+    foreach (PluginSpec *spec, d->manager->plugins()) {
+        if (!d->nodesForCategories.contains(spec->category())) {
+            const QString &category = spec->category();
+            int rows = rowCount();
+            beginInsertRows(QModelIndex(), rows, rows);
+            d->node(category);
+            endInsertRows();
+        }
+        if (!d->nodesForSpecs.contains(spec)) {
+            QModelIndex categoryIndex = index(d->node(spec->category())->row(), 0);
+            int rows = rowCount(categoryIndex);
+            beginInsertRows(categoryIndex, rows, rows);
+            d->node(spec);
+            endInsertRows();
+        }
+    }
+//    this->reset();
 }
 
 // ============= PluginViewModelPrivate =============

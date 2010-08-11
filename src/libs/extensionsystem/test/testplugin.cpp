@@ -5,6 +5,12 @@ TestPlugin::TestPlugin()
 {
 }
 
+bool TestPlugin::initialize()
+{
+    qDebug("TestPlugin::initialize");
+    return true;
+}
+
 QString TestPlugin::property(Properties property)
 {
     switch(property) {

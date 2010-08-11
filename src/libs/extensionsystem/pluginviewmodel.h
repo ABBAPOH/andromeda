@@ -7,6 +7,7 @@
 
 namespace ExtensionSystem {
 
+class PluginSpec;
 class PluginViewModelPrivate;
 class EXTENSIONSYSTEM_EXPORT PluginViewModel : public QAbstractItemModel
 {
@@ -30,9 +31,11 @@ public:
 signals:
 
 public slots:
+    void updateModel();
 
 private:
     PluginViewModelPrivate * d_ptr;
+
 };
 
 } // namespace ExtensionSystem

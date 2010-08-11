@@ -7,6 +7,12 @@ TestPlugin2::TestPlugin2()
 {
 }
 
+bool TestPlugin2::initialize()
+{
+    qDebug("TestPlugin2::initialize");
+    return true;
+}
+
 QString TestPlugin2::property(Properties property)
 {
     switch(property) {
