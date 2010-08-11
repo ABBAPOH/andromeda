@@ -4,6 +4,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDir>
+#include <QtCore/QFileSystemWatcher>
 #include <QDebug>
 
 #include "iplugin.h"
@@ -28,8 +29,14 @@ PluginManager::PluginManager(QObject *parent) :
     QObject(parent),
     d_ptr(new PluginManagerPrivate)
 {
+    Q_D(PluginManager);
     Q_ASSERT(!m_instance);
     m_instance = this;
+
+    d->watcher = new QFileSystemWatcher(this);
+    connect(d->watcher, SIGNAL(directoryChanged(QString)), SLOT(updateDirectory(QString)));
+    connect(d->watcher, SIGNAL(fileChanged(QString)), SLOT(updateLibrary(QString)));
+    startTimer(5000);
 }
 
 /*!
@@ -53,11 +60,14 @@ void PluginManager::loadPlugins()
     d->loadSpecs();
 
     // enables all plugins
-    foreach (PluginSpec *spec, plugins()) {
-        if (spec->loadOnStartup()) {
-            spec->setEnabled(true);
-        }
-    }
+    d->enableSpecs();
+//    foreach (PluginSpec *spec, plugins()) {
+//        if (spec->loadOnStartup()) {
+//            qDebug() << "enabling" << spec->name();
+//            spec->setEnabled(true);
+//        }
+//    }
+    emit pluginsChanged();
 }
 
 QString PluginManager::pluginsFolder()
@@ -73,6 +83,37 @@ void PluginManager::setPluginsFolder(const QString &name)
 QList<PluginSpec *> PluginManager::plugins() const
 {
     return d_func()->pluginSpecs;
+}
+
+void PluginManager::updateDirectory(const QString &dirPath)
+{
+    Q_D(PluginManager);
+    d->pathsToBeUpdated.append(dirPath);
+    killTimer(d->updateTimer);
+    d->updateTimer = startTimer(5000);
+}
+
+// checks if library exists and loads/unloads it if necessary
+void PluginManager::updateLibrary(const QString &libraryPath)
+{
+    d_func()->fileChanged(libraryPath);
+}
+
+void PluginManager::timerEvent(QTimerEvent *event)
+{
+    Q_D(PluginManager);
+
+    if (event->timerId() == d->updateTimer) {
+        killTimer(d->updateTimer);
+        d->updateTimer = 0;
+        foreach (QString dirPath, d->pathsToBeUpdated) {
+            d->parseDirectory(dirPath);
+        }
+        d->pathsToBeUpdated.clear();
+
+        d_func()->enableSpecs();
+        emit pluginsChanged();
+    }
 }
 
 // ============= PluginManagerPrivate =============
@@ -95,19 +136,13 @@ void PluginManagerPrivate::loadSpecs()
     }
 
     foreach (QString folder, qApp->libraryPaths()) {
-        QDir pluginsDir = QDir(folder);
-        if (pluginsFolder != "") // we try to cd into pluginsFolder
-            if (!pluginsDir.cd(pluginsFolder))
+        if (pluginsFolder != "") { // we try to cd into pluginsFolder
+            if (!QFileInfo(folder + '/' + pluginsFolder).exists())
                 continue;
-
-        foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-            QString libraryPath = pluginsDir.absoluteFilePath(fileName);
-            PluginSpec * spec = new PluginSpec(libraryPath);
-            if (!spec->hasError()) {
-                pluginSpecs.append(spec);
-            } else
-                delete spec;
+            else
+                folder = folder + '/' + pluginsFolder;
         }
+        parseDirectory(folder);
     }
 
     qSort(pluginSpecs.begin(), pluginSpecs.end(), lessThanByPluginName);
@@ -124,5 +159,53 @@ void PluginManagerPrivate::specFromPlugin(QObject * object)
     PluginSpec * spec = new PluginSpec(plugin); // static plugin
     pluginSpecs.append(spec);
 }
+
+void PluginManagerPrivate::fileChanged(const QString &libraryPath)
+{
+    qDebug() << "PluginManagerPrivate::fileChanged" << libraryPath;
+
+    QFileInfo info(libraryPath);
+
+    if (!info.exists()) {
+        PluginSpec *spec = pathToSpec.value(libraryPath);
+        if (!spec)
+            return;
+        spec->setEnabled(false);
+        if (!spec->enabled()) {
+            pathToSpec.remove(libraryPath);
+        }
+    }
+}
+
+void PluginManagerPrivate::parseDirectory(const QString &dir)
+{
+    QDir pluginsDir(dir);
+    watcher->addPath(pluginsDir.absolutePath());
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        QString libraryPath = pluginsDir.absoluteFilePath(fileName);
+        if (pathToSpec.contains(libraryPath))
+            continue;
+        PluginSpec * spec = new PluginSpec(libraryPath);
+        if (!spec->hasError()) {
+            watcher->addPath(libraryPath);
+            pathToSpec.insert(libraryPath, spec);
+            pluginSpecs.append(spec);
+            specsToBeEnabled.append(spec);
+        } else
+            delete spec;
+    }
+}
+
+void PluginManagerPrivate::enableSpecs()
+{
+    foreach (PluginSpec *spec, specsToBeEnabled) {
+        if (spec->loadOnStartup()) {
+            qDebug() << "enabling" << spec->name();
+            spec->setEnabled(true);
+        }
+    }
+    specsToBeEnabled.clear();
+}
+
 
 

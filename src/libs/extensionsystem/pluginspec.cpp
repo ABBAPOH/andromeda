@@ -75,6 +75,7 @@ PluginSpec::PluginSpec(const QString & path) :
 {
     Q_D(PluginSpec);
     d->libraryPath = path;
+    d->loader->setFileName(path);
     if (!d->loadLibrary()) {
         return;
     }
@@ -366,7 +367,7 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
 PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
         q_ptr(qq),
         plugin(0),
-        loader(0),
+        loader(new QPluginLoader(q_ptr)),
         isStatic(false),
         hasError(false),
         enabled(false),
@@ -407,6 +408,7 @@ bool PluginSpecPrivate::load()
         }
     }
 
+    qDebug("PluginSpecPrivate::load");
     if (hasError)
         return false;
 
@@ -421,8 +423,6 @@ bool PluginSpecPrivate::load()
 
 bool PluginSpecPrivate::loadLibrary()
 {
-    if (!loader)
-        loader = new QPluginLoader(libraryPath);
     QObject * object = loader->instance();
     if (plugin)
         return true;

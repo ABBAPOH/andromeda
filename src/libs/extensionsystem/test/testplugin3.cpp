@@ -7,6 +7,12 @@ TestPlugin3::TestPlugin3()
 {
 }
 
+bool TestPlugin3::initialize()
+{
+    qDebug("TestPlugin3::initialize");
+    return true;
+}
+
 QString TestPlugin3::property(Properties property)
 {
     switch(property) {

@@ -9,7 +9,7 @@ class TestPlugin : public ExtensionSystem::IPlugin
     Q_OBJECT
 public:
     TestPlugin();
-    virtual bool initialize() { return true; }
+    virtual bool initialize();
     virtual QString property(Properties property);
     virtual QList<ExtensionSystem::PluginDependency> dependencies();
 

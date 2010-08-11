@@ -35,8 +35,14 @@ public:
     QList<PluginSpec *> plugins() const;
 
 signals:
+    void pluginsChanged();
 
 public slots:
+    void updateDirectory(const QString &);
+    void updateLibrary(const QString &);
+
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private:
     PluginManagerPrivate *d_ptr;
