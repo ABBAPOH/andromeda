@@ -5,6 +5,8 @@
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDir>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QWriteLocker>
+#include <QtCore/QReadLocker>
 #include <QDebug>
 
 #include "iplugin.h"
@@ -48,6 +50,58 @@ PluginManager::~PluginManager()
     Q_D(PluginManager);
     qDeleteAll(d->pluginSpecs);
     delete d_ptr;
+}
+
+void PluginManager::addObject(QObject * object)
+{
+    QWriteLocker l(&m_lock);
+
+    Q_D(PluginManager);
+    if (!object) {
+        return;
+    }
+
+    if (!d->objects.contains(object)) {
+        d->objects.append(object);
+        if (object->objectName() != "") {
+            d->namedObjects.insertMulti(object->objectName(), object);
+        }
+        l.unlock();
+        emit objectAdded(object);
+    }
+}
+
+void PluginManager::removeObject(QObject * object)
+{
+    QWriteLocker l(&m_lock);
+
+    Q_D(PluginManager);
+
+    if (!object) {
+        return;
+    }
+
+    d->objects.removeAll(object);
+    l.unlock();
+    emit objectRemoved(object);
+}
+
+QObjectList PluginManager::objects()
+{
+    QReadLocker l(&m_lock);
+    return d_func()->objects;
+}
+
+QObject * PluginManager::object(const QString &name)
+{
+    QReadLocker l(&m_lock);
+    return d_func()->namedObjects.value(name);
+}
+
+QObjectList PluginManager::objects(const QString &name)
+{
+    QReadLocker l(&m_lock);
+    return d_func()->namedObjects.values(name);
 }
 
 void PluginManager::loadPlugins()

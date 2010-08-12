@@ -18,6 +18,9 @@ public:
     QList<PluginSpec *> specsToBeEnabled;
     QFileSystemWatcher *watcher;
     QHash<QString, PluginSpec*> pathToSpec;
+    QObjectList objects;
+    QHash<QString, QObject *> namedObjects;
+
     QStringList pathsToBeUpdated;
     int updateTimer;
 

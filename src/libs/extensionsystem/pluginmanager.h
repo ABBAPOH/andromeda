@@ -25,6 +25,32 @@ public:
 
     void addObject(QObject * object);
     void removeObject(QObject * object);
+    QObjectList objects();
+    QObject * object(const QString &name);
+
+    template <class T> T* object()
+    {
+        QReadLocker l(&m_lock);
+        foreach (QObject * object, objects()) {
+            T * t = qobject_cast<T*>(object);
+            if (t)
+                return t;
+            return 0;
+        }
+    }
+
+    QObjectList objects(const QString &name);
+    template <class T> QList<T*> objects()
+    {
+        QReadLocker l(&m_lock);
+        QList<T*> result;
+        foreach (QObject * object, objects()) {
+            T * t = qobject_cast<T*>(object);
+            if (t)
+                result.append(t);
+        }
+        return result;
+    }
 
     void loadPlugins();
     void shutdown();
@@ -36,6 +62,8 @@ public:
 
 signals:
     void pluginsChanged();
+    void objectAdded(QObject *object);
+    void objectRemoved(QObject *object);
 
 public slots:
     void updateDirectory(const QString &);
