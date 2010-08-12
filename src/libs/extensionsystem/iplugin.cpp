@@ -2,6 +2,7 @@
 #include "iplugin_p.h"
 
 #include "pluginspec_p.h"
+#include "pluginmanager.h"
 
 using namespace ExtensionSystem;
 
@@ -49,18 +50,26 @@ IPlugin::~IPlugin()
     \fn void addObject(QObject * object)
     \brief Adds \a object to object pool in PluginManager.
 */
-void addObject(QObject * object)
+void IPlugin::addObject(QObject * object)
 {
+    Q_D(IPlugin);
 
+    if (!d->addedObjects.contains(object))
+        d->addedObjects.append(object);
+
+    PluginManager::instance()->addObject(object);
 }
 
 /*!
     \fn void removeObject(QObject * object)
     \brief Removes \a object from object pool in PluginManager.
 */
-void removeObject(QObject * object)
+void IPlugin::removeObject(QObject * object)
 {
+    Q_D(IPlugin);
 
+    d->addedObjects.removeAll(object);
+    PluginManager::instance()->removeObject(object);
 }
 
 // ============= IPluginPrivate =============
@@ -71,5 +80,6 @@ IPluginPrivate::IPluginPrivate()
 
 IPluginPrivate::~IPluginPrivate()
 {
+    qDeleteAll(addedObjects);
 }
 

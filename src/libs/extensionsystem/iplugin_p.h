@@ -10,6 +10,7 @@ namespace ExtensionSystem {
         IPluginPrivate();
         virtual ~IPluginPrivate();
 
+        QList<QObject *> addedObjects;
     };
 } // namespace ExtensionSystem
 
