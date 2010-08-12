@@ -4,15 +4,14 @@
 #include "iplugin.h"
 
 namespace ExtensionSystem {
-    class IPluginPrivate
-    {
-    public:
-        IPluginPrivate();
-        virtual ~IPluginPrivate();
+class IPluginPrivate
+{
+public:
+    IPluginPrivate();
+    virtual ~IPluginPrivate();
 
-        QList<QObject *> addedObjects;
-    };
+    QList<QObject *> addedObjects;
+};
 } // namespace ExtensionSystem
-
 
 #endif // IPLUGIN_P_H
