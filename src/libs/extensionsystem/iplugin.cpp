@@ -80,6 +80,9 @@ IPluginPrivate::IPluginPrivate()
 
 IPluginPrivate::~IPluginPrivate()
 {
-    qDeleteAll(addedObjects);
+    foreach (QObject *object, addedObjects) {
+        PluginManager::instance()->removeObject(object);
+        delete object;
+    }
 }
 
