@@ -23,7 +23,7 @@ qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_cpp( MOC_SOURCES2 ${HEADERS2} )
 qt4_wrap_cpp( MOC_SOURCES3 ${HEADERS3} )
 
-set( LIBRARY_OUTPUT_PATH plugins )
+set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/plugins )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../ )
 link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../ )
@@ -47,6 +47,6 @@ target_link_libraries( testplugin3 ${QT_LIBRARIES} extensionsystem )
     # WIN32 is specified on Windows to remove console
 #    add_executable( test WIN32 main.cpp )
 #else (WIN32)
-    add_executable( test main.cpp )
+    add_executable( extensionsystem_test main.cpp )
 #endif (WIN32)
-target_link_libraries( test ${QT_LIBRARIES} extensionsystem )
+target_link_libraries( extensionsystem_test ${QT_LIBRARIES} extensionsystem )
