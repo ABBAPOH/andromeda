@@ -1,11 +1,16 @@
-#include <QtGui/QApplication>
+#include <QtSingleApplication>
 #include <pluginmanager.h>
 
 using namespace ExtensionSystem;
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QtSingleApplication app("Andromeda", argc, argv);
+
+    if (app.isRunning()) {
+        app.sendMessage("activate");
+        return 0;
+    }
 
     PluginManager manager;
     manager.setPluginsFolder("andromeda");
