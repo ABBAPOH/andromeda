@@ -4,5 +4,6 @@ add_definitions( -DQT_PLUGIN )
 add_definitions( -DQT_NO_DEBUG )
 add_definitions( -DQT_SHARED )
 
-add_subdirectory( coreplugin )
-add_subdirectory( coreplugin/actionmanager )
+add_subdirectory( testplugin )
+add_subdirectory( testplugin2 )
+add_subdirectory( testplugin3 )
