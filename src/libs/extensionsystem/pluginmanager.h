@@ -23,7 +23,7 @@ public:
     explicit PluginManager(QObject *parent = 0);
     virtual ~PluginManager();
 
-    void addObject(QObject * object);
+    void addObject(QObject * object, const QString &type = "");
     void removeObject(QObject * object);
     QObjectList objects();
     QObject * object(const QString &name);
@@ -62,7 +62,7 @@ public:
 
 signals:
     void pluginsChanged();
-    void objectAdded(QObject *object);
+    void objectAdded(QObject *object, const QString &type);
     void objectRemoved(QObject *object);
 
 public slots:

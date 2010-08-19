@@ -27,7 +27,7 @@ public:
     virtual QList<PluginDependency> dependencies() { return QList<PluginDependency>(); }
     virtual void shutdown() {}
 
-    void addObject(QObject * object);
+    void addObject(QObject * object, const QString &type = "");
     void removeObject(QObject * object);
 
 protected:

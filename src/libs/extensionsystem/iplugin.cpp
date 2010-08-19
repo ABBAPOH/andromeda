@@ -50,14 +50,14 @@ IPlugin::~IPlugin()
     \fn void addObject(QObject * object)
     \brief Adds \a object to object pool in PluginManager.
 */
-void IPlugin::addObject(QObject * object)
+void IPlugin::addObject(QObject * object, const QString &type)
 {
     Q_D(IPlugin);
 
     if (!d->addedObjects.contains(object))
         d->addedObjects.append(object);
 
-    PluginManager::instance()->addObject(object);
+    PluginManager::instance()->addObject(object, type);
 }
 
 /*!
