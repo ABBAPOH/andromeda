@@ -52,7 +52,7 @@ PluginManager::~PluginManager()
     delete d_ptr;
 }
 
-void PluginManager::addObject(QObject * object)
+void PluginManager::addObject(QObject * object, const QString &type)
 {
     QWriteLocker l(&m_lock);
 
@@ -67,7 +67,7 @@ void PluginManager::addObject(QObject * object)
             d->namedObjects.insertMulti(object->objectName(), object);
         }
         l.unlock();
-        emit objectAdded(object);
+        emit objectAdded(object, type);
     }
 }
 
