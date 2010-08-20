@@ -15,6 +15,7 @@ class Core : public ICore
 
 public:
     explicit Core(QObject *parent = 0);
+    ~Core();
 
     virtual RegistrationSystem::RegistrationManager *registrationManager();
 
