@@ -3,6 +3,63 @@
 #include <QtCore/QStringList>
 #include <QtCore/QMultiHash>
 
+/*!
+    \namespace RegistrationSystem
+    \brief The RegistrationSystem namespace only one class - RegistrationSystem::RegistrationManager.
+    This class is used to improve speed of registration process.
+*/
+
+/*!
+    \class RegistrationSystem::RegistrationManager
+    \brief This class is used to improve speed of registration process.
+
+    Objects that added to ExtensionSystem::PluginManager pool can be handled directly by
+    connecting to ExtensionSystem::PluginManager::objectAdded signal. However, this class
+    can improve speed of this process. To register an object of specific type, you need to
+    implement RegistrationSystem::IRegistrator interface and add it to system via
+    RegistrationSystem::RegistrationManager::addRegistrator method.
+*/
+
+/*!
+    \fn void RegistrationManager::addRegistrator(IRegistrator *registrator, const QString &type = "");
+    \brief This function adds registrator to a registration system.
+
+    One registrator can be added multiple times using different types.
+
+    \a type parameter is used to determine objects of what type we want to register
+    IRegistrator::registerObject function will only be called if type of object added
+    to pool equal to type of registrator.
+*/
+
+/*!
+    \fn void RegistrationManager::removeRegistrator(IRegistrator *registrator)
+    \brief Removes ALL instances of \a registrator from system.
+*/
+
+/*!
+    \interface RegistrationSystem::IRegistrator
+    \brief This interface is a base interface for all registrators.
+
+    To register any object, you have to reimplement at least
+    RegistrationSystem::IRegistrator::registerObject method. After that, you need to
+    add instance of this class to instance of RegistrationSystem::RegistrationManager.
+*/
+
+/*!
+    \fn bool IRegistrator::canRegister(QObject *object)
+    \brief Can be used to provide checks if object is valid and it's type
+    is really what we want to see.
+
+    Default implementation returns true.
+*/
+
+/*!
+    \fn bool IRegistrator::registerObject(QObject *object)
+    \brief This function should do all custom actions to register an object.
+
+    It is automatically called when object added to ExtensionSystem::PluginManager pool.
+*/
+
 namespace RegistrationSystem {
 
 // ============= RegistrationManagerPrivate =============
