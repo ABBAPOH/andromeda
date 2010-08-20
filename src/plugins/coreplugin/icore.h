@@ -20,7 +20,8 @@ class COREPLUGIN_EXPORT ICore : public QObject
     Q_DISABLE_COPY(ICore);
 
 public:
-    explicit ICore(QObject *parent = 0);
+    explicit ICore(QObject *parent = 0): QObject(parent) {}
+    virtual ~ICore() {}
 
     static ICore *instance();
 
