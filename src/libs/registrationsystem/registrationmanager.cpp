@@ -21,7 +21,7 @@
 */
 
 /*!
-    \fn void RegistrationManager::addRegistrator(IRegistrator *registrator, const QString &type = "");
+    \fn void RegistrationManager::addRegistrator(IRegistrator *registrator, const QString &type)
     \brief This function adds registrator to a registration system.
 
     One registrator can be added multiple times using different types.
@@ -54,7 +54,12 @@
 */
 
 /*!
-    \fn bool IRegistrator::registerObject(QObject *object)
+    \fn void objectRegistered(QObject *object)
+    \brief Emited when \a object successfully registered.
+*/
+
+/*!
+    \fn bool IRegistrator::registerObject(QObject *object, const QString &type)
     \brief This function should do all custom actions to register an object.
 
     It is automatically called when object added to ExtensionSystem::PluginManager pool.
