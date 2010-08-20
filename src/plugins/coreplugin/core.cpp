@@ -1,6 +1,8 @@
 #include "core.h"
 #include "core_p.h"
 
+#include <registrationmanager.h>
+
 namespace Core {
 
 Core *m_instance = 0;
@@ -14,8 +16,14 @@ Core::Core(QObject *parent) :
     setObjectName("Core");
 
     Q_D(Core);
-//    d->registrationManager = new RegistrationManager(this);
-//    d->registrationManager->setObjectName("RegistrationManager");
+    d->registrationManager = new RegistrationManager(this);
+    d->registrationManager->setObjectName("RegistrationManager");
+}
+
+Core::~Core()
+{
+    delete d_ptr;
+    m_instance = 0;
 }
 
 ICore *ICore::instance()
