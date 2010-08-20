@@ -5,7 +5,7 @@
 
 /*!
     \namespace RegistrationSystem
-    \brief The RegistrationSystem namespace only one class - RegistrationSystem::RegistrationManager.
+    \brief The RegistrationSystem namespace contains only one class - RegistrationSystem::RegistrationManager.
     This class is used to improve speed of registration process.
 */
 
