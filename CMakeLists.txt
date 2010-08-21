@@ -11,4 +11,6 @@ set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 
 add_subdirectory( src )
+
+enable_testing()
 add_subdirectory( tests )
