@@ -254,7 +254,7 @@ void PluginManagerPrivate::enableSpecs()
 {
     foreach (PluginSpec *spec, specsToBeEnabled) {
         if (spec->loadOnStartup()) {
-            qDebug() << "enabling" << spec->name();
+            qDebug() << "enabling1" << spec->name();
             spec->setEnabled(true);
         }
     }

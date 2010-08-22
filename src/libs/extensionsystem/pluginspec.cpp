@@ -388,8 +388,6 @@ void PluginSpecPrivate::init(IPlugin * plugin)
     description = plugin->property(IPlugin::Description);
     url = plugin->property(IPlugin::Url);
     dependencies = plugin->dependencies();
-
-    enabled = true;
 }
 
 bool PluginSpecPrivate::load()
@@ -408,7 +406,6 @@ bool PluginSpecPrivate::load()
         }
     }
 
-    qDebug("PluginSpecPrivate::load");
     if (hasError)
         return false;
 
