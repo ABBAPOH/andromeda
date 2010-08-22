@@ -175,7 +175,7 @@ bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, i
             node->spec->setEnabled(value.toBool());
             qDebug() << "enabled:" << node->spec->enabled();
             qDebug() << node->spec->errorString();
-            return !node->spec->enabled();
+            return node->spec->enabled() == value.toBool();
         }
     }
     return false;

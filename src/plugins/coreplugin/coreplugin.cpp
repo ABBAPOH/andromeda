@@ -35,7 +35,8 @@ QString CorePlugin::property(Properties property)
 void CorePlugin::shutdown()
 {
     delete core;
-}
 
+    qDebug("Core is dead");
+}
 
 Q_EXPORT_PLUGIN(CorePlugin)
