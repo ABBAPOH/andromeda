@@ -114,23 +114,13 @@ void RegistrationManager::removeRegistrator(IRegistrator *registrator)
 void RegistrationManager::registerObject(QObject *object, const QString &type)
 {
     Q_D(RegistrationManager);
-    if (type == "") {
-        foreach (IRegistrator *registrator, d->registrators.values(type)) {
-            if (registrator->canRegister(object)) {
-                bool result = registrator->registerObject(object);
-                if (result) {
-                    d->mapped.insert(object, registrator);
-                    emit objectRegistered(object);
-                }
-            }
-        }
-    } else {
-        foreach (IRegistrator *registrator, d->registrators.values(type)) {
-            bool result = registrator->registerObject(object);
-            if (result) {
-                d->mapped.insert(object, registrator);
-                emit objectRegistered(object);
-            }
+
+    QList<IRegistrator *> registrators = appropriateRegistrators(object, type);
+    foreach (IRegistrator *registrator, registrators) {
+        bool result = registrator->registerObject(object);
+        if (result) {
+            d->mapped.insert(object, registrator);
+            emit objectRegistered(object);
         }
     }
 }
@@ -142,5 +132,25 @@ void RegistrationManager::unregisterObject(QObject *object)
     foreach (IRegistrator *registrator, d->mapped.values(object)) {
         registrator->unregisterObject(object);
     }
+    emit objectUnregistered(object);
 }
 
+QList<IRegistrator *> RegistrationManager::appropriateRegistrators(QObject *object, const QString &type)
+{
+    Q_D(RegistrationManager);
+
+    QList<IRegistrator *> result;
+    if (type == "") {
+        foreach (IRegistrator *registrator, d->registrators.values(type)) {
+            if (registrator->canRegister(object)) {
+                result.append(registrator);
+            }
+        }
+    } else {
+        foreach (IRegistrator *registrator, d->registrators.values(type)) {
+            result.append(registrator);
+        }
+    }
+
+    return result;
+}
