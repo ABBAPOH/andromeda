@@ -23,6 +23,10 @@ public:
     {
         object->setObjectName("registered");
     };
+    virtual bool unregisterObject(QObject *object)
+    {
+        object->setObjectName("unregistered");
+    };
 };
 
 class TestRegistrationSystem: public QObject
@@ -47,6 +51,8 @@ void TestRegistrationSystem::test1()
     Object *object1 = new Object;
     manager->registerObject(object1, "test");
     QCOMPARE(object1->objectName(), QString("registered"));
+    manager->unregisterObject(object1);
+    QCOMPARE(object1->objectName(), QString("unregistered"));
 }
 
 QTEST_MAIN(TestRegistrationSystem)

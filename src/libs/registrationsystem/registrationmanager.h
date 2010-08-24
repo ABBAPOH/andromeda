@@ -11,6 +11,7 @@ class IRegistrator
 public:
     virtual bool canRegister(QObject *object) { return true; }
     virtual bool registerObject(QObject *object) = 0;
+    virtual bool unregisterObject(QObject *object) = 0;
 };
 
 class RegistrationManagerPrivate;
@@ -31,6 +32,7 @@ signals:
 
 public slots:
     void registerObject(QObject *object, const QString &type = "");
+    void unregisterObject(QObject *object);
 
 protected:
     RegistrationManagerPrivate *d_ptr;
