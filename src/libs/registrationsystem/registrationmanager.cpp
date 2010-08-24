@@ -37,6 +37,16 @@
 */
 
 /*!
+    \fn void RegistrationManager::objectRegistered(QObject *object)
+    \brief Emited when \a object successfully registered.
+*/
+
+/*!
+    \fn void RegistrationManager::objectUnregistered(QObject *object)
+    \brief Emited when \a object successfully unregistered.
+*/
+
+/*!
     \interface RegistrationSystem::IRegistrator
     \brief This interface is a base interface for all registrators.
 
@@ -54,15 +64,17 @@
 */
 
 /*!
-    \fn void objectRegistered(QObject *object)
-    \brief Emited when \a object successfully registered.
-*/
-
-/*!
-    \fn bool IRegistrator::registerObject(QObject *object, const QString &type)
+    \fn bool IRegistrator::registerObject(QObject *object)
     \brief This function should do all custom actions to register an object.
 
     It is automatically called when object added to ExtensionSystem::PluginManager pool.
+*/
+
+/*!
+    \fn bool IRegistrator::unregisterObject(QObject *object)
+    \brief This function should do all custom actions to unregister an object.
+
+    It is automatically called when object removed from ExtensionSystem::PluginManager pool.
 */
 
 namespace RegistrationSystem {
