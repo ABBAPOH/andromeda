@@ -73,6 +73,7 @@ class RegistrationManagerPrivate
 {
 public:
     QMultiHash<QString, IRegistrator *> registrators;
+    QMultiHash<QObject *, IRegistrator *> mapped;
 };
 
 } // namespace RegistrationSystem
@@ -117,15 +118,29 @@ void RegistrationManager::registerObject(QObject *object, const QString &type)
         foreach (IRegistrator *registrator, d->registrators.values(type)) {
             if (registrator->canRegister(object)) {
                 bool result = registrator->registerObject(object);
-                if (result)
+                if (result) {
+                    d->mapped.insert(object, registrator);
                     emit objectRegistered(object);
+                }
             }
         }
     } else {
         foreach (IRegistrator *registrator, d->registrators.values(type)) {
             bool result = registrator->registerObject(object);
-            if (result)
+            if (result) {
+                d->mapped.insert(object, registrator);
                 emit objectRegistered(object);
+            }
         }
     }
 }
+
+void RegistrationManager::unregisterObject(QObject *object)
+{
+    Q_D(RegistrationManager);
+
+    foreach (IRegistrator *registrator, d->mapped.values(object)) {
+        registrator->unregisterObject(object);
+    }
+}
+
