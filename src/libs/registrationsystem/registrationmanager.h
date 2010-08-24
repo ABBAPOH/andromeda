@@ -29,6 +29,7 @@ public:
 
 signals:
     void objectRegistered(QObject *object);
+    void objectUnregistered(QObject *object);
 
 public slots:
     void registerObject(QObject *object, const QString &type = "");
@@ -36,6 +37,8 @@ public slots:
 
 protected:
     RegistrationManagerPrivate *d_ptr;
+
+    QList<IRegistrator *> appropriateRegistrators(QObject *object, const QString &type = "");
 };
 
 } // namespace RegistrationSystem
