@@ -1,6 +1,7 @@
 #include "core.h"
 #include "core_p.h"
 
+#include <editormanager.h>
 #include <registrationmanager.h>
 
 namespace Core {
@@ -18,6 +19,9 @@ Core::Core(QObject *parent) :
     Q_D(Core);
     d->registrationManager = new RegistrationManager(this);
     d->registrationManager->setObjectName("RegistrationManager");
+
+    d->editorManager = new EditorManager(this);
+    d->editorManager->setObjectName("EditorManager");
 }
 
 Core::~Core()
@@ -29,6 +33,11 @@ Core::~Core()
 ICore *ICore::instance()
 {
     return m_instance;
+}
+
+EditorManager *Core::editorManager()
+{
+    return d_func()->editorManager;
 }
 
 RegistrationManager *Core::registrationManager()

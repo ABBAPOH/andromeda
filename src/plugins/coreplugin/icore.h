@@ -14,6 +14,7 @@ using namespace RegistrationSystem;
 
 namespace Core {
 
+class EditorManager;
 class COREPLUGIN_EXPORT ICore : public QObject
 {
     Q_OBJECT
@@ -25,6 +26,7 @@ public:
 
     static ICore *instance();
 
+    virtual EditorManager *editorManager() = 0;
     virtual RegistrationManager *registrationManager() = 0;
 
 signals:

@@ -9,6 +9,7 @@ namespace Core
 class CorePrivate
 {
 public:
+    EditorManager *editorManager;
     RegistrationManager *registrationManager;
 };
 
