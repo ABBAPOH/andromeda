@@ -6,3 +6,4 @@ add_definitions( -DQT_SHARED )
 
 add_subdirectory( coreplugin )
 add_subdirectory( coreplugin/actionmanager )
+add_subdirectory( coreplugin/editormanager )

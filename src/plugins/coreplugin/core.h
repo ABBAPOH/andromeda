@@ -7,7 +7,7 @@ namespace Core
 {
 
 class CorePrivate;
-class Core : public ICore
+class COREPLUGIN_EXPORT Core : public ICore
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Core);
@@ -17,6 +17,7 @@ public:
     explicit Core(QObject *parent = 0);
     ~Core();
 
+    virtual EditorManager *editorManager();
     virtual RegistrationSystem::RegistrationManager *registrationManager();
 
 signals:
