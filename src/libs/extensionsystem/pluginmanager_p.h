@@ -13,22 +13,24 @@ class PluginManagerPrivate
 {
 public:
     PluginManagerPrivate();
-    QString pluginsFolder;
-    QList<PluginSpec *> pluginSpecs;
-    QList<PluginSpec *> specsToBeEnabled;
     QFileSystemWatcher *watcher;
-    QHash<QString, PluginSpec*> pathToSpec;
+    int updateTimer;
+
+    QString pluginsFolder;
+    QList<PluginSpec *> pluginSpecs; // contains all specs
+
     QObjectList objects;
     QHash<QString, QObject *> namedObjects;
 
-    QStringList pathsToBeUpdated;
-    int updateTimer;
+    QHash<QString, PluginSpec*> pathToSpec; // maps file to spec
+    QStringList foldersToBeLoaded; // folders to be loaded on startup or after watcher event
 
-    void loadSpecs();
-    void specFromPlugin(QObject * object);
+    void load();
+    QStringList getSpecFiles(QStringList folders);
+    QList<PluginSpec *> loadSpecs(QStringList specFiles);
+
     void fileChanged(const QString &libraryPath);
-    void parseDirectory(const QString &dir);
-    void enableSpecs();
+    void enableSpecs(QList<PluginSpec *> specs);
 };
 
 } // namespace ExtensionSystem
