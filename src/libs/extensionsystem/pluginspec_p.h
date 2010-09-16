@@ -41,12 +41,14 @@ namespace ExtensionSystem {
         bool hasError;
 
         void init(IPlugin * plugin);
+        void init(const QString &path);
         bool load();
         bool loadLibrary();
         bool resolveDependencies();
         bool unload();
         bool unloadLibrary();
         static int compareVersion(const QString &version1, const QString &version2);
+        QString getLibraryPath(const QString &path);
     };
 } // namespace ExtensionSystem
 

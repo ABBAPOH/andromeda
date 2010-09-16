@@ -3,6 +3,8 @@
 
 #include <QtCore/QRegExp>
 #include <QtCore/QPluginLoader>
+#include <QtCore/QSettings>
+#include <QtCore/QFileInfo>
 #include <QDebug>
 
 #include "iplugin_p.h"
@@ -74,13 +76,14 @@ PluginSpec::PluginSpec(const QString & path) :
         d_ptr(new PluginSpecPrivate(this))
 {
     Q_D(PluginSpec);
-    d->libraryPath = path;
-    d->loader->setFileName(path);
-    if (!d->loadLibrary()) {
-        return;
-    }
-    d->isStatic = false;
-    d->init(d->plugin);
+    d->init(path);
+//    d->libraryPath = path;
+//    d->loader->setFileName(path);
+//    if (!d->loadLibrary()) {
+//        return;
+//    }
+//    d->isStatic = false;
+//    d->init(d->plugin);
 }
 
 /*!
@@ -390,6 +393,24 @@ void PluginSpecPrivate::init(IPlugin * plugin)
     dependencies = plugin->dependencies();
 }
 
+void PluginSpecPrivate::init(const QString &path)
+{
+    QSettings specFile(path, QSettings::IniFormat);
+
+    name = specFile.value("name").toString();
+    version = specFile.value("version").toString();
+    compatibilityVersion = specFile.value("compatibilityVersion").toString();
+    vendor = specFile.value("vendor").toString();
+    category = specFile.value("category").toString();
+    copyright = specFile.value("copyright").toString();
+    license = specFile.value("license").toString();
+    description = specFile.value("description").toString();
+    url = specFile.value("url").toString();
+
+    libraryPath = getLibraryPath(path);
+    qDebug() << name << version;
+}
+
 bool PluginSpecPrivate::load()
 {
     if (!loadLibrary())
@@ -530,5 +551,23 @@ int PluginSpecPrivate::compareVersion(const QString &version1, const QString &ve
     }
     return 0;
 }
+
+QString PluginSpecPrivate::getLibraryPath(const QString &path)
+{
+    QFileInfo info(path);
+    QString baseName = info.baseName();
+    QString absolutePath = info.absolutePath();
+#ifdef Q_OS_WIN
+    return absolutePath + "/" + baseName + ".dll";
+#endif
+#ifdef Q_OS_MAC
+    return absolutePath + "/" + "lib" + baseName + ".dylib";
+#else
+#ifdef Q_OS_UNIX
+    return absolutePath + "/" + "lib" + baseName + ".so";
+#endif
+#endif
+}
+
 
 
