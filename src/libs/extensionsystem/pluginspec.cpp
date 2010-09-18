@@ -70,15 +70,16 @@ PluginSpec::PluginSpec(IPlugin * plugin) :
 /*!
     \fn PluginSpec::PluginSpec(const QString & path)
     \internal
-    Constructs static PluginSpec using data received from library located at \a path.
+    Constructs PluginSpec using data received from file located at \a path.
 */
 PluginSpec::PluginSpec(const QString & path) :
         d_ptr(new PluginSpecPrivate(this))
 {
     Q_D(PluginSpec);
     d->init(path);
-//    d->libraryPath = path;
-//    d->loader->setFileName(path);
+    d->loader->setFileName(d->libraryPath);
+
+    //    d->libraryPath = path;
 //    if (!d->loadLibrary()) {
 //        return;
 //    }
@@ -213,49 +214,63 @@ bool PluginSpec::isStatic() const
     return d_func()->isStatic;
 }
 
+void PluginSpec::load()
+{
+    Q_D(PluginSpec);
+
+    if (d->loaded)
+        return;
+
+    if (d->load()) {
+        d->loaded = true;
+        emit loadedChanged(true);
+    }
+}
+
+void PluginSpec::unload()
+{
+    Q_D(PluginSpec);
+
+    if (!d->loaded)
+        return;
+
+    if (d->unload()) {
+        d->loaded = false;
+        emit loadedChanged(false);
+    }
+}
+
 /*!
     \fn void PluginSpec::setEnabled(bool enabled)
     \brief Enables or disables plugin.
     Note that library is loaded or unloaded when necessary.
 */
-void PluginSpec::setEnabled(bool enabled)
+void PluginSpec::setLoaded(bool yes)
 {
-    Q_D(PluginSpec);
-    if (enabled == d->enabled)
-        return;
-
-    if (enabled) {
-        if (d->load()) {
-            d->enabled = true;
-            emit enabledChanged(enabled);
-        }
-    } else {
-        if (!canBeUnloaded()) {
-            return;
-        }
-        if (d->unload()) {
-            d->enabled = false;
-            emit enabledChanged(enabled);
-        }
-    }
+    if (yes)
+        load();
+    else
+        unload();
 }
 
 /*!
     \fn bool PluginSpec::enabled() const
     \brief Returns if plugin enabled.
 */
-bool PluginSpec::enabled() const
+bool PluginSpec::loaded() const
 {
-    return d_func()->enabled;
+    return d_func()->loaded;
 }
 
-void PluginSpec::setLoadOnStartup(bool on)
+void PluginSpec::setLoadOnStartup(bool yes)
 {
     Q_D(PluginSpec);
-    if (d->loadOnStartup == on)
+
+    if (d->loadOnStartup == yes)
         return;
-    d->loadOnStartup = on;
-    emit loadsOnStartupChanged(on);
+
+    d->loadOnStartup = yes;
+    emit loadsOnStartupChanged(yes);
 }
 
 bool PluginSpec::loadOnStartup() const
@@ -266,7 +281,7 @@ bool PluginSpec::loadOnStartup() const
 bool PluginSpec::canBeUnloaded() const
 {
     foreach (PluginSpec *spec, dependentSpecs()) {
-        if (spec->enabled())
+        if (spec->loaded())
             return false;
     }
     return true;
@@ -373,9 +388,10 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
         loader(new QPluginLoader(q_ptr)),
         isStatic(false),
         hasError(false),
-        enabled(false),
+        loaded(false),
         loadOnStartup(true)
 {
+    errorString = "Unknown Error";
 }
 
 void PluginSpecPrivate::init(IPlugin * plugin)
@@ -408,7 +424,6 @@ void PluginSpecPrivate::init(const QString &path)
     url = specFile.value("url").toString();
 
     libraryPath = getLibraryPath(path);
-    qDebug() << name << version;
 }
 
 bool PluginSpecPrivate::load()
@@ -416,23 +431,26 @@ bool PluginSpecPrivate::load()
     if (!loadLibrary())
         return false;
 
-    if (!resolveDependencies())
-        return false;
+//    if (!resolveDependencies())
+//        return false;
 
+    bool ok = true;
+    QString errorMessage;
     foreach (PluginSpec *spec, dependencySpecs) {
-        spec->setEnabled(true);
-        if (!spec->enabled()) {
-            hasError = true;
-            errorString += "Can't load plugin: " + spec->name() + " is not loaded";
+        spec->load();
+        if (!spec->loaded()) {
+            ok = false;
+            errorMessage += "Can't load plugin: " + spec->name() + " is not loaded";
         }
     }
 
-    if (hasError)
+    if (!ok) {
+        setError(errorMessage);
         return false;
+    }
 
     if (!plugin->initialize()) {
-        hasError = true;
-        errorString += "Failed to initialize plugin";
+        setError("Failed to initialize plugin");
         return false;
     }
 
@@ -446,17 +464,13 @@ bool PluginSpecPrivate::loadLibrary()
         return true;
 
     if (!object) {
-        hasError = true;
-        errorString = QObject::tr("PluginSpec", "Can't load plugin: ") + loader->errorString();
-        qWarning () << "Can't load plugin: " + loader->errorString();
+        setError(QObject::tr("Can't load plugin: ", "PluginSpec") + loader->errorString());
         return false;
     }
 
     IPlugin *plugin = qobject_cast<IPlugin *>(object);
     if (!plugin) {
-        hasError = true;
-        errorString = QObject::tr("PluginSpec", "Can't load plugin: not a valid plugin" );
-        qWarning () << "not a plugin";
+        setError(QObject::tr("PluginSpec", "Can't load plugin: not a valid plugin" ));
         return false;
     }
 
@@ -466,13 +480,20 @@ bool PluginSpecPrivate::loadLibrary()
 
 bool PluginSpecPrivate::unload()
 {
-//    foreach (PluginSpec *spec, dependencySpecs) {
-//        spec->setEnabled(false);
-//        if (!spec->enabled()) {
-//            hasError = true;
-//            errorString += "Can't unload plugin: " + spec->name() + " is not unloaded";
-//        }
-//    }
+    bool ok = true;
+    QString errorMessage;
+    foreach (PluginSpec *spec, dependentSpecs) {
+        spec->unload();;
+        if (!spec->loaded()) {
+            ok = false;
+            errorMessage += "Can't unload plugin: " + spec->name() + " is not unloaded";
+        }
+    }
+
+    if (!ok) {
+        setError(errorMessage);
+        return false;
+    }
 
     plugin->shutdown();
 
@@ -485,8 +506,7 @@ bool PluginSpecPrivate::unload()
 bool PluginSpecPrivate::unloadLibrary()
 {
     if (!loader->unload()) {
-        hasError = true;
-        errorString += "Can't unload plugin library: " + loader->errorString();
+        setError("Can't unload plugin library: " + loader->errorString());
         return false;
     }
     plugin = 0;
@@ -501,6 +521,8 @@ bool PluginSpecPrivate::resolveDependencies()
     QList<PluginSpec*> resolvedSpecs;
 
     PluginSpec * dependencySpec = 0;
+    bool ok = true;
+    QString errorMessage;
     foreach (PluginDependency dep, dependencies) {
         dependencySpec = 0;
         foreach (PluginSpec *spec, specs) {
@@ -510,17 +532,18 @@ bool PluginSpecPrivate::resolveDependencies()
             }
         }
         if (dependencySpec == 0) {
-            hasError = true;
-            #warning "TODO: collect all errors in error string"
-            errorString.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
+            ok = false;
+            errorMessage.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
                                 .arg(dep.name()).arg(dep.version()));
         } else {
             resolvedSpecs.append(dependencySpec);
         }
     }
 
-    if (hasError)
+    if (!ok) {
+        setError(errorMessage);
         return false;
+    }
 
     foreach (PluginSpec *spec, resolvedSpecs) {
         if (!spec->d_ptr->dependentSpecs.contains(q))
@@ -569,5 +592,11 @@ QString PluginSpecPrivate::getLibraryPath(const QString &path)
 #endif
 }
 
+void PluginSpecPrivate::setError(const QString &message)
+{
+    hasError = true;
+    errorString = message;
+    emit q_ptr->error(message);
+}
 
 
