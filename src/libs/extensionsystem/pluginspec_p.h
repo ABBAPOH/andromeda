@@ -34,7 +34,7 @@ namespace ExtensionSystem {
         QString libraryLocation;
 
         bool isStatic;
-        bool enabled;
+        bool loaded;
         bool loadOnStartup;
 
         QString errorString;
@@ -49,6 +49,7 @@ namespace ExtensionSystem {
         bool unloadLibrary();
         static int compareVersion(const QString &version1, const QString &version2);
         QString getLibraryPath(const QString &path);
+        void setError(const QString &message);
     };
 } // namespace ExtensionSystem
 

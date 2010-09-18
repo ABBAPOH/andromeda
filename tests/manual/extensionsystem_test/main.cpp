@@ -14,19 +14,20 @@ int main(int argc, char *argv[])
     manager.setPluginsFolder("plugins");
     manager.loadPlugins();
 
+    qDebug() << "List of plugins: ";
     foreach (PluginSpec * spec, manager.plugins()) {
-        qDebug() << spec->name();
-        qDebug() << spec->version();
-        qDebug() << spec->compatibilityVersion();
-        qDebug() << spec->vendor();
-        qDebug() << spec->hasError();
-        qDebug() << spec->errorString();
+        qDebug() << "   " << spec->name();
+        qDebug() << "   " << spec->version();
+        qDebug() << "   " << spec->compatibilityVersion();
+        qDebug() << "   " << spec->vendor();
+        qDebug() << "   " << spec->hasError();
+        qDebug() << "   " << spec->errorString();
+        qDebug() << "";
     }
+    qDebug() << "end list";
 
-    qDebug() << "Creating view";
     PluginView view;
     view.show();
-    qDebug() << "Starting Main Loop";
 
     return app.exec();
 }
