@@ -40,7 +40,7 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
                 return node->spec->loadOnStartup() ? 2 : 0;
             }
             if (index.column() == 2) {
-                return node->spec->enabled() ? 2 : 0;
+                return node->spec->loaded() ? 2 : 0;
             }
         }
     }
@@ -131,8 +131,6 @@ QModelIndex PluginViewModel::index(int row, int column, const QModelIndex &paren
 
 QModelIndex PluginViewModel::parent(const QModelIndex &index) const
 {
-//    qDebug("PluginViewModel::parent");
-//    qDebug() << index;
     if (!index.isValid())
         return QModelIndex();
 
@@ -141,7 +139,6 @@ QModelIndex PluginViewModel::parent(const QModelIndex &index) const
     if (parentNode == d_func()->rootNode)
         return QModelIndex();
 
-//    qDebug() << "create index" << createIndex(parentNode->row(), 0, parentNode);
     return createIndex(parentNode->row(), 0, parentNode);
 }
 
@@ -172,10 +169,8 @@ bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, i
         }
         if (index.column() == 2) {
             Node *node = static_cast<Node *>(index.internalPointer());
-            node->spec->setEnabled(value.toBool());
-            qDebug() << "enabled:" << node->spec->enabled();
-            qDebug() << node->spec->errorString();
-            return node->spec->enabled() == value.toBool();
+            node->spec->setLoaded(value.toBool());
+            return node->spec->loaded() == value.toBool();
         }
     }
     return false;
@@ -219,7 +214,6 @@ PluginViewModelPrivate::~PluginViewModelPrivate()
 
 Node *PluginViewModelPrivate::node(const QString &category)
 {
-    qDebug() << category;
     if (nodesForCategories.contains(category))
         return nodesForCategories.value(category);
     Node *result = new Node(rootNode);
