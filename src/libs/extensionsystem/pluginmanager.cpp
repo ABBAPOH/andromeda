@@ -186,6 +186,9 @@ void PluginManagerPrivate::load()
     // get all specs from files
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
 
+    // resolves dependencies of new specs
+    resolveDependencies(newSpecs);
+
     // enables new plugins
     enableSpecs(newSpecs);
 }
@@ -231,19 +234,26 @@ void PluginManagerPrivate::fileChanged(const QString &libraryPath)
         PluginSpec *spec = pathToSpec.value(libraryPath);
         if (!spec)
             return;
-        spec->setEnabled(false);
-        if (!spec->enabled()) {
+        spec->setLoaded(false);
+        if (!spec->loaded()) {
             pathToSpec.remove(libraryPath);
         }
     }
+}
+
+void PluginManagerPrivate::resolveDependencies(QList<PluginSpec *> specsToBeEnabled)
+{
+    foreach (PluginSpec *spec, specsToBeEnabled) {
+        spec->d_ptr->resolveDependencies();
+    }
+
 }
 
 void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
 {
     foreach (PluginSpec *spec, specsToBeEnabled) {
         if (spec->loadOnStartup()) {
-            qDebug() << "enabling1" << spec->name();
-            spec->setEnabled(true);
+            spec->load();
         }
     }
 }

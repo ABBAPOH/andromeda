@@ -30,6 +30,8 @@ public:
     QList<PluginSpec *> loadSpecs(QStringList specFiles);
 
     void fileChanged(const QString &libraryPath);
+
+    void resolveDependencies(QList<PluginSpec *> specsToBeEnabled);
     void enableSpecs(QList<PluginSpec *> specs);
 };
 
