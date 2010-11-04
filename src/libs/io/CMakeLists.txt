@@ -1,0 +1,22 @@
+set( HEADERS
+    io_global.h
+    filecopymanager.h
+    filecopymanager_p.h
+   )
+set( SOURCES
+    filecopymanager.cpp
+   )
+set( FORMS
+   )
+
+qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
+qt4_wrap_ui( UI_HEADERS ${FORMS} )
+
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
+
+add_definitions( -DIO_LIBRARY )
+
+add_library( io SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+target_link_libraries( io ${QT_LIBRARIES} qtfilecopier )
+
