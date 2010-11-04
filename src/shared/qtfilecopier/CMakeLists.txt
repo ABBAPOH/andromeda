@@ -6,7 +6,10 @@ function( qt4_wrap_single_cpp SOURCE TARGET )
     set_source_files_properties( ${SOURCE}  OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${TARGET} )
 endfunction( qt4_wrap_single_cpp )
 
-set( HEADERS qtfilecopier.h )
+set( HEADERS
+    qtfilecopier.h
+    QtFileCopier
+)
 set( SOURCES qtfilecopier.cpp )
 
 qt4_wrap_single_cpp( qtfilecopier.cpp moc_qtfilecopier.cpp )
