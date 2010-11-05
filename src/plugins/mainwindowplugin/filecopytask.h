@@ -5,6 +5,7 @@
 #include <QtCore/QMap>
 #include <QtFileCopier>
 
+class QTimeEvent;
 namespace MainWindowPlugin {
 
 class Request
@@ -25,9 +26,12 @@ public:
     QtFileCopier *copier();
     void setCopier(QtFileCopier *copier);
     QString currentFilePath();
+    qint64 finishedSize();
     int objectsCount();
-    int totalSize();
+    int remainingTime();
+    int speed();
     int totalObjects();
+    qint64 totalSize();
 
 signals:
     void updated();
@@ -38,16 +42,22 @@ private slots:
     void onStateChanged(QtFileCopier::State state);
     void onStarted(int identifier);
     void onProgress(int identifier, qint64 progress);
+    void onDone();
 
 private:
     QtFileCopier *m_copier;
-    int m_totalSize;
-    int m_copiedSize;
+    qint64 m_finishedSize;
+    qint64 m_currentProgress;
     int m_objectsCount;
+    int m_speed;
     int m_totalObjects;
+    qint64 m_totalSize;
+    qint64 m_speedLastSize;
     QMap<int, Request> m_requests;
 
     void reset();
+protected:
+    void timerEvent(QTimerEvent *);
 };
 
 }

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icons/FCProgressReveal.png</file>
+        <file>images/icons/FCProgressStop.png</file>
+    </qresource>
+</RCC>

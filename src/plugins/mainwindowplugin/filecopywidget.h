@@ -18,9 +18,13 @@ public:
     explicit FileCopyWidget(FileCopyTask *task, QWidget *parent = 0);
     ~FileCopyWidget();
 
+signals:
+    void canceled();
+
 public slots:
     void update();
     void updateProgress(qint64 progress);
+//    void showDetails(bool show);
 
 private:
     Ui::FileCopyWidget *ui;

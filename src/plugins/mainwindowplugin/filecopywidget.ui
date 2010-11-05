@@ -46,11 +46,30 @@
            <property name="text">
             <string>...</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/FCProgressReveal.png</normaloff>:/images/icons/FCProgressReveal.png</iconset>
+           </property>
            <property name="checkable">
             <bool>true</bool>
            </property>
            <property name="checked">
             <bool>false</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::DelayedPopup</enum>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonFollowStyle</enum>
+           </property>
+           <property name="autoRaise">
+            <bool>false</bool>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::NoArrow</enum>
            </property>
           </widget>
          </item>
@@ -58,6 +77,10 @@
           <widget class="QToolButton" name="cancelButton">
            <property name="text">
             <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/FCProgressStop.png</normaloff>:/images/icons/FCProgressStop.png</iconset>
            </property>
           </widget>
          </item>
@@ -94,8 +117,17 @@
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="nameLabel_2">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>&lt;name here&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -206,7 +238,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>detailsButton</sender>

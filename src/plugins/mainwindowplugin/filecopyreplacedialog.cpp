@@ -6,11 +6,20 @@ FileCopyReplaceDialog::FileCopyReplaceDialog(QWidget *parent) :
     ui(new Ui::FileCopyReplaceDialog)
 {
     ui->setupUi(this);
+    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowTitleHint/*| Qt::WindowSystemMenuHint*/ | Qt::WindowMinMaxButtonsHint);
+    connect(ui->skipButton, SIGNAL(clicked()), SLOT(onButtonClick()));
+    connect(ui->cancelButton, SIGNAL(clicked()), SLOT(onButtonClick()));
+    connect(ui->overwriteButton, SIGNAL(clicked()), SLOT(onButtonClick()));
 }
 
 FileCopyReplaceDialog::~FileCopyReplaceDialog()
 {
     delete ui;
+}
+
+void FileCopyReplaceDialog::setMessage(const QString &message)
+{
+    ui->messageLabel->setText(message);
 }
 
 void FileCopyReplaceDialog::onButtonClick()
@@ -25,9 +34,9 @@ void FileCopyReplaceDialog::onButtonClick()
         emit cancelAll();
     } else if (button == ui->overwriteButton) {
         if (ui->checkBoxApplyToAll->isChecked())
-            emit overwrite();
-        else
             emit overwriteAll();
+        else
+            emit overwrite();
     }
     close();
 }
