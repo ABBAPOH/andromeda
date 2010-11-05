@@ -72,8 +72,9 @@ public slots:
 protected:
     void timerEvent(QTimerEvent *event);
 
-private:
     PluginManagerPrivate *d_ptr;
+
+private:
     static PluginManager *m_instance;
     mutable QReadWriteLock m_lock;
 };
