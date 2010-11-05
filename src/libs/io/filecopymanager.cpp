@@ -52,6 +52,8 @@ void FileCopyManager::onDone(bool error)
 void FileCopyManager::onStateChanged(QtFileCopier::State state)
 {
     QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+    if (!copier)
+        return;
     if (state == QtFileCopier::Busy && copier->state() == QtFileCopier::Idle) {
 //        qDebug() << "started";
         emit started(copier);

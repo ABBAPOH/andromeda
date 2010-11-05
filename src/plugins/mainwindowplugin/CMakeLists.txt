@@ -36,3 +36,4 @@ add_definitions( -DMAINWINDOWPLUGIN_LIBRARY )
 add_library( mainwindowplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
 target_link_libraries( mainwindowplugin ${QT_LIBRARIES} extensionsystem io )
 
+install_spec( mainwindowplugin.spec )
