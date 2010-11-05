@@ -1,4 +1,5 @@
 #include "filecopytask.h"
+#include "filecopytask_p.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimerEvent>
@@ -7,32 +8,30 @@ using namespace MainWindowPlugin;
 
 FileCopyTask::FileCopyTask(QObject *parent) :
     QObject(parent),
-    m_copier(0),
-    m_totalSize(0),
-    m_finishedSize(0),
-    m_objectsCount(0),
-    m_speed(0),
-    m_totalObjects(0)
+    d_ptr(new FileCopyTaskPrivate(this))
 {
     startTimer(1000);
 }
 
 FileCopyTask::~FileCopyTask()
 {
+    delete d_ptr;
 }
 
 QtFileCopier *FileCopyTask::copier()
 {
-    return m_copier;
+    return d_func()->copier;
 }
 
 void FileCopyTask::setCopier(QtFileCopier *copier)
 {
-    if (m_copier) {
-        disconnect(m_copier, 0, this, 0);
+    Q_D(FileCopyTask);
+
+    if (d->copier) {
+        disconnect(d->copier, 0, this, 0);
     }
-    if (m_copier != copier) {
-        m_copier = copier;
+    if (d->copier != copier) {
+        d->copier = copier;
         connect(copier, SIGNAL(stateChanged(QtFileCopier::State)),
                 SLOT(onStateChanged(QtFileCopier::State)));
         connect(copier, SIGNAL(started(int)), SLOT(onStarted(int)));
@@ -44,17 +43,18 @@ void FileCopyTask::setCopier(QtFileCopier *copier)
 
 QString FileCopyTask::currentFilePath()
 {
-    return m_requests.value(m_copier->currentId()).source;
+    Q_D(FileCopyTask);
+    return d->requests.value(d->copier->currentId()).source;
 }
 
 qint64 FileCopyTask::finishedSize()
 {
-    return m_finishedSize;
+    return d_func()->finishedSize;
 }
 
 int FileCopyTask::objectsCount()
 {
-    return m_objectsCount - 1;
+    return d_func()->objectsCount - 1;
 }
 
 int FileCopyTask::remainingTime()
@@ -66,93 +66,107 @@ int FileCopyTask::remainingTime()
 
 int FileCopyTask::speed()
 {
-    return m_speed;
+    return d_func()->speed;
 }
 
 qint64 FileCopyTask::totalSize()
 {
-    return m_totalSize;
+    return d_func()->totalSize;
 }
 
 int FileCopyTask::totalObjects()
 {
-    return m_totalObjects;
+    return d_func()->totalObjects;
 }
 
-void FileCopyTask::onStateChanged(QtFileCopier::State state)
+void FileCopyTask::timerEvent(QTimerEvent *e)
 {
-    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+    Q_D(FileCopyTask);
+
+    d->speed = (qint64)(d->finishedSize - d->speedLastSize); // delta per second
+    d->speedLastSize = d->finishedSize;
+}
+
+// ============= FileCopyTaskPrivate =============
+
+FileCopyTaskPrivate::FileCopyTaskPrivate(FileCopyTask *qq):
+        q_ptr(qq),
+        copier(0),
+        totalSize(0),
+        finishedSize(0),
+        objectsCount(0),
+        speed(0),
+        totalObjects(0)
+{
+}
+
+void FileCopyTaskPrivate::onStateChanged(QtFileCopier::State state)
+{
+    QtFileCopier *copier = qobject_cast<QtFileCopier *>(q_func()->sender());
     if (state == QtFileCopier::Busy && copier->state() == QtFileCopier::Idle) {
         reset();
     }
 }
 
-void FileCopyTask::onStarted(int identifier)
+void FileCopyTaskPrivate::onStarted(int identifier)
 {
-    Q_ASSERT(identifier == m_copier->currentId());
+    Q_ASSERT(identifier == copier->currentId());
 
-    Request request = m_requests.value(identifier);
+    Request request = requests.value(identifier);
     QFileInfo info(request.source);
 
     if (request.size != info.size()) {
-        m_totalSize -= request.size;
-        m_totalSize += info.size();
+        totalSize -= request.size;
+        totalSize += info.size();
         request.size = info.size();
-        m_requests.insert(identifier, request);
+        requests.insert(identifier, request);
     }
-    m_objectsCount++;
-    m_currentProgress = 0;
-    emit updated();
+    objectsCount++;
+    currentProgress = 0;
+    emit q_func()->updated();
 }
 
-void FileCopyTask::onProgress(int /*identifier*/, qint64 progress)
+void FileCopyTaskPrivate::onProgress(int /*identifier*/, qint64 progress)
 {
-    qint64 oldFinishedSize = m_finishedSize;
-    m_finishedSize += progress - m_currentProgress;
-    m_currentProgress = progress;
+    qint64 oldFinishedSize = finishedSize;
+    finishedSize += progress - currentProgress;
+    currentProgress = progress;
 
-    emit currentProgress(progress);
-    emit this->progress(m_finishedSize);
+    emit q_func()->currentProgress(progress);
+    emit q_func()->progress(finishedSize);
 }
 
-void FileCopyTask::onDone()
+void FileCopyTaskPrivate::onDone()
 {
-    m_finishedSize = m_totalSize;
-    m_objectsCount = m_totalObjects + 1;
+    finishedSize = totalSize;
+    objectsCount = totalObjects + 1;
 
-    emit currentProgress(0);
-    emit this->progress(m_finishedSize);
-    emit updated();
+    emit q_func()->currentProgress(0);
+    emit q_func()->progress(finishedSize);
+    emit q_func()->updated();
 }
 
-void FileCopyTask::reset()
+void FileCopyTaskPrivate::reset()
 {
     // maybe we need to use threads to get full size in case of remote files?
-    m_totalSize = 0;
-    m_finishedSize = 0;
-    m_totalObjects = 0;
-    m_objectsCount = 0;
-    m_speedLastSize = 0;
-    if (!m_copier)
+    totalSize = 0;
+    finishedSize = 0;
+    totalObjects = 0;
+    objectsCount = 0;
+    speedLastSize = 0;
+    if (!copier)
         return;
-    QList<int> pending = m_copier->pendingRequests();
+    QList<int> pending = copier->pendingRequests();
     foreach (int id, pending) {
         Request request;
-        request.source = m_copier->sourceFilePath(id);
-        request.destination = m_copier->destinationFilePath(id);
+        request.source = copier->sourceFilePath(id);
+        request.destination = copier->destinationFilePath(id);
         QFileInfo fileInfo(request.source);
         request.size = fileInfo.size();
-        m_totalSize += request.size;
-        m_requests.insert(id, request);
+        totalSize += request.size;
+        requests.insert(id, request);
     }
-    m_totalObjects = pending.size();
+    totalObjects = pending.size();
 }
 
-void FileCopyTask::timerEvent(QTimerEvent *e)
-{
-    m_speed = (qint64)(m_finishedSize - m_speedLastSize); // delta per second
-    m_speedLastSize = m_finishedSize;
-}
-
-
-
+#include "filecopytask.moc"

@@ -22,9 +22,6 @@ bool MainWindowPluginImpl::initialize()
     QtFileCopier *copier = manager->copier();
     qDebug() << "mkdir" << QDir("/Users/arch").mkdir("1");
     copier->copyDirectory("/Users/arch/Sites", "/Users/arch/1");
-    copier->copyDirectory("/Users/arch/TextEditor", "/Users/arch/1");
-//    FileCopyDialog d;
-//    d.exec();
 
     qDebug("MainWindowPluginImpl::initialize");
 }

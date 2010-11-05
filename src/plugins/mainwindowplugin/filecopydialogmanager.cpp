@@ -1,4 +1,5 @@
 #include "filecopydialogmanager.h"
+#include "filecopydialogmanager_p.h"
 
 #include "filecopyreplacedialog.h"
 #include "filecopywidget.h"
@@ -6,13 +7,16 @@
 #include "filecopydialog.h"
 #include <filecopymanager.h>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTimer>
 
 using namespace MainWindowPlugin;
 using namespace IO;
 
+// ============= FileCopyDialogManager =============
+
 FileCopyDialogManager::FileCopyDialogManager(QObject *parent) :
     QObject(parent),
-    fileCopyDialog(new FileCopyDialog)
+    d_ptr(new FileCopyDialogManagerPrivate(this))
 {
     FileCopyManager *manager = FileCopyManager::instance();
     connect(manager, SIGNAL(created(QtFileCopier*)), SLOT(addCopier(QtFileCopier*)));
@@ -20,51 +24,74 @@ FileCopyDialogManager::FileCopyDialogManager(QObject *parent) :
 
 FileCopyDialogManager::~FileCopyDialogManager()
 {
-    delete fileCopyDialog;
+    delete d_ptr;
 }
 
 void FileCopyDialogManager::addCopier(QtFileCopier *copier)
 {
+    Q_D(FileCopyDialogManager);
     connect(copier, SIGNAL(error(int,QtFileCopier::Error,bool)),
             SLOT(handleError(int,QtFileCopier::Error,bool)));
 
-    FileCopyTask *task = new FileCopyTask(this);
+    d->addCopier(copier);
+}
+
+// ============= FileCopyDialogManagerPrivate =============
+
+FileCopyDialogManagerPrivate::FileCopyDialogManagerPrivate(FileCopyDialogManager *qq):
+        q_ptr(qq),
+        fileCopyDialog(new FileCopyDialog)
+{
+}
+
+FileCopyDialogManagerPrivate::~FileCopyDialogManagerPrivate()
+{
+    delete fileCopyDialog;
+}
+
+void FileCopyDialogManagerPrivate::addCopier(QtFileCopier *copier)
+{
+    FileCopyTask *task = new FileCopyTask();
     task->setCopier(copier);
+
     FileCopyWidget *widget = new FileCopyWidget(task);
     mapToTask.insert(copier, task);
     mapToWidget.insert(copier, widget);
-    connect(copier, SIGNAL(done(bool)), SLOT(update()));
-    connect(widget, SIGNAL(canceled()), copier, SLOT(cancelAll()));
+    QObject::connect(copier, SIGNAL(done(bool)), q_func(), SLOT(update()));
+    QObject::connect(widget, SIGNAL(canceled()), copier, SLOT(cancelAll()));
 
     fileCopyDialog->addWidget(widget);
+//    QTimer::singleShot(2000, fileCopyDialog, SLOT(show()));
     fileCopyDialog->show();
 }
 
-void FileCopyDialogManager::handleError(int id, QtFileCopier::Error error, bool stopped)
+void FileCopyDialogManagerPrivate::handleError(int id, QtFileCopier::Error error, bool stopped)
 {
+    Q_Q(FileCopyDialogManager);
+
     if (!stopped)
         return;
     if (error == QtFileCopier::DestinationExists) {
-        QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+        QtFileCopier *copier = qobject_cast<QtFileCopier *>(q->sender());
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString destName = copier->destinationFilePath(id);
-        dialog->setMessage(tr("%1 \"%2\" is already exists").
-                           arg(copier->isDir(id) ? tr("Folder") : tr("File")).
+        dialog->setMessage(q->tr("%1 \"%2\" is already exists").
+                           arg(copier->isDir(id) ? q->tr("Folder") : q->tr("File")).
                            arg(QFileInfo(destName).baseName())
                            );
-        connect(dialog, SIGNAL(cancelAll()), copier, SLOT(cancelAll()));
-        connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
-        connect(dialog, SIGNAL(overwriteAll()), copier, SLOT(overwriteAll()));
-        connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));
-        connect(dialog, SIGNAL(skipAll()), copier, SLOT(skipAll()));
+        q->connect(dialog, SIGNAL(cancelAll()), copier, SLOT(cancelAll()));
+        q->connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
+        q->connect(dialog, SIGNAL(overwriteAll()), copier, SLOT(overwriteAll()));
+        q->connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));
+        q->connect(dialog, SIGNAL(skipAll()), copier, SLOT(skipAll()));
         dialog->show();
     }
 }
 
-void FileCopyDialogManager::update()
+void FileCopyDialogManagerPrivate::update()
 {
-    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+    QtFileCopier *copier = qobject_cast<QtFileCopier *>(q_func()->sender());
     if (!copier)
         return;
 
@@ -75,3 +102,5 @@ void FileCopyDialogManager::update()
     if (mapToTask.isEmpty())
         fileCopyDialog->hide();
 }
+
+#include "filecopydialogmanager.moc"

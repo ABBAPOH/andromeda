@@ -28,47 +28,24 @@ QtFileCopier *FileCopyManager::copier()
 {
     Q_D(FileCopyManager);
 
-        QtFileCopier *copier = new QtFileCopier(this);
-        connect(copier, SIGNAL(stateChanged(QtFileCopier::State)),
-                SLOT(onStateChanged(QtFileCopier::State)));
-        connect(copier, SIGNAL(done(bool)), SLOT(onDone(bool)));
-        connect(copier, SIGNAL(error(int,QtFileCopier::Error,bool)),
-                SLOT(error(int,QtFileCopier::Error,bool)));
-        emit created(copier);
-        return copier;
+    QtFileCopier *copier = new QtFileCopier(this);
+    connect(copier, SIGNAL(done(bool)), SLOT(onDone(bool)));
+    emit created(copier);
+    return copier;
 }
 
-void FileCopyManager::onDone(bool error)
+void FileCopyManager::onDone(bool /*error*/)
 {
     Q_D(FileCopyManager);
     QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+
     if (!copier)
         return;
 
+    emit destroyed(copier);
     copier->deleteLater();
-    qDebug() << "done, error:" << error;
-}
-
-void FileCopyManager::onStateChanged(QtFileCopier::State state)
-{
-    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
-    if (!copier)
-        return;
-    if (state == QtFileCopier::Busy && copier->state() == QtFileCopier::Idle) {
-//        qDebug() << "started";
-        emit started(copier);
-    }
-    qDebug() << state;
-}
-
-void FileCopyManager::error(int id, QtFileCopier::Error error, bool stopped)
-{
-    qDebug() << "error" << id << error << stopped;
-//    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
-//copier->overwrite();
 }
 
 FileCopyManagerPrivate::FileCopyManagerPrivate()
 {
-
 }
