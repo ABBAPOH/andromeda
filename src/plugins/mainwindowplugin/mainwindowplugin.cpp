@@ -13,6 +13,7 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 #include <filecopymanager.h>
 #include <QDebug>
 #include <QDir>
+#include "filecopydialog.h"
 using namespace IO;
 bool MainWindowPluginImpl::initialize()
 {
@@ -20,7 +21,10 @@ bool MainWindowPluginImpl::initialize()
     FileCopyManager *manager  = FileCopyManager::instance();
     QtFileCopier *copier = manager->copier();
     qDebug() << "mkdir" << QDir("/Users/arch").mkdir("1");
-    copier->copyDirectory("/Users/arch/Sites", "/Users/arch/1", QtFileCopier::NonInteractive);
+    copier->copyDirectory("/Users/arch/Sites", "/Users/arch/1");
+    copier->copyDirectory("/Users/arch/TextEditor", "/Users/arch/1");
+//    FileCopyDialog d;
+//    d.exec();
 
     qDebug("MainWindowPluginImpl::initialize");
 }

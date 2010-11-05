@@ -9,8 +9,6 @@ class FileCopyManagerPrivate
 {
 public:
     FileCopyManagerPrivate();
-    int poolSize;
-    QList<QtFileCopier *> pool;
 };
 
 }
