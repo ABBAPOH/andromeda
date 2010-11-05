@@ -33,6 +33,8 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
     Q_PROPERTY(bool canBeUnloaded READ canBeUnloaded)
 
 public:
+    PluginSpec();
+    explicit PluginSpec(const QString & path);
     ~PluginSpec();
 
     QString name() const;
@@ -76,12 +78,8 @@ signals:
     void error(const QString &message);
 
 protected:
-    PluginSpec();
-    explicit PluginSpec(const QString & path);
-
     PluginSpecPrivate *d_ptr;
 
-    friend class PluginManagerPrivate;
     friend QDataStream &operator>>(QDataStream &s, PluginSpec &pluginSpec);
     friend QDataStream &operator<<(QDataStream &s, const PluginSpec &pluginSpec);
 };

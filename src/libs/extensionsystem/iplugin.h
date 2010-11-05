@@ -32,7 +32,6 @@ public:
 
 protected:
     IPluginPrivate *d_ptr;
-    friend class PluginSpec;
 };
 
 } // namespace ExtensionSystem
