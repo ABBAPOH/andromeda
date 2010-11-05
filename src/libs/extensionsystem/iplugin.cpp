@@ -22,6 +22,7 @@ IPlugin::IPlugin() :
 */
 IPlugin::~IPlugin()
 {
+    delete d_ptr;
 }
 
 /*!
@@ -31,26 +32,36 @@ IPlugin::~IPlugin()
 */
 
 /*!
-    \fn void extensionsInitialized()
-    \brief Function for secondary initialization of plugin.
-    This function called after both the IPlugin::initialize() and IPlugin::extensionsInitialized()
-    methods of plugins that depend on this plugin have been called.
-*/
-
-/*!
-    \fn QString property(Properties property)
-    \brief Returns string propertis of the plugin.
-    Information from this function is stored in PluginSpec class.
-    This is place where you have to place all string information for plugin.
-    \sa PluginSpec
-    \sa IPlugin::Properties
-*/
-
-/*!
     \fn void addObject(QObject * object)
     \brief Adds \a object to object pool in PluginManager.
 */
-void IPlugin::addObject(QObject * object, const QString &type)
+void IPlugin::addObject(QObject * object)
+{
+    Q_D(IPlugin);
+
+    if (!d->addedObjects.contains(object))
+        d->addedObjects.append(object);
+
+    PluginManager::instance()->addObject(object);
+}
+
+/*!
+    \fn void IPlugin::addObjectByName(QObject * object, const QString name)
+    \brief Adds \a object to object pool in PluginManager and sets its objectName to \a name.
+*/
+void IPlugin::addObjectByName(QObject * object, const QString name)
+{
+    object->setObjectName(name);
+    addObject(object);
+}
+
+/*!
+    \fn void IPlugin::addObjectByType(QObject * object, const QString type)
+    \brief Adds \a object to object pool in PluginManager.
+
+    \a type can be used to determine who should handle this object.
+*/
+void IPlugin::addObjectByType(QObject * object, const QString type)
 {
     Q_D(IPlugin);
 

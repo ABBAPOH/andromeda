@@ -22,15 +22,15 @@ class EXTENSIONSYSTEM_EXPORT FullPluginView : public QDialog
 public:
     explicit FullPluginView(QWidget *parent = 0);
     ~FullPluginView();
-    void setModel(PluginViewModel * model);
+    void setModel(PluginViewModel *model);
 
 public slots:
     void setIndex(const QModelIndex &index);
 
 private:
     Ui::FullPluginView *ui;
-    QDataWidgetMapper * mapper;
-    PluginViewModel * model;
+    QDataWidgetMapper *mapper;
+    PluginViewModel *model;
 };
 
 } // namespace ExtensionSystem

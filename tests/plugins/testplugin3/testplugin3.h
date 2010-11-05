@@ -10,7 +10,6 @@ class TestPlugin3 : public ExtensionSystem::IPlugin
 public:
     TestPlugin3();
     virtual bool initialize();
-    virtual QString property(Properties property);
 };
 
 #endif // TESTPLUGIN3_H

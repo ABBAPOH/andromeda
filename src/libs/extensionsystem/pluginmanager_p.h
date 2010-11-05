@@ -31,7 +31,6 @@ public:
 
     void fileChanged(const QString &libraryPath);
 
-    void resolveDependencies(QList<PluginSpec *> specsToBeEnabled);
     void enableSpecs(QList<PluginSpec *> specs);
 };
 

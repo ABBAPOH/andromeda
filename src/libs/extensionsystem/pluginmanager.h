@@ -18,10 +18,10 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObject
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
 
 public:
-    static PluginManager *instance();
-
     explicit PluginManager(QObject *parent = 0);
     virtual ~PluginManager();
+
+    static PluginManager *instance();
 
     void addObject(QObject * object, const QString &type = "");
     void removeObject(QObject * object);
@@ -55,7 +55,7 @@ public:
     void loadPlugins();
     void shutdown();
 
-    QString pluginsFolder();
+    QString pluginsFolder() const;
     void setPluginsFolder(const QString &name);
 
     QList<PluginSpec *> plugins() const;

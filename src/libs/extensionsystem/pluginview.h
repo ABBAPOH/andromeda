@@ -25,10 +25,10 @@ public:
 private:
     Ui::PluginView *ui;
     PluginManager *manager;
-    FullPluginView * fullPluginView;
+    FullPluginView *fullPluginView;
 
 private slots:
-    void showFullInfo(const QModelIndex & index = QModelIndex());
+    void showFullInfo(const QModelIndex &index = QModelIndex());
 };
 
 } // namespace ExtensionSystem

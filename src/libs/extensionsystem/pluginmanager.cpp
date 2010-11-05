@@ -52,6 +52,16 @@ PluginManager::~PluginManager()
     delete d_ptr;
 }
 
+/*!
+    \fn void PluginManager::addObject(QObject * object, const QString &type)
+    \brief Adds \a object to object pool.
+
+    There are 3 kinds of objects - named objects, typed objects and other objects.
+    If object name if not an empty string, object counts as named object.
+    If \a type if not an empty string, object counts as typed object.
+
+    In fact, there can be many objects with same name.
+*/
 void PluginManager::addObject(QObject * object, const QString &type)
 {
     QWriteLocker l(&m_lock);
@@ -71,6 +81,12 @@ void PluginManager::addObject(QObject * object, const QString &type)
     }
 }
 
+/*!
+    \fn void PluginManager::removeObject(QObject * object)
+    \brief Removes \a object to object pool.
+
+    \sa PluginManager::addObject
+*/
 void PluginManager::removeObject(QObject * object)
 {
     QWriteLocker l(&m_lock);
@@ -92,18 +108,35 @@ QObjectList PluginManager::objects()
     return d_func()->objects;
 }
 
+/*!
+    \fn QObject * PluginManager::object(const QString &name)
+    \brief Returns object from object pool with objectName property equal to \a name.
+
+    \sa PluginManager::addObject
+*/
 QObject * PluginManager::object(const QString &name)
 {
     QReadLocker l(&m_lock);
     return d_func()->namedObjects.value(name);
 }
 
+/*!
+    \fn QObject * PluginManager::object(const QString &name)
+    \brief Returns list object from object pool with objectName property equal to \a name.
+
+    \sa PluginManager::addObject
+*/
 QObjectList PluginManager::objects(const QString &name)
 {
     QReadLocker l(&m_lock);
     return d_func()->namedObjects.values(name);
 }
 
+/*!
+    \fn void PluginManager::loadPlugins()
+    \brief Loads all plugins from plugins folder.
+
+*/
 void PluginManager::loadPlugins()
 {
     Q_D(PluginManager);
@@ -126,7 +159,7 @@ void PluginManager::loadPlugins()
     emit pluginsChanged();
 }
 
-QString PluginManager::pluginsFolder()
+QString PluginManager::pluginsFolder() const
 {
     return d_func()->pluginsFolder;
 }
@@ -136,6 +169,11 @@ void PluginManager::setPluginsFolder(const QString &name)
     d_func()->pluginsFolder = name;
 }
 
+/*!
+    \fn QList<PluginSpec *> PluginManager::plugins() const
+    \brief Return list of PluginSpecs loaded at current moment.
+
+*/
 QList<PluginSpec *> PluginManager::plugins() const
 {
     return d_func()->pluginSpecs;
@@ -150,10 +188,10 @@ void PluginManager::updateDirectory(const QString &dirPath)
     d->updateTimer = startTimer(5000);
 }
 
-// checks if library exists and loads/unloads it if necessary
-void PluginManager::updateLibrary(const QString &libraryPath)
+// checks if spec exists and loads/unloads it if necessary
+void PluginManager::updateLibrary(const QString &specPath)
 {
-    d_func()->fileChanged(libraryPath);
+    d_func()->fileChanged(specPath);
 }
 
 void PluginManager::timerEvent(QTimerEvent *event)
@@ -182,12 +220,10 @@ static bool lessThanByPluginName(const PluginSpec *first, const PluginSpec *seco
 void PluginManagerPrivate::load()
 {
     QStringList specFiles = getSpecFiles(foldersToBeLoaded);
+    foldersToBeLoaded.clear();
 
     // get all specs from files
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
-
-    // resolves dependencies of new specs
-    resolveDependencies(newSpecs);
 
     // enables new plugins
     enableSpecs(newSpecs);
@@ -224,29 +260,21 @@ QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
     return result;
 }
 
-void PluginManagerPrivate::fileChanged(const QString &libraryPath)
+void PluginManagerPrivate::fileChanged(const QString &specPath)
 {
-    qDebug() << "PluginManagerPrivate::fileChanged" << libraryPath;
+    qDebug() << "PluginManagerPrivate::fileChanged" << specPath;
 
-    QFileInfo info(libraryPath);
+    QFileInfo info(specPath);
 
     if (!info.exists()) {
-        PluginSpec *spec = pathToSpec.value(libraryPath);
+        PluginSpec *spec = pathToSpec.value(specPath);
         if (!spec)
             return;
-        spec->setLoaded(false);
+        spec->unload();
         if (!spec->loaded()) {
-            pathToSpec.remove(libraryPath);
+            pathToSpec.remove(specPath);
         }
     }
-}
-
-void PluginManagerPrivate::resolveDependencies(QList<PluginSpec *> specsToBeEnabled)
-{
-    foreach (PluginSpec *spec, specsToBeEnabled) {
-        spec->d_ptr->resolveDependencies();
-    }
-
 }
 
 void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
