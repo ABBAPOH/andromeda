@@ -54,20 +54,6 @@ PluginSpec::~PluginSpec()
 }
 
 /*!
-    \fn PluginSpec::PluginSpec(IPlugin * plugin)
-    \internal
-    Constructs static PluginSpec using data received from IPlugin::property function.
-*/
-PluginSpec::PluginSpec(IPlugin * plugin) :
-        d_ptr(new PluginSpecPrivate(this))
-{
-    Q_D(PluginSpec);
-
-    d->init(plugin);
-    d->isStatic = true;
-}
-
-/*!
     \fn PluginSpec::PluginSpec(const QString & path)
     \internal
     Constructs PluginSpec using data received from file located at \a path.
@@ -78,13 +64,6 @@ PluginSpec::PluginSpec(const QString & path) :
     Q_D(PluginSpec);
     d->init(path);
     d->loader->setFileName(d->libraryPath);
-
-    //    d->libraryPath = path;
-//    if (!d->loadLibrary()) {
-//        return;
-//    }
-//    d->isStatic = false;
-//    d->init(d->plugin);
 }
 
 /*!
@@ -181,13 +160,17 @@ QList<PluginDependency> PluginSpec::dependencies() const
 
 /*!
     \fn QList<PluginSpec*> PluginSpec::dependencySpecs() const
-    \brief Returns list of dependent PluginSpecs.
+    \brief Returns list of PluginSpecs that need for this plugin.
 */
 QList<PluginSpec*> PluginSpec::dependencySpecs() const
 {
     return d_func()->dependencySpecs;
 }
 
+/*!
+    \fn QList<PluginSpec*> PluginSpec::dependentSpecs() const
+    \brief Returns list of PluginSpecs that require this plugin.
+*/
 QList<PluginSpec*> PluginSpec::dependentSpecs() const
 {
     return d_func()->dependentSpecs;
@@ -206,14 +189,9 @@ QString PluginSpec::libraryPath() const
 }
 
 /*!
-    \fn bool PluginSpec::isStatic() const
-    \brief Returns true if plugin is linked statically.
+    \fn void PluginSpec::load()
+    \brief Loads plugin into memory and initialises it.
 */
-bool PluginSpec::isStatic() const
-{
-    return d_func()->isStatic;
-}
-
 void PluginSpec::load()
 {
     Q_D(PluginSpec);
@@ -227,6 +205,10 @@ void PluginSpec::load()
     }
 }
 
+/*!
+    \fn void PluginSpec::unload()
+    \brief UnLoads plugin from memory and shutdowns it.
+*/
 void PluginSpec::unload()
 {
     Q_D(PluginSpec);
@@ -254,8 +236,8 @@ void PluginSpec::setLoaded(bool yes)
 }
 
 /*!
-    \fn bool PluginSpec::enabled() const
-    \brief Returns if plugin enabled.
+    \fn bool PluginSpec::loaded() const
+    \brief Returns if plugin is loaded.
 */
 bool PluginSpec::loaded() const
 {
@@ -315,16 +297,16 @@ IPlugin *PluginSpec::plugin() const
 }
 
 /*!
-    \fn bool PluginSpec::provides(const QString &pluginName, const QString &pluginVersion) const
-    Returns if this plugin can be used to fill in a dependency of the given \a pluginName and \a version.
+    \fn bool PluginSpec::provides(const PluginDependency &pluginDependency) const
+    Returns if this plugin can be used to fill in a of the given \a dependency.
     \sa PluginSpec::dependencies()
 */
-bool PluginSpec::provides(const QString &pluginName, const QString &pluginVersion) const
+bool PluginSpec::provides(const PluginDependency &dependency) const
 {
-    if (QString::compare(pluginName, name(), Qt::CaseInsensitive) != 0)
+    if (QString::compare(dependency.name(), name(), Qt::CaseInsensitive) != 0)
          return false;
-    return (PluginSpecPrivate::compareVersion(version(), pluginVersion) >= 0) &&
-           (PluginSpecPrivate::compareVersion(compatibilityVersion(), pluginVersion) <= 0);
+    return (PluginSpecPrivate::compareVersion(version(), dependency.version()) >= 0) &&
+           (PluginSpecPrivate::compareVersion(compatibilityVersion(), dependency.version()) <= 0);
 }
 
 namespace ExtensionSystem {
@@ -386,27 +368,11 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
         q_ptr(qq),
         plugin(0),
         loader(new QPluginLoader(q_ptr)),
-        isStatic(false),
         hasError(false),
         loaded(false),
         loadOnStartup(true)
 {
     errorString = "Unknown Error";
-}
-
-void PluginSpecPrivate::init(IPlugin * plugin)
-{
-    this->plugin = plugin;
-    name = plugin->property(IPlugin::Name);
-    version = plugin->property(IPlugin::Version);
-    compatibilityVersion = plugin->property(IPlugin::CompatibilityVersion);
-    vendor = plugin->property(IPlugin::Vendor);
-    category = plugin->property(IPlugin::Category);
-    copyright = plugin->property(IPlugin::Copyright);
-    license = plugin->property(IPlugin::License);
-    description = plugin->property(IPlugin::Description);
-    url = plugin->property(IPlugin::Url);
-    dependencies = plugin->dependencies();
 }
 
 void PluginSpecPrivate::init(const QString &path)
@@ -459,10 +425,10 @@ bool PluginSpecPrivate::load()
 
 bool PluginSpecPrivate::loadLibrary()
 {
-    QObject * object = loader->instance();
     if (plugin)
         return true;
 
+    QObject * object = loader->instance();
     if (!object) {
         setError(QObject::tr("Can't load plugin: ", "PluginSpec") + loader->errorString());
         return false;
@@ -470,7 +436,7 @@ bool PluginSpecPrivate::loadLibrary()
 
     IPlugin *plugin = qobject_cast<IPlugin *>(object);
     if (!plugin) {
-        setError(QObject::tr("PluginSpec", "Can't load plugin: not a valid plugin" ));
+        setError(QObject::tr("Can't load plugin: not a valid plugin", "PluginSpec"));
         return false;
     }
 
@@ -482,6 +448,7 @@ bool PluginSpecPrivate::unload()
 {
     bool ok = true;
     QString errorMessage;
+
     foreach (PluginSpec *spec, dependentSpecs) {
         spec->unload();;
         if (!spec->loaded()) {
@@ -523,10 +490,11 @@ bool PluginSpecPrivate::resolveDependencies()
     PluginSpec * dependencySpec = 0;
     bool ok = true;
     QString errorMessage;
+
     foreach (PluginDependency dep, dependencies) {
         dependencySpec = 0;
         foreach (PluginSpec *spec, specs) {
-            if (spec->provides(dep.name(), dep.version())) {
+            if (spec->provides(dep)) {
                 dependencySpec = spec;
                 break;
             }
@@ -557,14 +525,14 @@ bool PluginSpecPrivate::resolveDependencies()
 // from Qt Creator
 int PluginSpecPrivate::compareVersion(const QString &version1, const QString &version2)
 {
-    static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?"); // mathes to Major.Minor.Patch version
+    static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\.([0-9]+))?"); // mathes to Major.Minor.Patch.Fix version
     QRegExp gerExp1 = regExp;
     QRegExp gerExp2 = regExp;
     if ( !gerExp1.exactMatch(version1) || !gerExp2.exactMatch(version2) )
         return 0;
     int number1;
     int number2;
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         number1 = gerExp1.cap(i+1).toInt();
         number2 = gerExp2.cap(i+1).toInt();
         if (number1 < number2)

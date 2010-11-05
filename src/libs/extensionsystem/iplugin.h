@@ -17,17 +17,17 @@ class EXTENSIONSYSTEM_EXPORT IPlugin : public QObject
     Q_DECLARE_PRIVATE(IPlugin)
 
 public:
-    enum Properties { Name, Version, CompatibilityVersion, Vendor, Category,
-                      Copyright, License, Description, Url };
     IPlugin();
     virtual ~IPlugin();
 
     virtual bool initialize() = 0;
-    virtual QString property(Properties property) {}
     virtual QList<PluginDependency> dependencies() { return QList<PluginDependency>(); }
     virtual void shutdown() {}
 
-    void addObject(QObject * object, const QString &type = "");
+    void addObject(QObject * object);
+    void addObjectByName(QObject * object, const QString name);
+    void addObjectByType(QObject * object, const QString type);
+
     void removeObject(QObject * object);
 
 protected:

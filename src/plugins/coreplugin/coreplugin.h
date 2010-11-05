@@ -13,7 +13,6 @@ public:
     CorePlugin();
 
     virtual bool initialize();
-    virtual QString property(Properties property);
     virtual void shutdown();
 
 signals:

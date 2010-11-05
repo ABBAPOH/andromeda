@@ -33,14 +33,12 @@ namespace ExtensionSystem {
         QString libraryPath;
         QString libraryLocation;
 
-        bool isStatic;
         bool loaded;
         bool loadOnStartup;
 
         QString errorString;
         bool hasError;
 
-        void init(IPlugin * plugin);
         void init(const QString &path);
         bool load();
         bool loadLibrary();

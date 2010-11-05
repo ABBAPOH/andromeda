@@ -53,7 +53,6 @@ public:
 
     QString libraryPath() const; // path to library
 
-    bool isStatic() const;
     bool loaded() const;
     bool loadOnStartup() const;
     bool canBeUnloaded() const;
@@ -63,7 +62,7 @@ public:
 
     IPlugin *plugin() const;
 
-    bool provides(const QString &pluginName, const QString &pluginVersion) const;
+    bool provides(const PluginDependency &dependency) const;
 
 public slots:
     void load();
@@ -78,8 +77,7 @@ signals:
 
 protected:
     PluginSpec();
-    PluginSpec(const QString & path);
-    explicit PluginSpec(IPlugin * plugin);
+    explicit PluginSpec(const QString & path);
 
     PluginSpecPrivate *d_ptr;
 
