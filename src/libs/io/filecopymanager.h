@@ -23,15 +23,13 @@ public:
     QtFileCopier *copier();
 
 signals:
-    void started(QtFileCopier *copier);
-    void created(QtFileCopier *copier);
+    void created(QtFileCopier *);
+    void destroyed(QtFileCopier *);
 
 public slots:
 
 private slots:
-    void onStateChanged(QtFileCopier::State state);
-    void onDone(bool error);
-    void error(int id, QtFileCopier::Error error, bool stopped);
+    void onDone(bool);
 
 protected:
     FileCopyManagerPrivate *d_ptr;

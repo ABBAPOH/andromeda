@@ -8,9 +8,12 @@
 namespace MainWindowPlugin {
 
 class FileCopyDialog;
+class FileCopyDialogManagerPrivate;
 class FileCopyDialogManager : public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(FileCopyDialogManager)
+    Q_DISABLE_COPY(FileCopyDialogManager)
 public:
     explicit FileCopyDialogManager(QObject *parent = 0);
     ~FileCopyDialogManager();
@@ -20,14 +23,11 @@ signals:
 public slots:
     void addCopier(QtFileCopier *);
 
-private slots:
-    void handleError(int id, QtFileCopier::Error error, bool stopped);
-    void update();
+protected:
+    FileCopyDialogManagerPrivate *d_ptr;
 
-private:
-    FileCopyDialog *fileCopyDialog;
-    QMap<QtFileCopier*, QWidget*> mapToWidget;
-    QMap<QtFileCopier*, QObject*> mapToTask;
+    Q_PRIVATE_SLOT(d_func(), void update());
+    Q_PRIVATE_SLOT(d_func(), void handleError(int id, QtFileCopier::Error error, bool stopped));
 };
 
 }

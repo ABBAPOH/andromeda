@@ -7,39 +7,57 @@
 
 using namespace MainWindowPlugin;
 
+namespace Ui {
+    class FileCopyReplaceDialog
+    {
+    public:
+        QScrollArea *scrollArea;
+        QVBoxLayout *layout;
+        QWidget *widget;
+
+        FileCopyReplaceDialog(){}
+
+        void setupUi(QDialog *dialog)
+        {
+            dialog->resize(400, 400);
+            layout = new QVBoxLayout;
+
+            layout->addSpacerItem(new QSpacerItem(0,
+                                                    0,
+                                                    QSizePolicy::Preferred,
+                                                    QSizePolicy::Expanding)
+                                    ); // We need this spacer to have space in bottom of list
+
+            widget = new QWidget;
+            widget->setLayout(layout);
+
+            scrollArea = new QScrollArea(dialog);
+            scrollArea->setWidgetResizable(true);
+            scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+            scrollArea->setWidget(widget);
+        }
+    };
+}
+
 FileCopyDialog::FileCopyDialog(QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    ui(new Ui::FileCopyReplaceDialog)
 {
-    setupUi();
+    ui->setupUi(this);
+}
+
+FileCopyDialog::~FileCopyDialog()
+{
+    delete ui;
 }
 
 void FileCopyDialog::addWidget(QWidget *widget)
 {
     widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-    m_layout->insertWidget(m_layout->count() - 1, widget);
-}
-
-void FileCopyDialog::setupUi()
-{
-    resize(400, 400);
-    m_layout = new QVBoxLayout;
-
-    m_layout->addSpacerItem(new QSpacerItem(0,
-                                            0,
-                                            QSizePolicy::Preferred,
-                                            QSizePolicy::Expanding)
-                            ); // We need this spacer to have space in bottom of list
-
-    m_widget = new QWidget;
-    m_widget->setLayout(m_layout);
-
-    m_scrollArea = new QScrollArea(this);
-    m_scrollArea->setWidgetResizable(true);
-    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    m_scrollArea->setWidget(m_widget);
+    ui->layout->insertWidget(ui->layout->count() - 1, widget);
 }
 
 void FileCopyDialog::resizeEvent(QResizeEvent *e)
 {
-    m_scrollArea->resize(e->size());
+    ui->scrollArea->resize(e->size());
 }

@@ -16,9 +16,12 @@ public:
     int size;
 };
 
+class FileCopyTaskPrivate;
 class FileCopyTask : public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(FileCopyTask)
+    Q_DISABLE_COPY(FileCopyTask)
 public:
     explicit FileCopyTask(QObject *parent = 0);
     ~FileCopyTask();
@@ -38,26 +41,15 @@ signals:
     void currentProgress(qint64 progress);
     void progress(qint64 progress);
 
-private slots:
-    void onStateChanged(QtFileCopier::State state);
-    void onStarted(int identifier);
-    void onProgress(int identifier, qint64 progress);
-    void onDone();
-
-private:
-    QtFileCopier *m_copier;
-    qint64 m_finishedSize;
-    qint64 m_currentProgress;
-    int m_objectsCount;
-    int m_speed;
-    int m_totalObjects;
-    qint64 m_totalSize;
-    qint64 m_speedLastSize;
-    QMap<int, Request> m_requests;
-
-    void reset();
 protected:
     void timerEvent(QTimerEvent *);
+
+    FileCopyTaskPrivate *d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QtFileCopier::State state));
+    Q_PRIVATE_SLOT(d_func(), void onStarted(int identifier));
+    Q_PRIVATE_SLOT(d_func(), void onProgress(int identifier, qint64 progress));
+    Q_PRIVATE_SLOT(d_func(), void onDone());
 };
 
 }

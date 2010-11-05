@@ -1,9 +1,11 @@
 set( HEADERS
     mainwindowplugin_global.h
     mainwindowplugin.h
-    filecopydialogmanager.h
+ #   filecopydialogmanager.h
+    filecopydialogmanager_p.h
     filecopyreplacedialog.h
-    filecopytask.h
+#    filecopytask.h
+    filecopytask_p.h
     filecopywidget.h
     filecopydialog.h
    )
@@ -25,6 +27,11 @@ set( RESOURCES resources.qrc )
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
+
+qt4_automoc(
+    filecopydialogmanager.cpp
+    filecopytask.cpp
+)
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
