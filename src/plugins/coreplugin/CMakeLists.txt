@@ -25,3 +25,4 @@ add_definitions( -DCOREPLUGIN_LIBRARY )
 add_library( coreplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem registrationsystem editormanager )
 
+install_spec( coreplugin.spec )
