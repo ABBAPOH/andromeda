@@ -2,9 +2,11 @@ set( HEADERS
     io_global.h
     filecopymanager.h
     filecopymanager_p.h
+    filesystemmodel.h
    )
 set( SOURCES
     filecopymanager.cpp
+    filesystemmodel.cpp
    )
 set( FORMS
    )
@@ -14,6 +16,7 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
+include_directories( ${PROJECT_SOURCE_DIR}/src/shared/include )
 
 add_definitions( -DIO_LIBRARY )
 
