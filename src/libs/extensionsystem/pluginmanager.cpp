@@ -64,8 +64,6 @@ PluginManager::~PluginManager()
 */
 void PluginManager::addObject(QObject * object, const QString &type)
 {
-    QWriteLocker l(&m_lock);
-
     Q_D(PluginManager);
     if (!object) {
         return;
@@ -76,7 +74,6 @@ void PluginManager::addObject(QObject * object, const QString &type)
         if (object->objectName() != "") {
             d->namedObjects.insertMulti(object->objectName(), object);
         }
-        l.unlock();
         emit objectAdded(object, type);
     }
 }
@@ -89,8 +86,6 @@ void PluginManager::addObject(QObject * object, const QString &type)
 */
 void PluginManager::removeObject(QObject * object)
 {
-    QWriteLocker l(&m_lock);
-
     Q_D(PluginManager);
 
     if (!object) {
@@ -98,13 +93,11 @@ void PluginManager::removeObject(QObject * object)
     }
 
     d->objects.removeAll(object);
-    l.unlock();
     emit objectRemoved(object);
 }
 
 QObjectList PluginManager::objects()
 {
-    QReadLocker l(&m_lock);
     return d_func()->objects;
 }
 
@@ -116,7 +109,6 @@ QObjectList PluginManager::objects()
 */
 QObject * PluginManager::object(const QString &name)
 {
-    QReadLocker l(&m_lock);
     return d_func()->namedObjects.value(name);
 }
 
@@ -128,7 +120,6 @@ QObject * PluginManager::object(const QString &name)
 */
 QObjectList PluginManager::objects(const QString &name)
 {
-    QReadLocker l(&m_lock);
     return d_func()->namedObjects.values(name);
 }
 

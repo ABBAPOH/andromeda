@@ -2,7 +2,6 @@
 #define PLUGINMANAGER_H
 
 #include <QtCore/QObject>
-#include <QtCore/QReadWriteLock>
 
 #include "pluginspec.h"
 
@@ -30,7 +29,6 @@ public:
 
     template <class T> T* object()
     {
-        QReadLocker l(&m_lock);
         foreach (QObject * object, objects()) {
             T * t = qobject_cast<T*>(object);
             if (t)
@@ -42,7 +40,6 @@ public:
     QObjectList objects(const QString &name);
     template <class T> QList<T*> objects()
     {
-        QReadLocker l(&m_lock);
         QList<T*> result;
         foreach (QObject * object, objects()) {
             T * t = qobject_cast<T*>(object);
@@ -76,7 +73,6 @@ protected:
 
 private:
     static PluginManager *m_instance;
-    mutable QReadWriteLock m_lock;
 };
 
 } // namespace ExtensionSystem
