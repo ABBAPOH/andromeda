@@ -19,14 +19,15 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 using namespace IO;
 bool MainWindowPluginImpl::initialize()
 {
-    FileCopyDialogManager *man = new FileCopyDialogManager;
+    FileCopyDialogManager *man = new FileCopyDialogManager(this);
 //    FileCopyManager *manager  = FileCopyManager::instance();
 //    QtFileCopier *copier = manager->copier();
 //    qDebug() << "mkdir" << QDir("/Users/arch").mkdir("1");
 //    copier->copyDirectory("/Users/arch/Sites", "/Users/arch/1");
 
     QTreeView *view = new QTreeView;
-    FileSystemModel *model = new FileSystemModel;
+    view->setAttribute(Qt::WA_DeleteOnClose);
+    FileSystemModel *model = new FileSystemModel(view);
     model->setReadOnly(false);
     model->setRootPath("");
     view->setModel(model);
