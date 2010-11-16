@@ -28,8 +28,7 @@ PluginManager *PluginManager::instance()
     \brief Creates PluginManager with given \a parent.
 */
 PluginManager::PluginManager(QObject *parent) :
-    QObject(parent),
-    d_ptr(new PluginManagerPrivate)
+    QObjectPool(*new PluginManagerPrivate, parent)
 {
     Q_D(PluginManager);
     Q_ASSERT(!m_instance);
@@ -49,78 +48,6 @@ PluginManager::~PluginManager()
 {
     Q_D(PluginManager);
     qDeleteAll(d->pluginSpecs);
-    delete d_ptr;
-}
-
-/*!
-    \fn void PluginManager::addObject(QObject * object, const QString &type)
-    \brief Adds \a object to object pool.
-
-    There are 3 kinds of objects - named objects, typed objects and other objects.
-    If object name if not an empty string, object counts as named object.
-    If \a type if not an empty string, object counts as typed object.
-
-    In fact, there can be many objects with same name.
-*/
-void PluginManager::addObject(QObject * object, const QString &type)
-{
-    Q_D(PluginManager);
-    if (!object) {
-        return;
-    }
-
-    if (!d->objects.contains(object)) {
-        d->objects.append(object);
-        if (object->objectName() != "") {
-            d->namedObjects.insertMulti(object->objectName(), object);
-        }
-        emit objectAdded(object, type);
-    }
-}
-
-/*!
-    \fn void PluginManager::removeObject(QObject * object)
-    \brief Removes \a object to object pool.
-
-    \sa PluginManager::addObject
-*/
-void PluginManager::removeObject(QObject * object)
-{
-    Q_D(PluginManager);
-
-    if (!object) {
-        return;
-    }
-
-    d->objects.removeAll(object);
-    emit objectRemoved(object);
-}
-
-QObjectList PluginManager::objects()
-{
-    return d_func()->objects;
-}
-
-/*!
-    \fn QObject * PluginManager::object(const QString &name)
-    \brief Returns object from object pool with objectName property equal to \a name.
-
-    \sa PluginManager::addObject
-*/
-QObject * PluginManager::object(const QString &name)
-{
-    return d_func()->namedObjects.value(name);
-}
-
-/*!
-    \fn QObject * PluginManager::object(const QString &name)
-    \brief Returns list object from object pool with objectName property equal to \a name.
-
-    \sa PluginManager::addObject
-*/
-QObjectList PluginManager::objects(const QString &name)
-{
-    return d_func()->namedObjects.values(name);
 }
 
 /*!

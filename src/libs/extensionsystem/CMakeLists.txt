@@ -10,6 +10,8 @@ set( HEADERS
     pluginviewmodel.h
     pluginviewmodel_p.h
     fullpluginview.h
+    qobjectpool.h
+    qobjectpool_p.h
    )
 set( SOURCES
     iplugin.cpp
@@ -18,6 +20,7 @@ set( SOURCES
     pluginview.cpp
     pluginviewmodel.cpp
     fullpluginview.cpp
+    qobjectpool.cpp
    )
 set( FORMS
     pluginview.ui
