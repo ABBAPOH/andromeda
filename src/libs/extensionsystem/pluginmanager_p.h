@@ -1,6 +1,7 @@
 #ifndef PLUGINMANAGER_P_H
 #define PLUGINMANAGER_P_H
 
+#include "qobjectpool_p.h"
 #include "pluginmanager.h"
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
@@ -9,7 +10,7 @@ class QFileSystemWatcher;
 namespace ExtensionSystem {
 
 class PluginSpec;
-class PluginManagerPrivate
+class PluginManagerPrivate : public QObjectPoolPrivate
 {
 public:
     PluginManagerPrivate();
@@ -18,9 +19,6 @@ public:
 
     QString pluginsFolder;
     QList<PluginSpec *> pluginSpecs; // contains all specs
-
-    QObjectList objects;
-    QHash<QString, QObject *> namedObjects;
 
     QHash<QString, PluginSpec*> pathToSpec; // maps file to spec
     QStringList foldersToBeLoaded; // folders to be loaded on startup or after watcher event
