@@ -21,7 +21,7 @@ public:
 
     // used for stacking:
     virtual bool allowStacking() { return false; }
-    virtual int stackPriority() { return 0; }
+    virtual int priority() { return 0; }
     virtual QString group() { return QString::null; }
 };
 

@@ -23,9 +23,25 @@ EditorManager::~EditorManager()
     delete d_ptr;
 }
 
-IEditor *EditorManager::openEditor(const QString &file)
+bool factoriesLessThan(IEditorFactory *f1, IEditorFactory *f2)
+{
+    return f1->priority() < f2->priority();
+}
+
+// we also need to return group of this editors
+QList<IEditor *> EditorManager::openEditors(const QUrl &url)
 {
     Q_D(EditorManager);
+    QList<IEditorFactory *> factories = d->factories.values();
+    QList<IEditor *> editors;
+    qSort(factories.begin(), factories.end(), factoriesLessThan);
+    foreach (IEditorFactory *factory, factories) {
+        if (factory->canOpen(url)) {
+            IEditor *editor = factory->open(url);
+            editors.append(editor);
+        }
+    }
+    return editors;
 }
 
 // ============= EditorManagerPrivate =============

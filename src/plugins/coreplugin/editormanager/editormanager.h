@@ -5,6 +5,7 @@
 
 #include <QtCore/QObject>
 
+class QUrl;
 namespace Core
 {
 
@@ -20,7 +21,7 @@ public:
     explicit EditorManager(QObject *parent = 0);
     ~EditorManager();
 
-    IEditor *openEditor(const QString &file);
+    QList<IEditor *>openEditors(const QUrl &url);
 
 signals:
 
