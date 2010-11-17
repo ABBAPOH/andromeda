@@ -16,7 +16,6 @@ class COREPLUGIN_EXPORT EditorManager : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(EditorManager)
     Q_DISABLE_COPY(EditorManager)
-
 public:
     explicit EditorManager(QObject *parent = 0);
     ~EditorManager();
