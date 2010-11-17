@@ -12,8 +12,8 @@ IEditor::IEditor(QObject *parent) :
 }
 
 /*!
-    \fn bool IEditor::open(const QString &file)
-    \brief Opens file, specified at \a path in this editor.
+    \fn bool IEditor::open(const QUrl &url)
+    \brief Opens file, specified at \a url in this editor.
 */
 
 /*!
