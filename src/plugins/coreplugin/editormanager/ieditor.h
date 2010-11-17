@@ -6,6 +6,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
+class QWidget;
+class QToolBar;
+class IFile;
 namespace Core
 {
 
@@ -16,7 +19,21 @@ public:
     explicit IEditor(QObject *parent = 0);
 
     virtual bool open(const QString &file) = 0;
+    virtual bool create() = 0;
+
+    virtual IFile *file() = 0;
+//    QList<IFile *> files();
+
     virtual QWidget *widget() = 0;
+    virtual QToolBar *toolBar() = 0;
+
+    virtual QString name() = 0;
+
+    virtual bool canClone() { return false; }
+    virtual IEditor *clone() { return 0; }
+
+//    virtual bool saveState() { return true; }
+//    virtual bool restoreState() { return true; }
 
 signals:
     void changed();
