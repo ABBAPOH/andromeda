@@ -1,12 +1,19 @@
 set( HEADERS
     editormanager.h
+    editormanager_p.h
     ieditor.h
     ieditorfactory.h
+    editorview.h
+    editorhistory.h
+    historyitem.h
    )
 set( SOURCES
     editormanager.cpp
     ieditor.cpp
     ieditorfactory.cpp
+    editorview.cpp
+    editorhistory.cpp
+    historyitem.cpp
    )
 set( FORMS
    )
