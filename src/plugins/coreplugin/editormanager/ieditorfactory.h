@@ -15,9 +15,14 @@ class COREPLUGIN_EXPORT IEditorFactory : public QObject
 public:
     explicit IEditorFactory(QObject *parent = 0);
 
-    virtual IEditor *open(const QString &path) = 0;
-    virtual bool canOpen(const QString &path) = 0;
+    virtual IEditor *open(const QUrl &url) = 0;
+    virtual bool canOpen(const QUrl &url) = 0;
     virtual QString type() = 0;
+
+    // used for stacking:
+    virtual bool allowStacking() { return false; }
+    virtual int stackPriority() { return 0; }
+    virtual QString group() { return QString::null; }
 };
 
 } // namespace Core

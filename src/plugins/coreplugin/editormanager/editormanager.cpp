@@ -25,7 +25,7 @@ EditorManager::~EditorManager()
 
 IEditor *EditorManager::openEditor(const QString &file)
 {
-
+    Q_D(EditorManager);
 }
 
 // ============= EditorManagerPrivate =============
