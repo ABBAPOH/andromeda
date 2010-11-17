@@ -4,11 +4,13 @@ set( HEADERS
     core.h
     core_p.h
     coreplugin.h
+    ifile.h
    )
 set( SOURCES
     icore.cpp
     core.cpp
     coreplugin.cpp
+    ifile.cpp
    )
 set( FORMS
    )
