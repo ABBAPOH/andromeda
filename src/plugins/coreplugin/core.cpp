@@ -2,6 +2,7 @@
 #include "core_p.h"
 
 #include <editormanager.h>
+#include <pluginmanager.h>
 #include <registrationmanager.h>
 
 namespace Core {
@@ -22,6 +23,10 @@ Core::Core(QObject *parent) :
 
     d->editorManager = new EditorManager(this);
     d->editorManager->setObjectName("EditorManager");
+
+connect(ExtensionSystem::PluginManager::instance(), SIGNAL(objectAdded(QObject*,QString)),
+        d->registrationManager, SLOT(registerObject(QObject*,QString)));
+
 }
 
 Core::~Core()

@@ -34,6 +34,7 @@ IEditor *EditorManager::openEditor(const QString &path)
             return editor;
         }
     }
+    return 0;
 }
 
 //bool factoriesLessThan(IEditorFactory *f1, IEditorFactory *f2)
