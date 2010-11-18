@@ -25,13 +25,6 @@ public:
 
 void EditorViewPrivate::setPath(const QString &path)
 {
-    EditorManager *manager = ICore::instance()->editorManager();
-    editor = manager->openEditor(path);
-    if (editor) {
-        widget = editor->widget();
-    } else {
-        widget = 0;
-    }
 }
 
 EditorView::EditorView(QWidget *parent) :
@@ -54,7 +47,18 @@ EditorHistory *EditorView::history()
 void EditorView::open(const QString &path)
 {
     Q_D(EditorView);
-    d->setPath(path);
+//    d->setPath(path);
+    EditorManager *manager = ICore::instance()->editorManager();
+    IEditor *newEditor = manager->openEditor(path);
+    qDebug("setPath");
+    if (newEditor) {
+        delete d->editor;
+        delete d->widget;
+        d->editor = newEditor;
+        d->widget = newEditor->widget();
+        d->widget->setParent(this);
+        d->widget->show();
+    }
 }
 
 void EditorView::close()

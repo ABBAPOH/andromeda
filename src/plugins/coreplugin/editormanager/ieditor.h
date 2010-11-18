@@ -10,6 +10,7 @@ class QUrl;
 class QWidget;
 class QToolBar;
 class IFile;
+
 namespace Core
 {
 
