@@ -1,6 +1,11 @@
 #include "editorview.h"
 
+#include "editormanager.h"
 #include "editorhistory.h"
+#include "ieditor.h"
+#include "icore.h"
+
+#include <QResizeEvent>
 
 using namespace Core;
 
@@ -10,15 +15,23 @@ class EditorViewPrivate
 {
 public:
     EditorHistory *history;
+    IEditor *editor;
+    QWidget *widget;
 
-    void setUrl(const QString &path);
+    void setPath(const QString &path);
 };
 
 } // namespace Core
 
-void EditorViewPrivate::setUrl(const QString &path)
+void EditorViewPrivate::setPath(const QString &path)
 {
-
+    EditorManager *manager = ICore::instance()->editorManager();
+    editor = manager->openEditor(path);
+    if (editor) {
+        widget = editor->widget();
+    } else {
+        widget = 0;
+    }
 }
 
 EditorView::EditorView(QWidget *parent) :
@@ -27,6 +40,9 @@ EditorView::EditorView(QWidget *parent) :
 {
     Q_D(EditorView);
     d->history = new EditorHistory(this);
+    d->editor = 0;
+    d->widget = 0;
+
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), SLOT(onCurrentItemIndexChanged(int)));
 }
 
@@ -38,7 +54,7 @@ EditorHistory *EditorView::history()
 void EditorView::open(const QString &path)
 {
     Q_D(EditorView);
-    d->setUrl(path);
+    d->setPath(path);
 }
 
 void EditorView::close()
@@ -59,5 +75,12 @@ void EditorView::onCurrentItemIndexChanged(int index)
 {
     Q_D(EditorView);
     QString path = d->history->itemAt(index).path();
-    d->setUrl(path);
+    d->setPath(path);
+}
+
+void EditorView::resizeEvent(QResizeEvent *event)
+{
+    Q_D(EditorView);
+    if (d->widget)
+        d->widget->resize(event->size());
 }

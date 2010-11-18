@@ -33,6 +33,8 @@ private slots:
 
 protected:
     EditorViewPrivate *d_ptr;
+
+    void resizeEvent(QResizeEvent *);
 };
 
 } // namespace Core

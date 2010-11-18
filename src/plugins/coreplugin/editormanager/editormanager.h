@@ -21,8 +21,8 @@ public:
     explicit EditorManager(QObject *parent = 0);
     ~EditorManager();
 
-    IEditor *openEditor(const QUrl &url);
-    QList<IEditor *>openEditors(const QUrl &url);
+    IEditor *openEditor(const QString &path);
+    QList<IEditor *>openEditors(const QString &path);
 
 signals:
 
