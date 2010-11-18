@@ -46,7 +46,6 @@ namespace ExtensionSystem {
         bool resolveDependencies();
         bool unload();
         bool unloadLibrary();
-        static int compareVersion(const QString &version1, const QString &version2);
         static int compareVersion(const Version &version1, const Version &version2);
         QString getLibraryPath(const QString &path);
         void setError(const QString &message);
