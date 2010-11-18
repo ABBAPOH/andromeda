@@ -20,8 +20,8 @@ public:
     virtual QString type() = 0;
 
     // used for stacking:
-    virtual bool allowStacking() { return false; }
-    virtual int priority() { return 0; }
+//    virtual bool allowStacking() { return false; }
+//    virtual int priority() { return 0; }
     virtual QString group() { return QString::null; }
 };
 

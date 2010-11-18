@@ -23,10 +23,23 @@ EditorManager::~EditorManager()
     delete d_ptr;
 }
 
-bool factoriesLessThan(IEditorFactory *f1, IEditorFactory *f2)
+IEditor *EditorManager::openEditor(const QUrl &url)
 {
-    return f1->priority() < f2->priority();
+    Q_D(EditorManager);
+    QList<IEditorFactory *> factories = d->factories.values();
+
+    foreach (IEditorFactory *factory, factories) {
+        if (factory->canOpen(url)) {
+            IEditor *editor = factory->open(url);
+            return editor;
+        }
+    }
 }
+
+//bool factoriesLessThan(IEditorFactory *f1, IEditorFactory *f2)
+//{
+//    return f1->priority() < f2->priority();
+//}
 
 // we also need to return group of this editors
 QList<IEditor *> EditorManager::openEditors(const QUrl &url)
@@ -34,7 +47,7 @@ QList<IEditor *> EditorManager::openEditors(const QUrl &url)
     Q_D(EditorManager);
     QList<IEditorFactory *> factories = d->factories.values();
     QList<IEditor *> editors;
-    qSort(factories.begin(), factories.end(), factoriesLessThan);
+//    qSort(factories.begin(), factories.end(), factoriesLessThan);
     foreach (IEditorFactory *factory, factories) {
         if (factory->canOpen(url)) {
             IEditor *editor = factory->open(url);
