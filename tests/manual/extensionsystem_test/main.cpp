@@ -17,8 +17,10 @@ int main(int argc, char *argv[])
     qDebug() << "List of plugins: ";
     foreach (PluginSpec * spec, manager.plugins()) {
         qDebug() << "   " << spec->name();
-        qDebug() << "   " << spec->version();
-        qDebug() << "   " << spec->compatibilityVersion();
+//        qDebug() << "   " << spec->version();
+//        qDebug() << "   " << spec->compatibilityVersion();
+        qDebug() << "   " << spec->version().toString();
+        qDebug() << "   " << spec->compatibilityVersion().toString();
         qDebug() << "   " << spec->vendor();
         qDebug() << "   " << spec->hasError();
         qDebug() << "   " << spec->errorString();

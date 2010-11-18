@@ -10,17 +10,34 @@ namespace ExtensionSystem {
 class IPlugin;
 class PluginSpecPrivate;
 
+class EXTENSIONSYSTEM_EXPORT Version
+{
+public:
+    unsigned major;
+    unsigned minor;
+    unsigned build;
+    unsigned revision;
+
+    Version();
+    explicit Version(const QString &);
+
+    QString toString() const;
+    static Version fromString(const QString &);
+    bool operator==(const Version &);
+};
+
 class EXTENSIONSYSTEM_EXPORT PluginDependency
 {
     QString m_name;
-    QString m_version;
+    Version m_version;
 
 public:
     PluginDependency() {}
     PluginDependency(const QString &name, const QString &version);
     inline QString name() const { return m_name; }
-    inline QString version() const { return m_version; }
+    inline Version version() const { return m_version; }
     bool operator==(const PluginDependency &other);
+
 };
 
 class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
@@ -38,8 +55,8 @@ public:
     ~PluginSpec();
 
     QString name() const;
-    QString version() const;
-    QString compatibilityVersion() const;
+    Version version() const;
+    Version compatibilityVersion() const;
     QString vendor() const;
     QString category() const;
     QString copyright() const;
