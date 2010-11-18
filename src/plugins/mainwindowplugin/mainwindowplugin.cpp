@@ -21,6 +21,7 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 using namespace IO;
 bool MainWindowPluginImpl::initialize()
 {
+    qDebug() << "MainWindowPluginImpl::initialize";
     MainWindow *window = new MainWindow();
     window->show();
     return true;
