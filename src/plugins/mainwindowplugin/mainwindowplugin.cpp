@@ -9,6 +9,8 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 {
 }
 
+#include "mainwindow.h"
+
 #include "filecopydialogmanager.h"
 #include <filecopymanager.h>
 #include <QDebug>
@@ -19,6 +21,9 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 using namespace IO;
 bool MainWindowPluginImpl::initialize()
 {
+    MainWindow *window = new MainWindow();
+    window->show();
+    return true;
     FileCopyDialogManager *man = new FileCopyDialogManager(this);
 //    FileCopyManager *manager  = FileCopyManager::instance();
 //    QtFileCopier *copier = manager->copier();

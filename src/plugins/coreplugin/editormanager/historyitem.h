@@ -22,7 +22,7 @@ public:
 //    QUrl originalUrl() const;
     void setUserData(const QVariant & userData);
     QString title() const;
-    QUrl url() const;
+    QString path() const;
     QVariant userData() const;
 
     bool operator==(const HistoryItem &other);

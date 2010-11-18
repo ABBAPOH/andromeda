@@ -22,7 +22,7 @@ public:
 signals:
 
 public slots:
-    void open(const QUrl &url);
+    void open(const QString &path);
     void close(); // ?
 
     void back();

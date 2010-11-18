@@ -11,10 +11,15 @@ class EditorViewPrivate
 public:
     EditorHistory *history;
 
-    void setUrl(const QUrl &url);
+    void setUrl(const QString &path);
 };
 
 } // namespace Core
+
+void EditorViewPrivate::setUrl(const QString &path)
+{
+
+}
 
 EditorView::EditorView(QWidget *parent) :
     QWidget(parent),
@@ -30,10 +35,14 @@ EditorHistory *EditorView::history()
     return d_func()->history;
 }
 
-void EditorView::open(const QUrl &url)
+void EditorView::open(const QString &path)
 {
     Q_D(EditorView);
-    d->setUrl(url);
+    d->setUrl(path);
+}
+
+void EditorView::close()
+{
 }
 
 void EditorView::back()
@@ -49,6 +58,6 @@ void EditorView::forward()
 void EditorView::onCurrentItemIndexChanged(int index)
 {
     Q_D(EditorView);
-    QUrl url = d->history->itemAt(index).url();
-    d->setUrl(url);
+    QString path = d->history->itemAt(index).path();
+    d->setUrl(path);
 }

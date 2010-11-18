@@ -9,7 +9,7 @@ public:
     bool valid;
     QDateTime lastVisited;
     QString title;
-    QUrl url;
+    QString path;
     QVariant userData;
 //    QImage preview; // for future.
 };
@@ -65,9 +65,9 @@ QString HistoryItem::title() const
     return data->title;
 }
 
-QUrl HistoryItem::url() const
+QString HistoryItem::path() const
 {
-    return data->url;
+    return data->path;
 }
 
 QVariant HistoryItem::userData() const
@@ -77,5 +77,5 @@ QVariant HistoryItem::userData() const
 
 bool HistoryItem::operator==(const HistoryItem &other)
 {
-    return data->url == other.data->url;
+    return data->path == other.data->path;
 }
