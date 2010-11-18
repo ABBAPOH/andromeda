@@ -1,8 +1,9 @@
 #include "pluginspec.h"
 #include "pluginspec_p.h"
 
-#include <QtCore/QRegExp>
 #include <QtCore/QPluginLoader>
+#include <QtCore/QStringList>
+#include <QtCore/QRegExp>
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
 #include <QDebug>
@@ -30,10 +31,10 @@ Version::Version(const QString &version) :
     // mathes to Major.Minor.Patch.Fix version
     static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\.([0-9]+))?");
     if ( regExp.exactMatch(version) ) {
-        major = regExp.cap(0).toInt();
-        minor = regExp.cap(1).toInt();
-        build = regExp.cap(2).toInt();
-        revision = regExp.cap(3).toInt();
+        major = regExp.cap(1).toInt();
+        minor = regExp.cap(2).toInt();
+        build = regExp.cap(3).toInt();
+        revision = regExp.cap(4).toInt();
     }
 }
 
@@ -61,7 +62,7 @@ PluginDependency::PluginDependency(const QString &name, const QString &version)
 {
     m_name = name;
 //    m_version = version;
-    m_version = Version::fromString(version);
+    m_version = Version(version);
 }
 
 /*!
@@ -432,6 +433,17 @@ void PluginSpecPrivate::init(const QString &path)
     description = specFile.value("description").toString();
     url = specFile.value("url").toString();
 
+    specFile.beginGroup("Dependencies");
+    foreach (QString key, specFile.childKeys()) {
+        if (key.length() == 1 && key.at(0).isDigit()) {
+            QStringList list = specFile.value(key).toStringList();
+            if (list.size() == 2) {
+                dependencies.append(PluginDependency(list.at(0), list.at(1)));
+            }
+        }
+    }
+    specFile.endGroup();
+
     libraryPath = getLibraryPath(path);
 }
 
@@ -440,8 +452,8 @@ bool PluginSpecPrivate::load()
     if (!loadLibrary())
         return false;
 
-//    if (!resolveDependencies())
-//        return false;
+    if (!resolveDependencies())
+        return false;
 
     bool ok = true;
     QString errorMessage;
@@ -523,6 +535,7 @@ bool PluginSpecPrivate::unloadLibrary()
     return true;
 }
 
+#warning TODO: check circular dependencies
 bool PluginSpecPrivate::resolveDependencies()
 {
     Q_Q(PluginSpec);
