@@ -12,6 +12,45 @@
 
 using namespace ExtensionSystem;
 
+Version::Version() :
+        major(0),
+        minor(0),
+        build(0),
+        revision(0)
+{
+
+}
+
+Version::Version(const QString &version) :
+        major(0),
+        minor(0),
+        build(0),
+        revision(0)
+{
+    // mathes to Major.Minor.Patch.Fix version
+    static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\.([0-9]+))?");
+    if ( regExp.exactMatch(version) ) {
+        major = regExp.cap(0).toInt();
+        minor = regExp.cap(1).toInt();
+        build = regExp.cap(2).toInt();
+        revision = regExp.cap(3).toInt();
+    }
+}
+
+QString Version::toString() const
+{
+    return QString("%1.%2.%3.%4").arg(major).arg(minor).arg(build).arg(revision);
+}
+
+Version Version::fromString(const QString &version)
+{
+    return Version(version);
+}
+
+bool Version::operator==(const Version &other)
+{
+    return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
+}
 
 // ============= PluginDependency =============
 /*!
@@ -21,7 +60,8 @@ using namespace ExtensionSystem;
 PluginDependency::PluginDependency(const QString &name, const QString &version)
 {
     m_name = name;
-    m_version = version;
+//    m_version = version;
+    m_version = Version::fromString(version);
 }
 
 /*!
@@ -77,20 +117,20 @@ QString PluginSpec::name() const
 }
 
 /*!
-    \fn QString PluginSpec::version() const
+    \fn Version PluginSpec::version() const
     \brief Returns version of the plugin.
-    Version should be in format "Major.Minor.Path".
+    Version should be in format "Major.Minor.Build.Revision".
 */
-QString PluginSpec::version() const
+Version PluginSpec::version() const
 {
     return d_func()->version;
 }
 
 /*!
-    \fn QString PluginSpec::compatibilityVersion() const
+    \fn Version PluginSpec::compatibilityVersion() const
     \brief Returns compatibility version of the plugin.
 */
-QString PluginSpec::compatibilityVersion() const
+Version PluginSpec::compatibilityVersion() const
 {
     return d_func()->compatibilityVersion;
 }
@@ -322,7 +362,7 @@ QDataStream & operator>>(QDataStream &s, PluginDependency &dependency)
 QDataStream & operator<<(QDataStream &s, const PluginDependency &dependency)
 {
     s << dependency.name();
-    s << dependency.version();
+    s << dependency.version().toString();
     return s;
 }
 
@@ -332,8 +372,11 @@ QDataStream & operator>>(QDataStream &s, PluginSpec &pluginSpec)
     quint32 magic;
     s >> magic;
     s >> d->name;
-    s >> d->version;
-    s >> d->compatibilityVersion;
+    QString str;
+    s >> str;
+    d->version = Version::fromString(str);
+    s >> str;
+    d->compatibilityVersion = Version::fromString(str);
     s >> d->vendor;
     s >> d->category;
     s >> d->copyright;
@@ -350,8 +393,8 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
     quint32 magic = *((quint32*)"SPEC");
     s << magic;
     s << d->name;
-    s << d->version;
-    s << d->compatibilityVersion;
+    s << d->version.toString();
+    s << d->compatibilityVersion.toString();
     s << d->vendor;
     s << d->category;
     s << d->copyright;
@@ -380,8 +423,8 @@ void PluginSpecPrivate::init(const QString &path)
     QSettings specFile(path, QSettings::IniFormat);
 
     name = specFile.value("name").toString();
-    version = specFile.value("version").toString();
-    compatibilityVersion = specFile.value("compatibilityVersion").toString();
+    version = Version::fromString(specFile.value("version").toString());
+    compatibilityVersion = Version::fromString(specFile.value("compatibilityVersion").toString());
     vendor = specFile.value("vendor").toString();
     category = specFile.value("category").toString();
     copyright = specFile.value("copyright").toString();
@@ -502,7 +545,7 @@ bool PluginSpecPrivate::resolveDependencies()
         if (dependencySpec == 0) {
             ok = false;
             errorMessage.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
-                                .arg(dep.name()).arg(dep.version()));
+                                .arg(dep.name()).arg(dep.version().toString()));
         } else {
             resolvedSpecs.append(dependencySpec);
         }
@@ -522,24 +565,28 @@ bool PluginSpecPrivate::resolveDependencies()
     return true;
 }
 
-// from Qt Creator
-int PluginSpecPrivate::compareVersion(const QString &version1, const QString &version2)
+int PluginSpecPrivate::compareVersion(const Version &version1, const Version &version2)
 {
-    static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\.([0-9]+))?"); // mathes to Major.Minor.Patch.Fix version
-    QRegExp gerExp1 = regExp;
-    QRegExp gerExp2 = regExp;
-    if ( !gerExp1.exactMatch(version1) || !gerExp2.exactMatch(version2) )
-        return 0;
-    int number1;
-    int number2;
-    for (int i = 0; i < 4; ++i) {
-        number1 = gerExp1.cap(i+1).toInt();
-        number2 = gerExp2.cap(i+1).toInt();
-        if (number1 < number2)
-            return -1;
-        if (number1 > number2)
-            return 1;
-    }
+    if (version1.major < version2.major)
+        return -1;
+    if (version1.major > version2.major)
+        return 1;
+
+    if (version1.minor < version2.minor)
+        return -1;
+    if (version1.minor > version2.minor)
+        return 1;
+
+    if (version1.build < version2.build)
+        return -1;
+    if (version1.build > version2.build)
+        return 1;
+
+    if (version1.revision < version2.revision)
+        return -1;
+    if (version1.revision > version2.revision)
+        return 1;
+
     return 0;
 }
 

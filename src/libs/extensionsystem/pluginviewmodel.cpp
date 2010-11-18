@@ -57,8 +57,8 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
             case 0: return node->spec->name();
 //            case 1: return node->spec->loadsOnStartup();
 //            case 2: return node->spec->enabled();
-            case 3: return node->spec->version();
-            case 4: return node->spec->compatibilityVersion();
+            case 3: return node->spec->version().toString();
+            case 4: return node->spec->compatibilityVersion().toString();
             case 5: return node->spec->vendor();
             case 6: return node->spec->url();
             case 7: return node->spec->libraryPath();
@@ -67,7 +67,7 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
             case 10: return node->spec->license();
             case 11: QString result;
                 foreach (PluginDependency dep, node->spec->dependencies()) {
-                    result += dep.name() + ' ' + '(' + dep.version() + ") \n";
+                    result += dep.name() + ' ' + '(' + dep.version().toString() + ") \n";
                 }
                 return result.mid(0, result.length()-2);
             }
