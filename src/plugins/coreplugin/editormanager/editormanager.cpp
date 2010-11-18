@@ -23,14 +23,14 @@ EditorManager::~EditorManager()
     delete d_ptr;
 }
 
-IEditor *EditorManager::openEditor(const QUrl &url)
+IEditor *EditorManager::openEditor(const QString &path)
 {
     Q_D(EditorManager);
     QList<IEditorFactory *> factories = d->factories.values();
 
     foreach (IEditorFactory *factory, factories) {
-        if (factory->canOpen(url)) {
-            IEditor *editor = factory->open(url);
+        if (factory->canOpen(path)) {
+            IEditor *editor = factory->open(path);
             return editor;
         }
     }
@@ -42,15 +42,15 @@ IEditor *EditorManager::openEditor(const QUrl &url)
 //}
 
 // we also need to return group of this editors
-QList<IEditor *> EditorManager::openEditors(const QUrl &url)
+QList<IEditor *> EditorManager::openEditors(const QString &path)
 {
     Q_D(EditorManager);
     QList<IEditorFactory *> factories = d->factories.values();
     QList<IEditor *> editors;
 //    qSort(factories.begin(), factories.end(), factoriesLessThan);
     foreach (IEditorFactory *factory, factories) {
-        if (factory->canOpen(url)) {
-            IEditor *editor = factory->open(url);
+        if (factory->canOpen(path)) {
+            IEditor *editor = factory->open(path);
             editors.append(editor);
         }
     }
