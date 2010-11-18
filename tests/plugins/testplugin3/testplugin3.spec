@@ -8,3 +8,5 @@ url=
 copyright=
 license=
 description=
+
+[Dependencies]
