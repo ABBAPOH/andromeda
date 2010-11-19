@@ -15,7 +15,7 @@ class COREPLUGIN_EXPORT IEditorFactory : public QObject
 public:
     explicit IEditorFactory(QObject *parent = 0);
 
-    virtual IEditor *open(const QString &path) = 0;
+    virtual IEditor *createEditor() = 0;
     virtual bool canOpen(const QString &path) = 0;
     virtual QString type() = 0;
 
