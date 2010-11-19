@@ -5,12 +5,26 @@ set( HEADERS
     core_p.h
     coreplugin.h
     ifile.h
+    editormanager/editormanager.h
+    editormanager/ieditor.h
+    editormanager/ieditorfactory.h
+    editormanager/editorview.h
+    editormanager/editorhistory.h
+    editormanager/historyitem.h
+
    )
 set( SOURCES
     icore.cpp
     core.cpp
     coreplugin.cpp
     ifile.cpp
+    editormanager/editormanager.cpp
+    editormanager/ieditor.cpp
+    editormanager/ieditorfactory.cpp
+    editormanager/editorview.cpp
+    editormanager/editorhistory.cpp
+    editormanager/historyitem.cpp
+
    )
 set( FORMS
    )
@@ -20,11 +34,12 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/registrationsystem )
+include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
 include_directories( editormanager )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
 
 add_library( coreplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
-target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem registrationsystem editormanager )
+target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem registrationsystem )
 
 install_spec( coreplugin.spec )
