@@ -21,7 +21,6 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 using namespace IO;
 bool MainWindowPluginImpl::initialize()
 {
-    qDebug() << "MainWindowPluginImpl::initialize";
     MainWindow *window = new MainWindow();
     window->show();
     return true;
@@ -47,6 +46,10 @@ bool MainWindowPluginImpl::initialize()
     view->setSelectionMode(QAbstractItemView::ContiguousSelection);
 
     qDebug("MainWindowPluginImpl::initialize");
+}
+
+void MainWindowPluginImpl::shutdown()
+{
 }
 
 Q_EXPORT_PLUGIN(MainWindowPluginImpl)

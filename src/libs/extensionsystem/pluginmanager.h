@@ -22,7 +22,7 @@ public:
     static PluginManager *instance();
 
     void loadPlugins();
-    void shutdown();
+    void unloadPlugins();
 
     QString pluginsFolder() const;
     void setPluginsFolder(const QString &name);

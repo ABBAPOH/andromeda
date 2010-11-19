@@ -506,7 +506,7 @@ bool PluginSpecPrivate::unload()
 
     foreach (PluginSpec *spec, dependentSpecs) {
         spec->unload();;
-        if (!spec->loaded()) {
+        if (spec->loaded()) {
             ok = false;
             errorMessage += "Can't unload plugin: " + spec->name() + " is not unloaded";
         }

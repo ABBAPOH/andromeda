@@ -16,7 +16,6 @@ class WebViewFactory : public IEditorFactory
     }
     virtual bool canOpen(const QString &path)
     {
-        qDebug("canOpen");
         return path.startsWith("http://");
     }
     virtual QString type()
@@ -33,14 +32,12 @@ WebViewPluginImpl::WebViewPluginImpl() :
 
 bool WebViewPluginImpl::initialize()
 {
-    qDebug("WebViewPluginImpl::initialize");
     addObjectByType(new WebViewFactory, "EditorFactory");
     return true;
 }
 
 void WebViewPluginImpl::shutdown()
 {
-    qDebug("WebViewPluginImpl::shutdown");
 }
 
 Q_EXPORT_PLUGIN(WebViewPluginImpl)

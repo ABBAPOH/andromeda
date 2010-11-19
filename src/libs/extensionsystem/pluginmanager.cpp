@@ -47,6 +47,7 @@ PluginManager::PluginManager(QObject *parent) :
 PluginManager::~PluginManager()
 {
     Q_D(PluginManager);
+    unloadPlugins();
     qDeleteAll(d->pluginSpecs);
 }
 
@@ -75,6 +76,20 @@ void PluginManager::loadPlugins()
 
     d->load();
     emit pluginsChanged();
+}
+
+/*!
+    \fn void PluginManager::unloadPlugins()
+    \brief Unloads all currently loaded plugins.
+
+    This function automatically called when destroying PluginManager class;
+*/
+void PluginManager::unloadPlugins()
+{
+    Q_D(PluginManager);
+    foreach (PluginSpec *spec, d->pluginSpecs) {
+        spec->unload();
+    }
 }
 
 QString PluginManager::pluginsFolder() const
