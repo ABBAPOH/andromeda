@@ -11,7 +11,6 @@ set( HEADERS
     editormanager/editorview.h
     editormanager/editorhistory.h
     editormanager/historyitem.h
-
    )
 set( SOURCES
     icore.cpp
@@ -24,7 +23,6 @@ set( SOURCES
     editormanager/editorview.cpp
     editormanager/editorhistory.cpp
     editormanager/historyitem.cpp
-
    )
 set( FORMS
    )
@@ -34,7 +32,6 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/registrationsystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
 include_directories( editormanager )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
