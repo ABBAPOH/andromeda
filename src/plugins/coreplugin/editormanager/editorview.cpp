@@ -3,7 +3,7 @@
 #include "editormanager.h"
 #include "editorhistory.h"
 #include "ieditor.h"
-#include "icore.h"
+#include "../icore.h"
 
 #include <QResizeEvent>
 

@@ -1,10 +1,10 @@
 #include "editormanager.h"
 #include "editormanager_p.h"
 
+#include "../icore.h"
 #include "ieditorfactory.h"
 
 #include <QtCore/QDebug>
-#include <icore.h>
 
 using namespace Core;
 
