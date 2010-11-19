@@ -17,9 +17,9 @@ namespace WebViewPlugin {
 public:
     explicit WebViewEditor(QObject *parent = 0);
 
-    virtual bool open(const QUrl &url)
+    virtual bool open(const QString &path)
     {
-        m_webView->setUrl(url);
+        m_webView->setUrl(path);
     }
     virtual bool create() { return false; }
 

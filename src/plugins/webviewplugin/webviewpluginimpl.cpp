@@ -10,11 +10,9 @@ using namespace Core;
 
 class WebViewFactory : public IEditorFactory
 {
-    virtual IEditor *open(const QString &path)
+    virtual IEditor *createEditor()
     {
-        WebViewEditor *e = new WebViewEditor;
-        e->open(path);
-        return e;
+        return new WebViewEditor;
     }
     virtual bool canOpen(const QString &path)
     {

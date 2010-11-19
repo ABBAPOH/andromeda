@@ -30,7 +30,8 @@ IEditor *EditorManager::openEditor(const QString &path)
 
     foreach (IEditorFactory *factory, factories) {
         if (factory->canOpen(path)) {
-            IEditor *editor = factory->open(path);
+            IEditor *editor = factory->createEditor();
+            editor->open(path);
             return editor;
         }
     }
@@ -51,7 +52,8 @@ QList<IEditor *> EditorManager::openEditors(const QString &path)
 //    qSort(factories.begin(), factories.end(), factoriesLessThan);
     foreach (IEditorFactory *factory, factories) {
         if (factory->canOpen(path)) {
-            IEditor *editor = factory->open(path);
+            IEditor *editor = factory->createEditor();
+            editor->open(path);
             editors.append(editor);
         }
     }

@@ -20,7 +20,7 @@ class COREPLUGIN_EXPORT IEditor : public QObject
 public:
     explicit IEditor(QObject *parent = 0);
 
-    virtual bool open(const QUrl &url) = 0;
+    virtual bool open(const QString &path) = 0;
     virtual bool create() = 0;
 
     virtual IFile *file() = 0;
