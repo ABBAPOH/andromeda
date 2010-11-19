@@ -1,6 +1,8 @@
 #ifndef EDITORVIEW_H
 #define EDITORVIEW_H
 
+#include "../coreplugin_global.h"
+
 #include <QtGui/QWidget>
 
 class QUrl;
@@ -8,7 +10,7 @@ namespace Core {
 
 class EditorHistory;
 class EditorViewPrivate;
-class EditorView : public QWidget
+class COREPLUGIN_EXPORT EditorView : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(EditorView)

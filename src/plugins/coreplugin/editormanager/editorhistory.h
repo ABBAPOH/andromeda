@@ -1,6 +1,8 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
+#include "../coreplugin_global.h"
+
 #include <QtCore/QObject>
 
 #include "historyitem.h"
@@ -8,7 +10,7 @@
 namespace Core {
 
 class EditorHistoryPrivate;
-class EditorHistory: public QObject
+class COREPLUGIN_EXPORT EditorHistory: public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(EditorHistory)

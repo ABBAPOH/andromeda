@@ -1,6 +1,8 @@
 #ifndef HISTORYITEM_H
 #define HISTORYITEM_H
 
+#include "../coreplugin_global.h"
+
 #include <QtCore/QExplicitlySharedDataPointer>
 #include <QtCore/QUrl>
 #include <QtCore/QDateTime>
@@ -8,7 +10,7 @@
 
 class HistoryItemData;
 
-class HistoryItem
+class COREPLUGIN_EXPORT HistoryItem
 {
 public:
     HistoryItem();
