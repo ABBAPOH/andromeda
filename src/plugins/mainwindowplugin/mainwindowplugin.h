@@ -4,6 +4,7 @@
 #include <iplugin.h>
 
 namespace MainWindowPlugin {
+
 class MainWindowPluginImpl : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
@@ -11,6 +12,7 @@ public:
     explicit MainWindowPluginImpl();
 
     virtual bool initialize();
+    virtual void shutdown();
 
 signals:
 

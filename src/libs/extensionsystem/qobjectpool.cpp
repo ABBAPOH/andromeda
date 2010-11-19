@@ -3,12 +3,10 @@
 
 QObjectPoolPrivate::QObjectPoolPrivate()
 {
-    qDebug("QObjectPoolPrivate");
 }
 
 QObjectPoolPrivate::~QObjectPoolPrivate()
 {
-    qDebug("~QObjectPoolPrivate");
 }
 
 QObjectPool::QObjectPool(QObject *parent) :
