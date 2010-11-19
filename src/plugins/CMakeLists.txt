@@ -14,6 +14,6 @@ add_definitions( -DQT_NO_DEBUG )
 add_definitions( -DQT_SHARED )
 
 add_subdirectory( coreplugin )
-add_subdirectory( coreplugin/editormanager )
+#add_subdirectory( coreplugin/editormanager )
 add_subdirectory( mainwindowplugin )
 add_subdirectory( webviewplugin )
