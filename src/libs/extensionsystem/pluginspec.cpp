@@ -609,7 +609,7 @@ QString PluginSpecPrivate::getLibraryPath(const QString &path)
     QString baseName = info.baseName();
     QString absolutePath = info.absolutePath();
 #ifdef Q_OS_WIN
-    return absolutePath + "/" + baseName + ".dll";
+    return absolutePath + "/" + "lib" + baseName + ".dll";
 #endif
 #ifdef Q_OS_MAC
     return absolutePath + "/" + "lib" + baseName + ".dylib";

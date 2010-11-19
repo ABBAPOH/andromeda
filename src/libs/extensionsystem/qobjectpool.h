@@ -1,10 +1,12 @@
 #ifndef QOBJECTPOOL_H
 #define QOBJECTPOOL_H
 
+#include "extensionsystem_global.h"
+
 #include <QtCore/QObject>
 
 class QObjectPoolPrivate;
-class QObjectPool : public QObject
+class EXTENSIONSYSTEM_EXPORT QObjectPool : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(QObjectPool)
