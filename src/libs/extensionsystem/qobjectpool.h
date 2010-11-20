@@ -21,6 +21,11 @@ public:
     QObject * object(const QString &name);
     QObjectList objects(const QString &name);
 
+    template <class T> T * object(const QString &name)
+    {
+        return qobject_cast<T *>(object(name));
+    }
+
     QObjectList objects();
 
     template <class T> T* object()
