@@ -1,5 +1,7 @@
 #include "ifile.h"
 
+using namespace Core;
+
 IFile::IFile(QObject *parent) :
     QObject(parent)
 {

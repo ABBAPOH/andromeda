@@ -1,9 +1,14 @@
 #ifndef IFILE_H
 #define IFILE_H
 
+#include "coreplugin_global.h"
+
 #include <QtCore/QObject>
 
-class IFile : public QObject
+class QString;
+namespace Core {
+
+class COREPLUGIN_EXPORT IFile : public QObject
 {
     Q_OBJECT
 public:
@@ -24,5 +29,7 @@ signals:
 public slots:
 
 };
+
+} // namespace Core
 
 #endif // IFILE_H
