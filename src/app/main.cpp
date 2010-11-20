@@ -1,6 +1,5 @@
 #include <QtSingleApplication>
 #include <pluginmanager.h>
-#include <QDebug>
 
 using namespace ExtensionSystem;
 

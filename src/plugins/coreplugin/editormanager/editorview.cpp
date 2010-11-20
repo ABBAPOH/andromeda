@@ -44,7 +44,7 @@ EditorHistory *EditorView::history()
     return d_func()->history;
 }
 
-void EditorView::open(const QString &path)
+bool EditorView::open(const QString &path)
 {
     Q_D(EditorView);
 //    d->setPath(path);
@@ -58,7 +58,9 @@ void EditorView::open(const QString &path)
         d->widget = newEditor->widget();
         d->widget->setParent(this);
         d->widget->show();
+        return true;
     }
+    return false;
 }
 
 void EditorView::close()

@@ -22,6 +22,7 @@ public:
 
     virtual bool open(const QString &path) = 0;
     virtual bool create() = 0;
+    virtual void close() = 0;
 
     virtual IFile *file() const = 0;
 //    QList<IFile *> files();
