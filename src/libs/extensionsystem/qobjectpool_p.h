@@ -5,6 +5,8 @@
 
 #include <QtCore/QHash>
 
+namespace ExtensionSystem {
+
 class QObjectPoolPrivate
 {
 public:
@@ -14,5 +16,7 @@ public:
     QObjectList objects;
     QHash<QString, QObject *> namedObjects;
 };
+
+} // namespace ExtensionSystem
 
 #endif // QOBJECTPOOL_P_H

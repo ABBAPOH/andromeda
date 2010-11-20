@@ -1,6 +1,8 @@
 #include "qobjectpool.h"
 #include "qobjectpool_p.h"
 
+using namespace ExtensionSystem;
+
 QObjectPoolPrivate::QObjectPoolPrivate()
 {
 }
@@ -70,7 +72,7 @@ void QObjectPool::removeObject(QObject * object)
     emit objectRemoved(object);
 }
 
-QObjectList QObjectPool::objects()
+QObjectList QObjectPool::objects() const
 {
     return d_func()->objects;
 }
@@ -81,7 +83,7 @@ QObjectList QObjectPool::objects()
 
     \sa QObjectPool::addObject
 */
-QObject * QObjectPool::object(const QString &name)
+QObject * QObjectPool::object(const QString &name) const
 {
     return d_func()->namedObjects.value(name);
 }
@@ -92,7 +94,7 @@ QObject * QObjectPool::object(const QString &name)
 
     \sa PluginManager::addObject
 */
-QObjectList QObjectPool::objects(const QString &name)
+QObjectList QObjectPool::objects(const QString &name) const
 {
     return d_func()->namedObjects.values(name);
 }

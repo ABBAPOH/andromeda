@@ -16,12 +16,12 @@ public:
 
     virtual bool save(const QString &path) = 0;
 
-    virtual bool isModified() { return false; }
-    virtual bool isReadOnly() { return true; }
+    virtual bool isModified() const { return false; }
+    virtual bool isReadOnly() const { return true; }
 //    virtual bool isDirectory(); // ??
 
-    virtual QString name() { return ""; }
-    virtual QString path() = 0;
+    virtual QString name() const { return ""; }
+    virtual QString path() const = 0;
 
 signals:
     void changed();

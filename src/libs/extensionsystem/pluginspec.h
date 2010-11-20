@@ -37,7 +37,6 @@ public:
     inline QString name() const { return m_name; }
     inline Version version() const { return m_version; }
     bool operator==(const PluginDependency &other);
-
 };
 
 class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
@@ -76,8 +75,8 @@ public:
     bool loadOnStartup() const;
     bool canBeUnloaded() const;
 
-    QString errorString();
-    bool hasError();
+    QString errorString() const;
+    bool hasError() const;
 
     IPlugin *plugin() const;
 

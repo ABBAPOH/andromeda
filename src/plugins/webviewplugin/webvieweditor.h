@@ -23,13 +23,13 @@ public:
     }
     virtual bool create() { return false; }
 
-    virtual IFile *file() { return 0; }
+    virtual IFile *file() const { return 0; }
 //    QList<IFile *> files();
 
-    virtual QWidget *widget() { return m_webView; }
-    virtual QToolBar *toolBar() { return 0; }
+    virtual QWidget *widget() const { return m_webView; }
+    virtual QToolBar *toolBar() const { return 0; }
 
-    virtual QString name() { return ""; }
+    virtual QString name() const { return ""; }
 
 signals:
 

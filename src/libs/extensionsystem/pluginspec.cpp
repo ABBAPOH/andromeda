@@ -314,7 +314,7 @@ bool PluginSpec::canBeUnloaded() const
     \fn QString PluginSpec::errorString()
     \brief Returns message of last occured error.
 */
-QString PluginSpec::errorString()
+QString PluginSpec::errorString() const
 {
     return d_func()->errorString;
 }
@@ -323,7 +323,7 @@ QString PluginSpec::errorString()
     \fn bool PluginSpec::hasError()
     \brief Returns true if error occured.
 */
-bool PluginSpec::hasError()
+bool PluginSpec::hasError() const
 {
     return d_func()->hasError;
 }
