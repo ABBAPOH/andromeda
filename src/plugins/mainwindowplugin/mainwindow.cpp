@@ -1,40 +1,44 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 #include <editorview.h>
+#include <QLineEdit>
+#include <QToolButton>
 
-#include <QtGui/QToolBar>
-#include <QtGui/QLineEdit>
-#include <QtGui/QToolButton>
-
-using namespace MainWindowPlugin;
 using namespace Core;
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-    m_toolBar = new QToolBar(this);
-    m_lineEdit = new QLineEdit(this);
-    m_toolBar->addWidget(m_lineEdit);
-    addToolBar(m_toolBar);
+    ui->setupUi(this);
+
     setUnifiedTitleAndToolBarOnMac(true);
+
+    m_lineEdit = new QLineEdit(this);
+    ui->toolBar->addWidget(m_lineEdit);
 
     m_newTabButton = new QToolButton(this);
     m_newTabButton->setText(tr("New Tab"));
-//    m_newTabButton->setFlat(true);
-    m_tabWidget = new QTabWidget(this);
-    m_tabWidget->setCornerWidget(m_newTabButton, Qt::TopRightCorner);
-    m_tabWidget->setDocumentMode(true);
-    setCentralWidget(m_tabWidget);
-    newTab();
-    resize(640, 480);
+    ui->tabWidget->setCornerWidget(m_newTabButton, Qt::TopRightCorner);
 
     connect(m_lineEdit, SIGNAL(textEdited(QString)), SLOT(open(QString)));
     connect(m_newTabButton, SIGNAL(clicked()), SLOT(newTab()));
+
+    connect(ui->actionBack, SIGNAL(triggered()), SLOT(back()));
+    connect(ui->actionForward, SIGNAL(triggered()), SLOT(back()));
+
+    newTab();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
 }
 
 void MainWindow::newTab()
 {
-    m_tabWidget->addTab(new EditorView, "tab");
+    ui->tabWidget->addTab(new EditorView, "tab");
 }
 
 void MainWindow::open(const QString &path)
@@ -42,7 +46,17 @@ void MainWindow::open(const QString &path)
     view()->open(path);
 }
 
+void MainWindow::back()
+{
+    view()->back();
+}
+
+void MainWindow::forward()
+{
+    view()->forward();
+}
+
 EditorView *MainWindow::view()
 {
-    return qobject_cast<EditorView *>(m_tabWidget->currentWidget());
+    return qobject_cast<EditorView *>(ui->tabWidget->currentWidget());
 }

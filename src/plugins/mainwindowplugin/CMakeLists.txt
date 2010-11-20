@@ -22,6 +22,7 @@ set( SOURCES
 set( FORMS
     filecopyreplacedialog.ui
     filecopywidget.ui
+    mainwindow.ui
    )
 
 set( RESOURCES resources.qrc )
