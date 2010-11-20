@@ -5,30 +5,33 @@
 
 #include <QtCore/QObject>
 
+namespace ExtensionSystem {
+
 class QObjectPoolPrivate;
 class EXTENSIONSYSTEM_EXPORT QObjectPool : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(QObjectPool)
     Q_DISABLE_COPY(QObjectPool)
+
 public:
     explicit QObjectPool(QObject *parent = 0);
     virtual ~QObjectPool();
 
-    void addObject(QObject * object, const QString &type = "");
-    void removeObject(QObject * object);
+    Q_INVOKABLE void addObject(QObject * object, const QString &type = "");
+    Q_INVOKABLE void removeObject(QObject * object);
 
-    QObject * object(const QString &name);
-    QObjectList objects(const QString &name);
+    QObject * object(const QString &name) const;
+    QObjectList objects(const QString &name) const;
 
-    template <class T> T * object(const QString &name)
+    template <class T> T * object(const QString &name) const
     {
         return qobject_cast<T *>(object(name));
     }
 
-    QObjectList objects();
+    QObjectList objects() const;
 
-    template <class T> T* object()
+    template <class T> T* object() const
     {
         foreach (QObject * object, objects()) {
             T * t = qobject_cast<T*>(object);
@@ -38,7 +41,7 @@ public:
         }
     }
 
-    template <class T> QList<T*> objects()
+    template <class T> QList<T*> objects() const
     {
         QList<T*> result;
         foreach (QObject * object, objects()) {
@@ -60,5 +63,7 @@ protected:
 
     QObjectPoolPrivate *d_ptr;
 };
+
+} // namespace ExtensionSystem
 
 #endif // QOBJECTPOOL_H

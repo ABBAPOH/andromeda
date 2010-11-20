@@ -23,16 +23,16 @@ public:
     virtual bool open(const QString &path) = 0;
     virtual bool create() = 0;
 
-    virtual IFile *file() = 0;
+    virtual IFile *file() const = 0;
 //    QList<IFile *> files();
 
-    virtual QWidget *widget() = 0;
-    virtual QToolBar *toolBar() = 0;
+    virtual QWidget *widget() const = 0;
+    virtual QToolBar *toolBar() const = 0;
 
-    virtual QString name() = 0;
+    virtual QString name() const = 0;
 
-    virtual bool canClone() { return false; }
-    virtual IEditor *clone() { return 0; }
+    virtual bool canClone() const { return false; }
+    virtual IEditor *clone() const { return 0; }
 
 //    virtual bool saveState() { return true; }
 //    virtual bool restoreState() { return true; }
