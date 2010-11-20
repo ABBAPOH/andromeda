@@ -4,6 +4,7 @@
 #include <editorview.h>
 #include <QLineEdit>
 #include <QToolButton>
+#include <enteredlineedit.h>
 
 using namespace Core;
 
@@ -15,18 +16,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setUnifiedTitleAndToolBarOnMac(true);
 
-    m_lineEdit = new QLineEdit(this);
+    m_lineEdit = new EnteredLineEdit(this);
     ui->toolBar->addWidget(m_lineEdit);
 
     m_newTabButton = new QToolButton(this);
     m_newTabButton->setText(tr("New Tab"));
     ui->tabWidget->setCornerWidget(m_newTabButton, Qt::TopRightCorner);
 
-    connect(m_lineEdit, SIGNAL(textEdited(QString)), SLOT(open(QString)));
+    connect(m_lineEdit, SIGNAL(textEntered(QString)), SLOT(open(QString)));
     connect(m_newTabButton, SIGNAL(clicked()), SLOT(newTab()));
 
     connect(ui->actionBack, SIGNAL(triggered()), SLOT(back()));
-    connect(ui->actionForward, SIGNAL(triggered()), SLOT(back()));
+    connect(ui->actionForward, SIGNAL(triggered()), SLOT(forward()));
 
     newTab();
 }

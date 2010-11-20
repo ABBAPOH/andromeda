@@ -52,16 +52,26 @@
    <addaction name="actionForward"/>
   </widget>
   <action name="actionBack">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/back.png</normaloff>:/images/icons/back.png</iconset>
+   </property>
    <property name="text">
     <string>Back</string>
    </property>
   </action>
   <action name="actionForward">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/forward.png</normaloff>:/images/icons/forward.png</iconset>
+   </property>
    <property name="text">
     <string>Forward</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

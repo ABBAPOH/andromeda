@@ -4,6 +4,7 @@
 #include "coreplugin_global.h"
 
 #include <QtCore/QObject>
+#include <QtGui/QIcon>
 
 class QString;
 namespace Core {
@@ -21,6 +22,7 @@ public:
     virtual bool isReadOnly() const { return true; }
 //    virtual bool isDirectory(); // ??
 
+    virtual QIcon icon() const { return QIcon(); }
     virtual QString name() const { return ""; }
     virtual QString path() const = 0;
 

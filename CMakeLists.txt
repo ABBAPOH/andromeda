@@ -9,6 +9,7 @@ add_definitions( -DUNICODE )
 
 set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+set( CMAKE_BUILD_TYPE Debug )
 
 add_subdirectory( src )
 

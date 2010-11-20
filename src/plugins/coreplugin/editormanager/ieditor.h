@@ -9,11 +9,11 @@
 class QUrl;
 class QWidget;
 class QToolBar;
-class IFile;
 
 namespace Core
 {
 
+class IFile;
 class COREPLUGIN_EXPORT IEditor : public QObject
 {
     Q_OBJECT
