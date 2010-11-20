@@ -24,7 +24,7 @@ public:
 signals:
 
 public slots:
-    bool open(const QString &path);
+    bool open(const QString &path, bool addToHistory = true);
     void close();
 
     void back();

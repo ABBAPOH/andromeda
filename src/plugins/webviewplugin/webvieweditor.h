@@ -24,7 +24,7 @@ public:
     virtual bool create() { return false; }
     virtual void close() {}
 
-    virtual IFile *file() const { return 0; }
+    virtual Core::IFile *file() const { return m_file; }
 //    QList<IFile *> files();
 
     virtual QWidget *widget() const { return m_webView; }
@@ -36,8 +36,10 @@ signals:
 
 public slots:
 
-private:
+public:
+//private:
     QWebView *m_webView;
+    Core::IFile *m_file;
 };
 
 } // namespace WebViewPlugin

@@ -4,8 +4,8 @@
 #include "../coreplugin_global.h"
 
 #include <QtCore/QExplicitlySharedDataPointer>
-#include <QtCore/QUrl>
 #include <QtCore/QDateTime>
+#include <QtCore/QVariant>
 #include <QtGui/QIcon>
 
 class HistoryItemData;
@@ -14,6 +14,11 @@ class COREPLUGIN_EXPORT HistoryItem
 {
 public:
     HistoryItem();
+    HistoryItem (QIcon icon,
+                 QDateTime lastVisited,
+                 QString title,
+                 QString path,
+                 QVariant userData = QVariant());
     HistoryItem(const HistoryItem &);
     HistoryItem &operator=(const HistoryItem &);
     ~HistoryItem();

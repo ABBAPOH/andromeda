@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>images/icons/FCProgressReveal.png</file>
         <file>images/icons/FCProgressStop.png</file>
+        <file>images/icons/back.png</file>
+        <file>images/icons/forward.png</file>
     </qresource>
 </RCC>

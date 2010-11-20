@@ -12,12 +12,28 @@ public:
     QString path;
     QVariant userData;
 //    QImage preview; // for future.
+
 };
 
 HistoryItem::HistoryItem() :
         data(new HistoryItemData)
 {
     data->valid = false;
+}
+
+HistoryItem::HistoryItem(QIcon icon,
+                         QDateTime lastVisited,
+                         QString title,
+                         QString path,
+                         QVariant userData) :
+data(new HistoryItemData)
+{
+    data->icon = icon;
+    data->valid = true;
+    data->lastVisited = lastVisited;
+    data->title = title;
+    data->path = path;
+    data->userData = userData;
 }
 
 HistoryItem::HistoryItem(const HistoryItem &rhs) :

@@ -20,12 +20,25 @@ EditorHistory::EditorHistory(QObject *parent) :
         QObject(parent),
         d_ptr(new EditorHistoryPrivate)
 {
-    d_func()->maximumItemCount = 0;
+    Q_D(EditorHistory);
+    d->maximumItemCount = 0;
+    d->currentItemIndex = -1;
 }
 
 EditorHistory::~EditorHistory()
 {
     delete d_ptr;
+}
+
+void EditorHistory::appendItem(const HistoryItem &item)
+{
+    Q_D(EditorHistory);
+    int count = d->items.size() - d->currentItemIndex;
+    while (count-- >= 1) {
+        d->items.removeAt(d->currentItemIndex + 1);
+    }
+    d->items.append(item);
+    d->currentItemIndex++;
 }
 
 bool EditorHistory::canGoBack() const
@@ -36,21 +49,25 @@ bool EditorHistory::canGoBack() const
 void EditorHistory::back()
 {
     Q_D(EditorHistory);
-    if (d->currentItemIndex > 0)
+    if (d->currentItemIndex > 0) {
         d->currentItemIndex--;
+        emit currentItemIndexChanged(d->currentItemIndex);
+    }
 }
 
 bool EditorHistory::canGoForward() const
 {
     Q_D(const EditorHistory);
-    return d->currentItemIndex < d->items.size();
+    return d->currentItemIndex >= 0 && d->currentItemIndex < d->items.size() - 1;
 }
 
 void EditorHistory::forward()
 {
     Q_D(EditorHistory);
-    if (canGoForward())
+    if (canGoForward()) {
         d->currentItemIndex++;
+        emit currentItemIndexChanged(d->currentItemIndex);
+    }
 }
 
 HistoryItem EditorHistory::backItem() const

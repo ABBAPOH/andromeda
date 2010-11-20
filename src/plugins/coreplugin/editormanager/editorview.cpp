@@ -1,9 +1,11 @@
 #include "editorview.h"
 
+#include "ieditor.h"
 #include "editormanager.h"
 #include "editorhistory.h"
 #include "ieditor.h"
 #include "../icore.h"
+#include "../ifile.h"
 
 #include <QResizeEvent>
 
@@ -17,15 +19,9 @@ public:
     EditorHistory *history;
     IEditor *editor;
     QWidget *widget;
-
-    void setPath(const QString &path);
 };
 
 } // namespace Core
-
-void EditorViewPrivate::setPath(const QString &path)
-{
-}
 
 EditorView::EditorView(QWidget *parent) :
     QWidget(parent),
@@ -43,14 +39,14 @@ EditorHistory *EditorView::history()
 {
     return d_func()->history;
 }
-
-bool EditorView::open(const QString &path)
+#include <QDebug>
+bool EditorView::open(const QString &path, bool addToHistory)
 {
     Q_D(EditorView);
 //    d->setPath(path);
     EditorManager *manager = ICore::instance()->editorManager();
     IEditor *newEditor = manager->openEditor(path);
-    qDebug("setPath");
+    qDebug("open");
     if (newEditor) {
         delete d->editor;
         delete d->widget;
@@ -58,8 +54,16 @@ bool EditorView::open(const QString &path)
         d->widget = newEditor->widget();
         d->widget->setParent(this);
         d->widget->show();
+        IFile *file = d->editor->file();
+        if (file) {
+            if (addToHistory) {
+                d->history->appendItem(HistoryItem(file->icon(),
+                                                   QDateTime::currentDateTime(),
+                                                   file->name(),
+                                                   file->path()));
+            }
+        }
         return true;
-//        d->history->
     }
     return false;
 }
@@ -91,7 +95,7 @@ void EditorView::onCurrentItemIndexChanged(int index)
 {
     Q_D(EditorView);
     QString path = d->history->itemAt(index).path();
-    d->setPath(path);
+    open(path, false);
 }
 
 void EditorView::resizeEvent(QResizeEvent *event)

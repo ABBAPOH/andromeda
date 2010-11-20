@@ -24,6 +24,8 @@ public:
     explicit EditorHistory(QObject *parent = 0);
     ~EditorHistory();
 
+    void appendItem(const HistoryItem &item);
+
     bool canGoBack() const;
     bool canGoForward() const;
 
