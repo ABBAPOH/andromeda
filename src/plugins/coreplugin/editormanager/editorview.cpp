@@ -59,12 +59,22 @@ bool EditorView::open(const QString &path)
         d->widget->setParent(this);
         d->widget->show();
         return true;
+//        d->history->
     }
     return false;
 }
 
 void EditorView::close()
 {
+    Q_D(EditorView);
+    d->editor->close();
+    if (d->editor->file() == 0) {
+        // we have no more opened files
+        delete d->editor;
+        d->widget->deleteLater(); // to be sure if plugin coder not idiot
+        d->editor = 0;
+        d->widget = 0;
+    }
 }
 
 void EditorView::back()

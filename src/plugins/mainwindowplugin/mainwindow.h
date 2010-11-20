@@ -1,40 +1,38 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 
-class QToolBar;
-class QTabWidget;
-class QToolButton;
-class QLineEdit;
-
-namespace Core {
-class EditorView;
+namespace Ui {
+    class MainWindow;
 }
 
-namespace MainWindowPlugin {
+namespace Core {
+    class EditorView;
+}
 
+class QLineEdit;
+class QToolButton;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
     explicit MainWindow(QWidget *parent = 0);
-
-signals:
+    ~MainWindow();
 
 public slots:
     void newTab();
     void open(const QString &);
+    void back();
+    void forward();
 
 private:
-    QToolBar *m_toolBar;
+    Ui::MainWindow *ui;
     QLineEdit *m_lineEdit;
-    QTabWidget *m_tabWidget;
     QToolButton *m_newTabButton;
 
     Core::EditorView *view();
 };
-
-} // namespace MainWindowPlugin
 
 #endif // MAINWINDOW_H
