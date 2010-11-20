@@ -22,6 +22,7 @@ public:
         m_webView->setUrl(path);
     }
     virtual bool create() { return false; }
+    virtual void close() {}
 
     virtual IFile *file() const { return 0; }
 //    QList<IFile *> files();

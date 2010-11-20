@@ -24,8 +24,8 @@ public:
 signals:
 
 public slots:
-    void open(const QString &path);
-    void close(); // ?
+    bool open(const QString &path);
+    void close();
 
     void back();
     void forward();

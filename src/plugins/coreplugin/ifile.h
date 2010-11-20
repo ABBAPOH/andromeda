@@ -15,6 +15,7 @@ public:
     explicit IFile(QObject *parent = 0);
 
     virtual bool save(const QString &path) = 0;
+    virtual void refresh() = 0;
 
     virtual bool isModified() const { return false; }
     virtual bool isReadOnly() const { return true; }

@@ -24,7 +24,8 @@ public:
     QObject * object(const QString &name) const;
     QObjectList objects(const QString &name) const;
 
-    template <class T> T * object(const QString &name) const
+    template <class T>
+    inline T * object(const QString &name) const
     {
         return qobject_cast<T *>(object(name));
     }
