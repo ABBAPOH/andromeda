@@ -52,7 +52,236 @@ bool Version::operator==(const Version &other)
     return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
 }
 
-// ============= PluginDependency =============
+PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
+        q_ptr(qq),
+        plugin(0),
+        loader(new QPluginLoader(q_ptr)),
+        hasError(false),
+        loaded(false),
+        loadOnStartup(true)
+{
+    errorString = "Unknown Error";
+}
+
+void PluginSpecPrivate::init(const QString &path)
+{
+    QSettings specFile(path, QSettings::IniFormat);
+
+    name = specFile.value("name").toString();
+    version = Version::fromString(specFile.value("version").toString());
+    compatibilityVersion = Version::fromString(specFile.value("compatibilityVersion").toString());
+    vendor = specFile.value("vendor").toString();
+    category = specFile.value("category").toString();
+    copyright = specFile.value("copyright").toString();
+    license = specFile.value("license").toString();
+    description = specFile.value("description").toString();
+    url = specFile.value("url").toString();
+
+    specFile.beginGroup("Dependencies");
+    foreach (QString key, specFile.childKeys()) {
+        if (key.length() == 1 && key.at(0).isDigit()) {
+            QStringList list = specFile.value(key).toStringList();
+            if (list.size() == 2) {
+                dependencies.append(PluginDependency(list.at(0), list.at(1)));
+            }
+        }
+    }
+    specFile.endGroup();
+
+    libraryPath = getLibraryPath(path);
+}
+
+bool PluginSpecPrivate::load()
+{
+    qDebug() << "loading" << name << version.toString();
+    qDebug() << "  resolving dependencies for" << name;
+    if (!resolveDependencies())
+        return false;
+
+    bool ok = true;
+
+    QString errorMessage;
+    foreach (PluginSpec *spec, dependencySpecs) {
+        spec->load();
+        if (!spec->loaded()) {
+            ok = false;
+            errorMessage += "Can't load plugin: " + spec->name() + " is not loaded";
+        }
+    }
+
+    if (!ok) {
+        setError(errorMessage);
+        return false;
+    }
+
+    qDebug() << "    loading library" << QFileInfo(libraryPath).fileName();
+    if (!loadLibrary())
+        return false;
+
+    qDebug() << "      initializing" << name;
+    if (!plugin->initialize()) {
+        setError("Failed to initialize plugin");
+        return false;
+    }
+    qDebug() << "======";
+
+    return true;
+}
+
+bool PluginSpecPrivate::loadLibrary()
+{
+    if (plugin)
+        return true;
+
+    QObject * object = loader->instance();
+    if (!object) {
+        setError(QObject::tr("Can't load plugin: ", "PluginSpec") + loader->errorString());
+        return false;
+    }
+
+    IPlugin *plugin = qobject_cast<IPlugin *>(object);
+    if (!plugin) {
+        setError(QObject::tr("Can't load plugin: not a valid plugin", "PluginSpec"));
+        return false;
+    }
+
+    this->plugin = plugin;
+    return true;
+}
+
+bool PluginSpecPrivate::unload()
+{
+    bool ok = true;
+    QString errorMessage;
+
+    qDebug() << "unloading" << name << version.toString();
+    qDebug() << "  unloading dependencies for" << name;
+    foreach (PluginSpec *spec, dependentSpecs) {
+        spec->unload();;
+        if (spec->loaded()) {
+            ok = false;
+            errorMessage += "Can't unload plugin: " + spec->name() + " is not unloaded";
+        }
+    }
+
+    if (!ok) {
+        setError(errorMessage);
+        return false;
+    }
+
+    qDebug() << "    shutting down" << name;
+    plugin->shutdown();
+
+    qDebug() << "      unloading library" << QFileInfo(libraryPath).fileName();
+    if (!unloadLibrary())
+        return false;
+    qDebug() << "======";
+
+    return true;
+}
+
+bool PluginSpecPrivate::unloadLibrary()
+{
+    if (!loader->unload()) {
+        setError("Can't unload plugin library: " + loader->errorString());
+        return false;
+    }
+    plugin = 0;
+    return true;
+}
+
+#warning TODO: check circular dependencies
+bool PluginSpecPrivate::resolveDependencies()
+{
+    Q_Q(PluginSpec);
+
+    QList<PluginSpec*> specs = PluginManager::instance()->plugins();
+    QList<PluginSpec*> resolvedSpecs;
+
+    PluginSpec * dependencySpec = 0;
+    bool ok = true;
+    QString errorMessage;
+
+    foreach (PluginDependency dep, dependencies) {
+        dependencySpec = 0;
+        foreach (PluginSpec *spec, specs) {
+            if (spec->provides(dep)) {
+                dependencySpec = spec;
+                break;
+            }
+        }
+        if (dependencySpec == 0) {
+            ok = false;
+            errorMessage.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
+                                .arg(dep.name()).arg(dep.version().toString()));
+        } else {
+            resolvedSpecs.append(dependencySpec);
+        }
+    }
+
+    if (!ok) {
+        setError(errorMessage);
+        return false;
+    }
+
+    foreach (PluginSpec *spec, resolvedSpecs) {
+        if (!spec->d_ptr->dependentSpecs.contains(q))
+            spec->d_ptr->dependentSpecs.append(q);
+    }
+
+    dependencySpecs = resolvedSpecs;
+    return true;
+}
+
+int PluginSpecPrivate::compareVersion(const Version &version1, const Version &version2)
+{
+    if (version1.major < version2.major)
+        return -1;
+    if (version1.major > version2.major)
+        return 1;
+
+    if (version1.minor < version2.minor)
+        return -1;
+    if (version1.minor > version2.minor)
+        return 1;
+
+    if (version1.build < version2.build)
+        return -1;
+    if (version1.build > version2.build)
+        return 1;
+
+    if (version1.revision < version2.revision)
+        return -1;
+    if (version1.revision > version2.revision)
+        return 1;
+
+    return 0;
+}
+
+QString PluginSpecPrivate::getLibraryPath(const QString &path)
+{
+    QFileInfo info(path);
+    QString baseName = info.baseName();
+    QString absolutePath = info.absolutePath();
+#ifdef Q_OS_WIN
+    return absolutePath + "/" + "lib" + baseName + ".dll";
+#endif
+#ifdef Q_OS_MAC
+    return absolutePath + "/" + "lib" + baseName + ".dylib";
+#else
+#ifdef Q_OS_UNIX
+    return absolutePath + "/" + "lib" + baseName + ".so";
+#endif
+#endif
+}
+
+void PluginSpecPrivate::setError(const QString &message)
+{
+    hasError = true;
+    errorString = message;
+    emit q_ptr->error(message);
+}
+
 /*!
     \fn PluginDependency::PluginDependency(const QString &name, const QString &version)
     \brief Constructs PluginDependency class with given \a name and \a version.
@@ -73,7 +302,6 @@ bool PluginDependency::operator==(const PluginDependency &other)
     return m_name == other.m_name && m_version == other.m_version;
 }
 
-// ============= PluginSpec =============
 /*!
     \fn PluginSpec::PluginSpec()
     \internal
@@ -404,236 +632,3 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
     return s;
 }
 }
-
-// ============= PluginSpecPrivate =============
-PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
-        q_ptr(qq),
-        plugin(0),
-        loader(new QPluginLoader(q_ptr)),
-        hasError(false),
-        loaded(false),
-        loadOnStartup(true)
-{
-    errorString = "Unknown Error";
-}
-
-void PluginSpecPrivate::init(const QString &path)
-{
-    QSettings specFile(path, QSettings::IniFormat);
-
-    name = specFile.value("name").toString();
-    version = Version::fromString(specFile.value("version").toString());
-    compatibilityVersion = Version::fromString(specFile.value("compatibilityVersion").toString());
-    vendor = specFile.value("vendor").toString();
-    category = specFile.value("category").toString();
-    copyright = specFile.value("copyright").toString();
-    license = specFile.value("license").toString();
-    description = specFile.value("description").toString();
-    url = specFile.value("url").toString();
-
-    specFile.beginGroup("Dependencies");
-    foreach (QString key, specFile.childKeys()) {
-        if (key.length() == 1 && key.at(0).isDigit()) {
-            QStringList list = specFile.value(key).toStringList();
-            if (list.size() == 2) {
-                dependencies.append(PluginDependency(list.at(0), list.at(1)));
-            }
-        }
-    }
-    specFile.endGroup();
-
-    libraryPath = getLibraryPath(path);
-}
-
-bool PluginSpecPrivate::load()
-{
-    qDebug() << "loading" << name << version.toString();
-    qDebug() << "  resolving dependencies for" << name;
-    if (!resolveDependencies())
-        return false;
-
-    bool ok = true;
-
-    QString errorMessage;
-    foreach (PluginSpec *spec, dependencySpecs) {
-        spec->load();
-        if (!spec->loaded()) {
-            ok = false;
-            errorMessage += "Can't load plugin: " + spec->name() + " is not loaded";
-        }
-    }
-
-    if (!ok) {
-        setError(errorMessage);
-        return false;
-    }
-
-    qDebug() << "    loading library" << QFileInfo(libraryPath).fileName();
-    if (!loadLibrary())
-        return false;
-
-    qDebug() << "      initializing" << name;
-    if (!plugin->initialize()) {
-        setError("Failed to initialize plugin");
-        return false;
-    }
-    qDebug() << "======";
-
-    return true;
-}
-
-bool PluginSpecPrivate::loadLibrary()
-{
-    if (plugin)
-        return true;
-
-    QObject * object = loader->instance();
-    if (!object) {
-        setError(QObject::tr("Can't load plugin: ", "PluginSpec") + loader->errorString());
-        return false;
-    }
-
-    IPlugin *plugin = qobject_cast<IPlugin *>(object);
-    if (!plugin) {
-        setError(QObject::tr("Can't load plugin: not a valid plugin", "PluginSpec"));
-        return false;
-    }
-
-    this->plugin = plugin;
-    return true;
-}
-
-bool PluginSpecPrivate::unload()
-{
-    bool ok = true;
-    QString errorMessage;
-
-    qDebug() << "unloading" << name << version.toString();
-    qDebug() << "  unloading dependencies for" << name;
-    foreach (PluginSpec *spec, dependentSpecs) {
-        spec->unload();;
-        if (spec->loaded()) {
-            ok = false;
-            errorMessage += "Can't unload plugin: " + spec->name() + " is not unloaded";
-        }
-    }
-
-    if (!ok) {
-        setError(errorMessage);
-        return false;
-    }
-
-    qDebug() << "    shutting down" << name;
-    plugin->shutdown();
-
-    qDebug() << "      unloading library" << QFileInfo(libraryPath).fileName();
-    if (!unloadLibrary())
-        return false;
-    qDebug() << "======";
-
-    return true;
-}
-
-bool PluginSpecPrivate::unloadLibrary()
-{
-    if (!loader->unload()) {
-        setError("Can't unload plugin library: " + loader->errorString());
-        return false;
-    }
-    plugin = 0;
-    return true;
-}
-
-#warning TODO: check circular dependencies
-bool PluginSpecPrivate::resolveDependencies()
-{
-    Q_Q(PluginSpec);
-
-    QList<PluginSpec*> specs = PluginManager::instance()->plugins();
-    QList<PluginSpec*> resolvedSpecs;
-
-    PluginSpec * dependencySpec = 0;
-    bool ok = true;
-    QString errorMessage;
-
-    foreach (PluginDependency dep, dependencies) {
-        dependencySpec = 0;
-        foreach (PluginSpec *spec, specs) {
-            if (spec->provides(dep)) {
-                dependencySpec = spec;
-                break;
-            }
-        }
-        if (dependencySpec == 0) {
-            ok = false;
-            errorMessage.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
-                                .arg(dep.name()).arg(dep.version().toString()));
-        } else {
-            resolvedSpecs.append(dependencySpec);
-        }
-    }
-
-    if (!ok) {
-        setError(errorMessage);
-        return false;
-    }
-
-    foreach (PluginSpec *spec, resolvedSpecs) {
-        if (!spec->d_ptr->dependentSpecs.contains(q))
-            spec->d_ptr->dependentSpecs.append(q);
-    }
-
-    dependencySpecs = resolvedSpecs;
-    return true;
-}
-
-int PluginSpecPrivate::compareVersion(const Version &version1, const Version &version2)
-{
-    if (version1.major < version2.major)
-        return -1;
-    if (version1.major > version2.major)
-        return 1;
-
-    if (version1.minor < version2.minor)
-        return -1;
-    if (version1.minor > version2.minor)
-        return 1;
-
-    if (version1.build < version2.build)
-        return -1;
-    if (version1.build > version2.build)
-        return 1;
-
-    if (version1.revision < version2.revision)
-        return -1;
-    if (version1.revision > version2.revision)
-        return 1;
-
-    return 0;
-}
-
-QString PluginSpecPrivate::getLibraryPath(const QString &path)
-{
-    QFileInfo info(path);
-    QString baseName = info.baseName();
-    QString absolutePath = info.absolutePath();
-#ifdef Q_OS_WIN
-    return absolutePath + "/" + "lib" + baseName + ".dll";
-#endif
-#ifdef Q_OS_MAC
-    return absolutePath + "/" + "lib" + baseName + ".dylib";
-#else
-#ifdef Q_OS_UNIX
-    return absolutePath + "/" + "lib" + baseName + ".so";
-#endif
-#endif
-}
-
-void PluginSpecPrivate::setError(const QString &message)
-{
-    hasError = true;
-    errorString = message;
-    emit q_ptr->error(message);
-}
-
-
