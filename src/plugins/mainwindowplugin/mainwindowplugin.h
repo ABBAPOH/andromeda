@@ -3,6 +3,7 @@
 
 #include <iplugin.h>
 
+class MainWindow;
 namespace MainWindowPlugin {
 
 class MainWindowPluginImpl : public ExtensionSystem::IPlugin
@@ -13,6 +14,8 @@ public:
 
     virtual bool initialize();
     virtual void shutdown();
+
+    MainWindow *window;
 
 signals:
 
