@@ -90,7 +90,7 @@ public slots:
 
 signals:
     void loadedChanged(bool loaded);
-    void loadsOnStartupChanged(bool loads);
+    void loadOnStartupChanged(bool loads);
     void error(const QString &message);
 
 protected:
