@@ -13,7 +13,7 @@ Core::Core(QObject *parent) :
     ICore(parent),
     d_ptr(new CorePrivate)
 {
-    Q_ASSERT(m_instance);
+    Q_ASSERT(!m_instance);
     m_instance = this;
     setObjectName("Core");
 

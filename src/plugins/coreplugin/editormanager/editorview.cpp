@@ -54,8 +54,8 @@ bool EditorView::open(const QString &path, bool addToHistory)
     IEditor *newEditor = manager->openEditor(path);
     qDebug("open");
     if (newEditor) {
+        d->widget->deleteLater(); // save from stupid plugin coder
         delete d->editor;
-        delete d->widget;
         d->editor = newEditor;
         d->widget = newEditor->widget();
         d->widget->setParent(this);
