@@ -18,6 +18,7 @@ class COREPLUGIN_EXPORT EditorView : public QWidget
 
 public:
     explicit EditorView(QWidget *parent = 0);
+    ~EditorView();
 
     EditorHistory *history();
 

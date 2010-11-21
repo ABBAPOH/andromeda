@@ -30,3 +30,9 @@ WebViewEditor::WebViewEditor(QObject *parent) :
     m_webView = new QWebView;
     m_file = new WebFile(this);
 }
+
+WebViewEditor::~WebViewEditor()
+{
+    delete m_webView;
+    delete m_file;
+}
