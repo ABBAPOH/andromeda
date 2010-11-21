@@ -7,7 +7,7 @@
 #include <QtGui/QIcon>
 
 class QString;
-namespace Core {
+namespace CorePlugin {
 
 class COREPLUGIN_EXPORT IFile : public QObject
 {
@@ -33,6 +33,6 @@ public slots:
 
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // IFILE_H

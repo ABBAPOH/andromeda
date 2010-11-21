@@ -11,7 +11,7 @@ class QWebView;
 
 namespace WebViewPlugin {
 
-    class WEBVIEWPLUGIN_EXPORT WebViewEditor : public Core::IEditor
+    class WEBVIEWPLUGIN_EXPORT WebViewEditor : public CorePlugin::IEditor
 {
     Q_OBJECT
 public:
@@ -25,7 +25,7 @@ public:
     virtual bool create() { return false; }
     virtual void close() {}
 
-    virtual Core::IFile *file() const { return m_file; }
+    virtual CorePlugin::IFile *file() const { return m_file; }
 //    QList<IFile *> files();
 
     virtual QWidget *widget() const { return m_webView; }
@@ -40,7 +40,7 @@ public slots:
 public:
 //private:
     QWebView *m_webView;
-    Core::IFile *m_file;
+    CorePlugin::IFile *m_file;
 };
 
 } // namespace WebViewPlugin

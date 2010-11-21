@@ -6,7 +6,7 @@
 #include "webvieweditor.h"
 
 using namespace WebViewPlugin;
-using namespace Core;
+using namespace CorePlugin;
 
 class WebViewFactory : public IEditorFactory
 {

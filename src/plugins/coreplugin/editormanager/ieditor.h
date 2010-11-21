@@ -10,7 +10,7 @@ class QUrl;
 class QWidget;
 class QToolBar;
 
-namespace Core
+namespace CorePlugin
 {
 
 class IFile;
@@ -45,6 +45,6 @@ public slots:
 
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // IEDITOR_H

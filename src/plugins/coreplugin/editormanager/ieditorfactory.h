@@ -6,7 +6,7 @@
 #include <QtCore/QObject>
 #include "ieditor.h"
 
-namespace Core
+namespace CorePlugin
 {
 
 class COREPLUGIN_EXPORT IEditorFactory : public QObject
@@ -25,6 +25,6 @@ public:
     virtual QString group() { return QString::null; }
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // IEDITORFACTORY_H

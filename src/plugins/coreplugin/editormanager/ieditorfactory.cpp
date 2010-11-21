@@ -1,6 +1,6 @@
 #include "ieditorfactory.h"
 
-using namespace Core;
+using namespace CorePlugin;
 
 IEditorFactory::IEditorFactory(QObject *parent) :
     QObject(parent)

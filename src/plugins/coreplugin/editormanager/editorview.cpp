@@ -4,14 +4,14 @@
 #include "editormanager.h"
 #include "editorhistory.h"
 #include "ieditor.h"
-#include "../icore.h"
+#include "../core.h"
 #include "../ifile.h"
 
 #include <QResizeEvent>
 
-using namespace Core;
+using namespace CorePlugin;
 
-namespace Core {
+namespace CorePlugin {
 
 class EditorViewPrivate
 {
@@ -21,7 +21,7 @@ public:
     QWidget *widget;
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 EditorView::EditorView(QWidget *parent) :
     QWidget(parent),
@@ -50,7 +50,7 @@ bool EditorView::open(const QString &path, bool addToHistory)
 {
     Q_D(EditorView);
 //    d->setPath(path);
-    EditorManager *manager = ICore::instance()->editorManager();
+    EditorManager *manager = Core::instance()->editorManager();
     IEditor *newEditor = manager->openEditor(path);
     qDebug("open");
     if (newEditor) {

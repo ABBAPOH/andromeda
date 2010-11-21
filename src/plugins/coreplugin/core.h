@@ -1,13 +1,17 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "icore.h"
+#include "coreplugin_global.h"
 
-namespace Core
+#include "editormanager/editormanager.h"
+
+#include <registrationmanager.h>
+
+namespace CorePlugin
 {
 
 class CorePrivate;
-class COREPLUGIN_EXPORT Core : public ICore
+class COREPLUGIN_EXPORT Core : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Core);
@@ -16,6 +20,8 @@ class COREPLUGIN_EXPORT Core : public ICore
 public:
     explicit Core(QObject *parent = 0);
     ~Core();
+
+    static Core *instance();
 
     virtual EditorManager *editorManager();
     virtual RegistrationSystem::RegistrationManager *registrationManager();
@@ -28,6 +34,6 @@ protected:
     CorePrivate *d_ptr;
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // CORE_H

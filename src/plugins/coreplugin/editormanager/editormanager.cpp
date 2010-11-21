@@ -1,12 +1,12 @@
 #include "editormanager.h"
 #include "editormanager_p.h"
 
-#include "../icore.h"
+#include "../core.h"
 #include "ieditorfactory.h"
 
 #include <QtCore/QDebug>
 
-using namespace Core;
+using namespace CorePlugin;
 
 // ============= EditorManager =============
 
@@ -14,7 +14,7 @@ EditorManager::EditorManager(QObject *parent) :
     QObject(parent),
     d_ptr(new EditorManagerPrivate)
 {
-    ICore *core = ICore::instance();
+    Core *core = Core::instance();
     core->registrationManager()->addRegistrator(d_ptr, "EditorFactory");
 }
 

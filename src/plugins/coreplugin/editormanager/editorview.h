@@ -6,7 +6,7 @@
 #include <QtGui/QWidget>
 
 class QUrl;
-namespace Core {
+namespace CorePlugin {
 
 class EditorHistory;
 class EditorViewPrivate;
@@ -40,6 +40,6 @@ protected:
     void resizeEvent(QResizeEvent *);
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // EDITORVIEW_H

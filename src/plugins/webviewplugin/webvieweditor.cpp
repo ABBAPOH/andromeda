@@ -3,7 +3,7 @@
 #include <ifile.h>
 
 using namespace WebViewPlugin;
-using namespace Core;
+using namespace CorePlugin;
 
 class WebFile: public IFile
 {

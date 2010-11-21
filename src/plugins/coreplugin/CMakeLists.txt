@@ -1,6 +1,5 @@
 set( HEADERS
     coreplugin_global.h
-    icore.h
     core.h
     core_p.h
     coreplugin.h
@@ -13,7 +12,6 @@ set( HEADERS
     editormanager/historyitem.h
    )
 set( SOURCES
-    icore.cpp
     core.cpp
     coreplugin.cpp
     ifile.cpp

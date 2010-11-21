@@ -6,7 +6,7 @@
 
 #include "editormanager.h"
 
-namespace Core
+namespace CorePlugin
 {
 
 class EditorManagerPrivate: public RegistrationSystem::IRegistrator
@@ -18,6 +18,6 @@ public:
     QMultiHash<QString, IEditorFactory *> factories;
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // EDITORMANAGER_P_H
