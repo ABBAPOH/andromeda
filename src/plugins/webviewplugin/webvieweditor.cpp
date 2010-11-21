@@ -33,6 +33,7 @@ WebViewEditor::WebViewEditor(QObject *parent) :
 
 WebViewEditor::~WebViewEditor()
 {
+    qDebug("~WebViewEditor");
     delete m_webView;
     delete m_file;
 }

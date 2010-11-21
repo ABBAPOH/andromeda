@@ -10,9 +10,15 @@ using namespace CorePlugin;
 
 class WebViewFactory : public IEditorFactory
 {
+public:
+    WebViewFactory() {}
+    ~WebViewFactory()
+    {
+        qDebug("~WebViewFactory");
+    }
     virtual IEditor *createEditor()
     {
-        return new WebViewEditor;
+        return new WebViewEditor(this);
     }
     virtual bool canOpen(const QString &path)
     {
