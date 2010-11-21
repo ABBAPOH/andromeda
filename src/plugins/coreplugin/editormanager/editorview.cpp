@@ -8,6 +8,7 @@
 #include "../ifile.h"
 
 #include <QResizeEvent>
+#include <QDebug>
 
 using namespace CorePlugin;
 
@@ -37,6 +38,7 @@ EditorView::EditorView(QWidget *parent) :
 
 EditorView::~EditorView()
 {
+    qDebug("~EditorView");
     Q_D(EditorView);
     delete d->editor;
 }
@@ -45,7 +47,7 @@ EditorHistory *EditorView::history()
 {
     return d_func()->history;
 }
-#include <QDebug>
+
 bool EditorView::open(const QString &path, bool addToHistory)
 {
     Q_D(EditorView);

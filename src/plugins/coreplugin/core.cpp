@@ -72,6 +72,9 @@ connect(ExtensionSystem::PluginManager::instance(), SIGNAL(objectAdded(QObject*,
 
 Core::~Core()
 {
+    // todo - use pool
+    delete d_func()->registrationManager;
+    delete d_func()->editorManager;
     delete d_ptr;
     m_instance = 0;
 }
