@@ -58,6 +58,7 @@ bool EditorView::open(const QString &path, bool addToHistory)
     if (newEditor) {
         if (d->widget)
             d->widget->deleteLater(); // save from stupid plugin coder
+        disconnect(d->editor, SIGNAL(destroyed()), this, SLOT(clearEditor()));
         delete d->editor;
         d->editor = newEditor;
         connect(d->editor, SIGNAL(destroyed()), SLOT(clearEditor()));
@@ -113,6 +114,8 @@ void EditorView::clearEditor()
     qDebug("EditorView::clearEditor");
     Q_D(EditorView);
     d->editor = 0;
+    if (d->widget)
+        d->widget->deleteLater();
     d->widget = 0;
 }
 
