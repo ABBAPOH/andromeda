@@ -277,6 +277,7 @@ QString PluginSpecPrivate::getLibraryPath(const QString &path)
 
 void PluginSpecPrivate::setError(const QString &message)
 {
+    qWarning() << "PluginSpec error:" << message;
     hasError = true;
     errorString = message;
     emit q_ptr->error(message);

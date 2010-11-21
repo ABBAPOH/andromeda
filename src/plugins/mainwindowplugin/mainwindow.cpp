@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    qDebug("~MainWindow");
     delete ui;
 }
 
