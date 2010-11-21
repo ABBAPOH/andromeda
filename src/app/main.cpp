@@ -12,9 +12,16 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    app.setQuitOnLastWindowClosed(false);
+
     PluginManager manager;
     manager.setPluginsFolder("plugins");
     manager.loadPlugins();
+
+    QObject::connect(&app, SIGNAL(lastWindowClosed()),
+                     &manager, SLOT(unloadPlugins()), Qt::QueuedConnection);
+    QObject::connect(&manager, SIGNAL(pluginsUnloaded()),
+                     &app, SLOT(quit()), Qt::QueuedConnection);
 
     return app.exec();
 }

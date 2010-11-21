@@ -33,6 +33,7 @@ PluginManager::PluginManager(QObject *parent) :
     Q_D(PluginManager);
     Q_ASSERT(!m_instance);
     m_instance = this;
+    d->loaded = false;
 
     d->watcher = new QFileSystemWatcher(this);
     connect(d->watcher, SIGNAL(directoryChanged(QString)), SLOT(updateDirectory(QString)));
@@ -60,6 +61,9 @@ void PluginManager::loadPlugins()
 {
     Q_D(PluginManager);
 
+    if (d->loaded)
+        return;
+
     // loadSettings()
 
     // findexisting folders with plugins
@@ -75,6 +79,9 @@ void PluginManager::loadPlugins()
     }
 
     d->load();
+    d->loaded = true;
+    qDebug("PluginManager::pluginsLoaded");
+    emit pluginsLoaded();
     emit pluginsChanged();
 }
 
@@ -87,9 +94,16 @@ void PluginManager::loadPlugins()
 void PluginManager::unloadPlugins()
 {
     Q_D(PluginManager);
+
+    if (!d->loaded)
+        return;
+
     foreach (PluginSpec *spec, d->pluginSpecs) {
         spec->unload();
     }
+    d->loaded = false;
+    qDebug("PluginManager::pluginsUnloaded");
+    emit pluginsUnloaded();
 }
 
 QString PluginManager::pluginsFolder() const
@@ -100,6 +114,11 @@ QString PluginManager::pluginsFolder() const
 void PluginManager::setPluginsFolder(const QString &name)
 {
     d_func()->pluginsFolder = name;
+}
+
+bool PluginManager::loaded()
+{
+    return d_func()->loaded;
 }
 
 /*!

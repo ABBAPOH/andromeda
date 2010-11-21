@@ -18,6 +18,7 @@ public:
     int updateTimer;
 
     QString pluginsFolder;
+    bool loaded;
     QList<PluginSpec *> pluginSpecs; // contains all specs
 
     QHash<QString, PluginSpec*> pathToSpec; // maps file to spec

@@ -13,6 +13,7 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_OBJECT
     Q_DISABLE_COPY(PluginManager)
     Q_DECLARE_PRIVATE(PluginManager)
+    Q_PROPERTY(bool loaded READ loaded)
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
 
 public:
@@ -21,18 +22,22 @@ public:
 
     static PluginManager *instance();
 
-    void loadPlugins();
-    void unloadPlugins();
-
     QString pluginsFolder() const;
     void setPluginsFolder(const QString &name);
+
+    bool loaded();
 
     QList<PluginSpec *> plugins() const;
 
 signals:
     void pluginsChanged();
+    void pluginsLoaded();
+    void pluginsUnloaded();
 
 public slots:
+    void loadPlugins();
+    void unloadPlugins();
+
     void updateDirectory(const QString &);
     void updateLibrary(const QString &);
 
