@@ -7,6 +7,7 @@
 #include "../core.h"
 #include "../ifile.h"
 
+#include <QPointer>
 #include <QResizeEvent>
 #include <QDebug>
 
@@ -18,7 +19,7 @@ class EditorViewPrivate
 {
 public:
     EditorHistory *history;
-    IEditor *editor;
+    QPointer<IEditor> editor;
     QWidget *widget;
 };
 
@@ -56,12 +57,8 @@ bool EditorView::open(const QString &path, bool addToHistory)
     IEditor *newEditor = manager->openEditor(path);
     qDebug("open");
     if (newEditor) {
-        if (d->widget)
-            d->widget->deleteLater(); // save from stupid plugin coder
-        disconnect(d->editor, SIGNAL(destroyed()), this, SLOT(clearEditor()));
         delete d->editor;
         d->editor = newEditor;
-        connect(d->editor, SIGNAL(destroyed()), SLOT(clearEditor()));
         d->widget = newEditor->widget();
         d->widget->setParent(this);
         d->widget->show();
@@ -82,11 +79,11 @@ bool EditorView::open(const QString &path, bool addToHistory)
 void EditorView::close()
 {
     Q_D(EditorView);
-    d->editor->close();
+    if (d->editor)
+        d->editor->close();
     if (d->editor->file() == 0) {
         // we have no more opened files
         delete d->editor;
-        d->widget->deleteLater(); // to be sure if plugin coder not idiot
         d->editor = 0;
         d->widget = 0;
     }
@@ -107,16 +104,6 @@ void EditorView::onCurrentItemIndexChanged(int index)
     Q_D(EditorView);
     QString path = d->history->itemAt(index).path();
     open(path, false);
-}
-
-void EditorView::clearEditor()
-{
-    qDebug("EditorView::clearEditor");
-    Q_D(EditorView);
-    d->editor = 0;
-    if (d->widget)
-        d->widget->deleteLater();
-    d->widget = 0;
 }
 
 void EditorView::resizeEvent(QResizeEvent *event)
