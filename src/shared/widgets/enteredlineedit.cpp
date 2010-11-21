@@ -9,9 +9,9 @@ EnteredLineEdit::EnteredLineEdit(QWidget *parent) :
 
 void EnteredLineEdit::keyPressEvent(QKeyEvent *e)
 {
+    QLineEdit::keyPressEvent(e);
+
     if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
         emit textEntered(text());
     }
-
-    QLineEdit::keyPressEvent(e);
 }

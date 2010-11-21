@@ -33,6 +33,7 @@ public slots:
 
 private slots:
     void onCurrentItemIndexChanged(int);
+    void clearEditor();
 
 protected:
     EditorViewPrivate *d_ptr;

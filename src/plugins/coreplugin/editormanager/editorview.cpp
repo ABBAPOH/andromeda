@@ -56,9 +56,11 @@ bool EditorView::open(const QString &path, bool addToHistory)
     IEditor *newEditor = manager->openEditor(path);
     qDebug("open");
     if (newEditor) {
-        d->widget->deleteLater(); // save from stupid plugin coder
+        if (d->widget)
+            d->widget->deleteLater(); // save from stupid plugin coder
         delete d->editor;
         d->editor = newEditor;
+        connect(d->editor, SIGNAL(destroyed()), SLOT(clearEditor()));
         d->widget = newEditor->widget();
         d->widget->setParent(this);
         d->widget->show();
@@ -104,6 +106,14 @@ void EditorView::onCurrentItemIndexChanged(int index)
     Q_D(EditorView);
     QString path = d->history->itemAt(index).path();
     open(path, false);
+}
+
+void EditorView::clearEditor()
+{
+    qDebug("EditorView::clearEditor");
+    Q_D(EditorView);
+    d->editor = 0;
+    d->widget = 0;
 }
 
 void EditorView::resizeEvent(QResizeEvent *event)
