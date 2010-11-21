@@ -16,6 +16,7 @@ namespace WebViewPlugin {
     Q_OBJECT
 public:
     explicit WebViewEditor(QObject *parent = 0);
+    ~WebViewEditor();
 
     virtual bool open(const QString &path)
     {

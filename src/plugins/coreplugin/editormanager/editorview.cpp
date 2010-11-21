@@ -35,6 +35,12 @@ EditorView::EditorView(QWidget *parent) :
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), SLOT(onCurrentItemIndexChanged(int)));
 }
 
+EditorView::~EditorView()
+{
+    Q_D(EditorView);
+    delete d->editor;
+}
+
 EditorHistory *EditorView::history()
 {
     return d_func()->history;
