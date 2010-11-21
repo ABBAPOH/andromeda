@@ -19,7 +19,6 @@ Version::Version() :
         build(0),
         revision(0)
 {
-
 }
 
 Version::Version(const QString &version) :
@@ -82,7 +81,6 @@ bool PluginDependency::operator==(const PluginDependency &other)
 PluginSpec::PluginSpec() :
         d_ptr(new PluginSpecPrivate(this))
 {
-
 }
 
 /*!
@@ -293,7 +291,7 @@ void PluginSpec::setLoadOnStartup(bool yes)
         return;
 
     d->loadOnStartup = yes;
-    emit loadsOnStartupChanged(yes);
+    emit loadOnStartupChanged(yes);
 }
 
 bool PluginSpec::loadOnStartup() const
@@ -449,13 +447,13 @@ void PluginSpecPrivate::init(const QString &path)
 
 bool PluginSpecPrivate::load()
 {
-    if (!loadLibrary())
-        return false;
-
+    qDebug() << "loading" << name << version.toString();
+    qDebug() << "  resolving dependencies for" << name;
     if (!resolveDependencies())
         return false;
 
     bool ok = true;
+
     QString errorMessage;
     foreach (PluginSpec *spec, dependencySpecs) {
         spec->load();
@@ -470,10 +468,16 @@ bool PluginSpecPrivate::load()
         return false;
     }
 
+    qDebug() << "    loading library" << QFileInfo(libraryPath).fileName();
+    if (!loadLibrary())
+        return false;
+
+    qDebug() << "      initializing" << name;
     if (!plugin->initialize()) {
         setError("Failed to initialize plugin");
         return false;
     }
+    qDebug() << "======";
 
     return true;
 }
@@ -504,6 +508,8 @@ bool PluginSpecPrivate::unload()
     bool ok = true;
     QString errorMessage;
 
+    qDebug() << "unloading" << name << version.toString();
+    qDebug() << "  unloading dependencies for" << name;
     foreach (PluginSpec *spec, dependentSpecs) {
         spec->unload();;
         if (spec->loaded()) {
@@ -517,10 +523,13 @@ bool PluginSpecPrivate::unload()
         return false;
     }
 
+    qDebug() << "    shutting down" << name;
     plugin->shutdown();
 
+    qDebug() << "      unloading library" << QFileInfo(libraryPath).fileName();
     if (!unloadLibrary())
         return false;
+    qDebug() << "======";
 
     return true;
 }

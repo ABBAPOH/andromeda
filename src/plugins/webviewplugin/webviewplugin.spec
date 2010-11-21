@@ -11,3 +11,4 @@ description=This plugin adds support for serfing web.
 
 [Dependencies]
 0=Core Plugin, 0.1.0.0
+1=MainWindow Plugin, 0.1.0.0
