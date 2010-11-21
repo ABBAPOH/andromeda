@@ -7,7 +7,7 @@ namespace Ui {
     class MainWindow;
 }
 
-namespace Core {
+namespace CorePlugin {
     class EditorView;
 }
 
@@ -32,7 +32,7 @@ private:
     QLineEdit *m_lineEdit;
     QToolButton *m_newTabButton;
 
-    Core::EditorView *view();
+    CorePlugin::EditorView *view();
 };
 
 #endif // MAINWINDOW_H

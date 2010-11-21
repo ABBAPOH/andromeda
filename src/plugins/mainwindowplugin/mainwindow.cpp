@@ -6,7 +6,7 @@
 #include <QToolButton>
 #include <enteredlineedit.h>
 
-using namespace Core;
+using namespace CorePlugin;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

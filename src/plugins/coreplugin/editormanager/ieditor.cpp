@@ -1,6 +1,6 @@
 #include "ieditor.h"
 
-using namespace Core;
+using namespace CorePlugin;
 
 /*!
     \fn IEditor::IEditor(QObject *parent)

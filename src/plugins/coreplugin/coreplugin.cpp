@@ -2,22 +2,22 @@
 
 #include <QtCore/QtPlugin>
 
-CorePlugin::CorePlugin() :
+CorePluginImpl::CorePluginImpl() :
     IPlugin(),
     core(0)
 {
 }
 
-bool CorePlugin::initialize()
+bool CorePluginImpl::initialize()
 {
-    core = new Core::Core();
+    core = new CorePlugin::Core();
 
     return true;
 }
 
-void CorePlugin::shutdown()
+void CorePluginImpl::shutdown()
 {
     delete core;
 }
 
-Q_EXPORT_PLUGIN(CorePlugin)
+Q_EXPORT_PLUGIN(CorePluginImpl)

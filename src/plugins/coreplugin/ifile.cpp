@@ -1,6 +1,6 @@
 #include "ifile.h"
 
-using namespace Core;
+using namespace CorePlugin;
 
 IFile::IFile(QObject *parent) :
     QObject(parent)

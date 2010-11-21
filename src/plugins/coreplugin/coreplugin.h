@@ -6,11 +6,11 @@
 
 using namespace ExtensionSystem;
 
-class CorePlugin : public IPlugin
+class CorePluginImpl : public IPlugin
 {
     Q_OBJECT
 public:
-    CorePlugin();
+    CorePluginImpl();
 
     virtual bool initialize();
     virtual void shutdown();
@@ -20,7 +20,7 @@ signals:
 public slots:
 
 private:
-    Core::Core *core;
+    CorePlugin::Core *core;
 };
 
 #endif // COREPLUGIN_H

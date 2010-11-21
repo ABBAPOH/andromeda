@@ -6,7 +6,7 @@
 #include <QtCore/QObject>
 
 class QUrl;
-namespace Core
+namespace CorePlugin
 {
 
 class IEditor;
@@ -32,6 +32,6 @@ protected:
     EditorManagerPrivate *d_ptr;
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // EDITORMANAGER_H

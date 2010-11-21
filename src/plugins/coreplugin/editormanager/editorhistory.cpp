@@ -2,9 +2,9 @@
 
 #include "historyitem.h"
 
-using namespace Core;
+using namespace CorePlugin;
 
-namespace Core {
+namespace CorePlugin {
 
 class EditorHistoryPrivate
 {
@@ -14,7 +14,7 @@ public:
     int currentItemIndex;
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 EditorHistory::EditorHistory(QObject *parent) :
         QObject(parent),

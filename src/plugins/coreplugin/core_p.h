@@ -3,14 +3,14 @@
 
 #include "core.h"
 
-namespace Core
+namespace CorePlugin
 {
 
 class CorePrivate
 {
 public:
     EditorManager *editorManager;
-    RegistrationManager *registrationManager;
+    RegistrationSystem::RegistrationManager *registrationManager;
 };
 
 } // namespace Core

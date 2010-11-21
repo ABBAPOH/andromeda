@@ -7,7 +7,7 @@
 
 #include "historyitem.h"
 
-namespace Core {
+namespace CorePlugin {
 
 class EditorHistoryPrivate;
 class COREPLUGIN_EXPORT EditorHistory: public QObject
@@ -60,6 +60,6 @@ protected:
     EditorHistoryPrivate *d_ptr;
 };
 
-} // namespace Core
+} // namespace CorePlugin
 
 #endif // HISTORY_H
