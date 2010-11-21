@@ -14,6 +14,6 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 add_definitions( -DWIDGETS_LIBRARY )
 
-add_library( widgets STATIC ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( widgets SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( widgets ${QT_LIBRARIES} )
 
