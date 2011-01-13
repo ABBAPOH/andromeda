@@ -81,4 +81,5 @@ bool EditorManagerPrivate::unregisterObject(QObject *object)
     IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
     if (factory)
         factories.remove(factory->type(), factory);
+    return true;
 }

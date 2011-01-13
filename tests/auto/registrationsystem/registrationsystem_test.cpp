@@ -22,10 +22,12 @@ public:
     virtual bool registerObject(QObject *object)
     {
         object->setObjectName("registered");
+        return true;
     };
     virtual bool unregisterObject(QObject *object)
     {
         object->setObjectName("unregistered");
+        return true;
     };
 };
 

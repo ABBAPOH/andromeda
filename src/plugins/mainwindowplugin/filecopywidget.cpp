@@ -60,7 +60,7 @@ void FileCopyWidget::updateProgress(qint64 progress)
     ui->remainsLabel->setText(getStringSize(totalSize - finishedSize));
     ui->progressBar->setValue(progress);
 
-#warning TODO:update speed and time on timer tick
+//#warning TODO:update speed and time on timer tick
     ui->speedLabel->setText(getStringSize(m_task->speed()));
 
     QTime time(0,0);
