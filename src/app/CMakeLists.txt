@@ -7,4 +7,6 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 add_executable( Andromeda MACOSX_BUNDLE ${SOURCES} )
 target_link_libraries( Andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
 
-set_target_properties( Andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
+if( MSVC )
+    set_target_properties( Andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
+endif( MSVC )
