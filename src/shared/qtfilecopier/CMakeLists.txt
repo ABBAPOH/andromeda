@@ -15,5 +15,7 @@ set( SOURCES qtfilecopier.cpp )
 qt4_wrap_single_cpp( qtfilecopier.cpp moc_qtfilecopier.cpp )
 qt4_automoc( qtfilecopier.cpp )
 
-add_library( qtfilecopier SHARED ${HEADERS} ${SOURCES} )
+#add_definitions( -DQT_QTCOPYDIALOG_EXPORT )
+
+add_library( qtfilecopier STATIC ${HEADERS} ${SOURCES} qtfilecopier.moc )
 target_link_libraries( qtfilecopier ${QT_LIBRARIES} )

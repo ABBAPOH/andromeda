@@ -21,6 +21,7 @@ public:
     virtual bool open(const QString &path)
     {
         m_webView->setUrl(path);
+        return true;
     }
     virtual bool create() { return false; }
     virtual void close() {}

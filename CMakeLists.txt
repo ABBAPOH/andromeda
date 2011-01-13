@@ -10,6 +10,10 @@ add_definitions( -DUNICODE )
 set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 
+if(MSVC)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+endif(MSVC)
+
 add_subdirectory( src )
 
 enable_testing()

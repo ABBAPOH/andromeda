@@ -25,3 +25,10 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
+//long __stdcall WinMain(...)
+//{
+////AllocConsole();
+//main(__argc, __argv);
+////FreeConsole();
+//}

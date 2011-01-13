@@ -13,7 +13,9 @@ public:
     {
     }
     virtual bool save(const QString &path)
-    {}
+    {
+        return false;
+    }
     virtual void refresh()
     {}
     virtual QString path() const

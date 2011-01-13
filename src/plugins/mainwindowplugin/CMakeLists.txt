@@ -45,8 +45,9 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/shared/widgets )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DMAINWINDOWPLUGIN_LIBRARY )
+#add_definitions( -DQT_QTCOPYDIALOG_IMPORT )
 
 add_library( mainwindowplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
-target_link_libraries( mainwindowplugin ${QT_LIBRARIES} extensionsystem io coreplugin widgets )
+target_link_libraries( mainwindowplugin ${QT_LIBRARIES} extensionsystem io coreplugin widgets )#qtfilecopier )
 
 install_spec( mainwindowplugin.spec )

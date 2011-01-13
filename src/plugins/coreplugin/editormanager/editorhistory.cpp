@@ -83,6 +83,7 @@ HistoryItem EditorHistory::backItem() const
 
 QList<HistoryItem> EditorHistory::backItems(int maxItems) const
 {
+    return QList<HistoryItem>();
 }
 
 void EditorHistory::clear()
@@ -117,6 +118,7 @@ HistoryItem EditorHistory::forwardItem() const
     Q_D(const EditorHistory);
     if (canGoForward())
         return d->items.at(d->currentItemIndex + 1);
+    return HistoryItem();
 }
 
 QList<HistoryItem> EditorHistory::forwardItems(int maxItems) const

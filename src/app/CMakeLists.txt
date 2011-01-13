@@ -4,5 +4,7 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin/actionmanager 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
-add_executable( Andromeda MACOSX_BUNDLE WIN32 ${SOURCES} )
+add_executable( Andromeda MACOSX_BUNDLE ${SOURCES} )
 target_link_libraries( Andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
+
+set_target_properties( Andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )

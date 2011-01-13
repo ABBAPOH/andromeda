@@ -190,7 +190,7 @@ bool PluginSpecPrivate::unloadLibrary()
     return true;
 }
 
-#warning TODO: check circular dependencies
+//#warning TODO: check circular dependencies
 bool PluginSpecPrivate::resolveDependencies()
 {
     Q_Q(PluginSpec);
