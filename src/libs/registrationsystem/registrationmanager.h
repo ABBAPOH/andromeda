@@ -24,7 +24,14 @@ public:
     explicit RegistrationManager(QObject *parent = 0);
     ~RegistrationManager();
 
-    void addRegistrator(IRegistrator *registrator, const QString &type = "");
+    void addRegistrator(IRegistrator *registrator, const QString &type);
+    void addRegistrator(IRegistrator *registrator, const QMetaObject *metaObject);
+
+    template <class T>
+    void addRegistrator(IRegistrator *registrator)
+    {
+        addRegistrator(T::staticMetaObject, registrator);
+    }
     void removeRegistrator(IRegistrator *registrator);
 
 signals:
@@ -32,7 +39,8 @@ signals:
     void objectUnregistered(QObject *object);
 
 public slots:
-    void registerObject(QObject *object, const QString &type = "");
+    void registerObject(QObject *object, const QString &type);
+    void registerObject(QObject *object);
     void unregisterObject(QObject *object);
 
 protected:

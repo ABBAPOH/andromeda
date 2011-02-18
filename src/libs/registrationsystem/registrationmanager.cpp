@@ -85,6 +85,7 @@ class RegistrationManagerPrivate
 {
 public:
     QMultiHash<QString, IRegistrator *> registrators;
+    QMultiHash<const QMetaObject *, IRegistrator *> registratorsForMetaObject;
     QMultiHash<QObject *, IRegistrator *> mapped;
 };
 
@@ -113,6 +114,14 @@ void RegistrationManager::addRegistrator(IRegistrator *registrator, const QStrin
     }
 }
 
+void RegistrationManager::addRegistrator(IRegistrator *registrator, const QMetaObject *metaObject)
+{
+    Q_D(RegistrationManager);
+    if (!d->registratorsForMetaObject.values(metaObject).contains(registrator)) {
+        d->registratorsForMetaObject.insert(metaObject, registrator);
+    }
+}
+
 void RegistrationManager::removeRegistrator(IRegistrator *registrator)
 {
     Q_D(RegistrationManager);
@@ -135,6 +144,26 @@ void RegistrationManager::registerObject(QObject *object, const QString &type)
             emit objectRegistered(object);
         }
     }
+}
+
+void RegistrationManager::registerObject(QObject *object)
+{
+    Q_D(RegistrationManager);
+
+    const QMetaObject * metaObject = 0;
+    do {
+        metaObject = object->metaObject()->superClass();
+        if (d->registratorsForMetaObject.contains(metaObject)) {
+            QList<IRegistrator *> registrators;
+            registrators = d->registratorsForMetaObject.values(metaObject);
+            foreach (IRegistrator *registrator, registrators) {
+                bool result = registrator->registerObject(object);
+                if (result) {
+                    d->mapped.insert(object, registrator);
+                    emit objectRegistered(object);
+                }
+            }        }
+    } while (metaObject != 0);
 }
 
 void RegistrationManager::unregisterObject(QObject *object)
