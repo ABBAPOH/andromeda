@@ -52,23 +52,18 @@ Core::Core(QObject *parent) :
     d_ptr(new CorePrivate)
 {
     Q_D(Core);
-    setObjectName("core");
     d->pool = ExtensionSystem::PluginManager::instance();
-//    d->pool->addObject(this); // we add the core to pool
+    setObjectName("core");
 }
 
 Core::~Core()
 {
-    // todo - use pool
-//    delete d_func()->editorManager;
     delete d_ptr;
 }
 
 EditorManager *Core::editorManager()
 {
-    qDebug("Core::editorManager()");
     Q_D(Core);
-//    return d_func()->editorManager;
     return d->pool->object<EditorManager>("editorManager");
 }
 

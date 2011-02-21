@@ -6,6 +6,7 @@ set( HEADERS
     coreplugin.h
     ifile.h
     editormanager/editormanager.h
+    editormanager/editormanager_p.h
     editormanager/ieditor.h
     editormanager/ieditorfactory.h
     editormanager/editorview.h

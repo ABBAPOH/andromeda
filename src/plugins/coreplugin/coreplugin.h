@@ -2,7 +2,6 @@
 #define COREPLUGIN_H
 
 #include <iplugin.h>
-#include "core.h"
 
 using namespace ExtensionSystem;
 
@@ -20,7 +19,6 @@ signals:
 public slots:
 
 private:
-    CorePlugin::Core *core;
 };
 
 #endif // COREPLUGIN_H
