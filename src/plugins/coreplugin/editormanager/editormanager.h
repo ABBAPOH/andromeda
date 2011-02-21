@@ -4,6 +4,7 @@
 #include "../coreplugin_global.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QMetaType>
 
 class QUrl;
 namespace CorePlugin
@@ -33,5 +34,7 @@ protected:
 };
 
 } // namespace CorePlugin
+
+Q_DECLARE_METATYPE(CorePlugin::EditorManager*)
 
 #endif // EDITORMANAGER_H
