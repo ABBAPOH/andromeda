@@ -1,7 +1,6 @@
 #ifndef EDITORMANAGER_P_H
 #define EDITORMANAGER_P_H
 
-#include <registrationmanager.h>
 #include <QtCore/QMultiHash>
 
 #include "editormanager.h"
@@ -9,12 +8,9 @@
 namespace CorePlugin
 {
 
-class EditorManagerPrivate: public RegistrationSystem::IRegistrator
+class EditorManagerPrivate
 {
 public:
-    virtual bool registerObject(QObject *object);
-    virtual bool unregisterObject(QObject *object);
-
     QMultiHash<QString, IEditorFactory *> factories;
 };
 

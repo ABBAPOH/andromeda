@@ -3,9 +3,9 @@
 
 #include "coreplugin_global.h"
 
-#include "editormanager/editormanager.h"
+#include <ExtensionSystem>
 
-#include <registrationmanager.h>
+#include "editormanager/editormanager.h"
 
 namespace CorePlugin
 {
@@ -17,14 +17,19 @@ class COREPLUGIN_EXPORT Core : public QObject
     Q_DECLARE_PRIVATE(Core);
     Q_DISABLE_COPY(Core);
 
+    Q_PROPERTY(EditorManager *editorManager READ editorManager);
+
 public:
     explicit Core(QObject *parent = 0);
     ~Core();
 
-    static Core *instance();
+    static Core *instance()
+    {
+        return ExtensionSystem::PluginManager::instance()->object<Core>("core");
+    }
 
-    virtual EditorManager *editorManager();
-    virtual RegistrationSystem::RegistrationManager *registrationManager();
+    EditorManager *editorManager();
+    QObject *getObject(const QString &name);
 
 signals:
 

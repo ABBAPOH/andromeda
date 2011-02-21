@@ -14,8 +14,7 @@ EditorManager::EditorManager(QObject *parent) :
     QObject(parent),
     d_ptr(new EditorManagerPrivate)
 {
-    Core *core = Core::instance();
-    core->registrationManager()->addRegistrator(d_ptr, "EditorFactory");
+    setObjectName("editorManager");
 }
 
 EditorManager::~EditorManager()
@@ -26,7 +25,9 @@ EditorManager::~EditorManager()
 IEditor *EditorManager::openEditor(const QString &path)
 {
     Q_D(EditorManager);
-    QList<IEditorFactory *> factories = d->factories.values();
+//    QList<IEditorFactory *> factories = d->factories.values();
+    QList<IEditorFactory *> factories;
+    factories = ExtensionSystem::PluginManager::instance()->objects<IEditorFactory>();
 
     foreach (IEditorFactory *factory, factories) {
         if (factory->canOpen(path)) {
@@ -62,24 +63,24 @@ QList<IEditor *> EditorManager::openEditors(const QString &path)
 
 // ============= EditorManagerPrivate =============
 
-bool EditorManagerPrivate::registerObject(QObject *object)
-{
-    IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
-    if (!factory) {
-        qWarning() << "Attempt to register object not of class IEditorFactory: " <<
-                object->metaObject()->className();
-        return false;
-    }
+//bool EditorManagerPrivate::registerObject(QObject *object)
+//{
+//    IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
+//    if (!factory) {
+//        qWarning() << "Attempt to register object not of class IEditorFactory: " <<
+//                object->metaObject()->className();
+//        return false;
+//    }
 
-    factories.insert(factory->type(), factory);
+//    factories.insert(factory->type(), factory);
 
-    return true;
-}
+//    return true;
+//}
 
-bool EditorManagerPrivate::unregisterObject(QObject *object)
-{
-    IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
-    if (factory)
-        factories.remove(factory->type(), factory);
-    return true;
-}
+//bool EditorManagerPrivate::unregisterObject(QObject *object)
+//{
+//    IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
+//    if (factory)
+//        factories.remove(factory->type(), factory);
+//    return true;
+//}

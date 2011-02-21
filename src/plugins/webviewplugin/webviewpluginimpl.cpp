@@ -38,7 +38,7 @@ WebViewPluginImpl::WebViewPluginImpl() :
 
 bool WebViewPluginImpl::initialize()
 {
-    addObjectByType(new WebViewFactory, "EditorFactory");
+    addObject(new WebViewFactory);
     return true;
 }
 

@@ -1,0 +1,4 @@
+#include "qobjectpool.h"
+#include "pluginspec.h"
+#include "pluginmanager.h"
+#include "iplugin.h"

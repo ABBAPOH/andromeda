@@ -1,0 +1,6 @@
+#include "editorhistory.h"
+#include "editormanager.h"
+#include "editorview.h"
+#include "historyitem.h"
+#include "ieditor.h"
+#include "ieditorfactory.h"

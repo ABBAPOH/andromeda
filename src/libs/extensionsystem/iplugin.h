@@ -21,13 +21,9 @@ public:
     virtual ~IPlugin();
 
     virtual bool initialize() = 0;
-    virtual QList<PluginDependency> dependencies() { return QList<PluginDependency>(); }
     virtual void shutdown() {}
 
-    void addObject(QObject * object);
-    void addObjectByName(QObject * object, const QString name);
-    void addObjectByType(QObject * object, const QString type);
-
+    void addObject(QObject * object, const QString &name = "");
     void removeObject(QObject * object);
 
 protected:

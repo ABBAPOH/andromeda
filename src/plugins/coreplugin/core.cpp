@@ -3,7 +3,6 @@
 
 #include <editormanager.h>
 #include <pluginmanager.h>
-#include <registrationmanager.h>
 
 /*!
     \namespace Core
@@ -48,48 +47,33 @@
 
 using namespace CorePlugin;
 
-Core *m_instance = 0;
-
 Core::Core(QObject *parent) :
     QObject(parent),
     d_ptr(new CorePrivate)
 {
-    Q_ASSERT(!m_instance);
-    m_instance = this;
-    setObjectName("Core");
-
     Q_D(Core);
-    d->registrationManager = new RegistrationSystem::RegistrationManager(this);
-    d->registrationManager->setObjectName("RegistrationManager");
-
-    d->editorManager = new EditorManager(this);
-    d->editorManager->setObjectName("EditorManager");
-
-connect(ExtensionSystem::PluginManager::instance(), SIGNAL(objectAdded(QObject*,QString)),
-        d->registrationManager, SLOT(registerObject(QObject*,QString)));
-
+    setObjectName("core");
+    d->pool = ExtensionSystem::PluginManager::instance();
+//    d->pool->addObject(this); // we add the core to pool
 }
 
 Core::~Core()
 {
     // todo - use pool
-    delete d_func()->registrationManager;
-    delete d_func()->editorManager;
+//    delete d_func()->editorManager;
     delete d_ptr;
-    m_instance = 0;
-}
-
-Core *Core::instance()
-{
-    return m_instance;
 }
 
 EditorManager *Core::editorManager()
 {
-    return d_func()->editorManager;
+    qDebug("Core::editorManager()");
+    Q_D(Core);
+//    return d_func()->editorManager;
+    return d->pool->object<EditorManager>("editorManager");
 }
 
-RegistrationSystem::RegistrationManager *Core::registrationManager()
+QObject *Core::getObject(const QString &name)
 {
-    return d_func()->registrationManager;
+    Q_D(Core);
+    return d->pool->object(name);
 }

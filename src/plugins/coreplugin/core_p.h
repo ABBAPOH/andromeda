@@ -9,8 +9,8 @@ namespace CorePlugin
 class CorePrivate
 {
 public:
-    EditorManager *editorManager;
-    RegistrationSystem::RegistrationManager *registrationManager;
+//    EditorManager *editorManager;
+    ExtensionSystem::QObjectPool *pool;
 };
 
 } // namespace Core

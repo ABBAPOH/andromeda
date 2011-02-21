@@ -18,7 +18,7 @@ public:
     explicit QObjectPool(QObject *parent = 0);
     virtual ~QObjectPool();
 
-    Q_INVOKABLE void addObject(QObject * object, const QString &type = "");
+    Q_INVOKABLE void addObject(QObject * object, const QString &name = "");
     Q_INVOKABLE void removeObject(QObject * object);
 
     QObject * object(const QString &name) const;
@@ -54,7 +54,7 @@ public:
     }
 
 signals:
-    void objectAdded(QObject *object, const QString &type);
+    void objectAdded(QObject *object);
     void objectRemoved(QObject *object);
 
 public slots:
