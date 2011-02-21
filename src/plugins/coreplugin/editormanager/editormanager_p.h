@@ -11,7 +11,6 @@ namespace CorePlugin
 class EditorManagerPrivate
 {
 public:
-    QMultiHash<QString, IEditorFactory *> factories;
 };
 
 } // namespace CorePlugin

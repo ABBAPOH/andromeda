@@ -8,8 +8,6 @@
 
 using namespace CorePlugin;
 
-// ============= EditorManager =============
-
 EditorManager::EditorManager(QObject *parent) :
     QObject(parent),
     d_ptr(new EditorManagerPrivate)
@@ -25,7 +23,6 @@ EditorManager::~EditorManager()
 IEditor *EditorManager::openEditor(const QString &path)
 {
     Q_D(EditorManager);
-//    QList<IEditorFactory *> factories = d->factories.values();
     QList<IEditorFactory *> factories;
     factories = ExtensionSystem::PluginManager::instance()->objects<IEditorFactory>();
 
@@ -48,9 +45,11 @@ IEditor *EditorManager::openEditor(const QString &path)
 QList<IEditor *> EditorManager::openEditors(const QString &path)
 {
     Q_D(EditorManager);
-    QList<IEditorFactory *> factories = d->factories.values();
+    QList<IEditorFactory *> factories;
+    factories = ExtensionSystem::PluginManager::instance()->objects<IEditorFactory>();
     QList<IEditor *> editors;
-//    qSort(factories.begin(), factories.end(), factoriesLessThan);
+
+    //    qSort(factories.begin(), factories.end(), factoriesLessThan);
     foreach (IEditorFactory *factory, factories) {
         if (factory->canOpen(path)) {
             IEditor *editor = factory->createEditor();
@@ -60,27 +59,3 @@ QList<IEditor *> EditorManager::openEditors(const QString &path)
     }
     return editors;
 }
-
-// ============= EditorManagerPrivate =============
-
-//bool EditorManagerPrivate::registerObject(QObject *object)
-//{
-//    IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
-//    if (!factory) {
-//        qWarning() << "Attempt to register object not of class IEditorFactory: " <<
-//                object->metaObject()->className();
-//        return false;
-//    }
-
-//    factories.insert(factory->type(), factory);
-
-//    return true;
-//}
-
-//bool EditorManagerPrivate::unregisterObject(QObject *object)
-//{
-//    IEditorFactory *factory = qobject_cast<IEditorFactory *>(object);
-//    if (factory)
-//        factories.remove(factory->type(), factory);
-//    return true;
-//}

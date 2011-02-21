@@ -3,11 +3,12 @@
 #include <QtCore/QtPlugin>
 #include <EditorManager>
 
+#include "core.h"
+
 using namespace CorePlugin;
 
 CorePluginImpl::CorePluginImpl() :
-    IPlugin(),
-    core(0)
+    IPlugin()
 {
 }
 

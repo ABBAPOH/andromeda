@@ -9,7 +9,6 @@ namespace CorePlugin
 class CorePrivate
 {
 public:
-//    EditorManager *editorManager;
     ExtensionSystem::QObjectPool *pool;
 };
 
