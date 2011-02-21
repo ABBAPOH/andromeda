@@ -38,11 +38,15 @@ QObjectPool::~QObjectPool()
 
     In fact, there can be many objects with same name.
 */
-void QObjectPool::addObject(QObject * object, const QString &type)
+void QObjectPool::addObject(QObject * object, const QString &name)
 {
     Q_D(QObjectPool);
     if (!object) {
         return;
+    }
+
+    if (!name.isEmpty()) {
+        object->setObjectName(name);
     }
 
     if (!d->objects.contains(object)) {
@@ -50,7 +54,7 @@ void QObjectPool::addObject(QObject * object, const QString &type)
         if (object->objectName() != "") {
             d->namedObjects.insertMulti(object->objectName(), object);
         }
-        emit objectAdded(object, type);
+        emit objectAdded(object);
     }
 }
 

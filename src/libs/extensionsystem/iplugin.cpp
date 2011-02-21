@@ -35,40 +35,14 @@ IPlugin::~IPlugin()
     \fn void addObject(QObject * object)
     \brief Adds \a object to object pool in PluginManager.
 */
-void IPlugin::addObject(QObject * object)
+void IPlugin::addObject(QObject * object, const QString &name)
 {
     Q_D(IPlugin);
 
     if (!d->addedObjects.contains(object))
         d->addedObjects.append(object);
 
-    PluginManager::instance()->addObject(object);
-}
-
-/*!
-    \fn void IPlugin::addObjectByName(QObject * object, const QString name)
-    \brief Adds \a object to object pool in PluginManager and sets its objectName to \a name.
-*/
-void IPlugin::addObjectByName(QObject * object, const QString name)
-{
-    object->setObjectName(name);
-    addObject(object);
-}
-
-/*!
-    \fn void IPlugin::addObjectByType(QObject * object, const QString type)
-    \brief Adds \a object to object pool in PluginManager.
-
-    \a type can be used to determine who should handle this object.
-*/
-void IPlugin::addObjectByType(QObject * object, const QString type)
-{
-    Q_D(IPlugin);
-
-    if (!d->addedObjects.contains(object))
-        d->addedObjects.append(object);
-
-    PluginManager::instance()->addObject(object, type);
+    PluginManager::instance()->addObject(object, name);
 }
 
 /*!
