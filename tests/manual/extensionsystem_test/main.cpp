@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
     }
     qDebug() << "end list";
 
-    PluginView view;
-    view.show();
+//    PluginView view;
+//    view.show();
 
     return app.exec();
 }
