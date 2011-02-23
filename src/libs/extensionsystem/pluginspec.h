@@ -51,6 +51,7 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
 public:
     PluginSpec();
     explicit PluginSpec(const QString & path);
+    explicit PluginSpec(QIODevice *device);
     ~PluginSpec();
 
     QString name() const;

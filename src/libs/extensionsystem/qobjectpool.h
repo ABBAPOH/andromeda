@@ -18,24 +18,24 @@ public:
     explicit QObjectPool(QObject *parent = 0);
     virtual ~QObjectPool();
 
-    Q_INVOKABLE void addObject(QObject * object, const QString &name = "");
-    Q_INVOKABLE void removeObject(QObject * object);
+    Q_INVOKABLE void addObject(QObject *object, const QString &name = "");
+    Q_INVOKABLE void removeObject(QObject *object);
 
-    QObject * object(const QString &name) const;
+    QObject *object(const QString &name) const;
     QObjectList objects(const QString &name) const;
 
     template <class T>
-    inline T * object(const QString &name) const
+    inline T *object(const QString &name) const
     {
         return qobject_cast<T *>(object(name));
     }
 
     QObjectList objects() const;
 
-    template <class T> T* object() const
+    template <class T> T *object() const
     {
-        foreach (QObject * object, objects()) {
-            T * t = qobject_cast<T*>(object);
+        foreach (QObject *object, objects()) {
+            T *t = qobject_cast<T*>(object);
             if (t)
                 return t;
             return 0;
@@ -45,8 +45,8 @@ public:
     template <class T> QList<T*> objects() const
     {
         QList<T*> result;
-        foreach (QObject * object, objects()) {
-            T * t = qobject_cast<T*>(object);
+        foreach (QObject *object, objects()) {
+            T *t = qobject_cast<T*>(object);
             if (t)
                 result.append(t);
         }
@@ -60,7 +60,7 @@ signals:
 public slots:
 
 protected:
-    QObjectPool(QObjectPoolPrivate &dd, QObject* parent = 0);
+    QObjectPool(QObjectPoolPrivate &dd, QObject *parent = 0);
 
     QObjectPoolPrivate *d_ptr;
 };

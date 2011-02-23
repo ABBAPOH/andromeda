@@ -22,15 +22,18 @@ public:
 
     static PluginManager *instance();
 
+    bool loaded();
+
     QString pluginsFolder() const;
     void setPluginsFolder(const QString &name);
 
-    bool loaded();
-
     QList<PluginSpec *> plugins() const;
+    PluginSpec *plugins(const QString &name) const;
 
 signals:
+#warning "TODO: check usage:"
     void pluginsChanged();
+
     void pluginsLoaded();
     void pluginsUnloaded();
 
