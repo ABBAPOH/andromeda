@@ -9,9 +9,9 @@ class WebViewTest : public ExtensionSystem::IPlugin
     Q_OBJECT
 public:
     WebViewTest();
+
     virtual bool initialize();
     virtual void shutdown();
-    virtual QList<ExtensionSystem::PluginDependency> dependencies();
 
     QObject * m_view;
 };

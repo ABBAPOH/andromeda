@@ -23,8 +23,9 @@ public:
     virtual bool initialize() = 0;
     virtual void shutdown() {}
 
-    void addObject(QObject * object, const QString &name = "");
-    void removeObject(QObject * object);
+protected:
+    void addObject(QObject *object, const QString &name = "");
+    void removeObject(QObject *object);
 
 protected:
     IPluginPrivate *d_ptr;

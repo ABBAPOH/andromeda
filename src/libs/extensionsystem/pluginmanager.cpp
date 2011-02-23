@@ -79,7 +79,6 @@ void PluginManager::loadPlugins()
     }
 
     d->load();
-    d->loaded = true;
     qDebug("PluginManager::pluginsLoaded");
     emit pluginsLoaded();
     emit pluginsChanged();
@@ -131,6 +130,12 @@ QList<PluginSpec *> PluginManager::plugins() const
     return d_func()->pluginSpecs;
 }
 
+PluginSpec *plugins(const QString &name) const
+{
+#warning "TODO: realize";
+}
+
+
 void PluginManager::updateDirectory(const QString &dirPath)
 {
     Q_D(PluginManager);
@@ -179,6 +184,8 @@ void PluginManagerPrivate::load()
 
     // enables new plugins
     enableSpecs(newSpecs);
+
+    loaded = true;
 }
 
 QStringList PluginManagerPrivate::getSpecFiles(QStringList folders)
