@@ -130,7 +130,7 @@ QList<PluginSpec *> PluginManager::plugins() const
     return d_func()->pluginSpecs;
 }
 
-PluginSpec *plugins(const QString &name) const
+PluginSpec *PluginManager::plugins(const QString &name) const
 {
 #warning "TODO: realize";
 }
