@@ -1,3 +1,6 @@
+set( QT_USE_QTWEBKIT TRUE )
+include( ${QT_USE_FILE} )
+
 set( SOURCES main.cpp )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin/actionmanager )
