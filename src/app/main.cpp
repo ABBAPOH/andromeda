@@ -1,7 +1,14 @@
 #include <QtSingleApplication>
 #include <pluginmanager.h>
+#include <QtCore/QStringList>
+#include <QtWebKit/QWebSecurityOrigin>
 
 using namespace ExtensionSystem;
+
+void preloadLibraries()
+{
+    QStringList schemes = QWebSecurityOrigin::localSchemes(); // preloading WebKit
+}
 
 int main(int argc, char *argv[])
 {
