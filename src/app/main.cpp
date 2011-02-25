@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
 
     app.setQuitOnLastWindowClosed(false);
 
+    preloadLibraries();
+
     PluginManager manager;
     manager.setPluginsFolder("plugins");
     manager.loadPlugins();
