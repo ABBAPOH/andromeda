@@ -1,0 +1,7 @@
+#include "guicontroller.h"
+#include "iview.h"
+#include "iviewfactory.h"
+#include "mainwindow.h"
+#include "perspective.h"
+#include "perspectiveinstance.h"
+#include "viewoptions.h"
