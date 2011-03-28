@@ -54,7 +54,6 @@ void MainWindow::displayInstance()
         IView *view = views[i];
         int area = view->area();
 
-        qDebug() << "area" << area;
         if (area > 0 && area < 5) {
             QDockWidget *dock = new QDockWidget;
             if (view->toolBar())
