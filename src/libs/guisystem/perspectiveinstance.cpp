@@ -13,6 +13,7 @@ namespace GuiSystem {
 class PerspectiveInstancePrivate
 {
 public:
+    Perspective *perspective;
     QList<IView *> views;
 };
 
@@ -26,6 +27,10 @@ PerspectiveInstance::PerspectiveInstance(Perspective *perspective) :
 {
     Q_D(PerspectiveInstance);
 
+    Q_ASSERT_X(perspective, "PerspectiveInstance::PerspectiveInstance", "Perspective can't be 0");
+
+    d->perspective = perspective;
+
     PerspectivePrivate *pd = perspective->d_func();
     GuiController *controller = GuiController::instance();
 
@@ -38,7 +43,7 @@ PerspectiveInstance::PerspectiveInstance(Perspective *perspective) :
             continue;
         }
         // FIXME: always clone views
-        IView *view = factory->createView();
+        IView *view = factory->createView(0); // parent() ?
         view->setOptions(pd->views.value(id));
         d->views.append(view);
 #warning "STOPPED HERE"
@@ -53,4 +58,9 @@ PerspectiveInstance::~PerspectiveInstance()
 QList<IView *> PerspectiveInstance::views()
 {
     return d_func()->views;
+}
+
+Perspective * PerspectiveInstance::perspective() const
+{
+    return d_func()->perspective;
 }

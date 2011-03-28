@@ -8,6 +8,8 @@
 namespace GuiSystem {
 
 class PerspectiveInstance;
+class State;
+
 class MainWindowPrivate;
 class GUISYSTEM_EXPORT MainWindow : public QMainWindow
 {
@@ -23,6 +25,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    State *currentState() const;
+
     PerspectiveInstance *perspectiveInstance() const;
     void setPerspectiveInstance(PerspectiveInstance *instance);
 
@@ -33,7 +37,7 @@ public slots:
 protected:
     MainWindowPrivate *d_ptr;
 
-    void displayInstance();
+    virtual void displayInstance();
 };
 
 } // namespace GuiSystem
