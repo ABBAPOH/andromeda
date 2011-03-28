@@ -21,33 +21,10 @@ public:
 
 using namespace GuiSystem;
 
-PerspectiveInstance::PerspectiveInstance(Perspective *perspective) :
-    QObject(perspective),
+PerspectiveInstance::PerspectiveInstance(QObject *parent) :
+    QObject(parent),
     d_ptr(new PerspectiveInstancePrivate)
 {
-    Q_D(PerspectiveInstance);
-
-    Q_ASSERT_X(perspective, "PerspectiveInstance::PerspectiveInstance", "Perspective can't be 0");
-
-    d->perspective = perspective;
-
-    PerspectivePrivate *pd = perspective->d_func();
-    GuiController *controller = GuiController::instance();
-
-    QStringList ids = pd->views.keys();
-    for (int i = 0; i < ids.size(); i++) {
-        QString id = ids[i];
-        IViewFactory *factory = controller->factory(id);
-        if (!factory) {
-            qWarning() << "Can't find view with id" << id;
-            continue;
-        }
-        // FIXME: always clone views
-        IView *view = factory->createView(0); // parent() ?
-        view->setOptions(pd->views.value(id));
-        d->views.append(view);
-#warning "STOPPED HERE"
-    }
 }
 
 PerspectiveInstance::~PerspectiveInstance()
@@ -55,12 +32,25 @@ PerspectiveInstance::~PerspectiveInstance()
     delete d_ptr;
 }
 
+Perspective * PerspectiveInstance::perspective() const
+{
+    return d_func()->perspective;
+}
+
+void PerspectiveInstance::setPerspective(Perspective *perspective)
+{
+    d_func()->perspective = perspective;
+}
+
 QList<IView *> PerspectiveInstance::views()
 {
     return d_func()->views;
 }
 
-Perspective * PerspectiveInstance::perspective() const
+void PerspectiveInstance::addView(IView *view)
 {
-    return d_func()->perspective;
+    Q_D(PerspectiveInstance);
+
+    if (!d->views.contains(view))
+        d->views.append(view);
 }

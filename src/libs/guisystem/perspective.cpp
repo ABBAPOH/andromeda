@@ -67,8 +67,16 @@ void Perspective::addView(const QString &id, int area)
     d->views.insert(id, ViewOptions(area));
 }
 
-PerspectiveInstance * Perspective::instance()
+QStringList Perspective::views() const
 {
-    return new PerspectiveInstance(this);
+    Q_D(const Perspective);
+
+    return d->views.keys();
 }
 
+ViewOptions Perspective::viewOptions(const QString &id) const
+{
+    Q_D(const Perspective);
+
+    return d->views.value(id);
+}

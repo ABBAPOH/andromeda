@@ -18,7 +18,7 @@ public:
 
     PerspectiveInstance *currentInstance() const;
 
-    void setCurrentPerspectiveId(const QString &id);
+    void setCurrentPerspective(const QString &id);
 //    void closeInstance(const QString &id);
 
     QStringList perspectiveIds() const;

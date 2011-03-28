@@ -19,11 +19,11 @@ int main(int argc, char *argv[])
     perspective->addView("TestViewFactory2", MainWindow::LeftViewArea);
     perspective->addView("TestViewFactory", MainWindow::CentralViewArea);
 
-    PerspectiveInstance *instance = perspective->instance();
+    GuiController::instance()->addPerspective(perspective);
 
     MainWindow w;
+    w.setPerspective("Test Perspective");
     w.show();
-    w.setPerspectiveInstance(instance);
 
     return app.exec();
 }
