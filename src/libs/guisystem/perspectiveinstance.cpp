@@ -30,7 +30,6 @@ PerspectiveInstance::PerspectiveInstance(Perspective *perspective) :
     GuiController *controller = GuiController::instance();
 
     QStringList ids = pd->views.keys();
-    qDebug() << ids;
     for (int i = 0; i < ids.size(); i++) {
         QString id = ids[i];
         IViewFactory *factory = controller->factory(id);
