@@ -1,0 +1,74 @@
+#include "perspective.h"
+#include "perspective_p.h"
+
+#include "perspectiveinstance.h"
+
+using namespace GuiSystem;
+
+Perspective::Perspective(const QString &id, QObject *parent) :
+    QObject(parent),
+    d_ptr(new PerspectivePrivate)
+{
+    Q_D(Perspective);
+
+    d->id = id;
+}
+
+Perspective::Perspective(const QString &id, const QStringList &types, QObject *parent) :
+    QObject(parent),
+    d_ptr(new PerspectivePrivate)
+{
+    Q_D(Perspective);
+
+    d->id = id;
+
+    setTypes(types);
+}
+
+Perspective::~Perspective()
+{
+    delete d_ptr;
+}
+
+QString Perspective::id() const
+{
+    return d_func()->id;
+}
+
+QStringList Perspective::types() const
+{
+    return d_func()->types;
+}
+
+void Perspective::setTypes(const QStringList &types)
+{
+    d_func()->types = types;
+}
+
+void Perspective::addType(const QString &type)
+{
+    Q_D(Perspective);
+
+    if (!d->types.contains(type))
+        d->types.append(type);
+}
+
+void Perspective::addView(const QString &id, const ViewOptions &options)
+{
+    Q_D(Perspective);
+
+    d->views.insert(id, options);
+}
+
+void Perspective::addView(const QString &id, int area)
+{
+    Q_D(Perspective);
+
+    d->views.insert(id, ViewOptions(area));
+}
+
+PerspectiveInstance * Perspective::instance()
+{
+    return new PerspectiveInstance(this);
+}
+
