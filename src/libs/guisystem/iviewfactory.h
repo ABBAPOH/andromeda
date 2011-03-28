@@ -5,6 +5,8 @@
 
 #include <QtCore/QString>
 
+class QObject;
+
 namespace GuiSystem {
 
 class IView;
@@ -18,7 +20,7 @@ public:
 
     virtual QString id() const = 0;
     virtual QString type() const { return ""; }
-    virtual IView *createView() const = 0;
+    virtual IView *createView(QObject *parent) const = 0;
 
     virtual ShareMode shareMode() const { return Clone; }
 };

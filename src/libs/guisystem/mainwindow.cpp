@@ -8,12 +8,15 @@
 
 #include <QDebug>
 
+#include "state.h"
+
 namespace GuiSystem {
 
 class MainWindowPrivate
 {
 public:
     PerspectiveInstance *currentInstance;
+    State *currentState;
 };
 
 } // namespace GuiSystem
@@ -24,12 +27,22 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new MainWindowPrivate)
 {
+    Q_D(MainWindow);
+
+    d->currentInstance = 0;
+    d->currentState = new State(this);
+
     resize(640, 480);
 }
 
 MainWindow::~MainWindow()
 {
     delete d_ptr;
+}
+
+State * MainWindow::currentState() const
+{
+    return d_func()->currentState;
 }
 
 PerspectiveInstance * MainWindow::perspectiveInstance() const
@@ -40,7 +53,12 @@ PerspectiveInstance * MainWindow::perspectiveInstance() const
 void MainWindow::setPerspectiveInstance(PerspectiveInstance *instance)
 {
     // TODO: Delete somewhere old perspective instance
+    if (!instance)
+        return;
+
     d_func()->currentInstance = instance;
+
+    instance->setParent(this);
 
     displayInstance();
 }
@@ -49,6 +67,7 @@ void MainWindow::displayInstance()
 {
     Q_D(MainWindow);
 
+    // TODO: remove old currentInstance. Use State. Check null instance.
     QList<IView *> views = d->currentInstance->views();
     for (int i = 0; i < views.size(); i++) {
         IView *view = views[i];

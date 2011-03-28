@@ -20,6 +20,8 @@ public:
 
     QList<IView *> views();
 
+    Perspective *perspective() const;
+
 signals:
 
 public slots:

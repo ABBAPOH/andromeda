@@ -48,7 +48,7 @@ public:
         return "TestView";
     }
 
-    virtual IView *createView() const
+    virtual IView *createView(QObject *parent) const
     {
         return new TestView;
     }
