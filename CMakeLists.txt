@@ -13,6 +13,8 @@ set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 
 if(MSVC)
     set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+else(MSVC)
+    add_definitions( -Wall )
 endif(MSVC)
 
 add_subdirectory( src )

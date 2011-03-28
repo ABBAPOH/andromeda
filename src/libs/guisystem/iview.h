@@ -12,11 +12,14 @@ class QToolBar;
 
 namespace GuiSystem {
 
+class State;
 class GUISYSTEM_EXPORT IView
 {
 public:
     IView() {}
     virtual ~IView() {}
+
+    virtual void initialize(State */*state*/) {}
 
     virtual QString type() const = 0;
 

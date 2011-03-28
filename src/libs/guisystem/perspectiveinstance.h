@@ -15,12 +15,14 @@ class GUISYSTEM_EXPORT PerspectiveInstance : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(PerspectiveInstance)
 public:
-    explicit PerspectiveInstance(Perspective *perspective);
+    explicit PerspectiveInstance(QObject *parent = 0);
     ~PerspectiveInstance();
 
-    QList<IView *> views();
-
     Perspective *perspective() const;
+    void setPerspective(Perspective *perspective);
+
+    QList<IView *> views();
+    void addView(IView *view);
 
 signals:
 

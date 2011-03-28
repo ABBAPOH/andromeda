@@ -30,8 +30,8 @@ public:
 
     void addView(const QString &id, const ViewOptions &options);
     void addView(const QString &id, int area);
-
-    PerspectiveInstance *instance();
+    QStringList views() const;
+    ViewOptions viewOptions(const QString &id) const;
 
 signals:
 

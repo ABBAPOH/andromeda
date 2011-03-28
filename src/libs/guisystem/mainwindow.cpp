@@ -50,25 +50,12 @@ PerspectiveInstance * MainWindow::perspectiveInstance() const
     return d_func()->currentInstance;
 }
 
-void MainWindow::setPerspectiveInstance(PerspectiveInstance *instance)
-{
-    // TODO: Delete somewhere old perspective instance
-    if (!instance)
-        return;
-
-    d_func()->currentInstance = instance;
-
-    instance->setParent(this);
-
-    displayInstance();
-}
-
 void MainWindow::displayInstance()
 {
     Q_D(MainWindow);
 
     // TODO: remove old currentInstance. Use State. Check null instance.
-    QList<IView *> views = d->currentInstance->views();
+    QList<IView *> views = d->currentState->currentInstance()->views();
     for (int i = 0; i < views.size(); i++) {
         IView *view = views[i];
         int area = view->area();
@@ -100,4 +87,13 @@ void MainWindow::displayInstance()
             setCentralWidget(view->widget());
         }
     }
+}
+
+void MainWindow::setPerspective(const QString &id)
+{
+    Q_D(MainWindow);
+
+    d->currentState->setCurrentPerspective(id);
+
+    displayInstance();
 }
