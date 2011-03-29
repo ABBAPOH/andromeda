@@ -1,6 +1,7 @@
 set( GLOBAL_HEADER GuiSystem)
 set( HEADERS
     guisystem_global.h
+    centralwidget.h
     guicontroller.h
     iview.h
     iviewfactory.h
@@ -12,6 +13,7 @@ set( HEADERS
     viewoptions.h
    )
 set( SOURCES
+    centralwidget.cpp
     guicontroller.cpp
     iview.cpp
     iviewfactory.cpp
