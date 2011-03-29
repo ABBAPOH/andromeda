@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include "centralwidget.h"
 #include "iview.h"
 #include "perspectiveinstance.h"
 
@@ -19,6 +20,7 @@ public:
     PerspectiveInstance *currentInstance;
     State *currentState;
     QList<QWidget *> widgets;
+    CentralWidget *centralWidget;
 };
 
 } // namespace GuiSystem
@@ -34,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent) :
     d->currentInstance = 0;
     d->currentState = new State(this);
     connect(d->currentState, SIGNAL(currentPerspectiveChanged(QString)), SLOT(setPerspective(QString)));
+
+    d->centralWidget = new CentralWidget(this);
+    setCentralWidget(d->centralWidget);
 
     resize(640, 480);
 }
@@ -95,7 +100,8 @@ void MainWindow::displayInstance()
             }
         } else if (area == 6) {
             // FIXME: add toolbar
-            setCentralWidget(view->widget());
+//            setCentralWidget(view->widget());
+            d->centralWidget->setView(view);
         }
     }
 }

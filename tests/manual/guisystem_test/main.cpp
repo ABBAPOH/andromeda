@@ -17,14 +17,14 @@ int main(int argc, char *argv[])
     Perspective *perspective = new Perspective("Test Perspective");
     perspective->setName("Perspective");
 
-    perspective->addView("TestViewFactory2", MainWindow::LeftViewArea);
-    perspective->addView("TestViewFactory", MainWindow::CentralViewArea);
+    perspective->addView("TestViewFactory", MainWindow::LeftViewArea);
+    perspective->addView("TestViewFactory2", MainWindow::CentralViewArea);
 
     GuiController::instance()->addPerspective(perspective);
 
     perspective = new Perspective("Test Perspective2");
     perspective->setName("Perspective 2");
-    perspective->addView("TestViewFactory", MainWindow::CentralViewArea);
+    perspective->addView("TestViewFactory2", MainWindow::CentralViewArea);
 
     GuiController::instance()->addPerspective(perspective);
 
