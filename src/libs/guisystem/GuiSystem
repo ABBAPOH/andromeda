@@ -4,5 +4,6 @@
 #include "mainwindow.h"
 #include "perspective.h"
 #include "perspectiveinstance.h"
+#include "perspectiveswitcher.h"
 #include "state.h"
 #include "viewoptions.h"

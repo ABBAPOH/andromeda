@@ -106,6 +106,8 @@ void State::setCurrentPerspective(const QString &id)
         d->instances.insert(id, instance);
     }
     d->currentInstanceId = id;
+
+    emit currentPerspectiveChanged(id);
 }
 
 // TODO: Implement. Need to change current instance.
@@ -121,4 +123,9 @@ QStringList State::perspectiveIds() const
     Q_D(const State);
 
     return d->instances.keys();
+}
+
+QStringList State::availablePerspectives() const
+{
+    return GuiController::instance()->perspectiveIds();
 }

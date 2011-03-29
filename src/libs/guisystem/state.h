@@ -22,8 +22,10 @@ public:
 //    void closeInstance(const QString &id);
 
     QStringList perspectiveIds() const;
+    QStringList availablePerspectives() const;
 
 signals:
+    void currentPerspectiveChanged(const QString &id);
 
 public slots:
 

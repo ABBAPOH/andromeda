@@ -82,3 +82,10 @@ Perspective * GuiController::perspective(const QString &id) const
 
     return d->perspectives.value(id);
 }
+
+QStringList GuiController::perspectiveIds() const
+{
+    Q_D(const GuiController);
+
+    return d->perspectives.keys();
+}

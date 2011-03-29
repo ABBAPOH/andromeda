@@ -30,11 +30,10 @@ public:
     PerspectiveInstance *perspectiveInstance() const;
     void setPerspectiveInstance(PerspectiveInstance *instance);
 
-    void setPerspective(const QString &id);
-
 signals:
 
-public slots:
+private slots:
+    void setPerspective(const QString &id);
 
 protected:
     MainWindowPrivate *d_ptr;

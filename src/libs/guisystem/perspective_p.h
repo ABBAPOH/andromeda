@@ -11,6 +11,7 @@ class PerspectivePrivate
 {
 public:
     QString id;
+    QString name;
     QStringList types;
 
     QMap<QString, ViewOptions> views;

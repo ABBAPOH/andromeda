@@ -7,6 +7,7 @@ set( HEADERS
     mainwindow.h
     perspective.h
     perspectiveinstance.h
+    perspectiveswitcher.h
     state.h
     viewoptions.h
    )
@@ -17,6 +18,7 @@ set( SOURCES
     mainwindow.cpp
     perspective.cpp
     perspectiveinstance.cpp
+    perspectiveswitcher.cpp
     state.cpp
     viewoptions.cpp
    )
