@@ -26,6 +26,8 @@ public:
     void addPerspective(Perspective *perspective);
     Perspective *perspective(const QString &id) const;
 
+    QStringList perspectiveIds() const;
+
 signals:
 
 public slots:

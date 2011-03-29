@@ -3,6 +3,7 @@
 #include "iview.h"
 #include "perspectiveinstance.h"
 
+#include <QtCore/QList>
 #include <QtGui/QDockWidget>
 #include <QtGui/QToolBar>
 
@@ -17,6 +18,7 @@ class MainWindowPrivate
 public:
     PerspectiveInstance *currentInstance;
     State *currentState;
+    QList<QWidget *> widgets;
 };
 
 } // namespace GuiSystem
@@ -31,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->currentInstance = 0;
     d->currentState = new State(this);
+    connect(d->currentState, SIGNAL(currentPerspectiveChanged(QString)), SLOT(setPerspective(QString)));
 
     resize(640, 480);
 }
@@ -54,6 +57,12 @@ void MainWindow::displayInstance()
 {
     Q_D(MainWindow);
 
+//    qDeleteAll(d->widgets);
+//    d->widgets.clear();
+    foreach(QWidget *widget, d->widgets) {
+        widget->hide();
+    }
+
     // TODO: remove old currentInstance. Use State. Check null instance.
     QList<IView *> views = d->currentState->currentInstance()->views();
     for (int i = 0; i < views.size(); i++) {
@@ -65,6 +74,8 @@ void MainWindow::displayInstance()
             if (view->toolBar())
                 dock->setTitleBarWidget(view->toolBar());
             dock->setWidget(view->widget());
+
+            d->widgets.append(dock);
 
             switch (area) {
             case 1:
@@ -92,8 +103,6 @@ void MainWindow::displayInstance()
 void MainWindow::setPerspective(const QString &id)
 {
     Q_D(MainWindow);
-
-    d->currentState->setCurrentPerspective(id);
 
     displayInstance();
 }

@@ -15,14 +15,27 @@ int main(int argc, char *argv[])
     GuiController::instance()->addFactory(new TestViewFactory);
     GuiController::instance()->addFactory(new TestViewFactory2);
     Perspective *perspective = new Perspective("Test Perspective");
+    perspective->setName("Perspective");
 
     perspective->addView("TestViewFactory2", MainWindow::LeftViewArea);
     perspective->addView("TestViewFactory", MainWindow::CentralViewArea);
 
     GuiController::instance()->addPerspective(perspective);
 
+    perspective = new Perspective("Test Perspective2");
+    perspective->setName("Perspective 2");
+    perspective->addView("TestViewFactory", MainWindow::CentralViewArea);
+
+    GuiController::instance()->addPerspective(perspective);
+
     MainWindow w;
-    w.setPerspective("Test Perspective");
+    w.currentState()->setCurrentPerspective("Test Perspective");
+
+    PerspectiveSwitcher s;
+    s.setState(w.currentState());
+//    s.show();
+    w.addToolBar(Qt::LeftToolBarArea, &s);
+
     w.show();
 
     return app.exec();

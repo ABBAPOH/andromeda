@@ -24,6 +24,9 @@ public:
 
     QString id() const;
 
+    QString name() const;
+    void setName(const QString &name);
+
     QStringList types() const;
     void setTypes(const QStringList &types);
     void addType(const QString &type);

@@ -35,6 +35,16 @@ QString Perspective::id() const
     return d_func()->id;
 }
 
+QString Perspective::name() const
+{
+    return d_func()->name;
+}
+
+void Perspective::setName(const QString &name)
+{
+    d_func()->name = name;
+}
+
 QStringList Perspective::types() const
 {
     return d_func()->types;
@@ -80,3 +90,4 @@ ViewOptions Perspective::viewOptions(const QString &id) const
 
     return d->views.value(id);
 }
+
