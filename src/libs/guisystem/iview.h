@@ -3,6 +3,7 @@
 
 #include "guisystem_global.h"
 
+#include <QtCore/QObject>
 #include <QtCore/QString>
 
 #include "viewoptions.h"
@@ -13,10 +14,11 @@ class QToolBar;
 namespace GuiSystem {
 
 class State;
-class GUISYSTEM_EXPORT IView
+class GUISYSTEM_EXPORT IView : public QObject
 {
+    Q_OBJECT
 public:
-    IView() {}
+    IView() : QObject() {}
     virtual ~IView() {}
 
     virtual void initialize(State */*state*/) {}
