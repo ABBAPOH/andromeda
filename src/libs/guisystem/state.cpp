@@ -18,7 +18,6 @@ public:
     StatePrivate(State *qq);
     QHash<QString, PerspectiveInstance*> instances; // perspective id -> instance
     QString currentInstanceId;
-    QHash<QString, IView *> sharedViews;
 
     void createViews(PerspectiveInstance *instance);
 
@@ -50,17 +49,8 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
             qWarning() << "Can't find view with id" << id;
             continue;
         }
-        // FIXME: always clone views
-        IView *view = 0;
-        if (factory->shareMode() == IViewFactory::Clone) {
-            view = factory->createView(q->parent());
-        } else {
-            view = sharedViews.value(id);
-            if (!view) {
-                view = factory->createView(q->parent());
-                sharedViews.insert(id, view);
-            }
-        }
+
+        IView *view = factory->view(q);
         view->setOptions(perspective->viewOptions(id));
         instance->addView(view);
     }

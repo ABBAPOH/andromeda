@@ -5,7 +5,7 @@
 
 using namespace GuiSystem;
 
-class TestView2 : public QObject, public IView
+class TestView2 : public IView
 {
     Q_OBJECT
 public:
