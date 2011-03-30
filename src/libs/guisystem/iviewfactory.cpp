@@ -34,7 +34,7 @@ IView *IViewFactory::view(State *state)
 
     if (shareMode() == Clone) {
 
-        IView *view = createView(state);
+        IView *view = createView();
         view->setParent(state); // should reparent to correctly delete object
         return view;
 
@@ -50,7 +50,7 @@ IView *IViewFactory::view(State *state)
 
         IView *view = d->sharedViews.value(parent);
         if (!view) {
-            view = createView(parent);
+            view = createView();
             view->setParent(parent); // should reparent to correctly delete object
             d->sharedViews.insert(parent, view);
         }
