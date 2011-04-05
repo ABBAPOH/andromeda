@@ -18,8 +18,8 @@ class GUISYSTEM_EXPORT IView : public QObject
 {
     Q_OBJECT
 public:
-    IView() : QObject() {}
-    virtual ~IView() {}
+    explicit IView(QObject *parent = 0);
+    virtual ~IView();
 
     virtual void initialize(State */*state*/) {}
     virtual void shutdown() {}
