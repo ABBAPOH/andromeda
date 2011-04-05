@@ -29,9 +29,6 @@ signals:
 
 public slots:
 
-private slots:
-    void onDestroy(QObject *object); // TODO : move to private class OR manually remove from View's destructor
-
 protected:
     StatePrivate *d_ptr;
 };
