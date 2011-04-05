@@ -3,5 +3,6 @@
 -remove sharing between tabs
 -deleting views and widgets with State
 -factory is no more view's parent
+-dual pain editor
 
 // DISCUSS:

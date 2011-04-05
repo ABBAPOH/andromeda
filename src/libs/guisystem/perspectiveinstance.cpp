@@ -14,8 +14,7 @@ class PerspectiveInstancePrivate
 {
 public:
     Perspective *perspective;
-    QList<IView *> views;
-    QMap<QString, IView *> mapToView;
+    QHash<QString, IView *> mapToView;
 };
 
 } // namespace GuiSystem
@@ -45,20 +44,16 @@ void PerspectiveInstance::setPerspective(Perspective *perspective)
 
 QList<IView *> PerspectiveInstance::views()
 {
-    return d_func()->views;
+    return d_func()->mapToView.values();
 }
 
 void PerspectiveInstance::addView(IView *view)
 {
     Q_D(PerspectiveInstance);
 
-    if (!d->views.contains(view)) {
-        d->views.append(view);
-
-        IViewFactory *factory = qobject_cast<IViewFactory *>(view->parent());
-        Q_ASSERT_X(factory, "PerspectiveInstance::addView", "View's parent is not a factory.");
-
-        d->mapToView.insert(factory->id(), view);
+    QString id = view->factoryId();
+    if (!d->mapToView.contains(id)) {
+        d->mapToView.insert(id, view);
     }
 }
 
@@ -66,13 +61,9 @@ void PerspectiveInstance::removeView(IView *view)
 {
     Q_D(PerspectiveInstance);
 
-    if (d->views.contains(view)) {
-        d->views.removeAll(view);
-
-        IViewFactory *factory = qobject_cast<IViewFactory *>(view->parent());
-        Q_ASSERT_X(factory, "PerspectiveInstance::addView", "View's parent is not a factory.");
-
-        d->mapToView.remove(factory->id());
+    QString id = view->factoryId();
+    if (d->mapToView.contains(id)) {
+        d->mapToView.remove(id);
     }
 }
 
