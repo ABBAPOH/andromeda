@@ -59,9 +59,17 @@ void GuiController::removeFactory(IViewFactory *factory)
     if (!factory)
         return;
 
+    removeFactory(factory->id());
+}
+
+void GuiController::removeFactory(const QString &id)
+{
     Q_D(GuiController);
 
-    d->factories.remove(factory->id());
+    if (d->factories.contains(id)) {
+        d->factories.remove(id);
+        emit factoryRemoved(id);
+    }
 }
 
 IViewFactory * GuiController::factory(const QString &id) const
