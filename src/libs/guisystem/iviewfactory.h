@@ -12,11 +12,9 @@ namespace GuiSystem {
 
 class State;
 class IView;
-class IViewFactoryPrivate;
 class GUISYSTEM_EXPORT IViewFactory : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(IViewFactory)
 public:
     enum ShareMode { Clone = 0, ShareState = 1, ShareWindow = 2 };
 
@@ -28,12 +26,11 @@ public:
 
     virtual ShareMode shareMode() const { return Clone; }
 
-    IView *view(State *state);
+    IView *view();
 
 protected:
-    virtual IView *createView() const = 0;
 
-    IViewFactoryPrivate *d_ptr; // TODO: maybe move map here?
+    virtual IView *createView() const = 0;
 };
 
 } // namespace GuiSystem

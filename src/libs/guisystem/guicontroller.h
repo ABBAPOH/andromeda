@@ -21,6 +21,7 @@ public:
     static GuiController *instance();
 
     void addFactory(IViewFactory *factory);
+    void removeFactory(IViewFactory *factory);
     IViewFactory *factory(const QString &id) const;
 
     void addPerspective(Perspective *perspective);

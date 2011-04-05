@@ -16,8 +16,10 @@ class StatePrivate
     Q_DECLARE_PUBLIC(State)
 public:
     StatePrivate(State *qq);
-    QHash<QString, PerspectiveInstance*> instances; // perspective id -> instance
+    QHash<QString, PerspectiveInstance *> instances; // perspective id -> instance
     QString currentInstanceId;
+    QHash<QString, IView *> sharedViews;
+    QList<IView *> views;
 
     void createViews(PerspectiveInstance *instance);
 
@@ -50,14 +52,28 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
             continue;
         }
 
-        IView *view = factory->view(q);
+        IView *view = 0;
+        if (factory->shareMode() == IViewFactory::Clone) {
+            view = factory->view();
+            views.append(view);
+            q->connect(view, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
+        } else {
+            view = sharedViews.value(id);
+            if (!view) {
+                view = factory->view();
+                views.append(view);
+                q->connect(view, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
+                sharedViews.insert(id, view);
+            }
+        }
+
         view->setOptions(perspective->viewOptions(id));
         instance->addView(view);
     }
 
-    QList<IView *> views = instance->views();
-    for (int i = 0; i < views.size(); i++) { // 20-years on counters market
-        views[i]->initialize(q);
+    QList<IView *> instanceViews = instance->views();
+    for (int i = 0; i < instanceViews.size(); i++) { // 20-years on counters market
+        instanceViews[i]->initialize(q);
     }
 }
 
@@ -69,6 +85,16 @@ State::State(QObject *parent) :
 
 State::~State()
 {
+    Q_D(State);
+
+    for (int i = 0; i < d->views.count(); i++) {
+        IView *view = d->views[i];
+        disconnect(view, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
+//        view->shutdown();
+//        view->deleteLater();
+        delete view;
+    }
+
     delete d_ptr;
 }
 
@@ -118,4 +144,29 @@ QStringList State::perspectiveIds() const
 QStringList State::availablePerspectives() const
 {
     return GuiController::instance()->perspectiveIds();
+}
+
+void State::onDestroy(QObject *object)
+{
+    qDebug("GuiSystem::State::onDestroy");
+//    qDebug() << sender()->metaObject()->className();
+//    IView *view = qobject_cast<IView *>(object);
+    IView *view = (IView *)object;
+//    Q_ASSERT(view);
+
+    // TODO: remove bidlo coding
+    Q_D(State);
+
+    d->views.removeAll(view);
+
+    IViewFactory *factory = qobject_cast<IViewFactory *>(view->parent());
+    Q_ASSERT_X(factory, "State::onDestroy", "View's parent is not a factory.");
+
+    QString key = factory->id();
+//    QString key = d->sharedViews.key(view);
+    d->sharedViews.remove(key);
+
+    foreach (PerspectiveInstance *instance, d->instances) {
+        instance->removeView(view);
+    }
 }
