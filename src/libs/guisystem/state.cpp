@@ -19,7 +19,6 @@ public:
     QHash<QString, PerspectiveInstance *> instances; // perspective id -> instance
     QString currentInstanceId;
     QHash<QString, IView *> sharedViews;
-    QList<IView *> views;
 
     void createViews(PerspectiveInstance *instance);
 
@@ -55,12 +54,12 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
         IView *view = 0;
         if (factory->shareMode() == IViewFactory::Clone) {
             view = factory->view();
-            views.append(view);
+//            views.append(view);
         } else {
             view = sharedViews.value(id);
             if (!view) {
                 view = factory->view();
-                views.append(view);
+//                views.append(view);
                 sharedViews.insert(id, view);
             }
         }
@@ -79,18 +78,21 @@ State::State(QObject *parent) :
     QObject(parent),
     d_ptr(new StatePrivate(this))
 {
+    GuiController *conTROLLer = GuiController::instance();
+    connect(conTROLLer, SIGNAL(factoryRemoved(QString)), this, SLOT(onFactoryRemoved(QString)));
 }
 
 State::~State()
 {
     Q_D(State);
 
-    for (int i = 0; i < d->views.count(); i++) {
-        IView *view = d->views[i];
-//        view->shutdown();
-//        view->deleteLater();
-        delete view;
+    foreach (PerspectiveInstance *instance, d->instances.values()) {
+        QList<IView *> views = instance->views();
+        qDeleteAll(views);
+        delete instance;
     }
+
+    qDeleteAll(d->sharedViews.values());
 
     delete d_ptr;
 }
@@ -141,4 +143,21 @@ QStringList State::perspectiveIds() const
 QStringList State::availablePerspectives() const
 {
     return GuiController::instance()->perspectiveIds();
+}
+
+void State::onFactoryRemoved(const QString &id)
+{
+    qDebug("State::onFactoryRemoved");
+
+    Q_D(State);
+
+    IView *view = d->sharedViews.value(id);
+    d->sharedViews.remove(id);
+    delete view;
+
+    foreach (PerspectiveInstance *instance, d->instances.values()) {
+        IView *view = instance->view(id);
+        instance->removeView(id);
+        delete view;
+    }
 }

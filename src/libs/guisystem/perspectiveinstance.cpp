@@ -62,9 +62,14 @@ void PerspectiveInstance::removeView(IView *view)
     Q_D(PerspectiveInstance);
 
     QString id = view->factoryId();
-    if (d->mapToView.contains(id)) {
+//    if (d->mapToView.contains(id)) {
         d->mapToView.remove(id);
-    }
+//    }
+}
+
+void PerspectiveInstance::removeView(const QString &id)
+{
+    d_func()->mapToView.remove(id);
 }
 
 IView * PerspectiveInstance::view(const QString &id) const
