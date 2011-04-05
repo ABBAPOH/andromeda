@@ -20,6 +20,7 @@ IViewFactory::~IViewFactory()
 IView* IViewFactory::view()
 {
     IView* result = createView();
+    result->setFactoryId(id());
 //    if (result->parent() && result->parent() != this) {
 //        qWarning() << "object of type" << result->metaObject()->className() << "already has parent, fixing";
 //    }
