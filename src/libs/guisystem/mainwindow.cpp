@@ -113,8 +113,6 @@ void MainWindow::displayInstance()
 
 void MainWindow::setPerspective(const QString &id)
 {
-    Q_D(MainWindow);
-
     displayInstance();
 }
 
