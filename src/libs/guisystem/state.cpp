@@ -56,13 +56,11 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
         if (factory->shareMode() == IViewFactory::Clone) {
             view = factory->view();
             views.append(view);
-            q->connect(view, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
         } else {
             view = sharedViews.value(id);
             if (!view) {
                 view = factory->view();
                 views.append(view);
-                q->connect(view, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
                 sharedViews.insert(id, view);
             }
         }
@@ -89,7 +87,6 @@ State::~State()
 
     for (int i = 0; i < d->views.count(); i++) {
         IView *view = d->views[i];
-        disconnect(view, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
 //        view->shutdown();
 //        view->deleteLater();
         delete view;
@@ -144,29 +141,4 @@ QStringList State::perspectiveIds() const
 QStringList State::availablePerspectives() const
 {
     return GuiController::instance()->perspectiveIds();
-}
-
-void State::onDestroy(QObject *object)
-{
-    qDebug("GuiSystem::State::onDestroy");
-//    qDebug() << sender()->metaObject()->className();
-//    IView *view = qobject_cast<IView *>(object);
-    IView *view = (IView *)object;
-//    Q_ASSERT(view);
-
-    // TODO: remove bidlo coding
-    Q_D(State);
-
-    d->views.removeAll(view);
-
-    IViewFactory *factory = qobject_cast<IViewFactory *>(view->parent());
-    Q_ASSERT_X(factory, "State::onDestroy", "View's parent is not a factory.");
-
-    QString key = factory->id();
-//    QString key = d->sharedViews.key(view);
-    d->sharedViews.remove(key);
-
-    foreach (PerspectiveInstance *instance, d->instances) {
-        instance->removeView(view);
-    }
 }
