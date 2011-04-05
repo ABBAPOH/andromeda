@@ -43,10 +43,18 @@ public:
         return m_area;
     }
 
-private:
+    QString factoryId() const;
+
+protected:
+    void setFactoryId(const QString &id);
+
+//private:
     // FIXME: remove area
     int m_area;
     ViewOptions m_options;
+    QString m_factoryId;
+
+    friend class IViewFactory;
 };
 
 } // namespace GuiSystem

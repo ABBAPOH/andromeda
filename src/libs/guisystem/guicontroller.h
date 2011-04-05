@@ -30,6 +30,7 @@ public:
     QStringList perspectiveIds() const;
 
 signals:
+    void factoryRemoved(const QString &id);
 
 public slots:
 
