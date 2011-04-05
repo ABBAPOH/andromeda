@@ -23,6 +23,8 @@ public:
 
     QList<IView *> views();
     void addView(IView *view);
+    void removeView(IView *view);
+    IView *view(const QString &id) const;
 
 signals:
 

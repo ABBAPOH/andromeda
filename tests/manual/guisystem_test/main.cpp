@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.currentState()->setCurrentPerspective("Test Perspective");
+    IView * view = w.currentState()->currentInstance()->view("TestViewFactory");
+    qDebug() << "found view" << view->metaObject()->className();
+    view->deleteLater();
 
     PerspectiveSwitcher s;
     s.setState(w.currentState());

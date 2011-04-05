@@ -22,6 +22,7 @@ public:
     virtual ~IView() {}
 
     virtual void initialize(State */*state*/) {}
+    virtual void shutdown() {}
 
     virtual QString type() const = 0;
 

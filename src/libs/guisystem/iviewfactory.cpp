@@ -1,60 +1,28 @@
 #include "iviewfactory.h"
 
 #include <QtCore/QMap>
+#include <QtCore/QDebug>
 
 #include "iview.h"
 #include "state.h"
 
-namespace GuiSystem {
-
-class IViewFactoryPrivate
-{
-public:
-    QMap<QObject*, IView*> sharedViews;
-};
-
-} // namespace GuiSystem
-
 using namespace GuiSystem;
 
-IViewFactory::IViewFactory(QObject * parent) :
-    QObject(parent),
-    d_ptr(new IViewFactoryPrivate)
+IViewFactory::IViewFactory(QObject* parent) :
+    QObject(parent)
 {
 }
 
 IViewFactory::~IViewFactory()
 {
-    delete d_ptr;
 }
 
-IView *IViewFactory::view(State *state)
+IView* IViewFactory::view()
 {
-    Q_ASSERT_X(state, "IViewFactory::view", "State can't be 0");
-
-    if (shareMode() == Clone) {
-
-        IView *view = createView();
-        view->setParent(state); // should reparent to correctly delete object
-        return view;
-
-    } else {
-
-        Q_D(IViewFactory);
-
-        QObject *parent = 0;
-        if (shareMode() == ShareState)
-            parent = state;
-        else if (shareMode() == ShareWindow)
-            parent = state->parent(); // TODO: state->session() ??
-
-        IView *view = d->sharedViews.value(parent);
-        if (!view) {
-            view = createView();
-            view->setParent(parent); // should reparent to correctly delete object
-            d->sharedViews.insert(parent, view);
-        }
-        return view;
-
+    IView* result = createView();
+    if (result->parent() && result->parent() != this) {
+        qWarning() << "object of type" << result->metaObject()->className() << "already has parent, fixing";
     }
+    result->setParent(this);
+    return result;
 }

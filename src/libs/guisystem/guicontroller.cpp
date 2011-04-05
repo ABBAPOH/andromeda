@@ -54,6 +54,16 @@ void GuiController::addFactory(IViewFactory *factory)
     d->factories.insert(id, factory);
 }
 
+void GuiController::removeFactory(IViewFactory *factory)
+{
+    if (!factory)
+        return;
+
+    Q_D(GuiController);
+
+    d->factories.remove(factory->id());
+}
+
 IViewFactory * GuiController::factory(const QString &id) const
 {
     Q_D(const GuiController);
