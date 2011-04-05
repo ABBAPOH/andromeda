@@ -26,8 +26,6 @@ FileCopyManager *FileCopyManager::instance()
 
 QtFileCopier *FileCopyManager::copier()
 {
-    Q_D(FileCopyManager);
-
     QtFileCopier *copier = new QtFileCopier(this);
     connect(copier, SIGNAL(done(bool)), SLOT(onDone(bool)));
     emit created(copier);
@@ -36,7 +34,6 @@ QtFileCopier *FileCopyManager::copier()
 
 void FileCopyManager::onDone(bool /*error*/)
 {
-    Q_D(FileCopyManager);
     QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
 
     if (!copier)
