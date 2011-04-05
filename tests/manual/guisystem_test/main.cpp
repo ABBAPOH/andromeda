@@ -43,11 +43,5 @@ int main(int argc, char *argv[])
 
     w.show();
 
-
-    QTimer tim;
-    tim.setSingleShot(true);
-    QObject::connect(&tim, SIGNAL(timeout()), factory, SLOT(deleteLater()));
-    tim.start(5000);
-
     return app.exec();
 }
