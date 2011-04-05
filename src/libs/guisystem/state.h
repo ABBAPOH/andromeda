@@ -29,6 +29,9 @@ signals:
 
 public slots:
 
+private slots:
+    void onFactoryRemoved(const QString &id);
+
 protected:
     StatePrivate *d_ptr;
 };
