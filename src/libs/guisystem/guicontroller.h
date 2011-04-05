@@ -22,6 +22,7 @@ public:
 
     void addFactory(IViewFactory *factory);
     void removeFactory(IViewFactory *factory);
+    void removeFactory(const QString &id);
     IViewFactory *factory(const QString &id) const;
 
     void addPerspective(Perspective *perspective);
