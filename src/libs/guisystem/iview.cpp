@@ -2,7 +2,7 @@
 
 using namespace GuiSystem;
 
-IView(QObject *parent = 0) :
+IView::IView(QObject *parent) :
     QObject(parent)
 {
 }
