@@ -40,6 +40,9 @@ protected:
     MainWindowPrivate *d_ptr;
 
     virtual void displayInstance();
+
+private:
+    void createWidgetsForInstance();
 };
 
 } // namespace GuiSystem

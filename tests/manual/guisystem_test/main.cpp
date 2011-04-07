@@ -6,16 +6,16 @@
 
 #include "testview.h"
 #include "testview2.h"
+#include "test.h"
 
 using namespace GuiSystem;
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    IViewFactory *factory = new TestViewFactory2;
 
     GuiController::instance()->addFactory(new TestViewFactory);
-    GuiController::instance()->addFactory(factory);
+    GuiController::instance()->addFactory(new TestViewFactory2);
     Perspective *perspective = new Perspective("Test Perspective");
     perspective->setName("Perspective");
 
@@ -42,6 +42,12 @@ int main(int argc, char *argv[])
     w.addToolBar(Qt::LeftToolBarArea, &s);
 
     w.show();
+
+    Test t;
+    QTimer tim;
+    tim.setSingleShot(true);
+    QObject::connect(&tim, SIGNAL(timeout()), &t, SLOT(testDeletion()));
+    tim.start(5000);
 
     return app.exec();
 }
