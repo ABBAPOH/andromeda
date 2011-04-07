@@ -5,6 +5,7 @@
 #include "perspectiveinstance.h"
 
 #include <QtCore/QList>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QDockWidget>
 #include <QtGui/QToolBar>
 
@@ -17,10 +18,18 @@ namespace GuiSystem {
 class MainWindowPrivate
 {
 public:
+    struct Data
+    {
+        QMap<IView *, QWidget *> mapToWidget;
+    };
+
+
     PerspectiveInstance *currentInstance;
     State *currentState;
-    QList<QWidget *> widgets;
-    CentralWidget *centralWidget;
+
+    QVBoxLayout *layout;
+
+    QSet<PerspectiveInstance *> instances;
     QHash<IView *, QWidget *> mapToWidget;
 };
 
@@ -38,14 +47,22 @@ MainWindow::MainWindow(QWidget *parent) :
     d->currentState = new State(this);
     connect(d->currentState, SIGNAL(currentPerspectiveChanged(QString)), SLOT(setPerspective(QString)));
 
-    d->centralWidget = new CentralWidget(this);
-    setCentralWidget(d->centralWidget);
+//    d->centralWidget = new CentralWidget(this);
+//    setCentralWidget(d->centralWidget);
+    d->layout = new QVBoxLayout();
+    d->layout->setMargin(0);
+    setCentralWidget(new QWidget);
+    centralWidget()->setLayout(d->layout);
 
     resize(640, 480);
 }
 
 MainWindow::~MainWindow()
 {
+    Q_D(MainWindow);
+
+    delete d->currentState;
+
     delete d_ptr;
 }
 
@@ -64,14 +81,52 @@ void MainWindow::displayInstance()
     Q_D(MainWindow);
     qDebug() << " MainWindow::displayInstance()";
 
-//    qDeleteAll(d->widgets);
-//    d->widgets.clear();
-    foreach(QWidget *widget, d->widgets) {
-        widget->hide();
+    // TODO: remove old currentInstance. Use State. Check null instance.
+    if (!d->instances.contains(d->currentState->currentInstance())) {
+        d->instances.insert(d->currentState->currentInstance());
+        createWidgetsForInstance();
     }
 
-    // TODO: remove old currentInstance. Use State. Check null instance.
-    QList<IView *> views = d->currentState->currentInstance()->views();
+    if (d->currentInstance) {
+        foreach (IView * view, d->currentInstance->views()) {
+            QWidget *widget = d->mapToWidget.value(view);
+            widget->hide();
+        }
+    }
+
+    d->currentInstance = d->currentState->currentInstance();
+
+    foreach (IView * view, d->currentInstance->views()) {
+        QWidget *widget = d->mapToWidget.value(view);
+        widget->show();
+    }
+}
+
+void MainWindow::setPerspective(const QString &id)
+{
+    displayInstance();
+}
+
+void MainWindow::onDestroy(QObject *object)
+{
+    qDebug("GuiSystem::MainWindow::onDestroy");
+
+    IView *view = (IView *)object;
+
+    // TODO: remove bidlo coding
+    Q_D(MainWindow);
+
+    QWidget *widget = d->mapToWidget.value(view);
+    d->mapToWidget.remove(view);
+    widget->deleteLater();
+}
+
+void MainWindow::createWidgetsForInstance()
+{
+    Q_D(MainWindow);
+
+    PerspectiveInstance *instance = d->currentState->currentInstance();
+    QList<IView *> views = instance->views();
     for (int i = 0; i < views.size(); i++) {
         IView *view = views[i];
         int area = view->area();
@@ -82,10 +137,10 @@ void MainWindow::displayInstance()
                 dock->setTitleBarWidget(view->toolBar());
             dock->setWidget(view->widget());
 //            connect(view, SIGNAL(destroyed()), dock, SLOT(deleteLater()));
-            connect(view, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
+            QObject::connect(view, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
 
             d->mapToWidget.insert(view, dock);
-            d->widgets.append(dock);
+//            d->widgets.append(dock);
 
             switch (area) {
             case 1:
@@ -105,28 +160,13 @@ void MainWindow::displayInstance()
             }
         } else if (area == 6) {
             // FIXME: add toolbar
+            CentralWidget *widget = new CentralWidget();
+            widget->setView(view);
+            d->layout->addWidget(widget);
+            d->mapToWidget.insert(view, widget);
 //            setCentralWidget(view->widget());
-            d->centralWidget->setView(view);
+//            d->centralWidget->setView(view);
         }
     }
-}
-
-void MainWindow::setPerspective(const QString &id)
-{
-    displayInstance();
-}
-
-void MainWindow::onDestroy(QObject *object)
-{
-    qDebug("GuiSystem::MainWindow::onDestroy");
-
-    IView *view = (IView *)object;
-
-    // TODO: remove bidlo coding
-    Q_D(MainWindow);
-
-    QWidget *widget = d->mapToWidget.value(view);
-    d->widgets.removeAll(widget);
-    d->mapToWidget.remove(view);
-    widget->deleteLater();
+    d->instances.insert(instance);
 }

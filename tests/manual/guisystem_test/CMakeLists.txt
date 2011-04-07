@@ -4,11 +4,13 @@ include( ${QT_USE_FILE} )
 set( HEADERS
     testview.h
     testview2.h
+    test.h
    )
 set( SOURCES
     main.cpp
     testview.cpp
     testview2.cpp
+    test.cpp
    )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
