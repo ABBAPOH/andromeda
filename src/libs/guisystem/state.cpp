@@ -8,22 +8,24 @@
 #include "iviewfactory.h"
 #include "perspective.h"
 #include "perspectiveinstance.h"
+#include "mainwindow.h"
 
 namespace GuiSystem {
 
 class StatePrivate
 {
     Q_DECLARE_PUBLIC(State)
+protected:
+    State *q_ptr;
+
 public:
     StatePrivate(State *qq);
     QHash<QString, PerspectiveInstance *> instances; // perspective id -> instance
     QString currentInstanceId;
     QHash<QString, IView *> sharedViews;
+    MainWindow *window;
 
     void createViews(PerspectiveInstance *instance);
-
-protected:
-    State *q_ptr;
 };
 
 } // namespace GuiSystem
@@ -31,7 +33,8 @@ protected:
 using namespace GuiSystem;
 
 StatePrivate::StatePrivate(State *qq) :
-    q_ptr(qq)
+    q_ptr(qq),
+    window(0)
 {
 }
 
@@ -66,6 +69,8 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
 
         view->setOptions(perspective->viewOptions(id));
         instance->addView(view);
+        QWidget *container = q->window()->createContainer(view, view->area());
+        view->setContainer(container);
     }
 
     QList<IView *> instanceViews = instance->views();
@@ -108,6 +113,7 @@ void State::setCurrentPerspective(const QString &id)
 {
     Q_D(State);
 
+    hideViews();
     PerspectiveInstance *instance = d->instances.value(id);
     if (!instance) {
         Perspective *perspective = GuiController::instance()->perspective(id);
@@ -121,6 +127,11 @@ void State::setCurrentPerspective(const QString &id)
         d->instances.insert(id, instance);
     }
     d->currentInstanceId = id;
+
+    if (window()->currentState() == this) {
+        // display instance
+        showViews();
+    }
 
     emit currentPerspectiveChanged(id);
 }
@@ -161,3 +172,33 @@ void State::onFactoryRemoved(const QString &id)
         delete view;
     }
 }
+
+MainWindow * State::window() const
+{
+    return d_func()->window;
+}
+
+void State::setWindow(MainWindow *window)
+{
+    d_func()->window = window;
+}
+
+void State::hideViews()
+{
+    Q_D(State);
+
+    if (!currentInstance())
+        return;
+
+    foreach (IView *view, currentInstance()->views()) {
+        view->container()->hide();
+    }
+}
+
+void State::showViews()
+{
+    foreach (IView *view, currentInstance()->views()) {
+        view->container()->show();
+    }
+}
+

@@ -5,6 +5,7 @@
 
 namespace GuiSystem {
 
+class MainWindow;
 class PerspectiveInstance;
 
 class StatePrivate;
@@ -23,6 +24,12 @@ public:
 
     QStringList perspectiveIds() const;
     QStringList availablePerspectives() const;
+
+    void hideViews();
+    void showViews();
+
+    MainWindow *window() const;
+    void setWindow(MainWindow *window);
 
 signals:
     void currentPerspectiveChanged(const QString &id);
