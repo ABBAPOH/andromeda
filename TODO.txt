@@ -4,5 +4,6 @@
 -deleting views and widgets with State
 -factory is no more view's parent
 -dual pain editor
+-separate options and geometry. Options are NOT used now.
 
 // DISCUSS:

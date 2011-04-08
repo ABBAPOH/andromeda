@@ -7,6 +7,7 @@
 
 namespace GuiSystem {
 
+class IView;
 class PerspectiveInstance;
 class State;
 
@@ -26,6 +27,16 @@ public:
     ~MainWindow();
 
     State *currentState() const;
+    int currentStateIndex() const;
+    void setCurrentState(int index);
+
+    QList<State*> states() const;
+    int stateCount() const;
+    void addState(State *state);
+    void removeState(int index);
+
+    virtual QWidget *createContainer(IView *view, int area);
+    virtual void displayView(IView *view, int area);
 
     PerspectiveInstance *perspectiveInstance() const;
     void setPerspectiveInstance(PerspectiveInstance *instance);
