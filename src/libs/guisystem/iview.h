@@ -5,6 +5,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QPointer>
 
 #include "viewoptions.h"
 
@@ -45,6 +46,9 @@ public:
 
     QString factoryId() const;
 
+    QWidget *container() const;
+    void setContainer(QWidget *widget);
+
 protected:
     void setFactoryId(const QString &id);
 
@@ -53,6 +57,7 @@ protected:
     int m_area;
     ViewOptions m_options;
     QString m_factoryId;
+    QPointer<QWidget> m_container;
 
     friend class IViewFactory;
 };
