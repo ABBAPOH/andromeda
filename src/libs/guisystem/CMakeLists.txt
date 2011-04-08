@@ -7,6 +7,7 @@ set( HEADERS
     iviewfactory.h
     mainwindow.h
     perspective.h
+    perspective_p.h
     perspectiveinstance.h
     perspectiveswitcher.h
     state.h

@@ -34,7 +34,6 @@ signals:
 
 private slots:
     void setPerspective(const QString &id);
-    void onDestroy(QObject *object);
 
 protected:
     MainWindowPrivate *d_ptr;

@@ -30,7 +30,7 @@ public:
     QVBoxLayout *layout;
 
     QSet<PerspectiveInstance *> instances;
-    QHash<IView *, QWidget *> mapToWidget;
+//    QHash<IView *, QWidget *> mapToWidget;
 };
 
 } // namespace GuiSystem
@@ -89,36 +89,20 @@ void MainWindow::displayInstance()
 
     if (d->currentInstance) {
         foreach (IView * view, d->currentInstance->views()) {
-            QWidget *widget = d->mapToWidget.value(view);
-            widget->hide();
+            view->container()->hide();
         }
     }
 
     d->currentInstance = d->currentState->currentInstance();
 
     foreach (IView * view, d->currentInstance->views()) {
-        QWidget *widget = d->mapToWidget.value(view);
-        widget->show();
+        view->container()->show();
     }
 }
 
 void MainWindow::setPerspective(const QString &id)
 {
     displayInstance();
-}
-
-void MainWindow::onDestroy(QObject *object)
-{
-    qDebug("GuiSystem::MainWindow::onDestroy");
-
-    IView *view = (IView *)object;
-
-    // TODO: remove bidlo coding
-    Q_D(MainWindow);
-
-    QWidget *widget = d->mapToWidget.value(view);
-    d->mapToWidget.remove(view);
-    widget->deleteLater();
 }
 
 void MainWindow::createWidgetsForInstance()
@@ -136,11 +120,8 @@ void MainWindow::createWidgetsForInstance()
             if (view->toolBar())
                 dock->setTitleBarWidget(view->toolBar());
             dock->setWidget(view->widget());
-//            connect(view, SIGNAL(destroyed()), dock, SLOT(deleteLater()));
-            QObject::connect(view, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
 
-            d->mapToWidget.insert(view, dock);
-//            d->widgets.append(dock);
+            view->setContainer(dock);
 
             switch (area) {
             case 1:
@@ -162,10 +143,8 @@ void MainWindow::createWidgetsForInstance()
             // FIXME: add toolbar
             CentralWidget *widget = new CentralWidget();
             widget->setView(view);
+            view->setContainer(widget);
             d->layout->addWidget(widget);
-            d->mapToWidget.insert(view, widget);
-//            setCentralWidget(view->widget());
-//            d->centralWidget->setView(view);
         }
     }
     d->instances.insert(instance);
