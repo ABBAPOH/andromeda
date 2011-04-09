@@ -1,6 +1,10 @@
 #include "perspective.h"
 #include "perspective_p.h"
 
+#include <QtCore/QFileInfo>
+
+#include "guicontroller.h"
+#include "iiohandler.h"
 #include "perspectiveinstance.h"
 
 using namespace GuiSystem;
@@ -63,6 +67,41 @@ void Perspective::addType(const QString &type)
         d->types.append(type);
 }
 
+void Perspective::load(const QString &file)
+{
+    QList<IIOHandler *> handlers = GuiController::instance()->handlers();
+    IIOHandler *handler = 0;
+
+    for (int i = 0; i < handlers.size(); i++) {
+        if (handlers[i]->canHandle(file)) {
+            handler = handlers[i];
+            break;
+        }
+    }
+
+    if (!handler)
+        return;
+
+    handler->read(file, this);
+}
+
+void Perspective::save(const QString &file, const QByteArray format)
+{
+    IIOHandler *handler = 0;
+    if (!format.isEmpty()) {
+        handler = GuiController::instance()->handler(format);
+    } else {
+        handler = GuiController::instance()->handler(QFileInfo(file).suffix().toUtf8());
+    }
+
+    if (!handler)
+        return;
+
+    if (handler->canWrite()) {
+        handler->write(file, this);
+    }
+}
+
 void Perspective::addView(const ViewOptions &options)
 {
     Q_D(Perspective);
@@ -90,4 +129,3 @@ ViewOptions Perspective::viewOptions(const QString &id) const
 
     return d->views.value(id);
 }
-

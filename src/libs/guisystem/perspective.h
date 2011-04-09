@@ -30,8 +30,10 @@ public:
     void setTypes(const QStringList &types);
     void addType(const QString &type);
 
-    void addView(const ViewOptions &options);
+    void load(const QString &file);
+    void save(const QString &file, const QByteArray format = QByteArray());
 
+    void addView(const ViewOptions &options);
     void addView(const QString &id, int area, int width = 0, int height = 0);
     QStringList views() const;
     ViewOptions viewOptions(const QString &id) const;

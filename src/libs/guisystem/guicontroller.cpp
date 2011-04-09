@@ -4,6 +4,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QDebug>
 
+#include "iiohandler.h"
 #include "iviewfactory.h"
 #include "perspective.h"
 
@@ -14,6 +15,8 @@ class GuiControllerPrivate
 public:
     QMap<QString, IViewFactory *> factories;
     QMap<QString, Perspective *> perspectives;
+
+    QMap<QByteArray, IIOHandler *> handlers;
 };
 
 }
@@ -28,6 +31,10 @@ GuiController::GuiController(QObject *parent) :
 
 GuiController::~GuiController()
 {
+    Q_D(GuiController);
+
+    qDeleteAll(d->handlers.values());
+
     delete d_ptr;
 }
 
@@ -77,6 +84,36 @@ IViewFactory * GuiController::factory(const QString &id) const
     Q_D(const GuiController);
 
     return d->factories.value(id);
+}
+
+void GuiController::addHandler(IIOHandler *handler)
+{
+    Q_D(GuiController);
+
+    QByteArray format = handler->format();
+    if (!d->handlers.contains(format))
+        d->handlers.insert(format, handler);
+}
+
+IIOHandler * GuiController::handler(const QByteArray &format) const
+{
+    Q_D(const GuiController);
+
+    return d->handlers.value(format);
+}
+
+QList<IIOHandler *> GuiController::handlers() const
+{
+    Q_D(const GuiController);
+
+    return d->handlers.values();
+}
+
+void GuiController::removeHandler(IIOHandler *handler)
+{
+    Q_D(GuiController);
+
+    d->handlers.remove(handler->format());
 }
 
 void GuiController::addPerspective(Perspective *perspective)

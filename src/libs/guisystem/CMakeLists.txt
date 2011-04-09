@@ -5,6 +5,7 @@ set( HEADERS
     guicontroller.h
     iview.h
     iviewfactory.h
+    iiohandler.h
     mainwindow.h
     perspective.h
     perspective_p.h
@@ -18,6 +19,7 @@ set( SOURCES
     guicontroller.cpp
     iview.cpp
     iviewfactory.cpp
+    iiohandler.cpp
     mainwindow.cpp
     perspective.cpp
     perspectiveinstance.cpp
