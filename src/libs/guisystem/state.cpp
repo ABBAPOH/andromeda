@@ -185,7 +185,7 @@ void State::setWindow(MainWindow *window)
 
 void State::hideViews()
 {
-    Q_D(State);
+//    Q_D(State);
 
     if (!currentInstance())
         return;
