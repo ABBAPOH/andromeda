@@ -63,18 +63,34 @@ void Perspective::addType(const QString &type)
         d->types.append(type);
 }
 
-void Perspective::addView(const QString &id, const ViewOptions &options)
+void Perspective::addView(const ViewOptions &options)
 {
     Q_D(Perspective);
 
-    d->views.insert(id, options);
+    d->views.insert(options.id(), options);
 }
 
-void Perspective::addView(const QString &id, int area)
-{
-    Q_D(Perspective);
+//void Perspective::addView(const QString &id, const ViewOptions &options)
+//{
+//    Q_D(Perspective);
 
-    d->views.insert(id, ViewOptions(area));
+//    ViewOptions copy(options);
+//    copy.setId(id);
+//    d->views.insert(id, copy);
+//}
+
+//void Perspective::addView(const QString &id, int area)
+//{
+//    Q_D(Perspective);
+
+//    d->views.insert(id, ViewOptions());
+//}
+
+void Perspective::addView(const QString &id, int area, int width, int height)
+{
+    ViewOptions options(id, area, width, height);
+
+    addView(options);
 }
 
 QStringList Perspective::views() const

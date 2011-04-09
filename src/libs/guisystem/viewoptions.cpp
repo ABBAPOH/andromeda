@@ -6,7 +6,6 @@ namespace GuiSystem {
 
 class ViewOptionsData : public QSharedData {
 public:
-    int area;
     QVariantHash options;
 };
 
@@ -14,19 +13,39 @@ public:
 
 using namespace GuiSystem;
 
-ViewOptions::ViewOptions(int area) : data(new ViewOptionsData)
-{
-    data->area = area;
-}
-
-ViewOptions::ViewOptions(const ViewOptions &rhs) : data(rhs.data)
+ViewOptions::ViewOptions() :
+    data(new ViewOptionsData)
 {
 }
 
-ViewOptions &ViewOptions::operator=(const ViewOptions &rhs)
+ViewOptions::ViewOptions(const QString &id) :
+    data(new ViewOptionsData)
 {
-    if (this != &rhs)
-        data.operator=(rhs.data);
+    setId(id);
+}
+
+ViewOptions::ViewOptions(const QString &id, int area, int width, int height) :
+    data(new ViewOptionsData)
+{
+    setId(id);
+    setArea(area);
+
+    if (width)
+        setWidth(width);
+
+    if (height)
+        setHeight(height);
+}
+
+ViewOptions::ViewOptions(const ViewOptions &other) :
+    data(other.data)
+{
+}
+
+ViewOptions &ViewOptions::operator=(const ViewOptions &other)
+{
+    if (this != &other)
+        data.operator=(other.data);
     return *this;
 }
 
@@ -34,9 +53,44 @@ ViewOptions::~ViewOptions()
 {
 }
 
-int GuiSystem::ViewOptions::area() const
+QString ViewOptions::id() const
 {
-    return data->area;
+    return data->options.value("id").toString();
+}
+
+void ViewOptions::setId(const QString &id)
+{
+    data->options["id"] = id;
+}
+
+int ViewOptions::area() const
+{
+    return data->options.value("area").toInt();
+}
+
+void ViewOptions::setArea(int area)
+{
+    data->options["area"] = area;
+}
+
+int ViewOptions::width() const
+{
+    return data->options.value("width").toInt();
+}
+
+void ViewOptions::setWidth(int width)
+{
+    data->options["width"] = width;
+}
+
+int ViewOptions::height() const
+{
+    return data->options.value("height").toInt();
+}
+
+void ViewOptions::setHeight(int height)
+{
+    data->options["height"] = height;
 }
 
 QVariant ViewOptions::option(const QString &option) const
@@ -47,4 +101,9 @@ QVariant ViewOptions::option(const QString &option) const
 void ViewOptions::setOption(const QString &option, const QVariant &value)
 {
     data->options.insert(option, value);
+}
+
+QVariantHash ViewOptions::toHash() const
+{
+    return data->options;
 }
