@@ -57,12 +57,10 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
         IView *view = 0;
         if (factory->shareMode() == IViewFactory::Clone) {
             view = factory->view();
-//            views.append(view);
         } else {
             view = sharedViews.value(id);
             if (!view) {
                 view = factory->view();
-//                views.append(view);
                 sharedViews.insert(id, view);
             }
         }
@@ -83,8 +81,8 @@ State::State(QObject *parent) :
     QObject(parent),
     d_ptr(new StatePrivate(this))
 {
-    GuiController *conTROLLer = GuiController::instance();
-    connect(conTROLLer, SIGNAL(factoryRemoved(QString)), this, SLOT(onFactoryRemoved(QString)));
+    GuiController *controller = GuiController::instance();
+    connect(controller, SIGNAL(factoryRemoved(QString)), this, SLOT(onFactoryRemoved(QString)));
 }
 
 State::~State()
@@ -185,8 +183,6 @@ void State::setWindow(MainWindow *window)
 
 void State::hideViews()
 {
-//    Q_D(State);
-
     if (!currentInstance())
         return;
 
