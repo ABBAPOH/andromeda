@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    Q_D(MainWindow);
+//    Q_D(MainWindow);
 
 //    delete d->currentState;
 
@@ -160,7 +160,7 @@ QWidget * MainWindow::createContainer(IView *view, int area)
 
 void MainWindow::displayView(IView *view, int area)
 {
-    Q_D(MainWindow);
+//    Q_D(MainWindow);
 
     if (area > 0 && area < 5) {
         QDockWidget *dock = qobject_cast<QDockWidget *>(view->container());
@@ -225,7 +225,7 @@ void MainWindow::setPerspective(const QString &id)
 
 void MainWindow::createWidgetsForInstance()
 {
-    Q_D(MainWindow);
+//    Q_D(MainWindow);
 
 //    PerspectiveInstance *instance = d->currentState->currentInstance();
 //    QList<IView *> views = instance->views();
