@@ -7,6 +7,7 @@
 
 namespace GuiSystem {
 
+class IIOHandler;
 class Perspective;
 class IViewFactory;
 class GuiControllerPrivate;
@@ -24,6 +25,11 @@ public:
     void removeFactory(IViewFactory *factory);
     void removeFactory(const QString &id);
     IViewFactory *factory(const QString &id) const;
+
+    IIOHandler *handler(const QByteArray &format) const;
+    QList<IIOHandler *> handlers() const;
+    void addHandler(IIOHandler *handler);
+    void removeHandler(IIOHandler *handler);
 
     void addPerspective(Perspective *perspective);
     Perspective *perspective(const QString &id) const;
