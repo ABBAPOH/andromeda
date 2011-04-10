@@ -8,6 +8,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QDockWidget>
 #include <QtGui/QToolBar>
+#include <QtGui/QTabBar>
 
 #include <QDebug>
 
@@ -26,13 +27,15 @@ public:
 
     PerspectiveInstance *currentInstance;
 
-//    State *currentState;
+    State *currentState;
     int currentStateIndex;
     QList<State *> states;
 
     QVBoxLayout *layout;
 
     QSet<PerspectiveInstance *> instances;
+    QTabBar *tabBar;
+    QToolBar *toolBar;
 //    QHash<IView *, QWidget *> mapToWidget;
 };
 
@@ -46,18 +49,37 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     Q_D(MainWindow);
 
-    d->currentInstance = 0;
-    d->currentStateIndex = 0;
-//    d->currentState = new State(this);
-    addState(new State(this));
-//    connect(d->currentState, SIGNAL(currentPerspectiveChanged(QString)), SLOT(setPerspective(QString)));
-
-//    d->centralWidget = new CentralWidget(this);
-//    setCentralWidget(d->centralWidget);
+    d->currentState = 0;
     d->layout = new QVBoxLayout();
     d->layout->setMargin(0);
     setCentralWidget(new QWidget);
     centralWidget()->setLayout(d->layout);
+
+    d->tabBar = new QTabBar();
+    d->toolBar = new QToolBar;
+    addToolBar(d->toolBar);
+    d->toolBar->addWidget(d->tabBar);
+
+    setUnifiedTitleAndToolBarOnMac(true);
+    d->tabBar->setDocumentMode(true);
+    d->tabBar->setTabsClosable(true);
+
+    d->currentInstance = 0;
+    State *state = new State(this);
+    addState(state);
+//    d->currentStateIndex = 0;
+    state->setCurrentPerspective("empty");
+    setCurrentState(0);
+
+    connect(d->tabBar, SIGNAL(currentChanged(int)), SLOT(setCurrentState(int)));
+    connect(d->tabBar, SIGNAL(tabCloseRequested(int)), SLOT(onTabClose(int)));
+//    connect(d->currentState, SIGNAL(currentPerspectiveChanged(QString)), SLOT(setPerspective(QString)));
+
+//    d->centralWidget = new CentralWidget(this);
+//    setCentralWidget(d->centralWidget);
+
+//    d->tabBar->addTab("     111     ");
+//    d->tabBar->addTab("222");
 
     resize(640, 480);
 }
@@ -75,7 +97,10 @@ State * MainWindow::currentState() const
 {
     Q_D(const MainWindow);
 
-    return d->states.at(d->currentStateIndex);
+    if (d->states.isEmpty())
+        return 0;
+
+    return d->currentState;
 }
 
 int MainWindow::currentStateIndex() const
@@ -85,9 +110,21 @@ int MainWindow::currentStateIndex() const
 
 void MainWindow::setCurrentState(int index)
 {
-    currentState()->hideViews();
-    d_func()->currentStateIndex = index;
-    currentState()->showViews();
+    Q_D(MainWindow);
+
+    qDebug() << "setCurrentState" << index;
+//    if (d->currentStateIndex != index) {
+    if (d->currentState != d->states[index]) {
+        if (currentState() != 0)
+            currentState()->hideViews();
+        d->currentStateIndex = index;
+        d->currentState = d->states[index];
+        currentState()->showViews();
+
+        // TODO: split gui and non-gui logic:)
+        if (d->tabBar->currentIndex() != d->currentStateIndex)
+            d->tabBar->setCurrentIndex(d->currentStateIndex);
+    }
 }
 
 QList<State *> MainWindow::states() const
@@ -103,16 +140,32 @@ void MainWindow::addState(State *state)
         d->states.append(state);
         state->setWindow(this);
     }
+
+    d->tabBar->addTab("     111     ");
+}
+
+void MainWindow::addState()
+{
+    State *state = new State(this);
+    addState(state);
+    state->setCurrentPerspective("empty");
 }
 
 void MainWindow::removeState(int index)
 {
     Q_D(MainWindow);
 
+    // TODO: last closed options
+    if (d->states.count() == 1)
+        return;
+
     d->states.removeAt(index);
+    // TODO: switch to options
     if (d->currentStateIndex == index) {
         setCurrentState((index + 1) % stateCount());
     }
+
+    d->tabBar->removeTab(index);
 }
 
 int MainWindow::stateCount() const
@@ -266,5 +319,11 @@ void MainWindow::createWidgetsForInstance()
 //        }
 //    }
     //    d->instances.insert(instance);
+}
+
+void MainWindow::onTabClose(int index)
+{
+    qDebug() << "onTabClose" << index;
+    removeState(index);
 }
 

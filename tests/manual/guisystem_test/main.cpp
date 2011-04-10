@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
     w.addToolBar(Qt::LeftToolBarArea, &s);
 
     w.show();
+    w.addState();
 
     Test t;
     QTimer tim;
