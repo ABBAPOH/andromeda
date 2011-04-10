@@ -9,13 +9,19 @@
 
 using namespace GuiSystem;
 
+Perspective::Perspective(QObject *parent) :
+    QObject(parent),
+    d_ptr(new PerspectivePrivate)
+{
+}
+
 Perspective::Perspective(const QString &id, QObject *parent) :
     QObject(parent),
     d_ptr(new PerspectivePrivate)
 {
     Q_D(Perspective);
 
-    d->id = id;
+    setId(id);
 }
 
 Perspective::Perspective(const QString &id, const QStringList &types, QObject *parent) :
@@ -37,6 +43,11 @@ Perspective::~Perspective()
 QString Perspective::id() const
 {
     return d_func()->id;
+}
+
+void Perspective::setId(const QString &id)
+{
+    d_func()->id = id;
 }
 
 QString Perspective::name() const
