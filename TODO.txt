@@ -7,3 +7,5 @@
 -separate options and geometry. Options are NOT used now.
 
 // DISCUSS:
+- hide event handler in view
+

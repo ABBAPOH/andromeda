@@ -27,6 +27,8 @@ GuiController::GuiController(QObject *parent) :
     QObject(parent),
     d_ptr(new GuiControllerPrivate)
 {
+    Perspective *perspective = new Perspective("empty", this);
+    addPerspective(perspective);
 }
 
 GuiController::~GuiController()

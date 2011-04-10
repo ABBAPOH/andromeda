@@ -28,7 +28,6 @@ public:
 
     State *currentState() const;
     int currentStateIndex() const;
-    void setCurrentState(int index);
 
     QList<State*> states() const;
     int stateCount() const;
@@ -43,8 +42,13 @@ public:
 
 signals:
 
+public slots:
+    void addState();
+    void setCurrentState(int index);
+
 private slots:
     void setPerspective(const QString &id);
+    void onTabClose(int index);
 
 protected:
     MainWindowPrivate *d_ptr;
