@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include "actionmanager.h"
 #include "centralwidget.h"
 #include "iview.h"
 #include "perspectiveinstance.h"
@@ -8,6 +9,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QDockWidget>
 #include <QtGui/QToolBar>
+#include <QtGui/QMenuBar>
 #include <QtGui/QTabBar>
 
 #include <QDebug>
@@ -80,6 +82,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    d->tabBar->addTab("     111     ");
 //    d->tabBar->addTab("222");
+
+    ActionManager *manager = ActionManager::instance();
+    QList<QAction*> actions = manager->actions();
+    for (int i = 0; i < actions.size(); i++) {
+        menuBar()->addAction(actions[i]);
+    }
+    connect(manager, SIGNAL(actionAdded(QAction*)), SLOT(onActionAdd(QAction*)));
 
     resize(640, 480);
 }
@@ -327,3 +336,7 @@ void MainWindow::onTabClose(int index)
     removeState(index);
 }
 
+void MainWindow::onActionAdd(QAction *action)
+{
+    menuBar()->addAction(action);
+}

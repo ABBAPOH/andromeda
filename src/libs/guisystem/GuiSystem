@@ -1,3 +1,4 @@
+#include "actionmanager.h"
 #include "guicontroller.h"
 #include "iview.h"
 #include "iviewfactory.h"
