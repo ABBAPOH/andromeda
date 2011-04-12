@@ -8,4 +8,5 @@
 
 // DISCUSS:
 - hide event handler in view
+- ID in Perspective (loading from files and constructors)
 
