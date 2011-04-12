@@ -1,5 +1,7 @@
 set( GLOBAL_HEADER GuiSystem)
 set( HEADERS
+    actionmanager.h
+    actionmanager_p.h
     guisystem_global.h
     centralwidget.h
     guicontroller.h
@@ -15,6 +17,7 @@ set( HEADERS
     viewoptions.h
    )
 set( SOURCES
+    actionmanager.cpp
     centralwidget.cpp
     guicontroller.cpp
     iview.cpp

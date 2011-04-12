@@ -5,8 +5,13 @@
 -factory is no more view's parent
 -dual pain editor
 -separate options and geometry. Options are NOT used now.
+-convenience methods for adding actions (not manually get menu, but use id)
+-actionManeger: disconnects (more methods),
+-when view removed, remove actions
 
 // DISCUSS:
 - hide event handler in view
 - ID in Perspective (loading from files and constructors)
+- different top level widgets (actionmanager is not singletone?)
+
 

@@ -3,6 +3,7 @@
 
 #include <GuiSystem>
 #include <QTimer>
+#include <QMenu>
 
 #include "testview.h"
 #include "testview2.h"
@@ -30,11 +31,22 @@ int main(int argc, char *argv[])
 
     GuiController::instance()->addPerspective(perspective);
 
+    ActionManager *manager = ActionManager::instance();
+    manager->addMenu(new QMenu("File"));
+    QMenu *menu = new QMenu("Edit");
+    QAction *a = new QAction("act", manager);
+    manager->registerAction(a, "iiiiiid!!!!!");
+    manager->registerMenu(menu, "menuId");
+
     MainWindow w;
+
     w.currentState()->setCurrentPerspective("Test Perspective");
     IView * view = w.currentState()->currentInstance()->view("TestViewFactory");
     qDebug() << "found view" << view->metaObject()->className();
 //    view->deleteLater();
+
+    manager->addAction(a);
+    manager->addMenu(menu);
 
     PerspectiveSwitcher s;
     s.setState(w.currentState());

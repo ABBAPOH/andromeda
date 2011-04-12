@@ -49,6 +49,7 @@ public slots:
 private slots:
     void setPerspective(const QString &id);
     void onTabClose(int index);
+    void onActionAdd(QAction *action);
 
 protected:
     MainWindowPrivate *d_ptr;
