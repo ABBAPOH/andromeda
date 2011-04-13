@@ -8,7 +8,6 @@
 -convenience methods for adding actions (not manually get menu, but use id)
 -actionManeger: disconnects (more methods),
 -when view removed, remove actions
--disable actions on switching of views
 
 // DISCUSS:
 - hide event handler in view
