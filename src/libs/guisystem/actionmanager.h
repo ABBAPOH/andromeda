@@ -6,6 +6,8 @@
 class QAction;
 class QMenu;
 
+typedef QList<QAction*> QActionList;
+
 namespace GuiSystem {
 
 class ActionManagerPrivate;
@@ -23,8 +25,8 @@ public:
     QAction *addMenu(QMenu *menu);
     void addSeparator();
 
-    QList<QAction*> actions() const;
-    QList<QAction*> actions(const QString &viewId) const;
+    QActionList actions() const;
+    QActionList actions(const QString &viewId) const;
 
     QAction *action(const QString &id) const;
     QMenu *menu(const QString &id) const;
