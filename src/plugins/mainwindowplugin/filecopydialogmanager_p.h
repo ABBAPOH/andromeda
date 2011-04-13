@@ -9,6 +9,7 @@ class FileCopyDialog;
 class FileCopyDialogManagerPrivate
 {
     Q_DECLARE_PUBLIC(FileCopyDialogManager)
+    FileCopyDialogManager *q_ptr;
 public:
     FileCopyDialogManagerPrivate(FileCopyDialogManager *qq);
     virtual ~FileCopyDialogManagerPrivate();
@@ -21,7 +22,6 @@ public:
     void handleError(int id, QtFileCopier::Error error, bool stopped);
     void update();
 
-    FileCopyDialogManager *q_ptr;
 };
 
 }

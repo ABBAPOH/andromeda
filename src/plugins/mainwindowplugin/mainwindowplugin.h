@@ -3,8 +3,9 @@
 
 #include <iplugin.h>
 
-class MainWindow;
 namespace MainWindowPlugin {
+
+class MainWindow;
 
 class MainWindowPluginImpl : public ExtensionSystem::IPlugin
 {
