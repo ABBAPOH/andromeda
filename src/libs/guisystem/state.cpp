@@ -2,7 +2,9 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QDebug>
+#include <QtGui/QAction>
 
+#include "actionmanager.h"
 #include "guicontroller.h"
 #include "iview.h"
 #include "iviewfactory.h"
@@ -186,14 +188,24 @@ void State::hideViews()
     if (!currentInstance())
         return;
 
+    ActionManager *manager = ActionManager::instance();
     foreach (IView *view, currentInstance()->views()) {
+        QActionList actions = manager->actions(view->factoryId());
+        foreach (QAction *action, actions) {
+            action->setEnabled(false);
+        }
         view->container()->hide();
     }
 }
 
 void State::showViews()
 {
+    ActionManager *manager = ActionManager::instance();
     foreach (IView *view, currentInstance()->views()) {
+        QActionList actions = manager->actions(view->factoryId());
+        foreach (QAction *action, actions) {
+            action->setEnabled(true);
+        }
         view->container()->show();
     }
 }

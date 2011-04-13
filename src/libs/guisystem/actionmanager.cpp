@@ -82,18 +82,18 @@ void ActionManager::addSeparator()
     addAction(action);
 }
 
-QList<QAction *> ActionManager::actions() const
+QActionList ActionManager::actions() const
 {
     Q_D(const ActionManager);
 
     return d->menuBarActions;
 }
 
-QList<QAction*> ActionManager::actions(const QString &viewId) const
+QActionList ActionManager::actions(const QString &viewId) const
 {
     Q_D(const ActionManager);
 
-    QList<QAction*> result;
+    QActionList result;
     QStringList ids = d->mapToView.values(viewId);
     for (int i = 0; i < ids.size(); i++) {
         QAction *act = action(ids[i]);
