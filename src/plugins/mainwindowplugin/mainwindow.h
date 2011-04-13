@@ -13,6 +13,9 @@ namespace CorePlugin {
 
 class QLineEdit;
 class QToolButton;
+
+namespace MainWindowPlugin {
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -34,5 +37,7 @@ private:
 
     CorePlugin::EditorView *view();
 };
+
+} // namespace MainWindowPlugin
 
 #endif // MAINWINDOW_H

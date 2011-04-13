@@ -1,6 +1,8 @@
 #include "filecopyreplacedialog.h"
 #include "ui_filecopyreplacedialog.h"
 
+using namespace MainWindowPlugin;
+
 FileCopyReplaceDialog::FileCopyReplaceDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FileCopyReplaceDialog)

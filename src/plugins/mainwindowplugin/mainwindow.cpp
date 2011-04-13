@@ -7,6 +7,7 @@
 #include <enteredlineedit.h>
 
 using namespace CorePlugin;
+using namespace MainWindowPlugin;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

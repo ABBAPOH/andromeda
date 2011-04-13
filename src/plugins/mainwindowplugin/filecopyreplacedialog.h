@@ -7,6 +7,8 @@ namespace Ui {
     class FileCopyReplaceDialog;
 }
 
+namespace MainWindowPlugin {
+
 class FileCopyReplaceDialog : public QDialog
 {
     Q_OBJECT
@@ -32,5 +34,7 @@ private slots:
 private:
     Ui::FileCopyReplaceDialog *ui;
 };
+
+} // namespace MainWindowPlugin
 
 #endif // FILECOPYREPLACEDIALOG_H
