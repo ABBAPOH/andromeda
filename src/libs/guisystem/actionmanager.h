@@ -36,9 +36,11 @@ public:
 
     bool connect(const QString &actionId, const QString &viewId, const char *slot);
     bool connect(const QString &actionId, QObject *receiver, const char *slot);
+    bool connect(const QString &actionId, const char *slot);
 
     void disconnect(const QString &actionId, const QString &viewId, const char *slot);
     void disconnect(const QString &actionId, QObject *receiver, const char *slot);
+    void disconnect(const QString &actionId, const char *slot);
 
 signals:
     void actionAdded(QAction *action);

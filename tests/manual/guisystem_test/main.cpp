@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     QTimer tim;
     tim.setSingleShot(true);
     QObject::connect(&tim, SIGNAL(timeout()), &t, SLOT(testDeletion()));
-    tim.start(5000);
+//    tim.start(5000);
 
     return app.exec();
 }

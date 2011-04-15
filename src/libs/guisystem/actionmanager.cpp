@@ -18,7 +18,7 @@ void ActionManagerPrivate::onTrigger(bool checked)
     // TODO: use QObject instead of QAction here
     QString id = action->property("id").toString();
 
-    foreach (ConnectionByObject pair, connectionsObjects.values(id)) {
+    foreach (const ConnectionByObject &pair, connectionsObjects.values(id)) {
         QObject *object = pair.first;
         const char *slot = pair.second;
         QMetaObject::invokeMethod(object, slot);
@@ -29,7 +29,7 @@ void ActionManagerPrivate::onTrigger(bool checked)
         return;
     }
 
-    foreach (ConnectionById pair, connectionsViews.values(id)) {
+    foreach (const ConnectionById &pair, connectionsViews.values(id)) {
         QString viewId = pair.first;
         const char *slot = pair.second;
         IView * view = window->currentState()->currentInstance()->view(viewId);
@@ -39,12 +39,37 @@ void ActionManagerPrivate::onTrigger(bool checked)
         }
         QMetaObject::invokeMethod(view, slot);
     }
+
+    QWidget *targetWidget = QApplication::focusWidget();
+    foreach (const char * slot, connectionsToWidgets.values(id)) {
+        const QMetaObject *metaObject = targetWidget->metaObject();
+        metaObject->invokeMethod(targetWidget, slot);
+    }
+
+}
+
+void ActionManagerPrivate::onFocusChange(QWidget *old, QWidget *now)
+{
+    foreach (const QString &id, connectionsToWidgets.keys()) {
+        QAction *action = mapToAction.value(id);
+        if (!action)
+            continue;
+        const QMetaObject *metaObject = now ? now->metaObject() : 0;
+        if (metaObject && metaObject->indexOfMethod(connectionsToWidgets.value(id)) != -1)
+            action->setEnabled(true);
+        else
+            action->setEnabled(false);
+    }
 }
 
 ActionManager::ActionManager(QObject *parent) :
     QObject(parent),
     d_ptr(new ActionManagerPrivate)
 {
+    Q_D(ActionManager);
+
+    QObject::connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)),
+                     d, SLOT(onFocusChange(QWidget*,QWidget*)));
 }
 
 ActionManager::~ActionManager()
@@ -170,6 +195,19 @@ bool ActionManager::connect(const QString &actionId, QObject *receiver, const ch
     return true;
 }
 
+bool ActionManager::connect(const QString &actionId, const char *slot)
+{
+    Q_D(ActionManager);
+
+    if (!d->mapToAction.contains(actionId)) {
+        qWarning() << "ActionManager::connect: No action" << actionId << "registered in ActionManager";
+        return false;
+    }
+
+    d->connectionsToWidgets.insertMulti(actionId, slot);
+    return true;
+}
+
 void ActionManager::disconnect(const QString &actionId, const QString &viewId, const char *slot)
 {
     Q_D(ActionManager);
@@ -184,3 +222,9 @@ void ActionManager::disconnect(const QString &actionId, QObject *receiver, const
     d->connectionsObjects.remove(actionId, QPair<QObject*, const char*>(receiver, slot));
 }
 
+void ActionManager::disconnect(const QString &actionId, const char *slot)
+{
+    Q_D(ActionManager);
+
+    d->connectionsToWidgets.remove(actionId, slot);
+}
