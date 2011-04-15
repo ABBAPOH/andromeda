@@ -34,6 +34,8 @@ public:
     void registerAction(QAction *action, const QString &id);
     void registerMenu(QMenu *menu, const QString &id);
 
+    void unregister(const QString &id);
+
     bool connect(const QString &actionId, const QString &viewId, const char *slot);
     bool connect(const QString &actionId, QObject *receiver, const char *slot);
     bool connect(const QString &actionId, const char *slot);
