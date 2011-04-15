@@ -25,11 +25,13 @@ public:
 
     QMultiMap<QString, QPair<QString, const char*> > connectionsViews;
     QMultiMap<QString, QPair<QObject *, const char*> > connectionsObjects;
+    QMultiMap<QString, const char*> connectionsToWidgets;
 
     QMap<QString, QString> mapToView;
 
 public slots:
     void onTrigger(bool);
+    void onFocusChange(QWidget * old, QWidget * now);
 };
 
 } // namespace GuiSystem
