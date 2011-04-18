@@ -3,6 +3,9 @@
 
 #include <QFileSystemModel>
 
+namespace FileManagerPlugin {
+
+class FileSystemUndoManager;
 class FileSystemModel : public QFileSystemModel
 {
     Q_OBJECT
@@ -16,6 +19,9 @@ protected:
                       int column,
                       const QModelIndex &parent
                       );
+    FileSystemUndoManager *m_undoManager; // can be safely changed to d_ptr
 };
+
+} // namespace FileManagerPlugin
 
 #endif // FILESYSTEMMODEL_H

@@ -21,7 +21,6 @@ public:
     void addCopier(QtFileCopier *);
     void handleError(int id, QtFileCopier::Error error, bool stopped);
     void update();
-
 };
 
 }

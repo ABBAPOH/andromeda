@@ -1,12 +1,11 @@
 set( HEADERS
+    IO
     io_global.h
     filecopymanager.h
     filecopymanager_p.h
-    filesystemmodel.h
    )
 set( SOURCES
     filecopymanager.cpp
-    filesystemmodel.cpp
    )
 set( FORMS
    )

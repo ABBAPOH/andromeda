@@ -13,5 +13,6 @@
 - hide event handler in view
 - ID in Perspective (loading from files and constructors)
 - different top level widgets (actionmanager is not singletone?)
-
+- relative paths in file Commands
+- filecopier & copying to same dir (append suffix with number)
 
