@@ -29,6 +29,7 @@ public:
 
 signals:
     void currentPathChanged(const QString &path);
+    void canUndoChanged(bool);
 
 public slots:
     void setCurrentPath(const QString &path);

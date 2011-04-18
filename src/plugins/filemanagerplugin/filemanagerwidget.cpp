@@ -1,48 +1,7 @@
 #include "filemanagerwidget.h"
-
-#include <QtCore/QMimeData>
-#include <QtCore/QUrl>
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
-#include <QtGui/QColumnView>
-#include <QtGui/QFileSystemModel>
-#include <QtGui/QListView>
-#include <QtGui/QStackedLayout>
-#include <QtGui/QTableView>
-#include <QtGui/QTreeView>
-#include <QtGui/QUndoCommand>
-#include <QtGui/QUndoStack>
+#include "filemanagerwidget_p.h"
 
 #include <QDebug>
-
-#include "filesystemundomanager.h"
-#include "filesystemmodel.h"
-
-#define MaxViews 5
-
-namespace FileManagerPlugin {
-
-class FileManagerWidgetPrivate
-{
-    Q_DECLARE_PUBLIC(FileManagerWidget)
-    FileManagerWidget *q_ptr;
-public:
-    FileManagerWidgetPrivate(FileManagerWidget *qq) : q_ptr(qq) {}
-
-    FileManagerWidget::ViewMode viewMode;
-    QAbstractItemView * currentView;
-    QAbstractItemView * views[MaxViews];
-    QStackedLayout * layout;
-
-    QFileSystemModel *model;
-    QString currentPath;
-
-    FileSystemUndoManager *undoManager;
-
-    QStringList selectedPaths();
-};
-
-} // namespace FileManagerPlugin
 
 using namespace FileManagerPlugin;
 
@@ -55,6 +14,16 @@ QStringList FileManagerWidgetPrivate::selectedPaths()
         result.append(model->filePath(index));
     }
     return result;
+}
+
+void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
+{
+    Q_Q(FileManagerWidget);
+
+    QString path = model->filePath(index);
+    if (QFileInfo(path).isDir()) {
+        q->setCurrentPath(path);
+    }
 }
 
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
@@ -100,6 +69,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
         d->views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         d->views[i]->setAcceptDrops(true);
 //        d->views[i]->setDragEnabled(true);
+        connect(d->views[i], SIGNAL(doubleClicked(QModelIndex)), d, SLOT(onDoubleClick(QModelIndex)));
     }
 
     d->layout->setContentsMargins(0, 0, 0, 0);
