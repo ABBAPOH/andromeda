@@ -135,7 +135,6 @@ PluginSpec *PluginManager::plugins(const QString &name) const
 #warning "TODO: realize";
 }
 
-
 void PluginManager::updateDirectory(const QString &dirPath)
 {
     Q_D(PluginManager);
@@ -169,10 +168,10 @@ PluginManagerPrivate::PluginManagerPrivate()
 {
 }
 
-static bool lessThanByPluginName(const PluginSpec *first, const PluginSpec *second)
-{
-    return first->name() < second->name();
-}
+//static bool lessThanByPluginName(const PluginSpec *first, const PluginSpec *second)
+//{
+//    return first->name() < second->name();
+//}
 
 void PluginManagerPrivate::load()
 {

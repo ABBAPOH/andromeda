@@ -1,6 +1,13 @@
 set( HEADERS
-    FilemanagerPlugin
     filemanagerplugin_global.h
+    FilemanagerPlugin
+ #   filecopydialogmanager.h
+    filecopydialogmanager_p.h
+    filecopyreplacedialog.h
+#    filecopytask.h
+    filecopytask_p.h
+    filecopywidget.h
+    filecopydialog.h
     filemanagerwidget.h
     filemanagerwidget_p.h
     filesystemmodel.h
@@ -10,6 +17,11 @@ set( HEADERS
     navigationpanel.h
    )
 set( SOURCES
+    filecopydialogmanager.cpp
+    filecopyreplacedialog.cpp
+    filecopytask.cpp
+    filecopywidget.cpp
+    filecopydialog.cpp
     filemanagerwidget.cpp
     filesystemmodel.cpp
     filesystemundomanager.cpp
@@ -17,6 +29,8 @@ set( SOURCES
     navigationpanel.cpp
    )
 set( FORMS
+    filecopyreplacedialog.ui
+    filecopywidget.ui
    )
 
 set( RESOURCES resources.qrc )
@@ -26,6 +40,8 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 
 qt4_automoc(
+    filecopydialogmanager.cpp
+    filecopytask.cpp
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )

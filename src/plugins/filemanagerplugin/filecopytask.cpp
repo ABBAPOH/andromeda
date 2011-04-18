@@ -92,8 +92,8 @@ void FileCopyTask::timerEvent(QTimerEvent *e)
 FileCopyTaskPrivate::FileCopyTaskPrivate(FileCopyTask *qq):
         q_ptr(qq),
         copier(0),
-        totalSize(0),
         finishedSize(0),
+        totalSize(0),
         objectsCount(0),
         speed(0),
         totalObjects(0)
@@ -128,7 +128,6 @@ void FileCopyTaskPrivate::onStarted(int identifier)
 
 void FileCopyTaskPrivate::onProgress(int /*identifier*/, qint64 progress)
 {
-    qint64 oldFinishedSize = finishedSize;
     finishedSize += progress - currentProgress;
     currentProgress = progress;
 
