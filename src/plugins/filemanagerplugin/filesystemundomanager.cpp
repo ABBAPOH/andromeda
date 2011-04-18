@@ -6,6 +6,8 @@
 #include <QtGui/QUndoStack>
 #include <IO>
 
+#include <QDebug>
+
 using namespace IO;
 using namespace FileManagerPlugin;
 
@@ -44,25 +46,55 @@ void CopyCommand::redo()
     FileCopyManager * manager = FileCopyManager::instance();
     QtFileCopier * copier = manager->copier();
 
+    m_destinationPaths.clear();
     foreach (const QString &filePath, m_sourcePaths) {
         QFileInfo info(filePath);
+        QString targetPath = m_destinationPath;
+        QDir dir(m_destinationPath);
 
         // TODO: give different names when copying to same dir
-        if (info.isDir()) {
-            copier->copyDirectory(filePath, m_destinationPath, QtFileCopier::NonInteractive);
+        if (dir == info.dir()) {
+            int i = 0;
+            do  {
+                i++;
+                targetPath = dir.absolutePath() + QDir::separator() + info.baseName() + ' ' +
+                        QString::number(i);
+                if (info.suffix() != "") {
+                    targetPath += '.' + info.suffix();
+                }
+            } while (QFileInfo(targetPath).exists());
+            m_destinationPaths.append(targetPath);
         } else {
-            copier->copy(filePath, m_destinationPath, QtFileCopier::NonInteractive);
+            m_destinationPaths.append(targetPath + QDir::separator() + info.fileName());
+        }
+
+        if (info.isDir()) {
+            copier->copyDirectory(filePath, targetPath);
+        } else {
+            copier->copy(filePath, targetPath);
         }
     }
 }
 
+bool removePath(const QString &path)
+{
+    bool result = true;
+    QFileInfo info(path);
+    if (info.isDir()) {
+        foreach (const QString &path, QDir(path).entryList(QStringList(), QDir::NoDotAndDotDot)) {
+            result &= removePath(path);
+        }
+        info.dir().rmdir(info.fileName());
+    } else {
+        result &= QFile::remove(path);
+    }
+    return result;
+}
+
 void CopyCommand::undo()
 {
-    QDir dir(m_destinationPath);
-    foreach (const QString &filePath, m_sourcePaths) {
-        QFileInfo info(filePath);
-        QString targetPath = dir.absolutePath() + '/' + info.fileName();
-        QFile::remove(targetPath);
+    foreach (const QString &path, m_destinationPaths) {
+        removePath(path);
     }
 }
 
@@ -74,14 +106,29 @@ void MoveCommand::redo()
     m_destinationPaths.clear();
     foreach (const QString &filePath, m_sourcePaths) {
         QFileInfo info(filePath);
+        QString targetPath = m_destinationPath;
+        QDir dir(m_destinationPath);
 
         // TODO: give different names when copying to same dir
-        if (info.isDir()) {
-            copier->moveDirectory(filePath, m_destinationPath);
-            m_destinationPaths.append(m_destinationPath + QDir::separator() + info.fileName());
+        if (dir == info.dir()) {
+            int i = 0;
+            do  {
+                i++;
+                targetPath = dir.absolutePath() + QDir::separator() + info.baseName() + ' ' +
+                        QString::number(i);
+                if (info.suffix() != "") {
+                    targetPath += '.' + info.suffix();
+                }
+            } while (QFileInfo(targetPath).exists());
+            m_destinationPaths.append(targetPath);
         } else {
-            int id = copier->move(filePath, m_destinationPath);
-            m_destinationPaths.append(copier->destinationFilePath(id));
+            m_destinationPaths.append(targetPath + QDir::separator() + info.fileName());
+        }
+
+        if (info.isDir()) {
+            copier->moveDirectory(filePath, targetPath);
+        } else {
+            copier->move(filePath, targetPath);
         }
     }
 }

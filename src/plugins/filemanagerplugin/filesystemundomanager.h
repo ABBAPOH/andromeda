@@ -37,6 +37,7 @@ public:
 protected:
     QString m_destinationPath;
     QStringList m_sourcePaths;
+    QStringList m_destinationPaths;
 };
 
 class MoveCommand : public CopyCommand
