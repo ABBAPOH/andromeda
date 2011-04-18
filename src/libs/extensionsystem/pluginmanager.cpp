@@ -130,9 +130,20 @@ QList<PluginSpec *> PluginManager::plugins() const
     return d_func()->pluginSpecs;
 }
 
-PluginSpec *PluginManager::plugins(const QString &name) const
+/*!
+    \fn PluginSpec *PluginManager::plugin(const QString &name) const
+    \brief Return PluginSpecs with name \a name.
+
+*/
+PluginSpec *PluginManager::plugin(const QString &name) const
 {
-#warning "TODO: realize";
+    Q_D(const PluginManager);
+
+    for (int i = 0; i < d->pluginSpecs.size(); i++) {
+        if (d->pluginSpecs[i]->name() == name)
+            return d->pluginSpecs[i];
+    }
+    return 0;
 }
 
 void PluginManager::updateDirectory(const QString &dirPath)
