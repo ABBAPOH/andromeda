@@ -53,6 +53,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     d->model = 0;
     d->currentView = 0;
+    d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
     d->layout = new QStackedLayout(this);
 
     d->views[ListView] = listView;
@@ -188,13 +189,16 @@ void FileManagerWidget::paste()
     d->undoManager->undoStack()->push(command);
 }
 
+bool removePath(const QString &path);
+
 void FileManagerWidget::remove()
 {
     Q_D(FileManagerWidget);
 
     QStringList paths = d->selectedPaths();
     foreach (const QString &path, paths) {
-        bool result = QFile::remove(path);
+//        bool result = QFile::remove(path);
+        bool result = removePath(path);
         if (!result) {
         }
     }
