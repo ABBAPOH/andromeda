@@ -4,6 +4,7 @@
 #include <EditorManager>
 
 #include "core.h"
+#include "perspectivemanager.h"
 
 using namespace CorePlugin;
 
@@ -16,6 +17,7 @@ bool CorePluginImpl::initialize()
 {
     addObject(new Core);
     addObject(new EditorManager);
+    addObject(new PerspectiveManager);
 
     return true;
 }

@@ -7,9 +7,9 @@
 
 #include "editormanager/editormanager.h"
 
-namespace CorePlugin
-{
+namespace CorePlugin {
 
+class PerspectiveManager;
 class CorePrivate;
 class COREPLUGIN_EXPORT Core : public QObject
 {
@@ -29,6 +29,8 @@ public:
     }
 
     EditorManager *editorManager();
+    PerspectiveManager *perspectiveManager() const;
+
     QObject *getObject(const QString &name);
 
 signals:
