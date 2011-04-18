@@ -28,7 +28,7 @@ public:
     void setPluginsFolder(const QString &name);
 
     QList<PluginSpec *> plugins() const;
-    PluginSpec *plugins(const QString &name) const;
+    PluginSpec *plugin(const QString &name) const;
 
 signals:
 #warning "TODO: check usage:"
