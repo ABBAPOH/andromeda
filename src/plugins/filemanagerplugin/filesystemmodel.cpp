@@ -1,14 +1,18 @@
 #include "filesystemmodel.h"
 
-#include "filecopymanager.h"
-
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
 
+#include <filecopymanager.h>
+
+#include "filesystemundomanager.h"
+
 using namespace IO;
+using namespace FileManagerPlugin;
 
 FileSystemModel::FileSystemModel(QObject *parent) :
-    QFileSystemModel(parent)
+    QFileSystemModel(parent),
+    m_undoManager(new FileSystemUndoManager(this))
 {
 }
 
@@ -29,29 +33,39 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
 
     QList<QUrl> urls = data->urls();
     QList<QUrl>::const_iterator it = urls.constBegin();
-    QtFileCopier *copier = FileCopyManager::instance()->copier();
 
     switch (action) {
-    case Qt::CopyAction:
+    case Qt::CopyAction: {
+        CopyCommand * command = new CopyCommand();
+        command->setDestination(to);
         for (; it != urls.constEnd(); ++it) {
             QString path = (*it).toLocalFile();
-            copier->copy(path, to + QFileInfo(path).fileName());
+            command->appendSourcePath(path);
             success = true;
         }
+        m_undoManager->undoStack()->push(command);
         break;
-    case Qt::LinkAction:
+    }
+    case Qt::LinkAction: {
+        LinkCommand * command = new LinkCommand();
         for (; it != urls.constEnd(); ++it) {
             QString path = (*it).toLocalFile();
-            success = QFile::link(path, to + QFileInfo(path).fileName()) && success;
+            command->appendPaths(path, to + QFileInfo(path).fileName());
         }
+        m_undoManager->undoStack()->push(command);
         break;
-    case Qt::MoveAction:
+    }
+    case Qt::MoveAction: {
+        MoveCommand * command = new MoveCommand();
+        command->setDestination(to);
         for (; it != urls.constEnd(); ++it) {
             QString path = (*it).toLocalFile();
-            copier->move(path, to + QFileInfo(path).fileName());
+            command->appendSourcePath(path);
             success = true;
         }
+        m_undoManager->undoStack()->push(command);
         break;
+    }
     default:
         return false;
     }

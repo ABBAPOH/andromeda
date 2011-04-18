@@ -1,0 +1,47 @@
+#ifndef FILEMANAGERWIDGET_H
+#define FILEMANAGERWIDGET_H
+
+#include <QtGui/QWidget>
+
+class QFileSystemModel;
+
+namespace FileManagerPlugin {
+
+class FileManagerWidgetPrivate;
+class FileManagerWidget : public QWidget
+{
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(FileManagerWidget)
+    Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+public:
+    explicit FileManagerWidget(QWidget *parent = 0);
+    ~FileManagerWidget();
+
+    enum ViewMode { ListView = 0, IconView, TableView, ColumnView, TreeView };
+
+    ViewMode viewMode() const;
+    void setViewMode(ViewMode mode);
+
+    QFileSystemModel *model() const;
+    void setModel(QFileSystemModel *model);
+
+    QString currentPath() const;
+
+signals:
+    void currentPathChanged(const QString &path);
+
+public slots:
+    void setCurrentPath(const QString &path);
+    void copy();
+    void paste();
+    void remove();
+    void undo();
+    void redo();
+
+protected:
+    FileManagerWidgetPrivate *d_ptr;
+};
+
+} // namespace FileManagerPlugin
+
+#endif // FILEMANAGERWIDGET_H

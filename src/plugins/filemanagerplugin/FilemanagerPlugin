@@ -1,0 +1,5 @@
+#include "filemanagerwidget.h"
+#include "filesystemmodel.h"
+#include "filesystemundomanager.h"
+#include "navigationmodel.h"
+#include "navigationpanel.h"
