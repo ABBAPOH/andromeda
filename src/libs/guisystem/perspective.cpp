@@ -19,8 +19,6 @@ Perspective::Perspective(const QString &id, QObject *parent) :
     QObject(parent),
     d_ptr(new PerspectivePrivate)
 {
-    Q_D(Perspective);
-
     setId(id);
 }
 

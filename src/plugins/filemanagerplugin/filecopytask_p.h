@@ -8,6 +8,7 @@ namespace MainWindowPlugin {
 class FileCopyTaskPrivate
 {
     Q_DECLARE_PUBLIC(FileCopyTask)
+    FileCopyTask *q_ptr;
 public:
     FileCopyTaskPrivate(FileCopyTask *qq);
 
@@ -28,8 +29,6 @@ public:
     qint64 totalSize;
     qint64 speedLastSize;
     QMap<int, Request> requests;
-
-    FileCopyTask *q_ptr;
 };
 
 }

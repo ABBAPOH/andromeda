@@ -22,7 +22,6 @@ EditorManager::~EditorManager()
 
 IEditor *EditorManager::openEditor(const QString &path)
 {
-    Q_D(EditorManager);
     QList<IEditorFactory *> factories;
     factories = ExtensionSystem::PluginManager::instance()->objects<IEditorFactory>();
 
@@ -44,7 +43,6 @@ IEditor *EditorManager::openEditor(const QString &path)
 // we also need to return group of this editors
 QList<IEditor *> EditorManager::openEditors(const QString &path)
 {
-    Q_D(EditorManager);
     QList<IEditorFactory *> factories;
     factories = ExtensionSystem::PluginManager::instance()->objects<IEditorFactory>();
     QList<IEditor *> editors;

@@ -54,9 +54,9 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
         q_ptr(qq),
         plugin(0),
         loader(new QPluginLoader(q_ptr)),
-        hasError(false),
         loaded(false),
-        loadOnStartup(true)
+        loadOnStartup(true),
+        hasError(false)
 {
     errorString = "Unknown Error";
 }
