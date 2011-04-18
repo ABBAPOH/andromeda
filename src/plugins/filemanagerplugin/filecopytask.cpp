@@ -89,14 +89,16 @@ void FileCopyTask::timerEvent(QTimerEvent *e)
 
 // ============= FileCopyTaskPrivate =============
 
-FileCopyTaskPrivate::FileCopyTaskPrivate(FileCopyTask *qq):
-        q_ptr(qq),
-        copier(0),
-        finishedSize(0),
-        totalSize(0),
-        objectsCount(0),
-        speed(0),
-        totalObjects(0)
+FileCopyTaskPrivate::FileCopyTaskPrivate(FileCopyTask *qq) :
+    q_ptr(qq),
+    copier(0),
+    finishedSize(0),
+    currentProgress(0),
+    objectsCount(0),
+    speed(0),
+    totalObjects(0),
+    totalSize(0),
+    speedLastSize(0)
 {
 }
 
