@@ -2,6 +2,7 @@ set( HEADERS
     FilemanagerPlugin
     filemanagerplugin_global.h
     filemanagerwidget.h
+    filemanagerwidget_p.h
     filesystemmodel.h
     filesystemundomanager.h
     navigationmodel.h

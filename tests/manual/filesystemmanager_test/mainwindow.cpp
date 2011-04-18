@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(view);
 
     connect(panel, SIGNAL(folderClicked(QString)), this, SLOT(onClick(QString)));
-    connect(view, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClick(QModelIndex)));
 
     QMenu * menu = menuBar()->addMenu("Edit");
     menu->addAction("Undo", view, SLOT(undo()), tr("Ctrl+Z"));
