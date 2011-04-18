@@ -1,17 +1,6 @@
 #include "mainwindow.h"
+#include "mainwindow_p.h"
 
-#include <enteredlineedit.h>
-
-namespace MainWindowPlugin {
-
-class MainWindowPrivate
-{
-public:
-};
-
-} // namespace MainWindowPlugin
-
-using namespace CorePlugin;
 using namespace MainWindowPlugin;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -19,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     d_ptr(new MainWindowPrivate)
 {
     Q_D(MainWindow);
+
+    d->lineEdit = new EnteredLineEdit(this);
 
     setUnifiedTitleAndToolBarOnMac(true);
 }
