@@ -80,6 +80,8 @@ void PluginManager::loadPlugins()
 
     d->load();
     qDebug("PluginManager::pluginsLoaded");
+    d->loaded = true;
+
     emit pluginsLoaded();
     emit pluginsChanged();
 }
@@ -169,8 +171,8 @@ void PluginManager::timerEvent(QTimerEvent *event)
         killTimer(d->updateTimer);
         d->updateTimer = 0;
 
-        d->load();
-        emit pluginsChanged();
+        if (d->load())
+            emit pluginsChanged();
     }
 }
 
@@ -184,7 +186,7 @@ PluginManagerPrivate::PluginManagerPrivate()
 //    return first->name() < second->name();
 //}
 
-void PluginManagerPrivate::load()
+bool PluginManagerPrivate::load()
 {
     QStringList specFiles = getSpecFiles(foldersToBeLoaded);
     foldersToBeLoaded.clear();
@@ -192,10 +194,12 @@ void PluginManagerPrivate::load()
     // get all specs from files
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
 
-    // enables new plugins
-    enableSpecs(newSpecs);
-
-    loaded = true;
+    if (!newSpecs.isEmpty()) {
+        // enables new plugins
+        enableSpecs(newSpecs);
+        return true; // return true if we have new plugins
+    }
+    return false;
 }
 
 QStringList PluginManagerPrivate::getSpecFiles(QStringList folders)
