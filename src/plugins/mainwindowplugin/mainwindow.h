@@ -1,12 +1,12 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINDOWPLUGIN_MAINWINDOW_H
+#define MAINWINDOWPLUGIN_MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
+#include <GuiSystem>
 
 namespace MainWindowPlugin {
 
 class MainWindowPrivate;
-class MainWindow : public QMainWindow
+class MainWindow : public GuiSystem::MainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MainWindow)
@@ -22,4 +22,4 @@ protected:
 
 } // namespace MainWindowPlugin
 
-#endif // MAINWINDOW_H
+#endif // MAINWINDOWPLUGIN_MAINWINDOW_H

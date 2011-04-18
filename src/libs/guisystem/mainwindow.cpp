@@ -58,11 +58,12 @@ MainWindow::MainWindow(QWidget *parent) :
     centralWidget()->setLayout(d->layout);
 
     d->tabBar = new QTabBar();
-    d->toolBar = new QToolBar;
-    addToolBar(d->toolBar);
-    d->toolBar->addWidget(d->tabBar);
+    d->tabBar->hide();
+//    d->toolBar = new QToolBar;
+//    addToolBar(d->toolBar);
+//    d->toolBar->addWidget(d->tabBar);
 
-    setUnifiedTitleAndToolBarOnMac(true);
+//    setUnifiedTitleAndToolBarOnMac(true);
     d->tabBar->setDocumentMode(true);
     d->tabBar->setTabsClosable(true);
 

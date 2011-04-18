@@ -15,6 +15,7 @@ bool MainWindowPluginImpl::initialize()
 {
     window = new MainWindow();
     window->show();
+
     return true;
 }
 
