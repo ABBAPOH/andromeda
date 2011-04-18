@@ -12,6 +12,7 @@ set( HEADERS
     editormanager/editorview.h
     editormanager/editorhistory.h
     editormanager/historyitem.h
+    perspectivemanager.h
    )
 set( SOURCES
     core.cpp
@@ -23,6 +24,7 @@ set( SOURCES
     editormanager/editorview.cpp
     editormanager/editorhistory.cpp
     editormanager/historyitem.cpp
+    perspectivemanager.cpp
    )
 set( FORMS
    )

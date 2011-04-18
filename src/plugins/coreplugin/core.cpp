@@ -4,6 +4,8 @@
 #include <editormanager.h>
 #include <pluginmanager.h>
 
+#include "perspectivemanager.h"
+
 /*!
     \namespace Core
     \brief This namespace contains main classes for Andromeda application.
@@ -71,4 +73,11 @@ QObject *Core::getObject(const QString &name)
 {
     Q_D(Core);
     return d->pool->object(name);
+}
+
+PerspectiveManager * Core::perspectiveManager() const
+{
+    Q_D(const Core);
+
+    return d->pool->object<PerspectiveManager>("perspectiveManager");
 }
