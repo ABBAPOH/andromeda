@@ -75,7 +75,8 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     iconView->setWordWrap(true);
     iconView->setViewMode(QListView::IconMode);
     iconView->setFlow(QListView::LeftToRight);
-    iconView->setMovement(QListView::Static);
+    iconView->setMovement(QListView::Snap);
+//    iconView->setMovement(QListView::Static);
     iconView->setResizeMode(QListView::Adjust);
 
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
