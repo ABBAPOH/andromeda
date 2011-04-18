@@ -8,7 +8,6 @@ set( SOURCES
     mainwindowplugin.cpp
    )
 set( FORMS
-    mainwindow.ui
    )
 
 set( RESOURCES resources.qrc )
