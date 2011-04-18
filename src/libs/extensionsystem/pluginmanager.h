@@ -31,7 +31,6 @@ public:
     PluginSpec *plugin(const QString &name) const;
 
 signals:
-#warning "TODO: check usage:"
     void pluginsChanged();
 
     void pluginsLoaded();

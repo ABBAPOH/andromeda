@@ -24,7 +24,7 @@ public:
     QHash<QString, PluginSpec*> pathToSpec; // maps file to spec
     QStringList foldersToBeLoaded; // folders to be loaded on startup or after watcher event
 
-    void load();
+    bool load();
     QStringList getSpecFiles(QStringList folders);
     QList<PluginSpec *> loadSpecs(QStringList specFiles);
 
