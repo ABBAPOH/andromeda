@@ -210,3 +210,9 @@ void State::showViews()
     }
 }
 
+void State::setProperty(const char *name, const QVariant &value)
+{
+    QObject::setProperty(name, value);
+    emit propertyChanged(name, value);
+}
+

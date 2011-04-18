@@ -31,8 +31,11 @@ public:
     MainWindow *window() const;
     void setWindow(MainWindow *window);
 
+    void setProperty(const char *name, const QVariant &value);
+
 signals:
     void currentPerspectiveChanged(const QString &id);
+    void propertyChanged(const char *name, const QVariant &value);
 
 public slots:
 
