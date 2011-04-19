@@ -21,7 +21,7 @@ public:
                      TopViewArea = 2,
                      RigthViewArea = 3,
                      BottomViewArea = 4,
-                     CentralViewArea = 6,
+                     CentralViewArea = 6
                    };
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

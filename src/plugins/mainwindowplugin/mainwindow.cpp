@@ -23,7 +23,7 @@ void MainWindowPrivate::onTextEntered(const QString &path)
     QString mime = getMimeType(path);
     QString perspective = CorePlugin::Core::instance()->perspectiveManager()->perspective(mime);
     q->currentState()->setCurrentPerspective(perspective);
-    qDebug() << "MainWindowPrivate::onTextEntered" << path;
+    qDebug() << "MainWindowPrivate::onTextEntered" << path << mime << perspective;
 }
 
 MainWindow::MainWindow(QWidget *parent) :

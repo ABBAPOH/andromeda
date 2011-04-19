@@ -8,14 +8,16 @@ set( HEADERS
     filecopytask_p.h
     filecopywidget.h
     filecopydialog.h
+    filemanagerpluginimpl.h
+    filemanagerview.h
     filemanagerwidget.h
     filemanagerwidget_p.h
-    filemanagerview.h
     filesystemmodel.h
     filesystemundomanager.h
     navigationmodel.h
     navigationmodel_p.h
     navigationpanel.h
+    navigationpanelview.h
    )
 set( SOURCES
     filecopydialogmanager.cpp
@@ -23,12 +25,14 @@ set( SOURCES
     filecopytask.cpp
     filecopywidget.cpp
     filecopydialog.cpp
-    filemanagerwidget.cpp
+    filemanagerpluginimpl.cpp
     filemanagerview.cpp
+    filemanagerwidget.cpp
     filesystemmodel.cpp
     filesystemundomanager.cpp
     navigationmodel.cpp
     navigationpanel.cpp
+    navigationpanelview.cpp
    )
 set( FORMS
     filecopyreplacedialog.ui
@@ -50,7 +54,7 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
-#include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
+include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin/editormanager )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/widgets )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
@@ -58,6 +62,6 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )
 
 add_library( filemanagerplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
-target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io )
+target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io coreplugin )
 
 install_spec( filemanagerplugin.spec )
