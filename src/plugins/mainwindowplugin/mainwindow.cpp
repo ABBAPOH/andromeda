@@ -1,13 +1,28 @@
 #include "mainwindow.h"
 #include "mainwindow_p.h"
 
+#include <QtCore/QFileInfo>
 #include <QtGui/QAction>
 #include <QDebug>
+#include <CorePlugin>
 
 using namespace MainWindowPlugin;
 
+QString getMimeType(const QString &path)
+{
+    QFileInfo info(path);
+    if (info.isDir())
+        return "inode/directory";
+    return "";
+}
+
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
+    Q_Q(MainWindow);
+
+    QString mime = getMimeType(path);
+    QString perspective = CorePlugin::Core::instance()->perspectiveManager()->perspective(mime);
+    q->currentState()->setCurrentPerspective(perspective);
     qDebug() << "MainWindowPrivate::onTextEntered" << path;
 }
 
