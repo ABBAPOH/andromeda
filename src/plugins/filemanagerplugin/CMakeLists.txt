@@ -10,6 +10,7 @@ set( HEADERS
     filecopydialog.h
     filemanagerwidget.h
     filemanagerwidget_p.h
+    filemanagerview.h
     filesystemmodel.h
     filesystemundomanager.h
     navigationmodel.h
@@ -23,6 +24,7 @@ set( SOURCES
     filecopywidget.cpp
     filecopydialog.cpp
     filemanagerwidget.cpp
+    filemanagerview.cpp
     filesystemmodel.cpp
     filesystemundomanager.cpp
     navigationmodel.cpp
@@ -45,6 +47,7 @@ qt4_automoc(
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
+include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
 #include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
