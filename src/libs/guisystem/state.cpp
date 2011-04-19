@@ -216,3 +216,8 @@ void State::setProperty(const char *name, const QVariant &value)
     emit propertyChanged(name, value);
 }
 
+IView * State::view(const QString &id)
+{
+    return currentInstance()->view(id);
+}
+
