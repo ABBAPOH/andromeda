@@ -6,6 +6,7 @@
 namespace GuiSystem {
 
 class MainWindow;
+class IView;
 class PerspectiveInstance;
 
 class StatePrivate;
@@ -32,6 +33,8 @@ public:
     void setWindow(MainWindow *window);
 
     void setProperty(const char *name, const QVariant &value);
+
+    IView *view(const QString &id);
 
 signals:
     void currentPerspectiveChanged(const QString &id);
