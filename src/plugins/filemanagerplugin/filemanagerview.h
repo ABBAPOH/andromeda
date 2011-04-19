@@ -13,8 +13,8 @@ class FileManagerView : public GuiSystem::IView
 public:
     explicit FileManagerView(QObject *parent = 0);
 
+    virtual void initialize(GuiSystem::State *state);
     virtual QString type() const;
-
     virtual QWidget *widget() const;
 
 signals:

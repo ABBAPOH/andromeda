@@ -13,6 +13,8 @@ class NavigationPanelView : public GuiSystem::IView
 public:
     explicit NavigationPanelView(QObject *parent = 0);
 
+    virtual void initialize(GuiSystem::State *state);
+
     virtual QString type() const;
 
     virtual QWidget *widget() const;
