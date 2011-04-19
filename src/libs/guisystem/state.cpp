@@ -115,6 +115,7 @@ void State::setCurrentPerspective(const QString &id)
 
     hideViews();
     PerspectiveInstance *instance = d->instances.value(id);
+    d->currentInstanceId = id;
     if (!instance) {
         Perspective *perspective = GuiController::instance()->perspective(id);
         if (!perspective) {
@@ -123,10 +124,9 @@ void State::setCurrentPerspective(const QString &id)
         }
         instance = new PerspectiveInstance(this);
         instance->setPerspective(perspective);
-        d->createViews(instance);
         d->instances.insert(id, instance);
+        d->createViews(instance);
     }
-    d->currentInstanceId = id;
 
     if (window()->currentState() == this) {
         // display instance
