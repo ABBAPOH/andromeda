@@ -47,6 +47,7 @@ void CentralWidget::setView(IView *view)
     }
     d->layout->addWidget(view->toolBar());
     d->layout->addWidget(view->widget());
-    view->toolBar()->show();
+    if (view->toolBar())
+        view->toolBar()->show();
     view->widget()->show();
 }

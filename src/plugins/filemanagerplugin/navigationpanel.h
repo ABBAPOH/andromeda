@@ -9,6 +9,9 @@ class QModelIndex;
 class QTreeView;
 class QTreeWidget;
 class QTreeWidgetItem;
+
+namespace FileManagerPlugin {
+
 class NavigationPanel : public QWidget
 {
     Q_OBJECT
@@ -32,5 +35,7 @@ private:
     QTreeView *m_treeView;
     NavigationModel *m_model;
 };
+
+} // namespace FileManagerPlugin
 
 #endif // QNAVIGATIONPANEL_H

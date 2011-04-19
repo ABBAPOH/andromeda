@@ -5,6 +5,8 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QResizeEvent>
 
+using namespace FileManagerPlugin;
+
 NavigationPanel::NavigationPanel(QWidget *parent) :
     QWidget(parent),
     m_treeView(new QTreeView(this)),
