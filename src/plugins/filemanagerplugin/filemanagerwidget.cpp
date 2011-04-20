@@ -62,6 +62,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->views[TableView] = tableView;
     d->views[TreeView] = treeView;
 
+    setFocusPolicy(Qt::StrongFocus);
     for (int i = 0; i < MaxViews; i++) {
         d->layout->addWidget(d->views[i]);
         d->views[i]->setFocusProxy(this);

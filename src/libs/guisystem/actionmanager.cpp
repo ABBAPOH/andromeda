@@ -6,6 +6,8 @@
 #include "mainwindow.h"
 #include "state.h"
 
+#include <QtCore/QMetaMethod>
+
 using namespace GuiSystem;
 
 void ActionManagerPrivate::onTrigger(bool checked)
@@ -43,7 +45,9 @@ void ActionManagerPrivate::onTrigger(bool checked)
     QWidget *targetWidget = QApplication::focusWidget();
     foreach (const char * slot, connectionsToWidgets.values(id)) {
         const QMetaObject *metaObject = targetWidget->metaObject();
-        metaObject->invokeMethod(targetWidget, slot);
+        int index = metaObject->indexOfMethod(slot);
+        const QMetaMethod &metaMethod = metaObject->method(index);
+        metaMethod.invoke(targetWidget);
     }
 
 }
@@ -55,7 +59,7 @@ void ActionManagerPrivate::onFocusChange(QWidget *old, QWidget *now)
         if (!action)
             continue;
         const QMetaObject *metaObject = now ? now->metaObject() : 0;
-        if (metaObject && metaObject->indexOfMethod(connectionsToWidgets.value(id)) != -1)
+        if (metaObject && metaObject->indexOfSlot(connectionsToWidgets.value(id)) != -1)
             action->setEnabled(true);
         else
             action->setEnabled(false);
