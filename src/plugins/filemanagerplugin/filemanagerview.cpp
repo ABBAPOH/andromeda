@@ -10,11 +10,13 @@ FileManagerView::FileManagerView(QObject *parent) :
     IView(parent)
 {
     m_widget = new FileManagerWidget();
+    connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChange(QString)));
 }
 
 void FileManagerView::initialize(GuiSystem::State *state)
 {
     QString path = state->property("path").toString();
+    m_state = state;
     m_widget->setCurrentPath(path);
 }
 
@@ -36,4 +38,10 @@ QString FileManagerFactory::id() const
 GuiSystem::IView * FileManagerPlugin::FileManagerFactory::createView() const
 {
     return new FileManagerView;
+}
+
+void FileManagerView::onCurrentPathChange(const QString &path)
+{
+    if (m_state->property("path").toString() != path)
+        m_state->setProperty("path", path);
 }

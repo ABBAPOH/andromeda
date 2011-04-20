@@ -20,9 +20,11 @@ public:
 signals:
 
 public slots:
+    void onCurrentPathChange(const QString &path);
 
 private:
     FileManagerWidget *m_widget;
+    GuiSystem::State *m_state;
 };
 
 class FileManagerFactory : public GuiSystem::IViewFactory

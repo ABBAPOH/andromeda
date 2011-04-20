@@ -25,6 +25,17 @@ void MainWindowPrivate::onTextEntered(const QString &path)
     q->currentState()->setProperty("path", path);
     q->currentState()->setCurrentPerspective(perspective);
     qDebug() << "MainWindowPrivate::onTextEntered" << path << mime << perspective;
+    // TODO: think disconnect
+    connect(q->currentState(), SIGNAL(propertyChanged(const char*,QVariant)),
+            SLOT(onPropertyChanged(const char*,QVariant)));
+}
+
+void MainWindowPrivate::onPropertyChanged(const char *name, const QVariant &value)
+{
+    if (strcmp(name, "path") == 0) {
+        qDebug() << name;
+        lineEdit->setText(value.toString());
+    }
 }
 
 MainWindow::MainWindow(QWidget *parent) :
