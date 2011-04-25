@@ -23,7 +23,7 @@
 
 namespace FileManagerPlugin {
 
-class FileManagerWidgetPrivate :public QObject
+class FileManagerWidgetPrivate : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PUBLIC(FileManagerWidget)
@@ -41,10 +41,13 @@ public:
 
     FileSystemUndoManager *undoManager;
 
+    CorePlugin::History * history;
+
     QStringList selectedPaths();
 
 public slots:
     void onDoubleClick(const QModelIndex &index);
+    void onCurrentItemIndexChanged(int index);
 };
 
 } // namespace FileManagerPlugin

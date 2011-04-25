@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <CorePlugin>
 
+#include <iview.h>
+
 using namespace MainWindowPlugin;
 
 QString getMimeType(const QString &path)
@@ -59,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setUnifiedTitleAndToolBarOnMac(true);
 
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
+    connect(backAction, SIGNAL(triggered()), SLOT(back()));
+    connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
     resize(640, 480);
 }
@@ -66,4 +70,18 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete d_ptr;
+}
+
+void MainWindow::back()
+{
+    GuiSystem::IView *view = currentState()->view("FileManager");
+    const QMetaObject *mo = view->widget()->metaObject();
+    mo->invokeMethod(view->widget(), "back");
+}
+
+void MainWindow::forward()
+{
+    GuiSystem::IView *view = currentState()->view("FileManager");
+    const QMetaObject *mo = view->widget()->metaObject();
+    mo->invokeMethod(view->widget(), "forward");
 }
