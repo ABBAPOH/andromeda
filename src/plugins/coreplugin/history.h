@@ -1,7 +1,7 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
-#include "../coreplugin_global.h"
+#include "coreplugin_global.h"
 
 #include <QtCore/QObject>
 
@@ -9,20 +9,20 @@
 
 namespace CorePlugin {
 
-class EditorHistoryPrivate;
-class COREPLUGIN_EXPORT EditorHistory: public QObject
+class HistoryPrivate;
+class COREPLUGIN_EXPORT History: public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(EditorHistory)
-    Q_DISABLE_COPY(EditorHistory)
+    Q_DECLARE_PRIVATE(History)
+    Q_DISABLE_COPY(History)
 
     Q_PROPERTY(int currentItemIndex READ currentItemIndex NOTIFY currentItemIndexChanged)
     Q_PROPERTY(int maximumItemCount READ maximumItemCount WRITE setMaximumItemCount)
     Q_PROPERTY(bool canGoBack READ canGoBack)
     Q_PROPERTY(bool canGoForward READ canGoForward)
 public:
-    explicit EditorHistory(QObject *parent = 0);
-    ~EditorHistory();
+    explicit History(QObject *parent = 0);
+    ~History();
 
     void appendItem(const HistoryItem &item);
 
@@ -57,7 +57,7 @@ signals:
     void currentItemIndexChanged(int index);
 
 protected:
-    EditorHistoryPrivate *d_ptr;
+    HistoryPrivate *d_ptr;
 };
 
 } // namespace CorePlugin

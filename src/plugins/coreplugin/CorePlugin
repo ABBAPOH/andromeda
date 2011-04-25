@@ -1,3 +1,5 @@
 #include "core.h"
+#include "history.h"
+#include "historyitem.h"
 #include "ifile.h"
 #include "perspectivemanager.h"

@@ -2,7 +2,7 @@
 
 #include "ieditor.h"
 #include "editormanager.h"
-#include "editorhistory.h"
+#include "../history.h"
 #include "ieditor.h"
 #include "../core.h"
 #include "../ifile.h"
@@ -18,7 +18,7 @@ namespace CorePlugin {
 class EditorViewPrivate
 {
 public:
-    EditorHistory *history;
+    History *history;
     QPointer<IEditor> editor;
     QWidget *widget;
 };
@@ -30,7 +30,7 @@ EditorView::EditorView(QWidget *parent) :
     d_ptr(new EditorViewPrivate)
 {
     Q_D(EditorView);
-    d->history = new EditorHistory(this);
+    d->history = new History(this);
     d->editor = 0;
     d->widget = 0;
 
@@ -44,7 +44,7 @@ EditorView::~EditorView()
     delete d->editor;
 }
 
-EditorHistory *EditorView::history()
+History *EditorView::history()
 {
     return d_func()->history;
 }

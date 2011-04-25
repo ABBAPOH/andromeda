@@ -1,4 +1,4 @@
-#include "editorhistory.h"
+#include "history.h"
 
 #include "historyitem.h"
 
@@ -6,7 +6,7 @@ using namespace CorePlugin;
 
 namespace CorePlugin {
 
-class EditorHistoryPrivate
+class HistoryPrivate
 {
 public:
     QList<HistoryItem> items;
@@ -16,23 +16,23 @@ public:
 
 } // namespace CorePlugin
 
-EditorHistory::EditorHistory(QObject *parent) :
+History::History(QObject *parent) :
         QObject(parent),
-        d_ptr(new EditorHistoryPrivate)
+        d_ptr(new HistoryPrivate)
 {
-    Q_D(EditorHistory);
+    Q_D(History);
     d->maximumItemCount = 0;
     d->currentItemIndex = -1;
 }
 
-EditorHistory::~EditorHistory()
+History::~History()
 {
     delete d_ptr;
 }
 
-void EditorHistory::appendItem(const HistoryItem &item)
+void History::appendItem(const HistoryItem &item)
 {
-    Q_D(EditorHistory);
+    Q_D(History);
     int count = d->items.size() - d->currentItemIndex;
     while (count-- >= 1) {
         d->items.removeAt(d->currentItemIndex + 1);
@@ -41,38 +41,38 @@ void EditorHistory::appendItem(const HistoryItem &item)
     d->currentItemIndex++;
 }
 
-bool EditorHistory::canGoBack() const
+bool History::canGoBack() const
 {
     return d_func()->items.size() > 0;
 }
 
-void EditorHistory::back()
+void History::back()
 {
-    Q_D(EditorHistory);
+    Q_D(History);
     if (d->currentItemIndex > 0) {
         d->currentItemIndex--;
         emit currentItemIndexChanged(d->currentItemIndex);
     }
 }
 
-bool EditorHistory::canGoForward() const
+bool History::canGoForward() const
 {
-    Q_D(const EditorHistory);
+    Q_D(const History);
     return d->currentItemIndex >= 0 && d->currentItemIndex < d->items.size() - 1;
 }
 
-void EditorHistory::forward()
+void History::forward()
 {
-    Q_D(EditorHistory);
+    Q_D(History);
     if (canGoForward()) {
         d->currentItemIndex++;
         emit currentItemIndexChanged(d->currentItemIndex);
     }
 }
 
-HistoryItem EditorHistory::backItem() const
+HistoryItem History::backItem() const
 {
-    Q_D(const EditorHistory);
+    Q_D(const History);
 
     if (canGoBack()) {
         return d->items.at(d->currentItemIndex - 1);
@@ -81,26 +81,26 @@ HistoryItem EditorHistory::backItem() const
     }
 }
 
-QList<HistoryItem> EditorHistory::backItems(int maxItems) const
+QList<HistoryItem> History::backItems(int maxItems) const
 {
     return QList<HistoryItem>();
 }
 
-void EditorHistory::clear()
+void History::clear()
 {
-    Q_D(EditorHistory);
+    Q_D(History);
     d->items.clear();
     d->currentItemIndex = -1;
 }
 
-int EditorHistory::count() const
+int History::count() const
 {
     return d_func()->items.size();
 }
 
-HistoryItem EditorHistory::currentItem() const
+HistoryItem History::currentItem() const
 {
-    Q_D(const EditorHistory);
+    Q_D(const History);
     if (d->currentItemIndex != -1) {
         return d->items.at(d->currentItemIndex);
     } else {
@@ -108,48 +108,48 @@ HistoryItem EditorHistory::currentItem() const
     }
 }
 
-int EditorHistory::currentItemIndex() const
+int History::currentItemIndex() const
 {
     return d_func()->currentItemIndex;
 }
 
-HistoryItem EditorHistory::forwardItem() const
+HistoryItem History::forwardItem() const
 {
-    Q_D(const EditorHistory);
+    Q_D(const History);
     if (canGoForward())
         return d->items.at(d->currentItemIndex + 1);
     return HistoryItem();
 }
 
-QList<HistoryItem> EditorHistory::forwardItems(int maxItems) const
+QList<HistoryItem> History::forwardItems(int maxItems) const
 {
-    Q_D(const EditorHistory);
+    Q_D(const History);
     return d->items.mid(d->currentItemIndex, maxItems);
 }
 
-void EditorHistory::goToItem(const HistoryItem & item)
+void History::goToItem(const HistoryItem & item)
 {
-    Q_D(EditorHistory);
+    Q_D(History);
     int index = d->items.indexOf(item);
     d->currentItemIndex = index;
 }
 
-HistoryItem EditorHistory::itemAt(int i) const
+HistoryItem History::itemAt(int i) const
 {
     return d_func()->items.at(i);
 }
 
-QList<HistoryItem> EditorHistory::items() const
+QList<HistoryItem> History::items() const
 {
     return d_func()->items;
 }
 
-int EditorHistory::maximumItemCount() const
+int History::maximumItemCount() const
 {
     return d_func()->maximumItemCount;
 }
 
-void EditorHistory::setMaximumItemCount(int count)
+void History::setMaximumItemCount(int count)
 {
     d_func()->maximumItemCount = count;
 }

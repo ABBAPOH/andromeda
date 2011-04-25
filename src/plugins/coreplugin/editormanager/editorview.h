@@ -8,7 +8,7 @@
 class QUrl;
 namespace CorePlugin {
 
-class EditorHistory;
+class History;
 class EditorViewPrivate;
 class COREPLUGIN_EXPORT EditorView : public QWidget
 {
@@ -20,7 +20,7 @@ public:
     explicit EditorView(QWidget *parent = 0);
     ~EditorView();
 
-    EditorHistory *history();
+    History *history();
 
 signals:
 
