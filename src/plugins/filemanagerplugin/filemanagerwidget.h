@@ -3,6 +3,8 @@
 
 #include <QtGui/QWidget>
 
+#include <history.h>
+
 class QFileSystemModel;
 
 namespace FileManagerPlugin {
@@ -27,6 +29,8 @@ public:
 
     QString currentPath() const;
 
+    CorePlugin::History *history() const;
+
 signals:
     void currentPathChanged(const QString &path);
     void canUndoChanged(bool);
@@ -38,6 +42,8 @@ public slots:
     void remove();
     void undo();
     void redo();
+    void back();
+    void forward();
 
 protected:
     FileManagerWidgetPrivate *d_ptr;

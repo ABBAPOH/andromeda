@@ -15,6 +15,8 @@ public:
     ~MainWindow();
 
 public slots:
+    void back();
+    void forward();
 
 protected:
     MainWindowPrivate * d_ptr;

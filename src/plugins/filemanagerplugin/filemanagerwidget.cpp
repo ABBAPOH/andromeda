@@ -4,6 +4,7 @@
 #include <QDebug>
 
 using namespace FileManagerPlugin;
+using namespace CorePlugin;
 
 QStringList FileManagerWidgetPrivate::selectedPaths()
 {
@@ -24,6 +25,18 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     if (QFileInfo(path).isDir()) {
         q->setCurrentPath(path);
     }
+}
+
+void FileManagerWidgetPrivate::onCurrentItemIndexChanged(int index)
+{
+    Q_Q(FileManagerWidget);
+
+    QString path = history->itemAt(index).path();
+    currentPath = path;
+    QModelIndex modelIndex = model->index(path);
+    currentView->setRootIndex(modelIndex);
+
+    emit q->currentPathChanged(path);
 }
 
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
@@ -79,6 +92,9 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     d->undoManager = new FileSystemUndoManager(this);
     connect(d->undoManager->undoStack(), SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
+
+    d->history = new History(this);
+    connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
     FileSystemModel *model = new FileSystemModel(this);
     model->setRootPath("/");
@@ -140,6 +156,13 @@ QString FileManagerWidget::currentPath() const
     return d->currentPath;
 }
 
+History * FileManagerWidget::history() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->history;
+}
+
 void FileManagerWidget::setCurrentPath(const QString &path)
 {
     Q_D(FileManagerWidget);
@@ -148,6 +171,10 @@ void FileManagerWidget::setCurrentPath(const QString &path)
         d->currentPath = path;
         QModelIndex index = d->model->index(path);
         d->currentView->setRootIndex(index);
+
+        HistoryItem item(QIcon(), QDateTime::currentDateTime(), QFileInfo(path).fileName(), path);
+        d->history->appendItem(item);
+
         emit currentPathChanged(path);
     }
 }
@@ -217,4 +244,18 @@ void FileManagerWidget::redo()
     Q_D(FileManagerWidget);
 
     d->undoManager->undoStack()->redo();
+}
+
+void FileManagerWidget::back()
+{
+    Q_D(FileManagerWidget);
+
+    d->history->back();
+}
+
+void FileManagerWidget::forward()
+{
+    Q_D(FileManagerWidget);
+
+    d->history->forward();
 }
