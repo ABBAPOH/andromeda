@@ -4,26 +4,26 @@ set( HEADERS
     core.h
     core_p.h
     coreplugin.h
+    history.h
+    historyitem.h
     ifile.h
     editormanager/editormanager.h
     editormanager/editormanager_p.h
     editormanager/ieditor.h
     editormanager/ieditorfactory.h
     editormanager/editorview.h
-    editormanager/editorhistory.h
-    editormanager/historyitem.h
     perspectivemanager.h
    )
 set( SOURCES
     core.cpp
     coreplugin.cpp
+    history.cpp
+    historyitem.cpp
     ifile.cpp
     editormanager/editormanager.cpp
     editormanager/ieditor.cpp
     editormanager/ieditorfactory.cpp
     editormanager/editorview.cpp
-    editormanager/editorhistory.cpp
-    editormanager/historyitem.cpp
     perspectivemanager.cpp
    )
 set( FORMS
