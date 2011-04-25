@@ -1,7 +1,7 @@
 #ifndef HISTORYITEM_H
 #define HISTORYITEM_H
 
-#include "../coreplugin_global.h"
+#include "coreplugin_global.h"
 
 #include <QtCore/QExplicitlySharedDataPointer>
 #include <QtCore/QDateTime>
