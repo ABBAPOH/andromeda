@@ -34,7 +34,7 @@ void MainWindowPrivate::onTextEntered(const QString &path)
 
 void MainWindowPrivate::onPropertyChanged(const char *name, const QVariant &value)
 {
-    if (strcmp(name, "path") == 0) {
+    if (QLatin1String(name) == QLatin1String("path")) {
         qDebug() << name;
         lineEdit->setText(value.toString());
     }

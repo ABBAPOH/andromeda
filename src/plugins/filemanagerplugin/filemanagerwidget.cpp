@@ -27,16 +27,19 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     }
 }
 
+// Triggers when current item in history changes
 void FileManagerWidgetPrivate::onCurrentItemIndexChanged(int index)
 {
     Q_Q(FileManagerWidget);
 
     QString path = history->itemAt(index).path();
-    currentPath = path;
-    QModelIndex modelIndex = model->index(path);
-    currentView->setRootIndex(modelIndex);
+    if (currentPath != path) {
+        currentPath = path;
+        QModelIndex modelIndex = model->index(path);
+        currentView->setRootIndex(modelIndex);
 
-    emit q->currentPathChanged(path);
+        emit q->currentPathChanged(path);
+    }
 }
 
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
