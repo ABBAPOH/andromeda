@@ -49,7 +49,6 @@ void ActionManagerPrivate::onTrigger(bool checked)
         const QMetaMethod &metaMethod = metaObject->method(index);
         metaMethod.invoke(targetWidget);
     }
-
 }
 
 void ActionManagerPrivate::onFocusChange(QWidget *old, QWidget *now)
