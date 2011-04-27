@@ -15,6 +15,10 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     m_treeView->setModel(m_model);
     m_treeView->setHeaderHidden(true);
     m_treeView->setFocusPolicy(Qt::NoFocus);
+    m_treeView->setAcceptDrops(true);
+    m_treeView->setDropIndicatorShown(true);
+    m_treeView->setDragEnabled(true);
+    m_treeView->setDragDropMode(QAbstractItemView::DragDrop);
 
     QPalette pal = m_treeView->palette();
     pal.setColor(QPalette::Base, QColor(214, 221, 229));

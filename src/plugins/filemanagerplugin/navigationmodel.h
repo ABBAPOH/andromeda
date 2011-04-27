@@ -28,18 +28,25 @@ public:
 
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
+
+    virtual QStringList mimeTypes() const;
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
+                              int row, int column, const QModelIndex &parent);
+
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &index) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual Qt::DropActions supportedDropActions() const;
 
     QString path(const QModelIndex &index) const;
 
     void addFolder(const QString &path);
     void removeFolder(const QString &path);
 
-    StandardLocations standardLocations() const;
+//    StandardLocations standardLocations() const;
     void setStandardLocations(StandardLocations locations);
 
 signals:

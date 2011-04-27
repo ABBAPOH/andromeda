@@ -6,6 +6,9 @@
 #include <QDesktopServices>
 #include <QFileIconProvider>
 #include <QFileInfo>
+#include <QMimeData>
+#include <QUrl>
+#include <QSettings>
 
 class QDriveInfo;
 
@@ -111,13 +114,28 @@ NavigationModel::NavigationModel(QObject *parent) :
 //        }
 //    }
 
-    StandardLocations locations(DesktopLocation | DocumentsLocation | HomeLocation | ApplicationsLocation);
-    setStandardLocations(locations);
+    QSettings settings("NavigationModel");
+    if (settings.contains("folders")) {
+        QStringList folders = settings.value("folders").toStringList();
+        foreach (const QString &folder, folders)
+            addFolder(folder);
+    } else {
+        StandardLocations locations(DesktopLocation | DocumentsLocation |
+                                    HomeLocation | ApplicationsLocation);
+        setStandardLocations(locations);
+    }
 }
 
 NavigationModel::~NavigationModel()
 {
     Q_D(NavigationModel);
+
+    QSettings settings("NavigationModel");
+    QStringList folders;
+    foreach (TreeItem *item, d->foldersItem->m_children) {
+        folders.append(item->path);
+    }
+    settings.setValue("folders", folders);
 
     delete d->rootItem;
 
@@ -146,12 +164,83 @@ QVariant NavigationModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+QStringList NavigationModel::mimeTypes() const
+{
+    return QStringList() << "text/uri-list";
+}
+
+QMimeData * NavigationModel::mimeData(const QModelIndexList &indexes) const
+{
+    Q_D(const NavigationModel);
+
+    QMimeData *data = new QMimeData();
+    QList<QUrl> urls;
+    foreach (const QModelIndex &index, indexes) {
+        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+        if (item->type == TreeItem::ChildItem && item->parent() == d->foldersItem) {
+            urls.append(QUrl::fromLocalFile(item->path));
+        }
+    }
+    data->setUrls(urls);
+    return data;
+}
+
+#include <QDebug>
+bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
+                                   int row, int column, const QModelIndex &parent)
+{
+    qDebug() << "NavigationModel::dropMimeData" << row << column << parent;
+    if (!data->hasUrls())
+        return false;
+
+    Q_D(NavigationModel);
+
+    const QList<QUrl> & urls = data->urls();
+    for (int i = 0; i < urls.size(); i++) {
+        QString path = urls[i].toLocalFile();
+        TreeItem *item = d->mapToItem.value(path);
+        if (item) {
+            beginRemoveRows(parent, item->row(), item->row());
+            delete item;
+            endRemoveRows();
+        }
+    }
+
+    beginInsertRows(parent, row, row + urls.size());
+    for (int i = 0; i < urls.size(); i++) {
+        QString path = urls[i].toLocalFile();
+        QFileInfo info(path);
+
+        TreeItem *item = new TreeItem(d->foldersItem, row + i);
+        item->type = TreeItem::ChildItem;
+        item->path = path;
+        item->name = info.fileName();
+        item->icon = d->iconProvider.icon(info);
+
+        d->mapToItem.insert(path, item);
+    }
+    endInsertRows();
+    return true;
+}
+
 Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
 
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    Q_D(const NavigationModel);
+
+    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    if (item->type == TreeItem::ChildItem && item->parent() == d->foldersItem)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled;
+
+    if (item == d->foldersItem)
+        return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
+
+    if (item->type == TreeItem::ChildItem)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+
+    return Qt::ItemIsEnabled;
 }
 
 QModelIndex NavigationModel::index(int row, int column, const QModelIndex &parent) const
@@ -205,6 +294,11 @@ int NavigationModel::rowCount(const QModelIndex &parent) const
     return parentItem->childCount();
 }
 
+Qt::DropActions NavigationModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}
+
 QString NavigationModel::path(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -241,18 +335,18 @@ void NavigationModel::removeFolder(const QString &path)
     d->removeItem(path);
 }
 
-NavigationModel::StandardLocations NavigationModel::standardLocations() const
-{
-    Q_D(const NavigationModel);
+//NavigationModel::StandardLocations NavigationModel::standardLocations() const
+//{
+//    Q_D(const NavigationModel);
 
-    return d->locations;
-}
+//    return d->locations;
+//}
 
 void NavigationModel::setStandardLocations(StandardLocations locations)
 {
-    Q_D(NavigationModel);
+//    Q_D(NavigationModel);
 
-    d->locations = locations;
+//    d->locations = locations;
 
     QString path;
 

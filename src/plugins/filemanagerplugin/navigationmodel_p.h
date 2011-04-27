@@ -25,6 +25,13 @@ struct TreeItem
         type = RootItem;
     }
 
+    TreeItem(TreeItem *parent, int row)
+    {
+        m_parent = parent;
+        if (parent)
+            parent->m_children.insert(row, this);
+    }
+
     TreeItem(TreeItem *parent, const QString &name)
     {
         m_parent = parent;
@@ -102,7 +109,7 @@ public:
 
     QFileIconProvider iconProvider;
 
-    NavigationModel::StandardLocations locations;
+//    NavigationModel::StandardLocations locations;
 
     void insertItem(TreeItem *parent, const QString &name, const QString &path);
     void removeItem(const QString &path);
