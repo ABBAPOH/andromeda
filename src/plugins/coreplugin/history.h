@@ -38,6 +38,7 @@ public:
 
     HistoryItem currentItem() const;
     int currentItemIndex() const;
+    void setCurrentItemIndex(int index);
 
     HistoryItem forwardItem() const;
     QList<HistoryItem> forwardItems(int maxItems) const;
