@@ -18,7 +18,7 @@ void NavigationPanelView::initialize(GuiSystem::State *state)
     IView *view = state->view("FileManager");
 
 //    FileManagerView *fileManagerView = qobject_cast<FileManagerView *>(view);
-    connect(m_widget, SIGNAL(folderClicked(QString)),
+    connect(m_widget, SIGNAL(currentPathChanged(QString)),
             view->widget(), SLOT(setCurrentPath(QString)));
 }
 

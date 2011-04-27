@@ -19,6 +19,7 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     m_treeView->setDropIndicatorShown(true);
     m_treeView->setDragEnabled(true);
     m_treeView->setDragDropMode(QAbstractItemView::DragDrop);
+//    m_treeView->setSelectionMode(QAbstractItemView::NoSelection);
 
     QPalette pal = m_treeView->palette();
     pal.setColor(QPalette::Base, QColor(214, 221, 229));
@@ -26,6 +27,8 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     m_treeView->expandAll();
 
     connect(m_treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClick(QModelIndex)));
+    connect(m_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(onCurrentChanged(QModelIndex,QModelIndex)));
 
     setMinimumSize(200, 200);
 }
@@ -44,6 +47,11 @@ void NavigationPanel::removeFolder(const QString &path)
     m_model->removeFolder(path);
 }
 
+QString NavigationPanel::currentPath() const
+{
+    return m_currentPath;
+}
+
 void NavigationPanel::resizeEvent(QResizeEvent * event)
 {
     m_treeView->resize(event->size());
@@ -53,6 +61,10 @@ void NavigationPanel::resizeEvent(QResizeEvent * event)
 void NavigationPanel::onClick(const QModelIndex &index)
 {
     QString path = m_model->path(index);
-    if (!path.isEmpty())
-        emit folderClicked(path);
+    if (!path.isEmpty()) {
+        m_currentPath  = path;
+        emit currentPathChanged(path);
+    } else {
+        m_treeView->selectionModel()->select(m_model->index(m_currentPath), QItemSelectionModel::Select);
+    }
 }

@@ -41,6 +41,7 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual Qt::DropActions supportedDropActions() const;
 
+    QModelIndex index(const QString &path) const;
     QString path(const QModelIndex &index) const;
 
     void addFolder(const QString &path);
