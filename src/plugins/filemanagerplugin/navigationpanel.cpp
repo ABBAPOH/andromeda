@@ -5,64 +5,90 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QResizeEvent>
 
+#define bublic public
+
+namespace FileManagerPlugin {
+
+class NavigationPanelPrivate
+{
+bublic:
+    QTreeView *treeView;
+    NavigationModel *model;
+    QString currentPath;
+};
+
+} // namespace FileManagerPlugin
+
 using namespace FileManagerPlugin;
 
 NavigationPanel::NavigationPanel(QWidget *parent) :
     QWidget(parent),
-    m_treeView(new QTreeView(this)),
-    m_model(new NavigationModel(this))
+    d_ptr(new NavigationPanelPrivate)
 {
-    m_treeView->setModel(m_model);
-    m_treeView->setHeaderHidden(true);
-    m_treeView->setFocusPolicy(Qt::NoFocus);
-    m_treeView->setAcceptDrops(true);
-    m_treeView->setDropIndicatorShown(true);
-    m_treeView->setDragEnabled(true);
-    m_treeView->setDragDropMode(QAbstractItemView::DragDrop);
-//    m_treeView->setSelectionMode(QAbstractItemView::NoSelection);
+    Q_D(NavigationPanel);
 
-    QPalette pal = m_treeView->palette();
+    d->model = new NavigationModel(this);
+    d->treeView = new QTreeView(this);
+
+    d->treeView->setModel(d->model);
+    d->treeView->setHeaderHidden(true);
+    d->treeView->setFocusPolicy(Qt::NoFocus);
+    d->treeView->setAcceptDrops(true);
+    d->treeView->setDropIndicatorShown(true);
+    d->treeView->setDragEnabled(true);
+    d->treeView->setDragDropMode(QAbstractItemView::DragDrop);
+
+    QPalette pal = d->treeView->palette();
     pal.setColor(QPalette::Base, QColor(214, 221, 229));
-    m_treeView->QAbstractItemView::setPalette(pal);
-    m_treeView->expandAll();
+    d->treeView->QAbstractItemView::setPalette(pal);
+    d->treeView->expandAll();
 
-    connect(m_treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClick(QModelIndex)));
+    connect(d->treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClick(QModelIndex)));
 
     setMinimumSize(200, 200);
 }
 
 NavigationPanel::~NavigationPanel()
 {
+    delete d_ptr;
 }
 
 void NavigationPanel::addFolder(const QString & path)
 {
-    m_model->addFolder(path);
+    Q_D(NavigationPanel);
+
+    d->model->addFolder(path);
 }
 
 void NavigationPanel::removeFolder(const QString &path)
 {
-    m_model->removeFolder(path);
+    Q_D(NavigationPanel);
+
+    d->model->removeFolder(path);
 }
 
 QString NavigationPanel::currentPath() const
 {
-    return m_currentPath;
+    return d_func()->currentPath;
 }
 
 void NavigationPanel::resizeEvent(QResizeEvent * event)
 {
-    m_treeView->resize(event->size());
+    Q_D(NavigationPanel);
+
+    d->treeView->resize(event->size());
     QWidget::resizeEvent(event);
 }
 
 void NavigationPanel::onClick(const QModelIndex &index)
 {
-    QString path = m_model->path(index);
+    Q_D(NavigationPanel);
+
+    QString path = d->model->path(index);
     if (!path.isEmpty()) {
-        m_currentPath  = path;
+        d->currentPath  = path;
         emit currentPathChanged(path);
     } else {
-        m_treeView->selectionModel()->select(m_model->index(m_currentPath), QItemSelectionModel::Select);
+        d->treeView->selectionModel()->select(d->model->index(d->currentPath), QItemSelectionModel::Select);
     }
 }
