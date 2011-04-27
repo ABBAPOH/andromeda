@@ -12,9 +12,11 @@ class QTreeWidgetItem;
 
 namespace FileManagerPlugin {
 
+class NavigationPanelPrivate;
 class NavigationPanel : public QWidget
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(NavigationPanel)
     Q_PROPERTY(QString currentPath READ currentPath NOTIFY currentPathChanged)
 public:
     explicit NavigationPanel(QWidget *parent = 0);
@@ -34,10 +36,8 @@ signals:
 private slots:
     void onClick(const QModelIndex &index);
 
-private:
-    QTreeView *m_treeView;
-    NavigationModel *m_model;
-    QString m_currentPath;
+protected:
+    NavigationPanelPrivate *d_ptr;
 };
 
 } // namespace FileManagerPlugin
