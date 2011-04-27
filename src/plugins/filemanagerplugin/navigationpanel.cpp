@@ -27,8 +27,6 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     m_treeView->expandAll();
 
     connect(m_treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClick(QModelIndex)));
-    connect(m_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            SLOT(onCurrentChanged(QModelIndex,QModelIndex)));
 
     setMinimumSize(200, 200);
 }
