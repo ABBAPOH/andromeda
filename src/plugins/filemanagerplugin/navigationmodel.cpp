@@ -299,6 +299,17 @@ Qt::DropActions NavigationModel::supportedDropActions() const
     return Qt::CopyAction | Qt::MoveAction;
 }
 
+QModelIndex NavigationModel::index(const QString &path) const
+{
+    Q_D(const NavigationModel);
+
+    TreeItem *item = d->mapToItem.value(path);
+    if (!item)
+        return QModelIndex();
+    else
+        return createIndex(item->row(), 0, item);
+}
+
 QString NavigationModel::path(const QModelIndex &index) const
 {
     if (!index.isValid())
