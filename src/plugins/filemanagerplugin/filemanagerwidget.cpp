@@ -6,17 +6,6 @@
 using namespace FileManagerPlugin;
 using namespace CorePlugin;
 
-QStringList FileManagerWidgetPrivate::selectedPaths()
-{
-    QStringList result;
-    QModelIndexList list = currentView->selectionModel()->selectedRows();
-
-    foreach (QModelIndex index, list) {
-        result.append(model->filePath(index));
-    }
-    return result;
-}
-
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
 {
     Q_Q(FileManagerWidget);
@@ -166,6 +155,24 @@ History * FileManagerWidget::history() const
     return d->history;
 }
 
+QStringList FileManagerWidget::selectedPaths() const
+{
+    Q_D(const FileManagerWidget);
+
+    QStringList result;
+    QModelIndexList list = d->currentView->selectionModel()->selectedRows();
+
+    foreach (QModelIndex index, list) {
+        result.append(d->model->filePath(index));
+    }
+    return result;
+}
+
+FileSystemUndoManager * FileManagerWidget::undoManager() const
+{
+    return d_func()->undoManager;
+}
+
 void FileManagerWidget::setCurrentPath(const QString &path)
 {
     Q_D(FileManagerWidget);
@@ -184,13 +191,11 @@ void FileManagerWidget::setCurrentPath(const QString &path)
 
 void FileManagerWidget::copy()
 {
-    Q_D(FileManagerWidget);
-
     QClipboard * clipboard = QApplication::clipboard();
     QMimeData * data = new QMimeData();
     QList<QUrl> urls;
 
-    QStringList paths = d->selectedPaths();
+    QStringList paths = selectedPaths();
     qDebug() << paths;
 
     foreach (const QString &path, paths) {
@@ -224,11 +229,8 @@ bool removePath(const QString &path);
 
 void FileManagerWidget::remove()
 {
-    Q_D(FileManagerWidget);
-
-    QStringList paths = d->selectedPaths();
+    QStringList paths = selectedPaths();
     foreach (const QString &path, paths) {
-//        bool result = QFile::remove(path);
         bool result = removePath(path);
         if (!result) {
         }

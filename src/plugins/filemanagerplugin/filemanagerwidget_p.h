@@ -43,8 +43,6 @@ public:
 
     CorePlugin::History * history;
 
-    QStringList selectedPaths();
-
 public slots:
     void onDoubleClick(const QModelIndex &index);
     void onCurrentItemIndexChanged(int index);

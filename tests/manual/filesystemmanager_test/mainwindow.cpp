@@ -24,11 +24,15 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setRootPath("/");
     model->setFilter(QDir::AllDirs | QDir::System | QDir::Hidden | QDir::Files /*| QDir::NoDotAndDotDot*/);
 
-    view = new FileManagerWidget(this);
+//    view = new FileManagerWidget(this);
+    dualPane = new DualPaneWidget(this);
+    dualPane->setDualPaneModeEnabled(true);
 
-    setCentralWidget(view);
+//    setCentralWidget(view);
+    setCentralWidget(dualPane);
 
-    connect(panel, SIGNAL(folderClicked(QString)), this, SLOT(onClick(QString)));
+//    connect(panel, SIGNAL(folderClicked(QString)), this, SLOT(onClick(QString)));
+    connect(panel, SIGNAL(currentPathChanged(QString)), dualPane, SLOT(setCurrentPath(QString)));
 
     QMenu * menu = menuBar()->addMenu("Edit");
     menu->addAction("Undo", view, SLOT(undo()), tr("Ctrl+Z"));
@@ -37,6 +41,9 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction("Copy", view, SLOT(copy()), tr("Ctrl+C"));
     menu->addAction("Paste", view, SLOT(paste()), tr("Ctrl+V"));
     menu->addAction("Remove", view, SLOT(remove()), tr("Ctrl+Shift+Backspace"));
+
+    menu = menuBar()->addMenu("Tools");
+    menu->addAction("Copy Files", dualPane, SLOT(copy()));
 
     resize(640, 480);
 }

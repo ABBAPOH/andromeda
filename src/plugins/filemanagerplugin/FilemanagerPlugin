@@ -1,3 +1,4 @@
+#include "dualpanewidget.h"
 #include "filemanagerwidget.h"
 #include "filesystemmodel.h"
 #include "filesystemundomanager.h"
