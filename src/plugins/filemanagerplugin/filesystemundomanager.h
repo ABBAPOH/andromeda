@@ -20,6 +20,7 @@ public:
 signals:
 
 public slots:
+
 };
 
 class CopyCommand : public QUndoCommand
