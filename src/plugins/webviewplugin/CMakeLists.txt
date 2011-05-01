@@ -16,10 +16,8 @@ set( FORMS
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/registrationsystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin/editormanager )
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DWEBVIEWPLUGIN_LIBRARY )
 
