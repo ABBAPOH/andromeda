@@ -43,6 +43,8 @@ public:
 
     CorePlugin::History * history;
 
+    bool blockEvents;
+
 public slots:
     void onDoubleClick(const QModelIndex &index);
     void onCurrentItemIndexChanged(int index);

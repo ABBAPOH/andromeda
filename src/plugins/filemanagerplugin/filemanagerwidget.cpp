@@ -1,6 +1,7 @@
 #include "filemanagerwidget.h"
 #include "filemanagerwidget_p.h"
 
+#include <QtGui/QKeyEvent>
 #include <QDebug>
 
 using namespace FileManagerPlugin;
@@ -66,6 +67,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->views[ColumnView] = columnView;
     d->views[TableView] = tableView;
     d->views[TreeView] = treeView;
+    d->blockEvents = false;
 
     setFocusPolicy(Qt::StrongFocus);
     for (int i = 0; i < MaxViews; i++) {
@@ -263,4 +265,30 @@ void FileManagerWidget::forward()
     Q_D(FileManagerWidget);
 
     d->history->forward();
+}
+
+void FileManagerWidget::keyPressEvent(QKeyEvent *event)
+{
+    Q_D(FileManagerWidget);
+
+    if (!d->blockEvents) { // prevent endless recursion
+        d->blockEvents = true;
+        qApp->sendEvent(d_func()->currentView, event);
+        d->blockEvents = false;
+    } else {
+        d->blockEvents = false;
+    }
+}
+
+void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
+{
+    Q_D(FileManagerWidget);
+
+    if (!d->blockEvents) { // prevent endless recursion
+        d->blockEvents = true;
+        qApp->sendEvent(d_func()->currentView, event);
+        d->blockEvents = false;
+    } else {
+        d->blockEvents = false;
+    }
 }
