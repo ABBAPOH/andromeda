@@ -26,8 +26,8 @@ public slots:
 protected:
     FileCopyDialogManagerPrivate *d_ptr;
 
-    Q_PRIVATE_SLOT(d_func(), void update());
-    Q_PRIVATE_SLOT(d_func(), void handleError(int id, QtFileCopier::Error error, bool stopped));
+    Q_PRIVATE_SLOT(d_func(), void update())
+    Q_PRIVATE_SLOT(d_func(), void handleError(int id, QtFileCopier::Error error, bool stopped))
 };
 
 }
