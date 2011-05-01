@@ -52,6 +52,9 @@ public slots:
     void forward();
 
 protected:
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
     FileManagerWidgetPrivate *d_ptr;
 };
 
