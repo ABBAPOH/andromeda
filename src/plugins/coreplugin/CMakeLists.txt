@@ -36,8 +36,6 @@ set( FORMS
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( editormanager )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
