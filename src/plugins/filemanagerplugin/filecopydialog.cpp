@@ -1,13 +1,15 @@
 #include "filecopydialog.h"
 
-#include "filecopywidget.h"
 #include <QtGui/QScrollArea>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QResizeEvent>
 
+#include "filecopywidget.h"
+
 using namespace MainWindowPlugin;
 
 namespace Ui {
+
     class FileCopyReplaceDialog
     {
     public:
@@ -23,10 +25,10 @@ namespace Ui {
             layout = new QVBoxLayout;
 
             layout->addSpacerItem(new QSpacerItem(0,
-                                                    0,
-                                                    QSizePolicy::Preferred,
-                                                    QSizePolicy::Expanding)
-                                    ); // We need this spacer to have space in bottom of list
+                                                  0,
+                                                  QSizePolicy::Preferred,
+                                                  QSizePolicy::Expanding)
+                                  ); // We need this spacer to have space in bottom of list
 
             widget = new QWidget;
             widget->setLayout(layout);
@@ -37,7 +39,8 @@ namespace Ui {
             scrollArea->setWidget(widget);
         }
     };
-}
+
+} // namespace Ui
 
 FileCopyDialog::FileCopyDialog(QWidget *parent) :
     QDialog(parent),
