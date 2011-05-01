@@ -7,7 +7,7 @@
 using namespace FileManagerPlugin;
 
 FileManagerView::FileManagerView(QObject *parent) :
-    IView(parent)
+    IHistoryView(parent)
 {
     m_widget = new FileManagerWidget();
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChange(QString)));
@@ -38,6 +38,16 @@ QString FileManagerFactory::id() const
 GuiSystem::IView * FileManagerPlugin::FileManagerFactory::createView() const
 {
     return new FileManagerView;
+}
+
+void FileManagerView::back()
+{
+    m_widget->back();
+}
+
+void FileManagerView::forward()
+{
+    m_widget->forward();
 }
 
 void FileManagerView::onCurrentPathChange(const QString &path)

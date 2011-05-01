@@ -9,6 +9,8 @@
 #include <iview.h>
 
 using namespace MainWindowPlugin;
+using namespace CorePlugin;
+//using namespace GuiSystem;
 
 QString getMimeType(const QString &path)
 {
@@ -23,10 +25,21 @@ void MainWindowPrivate::onTextEntered(const QString &path)
     Q_Q(MainWindow);
 
     QString mime = getMimeType(path);
-    QString perspective = CorePlugin::Core::instance()->perspectiveManager()->perspective(mime);
+    GuiSystem::GuiController *controller = GuiSystem::GuiController::instance();
+    QString perspectiveId = Core::instance()->perspectiveManager()->perspective(mime);
     q->currentState()->setProperty("path", path);
-    q->currentState()->setCurrentPerspective(perspective);
-    qDebug() << "MainWindowPrivate::onTextEntered" << path << mime << perspective;
+    q->currentState()->setCurrentPerspective(perspectiveId);
+
+    QString mainViewId = controller->perspective(perspectiveId)->property("MainView").toString();
+    GuiSystem::IView *iview = q->currentState()->view(mainViewId);
+    IHistoryView *view = qobject_cast<IHistoryView*>(iview);
+    if (view) {
+        currentHistory->appendView(view);
+    } else {
+        HistoryItem item(QIcon(), QDateTime::currentDateTime(), "", path);
+        currentHistory->appendItem(item);
+    }
+    qDebug() << "MainWindowPrivate::onTextEntered" << path << mime << perspectiveId;
     // TODO: think disconnect
     connect(q->currentState(), SIGNAL(propertyChanged(const char*,QVariant)),
             SLOT(onPropertyChanged(const char*,QVariant)));
@@ -45,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
     d_ptr(new MainWindowPrivate(this))
 {
     Q_D(MainWindow);
+
+    d->currentHistory = new CorePlugin::GlobalHistory(currentState());
 
     d->lineEdit = new EnteredLineEdit(this);
     d->toolBar = new QToolBar(this);
@@ -74,14 +89,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::back()
 {
-    GuiSystem::IView *view = currentState()->view("FileManager");
-    const QMetaObject *mo = view->widget()->metaObject();
-    mo->invokeMethod(view->widget(), "back");
+    Q_D(MainWindow);
+
+    if (d->currentHistory->canGoBack()) {
+        d->currentHistory->back();
+        GlobalHistoryItem *item = d->currentHistory->currentItem();
+        if (item->type == GlobalHistoryItem::View) {
+            item->view->back();
+        } else {
+
+        }
+    }
+
+    QString mainViewId = currentState()->currentInstance()->perspective()->property("MainView").toString();
+    GuiSystem::IView *iview = currentState()->view(mainViewId);
+    CorePlugin::IHistoryView * view = qobject_cast<CorePlugin::IHistoryView *>(iview);
+    view->back();
 }
 
 void MainWindow::forward()
 {
-    GuiSystem::IView *view = currentState()->view("FileManager");
-    const QMetaObject *mo = view->widget()->metaObject();
-    mo->invokeMethod(view->widget(), "forward");
+    QString mainViewId = currentState()->currentInstance()->perspective()->property("MainView").toString();
+    GuiSystem::IView *iview = currentState()->view(mainViewId);
+    CorePlugin::IHistoryView * view = qobject_cast<CorePlugin::IHistoryView *>(iview);
+    view->forward();
 }

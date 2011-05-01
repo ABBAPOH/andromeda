@@ -25,6 +25,7 @@ bool FileManagerPluginImpl::initialize()
     Perspective *perspective = new Perspective("FileManagerPerspective");
     perspective->addView("FileManager", 6);
     perspective->addView("NavigationPanel", 1);
+    perspective->setProperty("MainView", "FileManager");
     GuiController::instance()->addPerspective(perspective);
 
     CorePlugin::Core::instance()->perspectiveManager()->addPerspective("inode/directory",
