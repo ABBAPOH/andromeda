@@ -20,6 +20,12 @@ struct GlobalHistoryItem
         this->item = new HistoryItem(item);
     }
 
+    GlobalHistoryItem(IHistoryView *view)
+    {
+        type = View;
+        this->view = view;
+    }
+
     ~GlobalHistoryItem()
     {
         if (type == Item)
@@ -45,8 +51,11 @@ public:
     void appendItem(const HistoryItem &item);
     void appendView(IHistoryView *view);
 
-    HistoryItem *currentItem() const;
+    bool canGoBack() const;
+    bool canGoForward() const;
+
     int currentIndex() const;
+    GlobalHistoryItem *currentItem() const;
 
 signals:
     void currentIndexChanged();

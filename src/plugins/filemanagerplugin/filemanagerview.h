@@ -1,21 +1,26 @@
 #ifndef FILEMANAGERVIEW_H
 #define FILEMANAGERVIEW_H
 
-#include <iview.h>
+#include <ihistoryview.h>
 #include <iviewfactory.h>
 
 namespace FileManagerPlugin {
 
 class FileManagerWidget;
-class FileManagerView : public GuiSystem::IView
+class FileManagerView : public CorePlugin::IHistoryView
 {
     Q_OBJECT
 public:
     explicit FileManagerView(QObject *parent = 0);
 
+    // from IView
     virtual void initialize(GuiSystem::State *state);
     virtual QString type() const;
     virtual QWidget *widget() const;
+
+    // from IHistoryView
+    void back();
+    void forward();
 
 signals:
 

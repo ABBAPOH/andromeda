@@ -5,6 +5,7 @@
 
 #include <QtGui/QToolBar>
 #include <enteredlineedit.h>
+#include <CorePlugin>
 
 namespace MainWindowPlugin {
 
@@ -18,6 +19,7 @@ public:
 
     EnteredLineEdit *lineEdit;
     QToolBar *toolBar;
+    CorePlugin::GlobalHistory *currentHistory;
 
 public slots:
     void onTextEntered(const QString &);
