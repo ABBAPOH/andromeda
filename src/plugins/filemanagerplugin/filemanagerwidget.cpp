@@ -12,8 +12,9 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     Q_Q(FileManagerWidget);
 
     QString path = model->filePath(index);
-    if (QFileInfo(path).isDir()) {
-        q->setCurrentPath(path);
+    QFileInfo info(path);
+    if (info.isDir()) {
+        q->setCurrentPath(info.canonicalFilePath());
     }
 }
 
@@ -56,6 +57,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setRootIsDecorated(false);
+    tableView->setItemsExpandable(false);
 
     d->model = 0;
     d->currentView = 0;
@@ -71,14 +73,16 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     setFocusPolicy(Qt::StrongFocus);
     for (int i = 0; i < MaxViews; i++) {
-        d->layout->addWidget(d->views[i]);
         d->views[i]->setFocusProxy(this);
         d->views[i]->setSelectionMode(QAbstractItemView::ContiguousSelection);
         d->views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
         d->views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         d->views[i]->setAcceptDrops(true);
+        d->layout->addWidget(d->views[i]);
 //        d->views[i]->setDragEnabled(true);
-        connect(d->views[i], SIGNAL(doubleClicked(QModelIndex)), d, SLOT(onDoubleClick(QModelIndex)));
+        connect(d->views[i], SIGNAL(doubleClicked(QModelIndex)),
+                d, SLOT(onDoubleClick(QModelIndex)),
+                Qt::QueuedConnection);
     }
 
     d->layout->setContentsMargins(0, 0, 0, 0);

@@ -165,6 +165,11 @@ void DualPaneWidget::move()
     source->undoManager()->undoStack()->push(command);
 }
 
+void DualPaneWidget::remove()
+{
+    activeWidget()->remove();
+}
+
 void DualPaneWidget::sync()
 {
     Q_D(DualPaneWidget);
@@ -193,5 +198,6 @@ bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
 
         emit currentPathChanged(activeWidget()->currentPath());
     }
+
     return false;
 }

@@ -43,6 +43,7 @@ public slots:
     void forward();
     void copy();
     void move();
+    void remove();
     void setActivePane(Pane pane);
     void setCurrentPath(const QString &path);
     void sync();

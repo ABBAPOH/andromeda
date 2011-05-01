@@ -9,6 +9,7 @@
 -actionManeger: disconnects (more methods),
 -when view removed, remove actions
 -clone tabs
+-fix bug with lost focus on dualpane. maybe qtbug
 
 // DISCUSS:
 - hide event handler in view

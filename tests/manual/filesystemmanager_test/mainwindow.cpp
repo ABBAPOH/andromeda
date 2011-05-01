@@ -35,17 +35,24 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(panel, SIGNAL(currentPathChanged(QString)), dualPane, SLOT(setCurrentPath(QString)));
 
     QMenu * menu = menuBar()->addMenu("Edit");
-    menu->addAction("Undo", view, SLOT(undo()), tr("Ctrl+Z"));
-    menu->addAction("Redo", view, SLOT(redo()), tr("Ctrl+Shift+Z"));
+//    menu->addAction("Undo", view, SLOT(undo()), tr("Ctrl+Z"));
+//    menu->addAction("Redo", view, SLOT(redo()), tr("Ctrl+Shift+Z"));
+//    menu->addSeparator();
+//    menu->addAction("Copy", view, SLOT(copy()), tr("Ctrl+C"));
+//    menu->addAction("Paste", view, SLOT(paste()), tr("Ctrl+V"));
+//    menu->addSeparator();
+//    menu->addAction("Remove", view, SLOT(remove()), tr("Ctrl+Shift+Backspace"));
+
+    menu->addAction("Undo", dualPane, SLOT(undo()), tr("Ctrl+Z"));
+    menu->addAction("Redo", dualPane, SLOT(redo()), tr("Ctrl+Shift+Z"));
     menu->addSeparator();
-    menu->addAction("Copy", view, SLOT(copy()), tr("Ctrl+C"));
-    menu->addAction("Paste", view, SLOT(paste()), tr("Ctrl+V"));
-    menu->addAction("Remove", view, SLOT(remove()), tr("Ctrl+Shift+Backspace"));
+    menu->addAction("Remove", dualPane, SLOT(remove()), tr("Ctrl+Shift+Backspace"));
 
     menu = menuBar()->addMenu("Tools");
-    menu->addAction("Copy Files", dualPane, SLOT(copy()));
+    menu->addAction("Copy Files", dualPane, SLOT(copy()), tr("Ctrl+Shift+C"));
+    menu->addAction("Move Files", dualPane, SLOT(move()), tr("Ctrl+Alt+C"));
 
-    resize(640, 480);
+    resize(1024, 640);
 }
 
 MainWindow::~MainWindow()
