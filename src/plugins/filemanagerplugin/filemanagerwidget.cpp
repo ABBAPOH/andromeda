@@ -241,30 +241,22 @@ void FileManagerWidget::remove()
 
 void FileManagerWidget::undo()
 {
-    Q_D(FileManagerWidget);
-
-    d->undoManager->undoStack()->undo();
+    undoManager()->undoStack()->undo();
 }
 
 void FileManagerWidget::redo()
 {
-    Q_D(FileManagerWidget);
-
-    d->undoManager->undoStack()->redo();
+    undoManager()->undoStack()->redo();
 }
 
 void FileManagerWidget::back()
 {
-    Q_D(FileManagerWidget);
-
-    d->history->back();
+    history()->back();
 }
 
 void FileManagerWidget::forward()
 {
-    Q_D(FileManagerWidget);
-
-    d->history->forward();
+    history()->forward();
 }
 
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)
