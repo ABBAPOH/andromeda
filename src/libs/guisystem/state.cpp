@@ -26,6 +26,7 @@ public:
     QString currentInstanceId;
     QHash<QString, IView *> sharedViews;
     MainWindow *window;
+    QMultiMap<QString, QObject*> mapToObject;
 
     void createViews(PerspectiveInstance *instance);
 };
@@ -156,33 +157,6 @@ QStringList State::availablePerspectives() const
     return GuiController::instance()->perspectiveIds();
 }
 
-void State::onFactoryRemoved(const QString &id)
-{
-    qDebug("State::onFactoryRemoved");
-
-    Q_D(State);
-
-    IView *view = d->sharedViews.value(id);
-    d->sharedViews.remove(id);
-    delete view;
-
-    foreach (PerspectiveInstance *instance, d->instances.values()) {
-        IView *view = instance->view(id);
-        instance->removeView(id);
-        delete view;
-    }
-}
-
-MainWindow * State::window() const
-{
-    return d_func()->window;
-}
-
-void State::setWindow(MainWindow *window)
-{
-    d_func()->window = window;
-}
-
 void State::hideViews()
 {
     if (!currentInstance())
@@ -210,6 +184,16 @@ void State::showViews()
     }
 }
 
+MainWindow * State::window() const
+{
+    return d_func()->window;
+}
+
+void State::setWindow(MainWindow *window)
+{
+    d_func()->window = window;
+}
+
 void State::setProperty(const char *name, const QVariant &value)
 {
     QObject::setProperty(name, value);
@@ -221,3 +205,65 @@ IView * State::view(const QString &id)
     return currentInstance()->view(id);
 }
 
+void State::addObject(QObject *object, const QString &name)
+{
+    Q_D(State);
+
+    if (!object)
+        return;
+
+    if (name.isEmpty()) {
+        QString newName = object->objectName();
+        if (newName.isEmpty()) {
+            newName = QString::fromAscii(object->metaObject()->className());
+            object->setObjectName(newName);
+        }
+        d->mapToObject.insert(newName, object);
+    } else {
+        d->mapToObject.insert(name, object);
+    }
+}
+
+void State::removeObject(QObject *object)
+{
+    Q_D(State);
+
+    if (!object)
+        return;
+
+    QStringList keys = d->mapToObject.keys(object);
+    foreach (const QString &key, keys) {
+        d->mapToObject.remove(key, object);
+    }
+}
+
+QObject * State::object(const QString &name) const
+{
+    Q_D(const State);
+
+    return d->mapToObject.value(name);
+}
+
+QObjectList State::objects(const QString &name) const
+{
+    Q_D(const State);
+
+    return d->mapToObject.values(name);
+}
+
+void State::onFactoryRemoved(const QString &id)
+{
+    qDebug("State::onFactoryRemoved");
+
+    Q_D(State);
+
+    IView *view = d->sharedViews.value(id);
+    d->sharedViews.remove(id);
+    delete view;
+
+    foreach (PerspectiveInstance *instance, d->instances.values()) {
+        IView *view = instance->view(id);
+        instance->removeView(id);
+        delete view;
+    }
+}
