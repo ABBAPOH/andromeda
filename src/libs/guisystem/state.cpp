@@ -222,6 +222,7 @@ void State::addObject(QObject *object, const QString &name)
     } else {
         d->mapToObject.insert(name, object);
     }
+    object->setParent(this);
 }
 
 void State::removeObject(QObject *object)
