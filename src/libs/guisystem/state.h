@@ -36,6 +36,12 @@ public:
 
     IView *view(const QString &id);
 
+    void addObject(QObject *object, const QString &name = QString());
+    void removeObject(QObject *object);
+
+    QObject *object(const QString &name) const;
+    QObjectList objects(const QString &name) const;
+
 signals:
     void currentPerspectiveChanged(const QString &id);
     void propertyChanged(const char *name, const QVariant &value);
