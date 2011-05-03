@@ -205,6 +205,20 @@ IView * State::view(const QString &id)
     return currentInstance()->view(id);
 }
 
+/*!
+    \fn void State::addObject(QObject *object, const QString &name)
+    \brief Adds \a object with \a name to State's pool.
+
+    Objects can be added to State pool and be accessed by their names. When adding object, State
+    becomes it's parent. If second parameter is present, also object's name is changed to \a name.
+    If second parameter is omitted, QObject::objectName() will be used as key for access to this
+    object. If \a object has no name (i.e. QObject::objectName() is empty), object's class name
+    (QMetaObject::className()) will be used instead as key.
+
+    If you try to add object with name that already present in map, the first one will no be replaced.
+
+    \sa State::object
+*/
 void State::addObject(QObject *object, const QString &name)
 {
     Q_D(State);
@@ -220,11 +234,18 @@ void State::addObject(QObject *object, const QString &name)
         }
         d->mapToObject.insert(newName, object);
     } else {
+        object->setObjectName(name);
         d->mapToObject.insert(name, object);
     }
     object->setParent(this);
 }
 
+/*!
+    \fn void State::removeObject(QObject *object)
+    \brief Removes \a object from pool.
+
+    Note, that State still will be parent of \a object.
+*/
 void State::removeObject(QObject *object)
 {
     Q_D(State);
@@ -238,6 +259,14 @@ void State::removeObject(QObject *object)
     }
 }
 
+/*!
+    \fn QObject * State::object(const QString &name) const
+    \brief Returns object with \a name.
+
+    Returns object previuosly added to pool. Returns 0 if no object has such name.
+
+    \sa State::addObject
+*/
 QObject * State::object(const QString &name) const
 {
     Q_D(const State);
@@ -245,6 +274,14 @@ QObject * State::object(const QString &name) const
     return d->mapToObject.value(name);
 }
 
+/*!
+    \fn QObjectList State::objects(const QString &name) const
+    \brief Returns list of objects with \a name.
+
+    Returns objects previuosly added to pool. Returns empty list if no object has such name.
+
+    \sa State::addObject
+*/
 QObjectList State::objects(const QString &name) const
 {
     Q_D(const State);
