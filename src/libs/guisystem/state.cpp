@@ -60,11 +60,13 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
         IView *view = 0;
         if (factory->shareMode() == IViewFactory::Clone) {
             view = factory->view();
+            view->setState(q);
         } else {
             view = sharedViews.value(id);
             if (!view) {
                 view = factory->view();
                 sharedViews.insert(id, view);
+                view->setState(q);
             }
         }
 
@@ -76,7 +78,7 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
 
     QList<IView *> instanceViews = instance->views();
     for (int i = 0; i < instanceViews.size(); i++) { // 20-years on counters market
-        instanceViews[i]->initialize(q);
+        instanceViews[i]->initialize();
     }
 }
 
