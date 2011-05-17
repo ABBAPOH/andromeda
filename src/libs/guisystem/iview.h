@@ -22,7 +22,7 @@ public:
     explicit IView(QObject *parent = 0);
     virtual ~IView();
 
-    virtual void initialize(State */*state*/) {}
+    virtual void initialize() {}
     virtual void shutdown() {}
 
     virtual QString type() const = 0;
@@ -49,6 +49,9 @@ public:
     QWidget *container() const;
     void setContainer(QWidget *widget);
 
+    const State *state() const;
+    void setState(State *state);
+
 protected:
     void setFactoryId(const QString &id);
 
@@ -58,6 +61,7 @@ protected:
     ViewOptions m_options;
     QString m_factoryId;
     QPointer<QWidget> m_container;
+    State *m_state;
 
     friend class IViewFactory;
 };
