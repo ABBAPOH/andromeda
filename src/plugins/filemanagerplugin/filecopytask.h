@@ -6,7 +6,7 @@
 #include <QtFileCopier>
 
 class QTimeEvent;
-namespace MainWindowPlugin {
+namespace FileManagerPlugin {
 
 class Request
 {
@@ -52,6 +52,6 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void onDone())
 };
 
-}
+} // namespace FileManagerPlugin
 
 #endif // FILECOPYTASK_H

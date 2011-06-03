@@ -7,7 +7,7 @@ namespace Ui {
     class FileCopyWidget;
 }
 
-namespace MainWindowPlugin {
+namespace FileManagerPlugin {
 
 class FileCopyTask;
 class FileCopyWidget : public QWidget
@@ -31,6 +31,6 @@ private:
     FileCopyTask *m_task;
 };
 
-}
+} // namespace FileManagerPlugin
 
 #endif // FILECOPYWIDGET_H

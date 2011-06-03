@@ -9,7 +9,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 
-using namespace MainWindowPlugin;
+using namespace FileManagerPlugin;
 using namespace IO;
 
 // ============= FileCopyDialogManager =============

@@ -4,7 +4,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimerEvent>
 
-using namespace MainWindowPlugin;
+using namespace FileManagerPlugin;
 
 FileCopyTask::FileCopyTask(QObject *parent) :
     QObject(parent),

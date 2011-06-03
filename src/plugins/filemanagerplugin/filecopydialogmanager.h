@@ -5,7 +5,7 @@
 #include <QtCore/QMap>
 #include <QtFileCopier>
 
-namespace MainWindowPlugin {
+namespace FileManagerPlugin {
 
 class FileCopyDialog;
 class FileCopyDialogManagerPrivate;
@@ -30,6 +30,6 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void handleError(int id, QtFileCopier::Error error, bool stopped))
 };
 
-}
+} // namespace FileManagerPlugin
 
 #endif // FILECOPYDIALOGMANAGER_H
