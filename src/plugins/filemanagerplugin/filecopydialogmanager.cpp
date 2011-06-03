@@ -4,12 +4,11 @@
 #include "filecopyreplacedialog.h"
 #include "filecopytask.h"
 #include "filecopydialog.h"
-#include <filecopymanager.h>
+#include "filesystemundomanager_p.h"
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 
 using namespace FileManagerPlugin;
-using namespace IO;
 
 // ============= FileCopyDialogManager =============
 

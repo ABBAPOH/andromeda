@@ -3,11 +3,8 @@
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
 
-#include <filecopymanager.h>
-
 #include "filesystemundomanager.h"
 
-using namespace IO;
 using namespace FileManagerPlugin;
 
 FileSystemModel::FileSystemModel(QObject *parent) :
