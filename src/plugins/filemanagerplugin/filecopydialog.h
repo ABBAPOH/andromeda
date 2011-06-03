@@ -10,20 +10,20 @@ namespace Ui {
 
 namespace FileManagerPlugin {
 
+class FileCopyDialogPrivate;
 class FileCopyDialog : public QDialog
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(FileCopyDialog)
 public:
     explicit FileCopyDialog(QWidget *parent = 0);
     ~FileCopyDialog();
-
-    void addWidget(QWidget *widget);
 
 protected:
     void resizeEvent(QResizeEvent *);
 
 private:
-    Ui::FileCopyDialog *ui;
+    FileCopyDialogPrivate *d_ptr;
 };
 
 class FileCopyTask;

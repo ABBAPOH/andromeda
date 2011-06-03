@@ -1,5 +1,11 @@
 #include "filecopydialog.h"
+#include "filecopydialog_p.h"
 
+#include "filesystemundomanager_p.h"
+#include "filecopytask.h"
+#include "filecopyreplacedialog.h"
+
+#include <QtCore/QFileInfo>
 #include <QtGui/QScrollArea>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QResizeEvent>
@@ -40,27 +46,91 @@ public:
 
 } // namespace Ui
 
-FileCopyDialog::FileCopyDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::FileCopyDialog)
-{
-    ui->setupUi(this);
-}
-
-FileCopyDialog::~FileCopyDialog()
-{
-    delete ui;
-}
-
-void FileCopyDialog::addWidget(QWidget *widget)
+void FileCopyDialogPrivate::addWidget(QWidget *widget)
 {
     widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     ui->layout->insertWidget(ui->layout->count() - 1, widget);
 }
 
+void FileCopyDialogPrivate::addCopier(QtFileCopier *copier)
+{
+    connect(copier, SIGNAL(error(int,QtFileCopier::Error,bool)),
+            SLOT(handleError(int,QtFileCopier::Error,bool)));
+
+//    d->addCopier(copier);
+    FileCopyTask *task = new FileCopyTask();
+    task->setCopier(copier);
+
+    FileCopyWidget *widget = new FileCopyWidget(task);
+//    mapToTask.insert(copier, task);
+//    mapToWidget.insert(copier, widget);
+    QObject::connect(copier, SIGNAL(done(bool)), SLOT(update()));
+    QObject::connect(widget, SIGNAL(canceled()), copier, SLOT(cancelAll()));
+
+    addWidget(widget);
+//    QTimer::singleShot(2000, fileCopyDialog, SLOT(show()));
+    q_ptr->show();
+    q_ptr->raise();
+}
+
+void FileCopyDialogPrivate::update()
+{
+    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+    if (!copier)
+        return;
+
+    QObject * task = mapToTask.take(copier);
+    delete task;
+    QWidget *widget = mapToWidget.take(copier);
+    delete widget;
+    if (mapToTask.isEmpty())
+        q_ptr->hide();
+}
+
+void FileCopyDialogPrivate::handleError(int id, QtFileCopier::Error error, bool stopped)
+{
+    if (!stopped)
+        return;
+    if (error == QtFileCopier::DestinationExists) {
+        QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+        FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        QString destName = copier->destinationFilePath(id);
+        dialog->setMessage(tr("%1 \"%2\" is already exists").
+                           arg(copier->isDir(id) ? tr("Folder") : tr("File")).
+                           arg(QFileInfo(destName).baseName())
+                           );
+        connect(dialog, SIGNAL(cancelAll()), copier, SLOT(cancelAll()));
+        connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
+        connect(dialog, SIGNAL(overwriteAll()), copier, SLOT(overwriteAll()));
+        connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));
+        connect(dialog, SIGNAL(skipAll()), copier, SLOT(skipAll()));
+        dialog->show();
+    }
+}
+
+FileCopyDialog::FileCopyDialog(QWidget *parent) :
+    QDialog(parent),
+    d_ptr(new FileCopyDialogPrivate(this))
+{
+    Q_D(FileCopyDialog);
+    d->ui = new Ui::FileCopyDialog;
+    d->ui->setupUi(this);
+
+    FileCopyManager *manager = FileCopyManager::instance();
+    connect(manager, SIGNAL(created(QtFileCopier*)), d, SLOT(addCopier(QtFileCopier*)));
+}
+
+FileCopyDialog::~FileCopyDialog()
+{
+    qDebug("FileCopyDialog");
+    delete d_ptr->ui;
+    delete d_ptr;
+}
+
 void FileCopyDialog::resizeEvent(QResizeEvent *e)
 {
-    ui->scrollArea->resize(e->size());
+    d_ptr->ui->scrollArea->resize(e->size());
 }
 
 // FileCopyWidget
