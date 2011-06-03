@@ -3,7 +3,7 @@
 
 #include "filecopytask.h"
 
-namespace MainWindowPlugin {
+namespace FileManagerPlugin {
 
 class FileCopyTaskPrivate
 {
@@ -31,6 +31,6 @@ public:
     QMap<int, Request> requests;
 };
 
-}
+} // namespace FileManagerPlugin
 
 #endif // FILECOPYTASK_P_H

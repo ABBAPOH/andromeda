@@ -6,39 +6,39 @@
 
 #include "filecopywidget.h"
 
-using namespace MainWindowPlugin;
+using namespace FileManagerPlugin;
 
 namespace Ui {
 
-    class FileCopyReplaceDialog
+class FileCopyReplaceDialog
+{
+public:
+    QScrollArea *scrollArea;
+    QVBoxLayout *layout;
+    QWidget *widget;
+
+    FileCopyReplaceDialog(){}
+
+    void setupUi(QDialog *dialog)
     {
-    public:
-        QScrollArea *scrollArea;
-        QVBoxLayout *layout;
-        QWidget *widget;
+        dialog->resize(400, 400);
+        layout = new QVBoxLayout;
 
-        FileCopyReplaceDialog(){}
+        layout->addSpacerItem(new QSpacerItem(0,
+                                              0,
+                                              QSizePolicy::Preferred,
+                                              QSizePolicy::Expanding)
+                              ); // We need this spacer to have space in bottom of list
 
-        void setupUi(QDialog *dialog)
-        {
-            dialog->resize(400, 400);
-            layout = new QVBoxLayout;
+        widget = new QWidget;
+        widget->setLayout(layout);
 
-            layout->addSpacerItem(new QSpacerItem(0,
-                                                  0,
-                                                  QSizePolicy::Preferred,
-                                                  QSizePolicy::Expanding)
-                                  ); // We need this spacer to have space in bottom of list
-
-            widget = new QWidget;
-            widget->setLayout(layout);
-
-            scrollArea = new QScrollArea(dialog);
-            scrollArea->setWidgetResizable(true);
-            scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-            scrollArea->setWidget(widget);
-        }
-    };
+        scrollArea = new QScrollArea(dialog);
+        scrollArea->setWidgetResizable(true);
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+        scrollArea->setWidget(widget);
+    }
+};
 
 } // namespace Ui
 

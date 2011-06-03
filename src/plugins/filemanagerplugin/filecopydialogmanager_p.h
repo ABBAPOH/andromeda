@@ -3,7 +3,7 @@
 
 #include "filecopydialogmanager.h"
 
-namespace MainWindowPlugin {
+namespace FileManagerPlugin {
 
 class FileCopyDialog;
 class FileCopyDialogManagerPrivate
@@ -23,6 +23,6 @@ public:
     void update();
 };
 
-}
+} // namespace FileManagerPlugin
 
 #endif // FILECOPYDIALOGMANAGER_P_H

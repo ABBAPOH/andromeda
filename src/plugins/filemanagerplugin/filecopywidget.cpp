@@ -6,7 +6,7 @@
 #include <QtCore/QTime>
 #include <QtCore/QFileInfo>
 
-using namespace MainWindowPlugin;
+using namespace FileManagerPlugin;
 
 FileCopyWidget::FileCopyWidget(FileCopyTask *task, QWidget *parent) :
     QWidget(parent),
