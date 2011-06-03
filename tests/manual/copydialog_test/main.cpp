@@ -1,11 +1,11 @@
 #include <QtGui/QApplication>
 #include <QDebug>
 
-#include <filecopymanager.h>
+#include <filesystemundomanager_p.h>
 #include <QtFileCopier>
 #include <QDir>
 
-using namespace IO;
+//using namespace FileManagerPlugin;
 
 int main(int argc, char *argv[])
 {

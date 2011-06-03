@@ -1,18 +1,14 @@
-#ifndef FILECOPYMANAGER_H
-#define FILECOPYMANAGER_H
+#ifndef FILESYSTEMUNDOMANAGER_P_H
+#define FILESYSTEMUNDOMANAGER_P_H
 
-#include "io_global.h"
+#include "filemanagerplugin_global.h"
 
 #include <QtCore/QObject>
 #include <QtFileCopier>
 
-namespace IO {
-
-class FileCopyManagerPrivate;
-class IO_EXPORT FileCopyManager : public QObject
+class FILEMANAGERPLUGIN_EXPORT FileCopyManager : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(FileCopyManager)
     Q_DISABLE_COPY(FileCopyManager)
 public:
     explicit FileCopyManager(QObject *parent = 0);
@@ -31,10 +27,6 @@ public slots:
 private slots:
     void onDone(bool);
 
-protected:
-    FileCopyManagerPrivate *d_ptr;
 };
 
-}
-
-#endif // FILECOPYMANAGER_H
+#endif // FILESYSTEMUNDOMANAGER_P_H

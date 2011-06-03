@@ -14,6 +14,7 @@ set( HEADERS
     filemanagerwidget_p.h
     filesystemmodel.h
     filesystemundomanager.h
+    filesystemundomanager_p.h
     navigationmodel.h
     navigationmodel_p.h
     navigationpanel.h

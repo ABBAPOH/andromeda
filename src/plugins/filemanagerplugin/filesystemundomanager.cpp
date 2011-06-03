@@ -1,15 +1,49 @@
 #include "filesystemundomanager.h"
+#include "filesystemundomanager_p.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtGui/QApplication>
 #include <QtGui/QUndoStack>
-#include <IO>
 
 #include <QDebug>
 
-using namespace IO;
 using namespace FileManagerPlugin;
+
+FileCopyManager::FileCopyManager(QObject *parent) :
+    QObject(parent)
+{
+    qDebug("FileCopyManager::FileCopyManager");
+}
+
+FileCopyManager::~FileCopyManager()
+{
+}
+
+FileCopyManager *FileCopyManager::instance()
+{
+    static FileCopyManager *m_instance = new FileCopyManager(qApp);
+    return m_instance;
+}
+
+QtFileCopier *FileCopyManager::copier()
+{
+    QtFileCopier *copier = new QtFileCopier(this);
+    connect(copier, SIGNAL(done(bool)), SLOT(onDone(bool)));
+    emit created(copier);
+    return copier;
+}
+
+void FileCopyManager::onDone(bool /*error*/)
+{
+    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+
+    if (!copier)
+        return;
+
+    emit destroyed(copier);
+    copier->deleteLater();
+}
 
 QUndoStack *m_undoStack = 0;
 
