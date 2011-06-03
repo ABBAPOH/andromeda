@@ -1,8 +1,20 @@
 #include "iplugin.h"
-#include "iplugin_p.h"
 
 #include "pluginspec_p.h"
 #include "pluginmanager.h"
+
+namespace ExtensionSystem {
+
+class IPluginPrivate
+{
+public:
+    IPluginPrivate();
+    virtual ~IPluginPrivate();
+
+    QList<QObject *> addedObjects;
+};
+
+} // namespace ExtensionSystem
 
 using namespace ExtensionSystem;
 
