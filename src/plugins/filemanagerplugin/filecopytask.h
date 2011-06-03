@@ -46,10 +46,10 @@ protected:
 
     FileCopyTaskPrivate *d_ptr;
 
-    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QtFileCopier::State state));
-    Q_PRIVATE_SLOT(d_func(), void onStarted(int identifier));
-    Q_PRIVATE_SLOT(d_func(), void onProgress(int identifier, qint64 progress));
-    Q_PRIVATE_SLOT(d_func(), void onDone());
+    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QtFileCopier::State state))
+    Q_PRIVATE_SLOT(d_func(), void onStarted(int identifier))
+    Q_PRIVATE_SLOT(d_func(), void onProgress(int identifier, qint64 progress))
+    Q_PRIVATE_SLOT(d_func(), void onDone())
 };
 
 }
