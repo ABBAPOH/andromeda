@@ -7,7 +7,8 @@
 
 #include "filemanagerview.h"
 #include "navigationpanelview.h"
-#include "filecopydialogmanager.h"
+#include "filecopydialog.h"
+#include "filesystemundomanager_p.h"
 
 using namespace FileManagerPlugin;
 using namespace ExtensionSystem;
@@ -32,7 +33,10 @@ bool FileManagerPluginImpl::initialize()
     CorePlugin::Core::instance()->perspectiveManager()->addPerspective("inode/directory",
                                                                        "FileManagerPerspective");
 
-    addObject(new FileCopyDialogManager, "fileCopyDialogManager");
+//    addObject(new FileCopyDialogManager, "fileCopyDialogManager");
+    addObject(new FileCopyManager);
+    addObject(new FileCopyDialog, "fileCopyDialog");
+//    new FileCopyDialog;
 
     return true;
 }

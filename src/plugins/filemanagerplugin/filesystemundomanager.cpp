@@ -10,10 +10,13 @@
 
 using namespace FileManagerPlugin;
 
+static FileCopyManager *m_instance = 0;
+
 FileCopyManager::FileCopyManager(QObject *parent) :
     QObject(parent)
 {
-    qDebug("FileCopyManager::FileCopyManager");
+    if (!m_instance)
+        m_instance = this;
 }
 
 FileCopyManager::~FileCopyManager()
@@ -22,7 +25,6 @@ FileCopyManager::~FileCopyManager()
 
 FileCopyManager *FileCopyManager::instance()
 {
-    static FileCopyManager *m_instance = new FileCopyManager(qApp);
     return m_instance;
 }
 

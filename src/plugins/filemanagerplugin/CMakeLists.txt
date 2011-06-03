@@ -2,12 +2,11 @@ set( HEADERS
     filemanagerplugin_global.h
     FilemanagerPlugin
     dualpanewidget.h
- #   filecopydialogmanager.h
-    filecopydialogmanager_p.h
     filecopyreplacedialog.h
 #    filecopytask.h
     filecopytask_p.h
     filecopydialog.h
+    filecopydialog_p.h
     filemanagerpluginimpl.h
     filemanagerview.h
     filemanagerwidget.h
@@ -22,7 +21,6 @@ set( HEADERS
    )
 set( SOURCES
     dualpanewidget.cpp
-    filecopydialogmanager.cpp
     filecopyreplacedialog.cpp
     filecopytask.cpp
     filecopydialog.cpp
