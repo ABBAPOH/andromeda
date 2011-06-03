@@ -2,7 +2,6 @@
 #include "filecopydialogmanager_p.h"
 
 #include "filecopyreplacedialog.h"
-#include "filecopywidget.h"
 #include "filecopytask.h"
 #include "filecopydialog.h"
 #include <filecopymanager.h>

@@ -7,7 +7,6 @@ set( HEADERS
     filecopyreplacedialog.h
 #    filecopytask.h
     filecopytask_p.h
-    filecopywidget.h
     filecopydialog.h
     filemanagerpluginimpl.h
     filemanagerview.h
@@ -25,7 +24,6 @@ set( SOURCES
     filecopydialogmanager.cpp
     filecopyreplacedialog.cpp
     filecopytask.cpp
-    filecopywidget.cpp
     filecopydialog.cpp
     filemanagerpluginimpl.cpp
     filemanagerview.cpp
