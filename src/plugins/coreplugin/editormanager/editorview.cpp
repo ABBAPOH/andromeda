@@ -65,10 +65,10 @@ bool EditorView::open(const QString &path, bool addToHistory)
         IFile *file = d->editor->file();
         if (file) {
             if (addToHistory) {
-                d->history->appendItem(HistoryItem(file->icon(),
-                                                   QDateTime::currentDateTime(),
+                d->history->appendItem(HistoryItem(file->path(),
                                                    file->name(),
-                                                   file->path()));
+                                                   file->icon(),
+                                                   QDateTime::currentDateTime()));
             }
         }
         return true;

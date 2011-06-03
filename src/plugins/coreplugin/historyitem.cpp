@@ -10,30 +10,26 @@ public:
     QDateTime lastVisited;
     QString title;
     QString path;
-    QVariant userData;
-//    QImage preview; // for future.
-
+    QVariantHash userData;
 };
 
 HistoryItem::HistoryItem() :
-        data(new HistoryItemData)
+    data(new HistoryItemData)
 {
     data->valid = false;
 }
 
-HistoryItem::HistoryItem(QIcon icon,
-                         QDateTime lastVisited,
+HistoryItem::HistoryItem(QString path,
                          QString title,
-                         QString path,
-                         QVariant userData) :
-data(new HistoryItemData)
+                         QIcon icon,
+                         QDateTime lastVisited) :
+    data(new HistoryItemData)
 {
     data->icon = icon;
     data->valid = true;
     data->lastVisited = lastVisited;
     data->title = title;
     data->path = path;
-    data->userData = userData;
 }
 
 HistoryItem::HistoryItem(const HistoryItem &rhs) :
@@ -57,6 +53,11 @@ QIcon HistoryItem::icon() const
     return data->icon;
 }
 
+//void HistoryItem::setIcon(const QIcon &icon)
+//{
+//    data->icon = icon;
+//}
+
 bool HistoryItem::isValid() const
 {
     return data->valid;
@@ -65,15 +66,6 @@ bool HistoryItem::isValid() const
 QDateTime HistoryItem::lastVisited() const
 {
     return data->lastVisited;
-}
-
-//QUrl originalUrl() const
-//{
-//}
-
-void HistoryItem::setUserData(const QVariant & userData)
-{
-    data->userData = userData;
 }
 
 QString HistoryItem::title() const
@@ -86,9 +78,14 @@ QString HistoryItem::path() const
     return data->path;
 }
 
-QVariant HistoryItem::userData() const
+QVariant HistoryItem::userData(const QString &key) const
 {
-    return data->userData;
+    return data->userData.value(key);
+}
+
+void HistoryItem::setUserData(const QString &key, const QVariant & data)
+{
+   this->data->userData[key] = data;
 }
 
 bool HistoryItem::operator==(const HistoryItem &other)

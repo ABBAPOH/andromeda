@@ -78,6 +78,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
         d->views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
         d->views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         d->views[i]->setAcceptDrops(true);
+        d->views[i]->setEditTriggers(QAbstractItemView::SelectedClicked);
         d->layout->addWidget(d->views[i]);
 //        d->views[i]->setDragEnabled(true);
         connect(d->views[i], SIGNAL(doubleClicked(QModelIndex)),
@@ -188,7 +189,7 @@ void FileManagerWidget::setCurrentPath(const QString &path)
         QModelIndex index = d->model->index(path);
         d->currentView->setRootIndex(index);
 
-        HistoryItem item(QIcon(), QDateTime::currentDateTime(), QFileInfo(path).fileName(), path);
+        HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
         d->history->appendItem(item);
 
         emit currentPathChanged(path);

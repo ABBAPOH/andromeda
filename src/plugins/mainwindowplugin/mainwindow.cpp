@@ -12,6 +12,39 @@ using namespace MainWindowPlugin;
 using namespace CorePlugin;
 //using namespace GuiSystem;
 
+StateController::StateController(QObject *parent) :
+    QObject(parent),
+    history(new GlobalHistory(this))
+{
+}
+
+StateController::~StateController()
+{
+}
+
+QString StateController::currentPath() const
+{
+    return m_currentPath;
+}
+
+void StateController::setCurrentPath(QString currentPath)
+{
+    if (m_currentPath != currentPath) {
+        m_currentPath = currentPath;
+        openPerspective(m_currentPath, true);
+        emit currentPathChanged(m_currentPath);
+    }
+}
+
+GuiSystem::State *StateController::state() const
+{
+    return qobject_cast<GuiSystem::State *>(parent());
+}
+
+void StateController::setState(GuiSystem::State *state)
+{
+    setParent(state);
+}
 QString getMimeType(const QString &path)
 {
     QFileInfo info(path);
@@ -20,29 +53,53 @@ QString getMimeType(const QString &path)
     return "";
 }
 
+void StateController::openPerspective(const QString path, bool addToHistory)
+{
+    QString mime = getMimeType(path);
+    QString perspectiveId = Core::instance()->perspectiveManager()->perspective(mime);
+    state()->setCurrentPerspective(perspectiveId);
+
+    if (addToHistory) {
+        GuiSystem::GuiController *controller = GuiSystem::GuiController::instance();
+        QString mainViewId = controller->perspective(perspectiveId)->property("MainView").toString();
+        GuiSystem::IView *iview = state()->view(mainViewId);
+        IHistoryView *view = qobject_cast<IHistoryView*>(iview);
+        if (view) {
+            history->appendView(view);
+        } else {
+            HistoryItem item(path, "", QIcon(), QDateTime::currentDateTime());
+            history->appendItem(item);
+        }
+    }
+}
+
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
     Q_Q(MainWindow);
 
-    QString mime = getMimeType(path);
-    GuiSystem::GuiController *controller = GuiSystem::GuiController::instance();
-    QString perspectiveId = Core::instance()->perspectiveManager()->perspective(mime);
-    q->currentState()->setProperty("path", path);
-    q->currentState()->setCurrentPerspective(perspectiveId);
+    QObject *o = q->currentState()->object("stateController");
+    StateController *stateController = qobject_cast<StateController *>(o);
+    stateController->setCurrentPath(path);
 
-    QString mainViewId = controller->perspective(perspectiveId)->property("MainView").toString();
-    GuiSystem::IView *iview = q->currentState()->view(mainViewId);
-    IHistoryView *view = qobject_cast<IHistoryView*>(iview);
-    if (view) {
-        currentHistory->appendView(view);
-    } else {
-        HistoryItem item(QIcon(), QDateTime::currentDateTime(), "", path);
-        currentHistory->appendItem(item);
-    }
-    qDebug() << "MainWindowPrivate::onTextEntered" << path << mime << perspectiveId;
-    // TODO: think disconnect
-    connect(q->currentState(), SIGNAL(propertyChanged(const char*,QVariant)),
-            SLOT(onPropertyChanged(const char*,QVariant)));
+//    QString mime = getMimeType(path);
+//    GuiSystem::GuiController *controller = GuiSystem::GuiController::instance();
+//    QString perspectiveId = Core::instance()->perspectiveManager()->perspective(mime);
+//    q->currentState()->setProperty("path", path);
+//    q->currentState()->setCurrentPerspective(perspectiveId);
+
+//    QString mainViewId = controller->perspective(perspectiveId)->property("MainView").toString();
+//    GuiSystem::IView *iview = q->currentState()->view(mainViewId);
+//    IHistoryView *view = qobject_cast<IHistoryView*>(iview);
+//    if (view) {
+//        currentHistory->appendView(view);
+//    } else {
+//        HistoryItem item(QIcon(), QDateTime::currentDateTime(), "", path);
+//        currentHistory->appendItem(item);
+//    }
+//    qDebug() << "MainWindowPrivate::onTextEntered" << path << mime << perspectiveId;
+//    // TODO: think disconnect
+//    connect(q->currentState(), SIGNAL(propertyChanged(const char*,QVariant)),
+//            SLOT(onPropertyChanged(const char*,QVariant)));
 }
 
 void MainWindowPrivate::onPropertyChanged(const char *name, const QVariant &value)
@@ -63,6 +120,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->lineEdit = new EnteredLineEdit(this);
     d->toolBar = new QToolBar(this);
+
+    currentState()->addObject(new StateController, "stateController");
 
     QAction *backAction = new QAction(QIcon(":/images/icons/back.png"), "Back", this);
     QAction *forwardAction = new QAction(QIcon(":/images/icons/forward.png"), "Forward", this);

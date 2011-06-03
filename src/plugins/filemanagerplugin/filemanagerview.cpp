@@ -13,9 +13,11 @@ FileManagerView::FileManagerView(QObject *parent) :
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChange(QString)));
 }
 
-void FileManagerView::initialize(GuiSystem::State *state)
+void FileManagerView::initialize(/*GuiSystem::State *state*/)
 {
-    QString path = state->property("path").toString();
+    const GuiSystem::State *state = this->state();
+//    QString path = state->property("path").toString();
+    QString path = state->object("stateController")->property("currentPath").toString();
     m_state = state;
     m_widget->setCurrentPath(path);
 }
@@ -52,6 +54,9 @@ void FileManagerView::forward()
 
 void FileManagerView::onCurrentPathChange(const QString &path)
 {
-    if (m_state->property("path").toString() != path)
-        m_state->setProperty("path", path);
+    QObject *controller = state()->object("stateController");
+    if (controller->property("currentPath").toString() != path)
+        controller->setProperty("currentPath", path);
+//    if (m_state->property("path").toString() != path)
+//        m_state->setProperty("path", path);
 }

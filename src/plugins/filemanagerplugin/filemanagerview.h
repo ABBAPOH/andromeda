@@ -14,7 +14,7 @@ public:
     explicit FileManagerView(QObject *parent = 0);
 
     // from IView
-    virtual void initialize(GuiSystem::State *state);
+    virtual void initialize(/*GuiSystem::State *state*/);
     virtual QString type() const;
     virtual QWidget *widget() const;
 
@@ -29,7 +29,7 @@ public slots:
 
 private:
     FileManagerWidget *m_widget;
-    GuiSystem::State *m_state;
+    const GuiSystem::State *m_state;
 };
 
 class FileManagerFactory : public GuiSystem::IViewFactory
