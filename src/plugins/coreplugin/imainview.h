@@ -20,6 +20,8 @@ public:
     virtual HistoryItem currentItem() const = 0;
 
 signals:
+    void pathChanged(QString);
+    void currentItemChanged();
 
 public slots:
 

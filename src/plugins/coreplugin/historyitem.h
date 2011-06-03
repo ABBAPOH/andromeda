@@ -28,6 +28,7 @@ public:
     QString title() const;
     QString path() const;
     QVariant userData(const QString &key) const;
+    QVariantHash &userData() const;
     void setUserData(const QString &key, const QVariant & data);
 
     bool operator==(const HistoryItem &other);
