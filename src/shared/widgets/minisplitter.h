@@ -39,6 +39,7 @@ class QSplitterHandle;
 /*! This is a simple helper-class to obtain mac-style 1-pixel wide splitters */
 class WIDGETS_EXPORT MiniSplitter : public QSplitter
 {
+    Q_OBJECT
 public:
     MiniSplitter(QWidget *parent = 0);
     MiniSplitter(Qt::Orientation orientation);
@@ -46,6 +47,5 @@ public:
 protected:
     QSplitterHandle *createHandle();
 };
-
 
 #endif // MINISPLITTER_H
