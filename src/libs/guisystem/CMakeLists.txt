@@ -1,8 +1,7 @@
-set( GLOBAL_HEADER GuiSystem)
+set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     actionmanager.h
     actionmanager_p.h
-    guisystem_global.h
     centralwidget.h
     guicontroller.h
     iview.h
@@ -40,6 +39,6 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DGUISYSTEM_LIBRARY )
 
-add_library( guisystem SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( guisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( guisystem ${QT_LIBRARIES} )
 

@@ -1,6 +1,5 @@
-set( GLOBAL_HEADER ExtensionSystem)
+set( GLOBAL_HEADERS ExtensionSystem extensionsystem_global.h)
 set( HEADERS
-    extensionsystem_global.h
     iplugin.h
     pluginmanager.h
     pluginmanager_p.h
@@ -34,6 +33,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 
-add_library( extensionsystem SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( extensionsystem ${QT_LIBRARIES} )
 
