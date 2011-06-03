@@ -83,6 +83,11 @@ QVariant HistoryItem::userData(const QString &key) const
     return data->userData.value(key);
 }
 
+QVariantHash &HistoryItem::userData() const
+{
+    return data->userData;
+}
+
 void HistoryItem::setUserData(const QString &key, const QVariant & data)
 {
    this->data->userData[key] = data;
