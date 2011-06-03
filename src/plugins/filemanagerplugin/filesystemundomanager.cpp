@@ -57,7 +57,7 @@ void CopyCommand::redo()
             int i = 0;
             do  {
                 i++;
-                targetPath = dir.absolutePath() + QDir::separator() + info.baseName() + ' ' +
+                targetPath = dir.absolutePath() + QDir::separator() + info.completeBaseName() + ' ' +
                         QString::number(i);
                 if (info.suffix() != "") {
                     targetPath += '.' + info.suffix();
@@ -114,7 +114,7 @@ void MoveCommand::redo()
             int i = 0;
             do  {
                 i++;
-                targetPath = dir.absolutePath() + QDir::separator() + info.baseName() + ' ' +
+                targetPath = dir.absolutePath() + QDir::separator() + info.completeBaseName() + ' ' +
                         QString::number(i);
                 if (info.suffix() != "") {
                     targetPath += '.' + info.suffix();
