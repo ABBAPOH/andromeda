@@ -5,8 +5,6 @@
 
 #include <ExtensionSystem>
 
-#include "editormanager/editormanager.h"
-
 namespace CorePlugin {
 
 class PerspectiveManager;
@@ -17,8 +15,6 @@ class COREPLUGIN_EXPORT Core : public QObject
     Q_DECLARE_PRIVATE(Core);
     Q_DISABLE_COPY(Core);
 
-    Q_PROPERTY(EditorManager *editorManager READ editorManager);
-
 public:
     explicit Core(QObject *parent = 0);
     ~Core();
@@ -28,7 +24,6 @@ public:
         return ExtensionSystem::PluginManager::instance()->object<Core>("core");
     }
 
-    EditorManager *editorManager();
     PerspectiveManager *perspectiveManager() const;
 
     QObject *getObject(const QString &name);

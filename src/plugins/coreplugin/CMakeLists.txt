@@ -1,4 +1,4 @@
-set( GLOBAL_HEADER CorePlugin editormanager/EditorManager)
+set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
     coreplugin_global.h
     core.h
@@ -10,11 +10,6 @@ set( HEADERS
     ifile.h
     ihistoryview.h
     imainview.h
-    editormanager/editormanager.h
-    editormanager/editormanager_p.h
-    editormanager/ieditor.h
-    editormanager/ieditorfactory.h
-    editormanager/editorview.h
     perspectivemanager.h
    )
 set( SOURCES
@@ -26,10 +21,6 @@ set( SOURCES
     ifile.cpp
     ihistoryview.cpp
     imainview.cpp
-    editormanager/editormanager.cpp
-    editormanager/ieditor.cpp
-    editormanager/ieditorfactory.cpp
-    editormanager/editorview.cpp
     perspectivemanager.cpp
    )
 set( FORMS

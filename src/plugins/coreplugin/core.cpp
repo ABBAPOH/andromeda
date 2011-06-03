@@ -1,7 +1,6 @@
 #include "core.h"
 #include "core_p.h"
 
-#include <editormanager.h>
 #include <pluginmanager.h>
 
 #include "perspectivemanager.h"
@@ -61,12 +60,6 @@ Core::Core(QObject *parent) :
 Core::~Core()
 {
     delete d_ptr;
-}
-
-EditorManager *Core::editorManager()
-{
-    Q_D(Core);
-    return d->pool->object<EditorManager>("editorManager");
 }
 
 QObject *Core::getObject(const QString &name)

@@ -1,7 +1,6 @@
 #include "coreplugin.h"
 
 #include <QtCore/QtPlugin>
-#include <EditorManager>
 
 #include "core.h"
 #include "perspectivemanager.h"
@@ -16,7 +15,6 @@ CorePluginImpl::CorePluginImpl() :
 bool CorePluginImpl::initialize()
 {
     addObject(new Core);
-    addObject(new EditorManager);
     addObject(new PerspectiveManager);
 
     return true;

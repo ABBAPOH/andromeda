@@ -27,15 +27,13 @@ public:
 };
 
 WebViewEditor::WebViewEditor(QObject *parent) :
-    IEditor(parent)
+    QObject(parent)
 {
     m_webView = new QWebView;
-    m_file = new WebFile(this);
 }
 
 WebViewEditor::~WebViewEditor()
 {
     qDebug("~WebViewEditor");
     delete m_webView;
-    delete m_file;
 }

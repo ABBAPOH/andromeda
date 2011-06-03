@@ -1,4 +1,0 @@
-#include "editormanager.h"
-#include "editorview.h"
-#include "ieditor.h"
-#include "ieditorfactory.h"
