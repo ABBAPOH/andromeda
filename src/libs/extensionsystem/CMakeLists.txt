@@ -2,7 +2,6 @@ set( GLOBAL_HEADER ExtensionSystem)
 set( HEADERS
     extensionsystem_global.h
     iplugin.h
-    iplugin_p.h
     pluginmanager.h
     pluginmanager_p.h
     pluginspec.h

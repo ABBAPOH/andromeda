@@ -8,7 +8,6 @@
 #include <QtCore/QFileInfo>
 #include <QDebug>
 
-#include "iplugin_p.h"
 #include "pluginmanager.h"
 
 using namespace ExtensionSystem;
