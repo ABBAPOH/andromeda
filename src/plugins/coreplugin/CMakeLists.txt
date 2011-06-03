@@ -9,6 +9,7 @@ set( HEADERS
     historyitem.h
     ifile.h
     ihistoryview.h
+    imainview.h
     editormanager/editormanager.h
     editormanager/editormanager_p.h
     editormanager/ieditor.h
@@ -24,6 +25,7 @@ set( SOURCES
     historyitem.cpp
     ifile.cpp
     ihistoryview.cpp
+    imainview.cpp
     editormanager/editormanager.cpp
     editormanager/ieditor.cpp
     editormanager/ieditorfactory.cpp

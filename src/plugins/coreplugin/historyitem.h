@@ -14,11 +14,10 @@ class COREPLUGIN_EXPORT HistoryItem
 {
 public:
     HistoryItem();
-    HistoryItem (QIcon icon,
-                 QDateTime lastVisited,
-                 QString title,
-                 QString path,
-                 QVariant userData = QVariant());
+    HistoryItem(QString path,
+                QString title = QString(),
+                QIcon icon = QIcon(),
+                QDateTime lastVisited = QDateTime::currentDateTime());
     HistoryItem(const HistoryItem &);
     HistoryItem &operator=(const HistoryItem &);
     ~HistoryItem();
@@ -26,11 +25,10 @@ public:
     QIcon icon() const;
     bool isValid() const;
     QDateTime lastVisited() const;
-//    QUrl originalUrl() const;
-    void setUserData(const QVariant & userData);
     QString title() const;
     QString path() const;
-    QVariant userData() const;
+    QVariant userData(const QString &key) const;
+    void setUserData(const QString &key, const QVariant & data);
 
     bool operator==(const HistoryItem &other);
 
