@@ -3,6 +3,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QAction>
+#include <QtGui/QDesktopServices>
 #include <QDebug>
 #include <CorePlugin>
 #include <page.h>
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
     resize(640, 480);
+    page->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
 }
 
 MainWindow::~MainWindow()
