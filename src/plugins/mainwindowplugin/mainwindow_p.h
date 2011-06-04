@@ -23,7 +23,6 @@ public:
 
 public slots:
     void onTextEntered(const QString &);
-    void onPropertyChanged(const char* name, const QVariant &value);
 };
 
 } // namespace MainWindowPlugin

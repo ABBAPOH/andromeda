@@ -20,11 +20,11 @@ public:
     virtual HistoryItem currentItem() const = 0;
 
 signals:
-    void pathChanged(QString);
+    void pathChanged(const QString &);
     void currentItemChanged();
 
-public slots:
-
+private slots:
+    void onPathChanged(const QString &);
 };
 
 } // namespace CorePlugin

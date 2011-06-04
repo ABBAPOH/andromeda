@@ -1,13 +1,13 @@
 #ifndef FILEMANAGERVIEW_H
 #define FILEMANAGERVIEW_H
 
-#include <ihistoryview.h>
+#include <imainview.h>.h>
 #include <iviewfactory.h>
 
 namespace FileManagerPlugin {
 
 class FileManagerWidget;
-class FileManagerView : public CorePlugin::IHistoryView
+class FileManagerView : public CorePlugin::IMainView
 {
     Q_OBJECT
 public:
@@ -18,14 +18,15 @@ public:
     virtual QString type() const;
     virtual QWidget *widget() const;
 
-    // from IHistoryView
-    void back();
-    void forward();
+    // from IMainView
+    virtual bool open(const QString &path);
+    virtual bool open(const HistoryItem &item);
+
+    virtual HistoryItem currentItem() const;
 
 signals:
 
 public slots:
-    void onCurrentPathChange(const QString &path);
 
 private:
     FileManagerWidget *m_widget;
