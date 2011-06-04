@@ -8,6 +8,7 @@
 #include "filemanagerview.h"
 #include "navigationpanelview.h"
 #include "filecopydialog.h"
+#include "filesystemundomanager.h"
 #include "filesystemundomanager_p.h"
 
 using namespace FileManagerPlugin;
@@ -36,6 +37,7 @@ bool FileManagerPluginImpl::initialize()
 //    addObject(new FileCopyDialogManager, "fileCopyDialogManager");
     addObject(new FileCopyManager);
     addObject(new FileCopyDialog, "fileCopyDialog");
+    addObject(FileSystemUndoManager::instance());
 //    new FileCopyDialog;
 
     return true;

@@ -9,7 +9,7 @@ using namespace FileManagerPlugin;
 
 FileSystemModel::FileSystemModel(QObject *parent) :
     QFileSystemModel(parent),
-    m_undoManager(new FileSystemUndoManager(this))
+    m_undoManager(FileSystemUndoManager::instance())
 {
 }
 

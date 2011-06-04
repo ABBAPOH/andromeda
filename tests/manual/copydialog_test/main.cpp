@@ -5,7 +5,7 @@
 #include <QtFileCopier>
 #include <QDir>
 
-//using namespace FileManagerPlugin;
+using namespace FileManagerPlugin;
 
 int main(int argc, char *argv[])
 {

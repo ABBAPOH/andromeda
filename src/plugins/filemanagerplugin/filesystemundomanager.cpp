@@ -47,19 +47,32 @@ void FileCopyManager::onDone(bool /*error*/)
     copier->deleteLater();
 }
 
-QUndoStack *m_undoStack = 0;
+static FileSystemUndoManager *my_instance = 0;
 
 FileSystemUndoManager::FileSystemUndoManager(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    d_ptr(new FileCopyManager)
 {
-    if (!m_undoStack) {
-        m_undoStack = new QUndoStack(qApp);
-    }
+    d_ptr->undoStack = new QUndoStack(this);
+}
+
+FileSystemUndoManager::~FileSystemUndoManager()
+{
+    if (my_instance == this)
+        my_instance = 0;
+    delete d_ptr;
+}
+
+FileSystemUndoManager *FileSystemUndoManager::instance()
+{
+    if (!my_instance)
+        my_instance = new FileSystemUndoManager(qApp);
+    return my_instance;
 }
 
 QUndoStack * FileSystemUndoManager::undoStack() const
 {
-    return m_undoStack;
+    return d_ptr->undoStack;
 }
 
 void CopyCommand::setDestination(const QString &path)
