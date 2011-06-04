@@ -116,6 +116,9 @@ void State::setCurrentPerspective(const QString &id)
 {
     Q_D(State);
 
+    if (d->currentInstanceId == id)
+        return;
+
     hideViews();
     PerspectiveInstance *instance = d->instances.value(id);
     d->currentInstanceId = id;
