@@ -2,6 +2,7 @@
 #include "filemanagerwidget_p.h"
 
 #include <QtGui/QKeyEvent>
+#include <QtGui/QAction>
 #include <QDebug>
 
 using namespace FileManagerPlugin;
@@ -97,11 +98,30 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     FileSystemModel *model = new FileSystemModel(this);
     model->setRootPath("/");
-    model->setFilter(QDir::AllEntries | /*QDir::NoDotAndDotDot |*/ QDir::AllDirs | QDir::Hidden);
+    model->setFilter(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Hidden);
     model->setReadOnly(false);
     setModel(model);
 
     setViewMode(ListView);
+
+    QAction *openAction = new QAction(this);
+#ifdef Q_OS_MAC
+    openAction->setShortcut(tr("Ctrl+O"));
+#else
+    openAction->setShortcut(tr("Return"));
+#endif
+    connect(openAction, SIGNAL(triggered()), SLOT(open()));
+    addAction(openAction);
+
+    QAction *removeAction = new QAction(this);
+    removeAction->setShortcut(tr("Ctrl+Shift+Backspace"));
+    connect(removeAction, SIGNAL(triggered()), SLOT(remove()));
+    addAction(removeAction);
+
+    QAction *upAction = new QAction(this);
+    upAction->setShortcut(tr("Ctrl+Up"));
+    connect(upAction, SIGNAL(triggered()), SLOT(up()));
+    addAction(upAction);
 }
 
 FileManagerWidget::~FileManagerWidget()
@@ -262,6 +282,25 @@ void FileManagerWidget::back()
 void FileManagerWidget::forward()
 {
     history()->forward();
+}
+
+void FileManagerWidget::open()
+{
+    foreach (const QString path, selectedPaths()) {
+        if (QFileInfo(path).isDir()) {
+            setCurrentPath(path);
+            return;
+        }
+    }
+}
+
+void FileManagerWidget::up()
+{
+    Q_D(FileManagerWidget);
+
+    QDir dir(d->currentPath);
+    dir.cdUp();
+    setCurrentPath(dir.path());
 }
 
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)

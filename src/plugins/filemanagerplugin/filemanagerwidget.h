@@ -50,6 +50,8 @@ public slots:
     void redo();
     void back();
     void forward();
+    void open();
+    void up();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
