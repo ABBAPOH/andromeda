@@ -202,7 +202,7 @@ void State::setProperty(const char *name, const QVariant &value)
     emit propertyChanged(name, value);
 }
 
-IView * State::view(const QString &id)
+IView * State::view(const QString &id) const
 {
     return currentInstance()->view(id);
 }
