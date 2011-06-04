@@ -192,6 +192,8 @@ QWidget * MainWindow::createContainer(IView *view, int area)
         QDockWidget *dock = new QDockWidget(this);
         if (view->toolBar())
             dock->setTitleBarWidget(view->toolBar());
+        else
+            dock->setTitleBarWidget(new QWidget);
         dock->setWidget(view->widget());
 
         switch (area) {

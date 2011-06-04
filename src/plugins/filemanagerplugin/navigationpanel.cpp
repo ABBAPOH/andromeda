@@ -87,7 +87,6 @@ void NavigationPanel::onClick(const QModelIndex &index)
     QString path = d->model->path(index);
     if (!path.isEmpty()) {
         d->currentPath  = path;
-        qDebug("emit");
         emit currentPathChanged(path);
     } else {
         d->treeView->selectionModel()->select(d->model->index(d->currentPath), QItemSelectionModel::Select);
