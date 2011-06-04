@@ -34,7 +34,7 @@ public:
 
     void setProperty(const char *name, const QVariant &value);
 
-    IView *view(const QString &id);
+    IView *view(const QString &id) const;
 
     void addObject(QObject *object, const QString &name = QString());
     void removeObject(QObject *object);

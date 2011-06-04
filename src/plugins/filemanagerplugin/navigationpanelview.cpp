@@ -13,9 +13,9 @@ NavigationPanelView::NavigationPanelView(QObject *parent) :
     m_widget = new NavigationPanel;
 }
 
-void NavigationPanelView::initialize(GuiSystem::State *state)
+void NavigationPanelView::initialize()
 {
-    IView *view = state->view("FileManager");
+    IView *view = state()->view("FileManager");
 
 //    FileManagerView *fileManagerView = qobject_cast<FileManagerView *>(view);
     connect(m_widget, SIGNAL(currentPathChanged(QString)),
