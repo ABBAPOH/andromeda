@@ -1,6 +1,6 @@
 #include "dualpanewidget.h"
 #include "filemanagerwidget.h"
 #include "filesystemmodel.h"
-#include "filesystemundomanager.h"
+#include "filesystemmanager.h"
 #include "navigationmodel.h"
 #include "navigationpanel.h"

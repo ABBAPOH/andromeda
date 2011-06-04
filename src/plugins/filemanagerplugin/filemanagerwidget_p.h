@@ -16,7 +16,7 @@
 #include <QtGui/QUndoCommand>
 #include <QtGui/QUndoStack>
 
-#include "filesystemundomanager.h"
+#include "filesystemmanager.h"
 #include "filesystemmodel.h"
 
 #define MaxViews 5
@@ -39,7 +39,7 @@ public:
     QFileSystemModel *model;
     QString currentPath;
 
-    FileSystemUndoManager *undoManager;
+    FileSystemManager *fileSystemManager;
 
     CorePlugin::History * history;
 

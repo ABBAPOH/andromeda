@@ -12,8 +12,7 @@ set( HEADERS
     filemanagerwidget.h
     filemanagerwidget_p.h
     filesystemmodel.h
-    filesystemundomanager.h
-    filesystemundomanager_p.h
+    filesystemmanager.h
     navigationmodel.h
     navigationmodel_p.h
     navigationpanel.h
@@ -28,7 +27,7 @@ set( SOURCES
     filemanagerview.cpp
     filemanagerwidget.cpp
     filesystemmodel.cpp
-    filesystemundomanager.cpp
+    filesystemmanager.cpp
     navigationmodel.cpp
     navigationpanel.cpp
     navigationpanelview.cpp

@@ -4,7 +4,7 @@
 #include <QtGui/QHBoxLayout>
 
 #include "filemanagerwidget.h"
-#include "filesystemundomanager.h"
+#include "filesystemmanager.h"
 
 namespace FileManagerPlugin {
 
@@ -134,14 +134,7 @@ void DualPaneWidget::copy()
     FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
 
     QStringList files = source->selectedPaths();
-    CopyCommand * command = new CopyCommand();
-    command->setDestination(target->currentPath());
-    for (int i = 0; i < files.size(); i++) {
-        QString path = files[i];
-        command->appendSourcePath(path);
-    }
-
-    source->undoManager()->undoStack()->push(command);
+    source->fileSystemManager()->copyFiles(files, target->currentPath());
 }
 
 void DualPaneWidget::move()
@@ -155,14 +148,7 @@ void DualPaneWidget::move()
     FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
 
     QStringList files = source->selectedPaths();
-    MoveCommand * command = new MoveCommand();
-    command->setDestination(target->currentPath());
-    for (int i = 0; i < files.size(); i++) {
-        QString path = files[i];
-        command->appendSourcePath(path);
-    }
-
-    source->undoManager()->undoStack()->push(command);
+    source->fileSystemManager()->moveFiles(files, target->currentPath());
 }
 
 void DualPaneWidget::remove()
