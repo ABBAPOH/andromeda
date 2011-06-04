@@ -90,7 +90,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->layout->setContentsMargins(0, 0, 0, 0);
     setLayout(d->layout);
 
-    d->undoManager = new FileSystemUndoManager(this);
+    d->undoManager = FileSystemUndoManager::instance();
     connect(d->undoManager->undoStack(), SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
 
     d->history = new History(this);

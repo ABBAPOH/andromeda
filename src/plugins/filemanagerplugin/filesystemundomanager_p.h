@@ -6,6 +6,10 @@
 #include <QtCore/QObject>
 #include <QtFileCopier>
 
+class QUndoStack;
+
+namespace FileManagerPlugin {
+
 class FILEMANAGERPLUGIN_EXPORT FileCopyManager : public QObject
 {
     Q_OBJECT
@@ -27,6 +31,10 @@ public slots:
 private slots:
     void onDone(bool);
 
+public:
+    QUndoStack *undoStack;
 };
+
+} // namespace FileManagerPlugin
 
 #endif // FILESYSTEMUNDOMANAGER_P_H

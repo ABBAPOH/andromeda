@@ -9,18 +9,23 @@ class QUndoStack;
 
 namespace FileManagerPlugin {
 
+class FileCopyManager;
 class FileSystemUndoManager : public QObject
 {
     Q_OBJECT
 public:
     explicit FileSystemUndoManager(QObject *parent = 0);
+    ~FileSystemUndoManager();
+
+    static FileSystemUndoManager *instance();
 
     QUndoStack *undoStack() const;
 
 signals:
 
 public slots:
-
+protected:
+    FileCopyManager *d_ptr;
 };
 
 class CopyCommand : public QUndoCommand
