@@ -90,8 +90,9 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->layout->setContentsMargins(0, 0, 0, 0);
     setLayout(d->layout);
 
-    d->undoManager = FileSystemUndoManager::instance();
-    connect(d->undoManager->undoStack(), SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
+    d->fileSystemManager = FileSystemManager::instance();
+    connect(d->fileSystemManager->undoStack(), SIGNAL(canUndoChanged(bool)),
+            SIGNAL(canUndoChanged(bool)));
 
     d->history = new History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -195,9 +196,9 @@ QStringList FileManagerWidget::selectedPaths() const
     return result;
 }
 
-FileSystemUndoManager * FileManagerWidget::undoManager() const
+FileSystemManager * FileManagerWidget::fileSystemManager() const
 {
-    return d_func()->undoManager;
+    return d_func()->fileSystemManager;
 }
 
 void FileManagerWidget::setCurrentPath(const QString &path)
@@ -236,20 +237,15 @@ void FileManagerWidget::paste()
 {
     Q_D(FileManagerWidget);
 
-    // TODO: use QtFileCopier
     QClipboard * clipboard = QApplication::clipboard();
     const QMimeData * data = clipboard->mimeData();
     QList<QUrl> urls = data->urls();
-    QDir dir(currentPath());
 
-    CopyCommand * command = new CopyCommand;
-    command->setDestination(currentPath());
-
-    foreach (QUrl path, urls) {
-        QString filePath = path.toLocalFile();
-        command->appendSourcePath(filePath);
+    QStringList files;
+    foreach (QUrl url, urls) {
+        files.append(url.toLocalFile());
     }
-    d->undoManager->undoStack()->push(command);
+    d->fileSystemManager->copyFiles(files, currentPath());
 }
 
 bool removePath(const QString &path);
@@ -266,12 +262,12 @@ void FileManagerWidget::remove()
 
 void FileManagerWidget::undo()
 {
-    undoManager()->undoStack()->undo();
+    fileSystemManager()->undoStack()->undo();
 }
 
 void FileManagerWidget::redo()
 {
-    undoManager()->undoStack()->redo();
+    fileSystemManager()->undoStack()->redo();
 }
 
 void FileManagerWidget::back()

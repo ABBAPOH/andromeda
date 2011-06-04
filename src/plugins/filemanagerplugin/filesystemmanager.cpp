@@ -1,79 +1,109 @@
-#include "filesystemundomanager.h"
-#include "filesystemundomanager_p.h"
+#include "filesystemmanager.h"
 
+#include <QtCore/QCoreApplication>
+#include <QtCore/QStringList>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtGui/QApplication>
-#include <QtGui/QUndoStack>
+#include <QtGui/QUndoCommand>
+#include <QtFileCopier>
 
-#include <QDebug>
+namespace FileManagerPlugin {
+
+class FileSystemManagerPrivate
+{
+public:
+    FileSystemManagerPrivate(FileSystemManager *qq) : q_ptr(qq) {}
+
+    QtFileCopier *copier();
+
+    QUndoStack *undoStack;
+    FileSystemManager *q_ptr;
+};
+
+} // namespace FileManagerPlugin
 
 using namespace FileManagerPlugin;
 
-static FileCopyManager *m_instance = 0;
-
-FileCopyManager::FileCopyManager(QObject *parent) :
-    QObject(parent)
+QtFileCopier *FileSystemManagerPrivate::copier()
 {
-    if (!m_instance)
-        m_instance = this;
-}
-
-FileCopyManager::~FileCopyManager()
-{
-}
-
-FileCopyManager *FileCopyManager::instance()
-{
-    return m_instance;
-}
-
-QtFileCopier *FileCopyManager::copier()
-{
-    QtFileCopier *copier = new QtFileCopier(this);
-    connect(copier, SIGNAL(done(bool)), SLOT(onDone(bool)));
-    emit created(copier);
+    QtFileCopier *copier = new QtFileCopier(q_ptr);
+    q_ptr->connect(copier, SIGNAL(done(bool)), copier, SLOT(deleteLater()));
+    emit q_ptr->operationStarted(copier);
     return copier;
 }
 
-void FileCopyManager::onDone(bool /*error*/)
+class FileSystemCommand : public QUndoCommand
 {
-    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+public:
+    explicit FileSystemCommand(QUndoCommand *parent = 0) : QUndoCommand(parent) {}
 
-    if (!copier)
-        return;
+    void setManager(FileSystemManagerPrivate *manager) { m_manager = manager; }
+    FileSystemManagerPrivate *manager() { return m_manager; }
 
-    emit destroyed(copier);
-    copier->deleteLater();
-}
+private:
+    FileSystemManagerPrivate *m_manager;
+};
 
-static FileSystemUndoManager *my_instance = 0;
-
-FileSystemUndoManager::FileSystemUndoManager(QObject *parent) :
-    QObject(parent),
-    d_ptr(new FileCopyManager)
+class CopyCommand : public FileSystemCommand
 {
-    d_ptr->undoStack = new QUndoStack(this);
-}
+public:
+    explicit CopyCommand(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
 
-FileSystemUndoManager::~FileSystemUndoManager()
-{
-    if (my_instance == this)
-        my_instance = 0;
-    delete d_ptr;
-}
+    void setDestination(const QString &path);
+    void setSourcePaths(const QStringList &paths);
 
-FileSystemUndoManager *FileSystemUndoManager::instance()
-{
-    if (!my_instance)
-        my_instance = new FileSystemUndoManager(qApp);
-    return my_instance;
-}
+    virtual void redo();
+    virtual void undo();
 
-QUndoStack * FileSystemUndoManager::undoStack() const
+protected:
+    QString m_destinationPath;
+    QStringList m_sourcePaths;
+    QStringList m_destinationPaths;
+};
+
+class MoveCommand : public CopyCommand
 {
-    return d_ptr->undoStack;
-}
+public:
+    explicit MoveCommand(QUndoCommand *parent = 0) : CopyCommand(parent) {}
+
+    virtual void redo();
+    virtual void undo();
+protected:
+    QStringList m_destinationPaths;
+};
+
+class RenameCommand : public QUndoCommand
+{
+public:
+    explicit RenameCommand(QUndoCommand *parent = 0) : QUndoCommand(parent) {}
+
+    void setPath(const QString &path);
+    void setNewName(const QString &name);
+
+    virtual void redo();
+    virtual void undo();
+
+protected:
+    QString m_path;
+    QString m_newName;
+};
+
+class LinkCommand : public QUndoCommand
+{
+public:
+    explicit LinkCommand(QUndoCommand *parent = 0) : QUndoCommand(parent) {}
+
+    void appendPaths(const QString &sourcePath, const QString &linkPath);
+
+    virtual void redo();
+    virtual void undo();
+
+protected:
+    QStringList m_paths;
+    QStringList m_linkPaths;
+};
+
+/* ================================ Implementation ================================ */
 
 void CopyCommand::setDestination(const QString &path)
 {
@@ -85,15 +115,9 @@ void CopyCommand::setSourcePaths(const QStringList &paths)
     m_sourcePaths = paths;
 }
 
-void CopyCommand::appendSourcePath(const QString &path)
-{
-    m_sourcePaths.append(path);
-}
-
 void CopyCommand::redo()
 {
-    FileCopyManager * manager = FileCopyManager::instance();
-    QtFileCopier * copier = manager->copier();
+    QtFileCopier * copier = manager()->copier();
 
     m_destinationPaths.clear();
     foreach (const QString &filePath, m_sourcePaths) {
@@ -149,8 +173,7 @@ void CopyCommand::undo()
 
 void MoveCommand::redo()
 {
-    FileCopyManager * manager = FileCopyManager::instance();
-    QtFileCopier * copier = manager->copier();
+    QtFileCopier * copier = manager()->copier();
 
     m_destinationPaths.clear();
     foreach (const QString &filePath, m_sourcePaths) {
@@ -185,8 +208,7 @@ void MoveCommand::redo()
 
 void MoveCommand::undo()
 {
-    FileCopyManager * manager = FileCopyManager::instance();
-    QtFileCopier * copier = manager->copier();
+    QtFileCopier * copier = manager()->copier();
 
     int i = 0;
     foreach (const QString &filePath, m_destinationPaths) {
@@ -250,4 +272,53 @@ void LinkCommand::appendPaths(const QString &sourcePath, const QString &linkPath
 {
     m_paths.append(sourcePath);
     m_linkPaths.append(linkPath);
+}
+
+/* ================================ FileSystemManager ================================ */
+
+FileSystemManager *m_instance = 0;
+
+FileSystemManager::FileSystemManager(QObject *parent) :
+    QObject(parent),
+    d_ptr(new FileSystemManagerPrivate(this))
+{
+    Q_D(FileSystemManager);
+    d->undoStack = new QUndoStack(this);
+}
+
+FileSystemManager::~FileSystemManager()
+{
+    if (m_instance == this)
+        m_instance = 0;
+    delete d_ptr;
+}
+
+FileSystemManager *FileSystemManager::instance()
+{
+    if (!m_instance)
+        m_instance = new FileSystemManager(qApp);
+    return m_instance;
+}
+
+QUndoStack *FileSystemManager::undoStack() const
+{
+    return d_ptr->undoStack;
+}
+
+void FileSystemManager::copyFiles(const QStringList &files, const QString &destination)
+{
+    CopyCommand *command = new CopyCommand;
+    command->setManager(d_func());
+    command->setSourcePaths(files);
+    command->setDestination(destination);
+    undoStack()->push(command);
+}
+
+void FileSystemManager::moveFiles(const QStringList &files, const QString &destination)
+{
+    MoveCommand *command = new MoveCommand;
+    command->setManager(d_func());
+    command->setSourcePaths(files);
+    command->setDestination(destination);
+    undoStack()->push(command);
 }

@@ -10,6 +10,7 @@ class QFileSystemModel;
 namespace FileManagerPlugin {
 
 class FileSystemUndoManager;
+class FileSystemManager;
 
 class FileManagerWidgetPrivate;
 class FileManagerWidget : public QWidget
@@ -35,7 +36,8 @@ public:
 
     QStringList selectedPaths() const;
 
-    FileSystemUndoManager *undoManager() const;
+//    FileSystemUndoManager *undoManager() const;
+    FileSystemManager *fileSystemManager() const;
 
 signals:
     void currentPathChanged(const QString &path);

@@ -1,7 +1,7 @@
 #include "filecopydialog.h"
 #include "filecopydialog_p.h"
 
-#include "filesystemundomanager_p.h"
+#include "filesystemmanager.h"
 #include "filecopytask.h"
 #include "filecopyreplacedialog.h"
 
@@ -117,8 +117,8 @@ FileCopyDialog::FileCopyDialog(QWidget *parent) :
     d->ui = new Ui::FileCopyDialog;
     d->ui->setupUi(this);
 
-    FileCopyManager *manager = FileCopyManager::instance();
-    connect(manager, SIGNAL(created(QtFileCopier*)), d, SLOT(addCopier(QtFileCopier*)));
+    FileSystemManager *manager = FileSystemManager::instance();
+    connect(manager, SIGNAL(operationStarted(QtFileCopier*)), d, SLOT(addCopier(QtFileCopier*)));
 }
 
 FileCopyDialog::~FileCopyDialog()

@@ -3,13 +3,13 @@
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
 
-#include "filesystemundomanager.h"
+#include "filesystemmanager.h"
 
 using namespace FileManagerPlugin;
 
 FileSystemModel::FileSystemModel(QObject *parent) :
     QFileSystemModel(parent),
-    m_undoManager(FileSystemUndoManager::instance())
+    m_manager(FileSystemManager::instance())
 {
 }
 
@@ -33,34 +33,33 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
 
     switch (action) {
     case Qt::CopyAction: {
-        CopyCommand * command = new CopyCommand();
-        command->setDestination(to);
-        for (; it != urls.constEnd(); ++it) {
-            QString path = (*it).toLocalFile();
-            command->appendSourcePath(path);
+        QStringList files;
+        foreach (const QUrl &url, urls) {
+            QString path = url.toLocalFile();
+            files.append(path);
             success = true;
         }
-        m_undoManager->undoStack()->push(command);
+        m_manager->copyFiles(files, to);
         break;
     }
-    case Qt::LinkAction: {
-        LinkCommand * command = new LinkCommand();
-        for (; it != urls.constEnd(); ++it) {
-            QString path = (*it).toLocalFile();
-            command->appendPaths(path, to + QFileInfo(path).fileName());
-        }
-        m_undoManager->undoStack()->push(command);
-        break;
-    }
+#warning "TODO: implement"
+//    case Qt::LinkAction: {
+//        LinkCommand * command = new LinkCommand();
+//        for (; it != urls.constEnd(); ++it) {
+//            QString path = (*it).toLocalFile();
+//            command->appendPaths(path, to + QFileInfo(path).fileName());
+//        }
+//        m_manager->undoStack()->push(command);
+//        break;
+//    }
     case Qt::MoveAction: {
-        MoveCommand * command = new MoveCommand();
-        command->setDestination(to);
-        for (; it != urls.constEnd(); ++it) {
-            QString path = (*it).toLocalFile();
-            command->appendSourcePath(path);
+        QStringList files;
+        foreach (const QUrl &url, urls) {
+            QString path = url.toLocalFile();
+            files.append(path);
             success = true;
         }
-        m_undoManager->undoStack()->push(command);
+        m_manager->moveFiles(files, to);
         break;
     }
     default:
