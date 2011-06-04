@@ -168,7 +168,7 @@ void History::goToItem(const HistoryItem & item)
     Q_D(History);
 
     int index = d->items.indexOf(item);
-    d->currentItemIndex = index;
+    setCurrentItemIndex(index);
 }
 
 HistoryItem History::itemAt(int i) const

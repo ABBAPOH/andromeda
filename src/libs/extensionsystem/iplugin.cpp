@@ -75,12 +75,10 @@ IPluginPrivate::IPluginPrivate()
 {
 }
 
-#include <QDebug>
 IPluginPrivate::~IPluginPrivate()
 {
     foreach (QObject *object, addedObjects) {
         PluginManager::instance()->removeObject(object);
-        qDebug() << "delete" << object->metaObject()->className();
         delete object;
     }
 }

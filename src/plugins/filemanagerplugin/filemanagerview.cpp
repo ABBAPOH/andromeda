@@ -7,19 +7,15 @@
 using namespace FileManagerPlugin;
 
 FileManagerView::FileManagerView(QObject *parent) :
-    IHistoryView(parent)
+    IMainView(parent)
 {
     m_widget = new FileManagerWidget();
-    connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChange(QString)));
+    connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
 }
 
-void FileManagerView::initialize(/*GuiSystem::State *state*/)
+void FileManagerView::initialize()
 {
-    const GuiSystem::State *state = this->state();
-//    QString path = state->property("path").toString();
-    QString path = state->object("stateController")->property("currentPath").toString();
-    m_state = state;
-    m_widget->setCurrentPath(path);
+
 }
 
 QString FileManagerView::type() const
@@ -32,6 +28,23 @@ QWidget * FileManagerView::widget() const
     return m_widget;
 }
 
+bool FileManagerView::open(const QString &path)
+{
+    m_widget->setCurrentPath(path);
+    return true;
+}
+
+bool FileManagerView::open(const HistoryItem &item)
+{
+    m_widget->history()->goToItem(item);
+    return true;
+}
+
+HistoryItem FileManagerView::currentItem() const
+{
+    return m_widget->history()->currentItem();
+}
+
 QString FileManagerFactory::id() const
 {
     return "FileManager";
@@ -40,23 +53,4 @@ QString FileManagerFactory::id() const
 GuiSystem::IView * FileManagerPlugin::FileManagerFactory::createView() const
 {
     return new FileManagerView;
-}
-
-void FileManagerView::back()
-{
-    m_widget->back();
-}
-
-void FileManagerView::forward()
-{
-    m_widget->forward();
-}
-
-void FileManagerView::onCurrentPathChange(const QString &path)
-{
-    QObject *controller = state()->object("stateController");
-    if (controller->property("currentPath").toString() != path)
-        controller->setProperty("currentPath", path);
-//    if (m_state->property("path").toString() != path)
-//        m_state->setProperty("path", path);
 }

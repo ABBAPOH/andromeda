@@ -10,6 +10,7 @@ set( HEADERS
     ifile.h
     ihistoryview.h
     imainview.h
+    page.h
     perspectivemanager.h
    )
 set( SOURCES
@@ -21,6 +22,7 @@ set( SOURCES
     ifile.cpp
     ihistoryview.cpp
     imainview.cpp
+    page.cpp
     perspectivemanager.cpp
    )
 set( FORMS
