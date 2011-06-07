@@ -19,7 +19,6 @@ public:
     QIcon icon() const { return pages.isEmpty() ? QIcon() : pages.first()->categoryIcon(); }
     QList<IOptionsPage *> pages;
     int index;
-    QTabWidget *tabWidget;
 };
 
 class CategoryModel : public QAbstractListModel
@@ -36,6 +35,9 @@ public:
     void removePage(IOptionsPage* page);
 
     const QList<Category*> &categories() const { return m_categories; }
+
+signals:
+    void pageRemoved(IOptionsPage* page);
 
 private:
     Category *findCategoryById(const QString &id);

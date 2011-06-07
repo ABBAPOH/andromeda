@@ -17,16 +17,13 @@ public:
     virtual ~IOptionsPage();
 
     QString id() const { return m_id; }
+    QString category() const { return m_category; }
+
     virtual QString displayName() const = 0;
-    virtual QString category() const { return m_category; }
     virtual QString displayCategory() const = 0;
     virtual QIcon categoryIcon() const = 0;
 
     virtual QWidget *createPage(QWidget *parent) = 0;
-
-signals:
-
-public slots:
 
 private:
     QString m_id;
