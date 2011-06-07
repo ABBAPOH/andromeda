@@ -30,8 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     Q_D(MainWindow);
 
-    d->currentHistory = new CorePlugin::GlobalHistory(currentState());
-
     d->lineEdit = new EnteredLineEdit(this);
     d->toolBar = new QToolBar(this);
 

@@ -4,11 +4,8 @@ set( HEADERS
     core.h
     core_p.h
     coreplugin.h
-    globalhistory.h
     history.h
     historyitem.h
-    ifile.h
-    ihistoryview.h
     imainview.h
     page.h
     perspectivemanager.h
@@ -16,11 +13,8 @@ set( HEADERS
 set( SOURCES
     core.cpp
     coreplugin.cpp
-    globalhistory.cpp
     history.cpp
     historyitem.cpp
-    ifile.cpp
-    ihistoryview.cpp
     imainview.cpp
     page.cpp
     perspectivemanager.cpp

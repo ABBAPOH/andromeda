@@ -19,7 +19,6 @@ public:
 
     EnteredLineEdit *lineEdit;
     QToolBar *toolBar;
-    CorePlugin::GlobalHistory *currentHistory;
 
 public slots:
     void onTextEntered(const QString &);
