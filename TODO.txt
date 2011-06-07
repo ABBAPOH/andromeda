@@ -18,4 +18,4 @@
 - different top level widgets (actionmanager is not singletone?)
 - relative paths in file Commands
 - filecopier & copying to same dir (append suffix with number)
-- history in filemanager
+- remove history from CorePlugin
