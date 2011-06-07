@@ -4,6 +4,7 @@
 
 #include "core.h"
 #include "perspectivemanager.h"
+#include "settingsdialog_p.h"
 
 using namespace CorePlugin;
 
@@ -16,6 +17,7 @@ bool CorePluginImpl::initialize()
 {
     addObject(new Core);
     addObject(new PerspectiveManager);
+    addObject(new CategoryModel);
 
     return true;
 }

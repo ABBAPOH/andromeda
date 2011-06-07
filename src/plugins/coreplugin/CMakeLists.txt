@@ -6,18 +6,23 @@ set( HEADERS
     coreplugin.h
     history.h
     historyitem.h
+    ioptionspage.h
     imainview.h
     page.h
     perspectivemanager.h
+    settingsdialog.h
+    settingsdialog_p.h
    )
 set( SOURCES
     core.cpp
     coreplugin.cpp
     history.cpp
     historyitem.cpp
+    ioptionspage.cpp
     imainview.cpp
     page.cpp
     perspectivemanager.cpp
+    settingsdialog.cpp
    )
 set( FORMS
    )
