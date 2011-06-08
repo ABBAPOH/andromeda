@@ -2,10 +2,6 @@
 
 #include "historyitem.h"
 
-using namespace CorePlugin;
-
-namespace CorePlugin {
-
 class HistoryPrivate
 {
 public:
@@ -13,8 +9,6 @@ public:
     int maximumItemCount;
     int currentItemIndex;
 };
-
-} // namespace CorePlugin
 
 History::History(QObject *parent) :
         QObject(parent),
@@ -35,12 +29,14 @@ void History::appendItem(const HistoryItem &item)
 {
     Q_D(History);
 
-    int count = d->items.size() - d->currentItemIndex;
-    while (count-- >= 1) {
-        d->items.removeAt(d->currentItemIndex + 1);
-    }
+    d->items.erase(d->items.begin() + d->currentItemIndex + 1, d->items.end());
     d->items.append(item);
     d->currentItemIndex++;
+
+    if (d->maximumItemCount != -1 && d->currentItemIndex == d->maximumItemCount) {
+        d->currentItemIndex--;
+        d->items.takeFirst();
+    }
 }
 
 bool History::canGoBack() const
@@ -54,7 +50,7 @@ void History::back()
 {
     Q_D(History);
 
-    if (d->currentItemIndex > 0) {
+    if (canGoBack()) {
         d->currentItemIndex--;
         emit currentItemIndexChanged(d->currentItemIndex);
     }
@@ -93,16 +89,16 @@ QList<HistoryItem> History::backItems(int maxItems) const
     Q_D(const History);
 
     int pos = d->currentItemIndex - maxItems;
-    int length = maxItems;
 
-    if (pos < 0 || length == -1) {
+    if (pos < 0 || maxItems == -1) {
         pos = 0;
-        length = d->currentItemIndex;
+        maxItems = d->currentItemIndex;
     }
 
-    return d->items.mid(pos, length);
+    return d->items.mid(pos, maxItems);
 }
 
+// TODO: clear from..to?
 void History::clear()
 {
     Q_D(History);
@@ -129,9 +125,7 @@ HistoryItem History::currentItem() const
 
 int History::currentItemIndex() const
 {
-    Q_D(const History);
-
-    return d->currentItemIndex;
+    return d_func()->currentItemIndex;
 }
 
 void History::setCurrentItemIndex(int index)
@@ -142,8 +136,10 @@ void History::setCurrentItemIndex(int index)
         return;
     }
 
-    d->currentItemIndex = index;
-    emit currentItemIndexChanged(index);
+    if (d->currentItemIndex != index) {
+        d->currentItemIndex = index;
+        emit currentItemIndexChanged(index);
+    }
 }
 
 HistoryItem History::forwardItem() const

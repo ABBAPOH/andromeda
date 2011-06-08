@@ -11,6 +11,7 @@
 -clone tabs
 -fix bug with lost focus on dualpane. maybe qtbug
 -think about dependencies and unloading. NOW bugs very big.
+-add maximum count to history
 
 // DISCUSS:
 - hide event handler in view

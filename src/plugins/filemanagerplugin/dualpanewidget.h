@@ -22,7 +22,7 @@ public:
     explicit DualPaneWidget(QWidget *parent = 0);
     ~DualPaneWidget();
 
-    CorePlugin::History *activeHistory() const;
+    History *activeHistory() const;
     Pane activePane() const;
     FileManagerWidget *activeWidget() const;
 

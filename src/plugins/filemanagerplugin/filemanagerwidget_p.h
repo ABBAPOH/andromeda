@@ -41,7 +41,7 @@ public:
 
     FileSystemManager *fileSystemManager;
 
-    CorePlugin::History * history;
+    History * history;
 
     bool blockEvents;
 

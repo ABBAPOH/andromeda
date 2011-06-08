@@ -32,7 +32,7 @@ public:
 
     QString currentPath() const;
 
-    CorePlugin::History *history() const;
+    History *history() const;
 
     QStringList selectedPaths() const;
 

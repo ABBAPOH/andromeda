@@ -6,7 +6,6 @@
 #include <QDebug>
 
 using namespace FileManagerPlugin;
-using namespace CorePlugin;
 
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
 {
