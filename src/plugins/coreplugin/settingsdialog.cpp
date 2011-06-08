@@ -63,6 +63,7 @@ void CategoryModel::addPage(IOptionsPage *page)
         category->index = -1;
         beginInsertRows(QModelIndex(), m_categories.size(), m_categories.size());
         m_categories.append(category);
+        qStableSort(category->pages.begin(), category->pages.end(), optionsPageLessThan);
         endInsertRows();
     }
     category->pages.append(page);
@@ -157,6 +158,7 @@ void SettingsDialog::setModel(CategoryModel *model)
     m_categoryList->setModel(m_model);
     connect(m_categoryList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(currentChanged(QModelIndex)), Qt::UniqueConnection);
+    connect(m_model, SIGNAL(pageAdded(IOptionsPage*)), SLOT(onPageRemoved(IOptionsPage*)));
     connect(m_model, SIGNAL(pageRemoved(IOptionsPage*)), SLOT(onPageRemoved(IOptionsPage*)));
 }
 
@@ -166,8 +168,18 @@ void SettingsDialog::currentChanged(const QModelIndex &current)
         showCategory(current.row());
 }
 
+void SettingsDialog::onPageAdded(IOptionsPage *page)
+{
+    Category *category = m_model->findCategoryById(page->category());
+    QTabWidget *widget = m_tabWidgets.value(category);
+    int index = category->pages.indexOf(page);
+    widget->insertTab(index, page->createPage(widget), page->displayName());
+}
+
 void SettingsDialog::onPageRemoved(IOptionsPage *page)
 {
+    QWidget *widget = m_widgets.take(page);
+    delete widget;
 }
 
 void SettingsDialog::setupUi()
@@ -219,8 +231,6 @@ void SettingsDialog::ensureCategoryWidget(Category *category)
 {
     if (m_tabWidgets.value(category) != 0)
         return;
-
-    qStableSort(category->pages.begin(), category->pages.end(), optionsPageLessThan);
 
     QTabWidget *tabWidget = new QTabWidget;
     for (int j = 0; j < category->pages.size(); ++j) {

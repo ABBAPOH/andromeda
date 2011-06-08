@@ -35,13 +35,13 @@ public:
     void removePage(IOptionsPage* page);
 
     const QList<Category*> &categories() const { return m_categories; }
+    Category *findCategoryById(const QString &id);
 
 signals:
+    void pageAdded(IOptionsPage* page);
     void pageRemoved(IOptionsPage* page);
 
 private:
-    Category *findCategoryById(const QString &id);
-
     QList<Category*> m_categories;
     QIcon m_emptyIcon;
 };
