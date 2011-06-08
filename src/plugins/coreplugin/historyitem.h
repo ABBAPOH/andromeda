@@ -9,7 +9,6 @@
 #include <QtGui/QIcon>
 
 class HistoryItemData;
-
 class COREPLUGIN_EXPORT HistoryItem
 {
 public:

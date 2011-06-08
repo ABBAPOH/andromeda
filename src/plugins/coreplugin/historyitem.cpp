@@ -32,15 +32,15 @@ HistoryItem::HistoryItem(QString path,
     data->path = path;
 }
 
-HistoryItem::HistoryItem(const HistoryItem &rhs) :
-        data(rhs.data)
+HistoryItem::HistoryItem(const HistoryItem &other) :
+    data(other.data)
 {
 }
 
-HistoryItem &HistoryItem::operator=(const HistoryItem &rhs)
+HistoryItem &HistoryItem::operator=(const HistoryItem &other)
 {
-    if (this != &rhs)
-        data.operator=(rhs.data);
+    if (this != &other)
+        data.operator=(other.data);
     return *this;
 }
 
@@ -95,5 +95,5 @@ void HistoryItem::setUserData(const QString &key, const QVariant & data)
 
 bool HistoryItem::operator==(const HistoryItem &other)
 {
-    return data->path == other.data->path;
+    return data == other.data;
 }

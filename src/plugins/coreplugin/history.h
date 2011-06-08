@@ -7,8 +7,6 @@
 
 #include "historyitem.h"
 
-namespace CorePlugin {
-
 class HistoryPrivate;
 class COREPLUGIN_EXPORT History: public QObject
 {
@@ -32,8 +30,6 @@ public:
     HistoryItem backItem() const;
     QList<HistoryItem> backItems(int maxItems) const;
 
-    void clear();
-
     int count() const;
 
     HistoryItem currentItem() const;
@@ -54,13 +50,13 @@ public slots:
     void back();
     void forward();
 
+    void clear();
+
 signals:
     void currentItemIndexChanged(int index);
 
 protected:
     HistoryPrivate *d_ptr;
 };
-
-} // namespace CorePlugin
 
 #endif // HISTORY_H
