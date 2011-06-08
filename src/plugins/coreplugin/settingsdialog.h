@@ -23,6 +23,7 @@ public:
 
 private slots:
     void currentChanged(const QModelIndex &current);
+    void onPageAdded(IOptionsPage *page);
     void onPageRemoved(IOptionsPage *page);
 
 private:
