@@ -50,8 +50,10 @@ void Page::setState(State *state)
 void Page::onIndexChanged(int index)
 {
     HistoryItem item = m_history->itemAt(index);
-//    if (!item.isValid())
-//        return;
+
+    if (!item.isValid())
+        return;
+
     m_currentPath = item.path();
     emit currentPathChanged(m_currentPath);
 

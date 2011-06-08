@@ -15,8 +15,7 @@ IMainView::IMainView(QObject *parent) :
 
 void IMainView::onPathChanged(const QString &path)
 {
-    QObject *o = state()->object("page");
-    Page *page = qobject_cast<Page*>(o);
+    Page *page = state()->object<Page>("page");
     if (page)
         page->setCurrentPath(path);
     else

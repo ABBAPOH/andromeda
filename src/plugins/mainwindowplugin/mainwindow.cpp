@@ -18,8 +18,7 @@ void MainWindowPrivate::onTextEntered(const QString &path)
 {
     Q_Q(MainWindow);
 
-    QObject *o = q->currentState()->object("page");
-    Page *page = qobject_cast<Page *>(o);
+    Page *page = q->currentState()->object<Page>("page");
     Q_ASSERT(page);
     page->setCurrentPath(path);
 }
@@ -63,16 +62,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::back()
 {
-    QObject *o = currentState()->object("page");
-    Page *page = qobject_cast<Page *>(o);
+    Page *page = currentState()->object<Page>("page");
     Q_ASSERT(page);
     page->history()->back();
 }
 
 void MainWindow::forward()
 {
-    QObject *o = currentState()->object("page");
-    Page *page = qobject_cast<Page *>(o);
+    Page *page = currentState()->object<Page>("page");
     Q_ASSERT(page);
     page->history()->forward();
 }
