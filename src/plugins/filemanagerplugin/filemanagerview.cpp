@@ -15,7 +15,6 @@ FileManagerView::FileManagerView(QObject *parent) :
 
 void FileManagerView::initialize()
 {
-
 }
 
 QString FileManagerView::type() const

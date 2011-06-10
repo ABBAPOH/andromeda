@@ -55,17 +55,17 @@ void Page::onIndexChanged(int index)
         return;
 
     m_currentPath = item.path();
-    emit currentPathChanged(m_currentPath);
 
     openPerspective(item);
+    emit currentPathChanged(m_currentPath);
 }
 
 QString getMimeType(const QString &path)
 {
     QFileInfo info(path);
     if (info.isDir())
-        return "inode/directory";
-    return "";
+        return QLatin1String("inode/directory");
+    return QString();
 }
 
 IMainView * Page::getMainView(const QString &perspective)
@@ -73,8 +73,7 @@ IMainView * Page::getMainView(const QString &perspective)
     GuiController *controller = GuiController::instance();
     QString id = controller->perspective(perspective)->property("MainView").toString();
 
-    IView *iview = state()->view(id);
-    return qobject_cast<IMainView*>(iview);
+    return qobject_cast<IMainView*>(state()->view(id));
 }
 
 QString Page::getPerspective(const QString &path)
@@ -93,8 +92,8 @@ void Page::openPerspective(const QString &path)
         view->open(path);
         HistoryItem item = view->currentItem();
         item.setUserData("perspective", perspective);
-        if (item.isValid())
-            m_history->appendItem(item);
+        m_history->appendItem(item);
+
     }
 }
 
