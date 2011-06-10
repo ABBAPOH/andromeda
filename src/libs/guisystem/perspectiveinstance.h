@@ -27,6 +27,9 @@ public:
     void removeView(const QString &id);
     IView *view(const QString &id) const;
 
+    int index() const;
+    void setIndex(int index);
+
 signals:
 
 public slots:

@@ -20,14 +20,14 @@ int main(int argc, char *argv[])
     Perspective *perspective = new Perspective("Test Perspective");
     perspective->setName("Perspective");
 
-    perspective->addView("TestViewFactory", MainWindow::LeftViewArea);
-    perspective->addView("TestViewFactory2", MainWindow::CentralViewArea);
+    perspective->addView("TestViewFactory", MainWindow::Left);
+    perspective->addView("TestViewFactory2", MainWindow::Central);
 
     GuiController::instance()->addPerspective(perspective);
 
     perspective = new Perspective("Test Perspective2");
     perspective->setName("Perspective 2");
-    perspective->addView("TestViewFactory2", MainWindow::CentralViewArea);
+    perspective->addView("TestViewFactory2", MainWindow::Central);
 
     GuiController::instance()->addPerspective(perspective);
 
@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
+//    w.newTab();
     w.currentState()->setCurrentPerspective("Test Perspective");
     IView * view = w.currentState()->currentInstance()->view("TestViewFactory");
     qDebug() << "found view" << view->metaObject()->className();
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
     w.addToolBar(Qt::LeftToolBarArea, &s);
 
     w.show();
-    w.addState();
+//    w.addState();
 
     Test t;
     QTimer tim;

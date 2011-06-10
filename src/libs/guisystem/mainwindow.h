@@ -17,12 +17,12 @@ class GUISYSTEM_EXPORT MainWindow : public QMainWindow
     Q_OBJECT
     Q_DECLARE_PRIVATE(MainWindow)
 public:
-    enum ViewAreas { LeftViewArea = 1,
-                     TopViewArea = 2,
-                     RigthViewArea = 3,
-                     BottomViewArea = 4,
-                     CentralViewArea = 6
-                   };
+    enum Area { Left = 0,
+                Top = 1,
+                Rigth = 2,
+                Bottom = 3,
+                Central = 4
+              };
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
@@ -31,33 +31,22 @@ public:
 
     QList<State*> states() const;
     int stateCount() const;
-    void addState(State *state);
-    void removeState(int index);
-
-    virtual QWidget *createContainer(IView *view, int area);
-    virtual void displayView(IView *view, int area);
-
-    PerspectiveInstance *perspectiveInstance() const;
-    void setPerspectiveInstance(PerspectiveInstance *instance);
 
 signals:
 
 public slots:
-    void addState();
-    void setCurrentState(int index);
+    void newTab();
+    void setCurrentIndex(int index);
+    void closeTab(int index);
 
 private slots:
-    void setPerspective(const QString &id);
-    void onTabClose(int index);
     void onActionAdd(QAction *action);
 
 protected:
     MainWindowPrivate *d_ptr;
 
-    virtual void displayInstance();
-
-private:
-    void createWidgetsForInstance();
+    friend class State;
+    friend class StatePrivate;
 };
 
 } // namespace GuiSystem

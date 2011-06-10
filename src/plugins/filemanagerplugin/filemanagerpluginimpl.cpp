@@ -25,8 +25,8 @@ bool FileManagerPluginImpl::initialize()
     GuiController::instance()->addFactory(new NavigationPanelFactory);
 
     Perspective *perspective = new Perspective("FileManagerPerspective");
-    perspective->addView("FileManager", 6);
-    perspective->addView("NavigationPanel", 1);
+    perspective->addView("NavigationPanel", 0);
+    perspective->addView("FileManager", 4);
     perspective->setProperty("MainView", "FileManager");
     GuiController::instance()->addPerspective(perspective);
 

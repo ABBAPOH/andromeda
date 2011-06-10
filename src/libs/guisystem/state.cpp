@@ -11,6 +11,8 @@
 #include "perspective.h"
 #include "perspectiveinstance.h"
 #include "mainwindow.h"
+#include "mainwindow_p.h"
+#include "centralwidget.h"
 
 namespace GuiSystem {
 
@@ -27,6 +29,7 @@ public:
     QHash<QString, IView *> sharedViews;
     MainWindow *window;
     QMultiMap<QString, QObject*> mapToObject;
+    int index;
 
     void createViews(PerspectiveInstance *instance);
 };
@@ -47,6 +50,11 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
 
     Perspective *perspective = instance->perspective();
     GuiController *controller = GuiController::instance();
+
+    CentralWidget *centralWidget = new CentralWidget;
+    for (int i = CentralWidget::Left; i <= CentralWidget::Central; i++) {
+        centralWidget->hideArea(i);
+    }
 
     QStringList ids = perspective->views();
     for (int i = 0; i < ids.size(); i++) {
@@ -72,20 +80,30 @@ void StatePrivate::createViews(PerspectiveInstance *instance)
 
         view->setOptions(perspective->viewOptions(id));
         instance->addView(view);
-        QWidget *container = q->window()->createContainer(view, view->area());
-        view->setContainer(container);
+
+        ViewWidget *viewWidget = new ViewWidget;
+        viewWidget->show();
+        viewWidget->setView(view);
+        view->setContainer(viewWidget);
+
+        centralWidget->addWidget(viewWidget, view->area());
+        centralWidget->showArea(view->area());
     }
 
     QList<IView *> instanceViews = instance->views();
     for (int i = 0; i < instanceViews.size(); i++) { // 20-years on counters market
         instanceViews[i]->initialize();
     }
+    int instanceIndex = q->window()->d_ptr->addWidget(index, centralWidget);
+    instance->setIndex(instanceIndex);
 }
 
 State::State(QObject *parent) :
     QObject(parent),
     d_ptr(new StatePrivate(this))
 {
+    Q_D(State);
+    d->index = -1;
     GuiController *controller = GuiController::instance();
     connect(controller, SIGNAL(factoryRemoved(QString)), this, SLOT(onFactoryRemoved(QString)));
 }
@@ -309,4 +327,14 @@ void State::onFactoryRemoved(const QString &id)
         instance->removeView(id);
         delete view;
     }
+}
+
+int State::index() const
+{
+    return d_func()->index;
+}
+
+void State::setIndex(int index)
+{
+    d_func()->index = index;
 }

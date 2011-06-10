@@ -16,10 +16,10 @@ public:
     ViewOptions();
     explicit ViewOptions(const QString &id);
     ViewOptions(const QString &id, int area, int width = 0, int height = 0);
+    ~ViewOptions();
 
     ViewOptions(const ViewOptions &);
     ViewOptions &operator=(const ViewOptions &);
-    ~ViewOptions();
 
     QString id() const;
     void setId(const QString &id);

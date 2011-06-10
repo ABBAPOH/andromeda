@@ -122,6 +122,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     upAction->setShortcut(tr("Ctrl+Up"));
     connect(upAction, SIGNAL(triggered()), SLOT(up()));
     addAction(upAction);
+    setMinimumSize(200, 200);
 }
 
 FileManagerWidget::~FileManagerWidget()
