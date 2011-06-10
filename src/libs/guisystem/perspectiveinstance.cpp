@@ -3,7 +3,6 @@
 #include <QtCore/QDebug>
 
 #include "perspective.h"
-#include "perspective_p.h"
 #include "guicontroller.h"
 #include "iviewfactory.h"
 #include "iview.h"
@@ -15,6 +14,7 @@ class PerspectiveInstancePrivate
 public:
     Perspective *perspective;
     QHash<QString, IView *> mapToView;
+    int index;
 };
 
 } // namespace GuiSystem
@@ -25,6 +25,7 @@ PerspectiveInstance::PerspectiveInstance(QObject *parent) :
     QObject(parent),
     d_ptr(new PerspectiveInstancePrivate)
 {
+    d_func()->index = -1;
 }
 
 PerspectiveInstance::~PerspectiveInstance()
@@ -75,4 +76,14 @@ void PerspectiveInstance::removeView(const QString &id)
 IView * PerspectiveInstance::view(const QString &id) const
 {
     return d_func()->mapToView.value(id);
+}
+
+int PerspectiveInstance::index() const
+{
+    return d_func()->index;
+}
+
+void PerspectiveInstance::setIndex(int index)
+{
+    d_func()->index = index;
 }

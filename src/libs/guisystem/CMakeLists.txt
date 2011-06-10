@@ -9,7 +9,6 @@ set( HEADERS
     iiohandler.h
     mainwindow.h
     perspective.h
-    perspective_p.h
     perspectiveinstance.h
     perspectiveswitcher.h
     state.h
@@ -36,9 +35,10 @@ qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../../shared/widgets )
 
 add_definitions( -DGUISYSTEM_LIBRARY )
 
 add_library( guisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
-target_link_libraries( guisystem ${QT_LIBRARIES} )
+target_link_libraries( guisystem ${QT_LIBRARIES} widgets )
 

@@ -5,8 +5,8 @@
 
 namespace GuiSystem {
 
-class MainWindow;
 class IView;
+class MainWindow;
 class PerspectiveInstance;
 
 class StatePrivate;
@@ -47,6 +47,9 @@ public:
     {
         return qobject_cast<T *>(object(name));
     }
+
+    int index() const;
+    void setIndex(int index);
 
 signals:
     void currentPerspectiveChanged(const QString &id);

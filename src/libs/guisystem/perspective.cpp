@@ -1,11 +1,25 @@
 #include "perspective.h"
-#include "perspective_p.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QMap>
 
 #include "guicontroller.h"
 #include "iiohandler.h"
 #include "perspectiveinstance.h"
+
+namespace GuiSystem {
+
+class PerspectivePrivate
+{
+public:
+    QString id;
+    QString name;
+    QStringList types;
+
+    QMap<QString, ViewOptions> views;
+};
+
+} // namespace GuiSystem
 
 using namespace GuiSystem;
 

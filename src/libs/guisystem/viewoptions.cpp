@@ -37,6 +37,10 @@ ViewOptions::ViewOptions(const QString &id, int area, int width, int height) :
         setHeight(height);
 }
 
+ViewOptions::~ViewOptions()
+{
+}
+
 ViewOptions::ViewOptions(const ViewOptions &other) :
     data(other.data)
 {
@@ -47,10 +51,6 @@ ViewOptions &ViewOptions::operator=(const ViewOptions &other)
     if (this != &other)
         data.operator=(other.data);
     return *this;
-}
-
-ViewOptions::~ViewOptions()
-{
 }
 
 QString ViewOptions::id() const
