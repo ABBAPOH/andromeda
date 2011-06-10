@@ -16,7 +16,7 @@ History::History(QObject *parent) :
 {
     Q_D(History);
 
-    d->maximumItemCount = 0;
+    d->maximumItemCount = -1;
     d->currentItemIndex = -1;
 }
 
@@ -27,6 +27,9 @@ History::~History()
 
 void History::appendItem(const HistoryItem &item)
 {
+    if (!item.isValid())
+        return;
+
     Q_D(History);
 
     d->items.erase(d->items.begin() + d->currentItemIndex + 1, d->items.end());

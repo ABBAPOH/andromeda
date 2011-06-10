@@ -14,7 +14,7 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     QString path = model->filePath(index);
     QFileInfo info(path);
     if (info.isDir()) {
-        q->setCurrentPath(info.canonicalFilePath());
+        q->setCurrentPath(info.absoluteFilePath());
     }
 }
 
@@ -223,7 +223,6 @@ void FileManagerWidget::copy()
     QList<QUrl> urls;
 
     QStringList paths = selectedPaths();
-    qDebug() << paths;
 
     foreach (const QString &path, paths) {
         urls.append(QUrl::fromLocalFile(path));
@@ -238,10 +237,10 @@ void FileManagerWidget::paste()
 
     QClipboard * clipboard = QApplication::clipboard();
     const QMimeData * data = clipboard->mimeData();
-    QList<QUrl> urls = data->urls();
+    const QList<QUrl> & urls = data->urls();
 
     QStringList files;
-    foreach (QUrl url, urls) {
+    foreach (const QUrl &url, urls) {
         files.append(url.toLocalFile());
     }
     d->fileSystemManager->copyFiles(files, currentPath());

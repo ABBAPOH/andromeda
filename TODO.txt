@@ -12,6 +12,7 @@
 -fix bug with lost focus on dualpane. maybe qtbug
 -think about dependencies and unloading. NOW bugs very big.
 -add maximum count to history
+-thinks about map MimeType->Perspective (move to core?)
 
 // DISCUSS:
 - hide event handler in view
