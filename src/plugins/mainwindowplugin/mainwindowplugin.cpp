@@ -13,10 +13,15 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 }
 
 #include "mainwindow.h"
+#include <menubar.h>
 
 bool MainWindowPluginImpl::initialize()
 {
     createActions();
+#ifdef Q_OS_MAC
+    addObject(new MenuBar);
+#endif
+    newWindow();
     newWindow();
 
     return true;
@@ -25,11 +30,12 @@ bool MainWindowPluginImpl::initialize()
 void MainWindowPluginImpl::shutdown()
 {
 }
-
+#include <QApplication>
 void MainWindowPluginImpl::newWindow()
 {
     MainWindow *window = new MainWindow();
     window->show();
+    qApp->processEvents();
     addObject(window);
 }
 

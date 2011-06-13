@@ -11,9 +11,23 @@ namespace GuiSystem {
 
 class PerspectiveInstancePrivate
 {
+    Q_DECLARE_PUBLIC(PerspectiveInstance)
+    PerspectiveInstance *q_ptr;
 public:
+    PerspectiveInstancePrivate(PerspectiveInstance *qq) :
+        q_ptr(qq),
+        perspective(0),
+        parentInstance(0)
+    {}
+
     Perspective *perspective;
     QHash<QString, IView *> mapToView;
+    PerspectiveInstance *parentInstance;
+
+    void createViews();
+    void initializeViews();
+
+// deprecated:
     int index;
 };
 
@@ -21,11 +35,47 @@ public:
 
 using namespace GuiSystem;
 
+void PerspectiveInstancePrivate::createViews()
+{
+    Q_Q(PerspectiveInstance);
+
+    GuiController *controller = GuiController::instance();
+
+    QStringList ids = perspective->views();
+    for (int i = 0; i < ids.size(); i++) {
+        QString id = ids[i];
+        IViewFactory *factory = controller->factory(id);
+        if (!factory) {
+            qWarning() << "Can't find view factory with id" << id;
+            continue;
+        }
+
+        IView *view = factory->view();
+        mapToView.insert(id, view);
+        view->setPerspectiveInstance(q);
+        view->setOptions(perspective->viewOptions(id));
+    }
+}
+
+void PerspectiveInstancePrivate::initializeViews()
+{
+    foreach (IView *view, mapToView) {
+        view->initialize();
+    }
+}
+
 PerspectiveInstance::PerspectiveInstance(QObject *parent) :
     QObject(parent),
-    d_ptr(new PerspectiveInstancePrivate)
+    d_ptr(new PerspectiveInstancePrivate(this))
 {
-    d_func()->index = -1;
+}
+
+PerspectiveInstance::PerspectiveInstance(PerspectiveInstance *parent) :
+    QObject(parent),
+    d_ptr(new PerspectiveInstancePrivate(this))
+{
+    if (parent)
+        d_func()->parentInstance = parent;
 }
 
 PerspectiveInstance::~PerspectiveInstance()
@@ -40,7 +90,19 @@ Perspective * PerspectiveInstance::perspective() const
 
 void PerspectiveInstance::setPerspective(Perspective *perspective)
 {
-    d_func()->perspective = perspective;
+    Q_D(PerspectiveInstance);
+
+    if (d->perspective == perspective)
+        return;
+
+    d->perspective = perspective;
+    d->createViews();
+    d->initializeViews();
+}
+
+PerspectiveInstance * PerspectiveInstance::parentInstance() const
+{
+    return d_func()->parentInstance;
 }
 
 QList<IView *> PerspectiveInstance::views()
@@ -58,6 +120,20 @@ void PerspectiveInstance::addView(IView *view)
     }
 }
 
+IView * PerspectiveInstance::view(const QString &id) const
+{
+    IView *result = d_func()->mapToView.value(id);
+    if (result)
+        return result;
+
+    return parentInstance() ? parentInstance()->view(id) : 0;
+}
+
+int PerspectiveInstance::index() const
+{
+    return d_func()->index;
+}
+
 void PerspectiveInstance::removeView(IView *view)
 {
     Q_D(PerspectiveInstance);
@@ -71,16 +147,6 @@ void PerspectiveInstance::removeView(IView *view)
 void PerspectiveInstance::removeView(const QString &id)
 {
     d_func()->mapToView.remove(id);
-}
-
-IView * PerspectiveInstance::view(const QString &id) const
-{
-    return d_func()->mapToView.value(id);
-}
-
-int PerspectiveInstance::index() const
-{
-    return d_func()->index;
 }
 
 void PerspectiveInstance::setIndex(int index)

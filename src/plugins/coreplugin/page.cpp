@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <guicontroller.h>
 #include <perspective.h>
+#include <perspectiveinstance.h>
 
 #include "core.h"
 #include "perspectivemanager.h"
@@ -37,14 +38,14 @@ History *Page::history() const
     return m_history;
 }
 
-State *Page::state() const
+PerspectiveWidget * Page::perspectiveWidget() const
 {
-    return qobject_cast<State *>(parent());
+    return qobject_cast<PerspectiveWidget *>(parent());
 }
 
-void Page::setState(State *state)
+void Page::setPerspectiveWidget(PerspectiveWidget *w)
 {
-    setParent(state);
+    setParent(w);
 }
 
 void Page::onIndexChanged(int index)
@@ -73,7 +74,7 @@ IMainView * Page::getMainView(const QString &perspective)
     GuiController *controller = GuiController::instance();
     QString id = controller->perspective(perspective)->property("MainView").toString();
 
-    return qobject_cast<IMainView*>(state()->view(id));
+    return qobject_cast<IMainView*>(perspectiveWidget()->currentInstance()->view(id));
 }
 
 QString Page::getPerspective(const QString &path)
@@ -85,11 +86,12 @@ QString Page::getPerspective(const QString &path)
 void Page::openPerspective(const QString &path)
 {
     QString perspective = getPerspective(path);
-    state()->setCurrentPerspective(perspective);
+    perspectiveWidget()->openPerspective(perspective);
 
     IMainView *view = getMainView(perspective);
     if (view) {
         view->open(path);
+        connect(view, SIGNAL(pathChanged(QString)), SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
         HistoryItem item = view->currentItem();
         item.setUserData("perspective", perspective);
         m_history->appendItem(item);
@@ -100,11 +102,12 @@ void Page::openPerspective(const QString &path)
 void Page::openPerspective(const HistoryItem &item)
 {
     QString perspective = item.userData("perspective").toString();
-    state()->setCurrentPerspective(perspective);
+    perspectiveWidget()->openPerspective(perspective);
 
     IMainView *view = getMainView(perspective);
     if (view) {
         view->open(item);
     }
 }
+
 

@@ -20,41 +20,48 @@ int main(int argc, char *argv[])
     Perspective *perspective = new Perspective("Test Perspective");
     perspective->setName("Perspective");
 
-    perspective->addView("TestViewFactory", MainWindow::Left);
-    perspective->addView("TestViewFactory2", MainWindow::Central);
+//    perspective->addView("TestViewFactory", MainWindow::Left);
+//    perspective->addView("TestViewFactory2", MainWindow::Central);
 
     GuiController::instance()->addPerspective(perspective);
 
     perspective = new Perspective("Test Perspective2");
     perspective->setName("Perspective 2");
-    perspective->addView("TestViewFactory2", MainWindow::Central);
+//    perspective->addView("TestViewFactory2", MainWindow::Central);
 
     GuiController::instance()->addPerspective(perspective);
 
-    ActionManager *manager = ActionManager::instance();
-    manager->addMenu(new QMenu("File"));
-    QMenu *menu = new QMenu("Edit");
-    QAction *a = new QAction("act", manager);
-    manager->registerAction(a, "iiiiiid!!!!!");
-    manager->registerMenu(menu, "menuId");
+    PerspectiveWidget *w = new PerspectiveWidget;
+    w->openPerspective("Test Perspective");
+    w->openPerspective("Test Perspective2");
+    w->openPerspective("Test Perspective");
+    w->resize(800, 600);
+    w->show();
 
-    MainWindow w;
+//    ActionManager *manager = ActionManager::instance();
+//    manager->addMenu(new QMenu("File"));
+//    QMenu *menu = new QMenu("Edit");
+//    QAction *a = new QAction("act", manager);
+//    manager->registerAction(a, "iiiiiid!!!!!");
+//    manager->registerMenu(menu, "menuId");
 
-//    w.newTab();
-    w.currentState()->setCurrentPerspective("Test Perspective");
-    IView * view = w.currentState()->currentInstance()->view("TestViewFactory");
-    qDebug() << "found view" << view->metaObject()->className();
-//    view->deleteLater();
+//    MainWindow w;
 
-    manager->addAction(a);
-    manager->addMenu(menu);
+////    w.newTab();
+//    w.currentState()->setCurrentPerspective("Test Perspective");
+//    IView * view = w.currentState()->currentInstance()->view("TestViewFactory");
+//    qDebug() << "found view" << view->metaObject()->className();
+////    view->deleteLater();
 
-    PerspectiveSwitcher s;
-    s.setState(w.currentState());
-//    s.show();
-    w.addToolBar(Qt::LeftToolBarArea, &s);
+//    manager->addAction(a);
+//    manager->addMenu(menu);
 
-    w.show();
+//    PerspectiveSwitcher s;
+//    s.setState(w.currentState());
+////    s.show();
+//    w.addToolBar(Qt::LeftToolBarArea, &s);
+
+//    w.show();
 //    w.addState();
 
     Test t;

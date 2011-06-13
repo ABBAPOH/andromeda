@@ -3,8 +3,7 @@
 
 #include "iview.h"
 #include "perspectiveinstance.h"
-#include "mainwindow.h"
-#include "state.h"
+#include "perspectivewidget.h"
 
 #include <QtCore/QMetaMethod>
 
@@ -26,15 +25,11 @@ void ActionManagerPrivate::onTrigger(bool checked)
         QMetaObject::invokeMethod(object, slot);
     }
 
-    MainWindow *window = qobject_cast<MainWindow *>(qApp->activeWindow());
-    if (!window) {
-        return;
-    }
-
+    PerspectiveWidget *activeWidget = PerspectiveWidget::activeWidget();
     foreach (const ConnectionById &pair, connectionsViews.values(id)) {
         QString viewId = pair.first;
         const char *slot = pair.second;
-        IView * view = window->currentState()->currentInstance()->view(viewId);
+        IView * view = activeWidget->currentInstance()->view(viewId);
         if (!view) {
             qWarning() << "Cant find view with id" << viewId;
             continue;

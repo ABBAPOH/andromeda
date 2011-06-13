@@ -6,35 +6,43 @@
 #include <QtGui/QDesktopServices>
 #include <QDebug>
 #include <CorePlugin>
-#include <page.h>
 
 #include <iview.h>
+#include <perspectivewidget.h>
+#include <menubar.h>
 
 using namespace MainWindowPlugin;
 using namespace CorePlugin;
-//using namespace GuiSystem;
+using namespace GuiSystem;
+
+int MainWindowPrivate::currentIndex() const
+{
+    return tabWidget->currentIndex();
+}
+
+Page * MainWindowPrivate::currentPage() const
+{
+    return pages.at(currentIndex());
+}
 
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
     Q_Q(MainWindow);
 
-    Page *page = q->currentState()->object<Page>("page");
-    Q_ASSERT(page);
-    page->setCurrentPath(path);
+    currentPage()->setCurrentPath(path);
 }
 
 MainWindow::MainWindow(QWidget *parent) :
-    GuiSystem::MainWindow(parent),
+    QMainWindow(parent),
     d_ptr(new MainWindowPrivate(this))
 {
     Q_D(MainWindow);
 
+    d->tabWidget = new QTabWidget;
+    d->tabWidget->setDocumentMode(true);
+    setCentralWidget(d->tabWidget);
     d->lineEdit = new EnteredLineEdit(this);
     d->toolBar = new QToolBar(this);
-
-    Page * page = new Page;
-    currentState()->addObject(page, "page");
-    connect(page, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
 
     QAction *backAction = new QAction(QIcon(":/images/icons/back.png"), "Back", this);
     QAction *forwardAction = new QAction(QIcon(":/images/icons/forward.png"), "Forward", this);
@@ -47,12 +55,18 @@ MainWindow::MainWindow(QWidget *parent) :
     addToolBar(d->toolBar);
     setUnifiedTitleAndToolBarOnMac(true);
 
+#ifndef Q_OS_MAC
+    setMenuBar(new MenuBar(this));
+#endif
+
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
     connect(backAction, SIGNAL(triggered()), SLOT(back()));
     connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
     resize(640, 480);
-    page->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    newTab();
+    newTab();
+    newTab();
 }
 
 MainWindow::~MainWindow()
@@ -62,14 +76,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::back()
 {
-    Page *page = currentState()->object<Page>("page");
-    Q_ASSERT(page);
-    page->history()->back();
+    d_func()->currentPage()->history()->back();
 }
 
 void MainWindow::forward()
 {
-    Page *page = currentState()->object<Page>("page");
-    Q_ASSERT(page);
-    page->history()->forward();
+    d_func()->currentPage()->history()->forward();
 }
+
+void MainWindow::newTab()
+{
+    Q_D(MainWindow);
+
+    PerspectiveWidget *widget = new PerspectiveWidget;
+    Page *page = new Page;
+    page->setPerspectiveWidget(widget);
+    connect(page, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
+    d->pages.append(page);
+    d->tabWidget->addTab(widget, "tab");
+    page->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+}
+

@@ -1,12 +1,12 @@
 #ifndef MAINWINDOWPLUGIN_MAINWINDOW_H
 #define MAINWINDOWPLUGIN_MAINWINDOW_H
 
-#include <GuiSystem>
+#include <QtGui/QMainWindow>
 
 namespace MainWindowPlugin {
 
 class MainWindowPrivate;
-class MainWindow : public GuiSystem::MainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MainWindow)
@@ -15,6 +15,7 @@ public:
     ~MainWindow();
 
 public slots:
+    void newTab();
     void back();
     void forward();
 

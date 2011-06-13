@@ -17,9 +17,11 @@ class GUISYSTEM_EXPORT Perspective : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(Perspective)
 public:
-    explicit Perspective(QObject *parent = 0);
-    explicit Perspective(const QString &id, QObject *parent = 0);
-    Perspective(const QString &id, const QStringList &types, QObject *parent = 0);
+    explicit Perspective(QObject *parentPerspective = 0);
+    explicit Perspective(const QString &id, QObject *parentPerspective = 0);
+    Perspective(const QString &id, Perspective *parentPerspective);
+//deprecated ?
+    Perspective(const QString &id, const QStringList &types, QObject *parentPerspective = 0);
     ~Perspective();
 
     QString id() const;
@@ -28,6 +30,9 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    Perspective *parentPerspective() const;
+
+    //deprecated ?
     QStringList types() const;
     void setTypes(const QStringList &types);
     void addType(const QString &type);

@@ -1,6 +1,6 @@
 #include "navigationpanelview.h"
 
-#include <state.h>
+#include <perspectiveinstance.h>
 
 #include "filemanagerview.h"
 #include "navigationpanel.h"
@@ -15,9 +15,8 @@ NavigationPanelView::NavigationPanelView(QObject *parent) :
 
 void NavigationPanelView::initialize()
 {
-    IView *view = state()->view("FileManager");
+    IView *view = perspectiveInstance()->view("FileManager");
 
-//    FileManagerView *fileManagerView = qobject_cast<FileManagerView *>(view);
     connect(m_widget, SIGNAL(currentPathChanged(QString)),
             view->widget(), SLOT(setCurrentPath(QString)));
 }

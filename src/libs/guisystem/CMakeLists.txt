@@ -7,11 +7,13 @@ set( HEADERS
     iview.h
     iviewfactory.h
     iiohandler.h
-    mainwindow.h
+#    mainwindow.h
+    menubar.h
     perspective.h
     perspectiveinstance.h
-    perspectiveswitcher.h
-    state.h
+#    perspectiveswitcher.h
+    perspectivewidget.h
+#    state.h
     viewoptions.h
    )
 set( SOURCES
@@ -21,11 +23,13 @@ set( SOURCES
     iview.cpp
     iviewfactory.cpp
     iiohandler.cpp
-    mainwindow.cpp
+#    mainwindow.cpp
+    menubar.cpp
     perspective.cpp
     perspectiveinstance.cpp
-    perspectiveswitcher.cpp
-    state.cpp
+#    perspectiveswitcher.cpp
+    perspectivewidget.cpp
+#    state.cpp
     viewoptions.cpp
    )
 set( FORMS

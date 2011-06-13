@@ -14,18 +14,24 @@ class GUISYSTEM_EXPORT PerspectiveInstance : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PerspectiveInstance)
+    Q_DISABLE_COPY(PerspectiveInstance)
 public:
     explicit PerspectiveInstance(QObject *parent = 0);
+    explicit PerspectiveInstance(PerspectiveInstance *parent);
     ~PerspectiveInstance();
 
     Perspective *perspective() const;
     void setPerspective(Perspective *perspective);
 
+    PerspectiveInstance *parentInstance() const;
+
     QList<IView *> views();
+    IView *view(const QString &id) const;
+
+// deprecated:
     void addView(IView *view);
     void removeView(IView *view);
     void removeView(const QString &id);
-    IView *view(const QString &id) const;
 
     int index() const;
     void setIndex(int index);
