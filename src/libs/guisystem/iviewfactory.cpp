@@ -4,7 +4,6 @@
 #include <QtCore/QDebug>
 
 #include "iview.h"
-#include "state.h"
 
 using namespace GuiSystem;
 

@@ -4,7 +4,7 @@
 #include "coreplugin_global.h"
 
 #include <QtCore/QObject>
-#include <state.h>
+#include <perspectivewidget.h>
 
 #include "history.h"
 
@@ -22,8 +22,8 @@ public:
 
     History *history() const;
 
-    GuiSystem::State *state() const;
-    void setState(GuiSystem::State *state);
+    GuiSystem::PerspectiveWidget * perspectiveWidget() const;
+    void setPerspectiveWidget(GuiSystem::PerspectiveWidget *);
 
 public slots:
     void setCurrentPath(QString currentPath);

@@ -12,7 +12,8 @@ class IViewPrivate
 public:
     QPointer<QWidget> container;
     QString factoryId;
-    State *state;
+//    State *state;
+    PerspectiveInstance *instance;
 };
 
 } // namespace GuiSystem
@@ -48,16 +49,26 @@ void IView::setContainer(QWidget *widget)
     d_func()->container = widget;
 }
 
-const State * IView::state() const
+//const State * IView::state() const
+//{
+//    return d_func()->state;
+//}
+
+//// TODO: move to private?
+//void IView::setState(State *state)
+//{
+//    Q_ASSERT(state);
+//    d_func()->state = state;
+//}
+
+PerspectiveInstance * IView::perspectiveInstance() const
 {
-    return d_func()->state;
+    return d_func()->instance;
 }
 
-// TODO: move to private?
-void IView::setState(State *state)
+void IView::setPerspectiveInstance(PerspectiveInstance *instance)
 {
-    Q_ASSERT(state);
-    d_func()->state = state;
+    d_func()->instance = instance;
 }
 
 void IView::setFactoryId(const QString &id)
@@ -107,3 +118,4 @@ QWidget * ViewWidget::widget() const
 {
     return m_view ? m_view->widget() : 0;
 }
+

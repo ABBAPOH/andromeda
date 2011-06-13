@@ -15,7 +15,8 @@ class QToolBar;
 
 namespace GuiSystem {
 
-class State;
+//class State;
+class PerspectiveInstance;
 class IViewPrivate;
 class GUISYSTEM_EXPORT IView : public QObject
 {
@@ -53,8 +54,11 @@ public:
     QWidget *container() const;
     void setContainer(QWidget *widget);
 
-    const State *state() const;
-    void setState(State *state);
+//    const State *state() const;
+//    void setState(State *state);
+
+    PerspectiveInstance *perspectiveInstance() const;
+    void setPerspectiveInstance(PerspectiveInstance *state);
 
 protected:
     void setFactoryId(const QString &id);

@@ -14,7 +14,7 @@ class ActionManagerPrivate;
 class ActionManager : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(ActionManager);
+    Q_DECLARE_PRIVATE(ActionManager)
 public:
     explicit ActionManager(QObject *parent = 0);
     ~ActionManager();

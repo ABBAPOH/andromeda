@@ -12,9 +12,11 @@ namespace GuiSystem {
 class PerspectivePrivate
 {
 public:
+    PerspectivePrivate() : parent(0) {}
     QString id;
     QString name;
     QStringList types;
+    Perspective *parent;
 
     QMap<QString, ViewOptions> views;
 };
@@ -34,6 +36,15 @@ Perspective::Perspective(const QString &id, QObject *parent) :
     d_ptr(new PerspectivePrivate)
 {
     setId(id);
+}
+
+Perspective::Perspective(const QString &id, Perspective *parent) :
+    QObject(parent),
+    d_ptr(new PerspectivePrivate)
+{
+    setId(id);
+
+    d_func()->parent = parent;
 }
 
 Perspective::Perspective(const QString &id, const QStringList &types, QObject *parent) :
@@ -70,6 +81,11 @@ QString Perspective::name() const
 void Perspective::setName(const QString &name)
 {
     d_func()->name = name;
+}
+
+Perspective * Perspective::parentPerspective() const
+{
+    return d_func()->parent;
 }
 
 QStringList Perspective::types() const
@@ -152,3 +168,4 @@ ViewOptions Perspective::viewOptions(const QString &id) const
 
     return d->views.value(id);
 }
+

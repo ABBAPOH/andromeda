@@ -2,8 +2,6 @@
 
 #include "filemanagerwidget.h"
 
-#include <state.h>
-
 using namespace FileManagerPlugin;
 
 FileManagerView::FileManagerView(QObject *parent) :
