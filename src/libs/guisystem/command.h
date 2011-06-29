@@ -14,6 +14,7 @@ class Command : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Command)
+    Q_DISABLE_COPY(Command)
 public:
     explicit Command(const QString &id, QObject *parent = 0);
     ~Command();
