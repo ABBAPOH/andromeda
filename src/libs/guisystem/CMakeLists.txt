@@ -4,6 +4,7 @@ set( HEADERS
     actionmanager_p.h
     centralwidget.h
     command.h
+    commandcontainer.h
     guicontroller.h
     iview.h
     iviewfactory.h
@@ -21,6 +22,7 @@ set( SOURCES
     actionmanager.cpp
     centralwidget.cpp
     command.cpp
+    commandcontainer.cpp
     guicontroller.cpp
     iview.cpp
     iviewfactory.cpp
