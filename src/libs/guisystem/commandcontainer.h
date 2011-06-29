@@ -22,10 +22,10 @@ public:
     void addCommand(Command *command);
     void addContainer(CommandContainer *container);
 
+    void clear();
+
     QMenu *menu() const;
     QMenuBar *menuBar() const;
-
-    void clear();
 
 signals:
 
