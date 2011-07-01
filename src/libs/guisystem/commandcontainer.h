@@ -24,8 +24,13 @@ public:
 
     void clear();
 
+    QString id() const;
+
     QMenu *menu() const;
     QMenuBar *menuBar() const;
+
+    QString title() const;
+    void setTitle(const QString &title);
 
 signals:
 

@@ -7,9 +7,12 @@
 #include <QDebug>
 #include <CorePlugin>
 
+#include <actionmanager.h>
+#include <commandcontainer.h>
 #include <iview.h>
 #include <perspectivewidget.h>
-#include <menubar.h>
+
+#include "mainwindowplugin.h"
 
 using namespace MainWindowPlugin;
 using namespace CorePlugin;
@@ -55,9 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addToolBar(d->toolBar);
     setUnifiedTitleAndToolBarOnMac(true);
 
-#ifndef Q_OS_MAC
-    setMenuBar(new MenuBar(this));
-#endif
+    ActionManager *manager = ActionManager::instance();
+    setMenuBar(manager->container(MENU_BAR)->menuBar());
 
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
     connect(backAction, SIGNAL(triggered()), SLOT(back()));

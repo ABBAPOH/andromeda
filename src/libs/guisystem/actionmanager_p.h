@@ -16,6 +16,9 @@ class ActionManagerPrivate : public QObject
 {
     Q_OBJECT
 public:
+    QHash<QString, QObject *> objects;
+    QList<Command *> activeCommands;
+
     QMap<QString, QAction*> mapToAction;
     QMap<QString, QMenu*> mapToMenu;
     QList<QAction*> menuBarActions;

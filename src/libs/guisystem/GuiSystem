@@ -2,7 +2,6 @@
 #include "guicontroller.h"
 #include "iview.h"
 #include "iviewfactory.h"
-#include "menubar.h"
 #include "perspective.h"
 #include "perspectiveinstance.h"
 #include "perspectiveswitcher.h"

@@ -3,6 +3,8 @@
 #include <QtCore/QtPlugin>
 #include <QtGui/QMenu>
 #include <actionmanager.h>
+#include <command.h>
+#include <commandcontainer.h>
 
 using namespace GuiSystem;
 using namespace MainWindowPlugin;
@@ -13,14 +15,10 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 }
 
 #include "mainwindow.h"
-#include <menubar.h>
 
 bool MainWindowPluginImpl::initialize()
 {
     createActions();
-#ifdef Q_OS_MAC
-    addObject(new MenuBar);
-#endif
     newWindow();
     newWindow();
 
@@ -43,49 +41,55 @@ void MainWindowPluginImpl::createActions()
 {
     ActionManager *manager = ActionManager::instance();
 
-    QMenu *fileMenu = new QMenu("File");
-    manager->addMenu(fileMenu);
-    manager->registerMenu(fileMenu, MENU_FILE);
+    CommandContainer *menuBarContainer = new CommandContainer(MENU_BAR, this);
+    manager->registerContainer(menuBarContainer);
 
-    QAction *newWindowAction = new QAction("New window", manager);
-    newWindowAction->setShortcut(tr("Ctrl+N"));
-    fileMenu->addAction(newWindowAction);
-    manager->registerAction(newWindowAction, ACTION_NEW_WINDOW);
-    connect(newWindowAction, SIGNAL(triggered()), SLOT(newWindow()));
+    CommandContainer *fileContainer = new CommandContainer(MENU_FILE, this);
+    fileContainer->setTitle(tr("File"));
+    manager->registerContainer(fileContainer);
 
-    QMenu *editMenu = new QMenu("Edit");
-    manager->addMenu(editMenu);
-    manager->registerMenu(editMenu, MENU_EDIT);
+    Command *newWindowCommand = new Command(ACTION_NEW_WINDOW, this);
+    newWindowCommand->setDefaultText(tr("New window"));
+    fileContainer->addCommand(newWindowCommand);
+    newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
+    manager->registerCommand(newWindowCommand);
 
-    QAction *undoAction = new QAction("Undo", manager);
-    undoAction->setShortcut(tr("Ctrl+Z"));
-    editMenu->addAction(undoAction);
-    manager->registerAction(undoAction, ACTION_UNDO);
+    CommandContainer *editContainer = new CommandContainer(MENU_EDIT, this);
+    editContainer->setTitle(tr("Edit"));
+    manager->registerContainer(editContainer);
 
-    QAction *redoAction = new QAction("Redo", manager);
-    redoAction->setShortcut(tr("Ctrl+Shift+Z"));
-    editMenu->addAction(redoAction);
-    manager->registerAction(redoAction, ACTION_REDO);
+    menuBarContainer->addContainer(fileContainer);
+    menuBarContainer->addContainer(editContainer);
 
-    editMenu->addSeparator();
+    Command *undoCommand = new Command(ACTION_UNDO, this);
+    undoCommand->setDefaultText(tr("Undo"));
+    undoCommand->setDefaultShortcut(tr("Ctrl+Z"));
+    editContainer->addCommand(undoCommand);
+    manager->registerCommand(undoCommand);
 
-    QAction *cutAction = new QAction("Cut", manager);
-    cutAction->setShortcut(tr("Ctrl+X"));
-    editMenu->addAction(cutAction);
-    manager->registerAction(cutAction, ACTION_CUT);
-    manager->connect("ACTION_CUT", "cut()");
+    Command *redoCommand = new Command(ACTION_REDO, this);
+    redoCommand->setDefaultText(tr("Redo"));
+    redoCommand->setDefaultShortcut(tr("Ctrl+Shift+Z"));
+    editContainer->addCommand(redoCommand);
+    manager->registerCommand(redoCommand);
 
-    QAction *copyAction = new QAction("Copy", manager);
-    copyAction->setShortcut(tr("Ctrl+C"));
-    editMenu->addAction(copyAction);
-    manager->registerAction(copyAction, ACTION_COPY);
-    manager->connect("ACTION_COPY", "copy()");
+    Command *cutCommand = new Command(ACTION_REDO, this);
+    cutCommand->setDefaultText(tr("Cut"));
+    cutCommand->setDefaultShortcut(tr("Ctrl+X"));
+    editContainer->addCommand(cutCommand);
+    manager->registerCommand(cutCommand);
 
-    QAction *pasteAction = new QAction("Paste", manager);
-    pasteAction->setShortcut(tr("Ctrl+V"));
-    editMenu->addAction(pasteAction);
-    manager->registerAction(pasteAction, ACTION_PASTE);
-    manager->connect("ACTION_PASTE", "paste()");
+    Command *copyCommand = new Command(ACTION_REDO, this);
+    copyCommand->setDefaultText(tr("Copy"));
+    copyCommand->setDefaultShortcut(tr("Ctrl+C"));
+    editContainer->addCommand(copyCommand);
+    manager->registerCommand(copyCommand);
+
+    Command *pasteCommand = new Command(ACTION_REDO, this);
+    pasteCommand->setDefaultText(tr("Paste"));
+    pasteCommand->setDefaultShortcut(tr("Ctrl+V"));
+    editContainer->addCommand(pasteCommand);
+    manager->registerCommand(pasteCommand);
 }
 
 Q_EXPORT_PLUGIN(MainWindowPluginImpl)

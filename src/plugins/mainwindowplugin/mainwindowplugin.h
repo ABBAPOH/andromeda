@@ -5,6 +5,8 @@
 
 namespace MainWindowPlugin {
 
+const char * const MENU_BAR = "MENU_BAR";
+
 const char * const MENU_FILE = "MENU_FILE";
 const char * const MENU_EDIT = "MENU_EDIT";
 

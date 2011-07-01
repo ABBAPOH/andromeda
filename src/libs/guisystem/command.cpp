@@ -68,7 +68,11 @@ QKeySequence Command::defaultShortcut() const
 
 void Command::setDefaultShortcut(const QKeySequence &key)
 {
-    d_func()->defaultShortcut = key;
+    Q_D(Command);
+
+    d->defaultShortcut = key;
+    if (!d->realAction)
+        d->action->setShortcut(key);
 }
 
 QIcon Command::defaultIcon() const
@@ -78,7 +82,11 @@ QIcon Command::defaultIcon() const
 
 void Command::setDefaultIcon(const QIcon &icon)
 {
-    d_func()->defaultIcon = icon;
+    Q_D(Command);
+
+    d->defaultIcon = icon;
+    if (!d->realAction)
+        d->action->setIcon(icon);
 }
 
 QString Command::defaultText() const
@@ -88,7 +96,11 @@ QString Command::defaultText() const
 
 void Command::setDefaultText(const QString &text)
 {
-    d_func()->defaultText = text;
+    Q_D(Command);
+
+    d->defaultText = text;
+    if (!d->realAction)
+        d->action->setText(text);
 }
 
 QString Command::id() const

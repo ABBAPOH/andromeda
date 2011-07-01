@@ -10,7 +10,6 @@ set( HEADERS
     iviewfactory.h
     iiohandler.h
 #    mainwindow.h
-    menubar.h
     perspective.h
     perspectiveinstance.h
 #    perspectiveswitcher.h
@@ -28,7 +27,6 @@ set( SOURCES
     iviewfactory.cpp
     iiohandler.cpp
 #    mainwindow.cpp
-    menubar.cpp
     perspective.cpp
     perspectiveinstance.cpp
 #    perspectiveswitcher.cpp
