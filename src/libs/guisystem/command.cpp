@@ -34,6 +34,7 @@ Command::Command(const QString &id, QObject *parent) :
 
     d->id = id;
     d->action = new QAction(this);
+    d->action->setEnabled(false);
     d->realAction = 0;
 
     connect(d->action, SIGNAL(triggered(bool)), SLOT(onTrigger(bool)));
@@ -133,11 +134,11 @@ void Command::setRealAction(QAction *action)
         d->action->setIcon(action ? action->icon() : d->defaultIcon);
     if (!(d->attributes & AttributeNonConfigurable)) {
         d->action->setShortcut(action ? action->shortcut() : d->defaultShortcut);
-        bool checkable = action->isCheckable();
+        bool checkable = action ? action->isCheckable() : false;
         d->action->setCheckable(checkable);
         if (checkable)
             d->action->setChecked(action->isChecked());
     }
 
-    d->action->setEnabled(action->isEnabled());
+    d->action->setEnabled(action ? action->isEnabled() : false);
 }
