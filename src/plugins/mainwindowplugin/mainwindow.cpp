@@ -69,6 +69,10 @@ MainWindow::MainWindow(QWidget *parent) :
     newTab();
     newTab();
     newTab();
+
+    QAction *a = new QAction(this);
+//    a->setObjectName(ACTION_NEW_WINDOW);
+    addAction(a);
 }
 
 MainWindow::~MainWindow()
