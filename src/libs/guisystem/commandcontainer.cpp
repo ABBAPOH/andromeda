@@ -12,6 +12,7 @@ class CommandContainerPrivate
 public:
     QString id;
     QObjectList commands;
+    QString title;
 };
 
 } // namespace GuiSystem
@@ -47,11 +48,17 @@ void CommandContainer::clear()
     d_func()->commands.clear();
 }
 
+QString CommandContainer::id() const
+{
+    return d_func()->id;
+}
+
 QMenu * CommandContainer::menu() const
 {
     Q_D(const CommandContainer);
 
     QMenu *menu = new QMenu;
+    menu->setTitle(title());
     foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
             menu->addAction(cmd->action());
@@ -75,4 +82,14 @@ QMenuBar * CommandContainer::menuBar() const
         }
     }
     return menuBar;
+}
+
+QString CommandContainer::title() const
+{
+    return d_func()->title;
+}
+
+void CommandContainer::setTitle(const QString &title)
+{
+    d_func()->title = title;
 }

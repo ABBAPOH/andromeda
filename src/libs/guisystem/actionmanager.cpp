@@ -1,6 +1,9 @@
 #include "actionmanager.h"
 #include "actionmanager_p.h"
 
+#include "command.h"
+#include "commandcontainer.h"
+
 #include "iview.h"
 #include "perspectiveinstance.h"
 #include "perspectivewidget.h"
@@ -46,18 +49,37 @@ void ActionManagerPrivate::onTrigger(bool checked)
     }
 }
 
-void ActionManagerPrivate::onFocusChange(QWidget *old, QWidget *now)
+void ActionManagerPrivate::onFocusChange(QWidget */*old*/, QWidget *now)
 {
-    foreach (const QString &id, connectionsToWidgets.keys()) {
-        QAction *action = mapToAction.value(id);
-        if (!action)
-            continue;
-        const QMetaObject *metaObject = now ? now->metaObject() : 0;
-        if (metaObject && metaObject->indexOfSlot(connectionsToWidgets.value(id)) != -1)
-            action->setEnabled(true);
-        else
-            action->setEnabled(false);
+    foreach (Command *c, activeCommands) {
+        c->setRealAction(0);
     }
+    activeCommands.clear();
+
+    QWidget *w = now;
+    while (w) {
+        foreach (QAction *action, w->actions()) {
+            QString id = action->objectName();
+            if (!id.isEmpty()) {
+                Command *c = qobject_cast<Command *>(objects.value(id));
+                if (c) {
+                    c->setRealAction(action);
+                    activeCommands.append(c);
+                }
+            }
+        }
+        w = w->parentWidget();
+    }
+//    foreach (const QString &id, connectionsToWidgets.keys()) {
+//        QAction *action = mapToAction.value(id);
+//        if (!action)
+//            continue;
+//        const QMetaObject *metaObject = now ? now->metaObject() : 0;
+//        if (metaObject && metaObject->indexOfSlot(connectionsToWidgets.value(id)) != -1)
+//            action->setEnabled(true);
+//        else
+//            action->setEnabled(false);
+//    }
 }
 
 ActionManager::ActionManager(QObject *parent) :
@@ -81,247 +103,30 @@ ActionManager *ActionManager::instance()
     return m_instance;
 }
 
-void ActionManager::addAction(QAction *action)
+void ActionManager::registerCommand(Command *cmd)
 {
     Q_D(ActionManager);
 
-    if (!d->menuBarActions.contains(action)) {
-        d->menuBarActions.append(action);
-        emit actionAdded(action);
-    }
+    d->objects.insert(cmd->id(), cmd);
+    if (!cmd->parent())
+        cmd->setParent(this);
 }
 
-QAction * ActionManager::addMenu(QMenu *menu)
-{
-    QAction *menuAction = menu->menuAction();
-    addAction(menuAction);
-    return menuAction;
-}
-
-void ActionManager::addSeparator()
-{
-    QAction *action = new QAction(this);
-    action->setSeparator(true);
-    addAction(action);
-}
-
-QActionList ActionManager::actions() const
-{
-    Q_D(const ActionManager);
-
-    return d->menuBarActions;
-}
-
-QActionList ActionManager::actions(const QString &viewId) const
-{
-    Q_D(const ActionManager);
-
-    QActionList result;
-    QStringList ids = d->mapToView.values(viewId);
-    for (int i = 0; i < ids.size(); i++) {
-        QAction *act = action(ids[i]);
-        if (act)
-            result.append(act);
-    }
-    return result;
-}
-
-QAction * ActionManager::action(const QString &id) const
-{
-    Q_D(const ActionManager);
-
-    return d->mapToAction.value(id);
-}
-
-QMenu * ActionManager::menu(const QString &id) const
-{
-    Q_D(const ActionManager);
-
-    return d->mapToMenu.value(id);
-}
-
-/*!
-    \fn void ActionManager::registerAction(QAction *action, const QString &id)
-    \brief Register \a action in ActionManager.
-
-    Registering of action allows you to use ActionManager::connect methods to connect to actions by
-    ids, not direct pointers. You must provied unique id for each action you want to use.
-
-    Also, you can retrieve action using ActionManager::action method to specify some properties.
-
-    \sa ActionManager::registerMenu, ActionManager::unregister
-*/
-void ActionManager::registerAction(QAction *action, const QString &id)
+void ActionManager::registerContainer(CommandContainer *c)
 {
     Q_D(ActionManager);
 
-    if (!d->mapToAction.contains(id)) {
-        d->mapToAction.insert(id, action);
-        action->setProperty("id", id);
-        QObject::connect(action, SIGNAL(triggered(bool)), d, SLOT(onTrigger(bool)));
-    } else {
-        qWarning() << "ActionManager::registerAction: Action with id" << id << "is already registered";
-    }
+    d->objects.insert(c->id(), c);
+    if (!c->parent())
+        c->setParent(this);
 }
 
-/*!
-    \fn void ActionManager::registerMenu(QMenu *menu, const QString &id)
-    \brief Register \a menu in ActionManager.
-
-    Allows retrieving menu using ActionManager::menu method. Also registers QMenu::menuAction with same
-    \a id in manager. Returns menuAction.
-
-    \sa ActionManager::registerAction, ActionManager::unregister
-*/
-void ActionManager::registerMenu(QMenu *menu, const QString &id)
+Command * ActionManager::command(const QString &id)
 {
-    Q_D(ActionManager);
-
-    d->mapToMenu.insert(id, menu);
-    registerAction(menu->menuAction(), id);
+    return qobject_cast<Command *>(d_func()->objects.value(id));
 }
 
-/*!
-    \fn void ActionManager::unregister(const QString &id)
-    \brief Unregister action or menu with \a id.
-
-    Removes all internal data of action or menu with \id from ActionManager. All connections are also
-    disconnected.
-
-    \sa ActionManager::registerAction, ActionManager::registerMenu
-*/
-void ActionManager::unregister(const QString &id)
+CommandContainer * ActionManager::container(const QString &id)
 {
-    Q_D(ActionManager);
-
-    d->mapToMenu.remove(id);
-    QAction *action = d->mapToAction.take(id);
-    if (action) {
-        action->setProperty("id", QVariant());
-        QObject::disconnect(action,  SIGNAL(triggered(bool)),
-                            d, SLOT(onTrigger(bool)));
-    }
-}
-
-/*!
-    \fn bool ActionManager::connect(const QString &actionId, const QString &viewId, const char *slot)
-    \brief Connects action with \a actionId to \a slot in \a viewId.
-
-    This function connects QAction::triggered(bool) signal of action specified by \a actionId
-    to slot in any view with id \a viewId. While changing perspectives, actions will be automatically
-    enabled and disabled if view with specified id is present in current perspective, or not. In fact,
-    there is no QObject::connect calls in this methods, so you don't warn about lot of connections -
-    receiver is determined only on triggering action, which is rather fast.
-
-    \sa ActionManager::disconnect
-*/
-bool ActionManager::connect(const QString &actionId, const QString &viewId, const char *slot)
-{
-    Q_D(ActionManager);
-
-    if (!d->mapToAction.contains(actionId)) {
-        qWarning() << "ActionManager::connect: No action" << actionId << "registered in ActionManager";
-        return false;
-    }
-
-    d->connectionsViews.insertMulti(actionId, QPair<QString, const char*>(viewId, slot));
-    d->mapToView.insertMulti(viewId, actionId);
-    return true;
-}
-
-/*!
-    \fn bool ActionManager::connect(const QString &actionId, QObject *receiver, const char *slot)
-    \brief Connects action with \a actionId directly to \a slot in \a receiver.
-
-    This function connects QAction::triggered(bool) signal of action specified by \a actionId
-    to slot in \a receiver. Action is always enabled and you should manually enable/disable it when
-    needed. You can also manually connect ot action using QObject::connect method to emulate behavior
-    of this function.
-
-    \sa ActionManager::action, ActionManager::disconnect
-*/
-bool ActionManager::connect(const QString &actionId, QObject *receiver, const char *slot)
-{
-    Q_D(ActionManager);
-
-    if (!d->mapToAction.contains(actionId)) {
-        qWarning() << "ActionManager::connect: No action" << actionId << "registered in ActionManager";
-        return false;
-    }
-
-    if (!receiver) {
-        qWarning() << "ActionManager::connect: null receiver";
-        return false;
-    }
-
-    d->connectionsObjects.insertMulti(actionId, QPair<QObject*, const char*>(receiver, slot));
-    return true;
-}
-
-/*!
-    \fn bool ActionManager::connect(const QString &actionId, const char *slot)
-    \brief Connects action with \a actionId to any widget that have method named \a slot.
-
-    This function connects QAction::triggered(bool) signal of action specified by \a actionId
-    to slot in widget. Actions enabled and disabled on changing focus if current focus widget have
-    specified slot or not.
-
-    \sa ActionManager::disconnect
-*/
-bool ActionManager::connect(const QString &actionId, const char *slot)
-{
-    Q_D(ActionManager);
-
-    if (!d->mapToAction.contains(actionId)) {
-        qWarning() << "ActionManager::connect: No action" << actionId << "registered in ActionManager";
-        return false;
-    }
-
-    d->connectionsToWidgets.insertMulti(actionId, slot);
-    return true;
-}
-
-/*!
-    \fn void ActionManager::disconnect(const QString &actionId, const QString &viewId, const char *slot)
-    \brief Disconnects previously established connection.
-
-    Disconnects connection between action with id \a actionId and view with id \a viewId.
-
-    \sa ActionManager::connect
-*/
-void ActionManager::disconnect(const QString &actionId, const QString &viewId, const char *slot)
-{
-    Q_D(ActionManager);
-
-    d->connectionsViews.remove(actionId, QPair<QString, const char*>(viewId, slot));
-}
-
-/*!
-    \fn void ActionManager::disconnect(const QString &actionId, QObject *receiver, const char *slot)
-    \brief Disconnects previously established connection.
-
-    Disconnects connection between action with id \a actionId and \a receiver.
-
-    \sa ActionManager::connect
-*/
-void ActionManager::disconnect(const QString &actionId, QObject *receiver, const char *slot)
-{
-    Q_D(ActionManager);
-
-    d->connectionsObjects.remove(actionId, QPair<QObject*, const char*>(receiver, slot));
-}
-
-/*!
-    \fn void ActionManager::disconnect(const QString &actionId, const char *slot)
-    \brief Disconnects previously established connection.
-
-    Removes connection between action with id \a actionId and any widgets.
-
-    \sa ActionManager::connect
-*/
-void ActionManager::disconnect(const QString &actionId, const char *slot)
-{
-    Q_D(ActionManager);
-
-    d->connectionsToWidgets.remove(actionId, slot);
+    return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
 }
