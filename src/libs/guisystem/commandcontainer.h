@@ -5,6 +5,7 @@
 
 class QMenu;
 class QMenuBar;
+class QToolBar;
 
 namespace GuiSystem {
 
@@ -28,6 +29,7 @@ public:
 
     QMenu *menu() const;
     QMenuBar *menuBar() const;
+    QToolBar *toolBar() const;
 
     QString title() const;
     void setTitle(const QString &title);

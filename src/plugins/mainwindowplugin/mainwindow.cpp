@@ -30,8 +30,6 @@ Page * MainWindowPrivate::currentPage() const
 
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
-    Q_Q(MainWindow);
-
     currentPage()->setCurrentPath(path);
 }
 
