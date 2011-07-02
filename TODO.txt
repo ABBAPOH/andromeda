@@ -21,3 +21,4 @@
 - relative paths in file Commands
 - filecopier & copying to same dir (append suffix with number)
 - remove history from CorePlugin
+- tags in Commands & Containers
