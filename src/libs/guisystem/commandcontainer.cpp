@@ -4,6 +4,7 @@
 
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
+#include <QtGui/QToolBar>
 
 namespace GuiSystem {
 
@@ -82,6 +83,19 @@ QMenuBar * CommandContainer::menuBar() const
         }
     }
     return menuBar;
+}
+
+QToolBar * CommandContainer::toolBar() const
+{
+    Q_D(const CommandContainer);
+
+    QToolBar *toolBar = new QToolBar;
+    foreach (QObject *o, d->commands) {
+        if (Command *cmd = qobject_cast<Command *>(o)) {
+            toolBar->addAction(cmd->action());
+        }
+    }
+    return toolBar;
 }
 
 QString CommandContainer::title() const
