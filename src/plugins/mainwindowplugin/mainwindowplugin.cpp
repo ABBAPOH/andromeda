@@ -28,12 +28,15 @@ bool MainWindowPluginImpl::initialize()
 void MainWindowPluginImpl::shutdown()
 {
 }
-#include <QApplication>
+
 void MainWindowPluginImpl::newWindow()
 {
     MainWindow *window = new MainWindow();
+    QAction *newTabAction = new QAction(this);
+    newTabAction->setObjectName(ACTION_NEW_TAB);
+    connect(newTabAction, SIGNAL(triggered()), window, SLOT(newTab()));
+    window->addAction(newTabAction);
     window->show();
-    qApp->processEvents();
     addObject(window);
 }
 
@@ -46,10 +49,15 @@ void MainWindowPluginImpl::createActions()
 
     Command *newWindowCommand = new Command(ACTION_NEW_WINDOW, this);
     newWindowCommand->setDefaultText(tr("New window"));
-    fileContainer->addCommand(newWindowCommand);
     newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
     newWindowCommand->action()->setEnabled(true);
+    fileContainer->addCommand(newWindowCommand);
     connect(newWindowCommand->action(), SIGNAL(triggered()), SLOT(newWindow()));
+
+    Command *newTabCommand = new Command(ACTION_NEW_TAB, this);
+    newTabCommand->setDefaultText(tr("New tab"));
+    newTabCommand->setDefaultShortcut(tr("Ctrl+T"));
+    fileContainer->addCommand(newTabCommand);
 
     CommandContainer *editContainer = new CommandContainer(MENU_EDIT, this);
     editContainer->setTitle(tr("Edit"));

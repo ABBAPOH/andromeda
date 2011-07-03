@@ -40,6 +40,8 @@ Command::Command(const QString &id, QObject *parent) :
     connect(d->action, SIGNAL(triggered(bool)), SLOT(onTrigger(bool)));
 
     ActionManager::instance()->registerCommand(this);
+
+    setAttributes(AttributeNonConfigurable);
 }
 
 Command::~Command()
