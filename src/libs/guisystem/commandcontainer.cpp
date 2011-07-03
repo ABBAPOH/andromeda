@@ -1,5 +1,6 @@
 #include "commandcontainer.h"
 
+#include "actionmanager.h"
 #include "command.h"
 
 #include <QtGui/QMenu>
@@ -27,6 +28,8 @@ CommandContainer::CommandContainer(const QString &id, QObject *parent) :
     Q_D(CommandContainer);
 
     d->id = id;
+
+    ActionManager::instance()->registerContainer(this);
 }
 
 CommandContainer::~CommandContainer()

@@ -22,19 +22,23 @@ public:
     explicit ActionManager(QObject *parent = 0);
     ~ActionManager();
 
-    void registerCommand(Command *cmd);
-    void registerContainer(CommandContainer *c);
-
     Command *command(const QString &id);
     CommandContainer *container(const QString &id);
 
     static ActionManager *instance();
+
+protected:
+    void registerCommand(Command *cmd);
+    void registerContainer(CommandContainer *c);
 
 private slots:
     void onFocusChange(QWidget * old, QWidget * now);
 
 protected:
     ActionManagerPrivate *d_ptr;
+
+    friend class Command;
+    friend class CommandContainer;
 };
 
 } // namespace GuiSystem
