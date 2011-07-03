@@ -1,95 +1,31 @@
 #include "actionmanager.h"
-#include "actionmanager_p.h"
 
 #include "command.h"
 #include "commandcontainer.h"
 
-#include "iview.h"
-#include "perspectiveinstance.h"
-#include "perspectivewidget.h"
+#include <QtCore/QHash>
+#include <QtGui/QApplication>
+#include <QtGui/QAction>
 
-#include <QtCore/QMetaMethod>
+namespace GuiSystem {
+
+class ActionManagerPrivate
+{
+public:
+    QHash<QString, QObject *> objects;
+    QList<Command *> activeCommands;
+};
+
+} // namespace GuiSystem
 
 using namespace GuiSystem;
-
-void ActionManagerPrivate::onTrigger(bool checked)
-{
-    qDebug() << "ActionManagerPrivate::onActionTriggered" << checked;
-
-    QAction *action = qobject_cast<QAction *>(sender());
-    Q_ASSERT(action);
-
-    // TODO: use QObject instead of QAction here
-    QString id = action->property("id").toString();
-
-    foreach (const ConnectionByObject &pair, connectionsObjects.values(id)) {
-        QObject *object = pair.first;
-        const char *slot = pair.second;
-        QMetaObject::invokeMethod(object, slot);
-    }
-
-    PerspectiveWidget *activeWidget = PerspectiveWidget::activeWidget();
-    foreach (const ConnectionById &pair, connectionsViews.values(id)) {
-        QString viewId = pair.first;
-        const char *slot = pair.second;
-        IView * view = activeWidget->currentInstance()->view(viewId);
-        if (!view) {
-            qWarning() << "Cant find view with id" << viewId;
-            continue;
-        }
-        QMetaObject::invokeMethod(view, slot);
-    }
-
-    QWidget *targetWidget = QApplication::focusWidget();
-    foreach (const char * slot, connectionsToWidgets.values(id)) {
-        const QMetaObject *metaObject = targetWidget->metaObject();
-        int index = metaObject->indexOfMethod(slot);
-        const QMetaMethod &metaMethod = metaObject->method(index);
-        metaMethod.invoke(targetWidget);
-    }
-}
-
-void ActionManagerPrivate::onFocusChange(QWidget */*old*/, QWidget *now)
-{
-    foreach (Command *c, activeCommands) {
-        c->setRealAction(0);
-    }
-    activeCommands.clear();
-
-    QWidget *w = now;
-    while (w) {
-        foreach (QAction *action, w->actions()) {
-            QString id = action->objectName();
-            if (!id.isEmpty()) {
-                Command *c = qobject_cast<Command *>(objects.value(id));
-                if (c) {
-                    c->setRealAction(action);
-                    activeCommands.append(c);
-                }
-            }
-        }
-        w = w->parentWidget();
-    }
-//    foreach (const QString &id, connectionsToWidgets.keys()) {
-//        QAction *action = mapToAction.value(id);
-//        if (!action)
-//            continue;
-//        const QMetaObject *metaObject = now ? now->metaObject() : 0;
-//        if (metaObject && metaObject->indexOfSlot(connectionsToWidgets.value(id)) != -1)
-//            action->setEnabled(true);
-//        else
-//            action->setEnabled(false);
-//    }
-}
 
 ActionManager::ActionManager(QObject *parent) :
     QObject(parent),
     d_ptr(new ActionManagerPrivate)
 {
-    Q_D(ActionManager);
-
     QObject::connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)),
-                     d, SLOT(onFocusChange(QWidget*,QWidget*)));
+                     SLOT(onFocusChange(QWidget*,QWidget*)));
 }
 
 ActionManager::~ActionManager()
@@ -129,4 +65,29 @@ Command * ActionManager::command(const QString &id)
 CommandContainer * ActionManager::container(const QString &id)
 {
     return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
+}
+
+void ActionManager::onFocusChange(QWidget */*old*/, QWidget *now)
+{
+    Q_D(ActionManager);
+
+    foreach (Command *c, d->activeCommands) {
+        c->setRealAction(0);
+    }
+    d->activeCommands.clear();
+
+    QWidget *w = now;
+    while (w) {
+        foreach (QAction *action, w->actions()) {
+            QString id = action->objectName();
+            if (!id.isEmpty()) {
+                Command *c = qobject_cast<Command *>(d->objects.value(id));
+                if (c) {
+                    c->setRealAction(action);
+                    d->activeCommands.append(c);
+                }
+            }
+        }
+        w = w->parentWidget();
+    }
 }

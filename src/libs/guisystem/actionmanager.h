@@ -30,6 +30,9 @@ public:
 
     static ActionManager *instance();
 
+private slots:
+    void onFocusChange(QWidget * old, QWidget * now);
+
 protected:
     ActionManagerPrivate *d_ptr;
 };

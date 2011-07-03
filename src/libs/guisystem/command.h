@@ -53,7 +53,7 @@ protected:
 
 protected:
     CommandPrivate *d_ptr;
-    friend class ActionManagerPrivate;
+    friend class ActionManager;
 };
 
 } // namespace GuiSystem
