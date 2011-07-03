@@ -1,7 +1,6 @@
 set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     actionmanager.h
-    actionmanager_p.h
     centralwidget.h
     command.h
     commandcontainer.h
