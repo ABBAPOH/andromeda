@@ -1,5 +1,7 @@
 #include "mainwindowplugin.h"
 
+#include "mainwindow.h"
+
 #include <QtCore/QtPlugin>
 #include <QtGui/QMenu>
 #include <actionmanager.h>
@@ -14,12 +16,9 @@ MainWindowPluginImpl::MainWindowPluginImpl() :
 {
 }
 
-#include "mainwindow.h"
-
 bool MainWindowPluginImpl::initialize()
 {
     createActions();
-    newWindow();
     newWindow();
 
     return true;

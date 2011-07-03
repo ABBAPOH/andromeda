@@ -65,12 +65,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     resize(640, 480);
     newTab();
-    newTab();
-    newTab();
-
-    QAction *a = new QAction(this);
-//    a->setObjectName(ACTION_NEW_WINDOW);
-    addAction(a);
 }
 
 MainWindow::~MainWindow()
