@@ -110,16 +110,6 @@ QList<IView *> PerspectiveInstance::views()
     return d_func()->mapToView.values();
 }
 
-void PerspectiveInstance::addView(IView *view)
-{
-    Q_D(PerspectiveInstance);
-
-    QString id = view->factoryId();
-    if (!d->mapToView.contains(id)) {
-        d->mapToView.insert(id, view);
-    }
-}
-
 IView * PerspectiveInstance::view(const QString &id) const
 {
     IView *result = d_func()->mapToView.value(id);
@@ -127,29 +117,4 @@ IView * PerspectiveInstance::view(const QString &id) const
         return result;
 
     return parentInstance() ? parentInstance()->view(id) : 0;
-}
-
-int PerspectiveInstance::index() const
-{
-    return d_func()->index;
-}
-
-void PerspectiveInstance::removeView(IView *view)
-{
-    Q_D(PerspectiveInstance);
-
-    QString id = view->factoryId();
-//    if (d->mapToView.contains(id)) {
-        d->mapToView.remove(id);
-//    }
-}
-
-void PerspectiveInstance::removeView(const QString &id)
-{
-    d_func()->mapToView.remove(id);
-}
-
-void PerspectiveInstance::setIndex(int index)
-{
-    d_func()->index = index;
 }

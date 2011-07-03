@@ -28,18 +28,6 @@ public:
     QList<IView *> views();
     IView *view(const QString &id) const;
 
-// deprecated:
-    void addView(IView *view);
-    void removeView(IView *view);
-    void removeView(const QString &id);
-
-    int index() const;
-    void setIndex(int index);
-
-signals:
-
-public slots:
-
 protected:
     PerspectiveInstancePrivate *d_ptr;
 };
