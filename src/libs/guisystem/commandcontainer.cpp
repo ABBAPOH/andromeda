@@ -34,6 +34,8 @@ CommandContainer::CommandContainer(const QString &id, QObject *parent) :
 
 CommandContainer::~CommandContainer()
 {
+    ActionManager::instance()->unregisterContainer(this);
+
     delete d_ptr;
 }
 

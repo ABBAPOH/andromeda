@@ -46,6 +46,8 @@ Command::Command(const QString &id, QObject *parent) :
 
 Command::~Command()
 {
+    ActionManager::instance()->unregisterCommand(this);
+
     delete d_ptr;
 }
 

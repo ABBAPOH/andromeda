@@ -31,6 +31,9 @@ protected:
     void registerCommand(Command *cmd);
     void registerContainer(CommandContainer *c);
 
+    void unregisterCommand(Command *cmd);
+    void unregisterContainer(CommandContainer *c);
+
 private slots:
     void onFocusChange(QWidget * old, QWidget * now);
 

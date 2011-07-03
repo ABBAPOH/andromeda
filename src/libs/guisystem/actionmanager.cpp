@@ -91,3 +91,21 @@ void ActionManager::onFocusChange(QWidget */*old*/, QWidget *now)
         w = w->parentWidget();
     }
 }
+
+void ActionManager::unregisterCommand(Command *cmd)
+{
+    Q_D(ActionManager);
+
+    d->objects.remove(cmd->id());
+    if (cmd->parent() == this)
+        cmd->deleteLater();
+}
+
+void ActionManager::unregisterContainer(CommandContainer *c)
+{
+    Q_D(ActionManager);
+
+    d->objects.remove(c->id());
+    if (c->parent() == this)
+        c->deleteLater();
+}
