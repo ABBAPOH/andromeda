@@ -15,7 +15,6 @@ public:
     PerspectivePrivate() : parent(0) {}
     QString id;
     QString name;
-    QStringList types;
     Perspective *parent;
 
     QMap<QString, ViewOptions> views;
@@ -47,17 +46,6 @@ Perspective::Perspective(const QString &id, Perspective *parent) :
     d_func()->parent = parent;
 }
 
-Perspective::Perspective(const QString &id, const QStringList &types, QObject *parent) :
-    QObject(parent),
-    d_ptr(new PerspectivePrivate)
-{
-    Q_D(Perspective);
-
-    d->id = id;
-
-    setTypes(types);
-}
-
 Perspective::~Perspective()
 {
     delete d_ptr;
@@ -86,24 +74,6 @@ void Perspective::setName(const QString &name)
 Perspective * Perspective::parentPerspective() const
 {
     return d_func()->parent;
-}
-
-QStringList Perspective::types() const
-{
-    return d_func()->types;
-}
-
-void Perspective::setTypes(const QStringList &types)
-{
-    d_func()->types = types;
-}
-
-void Perspective::addType(const QString &type)
-{
-    Q_D(Perspective);
-
-    if (!d->types.contains(type))
-        d->types.append(type);
 }
 
 void Perspective::load(const QString &file)
