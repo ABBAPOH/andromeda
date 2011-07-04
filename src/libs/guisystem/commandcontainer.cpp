@@ -67,7 +67,7 @@ QMenu * CommandContainer::menu() const
     menu->setTitle(title());
     foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
-            menu->addAction(cmd->action());
+            menu->addAction(cmd->commandAction());
         } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
             menu->addMenu(container->menu());
         }
@@ -82,7 +82,7 @@ QMenuBar * CommandContainer::menuBar() const
     QMenuBar *menuBar = new QMenuBar;
     foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
-            menuBar->addAction(cmd->action());
+            menuBar->addAction(cmd->commandAction());
         } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
             menuBar->addMenu(container->menu());
         }
@@ -97,7 +97,7 @@ QToolBar * CommandContainer::toolBar() const
     QToolBar *toolBar = new QToolBar;
     foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
-            toolBar->addAction(cmd->action());
+            toolBar->addAction(cmd->commandAction());
         }
     }
     return toolBar;

@@ -27,7 +27,8 @@ public:
     };
     Q_DECLARE_FLAGS(Attributes, Attribute)
 
-    QAction *action() const;
+    QAction *action();
+    QAction *commandAction() const;
 
     Attributes attributes() const;
     void setAttributes(Attributes attr);
@@ -49,7 +50,7 @@ private slots:
     void onTrigger(bool);
 
 protected:
-    void setRealAction(QAction *action);
+    void setRealAction(QAction *commandAction);
 
 protected:
     CommandPrivate *d_ptr;

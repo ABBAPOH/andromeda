@@ -51,7 +51,17 @@ Command::~Command()
     delete d_ptr;
 }
 
-QAction * Command::action() const
+QAction * GuiSystem::Command::action()
+{
+    QAction *a = new QAction(this);
+    a->setObjectName(id());
+    a->setIcon(defaultIcon());
+    a->setShortcut(defaultShortcut());
+    a->setText(defaultText());
+    return a;
+}
+
+QAction * Command::commandAction() const
 {
     return d_func()->action;
 }
