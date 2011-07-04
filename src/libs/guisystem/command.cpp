@@ -51,6 +51,12 @@ Command::~Command()
     delete d_ptr;
 }
 
+/*!
+    \brief Creates new action with objectName equal to command's id.
+
+    Also command sets action's text, icon and shortcut default values (as passed to setDefault* methods).
+    This action can be used in widgets and will be automatically triggered when widget have focus.
+*/
 QAction * GuiSystem::Command::action()
 {
     QAction *a = new QAction(this);
@@ -61,6 +67,9 @@ QAction * GuiSystem::Command::action()
     return a;
 }
 
+/*!
+    \brief Returns inner Command's action which is used in menus and menubars.
+*/
 QAction * Command::commandAction() const
 {
     return d_func()->action;
@@ -118,6 +127,13 @@ void Command::setDefaultText(const QString &text)
         d->action->setText(text);
 }
 
+/*!
+    \brief Returns id of this command.
+
+    When widget that have focus (or one of this parents) has action with objectName equal to id,
+    actionmanager enables this command in all menus. When command action is triggered, Command
+    automatically triggers action in focus widget.
+*/
 QString Command::id() const
 {
     return d_func()->id;
