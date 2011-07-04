@@ -9,30 +9,47 @@
 #include "perspective.h"
 #include "perspectiveinstance.h"
 
-using namespace GuiSystem;
+namespace GuiSystem
+{
 
-static PerspectiveWidget *m_activeWidget = 0;
+class PerspectiveWidgetPrivate
+{
+public:
+    QStackedLayout *layout;
+    QList<PerspectiveInstance *> topInstances;
+    PerspectiveInstance * currentInstance;
+    QHash<Perspective *, PerspectiveInstance*> mapToInstace;
+};
+
+} // namespace GuiSystem
+
+using namespace GuiSystem;
 
 PerspectiveWidget::PerspectiveWidget(QWidget *parent) :
     QWidget(parent),
-    m_layout(new QStackedLayout(this)),
-    m_currentInstance(0)
+    d_ptr(new PerspectiveWidgetPrivate)
 {
+    Q_D(PerspectiveWidget);
+
+    d->layout = new QStackedLayout(this);
+    d->currentInstance = 0;
 }
 
-PerspectiveWidget *PerspectiveWidget::activeWidget()
+PerspectiveWidget::~PerspectiveWidget()
 {
-    return m_activeWidget;
+    delete d_ptr;
 }
 
 PerspectiveInstance * PerspectiveWidget::currentInstance() const
 {
-    return m_currentInstance;
+    return d_func()->currentInstance;
 }
 
 Perspective * PerspectiveWidget::currentPerspective() const
 {
-    return m_currentInstance ? m_currentInstance->perspective() : 0;
+    Q_D(const PerspectiveWidget);
+
+    return d->currentInstance ? d->currentInstance->perspective() : 0;
 }
 
 Perspective * topPerspective(Perspective *child)
@@ -56,6 +73,8 @@ QList<Perspective *> parentPerspectives(Perspective *child)
 #warning "TODO: hide and show areas properly"
 void PerspectiveWidget::openPerspective(const QString &perspective)
 {
+    Q_D(PerspectiveWidget);
+
     Perspective *p = GuiController::instance()->perspective(perspective);
 
     if (!p)
@@ -68,15 +87,15 @@ void PerspectiveWidget::openPerspective(const QString &perspective)
     perspectives.prepend(p);
 
     int index = -1;
-    PerspectiveInstance *topInstance = m_mapToInstace.value(perspectives.first());
+    PerspectiveInstance *topInstance = d->mapToInstace.value(perspectives.first());
     if (!topInstance) {
         CentralWidget *widget = new CentralWidget(this);
         for (int i = CentralWidget::Left; i <= CentralWidget::Central; i++) {
             widget->hideArea(i);
         }
-        index = m_layout->addWidget(widget);
+        index = d->layout->addWidget(widget);
     } else {
-        index = m_topInstances.indexOf(topInstance);
+        index = d->topInstances.indexOf(topInstance);
     }
 
     for (int i = perspectives.size() - 1; i >= 0; --i) {
@@ -84,22 +103,24 @@ void PerspectiveWidget::openPerspective(const QString &perspective)
     }
 
     if (!topInstance) {
-        topInstance = m_mapToInstace.value(perspectives.first());
-        m_topInstances.append(topInstance);
+        topInstance = d->mapToInstace.value(perspectives.first());
+        d->topInstances.append(topInstance);
     }
-    m_currentInstance = m_mapToInstace.value(p);
-    m_layout->setCurrentIndex(index);
+    d->currentInstance = d->mapToInstace.value(p);
+    d->layout->setCurrentIndex(index);
 }
 
 void PerspectiveWidget::createInstance(Perspective *p, int index)
 {
-    if (m_mapToInstace.contains(p)) {
+    Q_D(PerspectiveWidget);
+
+    if (d->mapToInstace.contains(p)) {
         return;
     }
 
-    PerspectiveInstance *parent = m_mapToInstace.value(p->parentPerspective());
+    PerspectiveInstance *parent = d->mapToInstace.value(p->parentPerspective());
     PerspectiveInstance *instance = new PerspectiveInstance(parent);
-    m_mapToInstace.insert(p, instance);
+    d->mapToInstace.insert(p, instance);
 
     instance->setPerspective(p);
     foreach (IView *view, instance->views()) {
@@ -107,42 +128,8 @@ void PerspectiveWidget::createInstance(Perspective *p, int index)
         viewWidget->setView(view);
         view->setContainer(viewWidget);
 
-        CentralWidget *widget = static_cast<CentralWidget *>(m_layout->widget(index));
+        CentralWidget *widget = static_cast<CentralWidget *>(d->layout->widget(index));
         widget->addWidget(viewWidget, view->area());
         widget->showArea(view->area());
     }
-}
-
-void PerspectiveWidget::hideViews()
-{
-    PerspectiveInstance *instance = m_currentInstance;
-    while (instance) {
-        foreach (IView * view, instance->views()) {
-            view->container()->hide();
-        }
-        instance = instance->parentInstance();
-    }
-}
-
-void PerspectiveWidget::showViews()
-{
-    PerspectiveInstance *instance = m_currentInstance;
-    while (instance) {
-        foreach (IView * view, instance->views()) {
-            view->container()->show();
-        }
-        instance = instance->parentInstance();
-    }
-}
-
-#include <QDebug>
-bool GuiSystem::PerspectiveWidget::event(QEvent *e)
-{
-    if (e->type() == QEvent::WindowActivate || e->type() == QEvent::Show) {
-        if (isActiveWindow()) {
-            qDebug() << "changing current to" << this << this->isActiveWindow();
-            m_activeWidget = this;
-        }
-    }
-    return false;
 }

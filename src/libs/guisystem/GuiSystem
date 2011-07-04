@@ -1,4 +1,7 @@
 #include "actionmanager.h"
+#include "centralwidget.h"
+#include "command.h"
+#include "commandcontainer.h"
 #include "guicontroller.h"
 #include "iview.h"
 #include "iviewfactory.h"

@@ -44,8 +44,6 @@ public:
 
     QString id() const;
 
-signals:
-
 private slots:
     void onTrigger(bool);
 

@@ -34,10 +34,6 @@ public:
     QString title() const;
     void setTitle(const QString &title);
 
-signals:
-
-public slots:
-
 protected:
     CommandContainerPrivate *d_ptr;
 };

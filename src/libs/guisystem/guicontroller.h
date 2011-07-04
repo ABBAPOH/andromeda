@@ -39,8 +39,6 @@ public:
 signals:
     void factoryRemoved(const QString &id);
 
-public slots:
-
 protected:
     GuiControllerPrivate *d_ptr;
 };

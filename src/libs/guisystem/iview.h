@@ -54,9 +54,6 @@ public:
     QWidget *container() const;
     void setContainer(QWidget *widget);
 
-//    const State *state() const;
-//    void setState(State *state);
-
     PerspectiveInstance *perspectiveInstance() const;
     void setPerspectiveInstance(PerspectiveInstance *state);
 
@@ -84,10 +81,6 @@ public:
 
     QToolBar *toolBar() const;
     QWidget *widget() const;
-
-signals:
-
-public slots:
 
 protected:
     IView *m_view;

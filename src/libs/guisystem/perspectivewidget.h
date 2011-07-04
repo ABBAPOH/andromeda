@@ -12,13 +12,15 @@ class CentralWidget;
 class Perspective;
 class PerspectiveInstance;
 
+class PerspectiveWidgetPrivate;
 class PerspectiveWidget : public QWidget
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(PerspectiveWidget)
+    Q_DISABLE_COPY(PerspectiveWidget)
 public:
     explicit PerspectiveWidget(QWidget *parent = 0);
-
-    static PerspectiveWidget *activeWidget();
+    ~PerspectiveWidget();
 
     PerspectiveInstance * currentInstance() const;
 
@@ -26,21 +28,10 @@ public:
     void openPerspective(const QString &perspective);
     void closePerspective(const QString &perspective);
 
-    bool event(QEvent * e);
-
-signals:
-
-public slots:
-
 protected:
     void createInstance(Perspective * p, int index);
-    void hideViews();
-    void showViews();
 
-    QStackedLayout *m_layout;
-    QList<PerspectiveInstance *> m_topInstances;
-    PerspectiveInstance * m_currentInstance;
-    QHash<Perspective *, PerspectiveInstance*> m_mapToInstace;
+    PerspectiveWidgetPrivate *d_ptr;
 };
 
 } // namespace GuiSystem

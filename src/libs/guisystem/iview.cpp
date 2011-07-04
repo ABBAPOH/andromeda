@@ -49,18 +49,6 @@ void IView::setContainer(QWidget *widget)
     d_func()->container = widget;
 }
 
-//const State * IView::state() const
-//{
-//    return d_func()->state;
-//}
-
-//// TODO: move to private?
-//void IView::setState(State *state)
-//{
-//    Q_ASSERT(state);
-//    d_func()->state = state;
-//}
-
 PerspectiveInstance * IView::perspectiveInstance() const
 {
     return d_func()->instance;
