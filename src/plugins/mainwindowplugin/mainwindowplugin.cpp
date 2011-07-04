@@ -49,9 +49,9 @@ void MainWindowPluginImpl::createActions()
     Command *newWindowCommand = new Command(ACTION_NEW_WINDOW, this);
     newWindowCommand->setDefaultText(tr("New window"));
     newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
-    newWindowCommand->action()->setEnabled(true);
+    newWindowCommand->commandAction()->setEnabled(true);
     fileContainer->addCommand(newWindowCommand);
-    connect(newWindowCommand->action(), SIGNAL(triggered()), SLOT(newWindow()));
+    connect(newWindowCommand->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
 
     Command *newTabCommand = new Command(ACTION_NEW_TAB, this);
     newTabCommand->setDefaultText(tr("New tab"));
