@@ -38,10 +38,6 @@ public:
     QStringList views() const;
     ViewOptions viewOptions(const QString &id) const;
 
-signals:
-
-public slots:
-
 protected:
     PerspectivePrivate *d_ptr;
     friend class PerspectiveInstance;

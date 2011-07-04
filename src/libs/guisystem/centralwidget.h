@@ -23,8 +23,6 @@ public:
     void showArea(int area);
     bool isAreaVisible(int area);
 
-signals:
-
 protected:
     void resizeEvent(QResizeEvent *);
 

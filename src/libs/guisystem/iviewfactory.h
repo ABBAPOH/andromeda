@@ -12,6 +12,7 @@ namespace GuiSystem {
 
 class State;
 class IView;
+
 class GUISYSTEM_EXPORT IViewFactory : public QObject
 {
     Q_OBJECT
@@ -22,7 +23,7 @@ public:
     virtual ~IViewFactory();
 
     virtual QString id() const = 0;
-    virtual QString type() const { return ""; }
+    virtual QString type() const { return QString(); }
 
     virtual ShareMode shareMode() const { return Clone; }
 
