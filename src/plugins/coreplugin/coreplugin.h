@@ -13,12 +13,6 @@ public:
 
     virtual bool initialize();
     virtual void shutdown();
-
-signals:
-
-public slots:
-
-private:
 };
 
 #endif // COREPLUGIN_H

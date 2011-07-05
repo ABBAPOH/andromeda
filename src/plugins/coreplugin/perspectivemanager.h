@@ -20,10 +20,6 @@ public:
 
     QString perspective(const QString &mimeType) const;
 
-signals:
-
-public slots:
-
 protected:
     PerspectiveManagerPrivate *d_ptr;
 };
