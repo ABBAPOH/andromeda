@@ -57,13 +57,21 @@ Command::~Command()
     Also command sets action's text, icon and shortcut default values (as passed to setDefault* methods).
     This action can be used in widgets and will be automatically triggered when widget have focus.
 */
-QAction * GuiSystem::Command::action()
+QAction * Command::action()
 {
     QAction *a = new QAction(this);
     a->setObjectName(id());
     a->setIcon(defaultIcon());
     a->setShortcut(defaultShortcut());
     a->setText(defaultText());
+    return a;
+}
+
+QAction * Command::action(QWidget *w, const char *slot)
+{
+    QAction * a = action();
+    w->addAction(a);
+    connect(a, SIGNAL(triggered()), w, slot);
     return a;
 }
 
