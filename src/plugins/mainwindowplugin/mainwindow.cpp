@@ -33,6 +33,16 @@ void MainWindowPrivate::onTextEntered(const QString &path)
     currentTab()->setCurrentPath(path);
 }
 
+void MainWindowPrivate::onDisplayNameChanged(const QString &name)
+{
+    Tab *tab = qobject_cast<Tab *>(sender());
+    if (!tab)
+        return;
+
+    int index = tabWidget->indexOf(tab);
+    tabWidget->setTabText(index, name);
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new MainWindowPrivate(this))
@@ -88,6 +98,7 @@ void MainWindow::newTab()
 
     Tab *tab = new Tab(d->tabWidget);
     connect(tab, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
+    connect(tab, SIGNAL(displayNameChanged(QString)), d, SLOT(onDisplayNameChanged(QString)));
     int index = d->tabWidget->addTab(tab, "tab");
     tab->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
     d->tabWidget->setCurrentIndex(index);

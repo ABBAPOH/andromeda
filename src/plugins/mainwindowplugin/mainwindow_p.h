@@ -27,6 +27,7 @@ public:
 
 public slots:
     void onTextEntered(const QString &);
+    void onDisplayNameChanged(const QString &);
 };
 
 } // namespace MainWindowPlugin
