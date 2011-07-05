@@ -23,14 +23,14 @@ int MainWindowPrivate::currentIndex() const
     return tabWidget->currentIndex();
 }
 
-Page * MainWindowPrivate::currentPage() const
+CorePlugin::Tab * MainWindowPrivate::currentTab() const
 {
-    return pages.at(currentIndex());
+    return qobject_cast<CorePlugin::Tab *>(tabWidget->currentWidget());
 }
 
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
-    currentPage()->setCurrentPath(path);
+    currentTab()->setCurrentPath(path);
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -74,24 +74,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::back()
 {
-    d_func()->currentPage()->history()->back();
+    d_func()->currentTab()->history()->back();
 }
 
 void MainWindow::forward()
 {
-    d_func()->currentPage()->history()->forward();
+    d_func()->currentTab()->history()->forward();
 }
 
 void MainWindow::newTab()
 {
     Q_D(MainWindow);
 
-    PerspectiveWidget *widget = new PerspectiveWidget;
-    Page *page = new Page;
-    page->setPerspectiveWidget(widget);
-    connect(page, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
-    d->pages.append(page);
-    d->tabWidget->addTab(widget, "tab");
-    page->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    Tab *tab = new Tab(d->tabWidget);
+    connect(tab, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
+    d->tabWidget->addTab(tab, "tab");
+    tab->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
 }
-

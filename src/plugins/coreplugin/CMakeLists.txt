@@ -8,8 +8,8 @@ set( HEADERS
     historyitem.h
     ioptionspage.h
     imainview.h
-    page.h
     perspectivemanager.h
+    tab.h
     settingsdialog.h
     settingsdialog_p.h
    )
@@ -20,8 +20,8 @@ set( SOURCES
     historyitem.cpp
     ioptionspage.cpp
     imainview.cpp
-    page.cpp
     perspectivemanager.cpp
+    tab.cpp
     settingsdialog.cpp
    )
 set( FORMS

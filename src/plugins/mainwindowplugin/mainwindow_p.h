@@ -6,7 +6,6 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <enteredlineedit.h>
-#include <page.h>
 #include <CorePlugin>
 
 namespace MainWindowPlugin {
@@ -22,10 +21,9 @@ public:
     EnteredLineEdit *lineEdit;
     QToolBar *toolBar;
     QTabWidget *tabWidget;
-    QList<CorePlugin::Page*> pages;
 
     int currentIndex() const;
-    CorePlugin::Page *currentPage() const;
+    CorePlugin::Tab *currentTab() const;
 
 public slots:
     void onTextEntered(const QString &);
