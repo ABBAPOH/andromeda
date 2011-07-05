@@ -89,6 +89,22 @@ void MainWindow::newTab()
     Tab *tab = new Tab(d->tabWidget);
     connect(tab, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
     int index = d->tabWidget->addTab(tab, "tab");
-    d->tabWidget->setCurrentIndex(index);
     tab->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    d->tabWidget->setCurrentIndex(index);
+}
+
+void MainWindow::closeTab()
+{
+    Q_D(MainWindow);
+
+    if (d->tabWidget->count() <= 1) {
+        close();
+        deleteLater();
+        return;
+    }
+
+    int index = d->tabWidget->currentIndex();
+    QWidget *widget = d->tabWidget->widget(index);
+    d->tabWidget->removeTab(index);
+    widget->deleteLater();
 }

@@ -15,9 +15,11 @@ public:
     ~MainWindow();
 
 public slots:
-    void newTab();
     void back();
     void forward();
+
+    void newTab();
+    void closeTab();
 
 protected:
     MainWindowPrivate * d_ptr;
