@@ -12,8 +12,8 @@ class CorePrivate;
 class COREPLUGIN_EXPORT Core : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(Core);
-    Q_DISABLE_COPY(Core);
+    Q_DECLARE_PRIVATE(Core)
+    Q_DISABLE_COPY(Core)
 
 public:
     explicit Core(QObject *parent = 0);
@@ -27,10 +27,6 @@ public:
     PerspectiveManager *perspectiveManager() const;
 
     QObject *getObject(const QString &name);
-
-signals:
-
-public slots:
 
 protected:
     CorePrivate *d_ptr;
