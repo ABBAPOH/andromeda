@@ -11,7 +11,8 @@ const char * const MENU_FILE = "MENU_FILE";
 const char * const MENU_EDIT = "MENU_EDIT";
 
 const char * const ACTION_NEW_WINDOW = "ACTION_NEW_WINDOW";
-const char * const ACTION_NEW_TAB = "ACTION_NEW_WINDOW";
+const char * const ACTION_NEW_TAB = "ACTION_NEW_TAB";
+const char * const ACTION_CLOSE_TAB = "ACTION_CLOSE_TAB";
 const char * const ACTION_UNDO = "ACTION_UNDO";
 const char * const ACTION_REDO = "ACTION_REDO";
 const char * const ACTION_CUT = "ACTION_CUT";

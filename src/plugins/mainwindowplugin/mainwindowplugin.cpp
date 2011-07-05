@@ -35,6 +35,7 @@ void MainWindowPluginImpl::newWindow()
     newTabAction->setObjectName(ACTION_NEW_TAB);
     connect(newTabAction, SIGNAL(triggered()), window, SLOT(newTab()));
     window->addAction(newTabAction);
+    ActionManager::instance()->command(ACTION_CLOSE_TAB)->action(window, SLOT(closeTab()));
     window->show();
     addObject(window);
 }
@@ -57,6 +58,11 @@ void MainWindowPluginImpl::createActions()
     newTabCommand->setDefaultText(tr("New tab"));
     newTabCommand->setDefaultShortcut(tr("Ctrl+T"));
     fileContainer->addCommand(newTabCommand);
+
+    Command *closeTabCommand = new Command(ACTION_CLOSE_TAB, this);
+    closeTabCommand->setDefaultText(tr("Close"));
+    closeTabCommand->setDefaultShortcut(tr("Ctrl+W"));
+    fileContainer->addCommand(closeTabCommand);
 
     CommandContainer *editContainer = new CommandContainer(MENU_EDIT, this);
     editContainer->setTitle(tr("Edit"));
