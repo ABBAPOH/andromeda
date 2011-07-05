@@ -88,6 +88,7 @@ void MainWindow::newTab()
 
     Tab *tab = new Tab(d->tabWidget);
     connect(tab, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
-    d->tabWidget->addTab(tab, "tab");
+    int index = d->tabWidget->addTab(tab, "tab");
+    d->tabWidget->setCurrentIndex(index);
     tab->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
 }
