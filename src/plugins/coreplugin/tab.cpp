@@ -49,6 +49,7 @@ void Tab::onIndexChanged(int index)
 
     d->openPerspective(item);
     emit currentPathChanged(d->currentPath);
+    emit displayNameChanged(displayName());
 }
 
 QString getMimeType(const QString &path)
@@ -130,6 +131,7 @@ void Tab::setCurrentPath(const QString & currentPath)
         d->currentPath = currentPath;
         d->openPerspective(d->currentPath);
         emit currentPathChanged(d->currentPath);
+        emit displayNameChanged(displayName());
     }
 }
 
@@ -146,4 +148,12 @@ PerspectiveWidget * Tab::perspectiveWidget() const
 void Tab::resizeEvent(QResizeEvent *e)
 {
     d_func()->perspectiveWidget->resize(e->size());
+}
+
+QString Tab::displayName() const
+{
+    QFileInfo fi(currentPath());
+    if (fi.exists())
+        return fi.fileName();
+    return QString();
 }
