@@ -1,5 +1,5 @@
 #include "core.h"
 #include "history.h"
 #include "historyitem.h"
-#include "page.h"
+#include "tab.h"
 #include "perspectivemanager.h"
