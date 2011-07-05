@@ -28,6 +28,7 @@ public:
     Q_DECLARE_FLAGS(Attributes, Attribute)
 
     QAction *action();
+    QAction *action(QWidget *w, const char *slot);
     QAction *commandAction() const;
 
     Attributes attributes() const;
