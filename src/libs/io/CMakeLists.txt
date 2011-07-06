@@ -3,6 +3,7 @@ set( HEADERS
     io_global.h
    )
 set( SOURCES
+    main.cpp
    )
 set( FORMS
    )

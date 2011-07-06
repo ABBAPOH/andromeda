@@ -1,6 +1,8 @@
 #ifndef DUALPANEWIDGET_H
 #define DUALPANEWIDGET_H
 
+#include "filemanagerplugin_global.h"
+
 #include <QtGui/QWidget>
 #include <history.h>
 
@@ -9,7 +11,7 @@ namespace FileManagerPlugin {
 class FileManagerWidget;
 
 class DualPaneWidgetPrivate;
-class DualPaneWidget : public QWidget
+class FILEMANAGERPLUGIN_EXPORT DualPaneWidget : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(DualPaneWidget)

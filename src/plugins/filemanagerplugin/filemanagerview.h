@@ -1,7 +1,7 @@
 #ifndef FILEMANAGERVIEW_H
 #define FILEMANAGERVIEW_H
 
-#include <imainview.h>.h>
+#include <imainview.h>
 #include <iviewfactory.h>
 
 namespace FileManagerPlugin {

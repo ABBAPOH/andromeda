@@ -10,6 +10,7 @@ TestPlugin3::TestPlugin3()
 bool TestPlugin3::initialize()
 {
     qDebug("TestPlugin3::initialize");
+
     return true;
 }
 

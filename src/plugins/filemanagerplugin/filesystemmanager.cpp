@@ -186,7 +186,9 @@ void MoveCommand::redo()
             int i = 0;
             do  {
                 i++;
+#ifndef Q_CC_MSVC
 #warning "Uses mimetypes to determine type and extension"
+#endif
                 targetPath = dir.absolutePath() + QDir::separator() + info.completeBaseName() + ' ' +
                         QString::number(i);
                 if (info.suffix() != "") {

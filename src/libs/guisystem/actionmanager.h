@@ -1,6 +1,8 @@
 #ifndef ACTIONMANAGER_H
 #define ACTIONMANAGER_H
 
+#include "guisystem_global.h"
+
 #include <QtCore/QObject>
 
 class QAction;
@@ -14,7 +16,7 @@ class Command;
 class CommandContainer;
 
 class ActionManagerPrivate;
-class ActionManager : public QObject
+class GUISYSTEM_EXPORT ActionManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ActionManager)

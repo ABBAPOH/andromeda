@@ -1,10 +1,12 @@
 #ifndef NAVIGATIONMODEL_H
 #define NAVIGATIONMODEL_H
 
-#include <QAbstractItemModel>
+#include "filemanagerplugin_global.h"
+
+#include <QtCore/QAbstractItemModel>
 
 class NavigationModelPrivate;
-class NavigationModel : public QAbstractItemModel
+class FILEMANAGERPLUGIN_EXPORT NavigationModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(NavigationModel)

@@ -1,6 +1,8 @@
 #ifndef PERSPECTIVEWIDGET_H
 #define PERSPECTIVEWIDGET_H
 
+#include "guisystem_global.h"
+
 #include <QtGui/QWidget>
 #include <QHash>
 
@@ -13,7 +15,7 @@ class Perspective;
 class PerspectiveInstance;
 
 class PerspectiveWidgetPrivate;
-class PerspectiveWidget : public QWidget
+class GUISYSTEM_EXPORT PerspectiveWidget : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PerspectiveWidget)

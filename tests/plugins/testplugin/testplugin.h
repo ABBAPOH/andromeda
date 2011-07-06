@@ -9,8 +9,7 @@ class TestPlugin : public ExtensionSystem::IPlugin
     Q_OBJECT
 public:
     TestPlugin();
-    virtual bool initialize();
-    virtual QList<ExtensionSystem::PluginDependency> dependencies();
+    bool initialize();
 
 };
 

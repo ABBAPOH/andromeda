@@ -1,6 +1,8 @@
 #ifndef COMMANDCONTAINER_H
 #define COMMANDCONTAINER_H
 
+#include "guisystem_global.h"
+
 #include <QtCore/QObject>
 
 class QMenu;
@@ -11,7 +13,7 @@ namespace GuiSystem {
 
 class Command;
 class CommandContainerPrivate;
-class CommandContainer : public QObject
+class GUISYSTEM_EXPORT CommandContainer : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(CommandContainer)

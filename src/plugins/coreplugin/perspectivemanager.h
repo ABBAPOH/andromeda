@@ -1,12 +1,14 @@
 #ifndef PERSPECTIVEMANAGER_H
 #define PERSPECTIVEMANAGER_H
 
+#include "coreplugin_global.h"
+
 #include <QtCore/QObject>
 
 namespace CorePlugin {
 
 class PerspectiveManagerPrivate;
-class PerspectiveManager : public QObject
+class COREPLUGIN_EXPORT PerspectiveManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PerspectiveManager)
