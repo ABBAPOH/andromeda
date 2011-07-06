@@ -49,6 +49,7 @@ qt4_automoc(
 )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
+include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/mainwindowplugin )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )

@@ -75,6 +75,11 @@ void MainWindowPluginImpl::createActions()
     closeTabCommand->setDefaultShortcut(tr("Ctrl+W"));
     fileContainer->addCommand(closeTabCommand);
 
+    Command *removeCommand = new Command(ACTION_REMOVE, this);
+    removeCommand->setDefaultText(tr("Remove"));
+    removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
+    fileContainer->addCommand(removeCommand);
+
     CommandContainer *editContainer = new CommandContainer(MENU_EDIT, this);
     editContainer->setTitle(tr("Edit"));
     menuBarContainer->addContainer(editContainer);
@@ -122,17 +127,17 @@ void MainWindowPluginImpl::createActions()
     goToContainer->setTitle(tr("Go To"));
     menuBarContainer->addContainer(goToContainer);
 
-    Command *backCommand = new Command(ACTION_SELECT_ALL, this);
+    Command *backCommand = new Command(ACTION_BACK, this);
     backCommand->setDefaultText(tr("Back"));
     backCommand->setDefaultShortcut(tr("Ctrl+["));
     goToContainer->addCommand(backCommand);
 
-    Command *forwardCommand = new Command(ACTION_SELECT_ALL, this);
+    Command *forwardCommand = new Command(ACTION_FORWARD, this);
     forwardCommand->setDefaultText(tr("Forward"));
     forwardCommand->setDefaultShortcut(tr("Ctrl+]"));
     goToContainer->addCommand(forwardCommand);
 
-    Command *upOneLevelCommand = new Command(ACTION_SELECT_ALL, this);
+    Command *upOneLevelCommand = new Command(ACTION_UP, this);
     upOneLevelCommand->setDefaultText(tr("Up one level"));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
