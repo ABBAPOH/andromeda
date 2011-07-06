@@ -8,6 +8,7 @@
 #include <CorePlugin>
 
 #include <actionmanager.h>
+#include <command.h>
 #include <commandcontainer.h>
 #include <iview.h>
 #include <perspectivewidget.h>
@@ -52,7 +53,20 @@ MainWindow::MainWindow(QWidget *parent) :
     d->tabWidget = new QTabWidget;
     d->tabWidget->setDocumentMode(true);
     setCentralWidget(d->tabWidget);
+
     d->lineEdit = new EnteredLineEdit(this);
+    d->lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
+    ActionManager *actionManager = ActionManager::instance();
+    actionManager->command(Constants::Ids::Actions::Undo)->action(d->lineEdit, SLOT(undo()));
+    actionManager->command(Constants::Ids::Actions::Redo)->action(d->lineEdit, SLOT(redo()));
+    QAction *a = new QAction(this);
+    a->setSeparator(true);
+    d->lineEdit->addAction(a);
+    actionManager->command(Constants::Ids::Actions::Cut)->action(d->lineEdit, SLOT(cut()));
+    actionManager->command(Constants::Ids::Actions::Copy)->action(d->lineEdit, SLOT(copy()));
+    actionManager->command(Constants::Ids::Actions::Paste)->action(d->lineEdit, SLOT(paste()));
+    actionManager->command(Constants::Ids::Actions::SelectAll)->action(d->lineEdit, SLOT(selectAll()));
+
     d->toolBar = new QToolBar(this);
 
     QAction *backAction = new QAction(QIcon(":/images/icons/back.png"), "Back", this);
