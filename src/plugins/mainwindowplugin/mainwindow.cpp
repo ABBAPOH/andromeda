@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setUnifiedTitleAndToolBarOnMac(true);
 
     ActionManager *manager = ActionManager::instance();
-    setMenuBar(manager->container(MENU_BAR)->menuBar());
+    setMenuBar(manager->container(Constants::Ids::Menus::MenuBar)->menuBar());
 
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
     connect(backAction, SIGNAL(triggered()), SLOT(back()));
