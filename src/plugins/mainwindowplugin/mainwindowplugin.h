@@ -17,6 +17,7 @@ const char * const ACTION_NEW_TAB = "ACTION_NEW_TAB";
 const char * const ACTION_NEW_FOLDER = "ACTION_NEW_FOLDER";
 const char * const ACTION_OPEN = "ACTION_OPEN";
 const char * const ACTION_CLOSE_TAB = "ACTION_CLOSE_TAB";
+const char * const ACTION_REMOVE = "ACTION_REMOVE";
 const char * const ACTION_UNDO = "ACTION_UNDO";
 const char * const ACTION_REDO = "ACTION_REDO";
 const char * const ACTION_CUT = "ACTION_CUT";

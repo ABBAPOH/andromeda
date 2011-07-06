@@ -2,7 +2,6 @@
 #include "filemanagerwidget_p.h"
 
 #include <QtGui/QKeyEvent>
-#include <QtGui/QAction>
 #include <QDebug>
 
 using namespace FileManagerPlugin;
@@ -104,24 +103,6 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     setViewMode(ListView);
 
-    QAction *openAction = new QAction(this);
-#ifdef Q_OS_MAC
-    openAction->setShortcut(tr("Ctrl+O"));
-#else
-    openAction->setShortcut(tr("Return"));
-#endif
-    connect(openAction, SIGNAL(triggered()), SLOT(open()));
-    addAction(openAction);
-
-    QAction *removeAction = new QAction(this);
-    removeAction->setShortcut(tr("Ctrl+Shift+Backspace"));
-    connect(removeAction, SIGNAL(triggered()), SLOT(remove()));
-    addAction(removeAction);
-
-    QAction *upAction = new QAction(this);
-    upAction->setShortcut(tr("Ctrl+Up"));
-    connect(upAction, SIGNAL(triggered()), SLOT(up()));
-    addAction(upAction);
     setMinimumSize(200, 200);
 }
 
@@ -321,5 +302,20 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
         d->blockEvents = false;
     } else {
         d->blockEvents = false;
+    }
+}
+
+void FileManagerWidget::newFolder()
+{
+    Q_D(FileManagerWidget);
+    QString dir = currentPath();
+    if (dir == "") {
+//        emit error;
+    } else {
+        QString  folderName = tr("New Folder");
+        QModelIndex index = d->model->mkdir(d->model->index(dir), folderName);
+
+        if (index.isValid())
+            d->currentView->edit(index);
     }
 }

@@ -54,6 +54,7 @@ public slots:
     void forward();
     void open();
     void up();
+    void newFolder();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
