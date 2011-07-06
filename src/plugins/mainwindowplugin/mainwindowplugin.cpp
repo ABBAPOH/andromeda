@@ -76,6 +76,8 @@ void MainWindowPluginImpl::createActions()
     closeTabCommand->setDefaultShortcut(tr("Ctrl+W"));
     fileContainer->addCommand(closeTabCommand);
 
+    fileContainer->addSeparator();
+
     Command *removeCommand = new Command(Constants::Ids::Actions::Remove, this);
     removeCommand->setDefaultText(tr("Remove"));
     removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
@@ -94,6 +96,8 @@ void MainWindowPluginImpl::createActions()
     redoCommand->setDefaultText(tr("Redo"));
     redoCommand->setDefaultShortcut(tr("Ctrl+Shift+Z"));
     editContainer->addCommand(redoCommand);
+
+    editContainer->addSeparator();
 
     Command *cutCommand = new Command(Constants::Ids::Actions::Cut, this);
     cutCommand->setDefaultText(tr("Cut"));
