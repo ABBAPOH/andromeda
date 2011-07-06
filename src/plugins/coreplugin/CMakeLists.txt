@@ -1,5 +1,6 @@
 set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
+    constants.h
     coreplugin_global.h
     core.h
     core_p.h

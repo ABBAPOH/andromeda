@@ -4,7 +4,7 @@
 
 #include <actionmanager.h>
 #include <command.h>
-#include <mainwindowplugin.h>
+#include <constants.h>
 
 using namespace FileManagerPlugin;
 
@@ -16,13 +16,13 @@ FileManagerView::FileManagerView(QObject *parent) :
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
 
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
-    actionManager->command(MainWindowPlugin::ACTION_OPEN)->action(m_widget, SLOT(open()));
-    actionManager->command(MainWindowPlugin::ACTION_NEW_FOLDER)->action(m_widget, SLOT(newFolder()));
-    actionManager->command(MainWindowPlugin::ACTION_REMOVE)->action(m_widget, SLOT(remove()));
+    actionManager->command(Constants::Ids::Actions::Open)->action(m_widget, SLOT(open()));
+    actionManager->command(Constants::Ids::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
+    actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
 
-    actionManager->command(MainWindowPlugin::ACTION_BACK)->action(m_widget, SLOT(back()));
-    actionManager->command(MainWindowPlugin::ACTION_FORWARD)->action(m_widget, SLOT(forward()));
-    actionManager->command(MainWindowPlugin::ACTION_UP)->action(m_widget, SLOT(up()));
+    actionManager->command(Constants::Ids::Actions::Back)->action(m_widget, SLOT(back()));
+    actionManager->command(Constants::Ids::Actions::Forward)->action(m_widget, SLOT(forward()));
+    actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 }
 
 void FileManagerView::initialize()
