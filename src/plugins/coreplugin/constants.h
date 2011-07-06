@@ -32,6 +32,8 @@ const char * const Copy = "Actions.Copy";
 const char * const Paste = "Actions.Paste";
 const char * const SelectAll = "Actions.SelectAll";
 
+const char * const DualPane = "Actions.DualPane";
+
 const char * const Back = "Actions.Back";
 const char * const Forward = "Actions.Forward";
 const char * const Up = "Actions.Up";
