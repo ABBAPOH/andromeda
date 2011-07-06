@@ -1,6 +1,8 @@
 #ifndef FILESYSTEMMANAGER_H
 #define FILESYSTEMMANAGER_H
 
+#include "filemanagerplugin_global.h"
+
 #include <QtCore/QObject>
 
 class QUndoStack;
@@ -9,7 +11,7 @@ class QtFileCopier;
 namespace FileManagerPlugin {
 
 class FileSystemManagerPrivate;
-class FileSystemManager : public QObject
+class FILEMANAGERPLUGIN_EXPORT FileSystemManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileSystemManager)

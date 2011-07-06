@@ -67,7 +67,7 @@ CommandContainer * ActionManager::container(const QString &id)
     return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
 }
 
-void ActionManager::onFocusChange(QWidget */*old*/, QWidget *now)
+void ActionManager::onFocusChange(QWidget * /*old*/, QWidget *now)
 {
     Q_D(ActionManager);
 

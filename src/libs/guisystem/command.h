@@ -1,6 +1,8 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "guisystem_global.h"
+
 #include <QtCore/QObject>
 
 class QAction;
@@ -10,7 +12,7 @@ class QKeySequence;
 namespace GuiSystem {
 
 class CommandPrivate;
-class Command : public QObject
+class GUISYSTEM_EXPORT Command : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Command)

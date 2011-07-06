@@ -42,7 +42,9 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
         m_manager->copyFiles(files, to);
         break;
     }
+#ifndef Q_CC_MSVC
 #warning "TODO: implement"
+#endif
 //    case Qt::LinkAction: {
 //        LinkCommand * command = new LinkCommand();
 //        for (; it != urls.constEnd(); ++it) {

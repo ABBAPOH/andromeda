@@ -1,8 +1,10 @@
 #ifndef QNAVIGATIONPANEL_H
 #define QNAVIGATIONPANEL_H
 
-#include <QWidget>
-#include <QHash>
+#include "filemanagerplugin_global.h"
+
+#include <QtCore/QHash>
+#include <QtGui/QWidget>
 
 class NavigationModel;
 class QModelIndex;
@@ -13,7 +15,7 @@ class QTreeWidgetItem;
 namespace FileManagerPlugin {
 
 class NavigationPanelPrivate;
-class NavigationPanel : public QWidget
+class FILEMANAGERPLUGIN_EXPORT NavigationPanel : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(NavigationPanel)

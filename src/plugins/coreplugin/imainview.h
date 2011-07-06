@@ -8,7 +8,7 @@
 
 namespace CorePlugin {
 
-class IMainView : public GuiSystem::IView
+class COREPLUGIN_EXPORT IMainView : public GuiSystem::IView
 {
     Q_OBJECT
 public:

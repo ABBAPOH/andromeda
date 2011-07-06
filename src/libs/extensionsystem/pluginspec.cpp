@@ -154,7 +154,7 @@ bool PluginSpecPrivate::unload()
     qDebug() << "unloading" << name << version.toString();
     qDebug() << "  unloading dependencies for" << name;
     foreach (PluginSpec *spec, dependentSpecs) {
-        spec->unload();;
+        spec->unload();
         if (spec->loaded()) {
             ok = false;
             errorMessage += "Can't unload plugin: " + spec->name() + " is not unloaded";

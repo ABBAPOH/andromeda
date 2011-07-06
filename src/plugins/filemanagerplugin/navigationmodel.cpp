@@ -63,6 +63,7 @@ QString getDriveName(const QDriveInfo &info)
 //#endif
 
 //    return name;
+    return QString();
 }
 
 void NavigationModelPrivate::onDriveAdded(const QString &path)

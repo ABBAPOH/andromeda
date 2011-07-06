@@ -1,8 +1,9 @@
 #ifndef FILEMANAGERWIDGET_H
 #define FILEMANAGERWIDGET_H
 
-#include <QtGui/QWidget>
+#include "filemanagerplugin_global.h"
 
+#include <QtGui/QWidget>
 #include <history.h>
 
 class QFileSystemModel;
@@ -13,7 +14,7 @@ class FileSystemUndoManager;
 class FileSystemManager;
 
 class FileManagerWidgetPrivate;
-class FileManagerWidget : public QWidget
+class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileManagerWidget)

@@ -70,7 +70,9 @@ QList<Perspective *> parentPerspectives(Perspective *child)
     return result;
 }
 
+#ifndef Q_CC_MSVC
 #warning "TODO: hide and show areas properly"
+#endif
 void PerspectiveWidget::openPerspective(const QString &perspective)
 {
     Q_D(PerspectiveWidget);
