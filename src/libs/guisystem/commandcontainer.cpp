@@ -49,6 +49,13 @@ void CommandContainer::addContainer(CommandContainer *container)
     d_func()->commands.append(container);
 }
 
+void CommandContainer::addSeparator()
+{
+    Command *cmd = new Command(QString(), this);
+    cmd->commandAction()->setSeparator(true);
+    addCommand(cmd);
+}
+
 void CommandContainer::clear()
 {
     d_func()->commands.clear();

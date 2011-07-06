@@ -22,6 +22,7 @@ public:
 
     void addCommand(Command *command);
     void addContainer(CommandContainer *container);
+    void addSeparator();
 
     void clear();
 
