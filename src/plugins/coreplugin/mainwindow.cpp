@@ -13,9 +13,6 @@
 #include <iview.h>
 #include <perspectivewidget.h>
 
-#include "mainwindowplugin.h"
-
-using namespace MainWindowPlugin;
 using namespace CorePlugin;
 using namespace GuiSystem;
 

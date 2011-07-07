@@ -13,6 +13,11 @@ public:
 
     virtual bool initialize();
     virtual void shutdown();
-};
+
+public slots:
+    void newWindow();
+
+private:
+    void createActions();};
 
 #endif // COREPLUGIN_H
