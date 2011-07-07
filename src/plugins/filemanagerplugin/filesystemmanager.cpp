@@ -5,7 +5,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtGui/QUndoCommand>
-#include <QtFileCopier>
+
+#include "QtFileCopier"
 
 namespace FileManagerPlugin {
 
