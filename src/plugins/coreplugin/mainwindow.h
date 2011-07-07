@@ -3,7 +3,7 @@
 
 #include <QtGui/QMainWindow>
 
-namespace MainWindowPlugin {
+namespace CorePlugin {
 
 class MainWindowPrivate;
 class MainWindow : public QMainWindow
@@ -25,6 +25,6 @@ protected:
     MainWindowPrivate * d_ptr;
 };
 
-} // namespace MainWindowPlugin
+} // namespace CorePlugin
 
 #endif // MAINWINDOWPLUGIN_MAINWINDOW_H

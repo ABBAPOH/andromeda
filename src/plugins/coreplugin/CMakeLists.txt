@@ -9,6 +9,8 @@ set( HEADERS
     historyitem.h
     ioptionspage.h
     imainview.h
+    mainwindow.h
+    mainwindow_p.h
     perspectivemanager.h
     tab.h
     settingsdialog.h
@@ -21,6 +23,7 @@ set( SOURCES
     historyitem.cpp
     ioptionspage.cpp
     imainview.cpp
+    mainwindow.cpp
     perspectivemanager.cpp
     tab.cpp
     settingsdialog.cpp
@@ -28,14 +31,17 @@ set( SOURCES
 set( FORMS
    )
 
+set( RESOURCES resources.qrc )
+
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 
-include_directories( editormanager )
+include_directories( ${PROJECT_SOURCE_DIR}/src/shared/widgets )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
 
-add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
-target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem )
+add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
+target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem widgets)
 
 install_spec( coreplugin.spec )

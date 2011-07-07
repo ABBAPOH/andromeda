@@ -8,7 +8,7 @@
 #include <enteredlineedit.h>
 #include <CorePlugin>
 
-namespace MainWindowPlugin {
+namespace CorePlugin {
 
 class MainWindowPrivate : public QObject
 {
@@ -30,6 +30,6 @@ public slots:
     void onDisplayNameChanged(const QString &);
 };
 
-} // namespace MainWindowPlugin
+} // namespace CorePlugin
 
 #endif // MAINWINDOW_P_H
