@@ -55,6 +55,7 @@ public slots:
     void redo();
     void copy();
     void paste();
+    void selectAll();
 
     void back();
     void forward();
