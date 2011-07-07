@@ -46,16 +46,19 @@ signals:
 
 public slots:
     void setCurrentPath(const QString &path);
-    void copy();
-    void paste();
+
+    void newFolder();
+    void open();
     void remove();
+
     void undo();
     void redo();
+    void copy();
+    void paste();
+
     void back();
     void forward();
-    void open();
     void up();
-    void newFolder();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
