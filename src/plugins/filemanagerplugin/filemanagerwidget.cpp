@@ -157,6 +157,22 @@ QString FileManagerWidget::currentPath() const
     return d->currentPath;
 }
 
+void FileManagerWidget::setCurrentPath(const QString &path)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->currentPath != path) {
+        d->currentPath = path;
+        QModelIndex index = d->model->index(path);
+        d->currentView->setRootIndex(index);
+
+        HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
+        d->history->appendItem(item);
+
+        emit currentPathChanged(path);
+    }
+}
+
 History * FileManagerWidget::history() const
 {
     Q_D(const FileManagerWidget);
@@ -182,20 +198,51 @@ FileSystemManager * FileManagerWidget::fileSystemManager() const
     return d_func()->fileSystemManager;
 }
 
-void FileManagerWidget::setCurrentPath(const QString &path)
+void FileManagerWidget::newFolder()
 {
     Q_D(FileManagerWidget);
+    QString dir = currentPath();
+    if (dir == "") {
+//        emit error;
+    } else {
+        QString  folderName = tr("New Folder");
+        QModelIndex index = d->model->mkdir(d->model->index(dir), folderName);
 
-    if (d->currentPath != path) {
-        d->currentPath = path;
-        QModelIndex index = d->model->index(path);
-        d->currentView->setRootIndex(index);
-
-        HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
-        d->history->appendItem(item);
-
-        emit currentPathChanged(path);
+        if (index.isValid())
+            d->currentView->edit(index);
     }
+}
+
+void FileManagerWidget::open()
+{
+    foreach (const QString path, selectedPaths()) {
+        if (QFileInfo(path).isDir()) {
+            setCurrentPath(path);
+            return;
+        }
+    }
+}
+
+bool removePath(const QString &path);
+
+void FileManagerWidget::remove()
+{
+    QStringList paths = selectedPaths();
+    foreach (const QString &path, paths) {
+        bool result = removePath(path);
+        if (!result) {
+        }
+    }
+}
+
+void FileManagerWidget::undo()
+{
+    fileSystemManager()->undoStack()->undo();
+}
+
+void FileManagerWidget::redo()
+{
+    fileSystemManager()->undoStack()->redo();
 }
 
 void FileManagerWidget::copy()
@@ -228,28 +275,6 @@ void FileManagerWidget::paste()
     d->fileSystemManager->copyFiles(files, currentPath());
 }
 
-bool removePath(const QString &path);
-
-void FileManagerWidget::remove()
-{
-    QStringList paths = selectedPaths();
-    foreach (const QString &path, paths) {
-        bool result = removePath(path);
-        if (!result) {
-        }
-    }
-}
-
-void FileManagerWidget::undo()
-{
-    fileSystemManager()->undoStack()->undo();
-}
-
-void FileManagerWidget::redo()
-{
-    fileSystemManager()->undoStack()->redo();
-}
-
 void FileManagerWidget::back()
 {
     history()->back();
@@ -258,16 +283,6 @@ void FileManagerWidget::back()
 void FileManagerWidget::forward()
 {
     history()->forward();
-}
-
-void FileManagerWidget::open()
-{
-    foreach (const QString path, selectedPaths()) {
-        if (QFileInfo(path).isDir()) {
-            setCurrentPath(path);
-            return;
-        }
-    }
 }
 
 void FileManagerWidget::up()
@@ -305,17 +320,3 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-void FileManagerWidget::newFolder()
-{
-    Q_D(FileManagerWidget);
-    QString dir = currentPath();
-    if (dir == "") {
-//        emit error;
-    } else {
-        QString  folderName = tr("New Folder");
-        QModelIndex index = d->model->mkdir(d->model->index(dir), folderName);
-
-        if (index.isValid())
-            d->currentView->edit(index);
-    }
-}
