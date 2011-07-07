@@ -3,7 +3,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMap>
-#include <QtFileCopier>
+
+#include "QtFileCopier"
 
 class QTimeEvent;
 namespace FileManagerPlugin {

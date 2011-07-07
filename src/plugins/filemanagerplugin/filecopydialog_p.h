@@ -1,9 +1,10 @@
 #ifndef FILECOPYDIALOG_P_H
 #define FILECOPYDIALOG_P_H
 
+#include <QtCore/QMap>
+
 #include "filecopydialog.h"
-#include <QtFileCopier>
-#include <QMap>
+#include "QtFileCopier"
 
 namespace FileManagerPlugin {
 
