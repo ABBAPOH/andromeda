@@ -275,6 +275,13 @@ void FileManagerWidget::paste()
     d->fileSystemManager->copyFiles(files, currentPath());
 }
 
+void FileManagerWidget::selectAll()
+{
+    Q_D(FileManagerWidget);
+
+    d->currentView->selectAll();
+}
+
 void FileManagerWidget::back()
 {
     history()->back();
