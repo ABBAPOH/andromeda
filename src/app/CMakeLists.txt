@@ -8,7 +8,7 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
-add_executable( Andromeda  MACOSX_BUNDLE ${SOURCES} )
+add_executable( Andromeda WIN32 MACOSX_BUNDLE ${SOURCES} )
 target_link_libraries( Andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem guisystem )
 
 if( MSVC )
