@@ -20,32 +20,33 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_DECLARE_PRIVATE(FileManagerWidget)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
 public:
+    enum ViewMode { ListView = 0, IconView, TableView, ColumnView, TreeView };
+    Q_ENUMS(ViewMode)
+
     explicit FileManagerWidget(QWidget *parent = 0);
     ~FileManagerWidget();
 
-    enum ViewMode { ListView = 0, IconView, TableView, ColumnView, TreeView };
+    QString currentPath() const;
 
-    ViewMode viewMode() const;
-    void setViewMode(ViewMode mode);
+    FileSystemManager *fileSystemManager() const;
+
+    History *history() const;
 
     QFileSystemModel *model() const;
     void setModel(QFileSystemModel *model);
 
-    QString currentPath() const;
-
-    History *history() const;
-
     QStringList selectedPaths() const;
 
-//    FileSystemUndoManager *undoManager() const;
-    FileSystemManager *fileSystemManager() const;
+    ViewMode viewMode() const;
 
 signals:
     void currentPathChanged(const QString &path);
     void canUndoChanged(bool);
+    void canRedoChanged(bool);
 
 public slots:
     void setCurrentPath(const QString &path);
+    void setViewMode(ViewMode mode);
 
     void newFolder();
     void open();
