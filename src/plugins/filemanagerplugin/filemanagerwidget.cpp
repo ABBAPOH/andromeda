@@ -91,6 +91,8 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->fileSystemManager = FileSystemManager::instance();
     connect(d->fileSystemManager->undoStack(), SIGNAL(canUndoChanged(bool)),
             SIGNAL(canUndoChanged(bool)));
+    connect(d->fileSystemManager->undoStack(), SIGNAL(canRedoChanged(bool)),
+            SIGNAL(canRedoChanged(bool)));
 
     d->history = new History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -109,45 +111,6 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 FileManagerWidget::~FileManagerWidget()
 {
     delete d_ptr;
-}
-
-FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->viewMode;
-}
-
-void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->viewMode != mode) {
-        d->viewMode = mode;
-        d->layout->setCurrentIndex(mode);
-        d->currentView = d->views[mode];
-
-        QModelIndex index = d->model->index(d->currentPath);
-        d->currentView->setRootIndex(index);
-    }
-}
-
-QFileSystemModel * FileManagerWidget::model() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->model;
-}
-
-void FileManagerWidget::setModel(QFileSystemModel *model)
-{
-    Q_D(FileManagerWidget);
-
-    d->model = model;
-
-    for (int i = 0; i < MaxViews; i++) {
-        d->views[i]->setModel(model);
-    }
 }
 
 QString FileManagerWidget::currentPath() const
@@ -173,11 +136,34 @@ void FileManagerWidget::setCurrentPath(const QString &path)
     }
 }
 
+FileSystemManager * FileManagerWidget::fileSystemManager() const
+{
+    return d_func()->fileSystemManager;
+}
+
 History * FileManagerWidget::history() const
 {
     Q_D(const FileManagerWidget);
 
     return d->history;
+}
+
+QFileSystemModel * FileManagerWidget::model() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->model;
+}
+
+void FileManagerWidget::setModel(QFileSystemModel *model)
+{
+    Q_D(FileManagerWidget);
+
+    d->model = model;
+
+    for (int i = 0; i < MaxViews; i++) {
+        d->views[i]->setModel(model);
+    }
 }
 
 QStringList FileManagerWidget::selectedPaths() const
@@ -193,9 +179,25 @@ QStringList FileManagerWidget::selectedPaths() const
     return result;
 }
 
-FileSystemManager * FileManagerWidget::fileSystemManager() const
+FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
 {
-    return d_func()->fileSystemManager;
+    Q_D(const FileManagerWidget);
+
+    return d->viewMode;
+}
+
+void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->viewMode != mode) {
+        d->viewMode = mode;
+        d->layout->setCurrentIndex(mode);
+        d->currentView = d->views[mode];
+
+        QModelIndex index = d->model->index(d->currentPath);
+        d->currentView->setRootIndex(index);
+    }
 }
 
 void FileManagerWidget::newFolder()
