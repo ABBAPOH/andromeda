@@ -20,8 +20,6 @@ FileManagerView::FileManagerView(QObject *parent) :
     actionManager->command(Constants::Ids::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
     actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
 
-    actionManager->command(Constants::Ids::Actions::Back)->action(m_widget, SLOT(back()));
-    actionManager->command(Constants::Ids::Actions::Forward)->action(m_widget, SLOT(forward()));
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 }
 

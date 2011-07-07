@@ -69,19 +69,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->toolBar = new QToolBar(this);
 
-    QAction *backAction = new QAction(QIcon(":/images/icons/back.png"), "Back", this);
-    QAction *forwardAction = new QAction(QIcon(":/images/icons/forward.png"), "Forward", this);
+    QAction *backAction = actionManager->command(Constants::Ids::Actions::Back)->action();
+    backAction->setIcon(QIcon(":/images/icons/back.png"));
+    addAction(backAction);
+
+    QAction *forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action();
+    forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
+    addAction(forwardAction);
 
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
+//    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
     d->toolBar->addSeparator();
     d->toolBar->addWidget(d->lineEdit);
 
     addToolBar(d->toolBar);
     setUnifiedTitleAndToolBarOnMac(true);
 
-    ActionManager *manager = ActionManager::instance();
-    setMenuBar(manager->container(Constants::Ids::Menus::MenuBar)->menuBar());
+    setMenuBar(actionManager->container(Constants::Ids::Menus::MenuBar)->menuBar());
 
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
     connect(backAction, SIGNAL(triggered()), SLOT(back()));
