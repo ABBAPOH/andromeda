@@ -113,17 +113,32 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     }
 }
 
-void DualPaneWidget::back()
+void DualPaneWidget::sync()
 {
-    activeWidget()->back();
+    Q_D(DualPaneWidget);
+
+    FileManagerWidget *source = activeWidget();
+    FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
+
+    target->setCurrentPath(source->currentPath());
 }
 
-void DualPaneWidget::forward()
+void DualPaneWidget::newFolder()
 {
-    activeWidget()->forward();
+    activeWidget()->newFolder();
 }
 
-void DualPaneWidget::copy()
+void DualPaneWidget::open()
+{
+    activeWidget()->open();
+}
+
+void DualPaneWidget::remove()
+{
+    activeWidget()->remove();
+}
+
+void DualPaneWidget::copyFiles()
 {
     Q_D(DualPaneWidget);
 
@@ -137,7 +152,7 @@ void DualPaneWidget::copy()
     source->fileSystemManager()->copyFiles(files, target->currentPath());
 }
 
-void DualPaneWidget::move()
+void DualPaneWidget::moveFiles()
 {
     Q_D(DualPaneWidget);
 
@@ -151,19 +166,44 @@ void DualPaneWidget::move()
     source->fileSystemManager()->moveFiles(files, target->currentPath());
 }
 
-void DualPaneWidget::remove()
+void DualPaneWidget::undo()
 {
-    activeWidget()->remove();
+    activeWidget()->undo();
 }
 
-void DualPaneWidget::sync()
+void DualPaneWidget::redo()
 {
-    Q_D(DualPaneWidget);
+    activeWidget()->redo();
+}
 
-    FileManagerWidget *source = activeWidget();
-    FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
+void DualPaneWidget::copy()
+{
+    activeWidget()->copy();
+}
 
-    target->setCurrentPath(source->currentPath());
+void DualPaneWidget::paste()
+{
+    activeWidget()->paste();
+}
+
+void DualPaneWidget::selectAll()
+{
+    activeWidget()->selectAll();
+}
+
+void DualPaneWidget::back()
+{
+    activeWidget()->back();
+}
+
+void DualPaneWidget::forward()
+{
+    activeWidget()->forward();
+}
+
+void DualPaneWidget::up()
+{
+    activeWidget()->up();
 }
 
 bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)

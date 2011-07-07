@@ -130,14 +130,14 @@ void CorePluginImpl::createActions()
     selectAllCommand->setDefaultShortcut(tr("Ctrl+A"));
     editContainer->addCommand(selectAllCommand);
 
-    CommandContainer *viewContainer = new CommandContainer(Constants::Ids::Menus::View, this);
-    viewContainer->setTitle(tr("View"));
-    menuBarContainer->addContainer(viewContainer);
+//    CommandContainer *viewContainer = new CommandContainer(Constants::Ids::Menus::View, this);
+//    viewContainer->setTitle(tr("View"));
+//    menuBarContainer->addContainer(viewContainer);
 
-    Command *dualPaneCommand = new Command(Constants::Ids::Actions::DualPane, this);
-    dualPaneCommand->setDefaultText(tr("Dual Pane"));
-    dualPaneCommand->setDefaultShortcut(tr("Ctrl+D"));
-    viewContainer->addCommand(dualPaneCommand);
+//    Command *dualPaneCommand = new Command(Constants::Ids::Actions::DualPane, this);
+//    dualPaneCommand->setDefaultText(tr("Dual Pane"));
+//    dualPaneCommand->setDefaultShortcut(tr("Ctrl+D"));
+//    viewContainer->addCommand(dualPaneCommand);
 
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
     goToContainer->setTitle(tr("Go To"));

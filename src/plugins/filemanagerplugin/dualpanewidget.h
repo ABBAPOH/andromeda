@@ -41,14 +41,25 @@ signals:
     void currentPathChanged(const QString &path);
 
 public slots:
+    void setCurrentPath(const QString &path);
+    void setActivePane(Pane pane);
+    void sync();
+
+    void newFolder();
+    void open();
+    void remove();
+    void copyFiles();
+    void moveFiles();
+
+    void undo();
+    void redo();
+    void copy();
+    void paste();
+    void selectAll();
+
     void back();
     void forward();
-    void copy();
-    void move();
-    void remove();
-    void setActivePane(Pane pane);
-    void setCurrentPath(const QString &path);
-    void sync();
+    void up();
 
 protected:
     virtual bool eventFilter(QObject * watched, QEvent * event);
