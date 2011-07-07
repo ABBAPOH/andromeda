@@ -5,10 +5,10 @@
 #include <guicontroller.h>
 #include <CorePlugin>
 
-#include "filemanagerview.h"
-#include "navigationpanelview.h"
 #include "filecopydialog.h"
+#include "filemanagerview.h"
 #include "filesystemmanager.h"
+#include "navigationpanelview.h"
 
 using namespace FileManagerPlugin;
 using namespace ExtensionSystem;

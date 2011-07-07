@@ -21,6 +21,10 @@ FileManagerView::FileManagerView(QObject *parent) :
     actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
+
+    actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
+    actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));
+    actionManager->command(Constants::Ids::Actions::Paste)->action(m_widget, SLOT(paste()));
 }
 
 void FileManagerView::initialize()
