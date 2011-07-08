@@ -13,21 +13,31 @@ set( HEADERS
    )
 set( SOURCES
     qdrivecontroller.cpp
-#    qdrivecontroller_linux.cpp
-#    qdrivecontroller_win.cpp
     qdriveinfo.cpp
-#    qdriveinfo_linux.cpp
-#    qdriveinfo_win.cpp
     qsystemerror.cpp
    )
 set( FORMS
    )
 
-if( APPLE )
+if( WIN32 )
+
+set( SOURCES
+    ${SOURCES}
+    qdrivecontroller_win.cpp
+    qdriveinfo_win.cpp
+   )
+
+set( LIBS
+    userenv Netapi32 Mpr
+   )
+
+elseif( APPLE )
+
 set( HEADERS
     ${HEADERS}
     qdrivecontroller_mac_p.h
    )
+
 set( SOURCES
     ${SOURCES}
     qdrivecontroller_mac.cpp
@@ -37,6 +47,20 @@ set( SOURCES
 set( LIBS
     "-framework CoreServices" "-framework DiskArbitration" "-framework IOKit"
    )
+
+elseif( UNIX )
+
+set( HEADERS
+    ${HEADERS}
+    qdrivecontroller_linux_p.h
+   )
+
+set( SOURCES
+    ${SOURCES}
+    qdrivecontroller_linux.cpp
+    qdriveinfo_linux.cpp
+   )
+
 endif()
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
