@@ -1,7 +1,8 @@
 #include "filemanagerview.h"
 
-#include "filemanagerwidget.h"
+#include "dualpanewidget.h"
 
+#include <QtGui/QAction>
 #include <actionmanager.h>
 #include <command.h>
 #include <constants.h>
@@ -11,7 +12,8 @@ using namespace FileManagerPlugin;
 FileManagerView::FileManagerView(QObject *parent) :
     IMainView(parent)
 {
-    m_widget = new FileManagerWidget();
+    m_widget = new DualPaneWidget();
+//    m_widget->setDualPaneModeEnabled(true);
     m_widget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
 
@@ -19,6 +21,11 @@ FileManagerView::FileManagerView(QObject *parent) :
     actionManager->command(Constants::Ids::Actions::Open)->action(m_widget, SLOT(open()));
     actionManager->command(Constants::Ids::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
     actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
+
+    QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action();
+    a->setCheckable(true);
+    m_widget->addAction(a);
+    connect(a, SIGNAL(toggled(bool)), m_widget, SLOT(setDualPaneModeEnabled(bool)));
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 

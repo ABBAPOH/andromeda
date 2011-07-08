@@ -6,7 +6,7 @@
 
 namespace FileManagerPlugin {
 
-class FileManagerWidget;
+class DualPaneWidget;
 class FileManagerView : public CorePlugin::IMainView
 {
     Q_OBJECT
@@ -29,7 +29,7 @@ signals:
 public slots:
 
 private:
-    FileManagerWidget *m_widget;
+    DualPaneWidget *m_widget;
     const GuiSystem::State *m_state;
 };
 
