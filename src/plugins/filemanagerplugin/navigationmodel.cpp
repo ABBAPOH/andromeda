@@ -1,8 +1,8 @@
 #include "navigationmodel.h"
 #include "navigationmodel_p.h"
 
-//#include <QDriveInfo>
-//#include <QDriveController>
+#include <QDriveInfo>
+#include <QDriveController>
 #include <QDesktopServices>
 #include <QFileIconProvider>
 #include <QFileInfo>
@@ -48,33 +48,32 @@ void NavigationModelPrivate::removeItem(const QString &path)
 
 QString getDriveName(const QDriveInfo &info)
 {
-//    QString name = info.name();
+    QString name = info.name();
 
-//#if defined(Q_OS_WIN)
-//    QString path = info.rootPath();
-//    if (!name.isEmpty())
-//        name = QString("%1 (%2)").arg(path).arg(name);
-//    else
-//        name = QString("%1").arg(path);
-//#elif defined(Q_OS_LINUX)
-//    QString path = info.rootPath();
-//    if (name.isEmpty())
-//        name = path;
-//#endif
+#if defined(Q_OS_WIN)
+    QString path = info.rootPath();
+    if (!name.isEmpty())
+        name = QString("%1 (%2)").arg(path).arg(name);
+    else
+        name = QString("%1").arg(path);
+#elif defined(Q_OS_LINUX)
+    QString path = info.rootPath();
+    if (name.isEmpty())
+        name = path;
+#endif
 
-//    return name;
-    return QString();
+    return name;
 }
 
 void NavigationModelPrivate::onDriveAdded(const QString &path)
 {
-//    QDriveInfo info(path);
-//    QString name = getDriveName(info);
+    QDriveInfo info(path);
+    QString name = getDriveName(info);
 
-//    if (info.type() == QDriveInfo::RemoteDrive)
-//        insertItem(networkItem, name, path);
-//    else if (info.type() != QDriveInfo::InvalidDrive)
-//        insertItem(drivesItem, name, path);
+    if (info.type() == QDriveInfo::RemoteDrive)
+        insertItem(networkItem, name, path);
+    else if (info.type() != QDriveInfo::InvalidDrive)
+        insertItem(drivesItem, name, path);
 }
 
 void NavigationModelPrivate::onDriveRemoved(const QString &path)
@@ -94,26 +93,26 @@ NavigationModel::NavigationModel(QObject *parent) :
     d->networkItem = new TreeItem(d->rootItem, tr("Network"));
     d->foldersItem = new TreeItem(d->rootItem, tr("Folders"));
 
-//    d->driveController = new QDriveController(this);
-//    connect(d->driveController, SIGNAL(driveMounted(QString)), d, SLOT(onDriveAdded(QString)));
-//    connect(d->driveController, SIGNAL(driveUnmounted(QString)), d, SLOT(onDriveRemoved(QString)));
+    d->driveController = new QDriveController(this);
+    connect(d->driveController, SIGNAL(driveMounted(QString)), d, SLOT(onDriveAdded(QString)));
+    connect(d->driveController, SIGNAL(driveUnmounted(QString)), d, SLOT(onDriveRemoved(QString)));
 
-//    QList<QDriveInfo> drives = QDriveInfo::drives();
-//    foreach (const QDriveInfo &info, drives) {
-//        QString name = getDriveName(info);
-//        QString path = info.rootPath();
+    QList<QDriveInfo> drives = QDriveInfo::drives();
+    foreach (const QDriveInfo &info, drives) {
+        QString name = getDriveName(info);
+        QString path = info.rootPath();
 
-//        TreeItem *item = 0;
-//        if (info.type() == QDriveInfo::RemoteDrive)
-//            item = new TreeItem(d->networkItem, name, path);
-//        else if (info.type() != QDriveInfo::InvalidDrive)
-//            item = new TreeItem(d->drivesItem, name, path);
+        TreeItem *item = 0;
+        if (info.type() == QDriveInfo::RemoteDrive)
+            item = new TreeItem(d->networkItem, name, path);
+        else if (info.type() != QDriveInfo::InvalidDrive)
+            item = new TreeItem(d->drivesItem, name, path);
 
-//        if (item) {
-//            item->icon = d->iconProvider.icon(QFileInfo(path));
-//            d->mapToItem.insert(path, item);
-//        }
-//    }
+        if (item) {
+            item->icon = d->iconProvider.icon(QFileInfo(path));
+            d->mapToItem.insert(path, item);
+        }
+    }
 
     QSettings settings("NavigationModel");
     if (settings.contains("folders")) {
