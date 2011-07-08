@@ -60,9 +60,11 @@ QString getMimeType(const QString &path)
     return QString();
 }
 
+#include <QDebug>
 IMainView * TabPrivate::getMainView(const QString &perspective)
 {
     GuiController *controller = GuiController::instance();
+    qDebug() << perspective;
     QString id = controller->perspective(perspective)->property("MainView").toString();
 
     return qobject_cast<IMainView*>(perspectiveWidget->currentInstance()->view(id));
@@ -77,6 +79,9 @@ QString TabPrivate::getPerspective(const QString &path)
 void TabPrivate::openPerspective(const QString &path)
 {
     QString perspective = getPerspective(path);
+    if (perspective.isEmpty())
+        return;
+
     perspectiveWidget->openPerspective(perspective);
 
     IMainView *view = getMainView(perspective);

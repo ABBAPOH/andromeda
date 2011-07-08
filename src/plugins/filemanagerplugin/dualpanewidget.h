@@ -24,7 +24,7 @@ public:
     explicit DualPaneWidget(QWidget *parent = 0);
     ~DualPaneWidget();
 
-    History *activeHistory() const;
+    History *history() const;
     Pane activePane() const;
     FileManagerWidget *activeWidget() const;
 
@@ -34,15 +34,15 @@ public:
     QString currentPath() const;
 
     bool dualPaneModeEnabled() const;
-    void setDualPaneModeEnabled(bool on);
 
 signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);
 
 public slots:
-    void setCurrentPath(const QString &path);
     void setActivePane(Pane pane);
+    void setCurrentPath(const QString &path);
+    void setDualPaneModeEnabled(bool on);
     void sync();
 
     void newFolder();
