@@ -57,53 +57,9 @@ private:
 
 #include "qdrivecontroller_mac_p.h"
 
-#elif defined(Q_OS_SYMBIAN)
-
-#include <e32base.h>
-#include <f32file.h>
-
-class QDriveWatcherEngine : public CActive
-{
-public:
-    QDriveWatcherEngine(QDriveWatcher *watcher);
-    ~QDriveWatcherEngine();
-
-protected:  //from CActive
-    void DoCancel();
-    void RunL();
-
-private:
-    QDriveWatcher *m_watcher;
-};
-
 #elif defined(Q_OS_LINUX)
 
-#include <QtCore/QSet>
-
-class QDriveWatcherEngine : public QObject
-{
-    Q_OBJECT
-
-public:
-    QDriveWatcherEngine(QObject *parent);
-    ~QDriveWatcherEngine();
-
-    inline bool isValid() const
-    { return mtabWatchA > 0; }
-
-Q_SIGNALS:
-    void driveAdded(const QString &path);
-    void driveRemoved(const QString &path);
-
-private Q_SLOTS:
-    void deviceChanged();
-    void inotifyActivated();
-
-private:
-    QSet<QString> drives;
-    int inotifyFD;
-    int mtabWatchA;
-};
+#include "qdrivecontroller_linux_p.h"
 
 #endif
 
