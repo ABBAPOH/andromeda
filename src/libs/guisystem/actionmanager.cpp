@@ -33,10 +33,10 @@ ActionManager::~ActionManager()
     delete d_ptr;
 }
 
+Q_GLOBAL_STATIC(ActionManager, get_instance)
 ActionManager *ActionManager::instance()
 {
-    static ActionManager *m_instance = new ActionManager(qApp);
-    return m_instance;
+    return get_instance();
 }
 
 void ActionManager::registerCommand(Command *cmd)
