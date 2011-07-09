@@ -95,7 +95,12 @@ QString DualPaneWidget::currentPath() const
 
 void DualPaneWidget::setCurrentPath(const QString &path)
 {
+    Q_D(DualPaneWidget);
+
     activeWidget()->setCurrentPath(path);
+
+    if (dualPaneModeEnabled() && d->panes[RightPane]->currentPath().isEmpty())
+        d->panes[RightPane]->setCurrentPath(path);
 }
 
 bool DualPaneWidget::dualPaneModeEnabled() const
@@ -110,6 +115,8 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     d->dualPaneModeEnabled = on;
     if (on) {
         d->panes[RightPane]->show();
+        if (d->panes[RightPane]->currentPath().isEmpty())
+            d->panes[RightPane]->setCurrentPath(d->panes[LeftPane]->currentPath());
     } else {
         d->panes[RightPane]->hide();
         setActivePane(LeftPane);

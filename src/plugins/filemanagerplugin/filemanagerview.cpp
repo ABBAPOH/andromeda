@@ -3,6 +3,7 @@
 #include "dualpanewidget.h"
 
 #include <QtGui/QAction>
+#include <QtCore/QSettings>
 #include <actionmanager.h>
 #include <command.h>
 #include <constants.h>
@@ -12,8 +13,13 @@ using namespace FileManagerPlugin;
 FileManagerView::FileManagerView(QObject *parent) :
     IMainView(parent)
 {
+    QSettings settings;
+    settings.beginGroup("FileManager");
+    bool enableDualPane = settings.value("dualPaneModeEnabled").toBool();
+    settings.endGroup();
+
     m_widget = new DualPaneWidget();
-//    m_widget->setDualPaneModeEnabled(true);
+    m_widget->setDualPaneModeEnabled(enableDualPane);
     m_widget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
     connect(m_widget, SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
@@ -25,8 +31,9 @@ FileManagerView::FileManagerView(QObject *parent) :
 
     QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action();
     a->setCheckable(true);
+    a->setChecked(enableDualPane);
     m_widget->addAction(a);
-    connect(a, SIGNAL(toggled(bool)), m_widget, SLOT(setDualPaneModeEnabled(bool)));
+    connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 
@@ -65,6 +72,15 @@ bool FileManagerView::open(const HistoryItem &item)
 HistoryItem FileManagerView::currentItem() const
 {
     return m_widget->history()->currentItem();
+}
+
+void FileManagerView::setDualPaneModeEnabled(bool on)
+{
+    QSettings settings;
+    settings.beginGroup("FileManager");
+    settings.setValue("dualPaneModeEnabled", on);
+    settings.endGroup();
+    m_widget->setDualPaneModeEnabled(on);
 }
 
 QString FileManagerFactory::id() const
