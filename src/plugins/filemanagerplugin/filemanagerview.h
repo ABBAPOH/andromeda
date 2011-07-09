@@ -26,7 +26,8 @@ public:
 
 signals:
 
-public slots:
+private slots:
+    void setDualPaneModeEnabled(bool on);
 
 private:
     DualPaneWidget *m_widget;
