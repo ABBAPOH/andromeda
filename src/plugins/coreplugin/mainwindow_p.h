@@ -3,10 +3,42 @@
 
 #include "mainwindow.h"
 
+#include <QtCore/QEvent>
+#include <QtGui/QMouseEvent>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <enteredlineedit.h>
 #include <CorePlugin>
+
+class MyTabWidget : public QTabWidget
+{
+    Q_OBJECT
+public:
+    MyTabWidget(QWidget *parent = 0) : QTabWidget(parent)
+    {
+        tabBar()->installEventFilter(this);
+    }
+
+signals:
+    void tabBarDoubleClicked();
+
+protected:
+    bool eventFilter(QObject *o, QEvent *e)
+    {
+        if (o != tabBar())
+            return false;
+
+        if (e->type() == QEvent::MouseButtonDblClick) {
+            QMouseEvent *me = static_cast<QMouseEvent *>(e);
+
+            if (tabBar()->tabAt(me->pos()) == -1)
+                emit tabBarDoubleClicked();
+
+            return true;
+        }
+        return false;
+    }
+};
 
 namespace CorePlugin {
 
