@@ -38,6 +38,7 @@ public:
 signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);
+    void openRequested(const QString &path);
 
 public slots:
     void setActivePane(Pane pane);

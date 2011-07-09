@@ -1,7 +1,9 @@
 #include "tab.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QUrl>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QDesktopServices>
 #include <guicontroller.h>
 #include <perspective.h>
 #include <perspectiveinstance.h>
@@ -20,7 +22,7 @@ public:
 
     IMainView *getMainView(const QString &perspective);
     QString getPerspective(const QString &path);
-    void openPerspective(const QString &path);
+    bool openPerspective(const QString &path);
     void openPerspective(const HistoryItem &item);
 
     GuiSystem::PerspectiveWidget *perspectiveWidget;
@@ -60,11 +62,9 @@ QString getMimeType(const QString &path)
     return QString();
 }
 
-#include <QDebug>
 IMainView * TabPrivate::getMainView(const QString &perspective)
 {
     GuiController *controller = GuiController::instance();
-    qDebug() << perspective;
     QString id = controller->perspective(perspective)->property("MainView").toString();
 
     return qobject_cast<IMainView*>(perspectiveWidget->currentInstance()->view(id));
@@ -76,11 +76,13 @@ QString TabPrivate::getPerspective(const QString &path)
     return Core::instance()->perspectiveManager()->perspective(mime);
 }
 
-void TabPrivate::openPerspective(const QString &path)
+bool TabPrivate::openPerspective(const QString &path)
 {
     QString perspective = getPerspective(path);
-    if (perspective.isEmpty())
-        return;
+    if (perspective.isEmpty()) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        return false;
+    }
 
     perspectiveWidget->openPerspective(perspective);
 
@@ -89,10 +91,13 @@ void TabPrivate::openPerspective(const QString &path)
         view->open(path);
         QObject::connect(view, SIGNAL(pathChanged(QString)), q_func(),
                          SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+        QObject::connect(view, SIGNAL(openRequested(QString)), q_func(),
+                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
         HistoryItem item = view->currentItem();
         item.setUserData("perspective", perspective);
         history->appendItem(item);
     }
+    return true;
 }
 
 void TabPrivate::openPerspective(const HistoryItem &item)
@@ -134,9 +139,10 @@ void Tab::setCurrentPath(const QString & currentPath)
 
     if (d->currentPath != currentPath) {
         d->currentPath = currentPath;
-        d->openPerspective(d->currentPath);
-        emit currentPathChanged(d->currentPath);
-        emit displayNameChanged(displayName());
+        if (d->openPerspective(d->currentPath)) {
+            emit currentPathChanged(d->currentPath);
+            emit displayNameChanged(displayName());
+        }
     }
 }
 
