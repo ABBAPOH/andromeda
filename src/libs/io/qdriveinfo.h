@@ -1,24 +1,14 @@
 #ifndef QDRIVEINFO_H
 #define QDRIVEINFO_H
 
+#include "io_global.h"
+
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QString>
 
-#ifdef QDRIVEINFO_DLL
-#  include <QtCore/QtGlobal>
-#  ifdef QDRIVEINFO_MAKEDLL
-#    define QDRIVEINFO_EXPORT Q_DECL_EXPORT
-#  else
-#    define QDRIVEINFO_EXPORT Q_DECL_IMPORT
-#  endif
-#endif
-#ifndef QDRIVEINFO_EXPORT
-#  define QDRIVEINFO_EXPORT
-#endif
-
 class QDriveInfoPrivate;
-class QDRIVEINFO_EXPORT QDriveInfo
+class IO_EXPORT QDriveInfo
 {
 public:
     enum DriveType {

@@ -18,6 +18,8 @@ else(MSVC)
     add_definitions( -Wall )
 endif(MSVC)
 
+include_directories( ${QT_INCLUDES} )
+
 add_subdirectory( src )
 
 enable_testing()
