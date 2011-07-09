@@ -40,12 +40,10 @@ GuiController::~GuiController()
     delete d_ptr;
 }
 
+Q_GLOBAL_STATIC(GuiController, get_instance)
 GuiController * GuiController::instance()
 {
-    Q_ASSERT_X(qApp, "GuiController::instance", "Must construct QApplication before calling this method");
-
-    static GuiController *m_instance = new GuiController(qApp);
-    return m_instance;
+    return get_instance();
 }
 
 void GuiController::addFactory(IViewFactory *factory)
