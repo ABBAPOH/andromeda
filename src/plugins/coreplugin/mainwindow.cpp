@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->tabWidget = new QTabWidget;
     d->tabWidget->setDocumentMode(true);
+    d->tabWidget->setTabsClosable(true);
     setCentralWidget(d->tabWidget);
 
     d->lineEdit = new EnteredLineEdit(this);
@@ -86,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setMenuBar(actionManager->container(Constants::Ids::Menus::MenuBar)->menuBar());
 
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
+    connect(d->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
     connect(backAction, SIGNAL(triggered()), SLOT(back()));
     connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
@@ -120,7 +122,7 @@ void MainWindow::newTab()
     d->tabWidget->setCurrentIndex(index);
 }
 
-void MainWindow::closeTab()
+void MainWindow::closeTab(int index)
 {
     Q_D(MainWindow);
 
@@ -130,7 +132,8 @@ void MainWindow::closeTab()
         return;
     }
 
-    int index = d->tabWidget->currentIndex();
+    if (index == -1)
+        index = d->tabWidget->currentIndex();
     QWidget *widget = d->tabWidget->widget(index);
     d->tabWidget->removeTab(index);
     widget->deleteLater();

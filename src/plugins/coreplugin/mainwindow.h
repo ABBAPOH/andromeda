@@ -19,7 +19,7 @@ public slots:
     void forward();
 
     void newTab();
-    void closeTab();
+    void closeTab(int index = -1);
 
 protected:
     MainWindowPrivate * d_ptr;
