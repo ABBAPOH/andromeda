@@ -9,7 +9,7 @@ WebViewTest::WebViewTest()
 
 bool WebViewTest::initialize()
 {
-    qDebug("TestPlugin::initialize");
+    qDebug("WebViewTest::initialize");
     QWebView * view = new QWebView();
     m_view = view;
     view->show();
