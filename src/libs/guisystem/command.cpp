@@ -172,11 +172,11 @@ void Command::setRealAction(QAction *action)
         d->action->setIcon(action ? action->icon() : d->defaultIcon);
     if (!(d->attributes & AttributeNonConfigurable)) {
         d->action->setShortcut(action ? action->shortcut() : d->defaultShortcut);
-        bool checkable = action ? action->isCheckable() : false;
-        d->action->setCheckable(checkable);
-        if (checkable)
-            d->action->setChecked(action->isChecked());
     }
 
+    bool checkable = action ? action->isCheckable() : false;
+    d->action->setCheckable(checkable);
+    if (checkable)
+        d->action->setChecked(action->isChecked());
     d->action->setEnabled(action ? action->isEnabled() : false);
 }
