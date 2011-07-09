@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     Q_D(MainWindow);
 
-    d->tabWidget = new QTabWidget;
+    d->tabWidget = new /*QTabWidget*/MyTabWidget;
     d->tabWidget->setDocumentMode(true);
     d->tabWidget->setTabsClosable(true);
     setCentralWidget(d->tabWidget);
@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
     connect(d->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
+    connect(d->tabWidget, SIGNAL(tabBarDoubleClicked()), SLOT(newTab()));
     connect(backAction, SIGNAL(triggered()), SLOT(back()));
     connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
