@@ -41,6 +41,7 @@ public:
 
 signals:
     void currentPathChanged(const QString &path);
+    void openRequested(const QString &path);
     void canUndoChanged(bool);
     void canRedoChanged(bool);
 

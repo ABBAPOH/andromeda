@@ -20,6 +20,7 @@ public:
     virtual HistoryItem currentItem() const = 0;
 
 signals:
+    void openRequested(const QString &path);
     void pathChanged(const QString &);
     void currentItemChanged();
 

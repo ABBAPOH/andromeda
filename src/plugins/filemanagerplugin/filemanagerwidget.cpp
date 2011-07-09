@@ -14,6 +14,8 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     QFileInfo info(path);
     if (info.isDir()) {
         q->setCurrentPath(info.absoluteFilePath());
+    }  else {
+        emit q->openRequested(path);
     }
 }
 
@@ -127,12 +129,14 @@ void FileManagerWidget::setCurrentPath(const QString &path)
     if (d->currentPath != path) {
         d->currentPath = path;
         QModelIndex index = d->model->index(path);
-        d->currentView->setRootIndex(index);
+        if (d->model->isDir(index)) {
+            d->currentView->setRootIndex(index);
 
-        HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
-        d->history->appendItem(item);
+            HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
+            d->history->appendItem(item);
 
-        emit currentPathChanged(path);
+            emit currentPathChanged(path);
+        }
     }
 }
 
@@ -221,6 +225,8 @@ void FileManagerWidget::open()
         if (QFileInfo(path).isDir()) {
             setCurrentPath(path);
             return;
+        } else {
+            emit openRequested(path);
         }
     }
 }

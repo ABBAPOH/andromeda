@@ -16,6 +16,7 @@ FileManagerView::FileManagerView(QObject *parent) :
 //    m_widget->setDualPaneModeEnabled(true);
     m_widget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
+    connect(m_widget, SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
 
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
     actionManager->command(Constants::Ids::Actions::Open)->action(m_widget, SLOT(open()));
