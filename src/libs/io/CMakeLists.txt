@@ -13,8 +13,6 @@ set( COPIER_SOURCES qtfilecopier.cpp )
 qt4_wrap_single_cpp( qtfilecopier.cpp moc_qtfilecopier.cpp )
 qt4_automoc( qtfilecopier.cpp )
 
-add_definitions( -fPIC )
-
 set( GLOBAL_HEADERS
     IO
     QDriveInfo
@@ -84,10 +82,13 @@ qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/include )
 
 add_definitions( -DIO_LIBRARY )
+add_definitions( -DQT_QTCOPYDIALOG_EXPORT )
+add_definitions( -DQDRIVEINFO_DLL )
 
 add_library( io SHARED ${COPIER_HEADERS} ${COPIER_SOURCES} ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( io ${QT_LIBRARIES} ${LIBS} )

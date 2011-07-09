@@ -21,13 +21,9 @@
 #if defined(QT_LARGEFILE_SUPPORT)
 #  define QT_STATFSBUF struct statvfs64
 #  define QT_STATFS    ::statvfs64
-#  define QT_STATBUF              struct stat64
-#  define QT_STAT                 ::stat64
 #else
 #  define QT_STATFSBUF struct statvfs
 #  define QT_STATFS    ::statvfs
-#  define QT_STATBUF              struct stat
-#  define QT_STAT                 ::stat
 #endif
 
 #ifndef _PATH_MOUNTED

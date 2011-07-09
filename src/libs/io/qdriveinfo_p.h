@@ -6,7 +6,7 @@
 #include <QtCore/QExplicitlySharedDataPointer>
 #include <QtCore/QFile>
 
-//#include <qplatformdefs.h>
+#include <qplatformdefs.h>
 
 class QDriveInfoPrivate
 {
