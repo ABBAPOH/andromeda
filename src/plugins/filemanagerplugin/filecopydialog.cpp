@@ -75,7 +75,8 @@ void FileCopyDialogPrivate::addCopier(QtFileCopier *copier)
 
 void FileCopyDialogPrivate::update()
 {
-    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+//    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+    QtFileCopier *copier = static_cast<QtFileCopier *>(sender());
     if (!copier)
         return;
 
@@ -92,7 +93,8 @@ void FileCopyDialogPrivate::handleError(int id, QtFileCopier::Error error, bool 
     if (!stopped)
         return;
     if (error == QtFileCopier::DestinationExists) {
-        QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+//        QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
+        QtFileCopier *copier = static_cast<QtFileCopier *>(sender());
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString destName = copier->destinationFilePath(id);
