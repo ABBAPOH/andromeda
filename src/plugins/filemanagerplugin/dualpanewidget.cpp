@@ -212,12 +212,10 @@ bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
 
     if (event->type() == QEvent::FocusIn) {
         if (watched == d->panes[LeftPane] && d->activePane != LeftPane) {
-            qDebug("active left");
             d->activePane = LeftPane;
             emit activePaneChanged(d->activePane);
         }
         if (watched == d->panes[RightPane] && d->activePane != RightPane) {
-            qDebug("active right");
             d->activePane = RightPane;
             emit activePaneChanged(d->activePane);
         }
