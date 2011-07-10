@@ -23,6 +23,7 @@ FullPluginView::~FullPluginView()
 void FullPluginView::setModel(PluginViewModel * model)
 {
     this->model = model;
+    mapper->clearMapping();
     mapper->setModel(model);
     mapper->setRootIndex(model->index(0,0));
     mapper->addMapping(ui->label_Name, 0, "text");
@@ -42,6 +43,3 @@ void FullPluginView::setIndex(const QModelIndex &index)
     mapper->setRootIndex(index.parent());
     mapper->setCurrentModelIndex(index);
 }
-
-
-

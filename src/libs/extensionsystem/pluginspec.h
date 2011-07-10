@@ -2,13 +2,12 @@
 #define PLUGINSPEC_H
 
 #include "extensionsystem_global.h"
-#include <QtCore/QString>
-#include <QObject>
-#include <QMetaType>
+
+#include <QtCore/QObject>
+
+class QIODevice;
 
 namespace ExtensionSystem {
-class IPlugin;
-class PluginSpecPrivate;
 
 class EXTENSIONSYSTEM_EXPORT Version
 {
@@ -23,6 +22,7 @@ public:
 
     QString toString() const;
     static Version fromString(const QString &);
+
     bool operator==(const Version &);
 };
 
@@ -34,11 +34,16 @@ class EXTENSIONSYSTEM_EXPORT PluginDependency
 public:
     PluginDependency() {}
     PluginDependency(const QString &name, const QString &version);
+
     inline QString name() const { return m_name; }
     inline Version version() const { return m_version; }
+
     bool operator==(const PluginDependency &other);
 };
 
+class IPlugin;
+
+class PluginSpecPrivate;
 class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
 {
     Q_OBJECT

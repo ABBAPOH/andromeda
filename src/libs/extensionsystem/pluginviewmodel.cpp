@@ -1,8 +1,6 @@
 #include "pluginviewmodel.h"
 #include "pluginviewmodel_p.h"
 
-#include <QDebug>
-
 using namespace ExtensionSystem;
 
 // ============= PluginViewModel =============
@@ -12,6 +10,7 @@ PluginViewModel::PluginViewModel(QObject *parent) :
     d_ptr(new PluginViewModelPrivate)
 {
     Q_D(PluginViewModel);
+
     connect(d->manager, SIGNAL(pluginsChanged()), this, SLOT(updateModel()));
     foreach (PluginSpec *spec, d->manager->plugins()) {
         d->node(spec);
@@ -23,7 +22,7 @@ PluginViewModel::~PluginViewModel()
     delete d_ptr;
 }
 
-int PluginViewModel::columnCount(const QModelIndex &parent) const
+int PluginViewModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return 12;
 }
@@ -102,7 +101,7 @@ QVariant PluginViewModel::headerData(int section, Qt::Orientation orientation, i
         case 7: return tr("Library Path");
         case 8: return tr("Description");
         case 9: return tr("Copyright");
-        case 10: return tr("license");
+        case 10: return tr("License");
         case 11: return tr("Dependencies");
         }
     }
@@ -160,6 +159,7 @@ bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, i
 {
     if (!index.isValid())
         return true;
+
     if (role == Qt::CheckStateRole) {
         if (index.column() == 1) {
             Node *node = static_cast<Node *>(index.internalPointer());
@@ -196,7 +196,6 @@ void PluginViewModel::updateModel()
             endInsertRows();
         }
     }
-//    this->reset();
 }
 
 // ============= PluginViewModelPrivate =============
@@ -233,4 +232,3 @@ Node * PluginViewModelPrivate::node(PluginSpec *spec)
     nodesForSpecs.insert(spec, result);
     return result;
 }
-

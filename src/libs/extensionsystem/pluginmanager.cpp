@@ -2,15 +2,9 @@
 #include "pluginmanager_p.h"
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QPluginLoader>
 #include <QtCore/QDir>
 #include <QtCore/QFileSystemWatcher>
-#include <QtCore/QWriteLocker>
-#include <QtCore/QReadLocker>
 #include <QDebug>
-
-#include "iplugin.h"
-#include "pluginspec_p.h"
 
 using namespace ExtensionSystem;
 
@@ -205,7 +199,7 @@ bool PluginManagerPrivate::load()
 QStringList PluginManagerPrivate::getSpecFiles(QStringList folders)
 {
     QStringList result;
-    foreach (QString folder, folders) {
+    foreach (const QString &folder, folders) {
         QDir dir(folder);
         QStringList entries = dir.entryList(QStringList() << "*.spec");
         foreach (QString entry, entries) {
@@ -218,7 +212,7 @@ QStringList PluginManagerPrivate::getSpecFiles(QStringList folders)
 QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
 {
     QList<PluginSpec*> result;
-    foreach (QString specFile, specFiles) {
+    foreach (const QString &specFile, specFiles) {
         if (!pathToSpec.contains(specFile)) {
             PluginSpec *spec = new PluginSpec(specFile);
             if (!spec->hasError()) {
@@ -258,6 +252,3 @@ void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
         }
     }
 }
-
-
-

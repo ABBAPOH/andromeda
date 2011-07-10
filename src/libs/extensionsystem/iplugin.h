@@ -2,15 +2,12 @@
 #define IPLUGIN_H
 
 #include "extensionsystem_global.h"
-#include "pluginspec.h"
 
 #include <QtCore/QObject>
-#include <QtCore/QVariant>
 
 namespace ExtensionSystem {
-class IPluginPrivate;
-class PluginSpec;
 
+class IPluginPrivate;
 class EXTENSIONSYSTEM_EXPORT IPlugin : public QObject
 {
     Q_OBJECT

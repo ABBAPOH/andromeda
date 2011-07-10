@@ -1,6 +1,5 @@
 #include "iplugin.h"
 
-#include "pluginspec_p.h"
 #include "pluginmanager.h"
 
 namespace ExtensionSystem {
@@ -8,9 +7,6 @@ namespace ExtensionSystem {
 class IPluginPrivate
 {
 public:
-    IPluginPrivate();
-    virtual ~IPluginPrivate();
-
     QList<QObject *> addedObjects;
 };
 
@@ -23,8 +19,8 @@ using namespace ExtensionSystem;
     \internal
 */
 IPlugin::IPlugin() :
-        QObject(),
-        d_ptr(new IPluginPrivate)
+    QObject(),
+    d_ptr(new IPluginPrivate)
 {
 }
 
@@ -34,6 +30,13 @@ IPlugin::IPlugin() :
 */
 IPlugin::~IPlugin()
 {
+    Q_D(IPlugin);
+
+    foreach (QObject *object, d->addedObjects) {
+        PluginManager::instance()->removeObject(object);
+        delete object;
+    }
+
     delete d_ptr;
 }
 
@@ -68,18 +71,3 @@ void IPlugin::removeObject(QObject * object)
     d->addedObjects.removeAll(object);
     PluginManager::instance()->removeObject(object);
 }
-
-// ============= IPluginPrivate =============
-
-IPluginPrivate::IPluginPrivate()
-{
-}
-
-IPluginPrivate::~IPluginPrivate()
-{
-    foreach (QObject *object, addedObjects) {
-        PluginManager::instance()->removeObject(object);
-        delete object;
-    }
-}
-

@@ -2,7 +2,7 @@
 #define PLUGINMANAGER_P_H
 
 #include "qobjectpool_p.h"
-#include "pluginmanager.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
 
