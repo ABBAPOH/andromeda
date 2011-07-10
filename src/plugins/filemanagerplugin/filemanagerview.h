@@ -24,8 +24,6 @@ public:
 
     virtual HistoryItem currentItem() const;
 
-signals:
-
 private slots:
     void setDualPaneModeEnabled(bool on);
 

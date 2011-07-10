@@ -12,11 +12,6 @@ public:
     explicit FileManagerPluginImpl(QObject *parent = 0);
 
     virtual bool initialize();
-
-signals:
-
-public slots:
-
 };
 
 //} // namespace FileManagerPlugin

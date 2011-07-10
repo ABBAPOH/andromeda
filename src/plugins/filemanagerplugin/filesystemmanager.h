@@ -31,8 +31,6 @@ public:
 signals:
     void operationStarted(QtFileCopier *);
 
-public slots:
-
 protected:
     FileSystemManagerPrivate *d_ptr;
 };

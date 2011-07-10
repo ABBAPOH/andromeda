@@ -19,10 +19,6 @@ public:
 
     virtual QWidget *widget() const;
 
-signals:
-
-public slots:
-
 private:
     NavigationPanel *m_widget;
 };
