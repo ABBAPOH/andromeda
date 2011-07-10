@@ -29,7 +29,7 @@ public:
     FileManagerWidget *activeWidget() const;
 
     FileManagerWidget *leftWidget() const;
-    FileManagerWidget *rigthWidget() const;
+    FileManagerWidget *rightWidget() const;
 
     QString currentPath() const;
 

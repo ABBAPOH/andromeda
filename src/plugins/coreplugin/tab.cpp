@@ -28,6 +28,7 @@ public:
     GuiSystem::PerspectiveWidget *perspectiveWidget;
     QString currentPath;
     History *history;
+    bool ignoreSignals;
 
 protected:
     Tab *q_ptr;
@@ -49,7 +50,9 @@ void Tab::onIndexChanged(int index)
 
     d->currentPath = item.path();
 
+    d->ignoreSignals = true;
     d->openPerspective(item);
+    d->ignoreSignals = false;
     emit currentPathChanged(d->currentPath);
     emit displayNameChanged(displayName());
 }
@@ -119,6 +122,7 @@ Tab::Tab(QWidget *parent) :
 
     d->history = new History(this);
     d->perspectiveWidget = new PerspectiveWidget(this);
+    d->ignoreSignals = false;
 
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), SLOT(onIndexChanged(int)));
 }
@@ -137,13 +141,20 @@ void Tab::setCurrentPath(const QString & currentPath)
 {
     Q_D(Tab);
 
-    if (d->currentPath != currentPath) {
+    if (d->ignoreSignals)
+        return;
+
+    d->ignoreSignals = true;
+
+//    if (d->currentPath != currentPath) {
         d->currentPath = currentPath;
         if (d->openPerspective(d->currentPath)) {
+            d->ignoreSignals = false;
             emit currentPathChanged(d->currentPath);
             emit displayNameChanged(displayName());
         }
-    }
+//    }
+    d->ignoreSignals = false;
 }
 
 History *Tab::history() const

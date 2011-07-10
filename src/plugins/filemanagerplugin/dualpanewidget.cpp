@@ -83,9 +83,9 @@ FileManagerWidget * DualPaneWidget::leftWidget() const
     return d_func()->panes[LeftPane];
 }
 
-FileManagerWidget * DualPaneWidget::rigthWidget() const
+FileManagerWidget * DualPaneWidget::rightWidget() const
 {
-    return d_func()->panes[LeftPane];
+    return d_func()->panes[RightPane];
 }
 
 QString DualPaneWidget::currentPath() const

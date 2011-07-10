@@ -1,6 +1,7 @@
 #include "filemanagerview.h"
 
 #include "dualpanewidget.h"
+#include "filemanagerwidget.h"
 
 #include <QtGui/QAction>
 #include <QtCore/QSettings>
@@ -65,7 +66,12 @@ bool FileManagerView::open(const QString &path)
 
 bool FileManagerView::open(const HistoryItem &item)
 {
-    m_widget->history()->goToItem(item);
+    if (m_widget->leftWidget()->history()->items().contains(item)) {
+        m_widget->leftWidget()->history()->goToItem(item);
+    }
+    if (m_widget->rightWidget()->history()->items().contains(item)) {
+        m_widget->rightWidget()->history()->goToItem(item);
+    }
     return true;
 }
 
