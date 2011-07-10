@@ -8,6 +8,7 @@
 namespace ExtensionSystem {
 
 class PluginSpec;
+
 class PluginViewModelPrivate;
 class EXTENSIONSYSTEM_EXPORT PluginViewModel : public QAbstractItemModel
 {
@@ -28,14 +29,11 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-signals:
-
 public slots:
     void updateModel();
 
 private:
     PluginViewModelPrivate * d_ptr;
-
 };
 
 } // namespace ExtensionSystem

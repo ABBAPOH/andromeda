@@ -1,11 +1,11 @@
 #include "pluginspec.h"
 #include "pluginspec_p.h"
 
+#include <QtCore/QFileInfo>
 #include <QtCore/QPluginLoader>
-#include <QtCore/QStringList>
 #include <QtCore/QRegExp>
 #include <QtCore/QSettings>
-#include <QtCore/QFileInfo>
+#include <QtCore/QStringList>
 #include <QDebug>
 
 #include "pluginmanager.h"
@@ -13,17 +13,19 @@
 using namespace ExtensionSystem;
 
 Version::Version() :
-        build(0),
-        revision(0)
+    major(0),
+    minor(0),
+    build(0),
+    revision(0)
 {
-    major = minor = 0; // to fix build on linux
 }
 
 Version::Version(const QString &version) :
-        build(0),
-        revision(0)
+    major(0),
+    minor(0),
+    build(0),
+    revision(0)
 {
-    major = minor = 0; // to fix build on linux
     // mathes to Major.Minor.Patch.Fix version
     static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\.([0-9]+))?");
     if ( regExp.exactMatch(version) ) {
@@ -49,13 +51,13 @@ bool Version::operator==(const Version &other)
     return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
 }
 
-PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq):
-        q_ptr(qq),
-        plugin(0),
-        loader(new QPluginLoader(q_ptr)),
-        loaded(false),
-        loadOnStartup(true),
-        hasError(false)
+PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
+    q_ptr(qq),
+    plugin(0),
+    loader(new QPluginLoader(q_ptr)),
+    loaded(false),
+    loadOnStartup(true),
+    hasError(false)
 {
     errorString = "Unknown Error";
 }
@@ -305,7 +307,7 @@ bool PluginDependency::operator==(const PluginDependency &other)
     \internal
 */
 PluginSpec::PluginSpec() :
-        d_ptr(new PluginSpecPrivate(this))
+    d_ptr(new PluginSpecPrivate(this))
 {
 }
 
@@ -324,7 +326,7 @@ PluginSpec::~PluginSpec()
     Constructs PluginSpec using data received from file located at \a path.
 */
 PluginSpec::PluginSpec(const QString & path) :
-        d_ptr(new PluginSpecPrivate(this))
+    d_ptr(new PluginSpecPrivate(this))
 {
     Q_D(PluginSpec);
     d->init(path);

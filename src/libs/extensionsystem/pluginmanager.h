@@ -6,7 +6,6 @@
 
 namespace ExtensionSystem {
 
-class PluginSpec;
 class PluginManagerPrivate;
 class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
 {

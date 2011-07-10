@@ -5,12 +5,12 @@
 
 #include <QtGui/QDialog>
 
+class QDataWidgetMapper;
+class QModelIndex;
+
 namespace Ui {
     class FullPluginView;
 }
-
-class QDataWidgetMapper;
-class QModelIndex;
 
 namespace ExtensionSystem {
 
@@ -22,6 +22,7 @@ class EXTENSIONSYSTEM_EXPORT FullPluginView : public QDialog
 public:
     explicit FullPluginView(QWidget *parent = 0);
     ~FullPluginView();
+
     void setModel(PluginViewModel *model);
 
 public slots:

@@ -1,23 +1,22 @@
 #include "pluginview.h"
 #include "ui_pluginview.h"
 
-#include "pluginmanager.h"
-#include "pluginviewmodel.h"
 #include "fullpluginview.h"
+#include "pluginviewmodel.h"
 
-#include <QtCore/QModelIndex>
 using namespace ExtensionSystem;
 
 PluginView::PluginView(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PluginView),
-    fullPluginView(new FullPluginView(this))
+    m_fullPluginView(new FullPluginView(this))
 {
     ui->setupUi(this);
+
     PluginViewModel* model = new PluginViewModel(this);
     ui->treeView->setModel(model);
     ui->treeView->setColumnWidth(0, 190);
-    fullPluginView->setModel(model);
+    m_fullPluginView->setModel(model);
 
     ui->treeView->hideColumn(4);
     ui->treeView->hideColumn(6);
@@ -51,6 +50,6 @@ void PluginView::showFullInfo(const QModelIndex & i)
 
         return;
     }
-    fullPluginView->setIndex(index);
-    fullPluginView->exec();
+    m_fullPluginView->setIndex(index);
+    m_fullPluginView->exec();
 }

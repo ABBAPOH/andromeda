@@ -3,8 +3,8 @@
 
 #include "extensionsystem_global.h"
 
-#include <QtGui/QDialog>
 #include <QtCore/QModelIndex>
+#include <QtGui/QDialog>
 
 namespace Ui {
     class PluginView;
@@ -12,8 +12,8 @@ namespace Ui {
 
 namespace ExtensionSystem {
 
-class PluginManager;
 class FullPluginView;
+
 class EXTENSIONSYSTEM_EXPORT PluginView : public QDialog
 {
     Q_OBJECT
@@ -24,8 +24,7 @@ public:
 
 private:
     Ui::PluginView *ui;
-    PluginManager *manager;
-    FullPluginView *fullPluginView;
+    FullPluginView *m_fullPluginView;
 
 private slots:
     void showFullInfo(const QModelIndex &index = QModelIndex());
