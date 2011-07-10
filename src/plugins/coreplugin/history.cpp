@@ -32,6 +32,9 @@ void History::appendItem(const HistoryItem &item)
 
     Q_D(History);
 
+//    if (d->items.contains(item))
+//        return;
+
     d->items.erase(d->items.begin() + d->currentItemIndex + 1, d->items.end());
     d->items.append(item);
     d->currentItemIndex++;
