@@ -21,6 +21,15 @@ public:
 
 using namespace FileManagerPlugin;
 
+void swapPalettes(QWidget *active, QWidget *inactive)
+{
+    QPalette pal = inactive->palette(); // it is active palette:)
+    active->setPalette(pal);
+    QColor c = pal.color(QPalette::Inactive, QPalette::Window);
+    pal.setColor(QPalette::Active, QPalette::Base, c);
+    inactive->setPalette(pal);
+}
+
 DualPaneWidget::DualPaneWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new DualPaneWidgetPrivate)
@@ -32,6 +41,7 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     d->panes[LeftPane] = new FileManagerWidget(this);
     d->panes[RightPane] = new FileManagerWidget(this);
     d->panes[RightPane]->hide();
+    swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
 
     d->layout = new QHBoxLayout();
     d->layout->addWidget(d->panes[LeftPane]);
@@ -222,11 +232,14 @@ bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
 
     if (event->type() == QEvent::FocusIn) {
         if (watched == d->panes[LeftPane] && d->activePane != LeftPane) {
+            qDebug("Active Left");
             d->activePane = LeftPane;
+            swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
             emit activePaneChanged(d->activePane);
         }
         if (watched == d->panes[RightPane] && d->activePane != RightPane) {
             d->activePane = RightPane;
+            swapPalettes(d->panes[RightPane], d->panes[LeftPane]);
             emit activePaneChanged(d->activePane);
         }
 
