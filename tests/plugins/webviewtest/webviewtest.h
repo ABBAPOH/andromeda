@@ -7,11 +7,12 @@
 class WebViewTest : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
+
 public:
     WebViewTest();
 
-    virtual bool initialize();
-    virtual void shutdown();
+    bool initialize();
+    void shutdown();
 
     QObject * m_view;
 };

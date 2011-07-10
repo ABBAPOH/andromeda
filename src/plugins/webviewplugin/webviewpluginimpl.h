@@ -9,13 +9,8 @@ class WebViewPluginImpl : public ExtensionSystem::IPlugin
 public:
     WebViewPluginImpl();
 
-    virtual bool initialize();
-    virtual void shutdown();
-
-signals:
-
-public slots:
-
+    bool initialize();
+    void shutdown();
 };
 
 #endif // WEBVIEWPLUGINIMPL_H

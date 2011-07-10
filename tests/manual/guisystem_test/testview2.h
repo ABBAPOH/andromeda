@@ -11,16 +11,16 @@ class TestView2 : public IView
 public:
     explicit TestView2(QObject *parent = 0);
 
-    virtual QString type() const
+    QString type() const
     {
         return "TestType 2";
     }
 
-    virtual QWidget *widget() const
+    QWidget *widget() const
     {
         return m_widget;
     }
-    virtual QToolBar *toolBar() const
+    QToolBar *toolBar() const
     {
         return m_toolBar;
     }
@@ -38,17 +38,17 @@ private:
 class TestViewFactory2: public IViewFactory
 {
 public:
-    virtual QString id() const
+    QString id() const
     {
         return "TestViewFactory2";
     }
 
-    virtual QString type() const
+    QString type() const
     {
         return "TestView ";
     }
 
-    virtual IView *createView() const
+    IView *createView() const
     {
         return new TestView2;
     }

@@ -28,20 +28,20 @@ public:
     explicit NavigationModel(QObject *parent = 0);
     ~NavigationModel();
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const;
 
-    virtual QStringList mimeTypes() const;
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
-    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
+    QStringList mimeTypes() const;
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                               int row, int column, const QModelIndex &parent);
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QModelIndex index(int row, int column,
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &index) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual Qt::DropActions supportedDropActions() const;
+    QModelIndex parent(const QModelIndex &index) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    Qt::DropActions supportedDropActions() const;
 
     QModelIndex index(const QString &path) const;
     QString path(const QModelIndex &index) const;
@@ -51,10 +51,6 @@ public:
 
 //    StandardLocations standardLocations() const;
     void setStandardLocations(StandardLocations locations);
-
-signals:
-
-public slots:
 
 protected:
     NavigationModelPrivate *d_ptr;

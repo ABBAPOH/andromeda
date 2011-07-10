@@ -30,7 +30,7 @@ public:
     QString currentPath() const;
 
 protected:
-    virtual void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *);
 
 signals:
     void currentPathChanged(const QString & path);

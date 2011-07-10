@@ -17,24 +17,20 @@ public:
     explicit WebViewEditor(QObject *parent = 0);
     ~WebViewEditor();
 
-    virtual bool open(const QString &path)
+    bool open(const QString &path)
     {
         m_webView->setUrl(path);
         return true;
     }
-    virtual bool create() { return false; }
-    virtual void close() {}
+    bool create() { return false; }
+    void close() {}
 
     //    QList<IFile *> files();
 
-    virtual QWidget *widget() const { return m_webView; }
-    virtual QToolBar *toolBar() const { return 0; }
+    QWidget *widget() const { return m_webView; }
+    QToolBar *toolBar() const { return 0; }
 
-    virtual QString name() const { return ""; }
-
-signals:
-
-public slots:
+    QString name() const { return ""; }
 
 public:
 //private:

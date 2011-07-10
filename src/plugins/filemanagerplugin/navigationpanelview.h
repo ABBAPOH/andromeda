@@ -13,11 +13,11 @@ class NavigationPanelView : public GuiSystem::IView
 public:
     explicit NavigationPanelView(QObject *parent = 0);
 
-    virtual void initialize();
+    void initialize();
 
-    virtual QString type() const;
+    QString type() const;
 
-    virtual QWidget *widget() const;
+    QWidget *widget() const;
 
 private:
     NavigationPanel *m_widget;
@@ -28,12 +28,12 @@ class NavigationPanelFactory : public GuiSystem::IViewFactory
     Q_OBJECT
 public:
     explicit NavigationPanelFactory(QObject * parent = 0) : GuiSystem::IViewFactory(parent) {}
-    virtual ~NavigationPanelFactory() {}
+    ~NavigationPanelFactory() {}
 
-    virtual QString id() const;
+    QString id() const;
 
 protected:
-    virtual GuiSystem::IView *createView() const;
+    GuiSystem::IView *createView() const;
 };
 
 } // namespace FileManagerPlugin

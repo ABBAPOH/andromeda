@@ -14,15 +14,15 @@ public:
     explicit FileManagerView(QObject *parent = 0);
 
     // from IView
-    virtual void initialize(/*GuiSystem::State *state*/);
-    virtual QString type() const;
-    virtual QWidget *widget() const;
+    void initialize();
+    QString type() const;
+    QWidget *widget() const;
 
     // from IMainView
-    virtual bool open(const QString &path);
-    virtual bool open(const HistoryItem &item);
+    bool open(const QString &path);
+    bool open(const HistoryItem &item);
 
-    virtual HistoryItem currentItem() const;
+    HistoryItem currentItem() const;
 
 private slots:
     void setDualPaneModeEnabled(bool on);
@@ -37,12 +37,12 @@ class FileManagerFactory : public GuiSystem::IViewFactory
     Q_OBJECT
 public:
     explicit FileManagerFactory(QObject * parent = 0) : GuiSystem::IViewFactory(parent) {}
-    virtual ~FileManagerFactory() {}
+    ~FileManagerFactory() {}
 
-    virtual QString id() const;
+    QString id() const;
 
 protected:
-    virtual GuiSystem::IView *createView() const;
+    GuiSystem::IView *createView() const;
 };
 
 } // namespace FileManagerPlugin

@@ -17,7 +17,7 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
 
 public:
     explicit PluginManager(QObject *parent = 0);
-    virtual ~PluginManager();
+    ~PluginManager();
 
     static PluginManager *instance();
 

@@ -7,9 +7,10 @@
 class TestPlugin2 : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
+
 public:
     TestPlugin2();
-    virtual bool initialize();
+    bool initialize();
 };
 
 #endif // TESTPLUGIN2_H
