@@ -23,11 +23,11 @@ using namespace FileManagerPlugin;
 
 void swapPalettes(QWidget *active, QWidget *inactive)
 {
-    QPalette pal = inactive->palette(); // it is active palette:)
-    active->setPalette(pal);
-    QColor c = pal.color(QPalette::Inactive, QPalette::Window);
-    pal.setColor(QPalette::Active, QPalette::Base, c);
-    inactive->setPalette(pal);
+    QPalette palette = inactive->palette(); // it is active palette:)
+    active->setPalette(palette);
+    QColor color = palette.color(QPalette::Disabled, QPalette::Base);
+    palette.setColor(QPalette::Active, QPalette::Base, color);
+    inactive->setPalette(palette);
 }
 
 DualPaneWidget::DualPaneWidget(QWidget *parent) :
