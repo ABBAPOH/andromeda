@@ -11,7 +11,7 @@ class FileManagerPluginImpl : public ExtensionSystem::IPlugin
 public:
     explicit FileManagerPluginImpl(QObject *parent = 0);
 
-    virtual bool initialize();
+    bool initialize();
 };
 
 //} // namespace FileManagerPlugin

@@ -9,8 +9,6 @@ class Test : public QObject
 public:
     explicit Test(QObject *parent = 0);
 
-signals:
-
 public slots:
     void testDeletion();
 };

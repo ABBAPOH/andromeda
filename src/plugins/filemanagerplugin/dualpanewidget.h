@@ -63,7 +63,7 @@ public slots:
     void up();
 
 protected:
-    virtual bool eventFilter(QObject * watched, QEvent * event);
+    bool eventFilter(QObject * watched, QEvent * event);
 
     DualPaneWidgetPrivate *d_ptr;
 };

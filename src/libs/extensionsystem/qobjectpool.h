@@ -16,7 +16,7 @@ class EXTENSIONSYSTEM_EXPORT QObjectPool : public QObject
 
 public:
     explicit QObjectPool(QObject *parent = 0);
-    virtual ~QObjectPool();
+    ~QObjectPool();
 
     Q_INVOKABLE void addObject(QObject *object, const QString &name = "");
     Q_INVOKABLE void removeObject(QObject *object);

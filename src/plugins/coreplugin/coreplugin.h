@@ -11,8 +11,8 @@ class CorePluginImpl : public IPlugin
 public:
     CorePluginImpl();
 
-    virtual bool initialize();
-    virtual void shutdown();
+    bool initialize();
+    void shutdown();
 
 public slots:
     void newWindow();
