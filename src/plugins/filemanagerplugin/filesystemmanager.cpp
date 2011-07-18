@@ -155,12 +155,14 @@ bool removePath(const QString &path)
     bool result = true;
     QFileInfo info(path);
     if (info.isDir()) {
-        foreach (const QString &path, QDir(path).entryList(QStringList(), QDir::NoDotAndDotDot)) {
-            result &= removePath(path);
+        QDir dir(path);
+        foreach (const QString &entry, dir.entryList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot)) {
+            result &= removePath(dir.absoluteFilePath(entry));
         }
-        info.dir().rmdir(info.fileName());
+        if (!info.dir().rmdir(info.fileName()))
+            return false;
     } else {
-        result &= QFile::remove(path);
+        result = QFile::remove(path);
     }
     return result;
 }
