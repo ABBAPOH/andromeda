@@ -63,6 +63,7 @@ QAction * Command::action()
     a->setObjectName(id());
     a->setIcon(defaultIcon());
     a->setShortcut(defaultShortcut());
+    a->setShortcutContext(Qt::WidgetShortcut);
     a->setText(defaultText());
     return a;
 }
