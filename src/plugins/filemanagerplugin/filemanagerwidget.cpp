@@ -235,9 +235,12 @@ bool removePath(const QString &path);
 
 void FileManagerWidget::remove()
 {
-    QStringList paths = selectedPaths();
-    foreach (const QString &path, paths) {
-        bool result = removePath(path);
+    Q_D(FileManagerWidget);
+
+    QModelIndexList list = d->currentView->selectionModel()->selectedRows();
+
+    foreach (const QModelIndex &index, list) {
+        bool result = d->model->remove(index);
         if (!result) {
         }
     }
