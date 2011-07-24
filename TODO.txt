@@ -1,24 +1,31 @@
 // TODO:
 -unloading factories and their views
--remove sharing between tabs
 -deleting views and widgets with State
--factory is no more view's parent
--dual pain editor
+-factory is no more view's parent (remove with plugin unloading)
 -separate options and geometry. Options are NOT used now.
--convenience methods for adding actions (not manually get menu, but use id)
--actionManeger: disconnects (more methods),
 -when view removed, remove actions
 -clone tabs
--fix bug with lost focus on dualpane. maybe qtbug
--think about dependencies and unloading. NOW bugs very big.
--add maximum count to history
--thinks about map MimeType->Perspective (move to core?)
+-remove history from CorePlugin
 
 // DISCUSS:
 - hide event handler in view
 - ID in Perspective (loading from files and constructors)
-- different top level widgets (actionmanager is not singletone?)
-- relative paths in file Commands
-- filecopier & copying to same dir (append suffix with number)
-- remove history from CorePlugin
 - tags in Commands & Containers
+- think about map MimeType->Perspective (move to core?)
+
+// TODO alpha
+Extension System:
+-Save/load plugin session
+-Fix current and compatibiltiy versions, fix dependencies
+-Menu command for pluginmanager UI
+-Maybe plugin downloading from server
+-Spec editing utility
+-Spec binary format
+-Make PluginManager non-static
+
+Guisystem:
+-Store view's sessions
+
+IO:
+-Add QMimeTypeDataBase
+-QFileCopier
