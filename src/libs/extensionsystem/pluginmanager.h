@@ -10,8 +10,8 @@ class PluginManagerPrivate;
 class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
 {
     Q_OBJECT
-    Q_DISABLE_COPY(PluginManager)
     Q_DECLARE_PRIVATE(PluginManager)
+    Q_DISABLE_COPY(PluginManager)
     Q_PROPERTY(bool loaded READ loaded)
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
 

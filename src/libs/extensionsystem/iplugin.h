@@ -12,6 +12,7 @@ class EXTENSIONSYSTEM_EXPORT IPlugin : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(IPlugin)
+    Q_DISABLE_COPY(IPlugin)
 
 public:
     IPlugin();

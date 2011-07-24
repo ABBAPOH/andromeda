@@ -17,6 +17,7 @@ class FullPluginView;
 class EXTENSIONSYSTEM_EXPORT PluginView : public QDialog
 {
     Q_OBJECT
+    Q_DISABLE_COPY(PluginView)
 
 public:
     explicit PluginView(QWidget *parent = 0);

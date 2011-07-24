@@ -14,6 +14,8 @@ class EXTENSIONSYSTEM_EXPORT PluginViewModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PluginViewModel)
+    Q_DISABLE_COPY(PluginViewModel)
+
 public:
     explicit PluginViewModel(QObject *parent = 0);
     ~PluginViewModel();
