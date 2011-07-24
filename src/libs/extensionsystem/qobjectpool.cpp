@@ -3,14 +3,6 @@
 
 using namespace ExtensionSystem;
 
-QObjectPoolPrivate::QObjectPoolPrivate()
-{
-}
-
-QObjectPoolPrivate::~QObjectPoolPrivate()
-{
-}
-
 QObjectPool::QObjectPool(QObject *parent) :
     QObject(parent),
     d_ptr(new QObjectPoolPrivate)

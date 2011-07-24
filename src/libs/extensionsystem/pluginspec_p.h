@@ -1,55 +1,58 @@
 #ifndef PLUGINSPEC_P_H
 #define PLUGINSPEC_P_H
 
+#include "pluginspec.h"
 #include "iplugin.h"
 
 class QPluginLoader;
+
 namespace ExtensionSystem {
 
-    class PluginSpecPrivate
-    {
-        Q_DECLARE_PUBLIC(PluginSpec)
-        PluginSpec *q_ptr;
-    public:
-        PluginSpecPrivate(PluginSpec *qq);
+class PluginSpecPrivate
+{
+    Q_DECLARE_PUBLIC(PluginSpec)
+    PluginSpec *q_ptr;
 
-        IPlugin *plugin;
-        QPluginLoader * loader;
+public:
+    PluginSpecPrivate(PluginSpec *qq);
 
-        QString name;
-        Version version;
-        Version compatibilityVersion;
-        QString vendor;
-        QString category;
-        QString copyright;
-        QString license;
-        QString description;
-        QString url;
+    IPlugin *plugin;
+    QPluginLoader *loader;
 
-        QList<PluginDependency> dependencies;
+    QString name;
+    Version version;
+    Version compatibilityVersion;
+    QString vendor;
+    QString category;
+    QString copyright;
+    QString license;
+    QString description;
+    QString url;
 
-        QList<PluginSpec*> dependencySpecs;
-        QList<PluginSpec*> dependentSpecs;
+    QList<PluginDependency> dependencies;
 
-        QString libraryPath;
-        QString libraryLocation;
+    QList<PluginSpec*> dependencySpecs;
+    QList<PluginSpec*> dependentSpecs;
 
-        bool loaded;
-        bool loadOnStartup;
+    QString libraryPath;
+    QString libraryLocation;
 
-        QString errorString;
-        bool hasError;
+    bool loaded;
+    bool loadOnStartup;
 
-        void init(const QString &path);
-        bool load();
-        bool loadLibrary();
-        bool resolveDependencies();
-        bool unload();
-        bool unloadLibrary();
-        static int compareVersion(const Version &version1, const Version &version2);
-        QString getLibraryPath(const QString &path);
-        void setError(const QString &message);
-    };
+    QString errorString;
+    bool hasError;
+
+    void init(const QString &path);
+    bool load();
+    bool loadLibrary();
+    bool resolveDependencies();
+    bool unload();
+    bool unloadLibrary();
+    static int compareVersion(const Version &version1, const Version &version2);
+    QString getLibraryPath(const QString &path);
+    void setError(const QString &message);
+};
 
 } // namespace ExtensionSystem
 

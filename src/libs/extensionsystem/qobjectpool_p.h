@@ -10,8 +10,8 @@ namespace ExtensionSystem {
 class QObjectPoolPrivate
 {
 public:
-    QObjectPoolPrivate();
-    virtual ~QObjectPoolPrivate();
+    QObjectPoolPrivate() {}
+    virtual ~QObjectPoolPrivate() {}
 
     QObjectList objects;
     QHash<QString, QObject *> namedObjects;
