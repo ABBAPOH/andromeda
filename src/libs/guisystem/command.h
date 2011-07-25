@@ -68,6 +68,9 @@ public:
 
     QString id() const;
 
+signals:
+    void changed();
+
 private slots:
     void onTrigger(bool);
 
