@@ -196,7 +196,6 @@ void Command::onTrigger(bool checked)
         else
             d->realAction->trigger();
     }
-    emit triggered(checked);
 }
 
 void Command::setRealAction(QAction *action)
