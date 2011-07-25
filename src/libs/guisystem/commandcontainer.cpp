@@ -52,7 +52,7 @@ void CommandContainer::addContainer(CommandContainer *container)
 void CommandContainer::addSeparator()
 {
     Command *cmd = new Command(QString(), this);
-    cmd->commandAction()->setSeparator(true);
+    cmd->setSeparator(true);
     addCommand(cmd);
 }
 

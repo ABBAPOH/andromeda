@@ -63,9 +63,9 @@ void CorePluginImpl::createActions()
     Command *newWindowCommand = new Command(Constants::Ids::Actions::NewWindow, this);
     newWindowCommand->setDefaultText(tr("New window"));
     newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
-    newWindowCommand->commandAction()->setEnabled(true);
+    newWindowCommand->setAlwaysEnabled(true);
     fileContainer->addCommand(newWindowCommand);
-    connect(newWindowCommand->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
+    connect(newWindowCommand, SIGNAL(triggered()), SLOT(newWindow()));
 
     Command *newTabCommand = new Command(Constants::Ids::Actions::NewTab, this);
     newTabCommand->setDefaultText(tr("New tab"));
@@ -138,7 +138,7 @@ void CorePluginImpl::createActions()
     dualPaneCommand->setDefaultText(tr("Dual Pane"));
     dualPaneCommand->setDefaultShortcut(tr("Ctrl+D"));
     // TODO: change API or realization!!!
-    dualPaneCommand->commandAction()->setCheckable(true);
+    dualPaneCommand->setCheckable(true);
     viewContainer->addCommand(dualPaneCommand);
 
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
