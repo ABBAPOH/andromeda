@@ -96,8 +96,12 @@ void GuiSystem::Command::setAlwaysEnabled(bool b)
 {
     Q_D(Command);
 
-    d->action->setEnabled(b);
-    d->alwaysEnabled = b;
+    if (d->alwaysEnabled != b) {
+        d->alwaysEnabled = b;
+        d->action->setEnabled(b);
+
+        emit changed();
+    }
 }
 
 Command::Attributes Command::attributes() const
@@ -105,20 +109,32 @@ Command::Attributes Command::attributes() const
     return d_func()->attributes;
 }
 
-void Command::setAttributes(Attributes attr)
+void Command::setAttributes(Attributes attrs)
 {
-    d_func()->attributes = attr;
+    Q_D(Command);
+
+    if (d->attributes != attrs) {
+        d->attributes = attrs;
+
+        emit changed();
+    }
 }
 
 
-bool GuiSystem::Command::isCheckable() const
+bool Command::isCheckable() const
 {
     return d_func()->action->isCheckable();
 }
 
-void GuiSystem::Command::setCheckable(bool b)
+void Command::setCheckable(bool b)
 {
-    d_func()->action->setCheckable(b);
+    Q_D(Command);
+
+    if (d->action->isCheckable() != b) {
+        d->action->setCheckable(b);
+
+        emit changed();
+    }
 }
 
 QKeySequence Command::defaultShortcut() const
@@ -130,9 +146,13 @@ void Command::setDefaultShortcut(const QKeySequence &key)
 {
     Q_D(Command);
 
-    d->defaultShortcut = key;
-    if (!d->realAction)
-        d->action->setShortcut(key);
+    if (d->defaultShortcut != key) {
+        d->defaultShortcut = key;
+        if (!d->realAction)
+            d->action->setShortcut(key);
+
+        emit changed();
+    }
 }
 
 QIcon Command::defaultIcon() const
@@ -144,9 +164,13 @@ void Command::setDefaultIcon(const QIcon &icon)
 {
     Q_D(Command);
 
-    d->defaultIcon = icon;
-    if (!d->realAction)
-        d->action->setIcon(icon);
+    if (d->defaultIcon != icon) {
+        d->defaultIcon = icon;
+        if (!d->realAction)
+            d->action->setIcon(icon);
+
+        emit changed();
+    }
 }
 
 QString Command::defaultText() const
@@ -158,18 +182,21 @@ void Command::setDefaultText(const QString &text)
 {
     Q_D(Command);
 
-    d->defaultText = text;
-    if (!d->realAction)
-        d->action->setText(text);
+    if (d->defaultText != text) {
+        d->defaultText = text;
+        if (!d->realAction)
+            d->action->setText(text);
+
+        emit changed();
+    }
 }
 
-
-bool GuiSystem::Command::isSeparator() const
+bool Command::isSeparator() const
 {
     return d_func()->action->isSeparator();
 }
 
-void GuiSystem::Command::setSeparator(bool b)
+void Command::setSeparator(bool b)
 {
     d_func()->action->setSeparator(b);
 }
