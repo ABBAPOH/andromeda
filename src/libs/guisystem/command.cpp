@@ -15,6 +15,8 @@ public:
 
     Command::Attributes attributes;
 
+    bool alwaysEnabled;
+
     QKeySequence defaultShortcut;
     QIcon defaultIcon;
     QString defaultText;
@@ -84,6 +86,20 @@ QAction * Command::commandAction() const
     return d_func()->action;
 }
 
+
+bool GuiSystem::Command::alwaysEnabled() const
+{
+    return d_func()->alwaysEnabled;
+}
+
+void GuiSystem::Command::setAlwaysEnabled(bool b)
+{
+    Q_D(Command);
+
+    d->action->setEnabled(b);
+    d->alwaysEnabled = b;
+}
+
 Command::Attributes Command::attributes() const
 {
     return d_func()->attributes;
@@ -92,6 +108,17 @@ Command::Attributes Command::attributes() const
 void Command::setAttributes(Attributes attr)
 {
     d_func()->attributes = attr;
+}
+
+
+bool GuiSystem::Command::isCheckable() const
+{
+    return d_func()->action->isCheckable();
+}
+
+void GuiSystem::Command::setCheckable(bool b)
+{
+    d_func()->action->setCheckable(b);
 }
 
 QKeySequence Command::defaultShortcut() const
@@ -136,6 +163,17 @@ void Command::setDefaultText(const QString &text)
         d->action->setText(text);
 }
 
+
+bool GuiSystem::Command::isSeparator() const
+{
+    return d_func()->action->isSeparator();
+}
+
+void GuiSystem::Command::setSeparator(bool b)
+{
+    d_func()->action->setSeparator(b);
+}
+
 /*!
     \brief Returns id of this command.
 
@@ -158,6 +196,7 @@ void Command::onTrigger(bool checked)
         else
             d->realAction->trigger();
     }
+    emit triggered(checked);
 }
 
 void Command::setRealAction(QAction *action)
@@ -179,5 +218,5 @@ void Command::setRealAction(QAction *action)
     d->action->setCheckable(checkable);
     if (checkable)
         d->action->setChecked(action->isChecked());
-    d->action->setEnabled(action ? action->isEnabled() : false);
+    d->action->setEnabled(d->alwaysEnabled || (action ? action->isEnabled() : false));
 }
