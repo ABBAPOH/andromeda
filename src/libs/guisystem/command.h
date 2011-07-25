@@ -68,9 +68,6 @@ public:
 
     QString id() const;
 
-signals:
-    void triggered(bool checked = false);
-
 private slots:
     void onTrigger(bool);
 

@@ -65,7 +65,7 @@ void CorePluginImpl::createActions()
     newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
     newWindowCommand->setAlwaysEnabled(true);
     fileContainer->addCommand(newWindowCommand);
-    connect(newWindowCommand, SIGNAL(triggered()), SLOT(newWindow()));
+    connect(newWindowCommand->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
 
     Command *newTabCommand = new Command(Constants::Ids::Actions::NewTab, this);
     newTabCommand->setDefaultText(tr("New tab"));
