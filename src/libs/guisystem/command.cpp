@@ -22,11 +22,32 @@ public:
     QString defaultText;
 
     QString id;
+
+    void update();
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
+
+void CommandPrivate::update()
+{
+    if (attributes & Command::AttributeHide)
+        action->setVisible((bool)realAction);
+    if (attributes & Command::AttributeUpdateText)
+        action->setText(realAction ? realAction->text() : defaultText);
+    if (attributes & Command::AttributeUpdateIcon)
+        action->setIcon(realAction ? realAction->icon() : defaultIcon);
+    if (!(attributes & Command::AttributeNonConfigurable)) {
+        action->setShortcut(realAction ? realAction->shortcut() : defaultShortcut);
+    }
+
+    bool checkable = realAction ? realAction->isCheckable() : false;
+    action->setCheckable(checkable);
+    if (checkable)
+        action->setChecked(realAction->isChecked());
+    action->setEnabled(alwaysEnabled || (realAction ? realAction->isEnabled() : false));
+}
 
 Command::Command(const QString &id, QObject *parent) :
     QObject(parent),
@@ -87,12 +108,12 @@ QAction * Command::commandAction() const
 }
 
 
-bool GuiSystem::Command::alwaysEnabled() const
+bool Command::alwaysEnabled() const
 {
     return d_func()->alwaysEnabled;
 }
 
-void GuiSystem::Command::setAlwaysEnabled(bool b)
+void Command::setAlwaysEnabled(bool b)
 {
     Q_D(Command);
 
@@ -119,7 +140,6 @@ void Command::setAttributes(Attributes attrs)
         emit changed();
     }
 }
-
 
 bool Command::isCheckable() const
 {
@@ -164,13 +184,11 @@ void Command::setDefaultIcon(const QIcon &icon)
 {
     Q_D(Command);
 
-    if (d->defaultIcon != icon) {
-        d->defaultIcon = icon;
-        if (!d->realAction)
-            d->action->setIcon(icon);
+    d->defaultIcon = icon;
+    if (!d->realAction)
+        d->action->setIcon(icon);
 
-        emit changed();
-    }
+    emit changed();
 }
 
 QString Command::defaultText() const
@@ -229,20 +247,8 @@ void Command::setRealAction(QAction *action)
 {
     Q_D(Command);
 
-    d->realAction = action;
-    if (d->attributes & AttributeHide)
-        d->action->setVisible((bool)action);
-    if (d->attributes & AttributeUpdateText)
-        d->action->setText(action ? action->text() : d->defaultText);
-    if (d->attributes & AttributeUpdateIcon)
-        d->action->setIcon(action ? action->icon() : d->defaultIcon);
-    if (!(d->attributes & AttributeNonConfigurable)) {
-        d->action->setShortcut(action ? action->shortcut() : d->defaultShortcut);
+    if (d->realAction != action) {
+        d->realAction = action;
+        d->update();
     }
-
-    bool checkable = action ? action->isCheckable() : false;
-    d->action->setCheckable(checkable);
-    if (checkable)
-        d->action->setChecked(action->isChecked());
-    d->action->setEnabled(d->alwaysEnabled || (action ? action->isEnabled() : false));
 }
