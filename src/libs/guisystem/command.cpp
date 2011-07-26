@@ -58,6 +58,7 @@ Command::Command(const QString &id, QObject *parent) :
     d->id = id;
     d->action = new QAction(this);
     d->action->setEnabled(false);
+    d->alwaysEnabled = false;
     d->realAction = 0;
 
     connect(d->action, SIGNAL(triggered(bool)), SLOT(onTrigger(bool)));

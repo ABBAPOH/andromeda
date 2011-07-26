@@ -13,6 +13,7 @@ const char * const File = "Menus.File";
 const char * const Edit = "Menus.Edit";
 const char * const View = "Menus.View";
 const char * const GoTo = "Menus.GoTo";
+const char * const Tools = "Menus.Tools";
 
 } // namespace Menus
 
@@ -31,6 +32,7 @@ const char * const Cut = "Actions.Cut";
 const char * const Copy = "Actions.Copy";
 const char * const Paste = "Actions.Paste";
 const char * const SelectAll = "Actions.SelectAll";
+const char * const Plugins = "Actions.Plugins";
 
 const char * const DualPane = "Actions.DualPane";
 

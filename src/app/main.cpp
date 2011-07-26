@@ -1,6 +1,7 @@
 #include <QtSingleApplication>
-#include <pluginmanager.h>
 #include <QtCore/QStringList>
+#include <pluginmanager.h>
+#include <pluginview.h>
 #include <QtWebKit/QWebSecurityOrigin>
 
 using namespace ExtensionSystem;
@@ -26,6 +27,9 @@ int main(int argc, char *argv[])
     PluginManager manager;
     manager.setPluginsFolder("plugins");
     manager.loadPlugins();
+
+    PluginView view;
+    manager.addObject(&view, "pluginView");
 
     QObject::connect(&app, SIGNAL(lastWindowClosed()),
                      &manager, SLOT(unloadPlugins()), Qt::QueuedConnection);

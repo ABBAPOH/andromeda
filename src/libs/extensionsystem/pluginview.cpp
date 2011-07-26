@@ -16,6 +16,7 @@ PluginView::PluginView(QWidget *parent) :
     PluginViewModel* model = new PluginViewModel(this);
     ui->treeView->setModel(model);
     ui->treeView->setColumnWidth(0, 190);
+    ui->treeView->expandAll();
     m_fullPluginView->setModel(model);
 
     ui->treeView->hideColumn(4);

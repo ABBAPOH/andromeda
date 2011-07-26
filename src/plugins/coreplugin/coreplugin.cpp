@@ -12,6 +12,7 @@
 #include <actionmanager.h>
 #include <command.h>
 #include <commandcontainer.h>
+#include <pluginview.h>
 #include "constants.h"
 
 using namespace CorePlugin;
@@ -50,6 +51,12 @@ void CorePluginImpl::newWindow()
     ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
     window->show();
     addObject(window);
+}
+
+void CorePluginImpl::showPluginView()
+{
+    PluginView *view = object<PluginView>("pluginView");
+    view->exec();
 }
 
 void CorePluginImpl::createActions()
@@ -141,7 +148,7 @@ void CorePluginImpl::createActions()
     dualPaneCommand->setCheckable(true);
     viewContainer->addCommand(dualPaneCommand);
 
-    CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
+    CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);
     goToContainer->setTitle(tr("Go To"));
     menuBarContainer->addContainer(goToContainer);
 
@@ -159,6 +166,16 @@ void CorePluginImpl::createActions()
     upOneLevelCommand->setDefaultText(tr("Up one level"));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
+
+    CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
+    toolsContainer->setTitle(tr("Tools"));
+    menuBarContainer->addContainer(toolsContainer);
+
+    Command *pluginsCommand = new Command(Constants::Ids::Actions::Plugins, this);
+    pluginsCommand->setDefaultText(tr("Plugins..."));
+    pluginsCommand->setAlwaysEnabled(true);
+    connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
+    toolsContainer->addCommand(pluginsCommand);
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)

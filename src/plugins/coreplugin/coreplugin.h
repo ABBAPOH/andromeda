@@ -16,8 +16,10 @@ public:
 
 public slots:
     void newWindow();
+    void showPluginView();
 
 private:
-    void createActions();};
+    void createActions();
+};
 
 #endif // COREPLUGIN_H
