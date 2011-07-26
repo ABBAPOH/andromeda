@@ -15,9 +15,6 @@
 
 // TODO alpha
 Extension System:
--Save/load plugin session
--Fix current and compatibiltiy versions, fix dependencies
--Menu command for pluginmanager UI
 -Maybe plugin downloading from server
 -Spec editing utility
 -Spec binary format
@@ -27,5 +24,5 @@ Guisystem:
 -Store view's sessions
 
 IO:
--Add QMimeTypeDataBase
 -QFileCopier
+-Add QMimeTypeDataBase
