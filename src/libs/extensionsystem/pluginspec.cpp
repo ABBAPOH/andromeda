@@ -317,6 +317,11 @@ PluginSpec::PluginSpec() :
 */
 PluginSpec::~PluginSpec()
 {
+    QSettings s;
+    s.beginGroup(name());
+    s.setValue("loadOnStartup", loadOnStartup());
+    s.endGroup();
+
     delete d_ptr;
 }
 
@@ -331,6 +336,12 @@ PluginSpec::PluginSpec(const QString & path) :
     Q_D(PluginSpec);
     d->init(path);
     d->loader->setFileName(d->libraryPath);
+
+    QSettings s;
+    s.beginGroup(name());
+    if (s.contains("loadOnStartup"))
+        d->loadOnStartup = s.value("loadOnStartup").toBool();
+    s.endGroup();
 }
 
 /*!
