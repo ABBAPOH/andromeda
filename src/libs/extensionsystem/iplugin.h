@@ -22,6 +22,9 @@ public:
     virtual void shutdown() {}
 
 protected:
+    QObject *object(const QString &name);
+    template <class T> T* object(const QString &name) { return qobject_cast<T*>(object(name)); }
+
     void addObject(QObject *object, const QString &name = "");
     void removeObject(QObject *object);
 
