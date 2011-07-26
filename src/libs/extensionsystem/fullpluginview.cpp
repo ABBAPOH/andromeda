@@ -31,7 +31,7 @@ void FullPluginView::setModel(PluginViewModel * model)
     mapper->addMapping(ui->label_CompatibilityVersion, 4, "text");
     mapper->addMapping(ui->label_Vendor, 5, "text");
     mapper->addMapping(ui->label_Url, 6, "text");
-    mapper->addMapping(ui->label_Location, 7, "text");
+    mapper->addMapping(ui->lineEdit_Location, 7, "text");
     mapper->addMapping(ui->textBrowser_Description, 8, "plainText");
     mapper->addMapping(ui->label_Copyright, 9, "text");
     mapper->addMapping(ui->textBrowser_License, 10, "plainText");
