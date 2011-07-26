@@ -46,6 +46,11 @@ IPlugin::~IPlugin()
     This function called after all dependencies are initialized.
 */
 
+QObject *IPlugin::object(const QString &name)
+{
+    return PluginManager::instance()->object(name);
+}
+
 /*!
     \fn void addObject(QObject * object)
     \brief Adds \a object to object pool in PluginManager.
