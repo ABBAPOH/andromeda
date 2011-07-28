@@ -88,6 +88,7 @@ void PluginSpecPrivate::init(const QString &path)
     specFile.endGroup();
 
     libraryPath = getLibraryPath(path);
+    loader->setFileName(libraryPath);
 }
 
 bool PluginSpecPrivate::load()
@@ -334,15 +335,7 @@ PluginSpec::~PluginSpec()
 PluginSpec::PluginSpec(const QString & path) :
     d_ptr(new PluginSpecPrivate(this))
 {
-    Q_D(PluginSpec);
-    d->init(path);
-    d->loader->setFileName(d->libraryPath);
-
-    QSettings s;
-    s.beginGroup(name());
-    if (s.contains("loadOnStartup"))
-        d->loadOnStartup = s.value("loadOnStartup").toBool();
-    s.endGroup();
+    read(path);
 }
 
 /*!
@@ -588,6 +581,47 @@ bool PluginSpec::provides(const PluginDependency &dependency) const
            (PluginSpecPrivate::compareVersion(compatibilityVersion(), dependency.version()) <= 0);
 }
 
+bool PluginSpec::read(const QString &path)
+{
+    Q_D(PluginSpec);
+
+    d->init(path);
+
+    QSettings s;
+    s.beginGroup(name());
+    if (s.contains("loadOnStartup"))
+        d->loadOnStartup = s.value("loadOnStartup").toBool();
+    s.endGroup();
+
+    return true;
+}
+
+bool PluginSpec::write(const QString &path)
+{
+    QSettings specFile(path, QSettings::IniFormat);
+
+    specFile.setValue(QLatin1String("name"), name());
+    specFile.setValue(QLatin1String("version"), version().toString());
+    specFile.setValue(QLatin1String("compatibilityVersion"), compatibilityVersion().toString());
+    specFile.setValue(QLatin1String("vendor"), vendor());
+    specFile.setValue(QLatin1String("category"), category());
+    specFile.setValue(QLatin1String("copyright"), copyright());
+    specFile.setValue(QLatin1String("license"), license());
+    specFile.setValue(QLatin1String("description"), description());
+    specFile.setValue(QLatin1String("url"), url());
+
+    specFile.beginGroup("Dependencies");
+    int counter = 0;
+    foreach (const PluginDependency &dependency,dependencies()) {
+        QStringList l;
+        l << dependency.name() << dependency.version().toString();
+        specFile.setValue(QString::number(counter++), l);
+    }
+    specFile.endGroup();
+
+    return true;
+}
+
 namespace ExtensionSystem {
 QDataStream & operator>>(QDataStream &s, PluginDependency &dependency)
 {
@@ -644,3 +678,4 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
     return s;
 }
 }
+
