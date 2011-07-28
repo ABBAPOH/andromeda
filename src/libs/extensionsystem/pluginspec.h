@@ -89,6 +89,11 @@ public:
 
     bool provides(const PluginDependency &dependency) const;
 
+    bool read(const QString & path);
+//    bool read(QIODevice *device);
+    bool write(const QString & path);
+//    bool write(QIODevice *device);
+
 public slots:
     void load();
     void unload();

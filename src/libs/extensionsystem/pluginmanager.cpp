@@ -214,7 +214,10 @@ QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
     QList<PluginSpec*> result;
     foreach (const QString &specFile, specFiles) {
         if (!pathToSpec.contains(specFile)) {
-            PluginSpec *spec = new PluginSpec(specFile);
+//            PluginSpec *spec = new PluginSpec(specFile);
+            PluginSpec *spec = new PluginSpec();
+            spec->read(specFile);
+
             if (!spec->hasError()) {
                 pluginSpecs.append(spec);
                 pathToSpec.insert(specFile, spec);
