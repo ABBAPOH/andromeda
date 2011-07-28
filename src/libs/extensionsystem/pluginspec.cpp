@@ -306,7 +306,8 @@ bool PluginDependency::operator==(const PluginDependency &other)
     \fn PluginSpec::PluginSpec()
     \internal
 */
-PluginSpec::PluginSpec() :
+PluginSpec::PluginSpec(QObject *parent) :
+    QObject(parent),
     d_ptr(new PluginSpecPrivate(this))
 {
 }

@@ -49,14 +49,15 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(PluginSpec)
     Q_DISABLE_COPY(PluginSpec)
+
     Q_PROPERTY(bool loaded READ loaded WRITE setLoaded NOTIFY loadedChanged)
     Q_PROPERTY(bool loadOnStartup READ loadOnStartup WRITE setLoadOnStartup NOTIFY loadOnStartupChanged)
     Q_PROPERTY(bool canBeUnloaded READ canBeUnloaded)
 
 public:
-    PluginSpec();
+    explicit PluginSpec(QObject *parent = 0);
     explicit PluginSpec(const QString & path);
-    explicit PluginSpec(QIODevice *device);
+//    explicit PluginSpec(QIODevice *device);
     ~PluginSpec();
 
     QString name() const;
