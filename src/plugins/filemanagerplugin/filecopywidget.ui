@@ -14,15 +14,11 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="margin">
+    <number>10</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="iconLabel">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -39,6 +35,9 @@
            <property name="value">
             <number>24</number>
            </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -47,7 +46,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="resources.qrc">
+            <iconset resource="../coreplugin/resources.qrc">
              <normaloff>:/images/icons/FCProgressReveal.png</normaloff>:/images/icons/FCProgressReveal.png</iconset>
            </property>
            <property name="checkable">
@@ -79,7 +78,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="resources.qrc">
+            <iconset resource="../coreplugin/resources.qrc">
              <normaloff>:/images/icons/FCProgressStop.png</normaloff>:/images/icons/FCProgressStop.png</iconset>
            </property>
           </widget>
@@ -239,7 +238,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../coreplugin/resources.qrc"/>
  </resources>
  <connections>
   <connection>
