@@ -1,6 +1,6 @@
 #include "webviewtest.h"
 
-#include "QWebView"
+#include <QtWebKit/QWebView>
 
 WebViewTest::WebViewTest()
     : IPlugin()

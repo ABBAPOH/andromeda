@@ -4,7 +4,7 @@
 #include "webviewplugin_global.h"
 
 #include <QtWebKit/QWebView>
-#include <QToolBar>
+#include <QtGui/QToolBar>
 
 class QWebView;
 
