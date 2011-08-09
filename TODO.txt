@@ -26,3 +26,10 @@ Guisystem:
 IO:
 -QFileCopier
 -Add QMimeTypeDataBase
+
+Ideas:
+- Root mode with authentication by su or sudo
+- Auto save registry/history/tabs to drop box or cloud, syncing with other browsers and so on
+- Change file attributes/ACL
+- Mount/unmount
+- VFS for archives

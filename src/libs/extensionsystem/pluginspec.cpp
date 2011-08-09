@@ -13,19 +13,20 @@
 using namespace ExtensionSystem;
 
 Version::Version() :
-    major(0),
-    minor(0),
     build(0),
     revision(0)
 {
+    this->major = 0;
+    this->minor = 0;
 }
 
 Version::Version(const QString &version) :
-    major(0),
-    minor(0),
     build(0),
     revision(0)
 {
+    this->major = 0;
+    this->minor = 0;
+
     // mathes to Major.Minor.Patch.Fix version
     static QRegExp regExp = QRegExp("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\.([0-9]+))?");
     if ( regExp.exactMatch(version) ) {
