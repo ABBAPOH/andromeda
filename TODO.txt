@@ -27,6 +27,10 @@ IO:
 -QFileCopier
 -Add QMimeTypeDataBase
 
+FilemanagerPlugin:
+- Reduce navigation widget width
+- Action to hide navigation widget
+
 Ideas:
 - Root mode with authentication by su or sudo
 - Auto save registry/history/tabs to drop box or cloud, syncing with other browsers and so on
