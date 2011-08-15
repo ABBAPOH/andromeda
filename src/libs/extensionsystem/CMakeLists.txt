@@ -38,3 +38,4 @@ add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( extensionsystem ${QT_LIBRARIES} )
 
+install_lib( extensionsystem )

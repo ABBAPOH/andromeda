@@ -47,3 +47,4 @@ add_definitions( -DGUISYSTEM_LIBRARY )
 add_library( guisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( guisystem ${QT_LIBRARIES} widgets )
 
+install_lib( guisystem )

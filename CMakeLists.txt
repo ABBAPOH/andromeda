@@ -18,11 +18,13 @@ else(MSVC)
     add_definitions( -Wall )
 endif(MSVC)
 
+include( "CMakeInstall.txt" )
+
 include_directories( ${QT_INCLUDES} )
 
 add_subdirectory( src )
 
-if ( ENABLE_TESTS )
+if( ENABLE_TESTS )
     enable_testing()
 
     add_subdirectory( tests )

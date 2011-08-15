@@ -1,0 +1,30 @@
+if(UNIX AND NOT APPLE)
+    set( INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin )
+    set( INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda )
+    set( INSTALL_PLUGIN_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda/plugins )
+
+    set( CMAKE_INSTALL_RPATH_USE_LINK_PATH true )
+    set( CMAKE_INSTALL_RPATH ${INSTALL_LIB_DIR} )
+
+    function( install_lib TARGET )
+        install( TARGETS ${TARGET} DESTINATION ${INSTALL_LIB_DIR} )
+    endfunction( install_lib )
+
+    function( install_bin TARGET )
+        install( TARGETS ${TARGET} DESTINATION ${INSTALL_BIN_DIR} )
+    endfunction( install_bin )
+
+    function( install_plugin TARGET )
+        install( TARGETS ${TARGET} DESTINATION ${INSTALL_PLUGIN_DIR} )
+        install( FILES ${TARGET}.spec DESTINATION ${INSTALL_PLUGIN_DIR} )
+    endfunction( install_plugin )
+else()
+    function( install_lib TARGET )
+    endfunction( install_lib )
+
+    function( install_bin TARGET )
+    endfunction( install_bin )
+
+    function( install_plugin TARGET )
+    endfunction( install_plugin )
+endif()

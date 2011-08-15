@@ -14,3 +14,5 @@ target_link_libraries( Andromeda ${QT_LIBRARIES} qtsingleapplication extensionsy
 if( MSVC )
     set_target_properties( Andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
 endif( MSVC )
+
+install_bin( Andromeda )
