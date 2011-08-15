@@ -25,3 +25,4 @@ add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEAD
 target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem coreplugin )
 
 install_spec( webviewplugin.spec )
+install_plugin( webviewplugin )

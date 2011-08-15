@@ -97,3 +97,4 @@ endif( MSVC )
 add_library( io SHARED ${COPIER_HEADERS} ${COPIER_SOURCES} ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( io ${QT_LIBRARIES} ${LIBS} )
 
+install_lib( io )

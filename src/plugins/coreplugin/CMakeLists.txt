@@ -45,3 +45,4 @@ add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOUR
 target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem widgets)
 
 install_spec( coreplugin.spec )
+install_plugin( coreplugin )
