@@ -43,6 +43,4 @@ add_definitions( -DCOREPLUGIN_LIBRARY )
 
 add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
 target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem widgets)
-
-install_spec( coreplugin.spec )
 install_plugin( coreplugin )
