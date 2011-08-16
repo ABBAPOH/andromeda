@@ -8,6 +8,8 @@
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
 
+namespace CorePlugin {
+
 class HistoryItemData;
 class COREPLUGIN_EXPORT HistoryItem
 {
@@ -35,5 +37,7 @@ public:
 private:
     QExplicitlySharedDataPointer<HistoryItemData> data;
 };
+
+} // namespace CorePlugin
 
 #endif // HISTORYITEM_H

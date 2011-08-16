@@ -96,7 +96,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     connect(d->fileSystemManager->undoStack(), SIGNAL(canRedoChanged(bool)),
             SIGNAL(canRedoChanged(bool)));
 
-    d->history = new History(this);
+    d->history = new CorePlugin::History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
     FileSystemModel *model = new FileSystemModel(this);
@@ -132,7 +132,7 @@ void FileManagerWidget::setCurrentPath(const QString &path)
         if (d->model->isDir(index)) {
             d->currentView->setRootIndex(index);
 
-            HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
+            CorePlugin::HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
             d->history->appendItem(item);
 
             emit currentPathChanged(path);
@@ -145,7 +145,7 @@ FileSystemManager * FileManagerWidget::fileSystemManager() const
     return d_func()->fileSystemManager;
 }
 
-History * FileManagerWidget::history() const
+CorePlugin::History * FileManagerWidget::history() const
 {
     Q_D(const FileManagerWidget);
 

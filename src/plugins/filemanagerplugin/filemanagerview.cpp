@@ -64,7 +64,7 @@ bool FileManagerView::open(const QString &path)
     return true;
 }
 
-bool FileManagerView::open(const HistoryItem &item)
+bool FileManagerView::open(const CorePlugin::HistoryItem &item)
 {
     if (m_widget->leftWidget()->history()->items().contains(item)) {
         m_widget->leftWidget()->history()->goToItem(item);
@@ -75,7 +75,7 @@ bool FileManagerView::open(const HistoryItem &item)
     return true;
 }
 
-HistoryItem FileManagerView::currentItem() const
+CorePlugin::HistoryItem FileManagerView::currentItem() const
 {
     return m_widget->history()->currentItem();
 }

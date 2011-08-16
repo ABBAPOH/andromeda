@@ -13,7 +13,6 @@ Coreplugin:
 - Unload factories and their views
 - Delete views and widgets with Perspecive instance (if not implemented)
 - Clone tabs
-- Remove history from CorePlugin (move to IO?)
 
 IO:
 - QFileCopier

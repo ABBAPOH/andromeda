@@ -3,6 +3,8 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QVariant>
 
+namespace CorePlugin {
+
 class HistoryItemData : public QSharedData {
 public:
     QIcon icon;
@@ -12,6 +14,10 @@ public:
     QString path;
     QVariantHash userData;
 };
+
+} // namespace CorePlugin
+
+using namespace CorePlugin;
 
 HistoryItem::HistoryItem() :
     data(new HistoryItemData)

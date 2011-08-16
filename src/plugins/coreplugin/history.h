@@ -7,6 +7,8 @@
 
 #include "historyitem.h"
 
+namespace CorePlugin {
+
 class HistoryPrivate;
 class COREPLUGIN_EXPORT History: public QObject
 {
@@ -58,5 +60,7 @@ signals:
 protected:
     HistoryPrivate *d_ptr;
 };
+
+} // namespace CorePlugin
 
 #endif // HISTORY_H
