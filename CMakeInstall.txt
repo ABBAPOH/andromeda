@@ -1,7 +1,7 @@
 if(UNIX AND NOT APPLE)
     set( INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin )
     set( INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda )
-    set( INSTALL_PLUGIN_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda/plugins )
+    set( INSTALL_PLUGIN_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda/plugins/andromeda )
 
     set( CMAKE_INSTALL_RPATH_USE_LINK_PATH true )
     set( CMAKE_INSTALL_RPATH ${INSTALL_LIB_DIR} )
