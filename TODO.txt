@@ -1,35 +1,32 @@
-// TODO:
--unloading factories and their views
--deleting views and widgets with State
--factory is no more view's parent (remove with plugin unloading)
--separate options and geometry. Options are NOT used now.
--when view removed, remove actions
--clone tabs
--remove history from CorePlugin
-
-// DISCUSS:
-- hide event handler in view
-- ID in Perspective (loading from files and constructors)
-- tags in Commands & Containers
-- think about map MimeType->Perspective (move to core?)
-
 // TODO alpha
 Extension System:
--Maybe plugin downloading from server
--Spec editing utility
--Spec binary format
--Make PluginManager non-static
+- Maybe plugin downloading from server
+- Spec editing utility
+- Spec binary format
+- Make PluginManager non-static
 
 Guisystem:
--Store view's sessions
+- Store view's sessions
+- Implement different options (ie hidden by default, etc)
+
+Coreplugin:
+- Unload factories and their views
+- Delete views and widgets with Perspecive instance (if not implemented)
+- Clone tabs
+- Remove history from CorePlugin (move to IO?)
 
 IO:
--QFileCopier
--Add QMimeTypeDataBase
+- QFileCopier
+- QMimeType
 
 FilemanagerPlugin:
-- Reduce navigation widget width
+- Reduce navigation widget width (and made it resizable)
 - Action to hide navigation widget
+- Actions to select view mode (icon, column, tree)
+- Actions for dual pane mode (copy, move, etc)
+- Action to rename files
+- Disable 'Paste' action if clipboard is empty
+- Action to hide/show hidden files
 
 Ideas:
 - Root mode with authentication by su or sudo
@@ -37,3 +34,4 @@ Ideas:
 - Change file attributes/ACL
 - Mount/unmount
 - VFS for archives
+- tags in Commands & Containers
