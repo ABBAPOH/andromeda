@@ -1,14 +1,33 @@
 #include <QtSingleApplication>
 #include <QtCore/QStringList>
+#include <QtCore/QDir>
+#include <QtWebKit/QWebSecurityOrigin>
 #include <pluginmanager.h>
 #include <pluginview.h>
-#include <QtWebKit/QWebSecurityOrigin>
 
 using namespace ExtensionSystem;
 
 void preloadLibraries()
 {
     QStringList schemes = QWebSecurityOrigin::localSchemes(); // preloading WebKit
+}
+
+static inline QString getPluginPath()
+{
+    // Figure out root:  Up one from 'bin' or 'MacOs'
+    QDir rootDir = QApplication::applicationDirPath();
+    rootDir.cdUp();
+    const QString rootDirPath = rootDir.canonicalPath();
+    // Build path
+    QString pluginPath = rootDirPath;
+    pluginPath += QLatin1Char('/');
+#ifdef Q_OS_UNIX
+#ifndef Q_OS_MACX
+    pluginPath += QLatin1String("lib/andromeda/"); // not Mac UNIXes
+#endif
+#endif
+    pluginPath += QLatin1String("plugins");
+    return pluginPath;
 }
 
 int main(int argc, char *argv[])
@@ -21,6 +40,7 @@ int main(int argc, char *argv[])
     }
 
     app.setQuitOnLastWindowClosed(false);
+    app.addLibraryPath(getPluginPath());
 
     preloadLibraries();
 
