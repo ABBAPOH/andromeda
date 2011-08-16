@@ -30,7 +30,7 @@ public:
 
     FileSystemManager *fileSystemManager() const;
 
-    History *history() const;
+    CorePlugin::History *history() const;
 
     QFileSystemModel *model() const;
     void setModel(QFileSystemModel *model);

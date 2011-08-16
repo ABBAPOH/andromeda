@@ -20,9 +20,9 @@ public:
 
     // from IMainView
     bool open(const QString &path);
-    bool open(const HistoryItem &item);
+    bool open(const CorePlugin::HistoryItem &item);
 
-    HistoryItem currentItem() const;
+    CorePlugin::HistoryItem currentItem() const;
 
 private slots:
     void setDualPaneModeEnabled(bool on);

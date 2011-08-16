@@ -2,6 +2,8 @@
 
 #include "historyitem.h"
 
+namespace CorePlugin {
+
 class HistoryPrivate
 {
 public:
@@ -9,6 +11,10 @@ public:
     int maximumItemCount;
     int currentItemIndex;
 };
+
+} // namespace CorePlugin
+
+using namespace CorePlugin;
 
 History::History(QObject *parent) :
         QObject(parent),

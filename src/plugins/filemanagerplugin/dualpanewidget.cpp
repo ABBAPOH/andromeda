@@ -66,7 +66,7 @@ DualPaneWidget::~DualPaneWidget()
     delete d_ptr;
 }
 
-History * DualPaneWidget::history() const
+CorePlugin::History * DualPaneWidget::history() const
 {
     return activeWidget()->history();
 }
