@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     preloadLibraries();
 
     PluginManager manager;
-    manager.setPluginsFolder("plugins");
+    manager.setPluginsFolder("andromeda");
     manager.loadPlugins();
 
     PluginView view;
