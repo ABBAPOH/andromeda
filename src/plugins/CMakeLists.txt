@@ -1,7 +1,7 @@
 if( APPLE )
-    set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/Andromeda.app/Contents/MacOS/plugins )
+    set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/Andromeda.app/Contents/plugins/andromeda )
 else( APPLE )
-    set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/plugins )
+    set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/plugins/andromeda )
 endif( APPLE )
 
 function( install_spec SPECFILE )
