@@ -45,7 +45,7 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
 
     connect(d->treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClick(QModelIndex)));
 
-    setMinimumSize(200, 200);
+    setMinimumSize(100, 200);
 }
 
 NavigationPanel::~NavigationPanel()
