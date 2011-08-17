@@ -149,7 +149,7 @@ void CorePluginImpl::createActions()
     viewContainer->addCommand(dualPaneCommand);
 
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);
-    goToContainer->setTitle(tr("Go To"));
+    goToContainer->setTitle(tr("GoTo"));
     menuBarContainer->addContainer(goToContainer);
 
     Command *backCommand = new Command(Constants::Ids::Actions::Back, this);
