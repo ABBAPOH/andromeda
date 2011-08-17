@@ -23,7 +23,10 @@ static inline QString getPluginPath()
     pluginPath += QLatin1Char('/');
 #ifdef Q_OS_UNIX
 #ifndef Q_OS_MACX
-    pluginPath += QLatin1String("lib/andromeda/"); // not Mac UNIXes
+    // not Mac UNIXes
+    pluginPath += QLatin1String("lib");
+    pluginPath += QLatin1String(LIB_SUFFIX);
+    pluginPath += QLatin1String("/andromeda/");
 #endif
 #endif
     pluginPath += QLatin1String("plugins");
