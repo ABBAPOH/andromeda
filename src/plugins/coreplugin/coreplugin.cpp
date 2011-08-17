@@ -1,19 +1,19 @@
 #include "coreplugin.h"
 
 #include <QtCore/QtPlugin>
+#include <QtCore/QTimer>
+#include <QtGui/QMenu>
 
+#include "constants.h"
 #include "core.h"
+#include "mainwindow.h"
 #include "perspectivemanager.h"
 #include "settingsdialog_p.h"
 
-#include "mainwindow.h"
-
-#include <QtGui/QMenu>
 #include <actionmanager.h>
 #include <command.h>
 #include <commandcontainer.h>
 #include <pluginview.h>
-#include "constants.h"
 
 using namespace CorePlugin;
 using namespace GuiSystem;
@@ -23,7 +23,6 @@ CorePluginImpl::CorePluginImpl() :
 {
 }
 
-#include <QTimer>
 bool CorePluginImpl::initialize()
 {
     addObject(new Core);
@@ -32,7 +31,6 @@ bool CorePluginImpl::initialize()
 
     createActions();
     QTimer::singleShot(0, this, SLOT(newWindow()));
-//    newWindow();
 
     return true;
 }
