@@ -10,6 +10,7 @@ Guisystem:
 - Implement different options (ie hidden by default, etc)
 
 Coreplugin:
+- Help menu (About, About Qt, Help)
 - Unload factories and their views
 - Delete views and widgets with Perspecive instance (if not implemented)
 - Clone tabs
@@ -26,6 +27,12 @@ FilemanagerPlugin:
 - Action to rename files
 - Disable 'Paste' action if clipboard is empty
 - Action to hide/show hidden files
+
+App
+- Icon on windows
+- Desktop + icon files on linux
+- Translations
+- License
 
 Ideas:
 - Root mode with authentication by su or sudo
