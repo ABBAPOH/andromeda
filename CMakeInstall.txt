@@ -1,3 +1,5 @@
+include ( LibSuffix.cmake )
+
 function( install_spec SPECFILE )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE}
   ${LIBRARY_OUTPUT_PATH}/${SPECFILE} COPYONLY)
@@ -5,8 +7,8 @@ endfunction( install_spec )
 
 if(UNIX AND NOT APPLE)
     set( INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin )
-    set( INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda )
-    set( INSTALL_PLUGIN_DIR ${CMAKE_INSTALL_PREFIX}/lib/andromeda/plugins/andromeda )
+    set( INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/andromeda )
+    set( INSTALL_PLUGIN_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/andromeda/plugins/andromeda )
 
     set( CMAKE_INSTALL_RPATH_USE_LINK_PATH true )
     set( CMAKE_INSTALL_RPATH ${INSTALL_LIB_DIR} )
