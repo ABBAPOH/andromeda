@@ -20,7 +20,6 @@ IO:
 - QMimeType
 
 FilemanagerPlugin:
-- Reduce navigation widget width (and made it resizable)
 - Action to hide navigation widget
 - Actions to select view mode (icon, column, tree)
 - Actions for dual pane mode (copy, move, etc)
