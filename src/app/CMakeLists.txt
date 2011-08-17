@@ -19,7 +19,7 @@ if( APPLE )
 elseif( MSVC )
     set_target_properties( andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
 elseif( UNIX )
-    install( FILES andromeda.desktop DESTINATION "/usr/share/appclications" )
+    install( FILES andromeda.desktop DESTINATION "/usr/share/applications" )
     install( FILES andromeda.png DESTINATION "/usr/share/pixmaps" )
 endif()
 
