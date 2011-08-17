@@ -1,7 +1,8 @@
 #include "coreplugin.h"
 
-#include <QtCore/QtPlugin>
+#include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
+#include <QtCore/QtPlugin>
 #include <QtGui/QMenu>
 
 #include "constants.h"
@@ -98,6 +99,16 @@ void CorePluginImpl::createActions()
     removeCommand->setDefaultText(tr("Remove"));
     removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
     fileContainer->addCommand(removeCommand);
+
+#ifndef Q_OS_MAC
+    fileContainer->addSeparator();
+    Command *exitCommand = new Command(Constants::Ids::Actions::Exit, this);
+    exitCommand->setDefaultText(tr("Exit"));
+    exitCommand->setDefaultShortcut(tr("Ctrl+Q"));
+    exitCommand->setAlwaysEnabled(true);
+    fileContainer->addCommand(exitCommand);
+    connect(exitCommand->commandAction(), SIGNAL(triggered()), qApp, SLOT(quit()));
+#endif
 
     CommandContainer *editContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
     editContainer->setTitle(tr("Edit"));
