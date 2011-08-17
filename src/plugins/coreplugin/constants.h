@@ -25,6 +25,7 @@ const char * const NewFolder = "Actions.NewFolder";
 const char * const Open = "Actions.Open";
 const char * const CloseTab = "Actions.CloseTab";
 const char * const Remove = "Actions.Remove";
+const char * const Exit = "Actions.Exit";
 
 const char * const Undo = "Actions.Undo";
 const char * const Redo = "Actions.Redo";
