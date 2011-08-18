@@ -8,7 +8,11 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
-add_executable( andromeda WIN32 MACOSX_BUNDLE ${SOURCES} )
+if(WIN32)
+    SET(WIN_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+endif()
+
+add_executable( andromeda WIN32 MACOSX_BUNDLE ${SOURCES} ${WIN_RESOURCES} )
 target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
 
 if( APPLE )
