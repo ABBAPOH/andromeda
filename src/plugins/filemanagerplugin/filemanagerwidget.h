@@ -52,6 +52,7 @@ public slots:
     void newFolder();
     void open();
     void remove();
+    void rename();
 
     void undo();
     void redo();

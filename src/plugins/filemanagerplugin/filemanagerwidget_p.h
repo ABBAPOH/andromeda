@@ -31,6 +31,8 @@ class FileManagerWidgetPrivate : public QObject
 public:
     FileManagerWidgetPrivate(FileManagerWidget *qq) : QObject(), q_ptr(qq) {}
 
+    QModelIndexList selectedIndexes() const;
+
     FileManagerWidget::ViewMode viewMode;
     QAbstractItemView * currentView;
     QAbstractItemView * views[MaxViews];
