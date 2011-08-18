@@ -10,7 +10,7 @@ add_definitions( -DUNICODE )
 include( "CMakeInstall.txt" )
 
 if(UNIX AND NOT APPLE)
-    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/libLIB_SUFFIX )
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib${LIB_SUFFIX} )
 else()
     set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 endif()
