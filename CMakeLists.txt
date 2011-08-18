@@ -7,7 +7,14 @@ include( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 add_definitions( -DUNICODE )
 
-set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+include( "CMakeInstall.txt" )
+
+if(UNIX AND NOT APPLE)
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/libLIB_SUFFIX )
+else()
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+endif()
+
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 #-DCMAKE_BUILD_TYPE=Debug
 set( CMAKE_BUILD_TYPE Debug )
@@ -17,8 +24,6 @@ if(MSVC)
 else(MSVC)
     add_definitions( -Wall )
 endif(MSVC)
-
-include( "CMakeInstall.txt" )
 
 include_directories( ${QT_INCLUDES} )
 
