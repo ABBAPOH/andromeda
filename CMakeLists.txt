@@ -9,10 +9,12 @@ add_definitions( -DUNICODE )
 
 include( "CMakeInstall.txt" )
 
-if(UNIX AND NOT APPLE)
-    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib${LIB_SUFFIX} )
-else()
+if(APPLE)
     set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+elseif(WIN32)
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+elseif(UNIX)
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib${LIB_SUFFIX} )
 endif()
 
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
