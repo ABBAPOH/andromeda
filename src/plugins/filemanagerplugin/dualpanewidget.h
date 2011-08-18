@@ -49,6 +49,7 @@ public slots:
     void newFolder();
     void open();
     void remove();
+    void rename();
     void copyFiles();
     void moveFiles();
 

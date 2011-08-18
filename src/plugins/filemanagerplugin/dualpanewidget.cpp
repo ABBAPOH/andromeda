@@ -158,6 +158,11 @@ void DualPaneWidget::remove()
     activeWidget()->remove();
 }
 
+void DualPaneWidget::rename()
+{
+    activeWidget()->rename();
+}
+
 void DualPaneWidget::copyFiles()
 {
     Q_D(DualPaneWidget);

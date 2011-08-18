@@ -28,6 +28,7 @@ FileManagerView::FileManagerView(QObject *parent) :
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
     actionManager->command(Constants::Ids::Actions::Open)->action(m_widget, SLOT(open()));
     actionManager->command(Constants::Ids::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
+    actionManager->command(Constants::Ids::Actions::Rename)->action(m_widget, SLOT(rename()));
     actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
 
     QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action();

@@ -6,6 +6,12 @@
 
 using namespace FileManagerPlugin;
 
+
+QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
+{
+    return currentView->selectionModel()->selectedRows();
+}
+
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
 {
     Q_Q(FileManagerWidget);
@@ -246,6 +252,18 @@ void FileManagerWidget::remove()
     }
 }
 
+void FileManagerWidget::rename()
+{
+    Q_D(FileManagerWidget);
+
+    QModelIndexList indexes = d->selectedIndexes();
+    if (indexes.count() != 1) {
+//        emit error();
+    } else {
+        d->currentView->edit(indexes.first());
+    }
+}
+
 void FileManagerWidget::undo()
 {
     fileSystemManager()->undoStack()->undo();
@@ -337,4 +355,3 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
         d->blockEvents = false;
     }
 }
-

@@ -95,6 +95,15 @@ void CorePluginImpl::createActions()
 
     fileContainer->addSeparator();
 
+    Command *renameCommand = new Command(Constants::Ids::Actions::Rename, this);
+    renameCommand->setDefaultText(tr("Rename"));
+#ifdef Q_OS_MAC
+    renameCommand->setDefaultShortcut(tr("Return"));
+#else
+    renameCommand->setDefaultShortcut(tr("F2"));
+#endif
+    fileContainer->addCommand(renameCommand);
+
     Command *removeCommand = new Command(Constants::Ids::Actions::Remove, this);
     removeCommand->setDefaultText(tr("Remove"));
     removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
