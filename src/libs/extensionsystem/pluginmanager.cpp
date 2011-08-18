@@ -72,7 +72,10 @@ void PluginManager::loadPlugins()
         d->watcher->addPath(folder);
     }
 
-    d->load();
+    if (!d->load()) {
+        qWarning() << "PluginManager warning: Couldn't load plugins";
+        qWarning() << "Searched paths:" << qApp->libraryPaths();
+    }
     qDebug("PluginManager::pluginsLoaded");
     d->loaded = true;
 
