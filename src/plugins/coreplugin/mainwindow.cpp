@@ -4,6 +4,11 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QAction>
 #include <QtGui/QDesktopServices>
+
+//#include <QtGui/QFileSystemModel>
+#include <QtGui/QDirModel>
+#include <QtGui/QCompleter>
+
 #include <QDebug>
 #include <CorePlugin>
 
@@ -54,6 +59,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->lineEdit = new EnteredLineEdit(this);
     d->lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
+    
+    // This is an example how to use completers to help directory listing.
+    // I'm not sure if it shouldn't be a part of plugins (standalone for web...)
+    // Note: QFileSystemModel is probably broken for qcompleter so the obsolete
+    //       QDirModel is used here.
+//    QFileSystemModel * dirModel = new QFileSystemModel(this);
+    QDirModel *dirModel = new QDirModel(this);
+//    dirModel->setRootPath(QDir::rootPath());
+    QCompleter *completer = new QCompleter(dirModel, d->lineEdit);
+    completer->setCompletionMode(QCompleter::InlineCompletion);
+    d->lineEdit->setCompleter(completer);
+
+    
     ActionManager *actionManager = ActionManager::instance();
     actionManager->command(Constants::Ids::Actions::Undo)->action(d->lineEdit, SLOT(undo()));
     actionManager->command(Constants::Ids::Actions::Redo)->action(d->lineEdit, SLOT(redo()));
