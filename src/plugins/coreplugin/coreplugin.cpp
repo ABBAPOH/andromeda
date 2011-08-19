@@ -63,9 +63,13 @@ void CorePluginImpl::createActions()
     CommandContainer *menuBarContainer = new CommandContainer(Constants::Ids::Menus::MenuBar, this);
 
     const char *group = 0;
+
+    // ================ File Menu ================
     CommandContainer *fileContainer = new CommandContainer(Constants::Ids::Menus::File, this);
     fileContainer->setTitle(tr("File"));
     menuBarContainer->addContainer(fileContainer);
+
+    // ================ File Menu (New) ================
     fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileNew);
 
     Command *newWindowCommand = new Command(Constants::Ids::Actions::NewWindow, this);
@@ -95,6 +99,7 @@ void CorePluginImpl::createActions()
     closeTabCommand->setDefaultShortcut(tr("Ctrl+W"));
     fileContainer->addCommand(closeTabCommand, group);
 
+    // ================ File Menu (Change) ================
     fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileChange);
 
     Command *renameCommand = new Command(Constants::Ids::Actions::Rename, this);
@@ -112,7 +117,9 @@ void CorePluginImpl::createActions()
     fileContainer->addCommand(removeCommand, group);
 
 #ifndef Q_OS_MAC
-    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileChange);
+    // ================ File Menu (Quit) ================
+    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileQuit);
+
     Command *exitCommand = new Command(Constants::Ids::Actions::Exit, this);
     exitCommand->setDefaultText(tr("Exit"));
     exitCommand->setDefaultShortcut(tr("Ctrl+Q"));
@@ -121,10 +128,12 @@ void CorePluginImpl::createActions()
     connect(exitCommand->commandAction(), SIGNAL(triggered()), qApp, SLOT(quit()));
 #endif
 
+    // ================ Edit Menu ================
     CommandContainer *editContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
     editContainer->setTitle(tr("Edit"));
     menuBarContainer->addContainer(editContainer);
 
+    // ================ Edit Menu (Redo) ================
     editContainer->addGroup(group = Constants::Ids::MenuGroups::EditRedo);
 
     Command *undoCommand = new Command(Constants::Ids::Actions::Undo, this);
@@ -137,6 +146,7 @@ void CorePluginImpl::createActions()
     redoCommand->setDefaultShortcut(tr("Ctrl+Shift+Z"));
     editContainer->addCommand(redoCommand, group);
 
+    // ================ Edit Menu (CopyPaste) ================
     editContainer->addGroup(group = Constants::Ids::MenuGroups::EditCopyPaste);
 
     Command *cutCommand = new Command(Constants::Ids::Actions::Cut, this);
@@ -159,6 +169,7 @@ void CorePluginImpl::createActions()
     selectAllCommand->setDefaultShortcut(tr("Ctrl+A"));
     editContainer->addCommand(selectAllCommand, group);
 
+    // ================ View Menu ================
     CommandContainer *viewContainer = new CommandContainer(Constants::Ids::Menus::View, this);
     viewContainer->setTitle(tr("View"));
     menuBarContainer->addContainer(viewContainer);
@@ -170,6 +181,7 @@ void CorePluginImpl::createActions()
     dualPaneCommand->setCheckable(true);
     viewContainer->addCommand(dualPaneCommand);
 
+    // ================ GoTo Menu ================
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);
     goToContainer->setTitle(tr("Go to"));
     menuBarContainer->addContainer(goToContainer);
@@ -194,6 +206,7 @@ void CorePluginImpl::createActions()
     homeCommand->setDefaultShortcut(tr("Ctrl+H"));
     goToContainer->addCommand(homeCommand);
 
+    // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
     toolsContainer->setTitle(tr("Tools"));
     menuBarContainer->addContainer(toolsContainer);
