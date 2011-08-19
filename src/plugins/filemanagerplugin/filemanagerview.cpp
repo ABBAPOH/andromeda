@@ -38,6 +38,7 @@ FileManagerView::FileManagerView(QObject *parent) :
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
+    actionManager->command(Constants::Ids::Actions::Home)->action(m_widget, SLOT(home()));
 
     actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
     actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));

@@ -167,7 +167,7 @@ void CorePluginImpl::createActions()
     viewContainer->addCommand(dualPaneCommand);
 
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);
-    goToContainer->setTitle(tr("GoTo"));
+    goToContainer->setTitle(tr("Go to"));
     menuBarContainer->addContainer(goToContainer);
 
     Command *backCommand = new Command(Constants::Ids::Actions::Back, this);
@@ -184,6 +184,11 @@ void CorePluginImpl::createActions()
     upOneLevelCommand->setDefaultText(tr("Up one level"));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
+    
+    Command *homeCommand = new Command(Constants::Ids::Actions::Home, this);
+    homeCommand->setDefaultText(tr("Go to Home Directory"));
+    homeCommand->setDefaultShortcut(tr("Ctrl+H"));
+    goToContainer->addCommand(homeCommand);
 
     CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
     toolsContainer->setTitle(tr("Tools"));

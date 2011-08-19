@@ -74,10 +74,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QAction *forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action();
     forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
     addAction(forwardAction);
-
+    
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
-//    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
+    d->toolBar->addSeparator();
+    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
+    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Home)->commandAction());
     d->toolBar->addSeparator();
     d->toolBar->addWidget(d->lineEdit);
 

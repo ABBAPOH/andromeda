@@ -63,6 +63,7 @@ public slots:
     void back();
     void forward();
     void up();
+    void home();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

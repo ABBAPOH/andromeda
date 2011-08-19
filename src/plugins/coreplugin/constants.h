@@ -42,6 +42,8 @@ const char * const Back = "Actions.Back";
 const char * const Forward = "Actions.Forward";
 const char * const Up = "Actions.Up";
 
+const char * const Home = "Actions.Home";
+
 } // namespace Actions
 
 } // namespace Ids
