@@ -26,10 +26,10 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_PROPERTY(QIcon defaultIcon READ defaultIcon WRITE setDefaultIcon)
     Q_PROPERTY(QString defaultText READ defaultText WRITE setDefaultText)
     Q_PROPERTY(bool isSeparator READ isSeparator WRITE setSeparator)
-    Q_PROPERTY(QString id READ id)
+    Q_PROPERTY(QByteArray id READ id)
 
 public:
-    explicit Command(const QString &id, QObject *parent = 0);
+    explicit Command(const QByteArray &id, QObject *parent = 0);
     ~Command();
 
     enum Attribute {
@@ -66,7 +66,7 @@ public:
     bool isSeparator() const;
     void setSeparator(bool);
 
-    QString id() const;
+    QByteArray id() const;
 
 signals:
     void changed();
