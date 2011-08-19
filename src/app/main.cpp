@@ -2,6 +2,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 #include <QtWebKit/QWebSecurityOrigin>
+
 #include <pluginmanager.h>
 #include <pluginview.h>
 
@@ -48,11 +49,11 @@ int main(int argc, char *argv[])
     preloadLibraries();
 
     PluginManager manager;
-    manager.setPluginsFolder("andromeda");
+    manager.setPluginsFolder(QLatin1String("andromeda"));
     manager.loadPlugins();
 
     PluginView view;
-    manager.addObject(&view, "pluginView");
+    manager.addObject(&view, QLatin1String("pluginView"));
 
     QObject::connect(&app, SIGNAL(lastWindowClosed()),
                      &manager, SLOT(unloadPlugins()), Qt::QueuedConnection);
