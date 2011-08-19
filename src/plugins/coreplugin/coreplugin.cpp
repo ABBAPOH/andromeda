@@ -55,7 +55,7 @@ void CorePluginImpl::newWindow()
 
 void CorePluginImpl::showPluginView()
 {
-    PluginView *view = object<PluginView>("pluginView");
+    PluginView *view = object<PluginView>(QLatin1String("pluginView"));
     view->exec();
 }
 
