@@ -31,6 +31,7 @@ bool CorePluginImpl::initialize()
     addObject(new CategoryModel);
 
     createActions();
+    connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
     QTimer::singleShot(0, this, SLOT(newWindow()));
 
     return true;
@@ -56,6 +57,12 @@ void CorePluginImpl::showPluginView()
 {
     PluginView *view = object<PluginView>("pluginView");
     view->exec();
+}
+
+void CorePluginImpl::handleMessage(const QString &message)
+{
+    if (message == QLatin1String("activate"))
+        newWindow();
 }
 
 void CorePluginImpl::createActions()

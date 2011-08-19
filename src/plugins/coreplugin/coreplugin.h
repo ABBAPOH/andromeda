@@ -17,6 +17,7 @@ public:
 public slots:
     void newWindow();
     void showPluginView();
+    void handleMessage(const QString &);
 
 private:
     void createActions();
