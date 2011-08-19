@@ -21,7 +21,7 @@ public:
     QIcon defaultIcon;
     QString defaultText;
 
-    QString id;
+    QByteArray id;
 
     void update();
 };
@@ -49,7 +49,7 @@ void CommandPrivate::update()
     action->setEnabled(alwaysEnabled || (realAction ? realAction->isEnabled() : false));
 }
 
-Command::Command(const QString &id, QObject *parent) :
+Command::Command(const QByteArray &id, QObject *parent) :
     QObject(parent),
     d_ptr(new CommandPrivate)
 {
@@ -227,7 +227,7 @@ void Command::setSeparator(bool b)
     actionmanager enables this command in all menus. When command action is triggered, Command
     automatically triggers action in focus widget.
 */
-QString Command::id() const
+QByteArray Command::id() const
 {
     return d_func()->id;
 }

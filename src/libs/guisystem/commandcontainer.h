@@ -19,7 +19,7 @@ class GUISYSTEM_EXPORT CommandContainer : public QObject
     Q_DECLARE_PRIVATE(CommandContainer)
     Q_DISABLE_COPY(CommandContainer)
 public:
-    explicit CommandContainer(const QString &id, QObject *parent = 0);
+    explicit CommandContainer(const QByteArray &id, QObject *parent = 0);
     ~CommandContainer();
 
     void addCommand(Command *command);
@@ -28,7 +28,7 @@ public:
 
     void clear();
 
-    QString id() const;
+    QByteArray id() const;
 
     QMenu *menu() const;
     QMenuBar *menuBar() const;

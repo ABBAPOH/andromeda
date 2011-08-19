@@ -12,7 +12,7 @@ namespace GuiSystem {
 class CommandContainerPrivate
 {
 public:
-    QString id;
+    QByteArray id;
     QObjectList commands;
     QString title;
 };
@@ -21,7 +21,7 @@ public:
 
 using namespace GuiSystem;
 
-CommandContainer::CommandContainer(const QString &id, QObject *parent) :
+CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
     QObject(parent),
     d_ptr(new CommandContainerPrivate)
 {
@@ -51,7 +51,7 @@ void CommandContainer::addContainer(CommandContainer *container)
 
 void CommandContainer::addSeparator()
 {
-    Command *cmd = new Command(QString(), this);
+    Command *cmd = new Command(QByteArray(), this);
     cmd->setSeparator(true);
     addCommand(cmd);
 }
@@ -61,7 +61,7 @@ void CommandContainer::clear()
     d_func()->commands.clear();
 }
 
-QString CommandContainer::id() const
+QByteArray CommandContainer::id() const
 {
     return d_func()->id;
 }
