@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     QtSingleApplication app("Andromeda", argc, argv);
 
     if (app.isRunning()) {
-        app.sendMessage("activate");
+        app.sendMessage(QLatin1String("activate"));
         return 0;
     }
 
