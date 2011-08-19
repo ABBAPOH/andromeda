@@ -17,6 +17,17 @@ const char * const Tools = "Menus.Tools";
 
 } // namespace Menus
 
+namespace MenuGroups {
+
+const char * const FileNew = "FileNew";
+const char * const FileChange = "FileChange";
+const char * const FileQuit = "FileQuit";
+
+const char * const EditRedo = "EditRedo";
+const char * const EditCopyPaste = "EditCopyPate";
+
+} // namespace Groups
+
 namespace Actions {
 
 const char * const NewWindow = "Actions.NewWindow";

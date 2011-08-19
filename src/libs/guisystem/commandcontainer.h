@@ -18,13 +18,14 @@ class GUISYSTEM_EXPORT CommandContainer : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(CommandContainer)
     Q_DISABLE_COPY(CommandContainer)
+
 public:
     explicit CommandContainer(const QByteArray &id, QObject *parent = 0);
     ~CommandContainer();
 
-    void addCommand(Command *command);
-    void addContainer(CommandContainer *container);
-    void addSeparator();
+    void addCommand(Command *command, const QByteArray &group = QByteArray());
+    void addContainer(CommandContainer *container, const QByteArray &group = QByteArray());
+    void addGroup(const QByteArray &id);
 
     void clear();
 
