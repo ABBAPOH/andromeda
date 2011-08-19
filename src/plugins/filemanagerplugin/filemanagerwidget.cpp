@@ -330,6 +330,13 @@ void FileManagerWidget::up()
     setCurrentPath(dir.path());
 }
 
+void FileManagerWidget::home()
+{
+    //Q_D(FileManagerWidget);
+
+    setCurrentPath(QDir::homePath());
+}
+
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)
 {
     Q_D(FileManagerWidget);

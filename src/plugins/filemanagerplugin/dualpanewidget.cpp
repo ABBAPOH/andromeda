@@ -231,6 +231,11 @@ void DualPaneWidget::up()
     activeWidget()->up();
 }
 
+void DualPaneWidget::home()
+{
+    activeWidget()->home();
+}
+
 bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
 {
     Q_D(DualPaneWidget);
