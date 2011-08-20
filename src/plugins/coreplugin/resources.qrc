@@ -4,7 +4,14 @@
         <file>images/icons/FCProgressStop.png</file>
         <file>images/icons/back.png</file>
         <file>images/icons/forward.png</file>
-        <file>images/icons/go-up.png</file>
-        <file>images/icons/go-home.png</file>
+        <file>images/icons/up.png</file>
+        <file>images/icons/appsFolder.png</file>
+        <file>images/icons/desktopFolder.png</file>
+        <file>images/icons/documentsFolder.png</file>
+        <file>images/icons/downloadsFolder.png</file>
+        <file>images/icons/homeFolder.png</file>
+        <file>images/icons/movieFolder.png</file>
+        <file>images/icons/musicFolder.png</file>
+        <file>images/icons/picturesFolder.png</file>
     </qresource>
 </RCC>

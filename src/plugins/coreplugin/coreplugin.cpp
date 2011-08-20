@@ -232,22 +232,22 @@ void CorePluginImpl::createActions()
 
     Command *upOneLevelCommand = new Command(Constants::Ids::Actions::Up, this);
     upOneLevelCommand->setDefaultText(tr("Up one level"));
-    upOneLevelCommand->setDefaultIcon(QIcon::fromTheme("go-up", QIcon(":/images/icons/go-up.png")));
+    upOneLevelCommand->setDefaultIcon(QIcon(":/images/icons/up.png"));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
     
     // ================ GoTo Menu (Locations) ================
     goToContainer->addGroup(Constants::Ids::MenuGroups::Locations);
 
+    createGotoDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
     createGotoDirCommand(QDesktopServices::HomeLocation,
-                         QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")),
+                         QIcon::fromTheme("go-home", QIcon(":/images/icons/homeFolder.png")),
                          tr("Ctrl+Shift+H"));
-    createGotoDirCommand(QDesktopServices::DesktopLocation);
-    createGotoDirCommand(QDesktopServices::DocumentsLocation);
-    createGotoDirCommand(QDesktopServices::ApplicationsLocation);
-    createGotoDirCommand(QDesktopServices::MusicLocation);
-    createGotoDirCommand(QDesktopServices::MoviesLocation);
-    createGotoDirCommand(QDesktopServices::PicturesLocation);
+    createGotoDirCommand(QDesktopServices::DocumentsLocation, QIcon(":/images/icons/documentsFolder.png"), tr("Ctrl+Shift+O"));
+    createGotoDirCommand(QDesktopServices::ApplicationsLocation, QIcon(":/images/icons/appsFolder.png"), tr("Ctrl+Shift+A"));
+    createGotoDirCommand(QDesktopServices::MusicLocation, QIcon(":/images/icons/musicFolder.png"));
+    createGotoDirCommand(QDesktopServices::MoviesLocation, QIcon(":/images/icons/movieFolder.png"));
+    createGotoDirCommand(QDesktopServices::PicturesLocation, QIcon(":/images/icons/picturesFolder.png"));
 
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
