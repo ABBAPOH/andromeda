@@ -4,5 +4,7 @@
         <file>images/icons/FCProgressStop.png</file>
         <file>images/icons/back.png</file>
         <file>images/icons/forward.png</file>
+        <file>images/icons/go-up.png</file>
+        <file>images/icons/go-home.png</file>
     </qresource>
 </RCC>

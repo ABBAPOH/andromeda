@@ -60,10 +60,11 @@ MainWindow::MainWindow(QWidget *parent) :
     d->lineEdit = new EnteredLineEdit(this);
     d->lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
     
+# warning "TODO/FIXME QDirModel is used in QCompleter because QFileSystemModel seems broken"
     // This is an example how to use completers to help directory listing.
     // I'm not sure if it shouldn't be a part of plugins (standalone for web...)
-    // Note: QFileSystemModel is probably broken for qcompleter so the obsolete
-    //       QDirModel is used here.
+    // TODO/FIXME: QFileSystemModel is probably broken for qcompleter so the obsolete
+    //             QDirModel is used here.
 //    QFileSystemModel * dirModel = new QFileSystemModel(this);
     QDirModel *dirModel = new QDirModel(this);
 //    dirModel->setRootPath(QDir::rootPath());
