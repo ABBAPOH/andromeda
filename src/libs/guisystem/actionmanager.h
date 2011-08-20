@@ -29,6 +29,9 @@ public:
 
     static ActionManager *instance();
 
+    void addDefaultDirHandler(Command * c) { m_defaultDirHandlers.append(c); };
+    QList<Command*> defaultDirHandlers() { return m_defaultDirHandlers; };
+
 protected:
     void registerCommand(Command *cmd);
     void registerContainer(CommandContainer *c);
@@ -44,6 +47,9 @@ protected:
 
     friend class Command;
     friend class CommandContainer;
+        
+private:
+    QList<Command*> m_defaultDirHandlers;
 };
 
 } // namespace GuiSystem
