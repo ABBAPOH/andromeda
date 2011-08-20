@@ -96,9 +96,9 @@ MainWindow::MainWindow(QWidget *parent) :
     
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
-    d->toolBar->addSeparator();
+//    d->toolBar->addSeparator();
     d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
-    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Home)->commandAction());
+//    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Home)->commandAction());
     d->toolBar->addSeparator();
     d->toolBar->addWidget(d->lineEdit);
 
