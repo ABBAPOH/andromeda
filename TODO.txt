@@ -29,6 +29,13 @@ FilemanagerPlugin:
 - Action to rename files
 - Disable 'Paste' action if clipboard is empty
 - Action to hide/show hidden files
+- Text and paddings sizes for IconView
+- Column view bigger (resisable) column size
+- Store inner path for ColumnView in history
+- Click on left panel goes to lineEdit (or lost) with column view (or not?)
+- Add preview to column view
+- Do not show empty network folder
+- Same elements in history with treeview and clicks (switching views add new element to history)
 
 App
 - Icon on windows
