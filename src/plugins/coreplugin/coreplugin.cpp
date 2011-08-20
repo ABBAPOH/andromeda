@@ -97,11 +97,6 @@ void CorePluginImpl::createActions()
     newTabCommand->setDefaultShortcut(tr("Ctrl+T"));
     fileContainer->addCommand(newTabCommand, group);
 
-    Command *newFolderCommand = new Command(Constants::Ids::Actions::NewFolder, this);
-    newFolderCommand->setDefaultText(tr("New folder"));
-    newFolderCommand->setDefaultShortcut(tr("Ctrl+Shift+N"));
-    fileContainer->addCommand(newFolderCommand, group);
-
     Command *openCommand = new Command(Constants::Ids::Actions::Open, this);
     openCommand->setDefaultText(tr("Open"));
 #ifdef Q_OS_MAC
@@ -118,6 +113,11 @@ void CorePluginImpl::createActions()
 
     // ================ File Menu (Change) ================
     fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileChange);
+
+    Command *newFolderCommand = new Command(Constants::Ids::Actions::NewFolder, this);
+    newFolderCommand->setDefaultText(tr("New folder"));
+    newFolderCommand->setDefaultShortcut(tr("Ctrl+Shift+N"));
+    fileContainer->addCommand(newFolderCommand, group);
 
     Command *renameCommand = new Command(Constants::Ids::Actions::Rename, this);
     renameCommand->setDefaultText(tr("Rename"));
