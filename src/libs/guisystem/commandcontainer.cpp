@@ -91,12 +91,13 @@ void CommandContainer::addContainer(CommandContainer *container, const QByteArra
     g->objects.append(container);
 }
 
-void CommandContainer::addGroup(const QByteArray &id)
+void CommandContainer::addGroup(const QByteArray &id, bool exclusive)
 {
     Q_D(CommandContainer);
 
     Group *g = new Group(id);
     g->actionGroup = new QActionGroup(this);
+    g->actionGroup->setExclusive(exclusive);
     d->groups.append(g);
 }
 
