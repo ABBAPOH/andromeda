@@ -330,11 +330,24 @@ void FileManagerWidget::up()
     setCurrentPath(dir.path());
 }
 
-void FileManagerWidget::home()
+#include <QAction>
+#include <QtDebug>
+void FileManagerWidget::goToDirCallback()
 {
     //Q_D(FileManagerWidget);
+    QAction * action = qobject_cast<QAction*>(sender());
+    if (!action)
+    {
+        qDebug() << "WW: FileManagerWidget::goToDirCallback - sender is not an action" << sender();
+        return;
+    }
 
-    setCurrentPath(QDir::homePath());
+    goToDirCallback(action->data().toString());
+}
+
+void FileManagerWidget::goToDirCallback(const QString &path)
+{
+    setCurrentPath(path);
 }
 
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)

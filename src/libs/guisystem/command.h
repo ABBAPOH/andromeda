@@ -4,6 +4,8 @@
 #include "guisystem_global.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QVariant>
+
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
 
@@ -26,6 +28,7 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_PROPERTY(QIcon defaultIcon READ defaultIcon WRITE setDefaultIcon)
     Q_PROPERTY(QString defaultText READ defaultText WRITE setDefaultText)
     Q_PROPERTY(bool isSeparator READ isSeparator WRITE setSeparator)
+    Q_PROPERTY(QVariant data READ data WRITE setData)
     Q_PROPERTY(QByteArray id READ id)
 
 public:
@@ -67,6 +70,9 @@ public:
     void setSeparator(bool);
 
     QByteArray id() const;
+    
+    void setData(const QVariant &data);
+    QVariant data() const;
 
 signals:
     void changed();

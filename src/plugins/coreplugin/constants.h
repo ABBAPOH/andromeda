@@ -30,6 +30,9 @@ const char * const EditCopyPaste = "EditCopyPate";
 
 namespace Actions {
 
+// create a separator for menus
+const char * const Separator = "Actions.Separator";
+    
 const char * const NewWindow = "Actions.NewWindow";
 const char * const NewTab = "Actions.NewTab";
 const char * const NewFolder = "Actions.NewFolder";
