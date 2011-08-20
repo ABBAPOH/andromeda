@@ -20,6 +20,7 @@ class GUISYSTEM_EXPORT ActionManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ActionManager)
+
 public:
     explicit ActionManager(QObject *parent = 0);
     ~ActionManager();
@@ -28,8 +29,6 @@ public:
     CommandContainer *container(const QString &id);
 
     static ActionManager *instance();
-
-    QList<Command*> defaultDirHandlers() { return m_defaultDirHandlers; };
 
 protected:
     void registerCommand(Command *cmd);
@@ -46,9 +45,6 @@ protected:
 
     friend class Command;
     friend class CommandContainer;
-        
-private:
-    QList<Command*> m_defaultDirHandlers;
 };
 
 } // namespace GuiSystem
