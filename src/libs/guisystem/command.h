@@ -70,7 +70,7 @@ public:
     void setSeparator(bool);
 
     QByteArray id() const;
-    
+
     void setData(const QVariant &data);
     QVariant data() const;
 

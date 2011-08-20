@@ -2,9 +2,10 @@
 #define COREPLUGIN_H
 
 #include <QtGui/QDesktopServices>
+#include <QtGui/QIcon>
+#include <QtGui/QKeySequence>
 
 #include <iplugin.h>
-#include <GuiSystem>
 
 using namespace ExtensionSystem;
 
@@ -24,7 +25,6 @@ public slots:
 
 private:
     void createActions();
-
     void createGotoDirCommand(QDesktopServices::StandardLocation location,
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());

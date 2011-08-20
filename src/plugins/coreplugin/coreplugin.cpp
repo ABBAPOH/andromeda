@@ -219,6 +219,7 @@ void CorePluginImpl::createActions()
     goToContainer->setTitle(tr("Go to"));
     menuBarContainer->addContainer(goToContainer);
 
+    // ================ GoTo Menu (default) ================
     Command *backCommand = new Command(Constants::Ids::Actions::Back, this);
     backCommand->setDefaultText(tr("Back"));
     backCommand->setDefaultShortcut(tr("Ctrl+["));
@@ -235,7 +236,8 @@ void CorePluginImpl::createActions()
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
     
-    goToContainer->addGroup(Constants::Ids::MenuGroups::GotoLocations);
+    // ================ GoTo Menu (Locations) ================
+    goToContainer->addGroup(Constants::Ids::MenuGroups::Locations);
 
     createGotoDirCommand(QDesktopServices::HomeLocation,
                          QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")),
@@ -276,8 +278,8 @@ void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation loc
 
     cmd->setData(dir.absolutePath());
     cmd->setAlwaysEnabled(true);
-    
-    container->addCommand(cmd, Constants::Ids::MenuGroups::GotoLocations);
+
+    container->addCommand(cmd, Constants::Ids::MenuGroups::Locations);
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)

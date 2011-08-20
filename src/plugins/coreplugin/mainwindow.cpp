@@ -53,15 +53,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     Q_D(MainWindow);
 
-    d->tabWidget = new /*QTabWidget*/MyTabWidget;
+    d->tabWidget = new MyTabWidget;
     d->tabWidget->setDocumentMode(true);
     d->tabWidget->setTabsClosable(true);
     setCentralWidget(d->tabWidget);
 
     d->lineEdit = new EnteredLineEdit(this);
     d->lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
-    
-# warning "TODO/FIXME QDirModel is used in QCompleter because QFileSystemModel seems broken"
+
+// ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
     // This is an example how to use completers to help directory listing.
     // I'm not sure if it shouldn't be a part of plugins (standalone for web...)
     // TODO/FIXME: QFileSystemModel is probably broken for qcompleter so the obsolete
@@ -73,7 +73,6 @@ MainWindow::MainWindow(QWidget *parent) :
     completer->setCompletionMode(QCompleter::InlineCompletion);
     d->lineEdit->setCompleter(completer);
 
-    
     ActionManager *actionManager = ActionManager::instance();
     actionManager->command(Constants::Ids::Actions::Undo)->action(d->lineEdit, SLOT(undo()));
     actionManager->command(Constants::Ids::Actions::Redo)->action(d->lineEdit, SLOT(redo()));
@@ -94,20 +93,19 @@ MainWindow::MainWindow(QWidget *parent) :
     QAction *forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action();
     forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
     addAction(forwardAction);
-    
+
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
     d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
 
     CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);
-    foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::GotoLocations)) {
+    foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::Locations)) {
         gotoMapper->setMapping(cmd->commandAction(), QString::fromUtf8(cmd->id()));
         connect(cmd->commandAction(), SIGNAL(triggered()), gotoMapper, SLOT(map()));
     }
     connect(gotoMapper, SIGNAL(mapped(QString)), d, SLOT(onTextEntered(QString)));
 
-//    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Home)->commandAction());
     d->toolBar->addSeparator();
     d->toolBar->addWidget(d->lineEdit);
 

@@ -3,10 +3,9 @@
 
 #include <QtGui/QKeyEvent>
 #include <QtGui/QAction>
-#include <QDebug>
+//#include <QDebug>
 
 using namespace FileManagerPlugin;
-
 
 QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
 {
@@ -333,25 +332,6 @@ void FileManagerWidget::up()
     QDir dir(d->currentPath);
     dir.cdUp();
     setCurrentPath(dir.path());
-}
-
-void FileManagerWidget::goToDirCallback()
-{
-    qDebug() << "FileManagerWidget::goToDirCallback()";
-    //Q_D(FileManagerWidget);
-    QAction * action = qobject_cast<QAction*>(sender());
-    if (!action)
-    {
-        qDebug() << "WW: FileManagerWidget::goToDirCallback - sender is not an action" << sender();
-        return;
-    }
-
-    goToDirCallback(action->data().toString());
-}
-
-void FileManagerWidget::goToDirCallback(const QString &path)
-{
-    setCurrentPath(path);
 }
 
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)
