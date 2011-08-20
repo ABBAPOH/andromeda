@@ -1,14 +1,15 @@
 #include "filemanagerview.h"
 
-#include "dualpanewidget.h"
-#include "filemanagerwidget.h"
-#include "command.h"
-
-#include <QtGui/QAction>
 #include <QtCore/QSettings>
+#include <QtCore/QSignalMapper>
+#include <QtGui/QAction>
+
 #include <actionmanager.h>
 #include <command.h>
 #include <constants.h>
+
+#include "dualpanewidget.h"
+#include "filemanagerwidget.h"
 
 using namespace FileManagerPlugin;
 using namespace GuiSystem;
@@ -19,7 +20,6 @@ FileManagerView::FileManagerView(QObject *parent) :
     QSettings settings;
     settings.beginGroup("FileManager");
     bool enableDualPane = settings.value("dualPaneModeEnabled").toBool();
-    settings.endGroup();
 
     m_widget = new DualPaneWidget();
     m_widget->setDualPaneModeEnabled(enableDualPane);
@@ -35,7 +35,6 @@ FileManagerView::FileManagerView(QObject *parent) :
 
     QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action();
     a->setCheckable(true);
-    a->setChecked(enableDualPane);
     m_widget->addAction(a);
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
@@ -51,6 +50,36 @@ FileManagerView::FileManagerView(QObject *parent) :
     actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));
     actionManager->command(Constants::Ids::Actions::Paste)->action(m_widget, SLOT(paste()));
     actionManager->command(Constants::Ids::Actions::SelectAll)->action(m_widget, SLOT(selectAll()));
+
+    int mode = settings.value("viewMode").toInt();
+    mode = mode == 0 ? 1 : mode;
+    if (!enableDualPane)
+        setViewMode(mode);
+
+    QAction *action = 0;
+    QSignalMapper *viewMapper = new QSignalMapper(this);
+
+    action = actionManager->command(Constants::Ids::Actions::IconMode)->action();
+    viewMapper->setMapping(action, 1);
+    connect(action, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
+    m_widget->addAction(action);
+    action->setChecked(mode == 1);
+
+    action = actionManager->command(Constants::Ids::Actions::ColumnMode)->action();
+    viewMapper->setMapping(action, 3);
+    connect(action, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
+    m_widget->addAction(action);
+    action->setChecked(mode == 3);
+
+    action = actionManager->command(Constants::Ids::Actions::TreeMode)->action();
+    viewMapper->setMapping(action, 4);
+    connect(action, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
+    m_widget->addAction(action);
+    action->setChecked(mode == 4);
+
+    connect(viewMapper, SIGNAL(mapped(int)), SLOT(setViewMode(int)));
+
+    settings.endGroup();
 }
 
 void FileManagerView::initialize()
@@ -96,6 +125,17 @@ void FileManagerView::setDualPaneModeEnabled(bool on)
     settings.setValue("dualPaneModeEnabled", on);
     settings.endGroup();
     m_widget->setDualPaneModeEnabled(on);
+}
+
+void FileManagerPlugin::FileManagerView::setViewMode(int mode)
+{
+    setDualPaneModeEnabled(false);
+
+    QSettings settings;
+    settings.beginGroup("FileManager");
+    settings.setValue("viewMode", mode);
+    settings.endGroup();
+    m_widget->setViewMode((FileManagerWidget::ViewMode)mode);
 }
 
 QString FileManagerFactory::id() const

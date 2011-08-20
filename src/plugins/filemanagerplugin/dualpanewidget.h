@@ -2,6 +2,7 @@
 #define DUALPANEWIDGET_H
 
 #include "filemanagerplugin_global.h"
+#include "filemanagerwidget.h"
 
 #include <QtGui/QWidget>
 #include <history.h>
@@ -43,6 +44,7 @@ signals:
 public slots:
     void setActivePane(Pane pane);
     void setCurrentPath(const QString &path);
+    void setViewMode(FileManagerWidget::ViewMode mode);
     void setDualPaneModeEnabled(bool on);
     void sync();
 
