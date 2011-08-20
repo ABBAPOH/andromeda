@@ -29,7 +29,6 @@ public:
 
     static ActionManager *instance();
 
-    void addDefaultDirHandler(Command * c) { m_defaultDirHandlers.append(c); };
     QList<Command*> defaultDirHandlers() { return m_defaultDirHandlers; };
 
 protected:

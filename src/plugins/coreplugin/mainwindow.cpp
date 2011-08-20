@@ -2,6 +2,7 @@
 #include "mainwindow_p.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
 #include <QtGui/QDesktopServices>
 
@@ -96,8 +97,16 @@ MainWindow::MainWindow(QWidget *parent) :
     
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
-//    d->toolBar->addSeparator();
     d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
+
+    CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
+    QSignalMapper *gotoMapper = new QSignalMapper(this);
+    foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::GotoLocations)) {
+        gotoMapper->setMapping(cmd->commandAction(), QString::fromUtf8(cmd->id()));
+        connect(cmd->commandAction(), SIGNAL(triggered()), gotoMapper, SLOT(map()));
+    }
+    connect(gotoMapper, SIGNAL(mapped(QString)), d, SLOT(onTextEntered(QString)));
+
 //    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Home)->commandAction());
     d->toolBar->addSeparator();
     d->toolBar->addWidget(d->lineEdit);

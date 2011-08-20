@@ -39,18 +39,12 @@ FileManagerView::FileManagerView(QObject *parent) :
     m_widget->addAction(a);
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
-    actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
-//    actionManager->command(Constants::Ids::Actions::Home)->action(m_widget, SLOT(goToDirCallback()));
-    foreach(Command *c, actionManager->defaultDirHandlers())
-    {
-//        qDebug() << c->action() << c->action()->text();
-        c->action(m_widget, SLOT(goToDirCallback()));
-    }
-
     actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
     actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));
     actionManager->command(Constants::Ids::Actions::Paste)->action(m_widget, SLOT(paste()));
     actionManager->command(Constants::Ids::Actions::SelectAll)->action(m_widget, SLOT(selectAll()));
+
+    actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
