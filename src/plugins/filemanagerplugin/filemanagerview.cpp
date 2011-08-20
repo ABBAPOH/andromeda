@@ -34,7 +34,8 @@ FileManagerView::FileManagerView(QObject *parent) :
     actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
 
     QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action();
-    a->setCheckable(true);
+//    a->setCheckable(true);
+    a->setChecked(enableDualPane);
     m_widget->addAction(a);
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
@@ -53,6 +54,7 @@ FileManagerView::FileManagerView(QObject *parent) :
 
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
+    mode = enableDualPane ? -1 : mode;
     if (!enableDualPane)
         setViewMode(mode);
 
