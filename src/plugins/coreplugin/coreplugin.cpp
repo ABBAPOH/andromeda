@@ -138,10 +138,10 @@ void CorePluginImpl::createActions()
     fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileQuit);
 
     Command *exitCommand = new Command(Constants::Ids::Actions::Exit, this);
-    exitCommand->setDefaultText(tr("Exit"));
+    exitCommand->setDefaultText(tr("Quit Andromeda"));
     exitCommand->setDefaultShortcut(tr("Ctrl+Q"));
     exitCommand->setAlwaysEnabled(true);
-    fileContainer->addCommand(exitCommand);
+    fileContainer->addCommand(exitCommand, group);
     connect(exitCommand->commandAction(), SIGNAL(triggered()), qApp, SLOT(quit()));
 #endif
 
