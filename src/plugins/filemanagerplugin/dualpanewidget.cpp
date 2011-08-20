@@ -15,6 +15,7 @@ public:
     bool dualPaneModeEnabled;
     FileManagerWidget *panes[2];
     QHBoxLayout *layout;
+    FileManagerWidget::ViewMode viewMode;
 };
 
 }
@@ -41,6 +42,7 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     d->panes[LeftPane] = new FileManagerWidget(this);
     d->panes[RightPane] = new FileManagerWidget(this);
     d->panes[RightPane]->hide();
+    d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
     swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
 
     d->layout = new QHBoxLayout();
@@ -50,6 +52,7 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     d->layout->setSpacing(3);
 
     setLayout(d->layout);
+    d->viewMode = FileManagerWidget::IconView;
 
     d->panes[LeftPane]->installEventFilter(this);
     d->panes[RightPane]->installEventFilter(this);
@@ -113,6 +116,16 @@ void DualPaneWidget::setCurrentPath(const QString &path)
         d->panes[RightPane]->setCurrentPath(path);
 }
 
+void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
+{
+    Q_D(DualPaneWidget);
+
+    d->viewMode = mode;
+    if (!d->dualPaneModeEnabled) {
+        d->panes[LeftPane]->setViewMode(mode);
+    }
+}
+
 bool DualPaneWidget::dualPaneModeEnabled() const
 {
     return d_func()->dualPaneModeEnabled;
@@ -125,10 +138,12 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     d->dualPaneModeEnabled = on;
     if (on) {
         d->panes[RightPane]->show();
+        d->panes[LeftPane]->setViewMode(FileManagerWidget::TableView);
         if (d->panes[RightPane]->currentPath().isEmpty())
             d->panes[RightPane]->setCurrentPath(d->panes[LeftPane]->currentPath());
     } else {
         d->panes[RightPane]->hide();
+        d->panes[LeftPane]->setViewMode(d->viewMode);
         setActivePane(LeftPane);
     }
 }

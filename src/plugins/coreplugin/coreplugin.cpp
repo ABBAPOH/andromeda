@@ -187,12 +187,32 @@ void CorePluginImpl::createActions()
     viewContainer->setTitle(tr("View"));
     menuBarContainer->addContainer(viewContainer);
 
+    viewContainer->addGroup(group = Constants::Ids::MenuGroups::ViewViewMode, true);
+
+    Command *iconModeCommand = new Command(Constants::Ids::Actions::IconMode, this);
+    iconModeCommand->setDefaultText(tr("Icon View"));
+    iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
+    iconModeCommand->setCheckable(true);
+    viewContainer->addCommand(iconModeCommand, group);
+
+    Command *columnModeCommand = new Command(Constants::Ids::Actions::ColumnMode, this);
+    columnModeCommand->setDefaultText(tr("Column View"));
+    columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
+    columnModeCommand->setCheckable(true);
+    viewContainer->addCommand(columnModeCommand, group);
+
+    Command *treeModeCommand = new Command(Constants::Ids::Actions::TreeMode, this);
+    treeModeCommand->setDefaultText(tr("Tree View"));
+    treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
+    treeModeCommand->setCheckable(true);
+    viewContainer->addCommand(treeModeCommand, group);
+
     Command *dualPaneCommand = new Command(Constants::Ids::Actions::DualPane, this);
     dualPaneCommand->setDefaultText(tr("Dual Pane"));
-    dualPaneCommand->setDefaultShortcut(tr("Ctrl+D"));
+    dualPaneCommand->setDefaultShortcut(tr("Ctrl+4"));
     // TODO: change API or realization!!!
     dualPaneCommand->setCheckable(true);
-    viewContainer->addCommand(dualPaneCommand);
+    viewContainer->addCommand(dualPaneCommand, group);
 
     // ================ GoTo Menu ================
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);

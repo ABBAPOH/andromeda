@@ -44,8 +44,11 @@ void CommandPrivate::update()
 
     bool checkable = realAction ? realAction->isCheckable() : false;
     action->setCheckable(checkable);
-    if (checkable)
+    if (checkable) {
+        action->blockSignals(true); // prevent from throwing signal on focus change
         action->setChecked(realAction->isChecked());
+        action->blockSignals(false);
+    }
     action->setEnabled(alwaysEnabled || (realAction ? realAction->isEnabled() : false));
 }
 
@@ -62,6 +65,7 @@ Command::Command(const QByteArray &id, QObject *parent) :
     d->realAction = 0;
 
     connect(d->action, SIGNAL(triggered(bool)), SLOT(onTrigger(bool)));
+    connect(d->action, SIGNAL(toggled(bool)), SLOT(onToggle(bool)));
 
     ActionManager::instance()->registerCommand(this);
 
@@ -90,6 +94,7 @@ QAction * Command::action()
     a->setShortcutContext(Qt::WidgetShortcut);
     a->setText(defaultText());
     a->setData(data());
+    a->setCheckable(d_func()->action->isCheckable());
     return a;
 }
 
@@ -247,11 +252,17 @@ void Command::onTrigger(bool checked)
 {
     Q_D(Command);
 
-    if (d->realAction) {
-        if (d->realAction->isCheckable())
-            d->realAction->setChecked(checked);
-        else
-            d->realAction->trigger();
+    if (d->realAction && !d->action->isCheckable()) {
+        d->realAction->trigger();
+    }
+}
+
+void Command::onToggle(bool checked)
+{
+    Q_D(Command);
+
+    if (d->realAction && d->action->isCheckable()) {
+        d->realAction->setChecked(checked);
     }
 }
 

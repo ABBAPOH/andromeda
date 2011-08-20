@@ -26,6 +26,8 @@ const char * const FileQuit = "FileQuit";
 const char * const EditRedo = "EditRedo";
 const char * const EditCopyPaste = "EditCopyPate";
 
+const char * const ViewViewMode = "ViewViewMode";
+
 } // namespace Groups
 
 namespace Actions {
@@ -50,6 +52,9 @@ const char * const Paste = "Actions.Paste";
 const char * const SelectAll = "Actions.SelectAll";
 const char * const Plugins = "Actions.Plugins";
 
+const char * const IconMode = "Actions.IconMode";
+const char * const ColumnMode = "Actions.ColumnMode";
+const char * const TreeMode = "Actions.TreeViewMode";
 const char * const DualPane = "Actions.DualPane";
 
 const char * const Back = "Actions.Back";

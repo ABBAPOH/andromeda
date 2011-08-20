@@ -79,6 +79,7 @@ signals:
 
 private slots:
     void onTrigger(bool);
+    void onToggle(bool);
 
 protected:
     void setRealAction(QAction *commandAction);

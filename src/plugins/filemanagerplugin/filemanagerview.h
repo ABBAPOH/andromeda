@@ -26,6 +26,7 @@ public:
 
 private slots:
     void setDualPaneModeEnabled(bool on);
+    void setViewMode(int);
 
 private:
     DualPaneWidget *m_widget;

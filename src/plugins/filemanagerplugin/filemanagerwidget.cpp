@@ -203,8 +203,12 @@ void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
 
     if (d->viewMode != mode) {
         d->viewMode = mode;
+        bool focus = d->currentView ? d->currentView->hasFocus() : false;
         d->layout->setCurrentIndex(mode);
         d->currentView = d->views[mode];
+        if (focus) {
+            d->currentView->setFocus();
+        }
 
         QModelIndex index = d->model->index(d->currentPath);
         d->currentView->setRootIndex(index);
