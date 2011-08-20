@@ -104,7 +104,11 @@ void CorePluginImpl::createActions()
 
     Command *openCommand = new Command(Constants::Ids::Actions::Open, this);
     openCommand->setDefaultText(tr("Open"));
+#ifdef Q_OS_MAC
     openCommand->setDefaultShortcut(tr("Ctrl+O"));
+#else
+    openCommand->setDefaultShortcut(tr("Return"));
+#endif
     fileContainer->addCommand(openCommand, group);
 
     Command *closeTabCommand = new Command(Constants::Ids::Actions::CloseTab, this);
