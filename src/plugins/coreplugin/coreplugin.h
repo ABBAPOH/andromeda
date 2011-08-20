@@ -14,6 +14,7 @@ class CorePluginImpl : public IPlugin
     Q_OBJECT
 public:
     CorePluginImpl();
+    ~CorePluginImpl();
 
     bool initialize();
     void shutdown();

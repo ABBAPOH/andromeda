@@ -26,6 +26,10 @@ CorePluginImpl::CorePluginImpl() :
 {
 }
 
+CorePluginImpl::~CorePluginImpl()
+{
+}
+
 bool CorePluginImpl::initialize()
 {
     addObject(new Core);
