@@ -2,7 +2,7 @@
 #include "filemanagerwidget_p.h"
 
 #include <QtGui/QKeyEvent>
-#include <QtCore/QAction>
+#include <QtGui/QAction>
 #include <QDebug>
 
 using namespace FileManagerPlugin;
