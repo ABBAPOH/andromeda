@@ -62,7 +62,7 @@ public slots:
     void back();
     void forward();
     void up();
-    void home();
+    void goToDirCallback();
 
 protected:
     bool eventFilter(QObject * watched, QEvent * event);

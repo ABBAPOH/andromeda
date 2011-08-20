@@ -89,6 +89,7 @@ QAction * Command::action()
     a->setShortcut(defaultShortcut());
     a->setShortcutContext(Qt::WidgetShortcut);
     a->setText(defaultText());
+    a->setData(data());
     return a;
 }
 
@@ -218,6 +219,16 @@ bool Command::isSeparator() const
 void Command::setSeparator(bool b)
 {
     d_func()->action->setSeparator(b);
+}
+
+QVariant Command::data() const
+{
+    return d_func()->action->data();
+}
+
+void Command::setData(const QVariant & data)
+{
+    d_func()->action->setData(data);
 }
 
 /*!

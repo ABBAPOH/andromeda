@@ -63,7 +63,8 @@ public slots:
     void back();
     void forward();
     void up();
-    void home();
+    void goToDirCallback();
+    void goToDirCallback(const QString &path);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

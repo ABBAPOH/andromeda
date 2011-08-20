@@ -3,6 +3,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
+#include <QtCore/QDir>
 #include <QtGui/QMenu>
 
 #include "constants.h"
@@ -67,6 +68,10 @@ void CorePluginImpl::handleMessage(const QString &message)
 
 void CorePluginImpl::createActions()
 {
+    // shared separator
+    Command *separator = new Command(Constants::Ids::Actions::Separator, this);
+    separator->setSeparator(true);
+
     CommandContainer *menuBarContainer = new CommandContainer(Constants::Ids::Menus::MenuBar, this);
 
     const char *group = 0;
@@ -208,12 +213,16 @@ void CorePluginImpl::createActions()
     upOneLevelCommand->setDefaultIcon(QIcon::fromTheme("go-up", QIcon(":/images/icons/go-up.png")));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
+    
+    goToContainer->addCommand(separator);
         
     Command *homeCommand = new Command(Constants::Ids::Actions::Home, this);
     homeCommand->setDefaultText(tr("Go to Home Directory"));
     homeCommand->setDefaultIcon(QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")));
     homeCommand->setDefaultShortcut(tr("Ctrl+H"));
+    homeCommand->setData(QDir::homePath());
     goToContainer->addCommand(homeCommand);
+    // it can be extended with QDesktopServices::StandardLocation values
 
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
