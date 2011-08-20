@@ -2,6 +2,7 @@
 
 #include "dualpanewidget.h"
 #include "filemanagerwidget.h"
+#include "command.h"
 
 #include <QtGui/QAction>
 #include <QtCore/QSettings>
@@ -10,6 +11,7 @@
 #include <constants.h>
 
 using namespace FileManagerPlugin;
+using namespace GuiSystem;
 
 FileManagerView::FileManagerView(QObject *parent) :
     IMainView(parent)
@@ -38,7 +40,12 @@ FileManagerView::FileManagerView(QObject *parent) :
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
-    actionManager->command(Constants::Ids::Actions::Home)->action(m_widget, SLOT(goToDirCallback()));
+//    actionManager->command(Constants::Ids::Actions::Home)->action(m_widget, SLOT(goToDirCallback()));
+    foreach(Command *c, actionManager->defaultDirHandlers())
+    {
+//        qDebug() << c->action() << c->action()->text();
+        c->action(m_widget, SLOT(goToDirCallback()));
+    }
 
     actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
     actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));

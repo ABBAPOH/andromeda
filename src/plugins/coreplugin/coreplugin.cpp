@@ -217,11 +217,14 @@ void CorePluginImpl::createActions()
     
     goToContainer->addCommand(separator);
         
+    // home is little bit different from DesktopLocation etc. - it has shortcut
     Command *homeCommand = new Command(Constants::Ids::Actions::Home, this);
     homeCommand->setDefaultText(tr("Home Directory"));
     homeCommand->setDefaultIcon(QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")));
     homeCommand->setDefaultShortcut(tr("Ctrl+H"));
     homeCommand->setData(QDir::homePath());
+    homeCommand->setAlwaysEnabled(true);
+    GuiSystem::ActionManager::instance()->addDefaultDirHandler(homeCommand);
     goToContainer->addCommand(homeCommand);
 
     createGotoDirCommand(goToContainer, QDesktopServices::DesktopLocation);
@@ -262,8 +265,11 @@ void CorePluginImpl::createGotoDirCommand(CommandContainer * container,
         ret->setDefaultIcon(icon);
 
     ret->setData(path.absolutePath());
+    ret->setAlwaysEnabled(true);
     
     container->addCommand(ret);
+    
+    GuiSystem::ActionManager::instance()->addDefaultDirHandler(ret);
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)

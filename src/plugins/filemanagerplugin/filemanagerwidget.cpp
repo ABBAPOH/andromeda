@@ -2,6 +2,7 @@
 #include "filemanagerwidget_p.h"
 
 #include <QtGui/QKeyEvent>
+#include <QtCore/QAction>
 #include <QDebug>
 
 using namespace FileManagerPlugin;
@@ -330,10 +331,9 @@ void FileManagerWidget::up()
     setCurrentPath(dir.path());
 }
 
-#include <QAction>
-#include <QtDebug>
 void FileManagerWidget::goToDirCallback()
 {
+    qDebug() << "FileManagerWidget::goToDirCallback()";
     //Q_D(FileManagerWidget);
     QAction * action = qobject_cast<QAction*>(sender());
     if (!action)
