@@ -17,6 +17,7 @@ Coreplugin:
 - Unload factories and their views
 - Delete views and widgets with Perspecive instance (if not implemented)
 - Clone tabs
+- History preview on long press on back/forward; in GoTo menu
 
 IO:
 - QFileCopier
@@ -36,6 +37,7 @@ FilemanagerPlugin:
 - Add preview to column view
 - Do not show empty network folder
 - Same elements in history with treeview and clicks (switching views add new element to history)
+- Reverse selection in FMWidget
 
 App
 - Icon on windows
