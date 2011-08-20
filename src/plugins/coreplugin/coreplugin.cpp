@@ -205,11 +205,13 @@ void CorePluginImpl::createActions()
 
     Command *upOneLevelCommand = new Command(Constants::Ids::Actions::Up, this);
     upOneLevelCommand->setDefaultText(tr("Up one level"));
+    upOneLevelCommand->setDefaultIcon(QIcon::fromTheme("go-up", QIcon(":/images/icons/go-up.png")));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
-    
+        
     Command *homeCommand = new Command(Constants::Ids::Actions::Home, this);
     homeCommand->setDefaultText(tr("Go to Home Directory"));
+    homeCommand->setDefaultIcon(QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")));
     homeCommand->setDefaultShortcut(tr("Ctrl+H"));
     goToContainer->addCommand(homeCommand);
 
