@@ -28,12 +28,11 @@ const char * const EditCopyPaste = "EditCopyPate";
 
 const char * const ViewViewMode = "ViewViewMode";
 
+const char * const GotoLocations = "GotoLocations";
+
 } // namespace Groups
 
 namespace Actions {
-
-// create a separator for menus
-const char * const Separator = "Actions.Separator";
     
 const char * const NewWindow = "Actions.NewWindow";
 const char * const NewTab = "Actions.NewTab";

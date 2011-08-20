@@ -245,20 +245,6 @@ void DualPaneWidget::up()
 {
     activeWidget()->up();
 }
-#include <QAction>
-#include <QtDebug>
-void DualPaneWidget::goToDirCallback()
-{
-    //Q_D(FileManagerWidget);
-    QAction * action = qobject_cast<QAction*>(sender());
-    if (!action)
-    {
-        qDebug() << "WW: DualPaneWidget::goToDirCallback - sender is not an action";
-        return;
-    }
-
-    activeWidget()->goToDirCallback(action->data().toString());
-}
 
 bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
 {

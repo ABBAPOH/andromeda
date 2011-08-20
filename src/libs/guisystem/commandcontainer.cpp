@@ -30,14 +30,14 @@ public:
     QString title;
     QList<Group*> groups;
 
-    Group* findGroup(const QByteArray &id);
+    Group* findGroup(const QByteArray &id) const;
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
 
-Group * CommandContainerPrivate::findGroup(const QByteArray &id)
+Group * CommandContainerPrivate::findGroup(const QByteArray &id) const
 {
     foreach (Group *g, groups) {
         if (g->id == id)
@@ -107,6 +107,22 @@ void CommandContainer::clear()
 
     qDeleteAll(d->groups);
     d->groups.clear();
+}
+
+QList<Command *> CommandContainer::commands(const QByteArray &id) const
+{
+    Q_D(const CommandContainer);
+
+    QList<Command *> result;
+    Group *g = d->findGroup(id);
+    if (g) {
+        foreach (QObject *o, g->objects) {
+            if (Command *cmd = qobject_cast<Command *>(o)) {
+                result.append(cmd);
+            }
+        }
+    }
+    return result;
 }
 
 QByteArray CommandContainer::id() const

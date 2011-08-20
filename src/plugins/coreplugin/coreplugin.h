@@ -25,11 +25,9 @@ public slots:
 private:
     void createActions();
 
-    void createGotoDirCommand(
-                              GuiSystem::CommandContainer * container,
-                              QDesktopServices::StandardLocation location,
-                              const QIcon &icon = QIcon()
-                            );
+    void createGotoDirCommand(QDesktopServices::StandardLocation location,
+                              const QIcon &icon = QIcon(),
+                              const QKeySequence &key = QKeySequence());
 };
 
 #endif // COREPLUGIN_H

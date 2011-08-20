@@ -69,10 +69,6 @@ void CorePluginImpl::handleMessage(const QString &message)
 
 void CorePluginImpl::createActions()
 {
-    // shared separator
-    Command *separator = new Command(Constants::Ids::Actions::Separator, this);
-    separator->setSeparator(true);
-
     CommandContainer *menuBarContainer = new CommandContainer(Constants::Ids::Menus::MenuBar, this);
 
     const char *group = 0;
@@ -239,24 +235,17 @@ void CorePluginImpl::createActions()
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
     
-    goToContainer->addCommand(separator);
-        
-    // home is little bit different from DesktopLocation etc. - it has shortcut
-    Command *homeCommand = new Command(Constants::Ids::Actions::Home, this);
-    homeCommand->setDefaultText(tr("Home Directory"));
-    homeCommand->setDefaultIcon(QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")));
-    homeCommand->setDefaultShortcut(tr("Ctrl+H"));
-    homeCommand->setData(QDir::homePath());
-    homeCommand->setAlwaysEnabled(true);
-    GuiSystem::ActionManager::instance()->addDefaultDirHandler(homeCommand);
-    goToContainer->addCommand(homeCommand);
+    goToContainer->addGroup(Constants::Ids::MenuGroups::GotoLocations);
 
-    createGotoDirCommand(goToContainer, QDesktopServices::DesktopLocation);
-    createGotoDirCommand(goToContainer, QDesktopServices::DocumentsLocation);
-    createGotoDirCommand(goToContainer, QDesktopServices::ApplicationsLocation);
-    createGotoDirCommand(goToContainer, QDesktopServices::MusicLocation);
-    createGotoDirCommand(goToContainer, QDesktopServices::MoviesLocation);
-    createGotoDirCommand(goToContainer, QDesktopServices::PicturesLocation);
+    createGotoDirCommand(QDesktopServices::HomeLocation,
+                         QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")),
+                         tr("Ctrl+Shift+H"));
+    createGotoDirCommand(QDesktopServices::DesktopLocation);
+    createGotoDirCommand(QDesktopServices::DocumentsLocation);
+    createGotoDirCommand(QDesktopServices::ApplicationsLocation);
+    createGotoDirCommand(QDesktopServices::MusicLocation);
+    createGotoDirCommand(QDesktopServices::MoviesLocation);
+    createGotoDirCommand(QDesktopServices::PicturesLocation);
 
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
@@ -270,30 +259,25 @@ void CorePluginImpl::createActions()
     toolsContainer->addCommand(pluginsCommand);
 }
 
-void CorePluginImpl::createGotoDirCommand(CommandContainer * container,
-                                               QDesktopServices::StandardLocation location,
-                                               const QIcon &icon)
+void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation location, const QIcon &icon, const QKeySequence &key)
 {
-//    qDebug() << "CREATING" << location << QDesktopServices::displayName(location) << QDesktopServices::storageLocation(location);
-    QDir path(QDesktopServices::storageLocation(location));
-    if (!path.exists())
-    {
-//        qDebug() << "!E" << path.absolutePath();
-        return;
-    }
+    GuiSystem::CommandContainer * container = ActionManager::instance()->container(Constants::Ids::Menus::GoTo);
+    QDir dir(QDesktopServices::storageLocation(location));
 
-    Command *ret = new Command(path.absolutePath().toUtf8(), this);
-    ret->setDefaultText(QDesktopServices::displayName(location));
+    if (!dir.exists())
+        return;
+
+    Command *cmd = new Command(dir.absolutePath().toUtf8(), this);
+    cmd->setDefaultText(QDesktopServices::displayName(location));
+    cmd->setDefaultShortcut(key);
 
     if (!icon.isNull())
-        ret->setDefaultIcon(icon);
+        cmd->setDefaultIcon(icon);
 
-    ret->setData(path.absolutePath());
-    ret->setAlwaysEnabled(true);
+    cmd->setData(dir.absolutePath());
+    cmd->setAlwaysEnabled(true);
     
-    container->addCommand(ret);
-    
-    GuiSystem::ActionManager::instance()->addDefaultDirHandler(ret);
+    container->addCommand(cmd, Constants::Ids::MenuGroups::GotoLocations);
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)
