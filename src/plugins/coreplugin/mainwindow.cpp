@@ -101,8 +101,11 @@ MainWindow::MainWindow(QWidget *parent) :
     CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);
     foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::Locations)) {
-        gotoMapper->setMapping(cmd->commandAction(), QString::fromUtf8(cmd->id()));
-        connect(cmd->commandAction(), SIGNAL(triggered()), gotoMapper, SLOT(map()));
+        QAction *action = cmd->action();
+        gotoMapper->setMapping(action, QString::fromUtf8(cmd->id()));
+        connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
+        action->setParent(this);
+        addAction(action);
     }
     connect(gotoMapper, SIGNAL(mapped(QString)), d, SLOT(onTextEntered(QString)));
 
