@@ -4,6 +4,9 @@ Extension System:
 - Spec editing utility
 - Spec binary format
 - Make PluginManager non-static
+- List for dependencies, not text
+- Extendable description/licence in plugin info
+- Do not use focus on widgets in plugin info
 
 Guisystem:
 - Store view's sessions
