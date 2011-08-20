@@ -1,7 +1,10 @@
 #ifndef COREPLUGIN_H
 #define COREPLUGIN_H
 
+#include <QtGui/QDesktopServices>
+
 #include <iplugin.h>
+#include <GuiSystem>
 
 using namespace ExtensionSystem;
 
@@ -21,6 +24,12 @@ public slots:
 
 private:
     void createActions();
+
+    void createGotoDirCommand(
+                              GuiSystem::CommandContainer * container,
+                              QDesktopServices::StandardLocation location,
+                              const QIcon &icon = QIcon()
+                            );
 };
 
 #endif // COREPLUGIN_H

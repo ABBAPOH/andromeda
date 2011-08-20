@@ -5,6 +5,7 @@
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>
 #include <QtGui/QMenu>
+#include <QtGui/QDesktopServices>
 
 #include "constants.h"
 #include "core.h"
@@ -217,12 +218,18 @@ void CorePluginImpl::createActions()
     goToContainer->addCommand(separator);
         
     Command *homeCommand = new Command(Constants::Ids::Actions::Home, this);
-    homeCommand->setDefaultText(tr("Go to Home Directory"));
+    homeCommand->setDefaultText(tr("Home Directory"));
     homeCommand->setDefaultIcon(QIcon::fromTheme("go-home", QIcon(":/images/icons/go-home.png")));
     homeCommand->setDefaultShortcut(tr("Ctrl+H"));
     homeCommand->setData(QDir::homePath());
     goToContainer->addCommand(homeCommand);
-    // it can be extended with QDesktopServices::StandardLocation values
+
+    createGotoDirCommand(goToContainer, QDesktopServices::DesktopLocation);
+    createGotoDirCommand(goToContainer, QDesktopServices::DocumentsLocation);
+    createGotoDirCommand(goToContainer, QDesktopServices::ApplicationsLocation);
+    createGotoDirCommand(goToContainer, QDesktopServices::MusicLocation);
+    createGotoDirCommand(goToContainer, QDesktopServices::MoviesLocation);
+    createGotoDirCommand(goToContainer, QDesktopServices::PicturesLocation);
 
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
@@ -234,6 +241,29 @@ void CorePluginImpl::createActions()
     pluginsCommand->setAlwaysEnabled(true);
     connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
     toolsContainer->addCommand(pluginsCommand);
+}
+
+void CorePluginImpl::createGotoDirCommand(CommandContainer * container,
+                                               QDesktopServices::StandardLocation location,
+                                               const QIcon &icon)
+{
+//    qDebug() << "CREATING" << location << QDesktopServices::displayName(location) << QDesktopServices::storageLocation(location);
+    QDir path(QDesktopServices::storageLocation(location));
+    if (!path.exists())
+    {
+//        qDebug() << "!E" << path.absolutePath();
+        return;
+    }
+
+    Command *ret = new Command(path.absolutePath().toUtf8(), this);
+    ret->setDefaultText(QDesktopServices::displayName(location));
+
+    if (!icon.isNull())
+        ret->setDefaultIcon(icon);
+
+    ret->setData(path.absolutePath());
+    
+    container->addCommand(ret);
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)
