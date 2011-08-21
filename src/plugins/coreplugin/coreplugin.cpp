@@ -274,7 +274,15 @@ void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation loc
         return;
 
     Command *cmd = new Command(dir.absolutePath().toUtf8(), this);
-    cmd->setDefaultText(QDesktopServices::displayName(location));
+    QString displayName(QDesktopServices::displayName(location));
+    // fir for broken linux Qt
+    if (displayName.isEmpty())
+    {
+        QStringList parts = dir.absolutePath().split(QDir::separator());
+        displayName = parts.at(parts.count()-1);
+    }
+
+    cmd->setDefaultText(displayName);
     cmd->setDefaultShortcut(key);
 
     if (!icon.isNull())
