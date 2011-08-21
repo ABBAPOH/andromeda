@@ -7,7 +7,7 @@ include( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 add_definitions( -DUNICODE )
 
-include( "CMakeInstall.txt" )
+include( "Install.cmake" )
 
 if(APPLE)
     set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
