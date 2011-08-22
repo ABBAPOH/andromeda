@@ -281,7 +281,7 @@ void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation loc
         QString path = dir.absolutePath();
         int index = path.lastIndexOf(QLatin1Char('/'));
         if (index != -1)
-            displayName = path.mid(index);
+            displayName = path.mid(index + 1);
     }
 
     cmd->setDefaultText(displayName);
