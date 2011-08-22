@@ -278,8 +278,10 @@ void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation loc
     // fir for broken linux Qt
     if (displayName.isEmpty())
     {
-        QStringList parts = dir.absolutePath().split(QDir::separator());
-        displayName = parts.at(parts.count()-1);
+        QString path = dir.absolutePath();
+        int index = path.lastIndexOf(QLatin1Char('/'));
+        if (index != -1)
+            displayName = path.mid(index);
     }
 
     cmd->setDefaultText(displayName);
