@@ -248,7 +248,9 @@ void CorePluginImpl::createActions()
                          QIcon::fromTheme("go-home", QIcon(":/images/icons/homeFolder.png")),
                          tr("Ctrl+Shift+H"));
     createGotoDirCommand(QDesktopServices::DocumentsLocation, QIcon(":/images/icons/documentsFolder.png"), tr("Ctrl+Shift+O"));
+#ifdef Q_OS_MAC
     createGotoDirCommand(QDesktopServices::ApplicationsLocation, QIcon(":/images/icons/appsFolder.png"), tr("Ctrl+Shift+A"));
+#endif
     createGotoDirCommand(QDesktopServices::MusicLocation, QIcon(":/images/icons/musicFolder.png"));
     createGotoDirCommand(QDesktopServices::MoviesLocation, QIcon(":/images/icons/movieFolder.png"));
     createGotoDirCommand(QDesktopServices::PicturesLocation, QIcon(":/images/icons/picturesFolder.png"));
