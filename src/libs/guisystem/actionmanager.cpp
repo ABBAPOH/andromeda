@@ -48,6 +48,22 @@ ActionManager::~ActionManager()
     delete d_ptr;
 }
 
+/*!
+    Returns pointer to Command previously created with \id
+*/
+Command * ActionManager::command(const QString &id)
+{
+    return qobject_cast<Command *>(d_func()->objects.value(id));
+}
+
+/*!
+    Returns pointer to CommandContainer previously created with \id
+*/
+CommandContainer * ActionManager::container(const QString &id)
+{
+    return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
+}
+
 Q_GLOBAL_STATIC(ActionManager, get_instance)
 /*!
     Returns pointer to static instance of an ActionManager.
@@ -80,22 +96,6 @@ void ActionManager::registerContainer(CommandContainer *c)
     d->objects.insert(c->id(), c);
     if (!c->parent())
         c->setParent(this);
-}
-
-/*!
-    Returns pointer to Command previously created with \id
-*/
-Command * ActionManager::command(const QString &id)
-{
-    return qobject_cast<Command *>(d_func()->objects.value(id));
-}
-
-/*!
-    Returns pointer to CommandContainer previously created with \id
-*/
-CommandContainer * ActionManager::container(const QString &id)
-{
-    return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
 }
 
 /*!
