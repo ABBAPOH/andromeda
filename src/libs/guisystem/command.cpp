@@ -314,16 +314,6 @@ void Command::setDefaultText(const QString &text)
     }
 }
 
-bool Command::isSeparator() const
-{
-    return d_func()->action->isSeparator();
-}
-
-void Command::setSeparator(bool b)
-{
-    d_func()->action->setSeparator(b);
-}
-
 /*!
     \property Command::data
 
