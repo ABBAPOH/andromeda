@@ -19,6 +19,20 @@ public:
 
 using namespace GuiSystem;
 
+/*!
+    \class ActionManager
+
+    \brief The ActionManager class is a container for commands
+
+    It allows to implicitly register Commands and CommandContainers and recieve them by their id.
+    Commands and CommandContainers are registered when created using their constructor. Once registered,
+    they can by retreived using ActionManager::command and ActionManager::container methods.
+*/
+
+/*!
+    Creates a ActionManager with the given \a parent. You are not suppose to construct ActionManager
+    manually, use ActionManager::instance instead.
+*/
 ActionManager::ActionManager(QObject *parent) :
     QObject(parent),
     d_ptr(new ActionManagerPrivate)
@@ -26,17 +40,27 @@ ActionManager::ActionManager(QObject *parent) :
     qApp->installEventFilter(this);
 }
 
+/*!
+    \brief Destructor
+*/
 ActionManager::~ActionManager()
 {
     delete d_ptr;
 }
 
 Q_GLOBAL_STATIC(ActionManager, get_instance)
+/*!
+    Returns pointer to static instance of an ActionManager.
+    Ths method should only be called after QApplication is constructed.
+*/
 ActionManager *ActionManager::instance()
 {
     return get_instance();
 }
 
+/*!
+    \internal
+*/
 void ActionManager::registerCommand(Command *cmd)
 {
     Q_D(ActionManager);
@@ -46,6 +70,9 @@ void ActionManager::registerCommand(Command *cmd)
         cmd->setParent(this);
 }
 
+/*!
+    \internal
+*/
 void ActionManager::registerContainer(CommandContainer *c)
 {
     Q_D(ActionManager);
@@ -55,16 +82,25 @@ void ActionManager::registerContainer(CommandContainer *c)
         c->setParent(this);
 }
 
+/*!
+    Returns pointer to Command previously created with \id
+*/
 Command * ActionManager::command(const QString &id)
 {
     return qobject_cast<Command *>(d_func()->objects.value(id));
 }
 
+/*!
+    Returns pointer to CommandContainer previously created with \id
+*/
 CommandContainer * ActionManager::container(const QString &id)
 {
     return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
 }
 
+/*!
+    \internal
+*/
 void ActionManager::unregisterCommand(Command *cmd)
 {
     Q_D(ActionManager);
@@ -74,6 +110,9 @@ void ActionManager::unregisterCommand(Command *cmd)
         cmd->deleteLater();
 }
 
+/*!
+    \internal
+*/
 void ActionManager::unregisterContainer(CommandContainer *c)
 {
     Q_D(ActionManager);
@@ -83,6 +122,11 @@ void ActionManager::unregisterContainer(CommandContainer *c)
         c->deleteLater();
 }
 
+/*!
+    \internal
+
+    Monitors changing of widgets in application to keep Commands up to date with visible widgets.
+*/
 bool ActionManager::eventFilter(QObject *o, QEvent *e)
 {
     if (o->isWidgetType()) {
@@ -118,6 +162,11 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
     return QObject::eventFilter(o, e);
 }
 
+/*!
+    \internal
+
+    Connects actions for widget \w to Commands with id equal to actions' objectNames.
+*/
 void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Command::CommandContext context)
 {
     Q_D(ActionManager);
