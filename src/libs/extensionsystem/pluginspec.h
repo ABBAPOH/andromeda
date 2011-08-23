@@ -23,7 +23,7 @@ public:
     QString toString() const;
     static Version fromString(const QString &);
 
-    bool operator==(const Version &);
+    bool operator==(const Version &) const;
 };
 
 class EXTENSIONSYSTEM_EXPORT PluginDependency
