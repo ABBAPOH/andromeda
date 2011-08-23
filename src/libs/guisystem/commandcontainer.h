@@ -19,6 +19,8 @@ class GUISYSTEM_EXPORT CommandContainer : public QObject
     Q_DECLARE_PRIVATE(CommandContainer)
     Q_DISABLE_COPY(CommandContainer)
 
+    Q_PROPERTY(QByteArray id READ id)
+
 public:
     explicit CommandContainer(const QByteArray &id, QObject *parent = 0);
     ~CommandContainer();
