@@ -22,9 +22,9 @@ using namespace GuiSystem;
 /*!
     \class ActionManager
 
-    \brief The ActionManager class is a container for commands
+    \brief The ActionManager class handles Commands and CommandContainers
 
-    It allows to implicitly register Commands and CommandContainers and recieve them by their id.
+    This class allows to implicitly register Commands and CommandContainers and recieve them by their id.
     Commands and CommandContainers are registered when created using their constructor. Once registered,
     they can by retreived using ActionManager::command and ActionManager::container methods.
 */
