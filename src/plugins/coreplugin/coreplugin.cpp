@@ -280,7 +280,9 @@ void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation loc
     if (!dir.exists())
         return;
 
-    Command *cmd = new Command(dir.absolutePath().toUtf8(), this);
+    QString id = QString(QLatin1String(Constants::Ids::Actions::Goto)).arg(location);
+    Command *cmd = new Command(id.toLatin1(), this);
+    cmd->setData(dir.absolutePath());
     QString displayName(QDesktopServices::displayName(location));
     // fir for broken linux Qt
     if (displayName.isEmpty())

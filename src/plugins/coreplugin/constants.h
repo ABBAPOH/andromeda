@@ -60,7 +60,7 @@ const char * const Back = "Actions.Back";
 const char * const Forward = "Actions.Forward";
 const char * const Up = "Actions.Up";
 
-const char * const Home = "Actions.Home";
+const char * const Goto = "Actions.Goto %1";
 
 } // namespace Actions
 
