@@ -2,13 +2,13 @@ set( QT_USE_QTWEBKIT TRUE )
 include( ${QT_USE_FILE} )
 
 set( HEADERS
-   webviewplugin_global.h
-   webvieweditor.h
-    webviewpluginimpl.h
+    webviewplugin_global.h
+    webvieweditor.h
+    webviewplugin.h
 )
 set( SOURCES
     webvieweditor.cpp
-    webviewpluginimpl.cpp
+    webviewplugin.cpp
    )
 set( FORMS
    )

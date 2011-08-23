@@ -1,4 +1,4 @@
-#include "webviewpluginimpl.h"
+#include "webviewplugin.h"
 
 #include <QtCore/QtPlugin>
 
