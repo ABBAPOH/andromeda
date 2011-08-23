@@ -47,7 +47,7 @@ Version Version::fromString(const QString &version)
     return Version(version);
 }
 
-bool Version::operator==(const Version &other)
+bool Version::operator==(const Version &other) const
 {
     return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
 }
