@@ -247,7 +247,8 @@ void Command::setContext(Command::CommandContext context)
 
     \brief Default Command's shortcut
 
-    It is used as a shortcut for this command if AttributeNonConfigurable is set.
+    It is used as a shortcut for this command if AttributeNonConfigurable is set, otherwised is used
+    action's shortcut.
 */
 QKeySequence Command::defaultShortcut() const
 {
