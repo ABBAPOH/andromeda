@@ -102,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QSignalMapper *gotoMapper = new QSignalMapper(this);
     foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::Locations)) {
         QAction *action = cmd->action();
-        gotoMapper->setMapping(action, QString::fromUtf8(cmd->id()));
+        gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
         action->setParent(this);
         addAction(action);
