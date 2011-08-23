@@ -16,10 +16,14 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void testSerialise();
+    void testSerialiseText();
+    void testSerialiseBinary();
 
 private:
     void compareSpecs(PluginSpec *first, PluginSpec *second);
+
+private:
+    MutablePluginSpec spec;
 };
 
 PluginSpecTest::PluginSpecTest()
@@ -28,15 +32,6 @@ PluginSpecTest::PluginSpecTest()
 
 void PluginSpecTest::initTestCase()
 {
-}
-
-void PluginSpecTest::cleanupTestCase()
-{
-}
-
-void PluginSpecTest::testSerialise()
-{
-    MutablePluginSpec spec;
     spec.setName(QLatin1String("Name"));
     spec.setVersion(Version::fromString(QLatin1String("1.2.3.4")));
     spec.setCompatibilityVersion(Version::fromString(QLatin1String("1.2.3.4")));
@@ -47,11 +42,28 @@ void PluginSpecTest::testSerialise()
     spec.setDescription(QLatin1String("Description"));
     spec.setUrl(QLatin1String("Url"));
     spec.setDependencies(QList<PluginDependency>() << PluginDependency(QLatin1String("Name"), QLatin1String("1.2.3.4")));
+}
 
-    spec.write(QLatin1String("File.pluginspec"));
+void PluginSpecTest::cleanupTestCase()
+{
+}
+
+void PluginSpecTest::testSerialiseText()
+{
+    spec.write(QLatin1String("Text.pluginspec"));
 
     PluginSpec spec2;
-    spec2.read(QLatin1String("File.pluginspec"));
+    spec2.read(QLatin1String("Text.pluginspec"));
+
+    compareSpecs(&spec, &spec2);
+}
+
+void PluginSpecTest::testSerialiseBinary()
+{
+    spec.write(QLatin1String("Binary.pluginspec"), PluginSpec::BinaryFormat);
+
+    PluginSpec spec2;
+    spec2.read(QLatin1String("Binary.pluginspec"));
 
     compareSpecs(&spec, &spec2);
 }

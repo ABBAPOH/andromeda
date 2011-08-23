@@ -586,44 +586,63 @@ bool PluginSpec::read(const QString &path)
 {
     Q_D(PluginSpec);
 
-    d->init(path);
+    QFile file(path);
+    file.open(QIODevice::ReadOnly);
+    if (file.peek(4) == QByteArray("SPEC")) {
+        QDataStream s(&file);
+        s.setByteOrder(QDataStream::BigEndian);
+        s >> *this->d_func();
+    } else {
+        file.close();
 
-    QSettings s;
-    s.beginGroup(name());
-    if (s.contains("loadOnStartup"))
-        d->loadOnStartup = s.value("loadOnStartup").toBool();
-    s.endGroup();
+        d->init(path);
 
+        QSettings s;
+        s.beginGroup(name());
+        if (s.contains("loadOnStartup"))
+            d->loadOnStartup = s.value("loadOnStartup").toBool();
+        s.endGroup();
+    }
     return true;
 }
 
-bool PluginSpec::write(const QString &path)
+bool PluginSpec::write(const QString &path, Format format)
 {
-    QSettings specFile(path, QSettings::IniFormat);
+    if (format == TextFormat) {
+        QSettings specFile(path, QSettings::IniFormat);
 
-    specFile.setValue(QLatin1String("name"), name());
-    specFile.setValue(QLatin1String("version"), version().toString());
-    specFile.setValue(QLatin1String("compatibilityVersion"), compatibilityVersion().toString());
-    specFile.setValue(QLatin1String("vendor"), vendor());
-    specFile.setValue(QLatin1String("category"), category());
-    specFile.setValue(QLatin1String("copyright"), copyright());
-    specFile.setValue(QLatin1String("license"), license());
-    specFile.setValue(QLatin1String("description"), description());
-    specFile.setValue(QLatin1String("url"), url());
+        specFile.setValue(QLatin1String("name"), name());
+        specFile.setValue(QLatin1String("version"), version().toString());
+        specFile.setValue(QLatin1String("compatibilityVersion"), compatibilityVersion().toString());
+        specFile.setValue(QLatin1String("vendor"), vendor());
+        specFile.setValue(QLatin1String("category"), category());
+        specFile.setValue(QLatin1String("copyright"), copyright());
+        specFile.setValue(QLatin1String("license"), license());
+        specFile.setValue(QLatin1String("description"), description());
+        specFile.setValue(QLatin1String("url"), url());
 
-    specFile.beginGroup("Dependencies");
-    int counter = 0;
-    foreach (const PluginDependency &dependency,dependencies()) {
-        QStringList l;
-        l << dependency.name() << dependency.version().toString();
-        specFile.setValue(QString::number(counter++), l);
+        specFile.beginGroup("Dependencies");
+        int counter = 0;
+        foreach (const PluginDependency &dependency,dependencies()) {
+            QStringList l;
+            l << dependency.name() << dependency.version().toString();
+            specFile.setValue(QString::number(counter++), l);
+        }
+        specFile.endGroup();
+    } else if (format == BinaryFormat) {
+        QFile file(path);
+        if (!file.open(QIODevice::WriteOnly))
+            return false;
+        QDataStream s(&file);
+        s.setByteOrder(QDataStream::BigEndian);
+        s << *this->d_func();
     }
-    specFile.endGroup();
 
     return true;
 }
 
 namespace ExtensionSystem {
+
 QDataStream & operator>>(QDataStream &s, PluginDependency &dependency)
 {
     QString a, b;
@@ -640,32 +659,35 @@ QDataStream & operator<<(QDataStream &s, const PluginDependency &dependency)
     return s;
 }
 
-QDataStream & operator>>(QDataStream &s, PluginSpec &pluginSpec)
+QDataStream & operator>>(QDataStream &s, PluginSpecPrivate &pluginSpec)
 {
-    PluginSpecPrivate * d = pluginSpec.d_func();
-    quint32 magic;
-    s >> magic;
+    PluginSpecPrivate * d = &pluginSpec;
+    QString tmp;
+    s.device()->read(4);
+    quint32 version;
+    s >> version;
+
     s >> d->name;
-    QString str;
-    s >> str;
-    d->version = Version::fromString(str);
-    s >> str;
-    d->compatibilityVersion = Version::fromString(str);
+    s >> tmp;
+    d->version = Version::fromString(tmp);
+    s >> tmp;
+    d->compatibilityVersion = Version::fromString(tmp);
     s >> d->vendor;
     s >> d->category;
     s >> d->copyright;
     s >> d->license;
+    s >> d->description;
     s >> d->url;
     s >> d->dependencies;
-    s >> d->libraryPath;
     return s;
 }
 
-QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
+QDataStream & operator<<(QDataStream &s, const PluginSpecPrivate &pluginSpec)
 {
-    const PluginSpecPrivate * d = pluginSpec.d_func();
-    quint32 magic = *((quint32*)"SPEC");
-    s << magic;
+    const PluginSpecPrivate * d = &pluginSpec;
+    s << (uchar)'S' << (uchar)'P' << (uchar)'E' << (uchar)'C';
+    quint32 version = 1;
+    s << version;
     s << d->name;
     s << d->version.toString();
     s << d->compatibilityVersion.toString();
@@ -673,10 +695,10 @@ QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec)
     s << d->category;
     s << d->copyright;
     s << d->license;
+    s << d->description;
     s << d->url;
     s << d->dependencies;
-    s << d->libraryPath;
     return s;
 }
-}
 
+} // namespace ExtensionSystem
