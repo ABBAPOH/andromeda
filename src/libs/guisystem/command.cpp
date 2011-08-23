@@ -184,6 +184,9 @@ void Command::setAttributes(Attributes attrs)
     if (d->attributes != attrs) {
         d->attributes = attrs;
 
+        if (attrs & AttributeHide && !d->realAction)
+            d->action->setVisible(false);
+
         emit changed();
     }
 }
