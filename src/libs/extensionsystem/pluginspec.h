@@ -55,6 +55,8 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
     Q_PROPERTY(bool canBeUnloaded READ canBeUnloaded)
 
 public:
+    enum Format { TextFormat, BinaryFormat };
+
     explicit PluginSpec(QObject *parent = 0);
     explicit PluginSpec(const QString & path);
 //    explicit PluginSpec(QIODevice *device);
@@ -91,8 +93,8 @@ public:
 
     bool read(const QString & path);
 //    bool read(QIODevice *device);
-    bool write(const QString & path);
-//    bool write(QIODevice *device);
+    bool write(const QString & path, Format format = TextFormat);
+//    bool write(QIODevice *device, Format format);
 
 public slots:
     void load();
@@ -107,13 +109,7 @@ signals:
 
 protected:
     PluginSpecPrivate *d_ptr;
-
-    friend QDataStream &operator>>(QDataStream &s, PluginSpec &pluginSpec);
-    friend QDataStream &operator<<(QDataStream &s, const PluginSpec &pluginSpec);
 };
-
-QDataStream & operator>>(QDataStream &s, PluginSpec &pluginSpec);
-QDataStream & operator<<(QDataStream &s, const PluginSpec &pluginSpec);
 
 } // namespace ExtensionSystem
 

@@ -54,6 +54,9 @@ public:
     void setError(const QString &message);
 };
 
+QDataStream & operator>>(QDataStream &s, PluginSpecPrivate &pluginSpec);
+QDataStream & operator<<(QDataStream &s, const PluginSpecPrivate &pluginSpec);
+
 } // namespace ExtensionSystem
 
 #endif // PLUGINSPEC_P_H
