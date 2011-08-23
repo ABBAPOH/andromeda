@@ -50,10 +50,7 @@ void CorePluginImpl::shutdown()
 void CorePluginImpl::newWindow()
 {
     MainWindow *window = new MainWindow();
-    QAction *newTabAction = new QAction(this);
-    newTabAction->setObjectName(Constants::Ids::Actions::NewTab);
-    connect(newTabAction, SIGNAL(triggered()), window, SLOT(newTab()));
-    window->addAction(newTabAction);
+    ActionManager::instance()->command(Constants::Ids::Actions::NewTab)->action(window, SLOT(newTab()));
     ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
     window->show();
     addObject(window);
@@ -88,13 +85,14 @@ void CorePluginImpl::createActions()
     Command *newWindowCommand = new Command(Constants::Ids::Actions::NewWindow, this);
     newWindowCommand->setDefaultText(tr("New window"));
     newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
-    newWindowCommand->setAlwaysEnabled(true);
+    newWindowCommand->setContext(Command::ApplicationCommand);
     connect(newWindowCommand->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
     fileContainer->addCommand(newWindowCommand, group);
 
     Command *newTabCommand = new Command(Constants::Ids::Actions::NewTab, this);
     newTabCommand->setDefaultText(tr("New tab"));
     newTabCommand->setDefaultShortcut(tr("Ctrl+T"));
+    newTabCommand->setContext(Command::WindowCommand);
     fileContainer->addCommand(newTabCommand, group);
 
     Command *openCommand = new Command(Constants::Ids::Actions::Open, this);
@@ -104,11 +102,13 @@ void CorePluginImpl::createActions()
 #else
     openCommand->setDefaultShortcut(tr("Return"));
 #endif
+    openCommand->setContext(Command::WindowCommand);
     fileContainer->addCommand(openCommand, group);
 
     Command *closeTabCommand = new Command(Constants::Ids::Actions::CloseTab, this);
     closeTabCommand->setDefaultText(tr("Close"));
     closeTabCommand->setDefaultShortcut(tr("Ctrl+W"));
+    closeTabCommand->setContext(Command::WindowCommand);
     fileContainer->addCommand(closeTabCommand, group);
 
     // ================ File Menu (Change) ================
@@ -197,18 +197,21 @@ void CorePluginImpl::createActions()
     iconModeCommand->setDefaultText(tr("Icon View"));
     iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
     iconModeCommand->setCheckable(true);
+    iconModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(iconModeCommand, group);
 
     Command *columnModeCommand = new Command(Constants::Ids::Actions::ColumnMode, this);
     columnModeCommand->setDefaultText(tr("Column View"));
     columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
     columnModeCommand->setCheckable(true);
+    columnModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(columnModeCommand, group);
 
     Command *treeModeCommand = new Command(Constants::Ids::Actions::TreeMode, this);
     treeModeCommand->setDefaultText(tr("Tree View"));
     treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
     treeModeCommand->setCheckable(true);
+    treeModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(treeModeCommand, group);
 
     Command *dualPaneCommand = new Command(Constants::Ids::Actions::DualPane, this);
@@ -216,6 +219,7 @@ void CorePluginImpl::createActions()
     dualPaneCommand->setDefaultShortcut(tr("Ctrl+4"));
     // TODO: change API or realization!!!
     dualPaneCommand->setCheckable(true);
+    dualPaneCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(dualPaneCommand, group);
 
     // ================ GoTo Menu ================
@@ -262,8 +266,9 @@ void CorePluginImpl::createActions()
 
     Command *pluginsCommand = new Command(Constants::Ids::Actions::Plugins, this);
     pluginsCommand->setDefaultText(tr("Plugins..."));
-    pluginsCommand->setAlwaysEnabled(true);
-    connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
+//    pluginsCommand->setAlwaysEnabled(true);
+    pluginsCommand->setContext(Command::ApplicationCommand);
+    connect(pluginsCommand->action(), SIGNAL(triggered()), SLOT(showPluginView()));
     toolsContainer->addCommand(pluginsCommand);
 }
 
@@ -293,7 +298,7 @@ void CorePluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation loc
         cmd->setDefaultIcon(icon);
 
     cmd->setData(dir.absolutePath());
-    cmd->setAlwaysEnabled(true);
+    cmd->setContext(Command::ApplicationCommand);
 
     container->addCommand(cmd, Constants::Ids::MenuGroups::Locations);
 }

@@ -5,6 +5,8 @@
 
 #include <QtCore/QObject>
 
+#include "command.h"
+
 class QAction;
 class QMenu;
 
@@ -12,7 +14,6 @@ typedef QList<QAction*> QActionList;
 
 namespace GuiSystem {
 
-class Command;
 class CommandContainer;
 
 class ActionManagerPrivate;
@@ -37,8 +38,10 @@ protected:
     void unregisterCommand(Command *cmd);
     void unregisterContainer(CommandContainer *c);
 
-private slots:
-    void onFocusChange(QWidget * old, QWidget * now);
+    bool eventFilter(QObject *o, QEvent *e);
+
+protected:
+    void setActionsEnabled(QWidget *w, bool enable, Command::CommandContext context);
 
 protected:
     ActionManagerPrivate *d_ptr;
