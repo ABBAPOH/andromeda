@@ -14,6 +14,7 @@ public:
     QAction *realAction;
 
     Command::Attributes attributes;
+    Command::CommandContext context;
 
     bool alwaysEnabled;
 
@@ -61,8 +62,9 @@ Command::Command(const QByteArray &id, QObject *parent) :
     d->id = id;
     d->action = new QAction(this);
     d->action->setEnabled(false);
-    d->alwaysEnabled = false;
     d->realAction = 0;
+    d->alwaysEnabled = false;
+    d->context = WidgetCommand;
 
     connect(d->action, SIGNAL(triggered(bool)), SLOT(onTrigger(bool)));
     connect(d->action, SIGNAL(toggled(bool)), SLOT(onToggle(bool)));
@@ -87,6 +89,12 @@ Command::~Command()
 */
 QAction * Command::action()
 {
+    Q_D(Command);
+
+    if (d->context == ApplicationCommand) {
+        return d->realAction;
+    }
+
     QAction *a = new QAction(this);
     a->setObjectName(id());
     a->setIcon(defaultIcon());
@@ -112,24 +120,6 @@ QAction * Command::action(QWidget *w, const char *slot)
 QAction * Command::commandAction() const
 {
     return d_func()->action;
-}
-
-
-bool Command::alwaysEnabled() const
-{
-    return d_func()->alwaysEnabled;
-}
-
-void Command::setAlwaysEnabled(bool b)
-{
-    Q_D(Command);
-
-    if (d->alwaysEnabled != b) {
-        d->alwaysEnabled = b;
-        d->action->setEnabled(b);
-
-        emit changed();
-    }
 }
 
 Command::Attributes Command::attributes() const
@@ -162,6 +152,27 @@ void Command::setCheckable(bool b)
 
         emit changed();
     }
+}
+
+Command::CommandContext Command::context() const
+{
+    return d_func()->context;
+}
+
+void Command::setContext(Command::CommandContext context)
+{
+    Q_D(Command);
+    if (d->context == ApplicationCommand) {
+        delete d->realAction;
+        d->action->setEnabled(false);
+    }
+
+    if (context == ApplicationCommand) {
+        d->realAction = action();
+        d->action->setEnabled(true);
+    }
+
+    d->context = context;
 }
 
 QKeySequence Command::defaultShortcut() const

@@ -21,9 +21,9 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_DECLARE_PRIVATE(Command)
     Q_DISABLE_COPY(Command)
 
-    Q_PROPERTY(bool alwaysEnabled READ alwaysEnabled WRITE setAlwaysEnabled)
     Q_PROPERTY(Attributes attributes READ attributes WRITE setAttributes)
     Q_PROPERTY(bool isCheckable READ isCheckable WRITE setCheckable)
+    Q_PROPERTY(CommandContext context READ context WRITE setContext)
     Q_PROPERTY(QKeySequence defaultShortcut READ defaultShortcut WRITE setDefaultShortcut)
     Q_PROPERTY(QIcon defaultIcon READ defaultIcon WRITE setDefaultIcon)
     Q_PROPERTY(QString defaultText READ defaultText WRITE setDefaultText)
@@ -43,19 +43,26 @@ public:
     };
     Q_DECLARE_FLAGS(Attributes, Attribute)
 
+    enum CommandContext {
+        WidgetCommand,
+        WindowCommand,
+        ApplicationCommand
+    };
+    Q_ENUMS(CommandContext)
+
     QAction *action();
     QAction *action(QWidget *w, const char *slot);
 
     QAction *commandAction() const;
-
-    bool alwaysEnabled() const;
-    void setAlwaysEnabled(bool);
 
     Attributes attributes() const;
     void setAttributes(Attributes attr);
 
     bool isCheckable() const;
     void setCheckable(bool);
+
+    CommandContext context() const;
+    void setContext(CommandContext context);
 
     QKeySequence defaultShortcut() const;
     void setDefaultShortcut(const QKeySequence &key);

@@ -13,7 +13,6 @@ class ActionManagerPrivate
 {
 public:
     QHash<QString, QObject *> objects;
-    QList<Command *> activeCommands;
 };
 
 } // namespace GuiSystem
@@ -24,8 +23,7 @@ ActionManager::ActionManager(QObject *parent) :
     QObject(parent),
     d_ptr(new ActionManagerPrivate)
 {
-    QObject::connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)),
-                     SLOT(onFocusChange(QWidget*,QWidget*)));
+    qApp->installEventFilter(this);
 }
 
 ActionManager::~ActionManager()
@@ -67,31 +65,6 @@ CommandContainer * ActionManager::container(const QString &id)
     return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
 }
 
-void ActionManager::onFocusChange(QWidget * /*old*/, QWidget *now)
-{
-    Q_D(ActionManager);
-
-    foreach (Command *c, d->activeCommands) {
-        c->setRealAction(0);
-    }
-    d->activeCommands.clear();
-
-    QWidget *w = now;
-    while (w) {
-        foreach (QAction *action, w->actions()) {
-            QString id = action->objectName();
-            if (!id.isEmpty()) {
-                Command *c = qobject_cast<Command *>(d->objects.value(id));
-                if (c) {
-                    c->setRealAction(action);
-                    d->activeCommands.append(c);
-                }
-            }
-        }
-        w = w->parentWidget();
-    }
-}
-
 void ActionManager::unregisterCommand(Command *cmd)
 {
     Q_D(ActionManager);
@@ -108,4 +81,54 @@ void ActionManager::unregisterContainer(CommandContainer *c)
     d->objects.remove(c->id());
     if (c->parent() == this)
         c->deleteLater();
+}
+
+bool ActionManager::eventFilter(QObject *o, QEvent *e)
+{
+    if (o->isWidgetType()) {
+        QWidget *w = static_cast<QWidget*>(o);
+
+        if (e->type() == QEvent::Show) {
+            if (w->isActiveWindow()) {
+                setActionsEnabled(w, true, Command::WindowCommand);
+            }
+        } else if (e->type() == QEvent::Hide) {
+            if (w->isActiveWindow()) {
+                setActionsEnabled(w, false, Command::WindowCommand);
+            }
+        } else if (e->type() == QEvent::FocusIn) {
+            while (w) {
+                setActionsEnabled(w, true, Command::WidgetCommand);
+                w = w->parentWidget();
+            }
+        } else if (e->type() == QEvent::FocusOut) {
+            while (w) {
+                setActionsEnabled(w, false, Command::WidgetCommand);
+                w = w->parentWidget();
+            }
+        } else if (e->type() == QEvent::ActivationChange) {
+            bool enable = w->isActiveWindow();
+            QWidgetList widgets = w->findChildren<QWidget*>();
+            widgets.prepend(w);
+            foreach (QWidget *w, widgets) {
+                setActionsEnabled(w, enable, Command::WindowCommand);
+            }
+        }
+    }
+    return QObject::eventFilter(o, e);
+}
+
+void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Command::CommandContext context)
+{
+    Q_D(ActionManager);
+
+    foreach (QAction *action, w->actions()) {
+        QString id = action->objectName();
+        if (!id.isEmpty()) {
+            Command *c = qobject_cast<Command *>(d->objects.value(id));
+            if (c && c->context() == context) {
+                c->setRealAction(enabled ? action : 0);
+            }
+        }
+    }
 }
