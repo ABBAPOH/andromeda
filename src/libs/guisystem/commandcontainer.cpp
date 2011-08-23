@@ -46,6 +46,19 @@ Group * CommandContainerPrivate::findGroup(const QByteArray &id) const
     return 0;
 }
 
+/*!
+    \class CommandContainer
+
+    \brief The CommandContainer is an abstraction over menus and toolbars which allows
+    to store Commands.
+
+    This class is very similar to QMenu, QMenuBar and QToolBar, except it stores Commands,
+    not QActions. However, each container can be represented using one of these classes.
+*/
+
+/*!
+    \brief Constructs CommandContainer with \a id and register it in ActionManager.
+*/
 CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
     QObject(parent),
     d_ptr(new CommandContainerPrivate)
@@ -58,6 +71,9 @@ CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
     ActionManager::instance()->registerContainer(this);
 }
 
+/*!
+    \brief Destroys CommandContainer and unregister it in ActionManager.
+*/
 CommandContainer::~CommandContainer()
 {
     ActionManager::instance()->unregisterContainer(this);
@@ -66,6 +82,9 @@ CommandContainer::~CommandContainer()
     delete d_ptr;
 }
 
+/*!
+    \brief Adds \a command to a \a group.
+*/
 void CommandContainer::addCommand(Command *command, const QByteArray &group)
 {
     Q_D(CommandContainer);
@@ -79,6 +98,9 @@ void CommandContainer::addCommand(Command *command, const QByteArray &group)
     g->actionGroup->addAction(command->commandAction());
 }
 
+/*!
+    \brief Adds \a container to a \a group.
+*/
 void CommandContainer::addContainer(CommandContainer *container, const QByteArray &group)
 {
     Q_D(CommandContainer);
@@ -91,6 +113,12 @@ void CommandContainer::addContainer(CommandContainer *container, const QByteArra
     g->objects.append(container);
 }
 
+/*!
+    \brief Adds group with \a id to this container.
+
+    Commands in group are combined together as a single unit; they are seprarated in menus and toolbars.
+    If \a exclusive is set to true, only one Command in a group can be checked at a time.
+*/
 void CommandContainer::addGroup(const QByteArray &id, bool exclusive)
 {
     Q_D(CommandContainer);
@@ -101,6 +129,9 @@ void CommandContainer::addGroup(const QByteArray &id, bool exclusive)
     d->groups.append(g);
 }
 
+/*!
+    \brief Destroys all gorups and remove added Commands.
+*/
 void CommandContainer::clear()
 {
     Q_D(CommandContainer);
@@ -109,6 +140,9 @@ void CommandContainer::clear()
     d->groups.clear();
 }
 
+/*!
+    \brief Returns list of Commands in group specified by \a id.
+*/
 QList<Command *> CommandContainer::commands(const QByteArray &id) const
 {
     Q_D(const CommandContainer);
@@ -125,11 +159,24 @@ QList<Command *> CommandContainer::commands(const QByteArray &id) const
     return result;
 }
 
+/*!
+    \property CommandContainer::id
+
+    \brief CommandContainer's id, which is used to identify containers.
+*/
 QByteArray CommandContainer::id() const
 {
     return d_func()->id;
 }
 
+/*!
+    \brief Constructs QMenu that represents this CommandContainer.
+
+    QMenu will contain all groups within this container; each group is separated.
+    Triggering action in this menu will cause triggering action linked to Command.
+
+    You are responsible for deleting menu.
+*/
 QMenu * CommandContainer::menu() const
 {
     Q_D(const CommandContainer);
@@ -153,6 +200,14 @@ QMenu * CommandContainer::menu() const
     return menu;
 }
 
+/*!
+    \brief Constructs QMenuBar that represents this CommandContainer.
+
+    QMenuBar will contain all groups within this container.
+    Note, that no actions added to menu bar, only sub menus.
+
+    You are responsible for deleting menu bar.
+*/
 QMenuBar * CommandContainer::menuBar() const
 {
     Q_D(const CommandContainer);
@@ -171,6 +226,14 @@ QMenuBar * CommandContainer::menuBar() const
     return menuBar;
 }
 
+/*!
+    \brief Constructs QToolBar that represents this CommandContainer.
+
+    QToolBar will contain all groups within this container; each group is separated.
+    Note, that only actions added to tool bar.
+
+    You are responsible for deleting tool bar.
+*/
 QToolBar * CommandContainer::toolBar() const
 {
     Q_D(const CommandContainer);
@@ -187,6 +250,11 @@ QToolBar * CommandContainer::toolBar() const
     return toolBar;
 }
 
+/*!
+    \property CommandContainer::title()
+
+    \brief CommandContainer's title, which is displayed as a menu's title.
+*/
 QString CommandContainer::title() const
 {
     return d_func()->title;
