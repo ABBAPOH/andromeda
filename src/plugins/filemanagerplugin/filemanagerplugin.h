@@ -1,5 +1,5 @@
-#ifndef FILEMANAGERPLUGINIMPL_H
-#define FILEMANAGERPLUGINIMPL_H
+#ifndef FILEMANAGERPLUGIN_H
+#define FILEMANAGERPLUGIN_H
 
 #include <iplugin.h>
 
@@ -23,4 +23,4 @@ public:
 
 //} // namespace FileManagerPlugin
 
-#endif // FILEMANAGERPLUGINIMPL_H
+#endif // FILEMANAGERPLUGIN_H
