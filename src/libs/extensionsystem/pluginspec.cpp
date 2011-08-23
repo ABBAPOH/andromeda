@@ -687,7 +687,6 @@ bool PluginSpec::read(const QString &path)
 
         if (!d->readTextFormat(path))
             return false;
-
     }
 
     QSettings s;
@@ -701,17 +700,18 @@ bool PluginSpec::read(const QString &path)
 
 bool PluginSpec::write(const QString &path, Format format)
 {
-    if (format == TextFormat) {
-        return d_func()->writeTextFormat(path);
-    } else if (format == BinaryFormat) {
+    if (format == BinaryFormat) {
         QFile file(path);
         if (!file.open(QIODevice::WriteOnly))
             return false;
+
         QDataStream s(&file);
         s.setByteOrder(QDataStream::BigEndian);
+
         s << *this->d_func();
+    } else if (format == TextFormat) {
+        return d_func()->writeTextFormat(path);
     }
 
     return true;
 }
-
