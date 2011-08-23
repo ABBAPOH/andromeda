@@ -1,4 +1,4 @@
-#include "filemanagerpluginimpl.h"
+#include "filemanagerplugin.h"
 
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>

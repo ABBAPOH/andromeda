@@ -1,13 +1,14 @@
+set( GLOBAL_HEADER FilemanagerPlugin )
+
 set( HEADERS
     filemanagerplugin_global.h
-    FilemanagerPlugin
     dualpanewidget.h
     filecopyreplacedialog.h
 #    filecopytask.h
     filecopytask_p.h
     filecopydialog.h
     filecopydialog_p.h
-    filemanagerpluginimpl.h
+    filemanagerplugin.h
     filemanagerview.h
     filemanagerwidget.h
     filemanagerwidget_p.h
@@ -23,7 +24,7 @@ set( SOURCES
     filecopyreplacedialog.cpp
     filecopytask.cpp
     filecopydialog.cpp
-    filemanagerpluginimpl.cpp
+    filemanagerplugin.cpp
     filemanagerview.cpp
     filemanagerwidget.cpp
     filesystemmodel.cpp
@@ -54,6 +55,6 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )
 
-add_library( filemanagerplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
+add_library( filemanagerplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
 target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io coreplugin )
 install_plugin( filemanagerplugin )
