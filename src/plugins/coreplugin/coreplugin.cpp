@@ -138,7 +138,7 @@ void CorePluginImpl::createActions()
     Command *exitCommand = new Command(Constants::Ids::Actions::Exit, this);
     exitCommand->setDefaultText(tr("Quit Andromeda"));
     exitCommand->setDefaultShortcut(tr("Ctrl+Q"));
-    exitCommand->setAlwaysEnabled(true);
+    exitCommand->setContext(Command::ApplicationCommand);
     fileContainer->addCommand(exitCommand, group);
     connect(exitCommand->commandAction(), SIGNAL(triggered()), qApp, SLOT(quit()));
 #endif
