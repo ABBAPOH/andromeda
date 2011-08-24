@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new QSettings(this);
     setupUi();
     setCentralWidget(m_editor);
+    resize(450, 600);
     pluginSpec = new MutablePluginSpec(this);
     m_editor->setPluginSpec(pluginSpec);
 }
