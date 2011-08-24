@@ -3,23 +3,33 @@ include( ${QT_USE_FILE} )
 
 set( SOURCES main.cpp )
 
+# on macosx the icons has to be part of sources. Bummer.
+if (APPLE)
+    set(MACOSX_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.icns)
+endif (APPLE)
+
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin/actionmanager )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
 if(WIN32)
-    SET(WIN_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+    set(WIN_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
 endif()
 
-add_executable( andromeda WIN32 MACOSX_BUNDLE ${SOURCES} ${WIN_RESOURCES} )
+add_executable( andromeda WIN32 MACOSX_BUNDLE ${SOURCES} ${WIN_RESOURCES} ${MACOSX_RESOURCES} )
 target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
 
 if( APPLE )
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/andromeda.icns ${LIBRARY_OUTPUT_PATH}/Andromeda.app/Contents/Resources COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/andromeda.icns ${LIBRARY_OUTPUT_PATH}/Andromeda.app/Contents/Resources/andromeda.icns COPYONLY)
     set_target_properties( andromeda PROPERTIES MACOSX_BUNDLE_ICON_FILE andromeda.icns
                                                 MACOSX_BUNDLE_BUNDLE_NAME "Andromeda"
-                                                MACOSX_BUNDLE_LONG_VERSION_STRING "0.1.0.0")
+                                                MACOSX_BUNDLE_LONG_VERSION_STRING "0.1.0.0"
+                                                MACOSX_BUNDLE_INFO_STRING "Andromeda 0.1.0"
+                                                MACOSX_BUNDLE_INFO_STRING "Andromeda 0.1.0"
+                                                MACOSX_BUNDLE_GUI_IDENTIFIER "org.andromeda"
+                                                MACOSX_BUNDLE_COPYRIGHT "ABBAPOH"
+                         )
 elseif( MSVC )
     set_target_properties( andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
 elseif( UNIX )
