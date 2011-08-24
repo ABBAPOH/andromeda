@@ -76,7 +76,6 @@ void PluginManager::loadPlugins()
         qWarning() << "PluginManager warning: Couldn't load plugins";
         qWarning() << "Searched paths:" << qApp->libraryPaths();
     }
-    qDebug("PluginManager::pluginsLoaded");
     d->loaded = true;
 
     emit pluginsLoaded();
@@ -100,7 +99,6 @@ void PluginManager::unloadPlugins()
         spec->unload();
     }
     d->loaded = false;
-    qDebug("PluginManager::pluginsUnloaded");
     emit pluginsUnloaded();
 }
 

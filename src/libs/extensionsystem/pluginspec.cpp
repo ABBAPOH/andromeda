@@ -10,6 +10,8 @@
 
 #include "pluginmanager.h"
 
+//#define DEBUG_OUTPUT
+
 using namespace ExtensionSystem;
 
 Version::Version() :
@@ -65,8 +67,10 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
 
 bool PluginSpecPrivate::load()
 {
+#ifdef DEBUG_OUTPUT
     qDebug() << "loading" << name << version.toString();
     qDebug() << "  resolving dependencies for" << name;
+#endif
     if (!resolveDependencies())
         return false;
 
@@ -86,16 +90,22 @@ bool PluginSpecPrivate::load()
         return false;
     }
 
+#ifdef DEBUG_OUTPUT
     qDebug() << "    loading library" << QFileInfo(libraryPath).fileName();
+#endif
     if (!loadLibrary())
         return false;
 
+#ifdef DEBUG_OUTPUT
     qDebug() << "      initializing" << name;
+#endif
     if (!plugin->initialize()) {
         setError("Failed to initialize plugin");
         return false;
     }
+#ifdef DEBUG_OUTPUT
     qDebug() << "======";
+#endif
 
     return true;
 }
@@ -126,8 +136,10 @@ bool PluginSpecPrivate::unload()
     bool ok = true;
     QString errorMessage;
 
+#ifdef DEBUG_OUTPUT
     qDebug() << "unloading" << name << version.toString();
     qDebug() << "  unloading dependencies for" << name;
+#endif
     foreach (PluginSpec *spec, dependentSpecs) {
         spec->unload();
         if (spec->loaded()) {
@@ -141,13 +153,19 @@ bool PluginSpecPrivate::unload()
         return false;
     }
 
+#ifdef DEBUG_OUTPUT
     qDebug() << "    shutting down" << name;
+#endif
     plugin->shutdown();
 
+#ifdef DEBUG_OUTPUT
     qDebug() << "      unloading library" << QFileInfo(libraryPath).fileName();
+#endif
     if (!unloadLibrary())
         return false;
+#ifdef DEBUG_OUTPUT
     qDebug() << "======";
+#endif
 
     return true;
 }
