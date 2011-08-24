@@ -125,7 +125,6 @@ FileCopyDialog::FileCopyDialog(QWidget *parent) :
 
 FileCopyDialog::~FileCopyDialog()
 {
-    qDebug("FileCopyDialog");
     delete d_ptr->ui;
     delete d_ptr;
 }

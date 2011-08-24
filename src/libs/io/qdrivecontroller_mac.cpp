@@ -125,8 +125,6 @@ QDriveWatcherEngine::~QDriveWatcherEngine()
     DAUnregisterCallback(m_session, (void*)unmountCallback, this);
 
     CFRelease(m_session);
-
-    qDebug("QDriveWatcherEngine::~QDriveWatcherEngine");
 }
 
 void QDriveWatcherEngine::stop()
@@ -137,8 +135,6 @@ void QDriveWatcherEngine::stop()
 
 void QDriveWatcherEngine::run()
 {
-    qDebug() << "DASessionThread::run" << currentThread();
-
     m_running = true;
 
     populateVolumes();
