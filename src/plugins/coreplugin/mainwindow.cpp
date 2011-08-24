@@ -129,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    qDebug("MainWindow::~MainWindow");
     delete d_ptr;
 }
 
@@ -160,7 +161,6 @@ void MainWindow::closeTab(int index)
 
     if (d->tabWidget->count() <= 1) {
         close();
-        deleteLater();
         return;
     }
 
