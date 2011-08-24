@@ -48,6 +48,8 @@ void CorePluginImpl::shutdown()
 void CorePluginImpl::newWindow()
 {
     MainWindow *window = new MainWindow();
+    window->setAttribute(Qt::WA_DeleteOnClose);
+    window->installEventFilter(this);
     ActionManager::instance()->command(Constants::Ids::Actions::NewTab)->action(window, SLOT(newTab()));
     ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
     window->show();
@@ -253,6 +255,18 @@ void CorePluginImpl::createActions()
     pluginsCommand->setContext(Command::ApplicationCommand);
     connect(pluginsCommand->action(), SIGNAL(triggered()), SLOT(showPluginView()));
     toolsContainer->addCommand(pluginsCommand);
+}
+
+bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
+{
+    if (o->isWidgetType()) {
+        if (e->type() == QEvent::Close) {
+            MainWindow *w = qobject_cast<MainWindow *>(o);
+            if (w)
+                removeObject(w);
+        }
+    }
+    return false;
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)

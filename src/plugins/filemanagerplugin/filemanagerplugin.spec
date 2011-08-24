@@ -10,3 +10,4 @@ license=other
 description=File manager plugin.
 
 [Dependencies]
+0=Core Plugin, 0.1.0.0
