@@ -2,6 +2,7 @@ set( GLOBAL_HEADERS ExtensionSystem extensionsystem_global.h)
 set( HEADERS
     iplugin.h
     mutablepluginspec.h
+    plugineditor.h
     pluginmanager.h
     pluginmanager_p.h
     pluginspec.h
@@ -16,6 +17,7 @@ set( HEADERS
 set( SOURCES
     iplugin.cpp
     mutablepluginspec.cpp
+    plugineditor.cpp
     pluginmanager.cpp
     pluginspec.cpp
     pluginview.cpp
@@ -26,6 +28,7 @@ set( SOURCES
 set( FORMS
     pluginview.ui
     fullpluginview.ui
+    plugineditor.ui
    )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
@@ -39,3 +42,5 @@ add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MO
 target_link_libraries( extensionsystem ${QT_LIBRARIES} )
 
 install_lib( extensionsystem )
+
+add_subdirectory( plugineditor )
