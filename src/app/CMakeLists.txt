@@ -37,8 +37,12 @@ elseif( MSVC )
     set_target_properties( andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
 elseif( UNIX )
     add_definitions( -DLIB_SUFFIX=\"${LIB_SUFFIX}\" )
+    
+    set(ICON_LOCATION "${CMAKE_INSTALL_PREFIX}/share/pixmaps")
+    add_definitions( -DICON_LOCATION=\"${ICON_LOCATION}\" )
+
     install( FILES andromeda.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" )
-    install( FILES andromeda.png DESTINATION "${CMAKE_INSTALL_PREFIX}/share/pixmaps" )
+    install( FILES andromeda.png DESTINATION "${ICON_LOCATION}" )
 endif()
 
 install_bin( andromeda )
