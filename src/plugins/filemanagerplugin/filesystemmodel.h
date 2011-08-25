@@ -12,6 +12,8 @@ class FileSystemModel : public QFileSystemModel
 public:
     explicit FileSystemModel(QObject *parent = 0);
 
+    FileSystemManager *manager() const;
+
 protected:
     bool dropMimeData(const QMimeData *data,
                       Qt::DropAction action,

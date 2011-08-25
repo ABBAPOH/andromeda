@@ -31,7 +31,13 @@ void swapPalettes(QWidget *active, QWidget *inactive)
     inactive->setPalette(palette);
 }
 
-DualPaneWidget::DualPaneWidget(QWidget *parent) :
+// todo : uncomment when c++0x will be standard
+//DualPaneWidget::DualPaneWidget(QWidget *parent) :
+//    DualPaneWidget(0, parent)
+//{
+//}
+
+DualPaneWidget::DualPaneWidget(FileSystemModel *model, QWidget *parent) :
     QWidget(parent),
     d_ptr(new DualPaneWidgetPrivate)
 {
@@ -39,8 +45,8 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
 
     d->activePane = LeftPane;
     d->dualPaneModeEnabled = false;
-    d->panes[LeftPane] = new FileManagerWidget(this);
-    d->panes[RightPane] = new FileManagerWidget(this);
+    d->panes[LeftPane] = new FileManagerWidget(model, this);
+    d->panes[RightPane] = new FileManagerWidget(model, this);
     d->panes[RightPane]->hide();
     d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
     swapPalettes(d->panes[LeftPane], d->panes[RightPane]);

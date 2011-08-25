@@ -13,6 +13,7 @@ namespace FileManagerPlugin {
 
 class FileSystemUndoManager;
 class FileSystemManager;
+class FileSystemModel;
 
 class FileManagerWidgetPrivate;
 class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
@@ -24,7 +25,8 @@ public:
     enum ViewMode { ListView = 0, IconView, TableView, ColumnView, TreeView };
     Q_ENUMS(ViewMode)
 
-    explicit FileManagerWidget(QWidget *parent = 0);
+//    explicit FileManagerWidget(QWidget *parent = 0);
+    explicit FileManagerWidget(FileSystemModel *model = 0, QWidget *parent = 0);
     ~FileManagerWidget();
 
     QString currentPath() const;
@@ -33,8 +35,8 @@ public:
 
     CorePlugin::History *history() const;
 
-    QFileSystemModel *model() const;
-    void setModel(QFileSystemModel *model);
+    FileSystemModel *model() const;
+    void setModel(FileSystemModel *model);
 
     QStringList selectedPaths() const;
 

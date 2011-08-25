@@ -38,7 +38,7 @@ public:
     QAbstractItemView * views[MaxViews];
     QStackedLayout * layout;
 
-    QFileSystemModel *model;
+    FileSystemModel *model;
     QString currentPath;
 
     FileSystemManager *fileSystemManager;
