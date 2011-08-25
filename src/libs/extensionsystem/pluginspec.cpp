@@ -76,17 +76,18 @@ bool PluginSpecPrivate::load()
 
     bool ok = true;
 
-    QString errorMessage;
+    QString tmp("Can't load plugin: %1");
+    QStringList errorMessages;
     foreach (PluginSpec *spec, dependencySpecs) {
         spec->load();
         if (!spec->loaded()) {
             ok = false;
-            errorMessage += "Can't load plugin: " + spec->name() + " is not loaded";
+            errorMessages << tmp.arg(spec->name());
         }
     }
 
     if (!ok) {
-        setError(errorMessage);
+        setError(errorMessages.join("\n"));
         return false;
     }
 
