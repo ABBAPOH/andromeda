@@ -23,4 +23,5 @@ add_definitions( -DWEBVIEWPLUGIN_LIBRARY )
 
 add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem coreplugin )
+add_dependencies( webviewplugin plugineditor)
 install_plugin( webviewplugin )

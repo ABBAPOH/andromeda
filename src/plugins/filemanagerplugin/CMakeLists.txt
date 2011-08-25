@@ -57,4 +57,5 @@ add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )
 
 add_library( filemanagerplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
 target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io coreplugin )
+add_dependencies( filemanagerplugin plugineditor)
 install_plugin( filemanagerplugin )
