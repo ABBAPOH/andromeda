@@ -12,8 +12,10 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
 
 add_definitions( -DQT_PLUGIN )
-add_definitions( -DQT_NO_DEBUG )
 add_definitions( -DQT_SHARED )
+if( CMAKE_BUILD_TYPE STREQUAL "Release" )
+    add_definitions( -DQT_NO_DEBUG )
+endif()
 
 add_subdirectory( coreplugin )
 add_subdirectory( webviewplugin )
