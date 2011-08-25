@@ -299,9 +299,6 @@ bool PluginSpecPrivate::readTextFormat(const QString &path)
     }
     specFile.endGroup();
 
-    libraryPath = getLibraryPath(path);
-    loader->setFileName(libraryPath);
-
     return true;
 }
 
@@ -707,6 +704,9 @@ bool PluginSpec::read(const QString &path)
         if (!d->readTextFormat(path))
             return false;
     }
+
+    d->libraryPath = d->getLibraryPath(path);
+    d->loader->setFileName(d->libraryPath);
 
     QSettings s;
     s.beginGroup(name());
