@@ -223,12 +223,6 @@ void CorePluginImpl::createActions()
     dualPaneCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(dualPaneCommand, group);
 
-    Command * showHiddenFilesCommand = new Command(Constants::Ids::Actions::ShowHiddenFiles, this);
-    showHiddenFilesCommand->setDefaultText(tr("Show Hidden Files"));
-    showHiddenFilesCommand->setCheckable(true);
-    showHiddenFilesCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(showHiddenFilesCommand);
-
     // ================ GoTo Menu ================
     CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);
     goToContainer->setTitle(tr("Go to"));
