@@ -48,7 +48,8 @@ void CorePluginImpl::shutdown()
 void CorePluginImpl::newWindow()
 {
     MainWindow *window = new MainWindow();
-    window->setAttribute(Qt::WA_DeleteOnClose);
+// TODO: explore why crashes (deletes after coreplugin is unloaded
+//    window->setAttribute(Qt::WA_DeleteOnClose);
     window->installEventFilter(this);
     ActionManager::instance()->command(Constants::Ids::Actions::NewTab)->action(window, SLOT(newTab()));
     ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
@@ -268,8 +269,10 @@ bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
     if (o->isWidgetType()) {
         if (e->type() == QEvent::Close) {
             MainWindow *w = qobject_cast<MainWindow *>(o);
-            if (w)
+            if (w) {
                 removeObject(w);
+                w->deleteLater();
+            }
         }
     }
     return false;
