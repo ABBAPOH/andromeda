@@ -8,8 +8,8 @@ set( SOURCES
 set( FORMS
    )
 
-set( MOC_SOURCES "")
-set( UI_HEADERS "")
+set( MOC_SOURCES )
+set( UI_HEADERS )
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 

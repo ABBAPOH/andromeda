@@ -3,7 +3,7 @@
 #include <QtCore/QSettings>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMenu>
-#include <QtGui/QMenubar>
+#include <QtGui/QMenuBar>
 
 using namespace ExtensionSystem;
 
