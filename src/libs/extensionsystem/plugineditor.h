@@ -1,6 +1,8 @@
 #ifndef PLUGINEDITOR_H
 #define PLUGINEDITOR_H
 
+#include "extensionsystem_global.h"
+
 #include <QtGui/QWidget>
 
 class QStringListModel;
@@ -15,7 +17,7 @@ namespace ExtensionSystem
 class MutablePluginSpec;
 class PluginSpec;
 
-class PluginEditor : public QWidget
+class EXTENSIONSYSTEM_EXPORT PluginEditor : public QWidget
 {
     Q_OBJECT
 
