@@ -1,8 +1,8 @@
 include ( LibSuffix.cmake )
 
 function( install_spec SPECFILE )
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE}
-  ${LIBRARY_OUTPUT_PATH}/${SPECFILE} COPYONLY)
+   # configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE} ${LIBRARY_OUTPUT_PATH}/${SPECFILE} COPYONLY)
+    execute_process(COMMAND ${CMAKE_BINARY_DIR}/bin/plugineditor ${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE} ${LIBRARY_OUTPUT_PATH}/${SPECFILE} )
 endfunction( install_spec )
 
 if(UNIX AND NOT APPLE)
@@ -23,7 +23,8 @@ if(UNIX AND NOT APPLE)
 
     function( install_plugin TARGET )
         install( TARGETS ${TARGET} DESTINATION ${INSTALL_PLUGIN_DIR} )
-        install( FILES ${TARGET}.spec DESTINATION ${INSTALL_PLUGIN_DIR} )
+        #install( FILES ${TARGET}.spec DESTINATION ${INSTALL_PLUGIN_DIR} )
+        install( CODE "execute_process(COMMAND ${CMAKE_BINARY_DIR}/bin/plugineditor ${TARGET} ${INSTALL_PLUGIN_DIR}/${SPECFILE}" )
         install_spec(${TARGET}.spec)
     endfunction( install_plugin )
 else()
