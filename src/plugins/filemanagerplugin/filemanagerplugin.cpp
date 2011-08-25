@@ -13,6 +13,7 @@
 #include "filecopydialog.h"
 #include "filemanagerview.h"
 #include "filesystemmanager.h"
+#include "filesystemmodel.h"
 #include "navigationpanelview.h"
 
 using namespace FileManagerPlugin;
@@ -39,6 +40,7 @@ bool FileManagerPluginImpl::initialize()
                                                                        "FileManagerPerspective");
 
     addObject(new FileCopyDialog, "fileCopyDialog");
+    addObject(new FileSystemModel);
     addObject(FileSystemManager::instance());
 
     CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Ids::Menus::View);

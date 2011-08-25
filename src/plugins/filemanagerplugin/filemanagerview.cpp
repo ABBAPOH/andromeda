@@ -7,9 +7,11 @@
 #include <actionmanager.h>
 #include <command.h>
 #include <constants.h>
+#include <pluginmanager.h>
 
 #include "dualpanewidget.h"
 #include "filemanagerwidget.h"
+#include "filesystemmodel.h"
 
 using namespace FileManagerPlugin;
 using namespace GuiSystem;
@@ -21,7 +23,9 @@ FileManagerView::FileManagerView(QObject *parent) :
     settings.beginGroup("FileManager");
     bool enableDualPane = settings.value("dualPaneModeEnabled").toBool();
 
-    m_widget = new DualPaneWidget();
+    FileSystemModel *model = ExtensionSystem::PluginManager::instance()->object<FileSystemModel>("FileSystemModel");
+
+    m_widget = new DualPaneWidget(model);
     m_widget->setDualPaneModeEnabled(enableDualPane);
     m_widget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));

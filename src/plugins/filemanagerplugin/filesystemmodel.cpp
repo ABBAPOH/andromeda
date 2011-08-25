@@ -9,8 +9,14 @@ using namespace FileManagerPlugin;
 
 FileSystemModel::FileSystemModel(QObject *parent) :
     QFileSystemModel(parent),
-    m_manager(FileSystemManager::instance())
+    m_manager(new FileSystemManager(this))
 {
+    setObjectName("FileSystemModel");
+}
+
+FileSystemManager * FileSystemModel::manager() const
+{
+    return m_manager;
 }
 
 bool FileSystemModel::dropMimeData(const QMimeData *data,

@@ -42,7 +42,13 @@ void FileManagerWidgetPrivate::onCurrentItemIndexChanged(int index)
 
 static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
 
-FileManagerWidget::FileManagerWidget(QWidget *parent) :
+// todo : uncomment when c++0x will be standard
+//FileManagerWidget::FileManagerWidget(QWidget *parent) :
+//    FileManagerWidget(0, parent)
+//{
+//}
+
+FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
     QWidget(parent),
     d_ptr(new FileManagerWidgetPrivate(this))
 {
@@ -107,7 +113,9 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->history = new CorePlugin::History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
-    FileSystemModel *model = new FileSystemModel(this);
+    if (!model)
+        model = new FileSystemModel(this);
+
     model->setRootPath("/");
     model->setFilter(mBaseFilters);
     model->setReadOnly(false);
@@ -160,16 +168,25 @@ CorePlugin::History * FileManagerWidget::history() const
     return d->history;
 }
 
-QFileSystemModel * FileManagerWidget::model() const
+FileSystemModel * FileManagerWidget::model() const
 {
     Q_D(const FileManagerWidget);
 
     return d->model;
 }
 
-void FileManagerWidget::setModel(QFileSystemModel *model)
+void FileManagerWidget::setModel(FileSystemModel *model)
 {
     Q_D(FileManagerWidget);
+
+    if (model == 0)
+        setModel(new FileSystemModel(this));
+
+    if (d->model == model)
+        return;
+
+    if (d->model && d->model->QObject::parent() == this)
+        delete d->model;
 
     d->model = model;
 
