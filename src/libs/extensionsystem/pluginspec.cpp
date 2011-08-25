@@ -330,35 +330,52 @@ bool PluginSpecPrivate::writeTextFormat(const QString &path)
 
 namespace ExtensionSystem {
 
+QDataStream & operator<<(QDataStream &s, const Version &version)
+{
+    s << (quint32)version.major;
+    s << (quint32)version.minor;
+    s << (quint32)version.build;
+    s << (quint32)version.revision;
+    return s;
+}
+
+QDataStream & operator>>(QDataStream &s, Version &version)
+{
+    quint32 tmp;
+    s >> tmp; version.major = tmp;
+    s >> tmp; version.minor = tmp;
+    s >> tmp; version.build = tmp;
+    s >> tmp; version.revision = tmp;
+    return s;
+}
+
 QDataStream & operator>>(QDataStream &s, PluginDependency &dependency)
 {
-    QString a, b;
-    s >> a;
-    s >> b;
-    dependency = PluginDependency(a, b);
+    QString name;
+    Version version;
+    s >> name;
+    s >> version;
+    dependency = PluginDependency(name, version);
     return s;
 }
 
 QDataStream & operator<<(QDataStream &s, const PluginDependency &dependency)
 {
     s << dependency.name();
-    s << dependency.version().toString();
+    s << dependency.version();
     return s;
 }
 
 QDataStream & operator>>(QDataStream &s, PluginSpecPrivate &pluginSpec)
 {
     PluginSpecPrivate * d = &pluginSpec;
-    QString tmp;
     s.device()->read(4);
     quint32 version;
     s >> version;
 
     s >> d->name;
-    s >> tmp;
-    d->version = Version::fromString(tmp);
-    s >> tmp;
-    d->compatibilityVersion = Version::fromString(tmp);
+    s >> d->version;
+    s >> d->compatibilityVersion;
     s >> d->vendor;
     s >> d->category;
     s >> d->copyright;
@@ -376,8 +393,8 @@ QDataStream & operator<<(QDataStream &s, const PluginSpecPrivate &pluginSpec)
     quint32 version = 1;
     s << version;
     s << d->name;
-    s << d->version.toString();
-    s << d->compatibilityVersion.toString();
+    s << d->version;
+    s << d->compatibilityVersion;
     s << d->vendor;
     s << d->category;
     s << d->copyright;
@@ -397,8 +414,13 @@ QDataStream & operator<<(QDataStream &s, const PluginSpecPrivate &pluginSpec)
 PluginDependency::PluginDependency(const QString &name, const QString &version)
 {
     m_name = name;
-//    m_version = version;
     m_version = Version(version);
+}
+
+PluginDependency::PluginDependency(const QString &name, const Version &version)
+{
+    m_name = name;
+    m_version = version;
 }
 
 /*!
