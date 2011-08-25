@@ -18,6 +18,8 @@ private Q_SLOTS:
     void cleanupTestCase();
     void testSerialiseText();
     void testSerialiseBinary();
+    void benchmarkText();
+    void benchmarkBinary();
 
 private:
     void compareSpecs(PluginSpec *first, PluginSpec *second);
@@ -50,7 +52,7 @@ void PluginSpecTest::cleanupTestCase()
 
 void PluginSpecTest::testSerialiseText()
 {
-    spec.write(QLatin1String("Text.pluginspec"));
+    spec.write(QLatin1String("Text.pluginspec"), PluginSpec::TextFormat);
 
     PluginSpec spec2;
     spec2.read(QLatin1String("Text.pluginspec"));
@@ -66,6 +68,28 @@ void PluginSpecTest::testSerialiseBinary()
     spec2.read(QLatin1String("Binary.pluginspec"));
 
     compareSpecs(&spec, &spec2);
+}
+
+void PluginSpecTest::benchmarkText()
+{
+    PluginSpec spec2;
+
+    QBENCHMARK {
+        spec.write(QLatin1String("Text.pluginspec"), PluginSpec::TextFormat);
+
+        spec2.read(QLatin1String("Text.pluginspec"));
+    }
+}
+
+void PluginSpecTest::benchmarkBinary()
+{
+    PluginSpec spec2;
+
+    QBENCHMARK {
+        spec.write(QLatin1String("Binary.pluginspec"), PluginSpec::BinaryFormat);
+
+        spec2.read(QLatin1String("Binary.pluginspec"));
+    }
 }
 
 void PluginSpecTest::compareSpecs(PluginSpec *first, PluginSpec *second)

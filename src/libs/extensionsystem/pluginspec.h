@@ -34,6 +34,7 @@ class EXTENSIONSYSTEM_EXPORT PluginDependency
 public:
     PluginDependency() {}
     PluginDependency(const QString &name, const QString &version);
+    PluginDependency(const QString &name, const Version &version);
 
     inline QString name() const { return m_name; }
     inline Version version() const { return m_version; }
