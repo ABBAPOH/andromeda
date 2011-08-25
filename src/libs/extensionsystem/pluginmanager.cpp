@@ -3,6 +3,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#include <QtCore/QDirIterator>
 #include <QtCore/QFileSystemWatcher>
 #include <QDebug>
 
@@ -63,10 +64,10 @@ void PluginManager::loadPlugins()
     // findexisting folders with plugins
     foreach (QString folder, qApp->libraryPaths()) {
         if (pluginsFolder() != "") { // we try to cd into pluginsFolder
-            if (!QFileInfo(folder + '/' + pluginsFolder()).exists())
+            if (!QFileInfo(folder + QLatin1Char('/') + pluginsFolder()).exists())
                 continue;
             else
-                folder = folder + '/' + pluginsFolder();
+                folder = folder + QLatin1Char('/') + pluginsFolder();
         }
         d->foldersToBeLoaded.append(folder);
         d->watcher->addPath(folder);
@@ -201,10 +202,9 @@ QStringList PluginManagerPrivate::getSpecFiles(QStringList folders)
 {
     QStringList result;
     foreach (const QString &folder, folders) {
-        QDir dir(folder);
-        QStringList entries = dir.entryList(QStringList() << "*.spec");
-        foreach (QString entry, entries) {
-            result.append(dir.absoluteFilePath(entry));
+        QDirIterator it(folder, QStringList() << "*.spec");
+        while (it.hasNext()) {
+            result.append(it.next());
         }
     }
     return result;
