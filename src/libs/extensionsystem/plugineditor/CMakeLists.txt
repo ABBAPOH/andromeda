@@ -8,13 +8,13 @@ set( SOURCES
 set( FORMS
    )
 
-qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
-qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_wrap_cpp( EDMOC_SOURCES ${HEADERS} )
+qt4_wrap_ui( EDUI_HEADERS ${FORMS} )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 
-add_executable( plugineditor WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_executable( plugineditor WIN32 ${HEADERS} ${SOURCES} ${EDMOC_SOURCES} ${EDUI_HEADERS} )
 target_link_libraries( plugineditor ${QT_LIBRARIES} extensionsystem )
 
