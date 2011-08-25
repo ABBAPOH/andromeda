@@ -1,4 +1,5 @@
 #include <QtSingleApplication>
+#include <QtGui/QIcon>
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 #include <QtWebKit/QWebSecurityOrigin>
@@ -42,6 +43,10 @@ int main(int argc, char *argv[])
         app.sendMessage(QLatin1String("activate"));
         return 0;
     }
+
+#ifdef ICON_LOCATION
+    app.setWindowIcon(QIcon(ICON_LOCATION + QString("/andromeda.png")));
+#endif
 
     app.setQuitOnLastWindowClosed(false);
     app.addLibraryPath(getPluginPath());
