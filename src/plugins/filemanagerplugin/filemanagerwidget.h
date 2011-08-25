@@ -72,9 +72,6 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
     FileManagerWidgetPrivate *d_ptr;
-
-private:
-    QDir::Filters mBaseFilters;
 };
 
 } // namespace FileManagerPlugin

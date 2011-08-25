@@ -40,6 +40,8 @@ void FileManagerWidgetPrivate::onCurrentItemIndexChanged(int index)
     }
 }
 
+static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
+
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new FileManagerWidgetPrivate(this))
@@ -107,7 +109,6 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     FileSystemModel *model = new FileSystemModel(this);
     model->setRootPath("/");
-    mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
     model->setFilter(mBaseFilters);
     model->setReadOnly(false);
     setModel(model);
