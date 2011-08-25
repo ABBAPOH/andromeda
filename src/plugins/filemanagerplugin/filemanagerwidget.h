@@ -4,6 +4,7 @@
 #include "filemanagerplugin_global.h"
 
 #include <QtGui/QWidget>
+#include <QtCore/QDir>
 #include <history.h>
 
 class QFileSystemModel;
@@ -64,11 +65,16 @@ public slots:
     void forward();
     void up();
 
+    void showHiddenFiles(bool show);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
     FileManagerWidgetPrivate *d_ptr;
+
+private:
+    QDir::Filters mBaseFilters;
 };
 
 } // namespace FileManagerPlugin

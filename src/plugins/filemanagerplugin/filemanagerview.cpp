@@ -45,6 +45,10 @@ FileManagerView::FileManagerView(QObject *parent) :
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 
+    QAction * showHiddenFilesAct = actionManager->command(Constants::Ids::Actions::ShowHiddenFiles)->action();
+    m_widget->addAction(showHiddenFilesAct);
+    connect(showHiddenFilesAct, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
+
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
     mode = enableDualPane ? -1 : mode;
