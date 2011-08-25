@@ -56,6 +56,8 @@ const char * const ColumnMode = "Actions.ColumnMode";
 const char * const TreeMode = "Actions.TreeViewMode";
 const char * const DualPane = "Actions.DualPane";
 
+const char * const ShowHiddenFiles = "Actions.ShowHiddenFiles";
+
 const char * const Back = "Actions.Back";
 const char * const Forward = "Actions.Forward";
 const char * const Up = "Actions.Up";

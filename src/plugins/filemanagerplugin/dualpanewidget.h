@@ -65,6 +65,8 @@ public slots:
     void forward();
     void up();
 
+    void showHiddenFiles(bool show);
+
 protected:
     bool eventFilter(QObject * watched, QEvent * event);
 

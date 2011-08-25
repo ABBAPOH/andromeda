@@ -107,7 +107,8 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     FileSystemModel *model = new FileSystemModel(this);
     model->setRootPath("/");
-    model->setFilter(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Hidden);
+    mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
+    model->setFilter(mBaseFilters);
     model->setReadOnly(false);
     setModel(model);
 
@@ -332,6 +333,16 @@ void FileManagerWidget::up()
     QDir dir(d->currentPath);
     dir.cdUp();
     setCurrentPath(dir.path());
+}
+
+void FileManagerWidget::showHiddenFiles(bool show)
+{
+    Q_D(FileManagerWidget);
+
+    if (show)
+        d->model->setFilter(mBaseFilters | QDir::Hidden);
+    else
+        d->model->setFilter(mBaseFilters);
 }
 
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)

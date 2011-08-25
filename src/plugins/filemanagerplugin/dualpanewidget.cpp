@@ -246,6 +246,11 @@ void DualPaneWidget::up()
     activeWidget()->up();
 }
 
+void DualPaneWidget::showHiddenFiles(bool show)
+{
+    activeWidget()->showHiddenFiles(show);
+}
+
 bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
 {
     Q_D(DualPaneWidget);
