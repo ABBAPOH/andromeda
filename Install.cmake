@@ -2,6 +2,7 @@ include ( LibSuffix.cmake )
 
 function( install_spec SPECFILE )
    # configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE} ${LIBRARY_OUTPUT_PATH}/${SPECFILE} COPYONLY)
+    execute_process(COMMAND mkdir -p ${LIBRARY_OUTPUT_PATH})
     execute_process(COMMAND ${CMAKE_BINARY_DIR}/bin/plugineditor ${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE} ${LIBRARY_OUTPUT_PATH}/${SPECFILE} )
 endfunction( install_spec )
 
