@@ -41,6 +41,15 @@ bool FileManagerPluginImpl::initialize()
     addObject(new FileCopyDialog, "fileCopyDialog");
     addObject(FileSystemManager::instance());
 
+    CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Ids::Menus::View);
+
+    Command * showHiddenFilesCommand = new Command(Constants::Ids::Actions::ShowHiddenFiles, this);
+    showHiddenFilesCommand->setDefaultText(tr("Show Hidden Files"));
+    showHiddenFilesCommand->setCheckable(true);
+    showHiddenFilesCommand->setDefaultShortcut(tr("Ctrl+."));
+    showHiddenFilesCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(showHiddenFilesCommand);
+
     CommandContainer *goToContainer = ActionManager::instance()->container(Constants::Ids::Menus::GoTo);
     // ================ GoTo Menu (Locations) ================
     goToContainer->addGroup(Constants::Ids::MenuGroups::Locations);
