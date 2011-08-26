@@ -20,8 +20,6 @@ public:
     explicit FileSystemManager(QObject *parent = 0);
     ~FileSystemManager();
 
-    static FileSystemManager *instance();
-
     QUndoStack *undoStack() const;
 
     void copyFiles(const QStringList &files, const QString &destination);

@@ -281,8 +281,6 @@ void LinkCommand::appendPaths(const QString &sourcePath, const QString &linkPath
 
 /* ================================ FileSystemManager ================================ */
 
-FileSystemManager *m_instance = 0;
-
 FileSystemManager::FileSystemManager(QObject *parent) :
     QObject(parent),
     d_ptr(new FileSystemManagerPrivate(this))
@@ -293,16 +291,7 @@ FileSystemManager::FileSystemManager(QObject *parent) :
 
 FileSystemManager::~FileSystemManager()
 {
-    if (m_instance == this)
-        m_instance = 0;
     delete d_ptr;
-}
-
-FileSystemManager *FileSystemManager::instance()
-{
-    if (!m_instance)
-        m_instance = new FileSystemManager(qApp);
-    return m_instance;
 }
 
 QUndoStack *FileSystemManager::undoStack() const

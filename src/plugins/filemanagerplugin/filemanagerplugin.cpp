@@ -39,9 +39,9 @@ bool FileManagerPluginImpl::initialize()
     CorePlugin::Core::instance()->perspectiveManager()->addPerspective("inode/directory",
                                                                        "FileManagerPerspective");
 
-    addObject(new FileCopyDialog, "fileCopyDialog");
-    addObject(new FileSystemModel);
-    addObject(FileSystemManager::instance());
+    FileSystemModel *model = new FileSystemModel;
+    addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
+    addObject(model);
 
     CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Ids::Menus::View);
 
