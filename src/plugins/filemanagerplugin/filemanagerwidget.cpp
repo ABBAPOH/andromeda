@@ -7,6 +7,82 @@
 
 using namespace FileManagerPlugin;
 
+void FileManagerWidgetPrivate::setupUi()
+{
+    Q_Q(FileManagerWidget);
+
+    layout = new QStackedLayout(q);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    initViews();
+
+    q->setLayout(layout);
+    q->setFocusPolicy(Qt::StrongFocus);
+    q->setMinimumSize(200, 200);
+}
+
+void FileManagerWidgetPrivate::initViews()
+{
+    Q_Q(FileManagerWidget);
+
+    QListView *listView = new QListView(q);
+    QListView *iconView = new QListView(q);
+    QColumnView *columnView = new QColumnView(q);
+//    QTableView *tableView = new QTableView(q);
+    QTreeView *tableView = new QTreeView(q);
+    QTreeView *treeView = new QTreeView(q);
+
+//    iconView->setGridSize(QSize(150, 100));
+    iconView->setGridSize(QSize(100, 100));
+    iconView->setWordWrap(true);
+    iconView->setViewMode(QListView::IconMode);
+    iconView->setFlow(QListView::LeftToRight);
+    iconView->setMovement(QListView::Snap);
+//    iconView->setMovement(QListView::Static);
+    iconView->setResizeMode(QListView::Adjust);
+
+    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableView->setRootIsDecorated(false);
+    tableView->setItemsExpandable(false);
+
+    views[FileManagerWidget::ListView] = listView;
+    views[FileManagerWidget::IconView] = iconView;
+    views[FileManagerWidget::ColumnView] = columnView;
+    views[FileManagerWidget::TableView] = tableView;
+    views[FileManagerWidget::TreeView] = treeView;
+    blockEvents = false;
+
+    for (int i = 0; i < MaxViews; i++) {
+        views[i]->setFocusProxy(q);
+        views[i]->setSelectionMode(QAbstractItemView::ContiguousSelection);
+        views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
+        views[i]->setDragDropMode(QAbstractItemView::DragDrop);
+        views[i]->setAcceptDrops(true);
+        views[i]->setEditTriggers(QAbstractItemView::SelectedClicked);
+        layout->addWidget(views[i]);
+//        views[i]->setDragEnabled(true);
+        connect(views[i], SIGNAL(doubleClicked(QModelIndex)),
+                this, SLOT(onDoubleClick(QModelIndex)),
+                Qt::QueuedConnection);
+    }
+}
+
+void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
+{
+    Q_Q(FileManagerWidget);
+
+    if (fileSystemManager) {
+        disconnect(fileSystemManager->undoStack(), 0, q, 0);
+    }
+
+    fileSystemManager = manager;
+    connect(fileSystemManager->undoStack(), SIGNAL(canUndoChanged(bool)),
+            q, SIGNAL(canUndoChanged(bool)));
+    connect(fileSystemManager->undoStack(), SIGNAL(canRedoChanged(bool)),
+            q, SIGNAL(canRedoChanged(bool)));
+
+}
+
 QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
 {
     return currentView->selectionModel()->selectedRows();
@@ -54,61 +130,12 @@ FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
 {
     Q_D(FileManagerWidget);
 
-    QListView *listView = new QListView(this);
-    QListView *iconView = new QListView(this);
-    QColumnView *columnView = new QColumnView(this);
-//    QTableView *tableView = new QTableView(this);
-    QTreeView *tableView = new QTreeView(this);
-    QTreeView *treeView = new QTreeView(this);
-
-//    iconView->setGridSize(QSize(150, 100));
-    iconView->setGridSize(QSize(100, 100));
-    iconView->setWordWrap(true);
-    iconView->setViewMode(QListView::IconMode);
-    iconView->setFlow(QListView::LeftToRight);
-    iconView->setMovement(QListView::Snap);
-//    iconView->setMovement(QListView::Static);
-    iconView->setResizeMode(QListView::Adjust);
-
-    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    tableView->setRootIsDecorated(false);
-    tableView->setItemsExpandable(false);
+    d->setupUi();
 
     d->model = 0;
     d->currentView = 0;
     d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
-    d->layout = new QStackedLayout(this);
-
-    d->views[ListView] = listView;
-    d->views[IconView] = iconView;
-    d->views[ColumnView] = columnView;
-    d->views[TableView] = tableView;
-    d->views[TreeView] = treeView;
-    d->blockEvents = false;
-
-    setFocusPolicy(Qt::StrongFocus);
-    for (int i = 0; i < MaxViews; i++) {
-        d->views[i]->setFocusProxy(this);
-        d->views[i]->setSelectionMode(QAbstractItemView::ContiguousSelection);
-        d->views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
-        d->views[i]->setDragDropMode(QAbstractItemView::DragDrop);
-        d->views[i]->setAcceptDrops(true);
-        d->views[i]->setEditTriggers(QAbstractItemView::SelectedClicked);
-        d->layout->addWidget(d->views[i]);
-//        d->views[i]->setDragEnabled(true);
-        connect(d->views[i], SIGNAL(doubleClicked(QModelIndex)),
-                d, SLOT(onDoubleClick(QModelIndex)),
-                Qt::QueuedConnection);
-    }
-
-    d->layout->setContentsMargins(0, 0, 0, 0);
-    setLayout(d->layout);
-
-    d->fileSystemManager = FileSystemManager::instance();
-    connect(d->fileSystemManager->undoStack(), SIGNAL(canUndoChanged(bool)),
-            SIGNAL(canUndoChanged(bool)));
-    connect(d->fileSystemManager->undoStack(), SIGNAL(canRedoChanged(bool)),
-            SIGNAL(canRedoChanged(bool)));
+    d->fileSystemManager = 0;
 
     d->history = new CorePlugin::History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -122,8 +149,6 @@ FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
     setModel(model);
 
     setViewMode(ListView);
-
-    setMinimumSize(200, 200);
 }
 
 FileManagerWidget::~FileManagerWidget()
@@ -189,6 +214,7 @@ void FileManagerWidget::setModel(FileSystemModel *model)
         delete d->model;
 
     d->model = model;
+    d->setFileSystemManager(model->fileSystemManager());
 
     for (int i = 0; i < MaxViews; i++) {
         d->views[i]->setModel(model);

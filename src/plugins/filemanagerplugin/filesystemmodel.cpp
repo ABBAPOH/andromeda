@@ -14,7 +14,7 @@ FileSystemModel::FileSystemModel(QObject *parent) :
     setObjectName("FileSystemModel");
 }
 
-FileSystemManager * FileSystemModel::manager() const
+FileSystemManager * FileSystemModel::fileSystemManager() const
 {
     return m_manager;
 }

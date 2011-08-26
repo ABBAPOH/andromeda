@@ -28,8 +28,14 @@ class FileManagerWidgetPrivate : public QObject
     Q_OBJECT
     Q_DECLARE_PUBLIC(FileManagerWidget)
     FileManagerWidget *q_ptr;
+
 public:
     FileManagerWidgetPrivate(FileManagerWidget *qq) : QObject(), q_ptr(qq) {}
+
+    void setupUi();
+    void initViews();
+
+    void setFileSystemManager(FileSystemManager *manager);
 
     QModelIndexList selectedIndexes() const;
 

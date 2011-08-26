@@ -12,7 +12,7 @@ class FileSystemModel : public QFileSystemModel
 public:
     explicit FileSystemModel(QObject *parent = 0);
 
-    FileSystemManager *manager() const;
+    FileSystemManager *fileSystemManager() const;
 
 protected:
     bool dropMimeData(const QMimeData *data,
