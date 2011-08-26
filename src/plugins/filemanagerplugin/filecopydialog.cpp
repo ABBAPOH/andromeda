@@ -116,17 +116,45 @@ FileCopyDialog::FileCopyDialog(QWidget *parent) :
     d_ptr(new FileCopyDialogPrivate(this))
 {
     Q_D(FileCopyDialog);
+
     d->ui = new Ui::FileCopyDialog;
     d->ui->setupUi(this);
+    d->manager = 0;
+}
 
-    FileSystemManager *manager = FileSystemManager::instance();
-    connect(manager, SIGNAL(operationStarted(QtFileCopier*)), d, SLOT(addCopier(QtFileCopier*)));
+FileCopyDialog::FileCopyDialog(FileSystemManager *manager, QWidget *parent) :
+    QDialog(parent),
+    d_ptr(new FileCopyDialogPrivate(this))
+{
+    Q_D(FileCopyDialog);
+
+    d->ui = new Ui::FileCopyDialog;
+    d->ui->setupUi(this);
+    d->manager = 0;
+
+    setFileSystemManager(manager);
 }
 
 FileCopyDialog::~FileCopyDialog()
 {
     delete d_ptr->ui;
     delete d_ptr;
+}
+
+FileSystemManager *FileCopyDialog::fileSystemManager() const
+{
+    return d_func()->manager;
+}
+
+void FileCopyDialog::setFileSystemManager(FileSystemManager *manager)
+{
+    Q_D(FileCopyDialog);
+
+    if (d->manager) {
+        disconnect(d->manager, 0, d, 0);
+    }
+    d->manager = manager;
+    connect(d->manager, SIGNAL(operationStarted(QtFileCopier*)), d, SLOT(addCopier(QtFileCopier*)));
 }
 
 void FileCopyDialog::resizeEvent(QResizeEvent *e)

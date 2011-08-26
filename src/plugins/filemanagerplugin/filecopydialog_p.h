@@ -19,6 +19,7 @@ public:
 
     QMap<QtFileCopier*, QWidget*> mapToWidget;
     QMap<QtFileCopier*, QObject*> mapToTask;
+    FileSystemManager *manager;
 
     FileCopyDialog *q_ptr;
 
