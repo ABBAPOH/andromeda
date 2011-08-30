@@ -72,13 +72,13 @@ void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
     Q_Q(FileManagerWidget);
 
     if (fileSystemManager) {
-        disconnect(fileSystemManager->undoStack(), 0, q, 0);
+        disconnect(fileSystemManager, 0, q, 0);
     }
 
     fileSystemManager = manager;
-    connect(fileSystemManager->undoStack(), SIGNAL(canUndoChanged(bool)),
+    connect(fileSystemManager, SIGNAL(canUndoChanged(bool)),
             q, SIGNAL(canUndoChanged(bool)));
-    connect(fileSystemManager->undoStack(), SIGNAL(canRedoChanged(bool)),
+    connect(fileSystemManager, SIGNAL(canRedoChanged(bool)),
             q, SIGNAL(canRedoChanged(bool)));
 
 }
@@ -315,12 +315,12 @@ void FileManagerWidget::rename()
 
 void FileManagerWidget::undo()
 {
-    fileSystemManager()->undoStack()->undo();
+    fileSystemManager()->undo();
 }
 
 void FileManagerWidget::redo()
 {
-    fileSystemManager()->undoStack()->redo();
+    fileSystemManager()->redo();
 }
 
 void FileManagerWidget::copy()
@@ -350,7 +350,7 @@ void FileManagerWidget::paste()
     foreach (const QUrl &url, urls) {
         files.append(url.toLocalFile());
     }
-    d->fileSystemManager->copyFiles(files, currentPath());
+    d->fileSystemManager->copy(files, currentPath());
 }
 
 void FileManagerWidget::selectAll()

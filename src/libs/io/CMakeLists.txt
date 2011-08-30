@@ -1,22 +1,8 @@
-function( qt4_wrap_single_cpp SOURCE TARGET )
-    get_filename_component( SOURCENAME ${SOURCE} NAME_WE )
-    qt4_generate_moc( ${SOURCE} ${CMAKE_CURRENT_BINARY_DIR}/${TARGET} )
-    set_source_files_properties( ${SOURCE}  OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${TARGET} )
-endfunction( qt4_wrap_single_cpp )
-
-set( COPIER_HEADERS
-    qtfilecopier.h
-    QtFileCopier
-)
-set( COPIER_SOURCES qtfilecopier.cpp )
-
-qt4_wrap_single_cpp( qtfilecopier.cpp moc_qtfilecopier.cpp )
-qt4_automoc( qtfilecopier.cpp )
-
 set( GLOBAL_HEADERS
     IO
     QDriveInfo
     QDriveController
+    QFileCopier
    )
 set( HEADERS
     io_global.h
@@ -24,11 +10,14 @@ set( HEADERS
     qdrivecontroller_p.h
     qdriveinfo.h
     qdriveinfo_p.h
+    qfilecopier.h
+    qfilecopier_p.h
     qsystemerror_p.h
    )
 set( SOURCES
     qdrivecontroller.cpp
     qdriveinfo.cpp
+    qfilecopier.cpp
     qsystemerror.cpp
    )
 set( FORMS
@@ -83,7 +72,6 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
-include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/include )
 
 add_definitions( -DIO_LIBRARY )
@@ -94,7 +82,7 @@ if( MSVC )
     add_definitions( /Zc:wchar_t- )
 endif( MSVC )
 
-add_library( io SHARED ${COPIER_HEADERS} ${COPIER_SOURCES} ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( io SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( io ${QT_LIBRARIES} ${LIBS} )
 
 install_lib( io )

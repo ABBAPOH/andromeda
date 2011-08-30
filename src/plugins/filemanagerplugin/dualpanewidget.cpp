@@ -195,7 +195,7 @@ void DualPaneWidget::copyFiles()
     FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
 
     QStringList files = source->selectedPaths();
-    source->fileSystemManager()->copyFiles(files, target->currentPath());
+    source->fileSystemManager()->copy(files, target->currentPath());
 }
 
 void DualPaneWidget::moveFiles()
@@ -209,7 +209,7 @@ void DualPaneWidget::moveFiles()
     FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
 
     QStringList files = source->selectedPaths();
-    source->fileSystemManager()->moveFiles(files, target->currentPath());
+    source->fileSystemManager()->move(files, target->currentPath());
 }
 
 void DualPaneWidget::undo()
