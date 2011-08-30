@@ -45,7 +45,7 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
             files.append(path);
             success = true;
         }
-        m_manager->copyFiles(files, to);
+        m_manager->copy(files, to);
         break;
     }
 #ifndef Q_CC_MSVC
@@ -67,7 +67,7 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
             files.append(path);
             success = true;
         }
-        m_manager->moveFiles(files, to);
+        m_manager->move(files, to);
         break;
     }
     default:

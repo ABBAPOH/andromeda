@@ -52,10 +52,10 @@ void FileCopyDialogPrivate::addWidget(QWidget *widget)
     ui->layout->insertWidget(ui->layout->count() - 1, widget);
 }
 
-void FileCopyDialogPrivate::addCopier(QtFileCopier *copier)
+void FileCopyDialogPrivate::addCopier(QFileCopier *copier)
 {
-    connect(copier, SIGNAL(error(int,QtFileCopier::Error,bool)),
-            SLOT(handleError(int,QtFileCopier::Error,bool)));
+    connect(copier, SIGNAL(error(int,QFileCopier::Error,bool)),
+            SLOT(handleError(int,QFileCopier::Error,bool)));
 
 //    d->addCopier(copier);
     FileCopyTask *task = new FileCopyTask();
@@ -73,10 +73,16 @@ void FileCopyDialogPrivate::addCopier(QtFileCopier *copier)
     q_ptr->raise();
 }
 
+void FileCopyDialogPrivate::addCopier(int index)
+{
+    FileSystemManager *manager = static_cast<FileSystemManager*>(sender());
+    addCopier(manager->copier(index));
+}
+
 void FileCopyDialogPrivate::update()
 {
-//    QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
-    QtFileCopier *copier = static_cast<QtFileCopier *>(sender());
+//    QFileCopier *copier = qobject_cast<QFileCopier *>(sender());
+    QFileCopier *copier = static_cast<QFileCopier *>(sender());
     if (!copier)
         return;
 
@@ -88,13 +94,13 @@ void FileCopyDialogPrivate::update()
         q_ptr->hide();
 }
 
-void FileCopyDialogPrivate::handleError(int id, QtFileCopier::Error error, bool stopped)
+void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool stopped)
 {
     if (!stopped)
         return;
-    if (error == QtFileCopier::DestinationExists) {
-//        QtFileCopier *copier = qobject_cast<QtFileCopier *>(sender());
-        QtFileCopier *copier = static_cast<QtFileCopier *>(sender());
+    if (error == QFileCopier::DestinationExists) {
+//        QFileCopier *copier = qobject_cast<QFileCopier *>(sender());
+        QFileCopier *copier = static_cast<QFileCopier *>(sender());
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         QString destName = copier->destinationFilePath(id);
@@ -102,7 +108,7 @@ void FileCopyDialogPrivate::handleError(int id, QtFileCopier::Error error, bool 
                            arg(copier->isDir(id) ? tr("Folder") : tr("File")).
                            arg(QFileInfo(destName).baseName())
                            );
-        connect(dialog, SIGNAL(cancelAll()), copier, SLOT(cancelAll()));
+        connect(dialog, SIGNAL(cancelAll()), copier, SLOT(skipAll()));
         connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
         connect(dialog, SIGNAL(overwriteAll()), copier, SLOT(overwriteAll()));
         connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));
@@ -154,7 +160,7 @@ void FileCopyDialog::setFileSystemManager(FileSystemManager *manager)
         disconnect(d->manager, 0, d, 0);
     }
     d->manager = manager;
-    connect(d->manager, SIGNAL(operationStarted(QtFileCopier*)), d, SLOT(addCopier(QtFileCopier*)));
+    connect(d->manager, SIGNAL(started(int)), d, SLOT(addCopier(int)));
 }
 
 void FileCopyDialog::resizeEvent(QResizeEvent *e)

@@ -4,18 +4,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QMap>
 
-#include "QtFileCopier"
+#include "QFileCopier"
 
 class QTimeEvent;
-namespace FileManagerPlugin {
 
-class Request
-{
-public:
-    QString source;
-    QString destination;
-    int size;
-};
+namespace FileManagerPlugin {
 
 class FileCopyTaskPrivate;
 class FileCopyTask : public QObject
@@ -23,19 +16,25 @@ class FileCopyTask : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileCopyTask)
     Q_DISABLE_COPY(FileCopyTask)
+
 public:
     explicit FileCopyTask(QObject *parent = 0);
     ~FileCopyTask();
 
-    QtFileCopier *copier();
-    void setCopier(QtFileCopier *copier);
+    QFileCopier *copier() const;
+    void setCopier(QFileCopier *copier);
+
     QString currentFilePath();
-    qint64 finishedSize();
-    int objectsCount();
-    int remainingTime();
-    int speed();
-    int totalObjects();
-    qint64 totalSize();
+
+    int objectsCount() const;
+    int totalObjects() const;
+
+    int speed() const;
+
+    int remainingTime() const;
+
+    qint64 finishedSize() const;
+    qint64 totalSize() const;
 
 signals:
     void updated();
@@ -47,9 +46,9 @@ protected:
 
     FileCopyTaskPrivate *d_ptr;
 
-    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QtFileCopier::State state))
+    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QFileCopier::State state))
     Q_PRIVATE_SLOT(d_func(), void onStarted(int identifier))
-    Q_PRIVATE_SLOT(d_func(), void onProgress(int identifier, qint64 progress))
+    Q_PRIVATE_SLOT(d_func(), void onProgress(qint64, qint64))
     Q_PRIVATE_SLOT(d_func(), void onDone())
 };
 

@@ -9,26 +9,29 @@ class FileCopyTaskPrivate
 {
     Q_DECLARE_PUBLIC(FileCopyTask)
     FileCopyTask *q_ptr;
+
 public:
-    FileCopyTaskPrivate(FileCopyTask *qq);
+    explicit FileCopyTaskPrivate(FileCopyTask *qq);
 
     void reset();
 
     // slots:
-    void onStateChanged(QtFileCopier::State state);
+    void onStateChanged(QFileCopier::State state);
     void onStarted(int identifier);
-    void onProgress(int identifier, qint64 progress);
+    void onProgress(qint64 progress, qint64 progressTotal);
     void onDone();
 
-    QtFileCopier *copier;
-    qint64 finishedSize;
-    qint64 currentProgress;
+    QFileCopier *copier;
+
     int objectsCount;
-    int speed;
     int totalObjects;
-    qint64 totalSize;
+
+    int speed;
     qint64 speedLastSize;
-    QMap<int, Request> requests;
+
+    qint64 currentProgress;
+    qint64 finishedSize;
+    qint64 totalSize;
 };
 
 } // namespace FileManagerPlugin

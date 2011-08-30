@@ -4,7 +4,7 @@
 #include <QtCore/QMap>
 
 #include "filecopydialog.h"
-#include "QtFileCopier"
+#include "QFileCopier"
 
 namespace FileManagerPlugin {
 
@@ -17,16 +17,17 @@ public:
 
     Ui::FileCopyDialog *ui;
 
-    QMap<QtFileCopier*, QWidget*> mapToWidget;
-    QMap<QtFileCopier*, QObject*> mapToTask;
+    QMap<QFileCopier*, QWidget*> mapToWidget;
+    QMap<QFileCopier*, QObject*> mapToTask;
     FileSystemManager *manager;
 
     FileCopyDialog *q_ptr;
 
 public slots:
-    void addCopier(QtFileCopier *);
+    void addCopier(QFileCopier *);
+    void addCopier(int index);
     void update();
-    void handleError(int id, QtFileCopier::Error error, bool stopped);
+    void handleError(int id, QFileCopier::Error error, bool stopped);
 };
 
 } // namespace FileManagerPlugin
