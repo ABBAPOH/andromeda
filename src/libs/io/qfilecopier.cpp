@@ -44,10 +44,11 @@ QFileCopierThread::QFileCopierThread(QObject *parent) :
 
 QFileCopierThread::~QFileCopierThread()
 {
-    // todo: stop operations
     stopRequest = true;
     cancel();
+    lock.lockForWrite();
     newCopyCondition.wakeOne();
+    lock.unlock();
     wait();
 }
 
@@ -264,6 +265,7 @@ void QFileCopierThread::run()
             topRequestsList.clear();
             emit canceled();
             lock.unlock();
+            continue;
         }
 
         if (taskQueue.isEmpty()) {
@@ -273,7 +275,6 @@ void QFileCopierThread::run()
                     stop = true;
                 } else {
                     waitForFinishedCondition.wakeOne();
-                    newCopyCondition.wait(&lock);
                     if (autoReset) {
                         hasError = false;
                         overwriteAllRequest = false;
@@ -282,6 +283,7 @@ void QFileCopierThread::run()
                         skipAllError.clear();
                         topRequestsList.clear();
                     }
+                    newCopyCondition.wait(&lock);
                     lock.unlock();
                 }
             } else {
