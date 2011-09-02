@@ -38,6 +38,7 @@ ActionManager::ActionManager(QObject *parent) :
     d_ptr(new ActionManagerPrivate)
 {
     qApp->installEventFilter(this);
+    connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), SLOT(onFocusChanged(QWidget*,QWidget*)));
 }
 
 /*!
@@ -140,16 +141,16 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
             if (w->isActiveWindow()) {
                 setActionsEnabled(w, false, Command::WindowCommand);
             }
-        } else if (e->type() == QEvent::FocusIn) {
-            while (w) {
-                setActionsEnabled(w, true, Command::WidgetCommand);
-                w = w->parentWidget();
-            }
-        } else if (e->type() == QEvent::FocusOut) {
-            while (w) {
-                setActionsEnabled(w, false, Command::WidgetCommand);
-                w = w->parentWidget();
-            }
+//        } else if (e->type() == QEvent::FocusIn) {
+//            while (w) {
+//                setActionsEnabled(w, true, Command::WidgetCommand);
+//                w = w->parentWidget();
+//            }
+//        } else if (e->type() == QEvent::FocusOut) {
+//            while (w) {
+//                setActionsEnabled(w, false, Command::WidgetCommand);
+//                w = w->parentWidget();
+//            }
         } else if (e->type() == QEvent::ActivationChange) {
             bool enable = w->isActiveWindow();
             QWidgetList widgets = w->findChildren<QWidget*>();
@@ -160,6 +161,21 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
         }
     }
     return QObject::eventFilter(o, e);
+}
+
+void ActionManager::onFocusChanged(QWidget *old, QWidget *newWidget)
+{
+    QWidget *w = old;
+    while (w) {
+        setActionsEnabled(w, false, Command::WidgetCommand);
+        w = w->parentWidget();
+    }
+
+    w = newWidget;
+    while (w) {
+        setActionsEnabled(w, true, Command::WidgetCommand);
+        w = w->parentWidget();
+    }
 }
 
 /*!

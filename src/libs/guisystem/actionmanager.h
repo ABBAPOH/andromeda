@@ -43,6 +43,9 @@ protected:
 protected:
     void setActionsEnabled(QWidget *w, bool enable, Command::CommandContext context);
 
+protected slots:
+    void onFocusChanged(QWidget*,QWidget*);
+
 protected:
     ActionManagerPrivate *d_ptr;
 
