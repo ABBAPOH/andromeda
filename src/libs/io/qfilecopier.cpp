@@ -274,6 +274,9 @@ void QFileCopierThread::run()
                     lock.unlock();
                     stop = true;
                 } else {
+                    hasError = false;
+                    setState(QFileCopier::Idle);
+                    emit done(hasError);
                     waitForFinishedCondition.wakeOne();
                     if (autoReset) {
                         hasError = false;
@@ -291,11 +294,6 @@ void QFileCopierThread::run()
                 setState(QFileCopier::Copying);
                 int id = requestQueue.takeFirst(); // inner queue, no lock
                 handle(id);
-                if (requestQueue.isEmpty()) {
-                    emit done(hasError);
-                    hasError = false;
-                    setState(QFileCopier::Idle);
-                }
             }
         } else {
             setState(QFileCopier::Gathering);
