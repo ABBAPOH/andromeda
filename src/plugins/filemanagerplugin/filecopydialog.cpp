@@ -101,9 +101,9 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setIcon(QFileIconProvider().icon(destInfo));
-        dialog->setMessage(tr("%1 \"%2\" is already exists").
+        dialog->setMessage(tr("%1 \"%2\" is already exists. Would you like to replace it?").
                            arg(copier->isDir(id) ? tr("Folder") : tr("File")).
-                           arg(destInfo.baseName()));
+                           arg(destInfo.fileName()));
 
         connect(dialog, SIGNAL(cancelAll()), copier, SLOT(skipAll()));
         connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
@@ -136,6 +136,7 @@ FileCopyDialog::FileCopyDialog(FileSystemManager *manager, QWidget *parent) :
     d->ui->setupUi(this);
     d->manager = 0;
 
+    setWindowTitle(tr("Copying"));
     setFileSystemManager(manager);
 }
 
