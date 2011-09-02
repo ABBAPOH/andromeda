@@ -17,7 +17,8 @@ public:
 
     // slots:
     void onStateChanged(QFileCopier::State state);
-    void onStarted(int identifier);
+    void onStarted(int);
+    void onFinished(int);
     void onProgress(qint64 progress, qint64 progressTotal);
     void onDone();
 

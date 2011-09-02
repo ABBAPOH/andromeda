@@ -33,8 +33,13 @@ void FileCopyTaskPrivate::onStateChanged(QFileCopier::State state)
 
 void FileCopyTaskPrivate::onStarted(int /*id*/)
 {
-    objectsCount++;
     currentProgress = 0;
+    emit q_func()->updated();
+}
+
+void FileCopyTaskPrivate::onFinished(int /*id*/)
+{
+    objectsCount++;
     emit q_func()->updated();
 }
 
@@ -102,6 +107,7 @@ void FileCopyTask::setCopier(QFileCopier *copier)
         connect(copier, SIGNAL(stateChanged(QFileCopier::State)),
                 SLOT(onStateChanged(QFileCopier::State)));
         connect(copier, SIGNAL(started(int)), SLOT(onStarted(int)));
+        connect(copier, SIGNAL(finished(int,bool)), SLOT(onFinished(int)));
         connect(copier, SIGNAL(progress(qint64,qint64)),
                 SLOT(onProgress(qint64,qint64)));
         connect(copier, SIGNAL(done(bool)), SLOT(onDone()));
@@ -118,7 +124,7 @@ QString FileCopyTask::currentFilePath()
 
 int FileCopyTask::objectsCount() const
 {
-    return d_func()->objectsCount - 1;
+    return d_func()->objectsCount;
 }
 
 int FileCopyTask::totalObjects() const
@@ -134,7 +140,7 @@ int FileCopyTask::speed() const
 int FileCopyTask::remainingTime() const
 {
     if (speed() == 0)
-        return -1;
+        return 0;
 
     return 1000*(qint64)(totalSize() - finishedSize())/speed();
 }

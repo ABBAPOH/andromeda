@@ -19,6 +19,11 @@ FileCopyReplaceDialog::~FileCopyReplaceDialog()
     delete ui;
 }
 
+void FileCopyReplaceDialog::setIcon(const QIcon &icon)
+{
+    ui->iconLabel->setPixmap(icon.pixmap(32));
+}
+
 void FileCopyReplaceDialog::setMessage(const QString &message)
 {
     ui->messageLabel->setText(message);

@@ -6,9 +6,10 @@
 #include "filecopyreplacedialog.h"
 
 #include <QtCore/QFileInfo>
+#include <QtGui/QFileIconProvider>
+#include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QResizeEvent>
 
 using namespace FileManagerPlugin;
 
@@ -21,18 +22,15 @@ public:
     QVBoxLayout *layout;
     QWidget *widget;
 
-    FileCopyDialog(){}
+    FileCopyDialog() {}
 
     void setupUi(QDialog *dialog)
     {
         dialog->resize(400, 400);
         layout = new QVBoxLayout;
 
-        layout->addSpacerItem(new QSpacerItem(0,
-                                              0,
-                                              QSizePolicy::Preferred,
-                                              QSizePolicy::Expanding)
-                              ); // We need this spacer to have space in bottom of list
+        // We need this spacer to have space in bottom of list
+        layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 
         widget = new QWidget;
         widget->setLayout(layout);
@@ -57,18 +55,14 @@ void FileCopyDialogPrivate::addCopier(QFileCopier *copier)
     connect(copier, SIGNAL(error(int,QFileCopier::Error,bool)),
             SLOT(handleError(int,QFileCopier::Error,bool)));
 
-//    d->addCopier(copier);
     FileCopyTask *task = new FileCopyTask();
     task->setCopier(copier);
 
     FileCopyWidget *widget = new FileCopyWidget(task);
-//    mapToTask.insert(copier, task);
-//    mapToWidget.insert(copier, widget);
     QObject::connect(copier, SIGNAL(done(bool)), SLOT(update()));
     QObject::connect(widget, SIGNAL(canceled()), copier, SLOT(cancelAll()));
 
     addWidget(widget);
-//    QTimer::singleShot(2000, fileCopyDialog, SLOT(show()));
     q_ptr->show();
     q_ptr->raise();
 }
@@ -81,7 +75,6 @@ void FileCopyDialogPrivate::addCopier(int index)
 
 void FileCopyDialogPrivate::update()
 {
-//    QFileCopier *copier = qobject_cast<QFileCopier *>(sender());
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
     if (!copier)
         return;
@@ -98,21 +91,24 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
 {
     if (!stopped)
         return;
+
     if (error == QFileCopier::DestinationExists) {
-//        QFileCopier *copier = qobject_cast<QFileCopier *>(sender());
         QFileCopier *copier = static_cast<QFileCopier *>(sender());
+        QFileInfo destInfo(copier->destinationFilePath(id));
+
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
         dialog->setAttribute(Qt::WA_DeleteOnClose);
-        QString destName = copier->destinationFilePath(id);
+        dialog->setIcon(QFileIconProvider().icon(destInfo));
         dialog->setMessage(tr("%1 \"%2\" is already exists").
                            arg(copier->isDir(id) ? tr("Folder") : tr("File")).
-                           arg(QFileInfo(destName).baseName())
-                           );
+                           arg(destInfo.baseName()));
+
         connect(dialog, SIGNAL(cancelAll()), copier, SLOT(skipAll()));
         connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
         connect(dialog, SIGNAL(overwriteAll()), copier, SLOT(overwriteAll()));
         connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));
         connect(dialog, SIGNAL(skipAll()), copier, SLOT(skipAll()));
+
         dialog->show();
     }
 }
@@ -190,6 +186,8 @@ FileCopyWidget::FileCopyWidget(FileCopyTask *task, QWidget *parent) :
     connect(m_task, SIGNAL(updated()), SLOT(update()));
     connect(m_task, SIGNAL(progress(qint64)), SLOT(updateProgress(qint64)));
     connect(ui->cancelButton, SIGNAL(clicked()), SIGNAL(canceled()));
+    update();
+    updateProgress(0);
 }
 
 FileCopyWidget::~FileCopyWidget()
@@ -215,20 +213,18 @@ void FileCopyWidget::update()
     ui->progressBar->setMaximum(m_task->totalSize());
     QString fileName = QFileInfo(m_task->currentFilePath()).fileName();
     ui->nameLabel->setText(fileName);
-    ui->nameLabel_2->setText(fileName);
-    qint64 totalSize = m_task->totalSize();
-    ui->sizeLabel->setText(getStringSize(totalSize));
-    ui->totalObjectsLabel->setText(QString::number(m_task->totalObjects()));
-    ui->remaingObjectLabel->setText(
-            QString::number(m_task->totalObjects() - m_task->objectsCount())
-            );
+    ui->remaingObjectLabel->setText(QString("%1 / %2").
+                                    arg(m_task->objectsCount()).
+                                    arg(m_task->totalObjects()));
 }
 
 void FileCopyWidget::updateProgress(qint64 progress)
 {
     qint64 totalSize = m_task->totalSize();
     qint64 finishedSize = m_task->finishedSize();
-    ui->remainsLabel->setText(getStringSize(totalSize - finishedSize));
+    ui->sizeLabel->setText(QString("%1 / %2").
+                           arg(getStringSize(finishedSize)).
+                           arg(getStringSize(totalSize)));
     ui->progressBar->setValue(progress);
 
 //#warning TODO:update speed and time on timer tick
@@ -238,4 +234,3 @@ void FileCopyWidget::updateProgress(qint64 progress)
     time = time.addMSecs(m_task->remainingTime());
     ui->timeLeftLabel->setText(time.toString("h:m:s"));
 }
-
