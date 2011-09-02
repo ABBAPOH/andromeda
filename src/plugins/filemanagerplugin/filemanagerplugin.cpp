@@ -40,8 +40,8 @@ bool FileManagerPluginImpl::initialize()
                                                                        "FileManagerPerspective");
 
     FileSystemModel *model = new FileSystemModel;
-    addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
     addObject(model);
+    addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
 
     CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Ids::Menus::View);
 

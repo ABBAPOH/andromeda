@@ -49,12 +49,15 @@ void FileCopyTaskPrivate::onProgress(qint64 progress, qint64 progressTotal)
 
 void FileCopyTaskPrivate::onDone()
 {
+    Q_Q(FileCopyTask);
+
     finishedSize = totalSize;
     objectsCount = totalObjects;
 
-    emit q_func()->currentProgress(0);
-    emit q_func()->progress(finishedSize);
-    emit q_func()->updated();
+    emit q->currentProgress(0);
+    emit q->progress(finishedSize);
+    emit q->updated();
+    q->deleteLater();
 }
 
 void FileCopyTaskPrivate::reset()
