@@ -1,3 +1,5 @@
+add_subdirectory( plugineditor )
+
 set( GLOBAL_HEADERS ExtensionSystem extensionsystem_global.h)
 set( HEADERS
     iplugin.h
@@ -42,5 +44,3 @@ add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MO
 target_link_libraries( extensionsystem ${QT_LIBRARIES} )
 
 install_lib( extensionsystem )
-
-add_subdirectory( plugineditor )
