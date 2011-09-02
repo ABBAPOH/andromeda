@@ -17,6 +17,7 @@ public:
     explicit FileCopyReplaceDialog(QWidget *parent = 0);
     ~FileCopyReplaceDialog();
 
+    void setIcon(const QIcon &icon);
     void setMessage(const QString &message);
 
 signals:
