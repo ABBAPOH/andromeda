@@ -186,6 +186,7 @@ FileCopyWidget::FileCopyWidget(FileCopyTask *task, QWidget *parent) :
     connect(m_task, SIGNAL(updated()), SLOT(update()));
     connect(m_task, SIGNAL(progress(qint64)), SLOT(updateProgress(qint64)));
     connect(ui->cancelButton, SIGNAL(clicked()), SIGNAL(canceled()));
+
     update();
     updateProgress(0);
 }
@@ -195,7 +196,7 @@ FileCopyWidget::~FileCopyWidget()
     delete ui;
 }
 
-QString getStringSize(qint64 size)
+static QString sizeToString(qint64 size)
 {
     if (size > (qint64)1024*1024*1024*1024)
         return QString::number(size/((qint64)1024*1024*1024*1024)) + "TB";
@@ -211,8 +212,7 @@ QString getStringSize(qint64 size)
 void FileCopyWidget::update()
 {
     ui->progressBar->setMaximum(m_task->totalSize());
-    QString fileName = QFileInfo(m_task->currentFilePath()).fileName();
-    ui->nameLabel->setText(fileName);
+    ui->nameLabel->setText(QFileInfo(m_task->currentFilePath()).fileName());
     ui->remaingObjectLabel->setText(QString("%1 / %2").
                                     arg(m_task->objectsCount()).
                                     arg(m_task->totalObjects()));
@@ -220,17 +220,18 @@ void FileCopyWidget::update()
 
 void FileCopyWidget::updateProgress(qint64 progress)
 {
-    qint64 totalSize = m_task->totalSize();
     qint64 finishedSize = m_task->finishedSize();
+    qint64 totalSize = m_task->totalSize();
+
     ui->sizeLabel->setText(QString("%1 / %2").
-                           arg(getStringSize(finishedSize)).
-                           arg(getStringSize(totalSize)));
+                           arg(sizeToString(finishedSize)).
+                           arg(sizeToString(totalSize)));
     ui->progressBar->setValue(progress);
 
 //#warning TODO:update speed and time on timer tick
-    ui->speedLabel->setText(getStringSize(m_task->speed()));
+    ui->speedLabel->setText(sizeToString(m_task->speed()));
 
-    QTime time(0,0);
+    QTime time(0, 0);
     time = time.addMSecs(m_task->remainingTime());
     ui->timeLeftLabel->setText(time.toString("h:m:s"));
 }
