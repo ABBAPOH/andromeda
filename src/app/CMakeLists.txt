@@ -3,24 +3,21 @@ include( ${QT_USE_FILE} )
 
 set( SOURCES main.cpp )
 
-# on macosx the icons has to be part of sources. Bummer.
-if (APPLE)
-    set(GU_RESOURCES andromeda.icns)
-    set(GUI_TYPE MACOSX_BUNDLE)
-endif (APPLE)
-
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin/actionmanager )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
-if(WIN32)
+# on macosx the icons has to be part of sources. Bummer.
+#if( APPLE )
+#    set(GUI_RESOURCES andromeda.icns)
+#endif()
+
+if( WIN32 )
     set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
-    set(GUI_TYPE WIN32)
 endif()
 
-
-add_executable( andromeda ${GUI_TYPE} ${SOURCES} ${GUI_RESOURCES} )
+add_executable( andromeda MACOSX_BUNDLE WIN32 ${SOURCES} ${GUI_RESOURCES} )
 target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
 
 if( APPLE )
