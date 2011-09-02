@@ -57,8 +57,10 @@ void FileCopyDialogPrivate::addCopier(QFileCopier *copier)
 
     FileCopyTask *task = new FileCopyTask();
     task->setCopier(copier);
+    mapToTask.insert(copier, task);
 
     FileCopyWidget *widget = new FileCopyWidget(task);
+    mapToWidget.insert(copier, widget);
     QObject::connect(copier, SIGNAL(done(bool)), SLOT(update()));
     QObject::connect(widget, SIGNAL(canceled()), copier, SLOT(cancelAll()));
 
