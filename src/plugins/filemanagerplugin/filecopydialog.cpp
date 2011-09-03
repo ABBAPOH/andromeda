@@ -214,7 +214,6 @@ static QString sizeToString(qint64 size)
 
 void FileCopyWidget::update()
 {
-    ui->progressBar->setMaximum(m_task->totalSize());
     ui->nameLabel->setText(QFileInfo(m_task->currentFilePath()).fileName());
     ui->remaingObjectLabel->setText(QString("%1 / %2").
                                     arg(m_task->objectsCount()).
@@ -223,13 +222,13 @@ void FileCopyWidget::update()
 
 void FileCopyWidget::updateProgress(qint64 progress)
 {
-    qint64 finishedSize = m_task->finishedSize();
+    qint64 finishedSize = progress;
     qint64 totalSize = m_task->totalSize();
 
     ui->sizeLabel->setText(QString("%1 / %2").
                            arg(sizeToString(finishedSize)).
                            arg(sizeToString(totalSize)));
-    ui->progressBar->setValue(progress);
+    ui->progressBar->setValue(totalSize ? 100*finishedSize/totalSize : 0);
 
 //#warning TODO:update speed and time on timer tick
     ui->speedLabel->setText(sizeToString(m_task->speed()));

@@ -110,14 +110,14 @@
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="text">
-         <string>Remains:</string>
+         <string>Bytes copied:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="sizeLabel">
         <property name="text">
-         <string>&lt;remains&gt; / &lt;total&gt;</string>
+         <string>&lt;copied&gt; / &lt;total&gt;</string>
         </property>
        </widget>
       </item>
@@ -144,14 +144,14 @@
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="text">
-         <string>Remaing objects:</string>
+         <string>Objects copied:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
        <widget class="QLabel" name="remaingObjectLabel">
         <property name="text">
-         <string>&lt;remains&gt; / &lt;total&gt;</string>
+         <string>&lt;copied&gt; / &lt;total&gt;</string>
         </property>
        </widget>
       </item>
