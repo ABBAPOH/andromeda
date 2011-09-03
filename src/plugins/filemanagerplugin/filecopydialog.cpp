@@ -2,7 +2,6 @@
 #include "filecopydialog_p.h"
 
 #include "filesystemmanager.h"
-#include "filecopytask.h"
 #include "filecopyreplacedialog.h"
 
 #include <QtCore/QFileInfo>
@@ -52,19 +51,15 @@ void FileCopyDialogPrivate::addWidget(QWidget *widget)
 
 void FileCopyDialogPrivate::addCopier(QFileCopier *copier)
 {
-    connect(copier, SIGNAL(error(int,QFileCopier::Error,bool)),
-            SLOT(handleError(int,QFileCopier::Error,bool)));
+    copiers.insert(copier);
+    connect(copier, SIGNAL(error(int,QFileCopier::Error,bool)), SLOT(handleError(int,QFileCopier::Error,bool)));
+    connect(copier, SIGNAL(done(bool)), SLOT(onDone()));
 
-    FileCopyTask *task = new FileCopyTask();
-    task->setCopier(copier);
-    mapToTask.insert(copier, task);
-
-    FileCopyWidget *widget = new FileCopyWidget(task);
-    mapToWidget.insert(copier, widget);
-    QObject::connect(copier, SIGNAL(done(bool)), SLOT(update()));
-    QObject::connect(widget, SIGNAL(canceled()), copier, SLOT(cancelAll()));
+    FileCopyWidget *widget = new FileCopyWidget(copier);
+    connect(copier, SIGNAL(done(bool)), widget, SLOT(deleteLater()));
 
     addWidget(widget);
+
     q_ptr->show();
     q_ptr->raise();
 }
@@ -75,17 +70,15 @@ void FileCopyDialogPrivate::addCopier(int index)
     addCopier(manager->copier(index));
 }
 
-void FileCopyDialogPrivate::update()
+void FileCopyDialogPrivate::onDone()
 {
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
     if (!copier)
         return;
 
-    QObject * task = mapToTask.take(copier);
-    delete task;
-    QWidget *widget = mapToWidget.take(copier);
-    delete widget;
-    if (mapToTask.isEmpty())
+    disconnect(copier, 0, this, 0);
+    copiers.remove(copier);
+    if (copiers.isEmpty())
         q_ptr->hide();
 }
 
@@ -178,17 +171,19 @@ void FileCopyDialog::resizeEvent(QResizeEvent *e)
 
 using namespace FileManagerPlugin;
 
-FileCopyWidget::FileCopyWidget(FileCopyTask *task, QWidget *parent) :
+FileCopyWidget::FileCopyWidget(QFileCopier *copier, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileCopyWidget),
-    m_task(task)
+    ui(new Ui::FileCopyWidget)
 {
     ui->setupUi(this);
     ui->groupBox->setHidden(true);
 
+    m_task = new FileCopyTask(this);
+    m_task->setCopier(copier);
     connect(m_task, SIGNAL(updated()), SLOT(update()));
     connect(m_task, SIGNAL(progress(qint64)), SLOT(updateProgress(qint64)));
     connect(ui->cancelButton, SIGNAL(clicked()), SIGNAL(canceled()));
+    connect(this, SIGNAL(canceled()), copier, SLOT(cancelAll()));
 
     update();
     updateProgress(0);

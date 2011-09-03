@@ -8,6 +8,8 @@ namespace Ui {
     class FileCopyWidget;
 }
 
+class QFileCopier;
+
 namespace FileManagerPlugin {
 
 class FileSystemManager;
@@ -38,7 +40,7 @@ class FileCopyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit FileCopyWidget(FileCopyTask *task, QWidget *parent = 0);
+    explicit FileCopyWidget(QFileCopier *copier, QWidget *parent = 0);
     ~FileCopyWidget();
 
 signals:
