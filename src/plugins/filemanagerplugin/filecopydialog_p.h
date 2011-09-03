@@ -1,10 +1,10 @@
 #ifndef FILECOPYDIALOG_P_H
 #define FILECOPYDIALOG_P_H
 
-#include <QtCore/QMap>
+#include <QtCore/QSet>
+#include <QFileCopier>
 
 #include "filecopydialog.h"
-#include "QFileCopier"
 
 namespace FileManagerPlugin {
 
@@ -17,8 +17,7 @@ public:
 
     Ui::FileCopyDialog *ui;
 
-    QMap<QFileCopier*, QWidget*> mapToWidget;
-    QMap<QFileCopier*, QObject*> mapToTask;
+    QSet<QFileCopier*> copiers;
     FileSystemManager *manager;
 
     FileCopyDialog *q_ptr;
@@ -26,7 +25,7 @@ public:
 public slots:
     void addCopier(QFileCopier *);
     void addCopier(int index);
-    void update();
+    void onDone();
     void handleError(int id, QFileCopier::Error error, bool stopped);
 };
 
