@@ -274,9 +274,9 @@ void QFileCopierThread::run()
                     lock.unlock();
                     stop = true;
                 } else {
-                    hasError = false;
                     setState(QFileCopier::Idle);
                     emit done(hasError);
+                    hasError = false;
                     waitForFinishedCondition.wakeOne();
                     if (autoReset) {
                         hasError = false;
