@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setFilter(QDir::AllDirs | QDir::System | QDir::Hidden | QDir::Files /*| QDir::NoDotAndDotDot*/);
 
 //    view = new FileManagerWidget(this);
-    dualPane = new DualPaneWidget(this);
+    dualPane = new DualPaneWidget(0, this);
     dualPane->setDualPaneModeEnabled(true);
 
 //    setCentralWidget(view);
