@@ -87,8 +87,8 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
     if (!stopped)
         return;
 
+    QFileCopier *copier = static_cast<QFileCopier *>(sender());
     if (error == QFileCopier::DestinationExists) {
-        QFileCopier *copier = static_cast<QFileCopier *>(sender());
         QFileInfo destInfo(copier->destinationFilePath(id));
 
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
@@ -105,6 +105,8 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         connect(dialog, SIGNAL(skipAll()), copier, SLOT(skipAll()));
 
         dialog->show();
+    } else if (error == QFileCopier::DestinationAndSourceEqual) {
+        copier->rename();
     }
 }
 

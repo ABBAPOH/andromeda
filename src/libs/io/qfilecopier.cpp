@@ -203,6 +203,28 @@ void QFileCopierThread::overwriteAll()
     interactionCondition.wakeOne();
 }
 
+void QFileCopierThread::rename()
+{
+    QWriteLocker l(&lock);
+    if (!waitingForInteraction)
+        return;
+
+    requests[m_currentId].rename = true;
+    waitingForInteraction = false;
+    interactionCondition.wakeOne();
+}
+
+void QFileCopierThread::renameAll()
+{
+    QWriteLocker l(&lock);
+    if (!waitingForInteraction)
+        return;
+
+    renameAllRequest = true;
+    waitingForInteraction = false;
+    interactionCondition.wakeOne();
+}
+
 void QFileCopierThread::retry()
 {
     QWriteLocker l(&lock);
@@ -347,14 +369,19 @@ void QFileCopierThread::createRequest(Task t)
     }
 }
 
+bool QFileCopierThread::shouldMerge(const Request &r)
+{
+    return r.merge || mergeAllRequest /*|| (r.copyFlags & QFileCopier::Merge)*/;
+}
+
 bool QFileCopierThread::shouldOverwrite(const Request &r)
 {
     return r.overwrite || overwriteAllRequest || (r.copyFlags & QFileCopier::Force);
 }
 
-bool QFileCopierThread::shouldMerge(const Request &r)
+bool QFileCopierThread::shouldRename(const Request &r)
 {
-    return r.merge || mergeAllRequest /*|| (r.copyFlags & QFileCopier::Merge)*/;
+    return r.rename || renameAllRequest;
 }
 
 bool QFileCopierThread::checkRequest(int id)
@@ -368,14 +395,18 @@ bool QFileCopierThread::checkRequest(int id)
     QFileCopier::Error err;
     while (!done) {
         Request r = request(id);
+        QFileInfo sourceInfo(r.source);
+        QFileInfo destInfo(r.dest);
         err = QFileCopier::NoError;
 
         if (r.canceled) {
             done = true;
             err = QFileCopier::Canceled;
-        } else if (!QFileInfo(r.source).exists()) {
+        } else if (!sourceInfo.exists()) {
             err = QFileCopier::SourceNotExists;
-        } else if (!shouldOverwrite(r) && !shouldMerge(r) && QFileInfo(r.dest).exists()) {
+        } else if (!shouldRename(r) && sourceInfo == destInfo) {
+            err = QFileCopier::DestinationAndSourceEqual;
+        } else if (!shouldRename(r) && !shouldOverwrite(r) && !shouldMerge(r) && destInfo.exists()) {
             err = QFileCopier::DestinationExists;
         } else {
             done = true;
@@ -404,9 +435,25 @@ int QFileCopierThread::addRequestToQueue(Request request)
     if (!checkRequest(id))
         return -1;
 
-    {
-        QWriteLocker l(&lock);
-        request = requests[id]; // refresh request
+    request = this->request(id); // refresh request
+
+    if (shouldRename(request)) {
+
+        int i = 0;
+        QString dest = request.dest;
+        while (QFileInfo(dest).exists()) {
+            QFileInfo destInfo(request.dest);
+
+#ifndef Q_CC_MSVC
+#warning "Uses mimetypes to determine type and extension"
+#endif
+            dest = destInfo.absolutePath() + QLatin1Char('/') + destInfo.completeBaseName() + QLatin1Char(' ') + QString::number(++i);
+            if (!destInfo.suffix().isEmpty()) {
+                dest += '.' + destInfo.suffix();
+            }
+        }
+        request.dest = dest;
+
     }
 
     QFileInfo sourceInfo(request.source);
@@ -999,6 +1046,16 @@ void QFileCopier::overwrite()
 void QFileCopier::overwriteAll()
 {
     d_func()->thread->overwriteAll();
+}
+
+void QFileCopier::rename()
+{
+    d_func()->thread->rename();
+}
+
+void QFileCopier::renameAll()
+{
+    d_func()->thread->renameAll();
 }
 
 void QFileCopier::reset()

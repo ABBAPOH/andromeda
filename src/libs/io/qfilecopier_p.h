@@ -29,16 +29,17 @@ struct Task
 struct Request : public Task
 {
     Request() :
-        isDir(false), size(0), canceled(false), overwrite(false), merge(false) {}
+        isDir(false), size(0), canceled(false), rename(false), overwrite(false), merge(false) {}
     explicit Request(const Task &t) :
         Task(t),
-        isDir(false), size(0), canceled(false), overwrite(false), merge(false) {}
+        isDir(false), size(0), canceled(false), rename(false), overwrite(false), merge(false) {}
 
     bool isDir;
     QList<int> childRequests;
     qint64 size;
 
     bool canceled;
+    bool rename;
     bool overwrite;
     bool merge;
 };
@@ -76,9 +77,13 @@ public:
 
     void cancel();
     void cancel(int id);
+
     void skip();
     void skipAll();
     void retry();
+
+    void rename();
+    void renameAll();
 
     void overwrite();
     void overwriteAll();
@@ -104,8 +109,9 @@ signals:
 
 private:
     void createRequest(Task r);
-    bool shouldOverwrite(const Request &r);
     bool shouldMerge(const Request &r);
+    bool shouldOverwrite(const Request &r);
+    bool shouldRename(const Request &r);
     bool checkRequest(int id);
     int addRequestToQueue(Request r);
     bool interact(int id, const Request &r, bool done, QFileCopier::Error err);
@@ -140,6 +146,7 @@ private:
     bool skipAllRequest;
     bool cancelAllRequest;
     bool overwriteAllRequest;
+    bool renameAllRequest;
     bool mergeAllRequest;
 
     bool hasError;
