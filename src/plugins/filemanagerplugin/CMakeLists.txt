@@ -3,6 +3,7 @@ set( GLOBAL_HEADER FilemanagerPlugin )
 set( HEADERS
     filemanagerplugin_global.h
     dualpanewidget.h
+    filecopyerrordialog.h
     filecopyreplacedialog.h
 #    filecopytask.h
     filecopytask_p.h
@@ -22,6 +23,7 @@ set( HEADERS
    )
 set( SOURCES
     dualpanewidget.cpp
+    filecopyerrordialog.cpp
     filecopyreplacedialog.cpp
     filecopytask.cpp
     filecopydialog.cpp
@@ -35,6 +37,7 @@ set( SOURCES
     navigationpanelview.cpp
    )
 set( FORMS
+    filecopyerrordialog.ui
     filecopyreplacedialog.ui
     filecopywidget.ui
    )

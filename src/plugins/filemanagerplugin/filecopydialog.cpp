@@ -2,6 +2,7 @@
 #include "filecopydialog_p.h"
 
 #include "filesystemmanager.h"
+#include "filecopyerrordialog.h"
 #include "filecopyreplacedialog.h"
 
 #include <QtCore/QFileInfo>
@@ -81,16 +82,16 @@ void FileCopyDialogPrivate::onDone()
     if (copiers.isEmpty())
         q_ptr->hide();
 }
-
+#include <QMetaEnum>
 void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool stopped)
 {
     if (!stopped)
         return;
 
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
-    if (error == QFileCopier::DestinationExists) {
-        QFileInfo destInfo(copier->destinationFilePath(id));
+    QFileInfo destInfo(copier->destinationFilePath(id));
 
+    if (error == QFileCopier::DestinationExists) {
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setIcon(QFileIconProvider().icon(destInfo));
@@ -107,6 +108,24 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         dialog->show();
     } else if (error == QFileCopier::DestinationAndSourceEqual) {
         copier->rename();
+    } else {
+        const QMetaObject *metaObject = copier->metaObject();
+        int enumIndex = metaObject->indexOfEnumerator("Error");
+        QMetaEnum metaEnum = metaObject->enumerator(enumIndex);
+
+        FileCopyErrorDialog *dialog = new FileCopyErrorDialog();
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->setIcon(QFileIconProvider().icon(destInfo));
+        dialog->setMessage(tr("Error occured for %1 \"%2\": %3").
+                           arg(copier->isDir(id) ? tr("Folder") : tr("File")).
+                           arg(destInfo.fileName()).
+                           arg(metaEnum.valueToKey(error)));
+
+        connect(dialog, SIGNAL(abort()), copier, SLOT(cancelAll()));
+        connect(dialog, SIGNAL(ignore()), copier, SLOT(skip()));
+        connect(dialog, SIGNAL(retry()), copier, SLOT(retry()));
+
+        dialog->show();
     }
 }
 
