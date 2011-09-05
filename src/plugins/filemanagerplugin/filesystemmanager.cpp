@@ -39,14 +39,18 @@ void FileSystemManagerPrivate::onDone()
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
     int index = mapToCopier.key(copier);
     mapToCopier.remove(index);
+    copier->deleteLater();
+
     FileSystemManager::FileOperation &op = operations[index];
+    op.setState(FileSystemManager::FileOperation::Done);
+    if (op.isUndo())
+        return;
+
     QStringList dests;
     foreach (int i, copier->topRequests()) {
         dests.append(copier->destinationFilePath(i));
     }
     op.m_destinationPaths = dests;
-    op.setState(FileSystemManager::FileOperation::Done);
-    copier->deleteLater();
 }
 
 class FileSystemCommand : public QUndoCommand
@@ -54,8 +58,8 @@ class FileSystemCommand : public QUndoCommand
 public:
     explicit FileSystemCommand(QUndoCommand *parent = 0) : QUndoCommand(parent) {}
 
-    FileSystemManager::FileOperation operation() const { return m_operation; }
-    void setOperation(FileSystemManager::FileOperation operation) { m_operation = operation; }
+    int operationIndex() const { return m_operationIndex; }
+    void setOperationIndex(int operationIndex) { m_operationIndex = operationIndex; }
 
     FileSystemManager *manager() const { return m_manager; }
     void setManager(FileSystemManager *manager) { m_manager = manager; }
@@ -66,7 +70,7 @@ public:
 private:
     FileSystemManagerPrivate *m_managerPrivate;
     FileSystemManager *m_manager;
-    FileSystemManager::FileOperation m_operation;
+    int m_operationIndex;
 };
 
 //class CopyCommand : public FileSystemCommand
@@ -212,7 +216,9 @@ protected:
 
 void CopyCommand2::redo()
 {
-    const FileSystemManager::FileOperation &op = operation();
+    int index = operationIndex();
+
+    const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
 
     QFileCopier *copier = managerPrivate()->copier(op.index());
     copier->copy(op.sources(), op.destination());
@@ -220,7 +226,8 @@ void CopyCommand2::redo()
 
 void CopyCommand2::undo()
 {
-    const FileSystemManager::FileOperation &op = operation();
+    int index = operationIndex();
+    const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
 
     QFileCopier *copier = managerPrivate()->copier(op.index());
     copier->remove(op.destinationPaths());
@@ -361,11 +368,12 @@ int FileSystemManager::copy(const QStringList &files, const QString &destination
 
     d->operations.erase(d->operations.begin() + index, d->operations.end());
     d->operations.append(op);
+    d->currentIndex = index;
 
     CopyCommand2 *cmd = new CopyCommand2;
     cmd->setManager(this);
     cmd->setManagerPrivate(d);
-    cmd->setOperation(op);
+    cmd->setOperationIndex(index);
     d->undoStack->push(cmd);
 
     return index;
@@ -404,10 +412,10 @@ void FileSystemManager::redo()
 
     d->undoStack->redo();
 
-    int index = d->undoStack->index();
+    int index = d->undoStack->index() - 1;
     const FileSystemCommand *cmd = static_cast<const FileSystemCommand *>(d->undoStack->command(index));
 
-    d->currentIndex = cmd->operation().index();
+    d->currentIndex = cmd->operationIndex();
 }
 
 void FileSystemManager::undo()
@@ -419,5 +427,5 @@ void FileSystemManager::undo()
     int index = d->undoStack->index();
     const FileSystemCommand *cmd = static_cast<const FileSystemCommand *>(d->undoStack->command(index));
 
-    d->currentIndex = cmd->operation().index();
+    d->currentIndex = cmd->operationIndex();
 }

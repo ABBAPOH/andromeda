@@ -34,6 +34,7 @@ QFileCopierThread::QFileCopierThread(QObject *parent) :
     skipAllRequest(false),
     cancelAllRequest(false),
     overwriteAllRequest(false),
+    renameAllRequest(false),
     mergeAllRequest(false),
     hasError(true),
     m_totalProgress(0),
@@ -346,27 +347,29 @@ void QFileCopierThread::restart()
 void QFileCopierThread::createRequest(Task t)
 {
     QFileInfo sourceInfo(t.source);
-    QFileInfo destInfo(t.dest);
 
     t.source = sourceInfo.absoluteFilePath();
-
-    if ((destInfo.exists() && destInfo.isDir() && destInfo.fileName() != sourceInfo.fileName()) || t.dest.endsWith(QLatin1Char('/'))) {
-        if (!destInfo.exists())
-            QDir().mkpath(destInfo.absoluteFilePath());
-        t.dest = destInfo.absoluteFilePath() + "/" + sourceInfo.fileName();
-    } else {
-        t.dest = destInfo.absoluteFilePath();
-    }
-
-    t.dest = QDir::cleanPath(t.dest);
     t.source = QDir::cleanPath(t.source);
 
+    if (!t.dest.isEmpty()) {
+        QFileInfo destInfo(t.dest);
+        if ((destInfo.exists() && destInfo.isDir() && destInfo.fileName() != sourceInfo.fileName()) || t.dest.endsWith(QLatin1Char('/'))) {
+            if (!destInfo.exists())
+                QDir().mkpath(destInfo.absoluteFilePath());
+            t.dest = destInfo.absoluteFilePath() + "/" + sourceInfo.fileName();
+        } else {
+            t.dest = destInfo.absoluteFilePath();
+        }
+
+        t.dest = QDir::cleanPath(t.dest);
+
 #ifdef Q_OS_WIN
-    if (t.type == Task::Link) {
-        if (!t.dest.endsWith(QLatin1String(".lnk")))
-            t.dest += QLatin1String(".lnk");
-    }
+        if (t.type == Task::Link) {
+            if (!t.dest.endsWith(QLatin1String(".lnk")))
+                t.dest += QLatin1String(".lnk");
+        }
 #endif
+    }
 
     int index = addRequestToQueue(Request(t));
     if (index != -1) {
