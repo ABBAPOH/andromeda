@@ -23,6 +23,9 @@ public:
 
     QFileCopier *copier(int index);
     void registerCopier(QFileCopier *copier, int index);
+    int newOperation(FileSystemManager::FileOperationType type, const QStringList &files, const QString &destination);
+
+    static void setOperationUndo(FileSystemManager::FileOperation &op, bool yes) { op.setUndo(yes); }
 
     FileSystemManager *q_ptr;
 

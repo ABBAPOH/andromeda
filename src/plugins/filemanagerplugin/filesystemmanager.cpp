@@ -11,14 +11,6 @@
 
 using namespace FileManagerPlugin;
 
-//QtFileCopier *FileSystemManagerPrivate::copier()
-//{
-//    QtFileCopier *copier = new QtFileCopier(q_ptr);
-//    q_ptr->connect(copier, SIGNAL(done(bool)), copier, SLOT(deleteLater()));
-//    emit q_ptr->operationStarted(copier);
-//    return copier;
-//}
-
 QFileCopier *FileSystemManagerPrivate::copier(int index)
 {
     QFileCopier *copier = new QFileCopier(this);
@@ -34,6 +26,17 @@ void FileSystemManagerPrivate::registerCopier(QFileCopier *copier, int index)
     emit q_func()->started(index);
 }
 
+int FileSystemManagerPrivate::newOperation(FileSystemManager::FileOperationType type, const QStringList &files, const QString &destination)
+{
+    currentIndex = currentIndex + 1;
+    FileSystemManager::FileOperation op(type, files, destination, currentIndex);
+    op.setState(FileSystemManager::FileOperation::Working);
+
+    operations.erase(operations.begin() + currentIndex, operations.end());
+    operations.append(op);
+    return currentIndex;
+}
+
 void FileSystemManagerPrivate::onDone()
 {
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
@@ -43,8 +46,10 @@ void FileSystemManagerPrivate::onDone()
 
     FileSystemManager::FileOperation &op = operations[index];
     op.setState(FileSystemManager::FileOperation::Done);
-    if (op.isUndo())
+    if (op.isUndo()) {
+        setOperationUndo(op, false);
         return;
+    }
 
     QStringList dests;
     foreach (int i, copier->topRequests()) {
@@ -73,148 +78,34 @@ private:
     int m_operationIndex;
 };
 
-//class CopyCommand : public FileSystemCommand
-//{
-//public:
-//    explicit CopyCommand(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
-
-//    void setDestination(const QString &path);
-//    void setSourcePaths(const QStringList &paths);
-
-//    virtual void redo();
-//    virtual void undo();
-
-//protected:
-//    QString m_destinationPath;
-//    QStringList m_sourcePaths;
-//    QStringList m_destinationPaths;
-//};
-
-class CopyCommand2 : public FileSystemCommand
+class CopyCommand : public FileSystemCommand
 {
 public:
-    explicit CopyCommand2(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
+    explicit CopyCommand(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
 
     void redo();
     void undo();
-
-protected:
-    QStringList m_destinationPaths;
 };
 
-//class MoveCommand : public CopyCommand
-//{
-//public:
-//    explicit MoveCommand(QUndoCommand *parent = 0) : CopyCommand(parent) {}
+class MoveCommand : public FileSystemCommand
+{
+public:
+    explicit MoveCommand(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
 
-//    virtual void redo();
-//    virtual void undo();
-//protected:
-//    QStringList m_destinationPaths;
-//};
+    virtual void redo();
+    virtual void undo();
+};
 
-//class RenameCommand : public QUndoCommand
-//{
-//public:
-//    explicit RenameCommand(QUndoCommand *parent = 0) : QUndoCommand(parent) {}
+class LinkCommand : public FileSystemCommand
+{
+public:
+    explicit LinkCommand(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
 
-//    void setPath(const QString &path);
-//    void setNewName(const QString &name);
+    void redo();
+    void undo();
+};
 
-//    virtual void redo();
-//    virtual void undo();
-
-//protected:
-//    QString m_path;
-//    QString m_newName;
-//};
-
-//class LinkCommand : public QUndoCommand
-//{
-//public:
-//    explicit LinkCommand(QUndoCommand *parent = 0) : QUndoCommand(parent) {}
-
-//    void appendPaths(const QString &sourcePath, const QString &linkPath);
-
-//    virtual void redo();
-//    virtual void undo();
-
-//protected:
-//    QStringList m_paths;
-//    QStringList m_linkPaths;
-//};
-
-/* ================================ Implementation ================================ */
-
-//void CopyCommand::setDestination(const QString &path)
-//{
-//    m_destinationPath = path;
-//}
-
-//void CopyCommand::setSourcePaths(const QStringList &paths)
-//{
-//    m_sourcePaths = paths;
-//}
-
-//void CopyCommand::redo()
-//{
-//    QtFileCopier * copier = managerPrivate()->copier();
-
-//    m_destinationPaths.clear();
-//    foreach (const QString &filePath, m_sourcePaths) {
-//        QFileInfo info(filePath);
-//        QString targetPath = m_destinationPath;
-//        QDir dir(m_destinationPath);
-
-//        // TODO: give different names when copying to same dir
-//        if (dir == info.dir()) {
-//            int i = 0;
-//            do  {
-//                i++;
-//                targetPath = dir.absolutePath() + QDir::separator() + info.completeBaseName() + ' ' +
-//                        QString::number(i);
-//                if (info.suffix() != "") {
-//                    targetPath += '.' + info.suffix();
-//                }
-//            } while (QFileInfo(targetPath).exists());
-//            m_destinationPaths.append(targetPath);
-//        } else {
-//            m_destinationPaths.append(targetPath + QDir::separator() + info.fileName());
-//        }
-
-//        if (info.isDir()) {
-//            copier->copyDirectory(filePath, targetPath);
-//        } else {
-//            copier->copy(filePath, targetPath);
-//        }
-//    }
-//}
-
-//bool removePath(const QString &path)
-//{
-//    bool result = true;
-//    QFileInfo info(path);
-//    if (info.isDir()) {
-//        QDir dir(path);
-//        foreach (const QString &entry, dir.entryList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot)) {
-//            result &= removePath(dir.absoluteFilePath(entry));
-//        }
-//        if (!info.dir().rmdir(info.fileName()))
-//            return false;
-//    } else {
-//        result = QFile::remove(path);
-//    }
-//    return result;
-//}
-
-//void CopyCommand::undo()
-//{
-//    foreach (const QString &path, m_destinationPaths) {
-//        removePath(path);
-//    }
-//}
-
-void CopyCommand2::redo()
+void CopyCommand::redo()
 {
     int index = operationIndex();
 
@@ -224,7 +115,46 @@ void CopyCommand2::redo()
     copier->copy(op.sources(), op.destination());
 }
 
-void CopyCommand2::undo()
+void CopyCommand::undo()
+{
+    int index = operationIndex();
+    FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
+    FileSystemManagerPrivate::setOperationUndo(op, true);
+
+    QFileCopier *copier = managerPrivate()->copier(op.index());
+    copier->remove(op.destinationPaths());
+}
+
+void MoveCommand::redo()
+{
+    int index = operationIndex();
+    const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
+
+    QFileCopier *copier = managerPrivate()->copier(op.index());
+    copier->move(op.sources(), op.destination(), QFileCopier::CopyOnMove);
+}
+
+void MoveCommand::undo()
+{
+    int index = operationIndex();
+    const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
+
+    QFileCopier *copier = managerPrivate()->copier(op.index());
+    for (int i = 0; i < op.destinationPaths().size(); i++) {
+        copier->move(op.destinationPaths()[i], op.sources()[i], QFileCopier::CopyOnMove);
+    }
+}
+
+void LinkCommand::redo()
+{
+    int index = operationIndex();
+    const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
+
+    QFileCopier *copier = managerPrivate()->copier(op.index());
+    copier->link(op.sources(), op.destination());
+}
+
+void LinkCommand::undo()
 {
     int index = operationIndex();
     const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
@@ -232,113 +162,6 @@ void CopyCommand2::undo()
     QFileCopier *copier = managerPrivate()->copier(op.index());
     copier->remove(op.destinationPaths());
 }
-
-//void MoveCommand::redo()
-//{
-//    QtFileCopier * copier = managerPrivate()->copier();
-
-//    m_destinationPaths.clear();
-//    foreach (const QString &filePath, m_sourcePaths) {
-//        QFileInfo info(filePath);
-//        QString targetPath = m_destinationPath;
-//        QDir dir(m_destinationPath);
-
-//        // TODO: give different names when copying to same dir
-//        if (dir == info.dir()) {
-//            int i = 0;
-//            do  {
-//                i++;
-//#ifndef Q_CC_MSVC
-//#warning "Uses mimetypes to determine type and extension"
-//#endif
-//                targetPath = dir.absolutePath() + QDir::separator() + info.completeBaseName() + ' ' +
-//                        QString::number(i);
-//                if (info.suffix() != "") {
-//                    targetPath += '.' + info.suffix();
-//                }
-//            } while (QFileInfo(targetPath).exists());
-//            m_destinationPaths.append(targetPath);
-//        } else {
-//            m_destinationPaths.append(targetPath + QDir::separator() + info.fileName());
-//        }
-
-//        if (info.isDir()) {
-//            copier->moveDirectory(filePath, targetPath);
-//        } else {
-//            copier->move(filePath, targetPath);
-//        }
-//    }
-//}
-
-//void MoveCommand::undo()
-//{
-//    QtFileCopier * copier = managerPrivate()->copier();
-
-//    int i = 0;
-//    foreach (const QString &filePath, m_destinationPaths) {
-//        QFileInfo info(filePath);
-//        QFileInfo sourceInfo(m_sourcePaths[i]);
-//        QDir dir = sourceInfo.dir();
-
-//        // TODO: give different names when copying to same dir
-//        if (info.isDir()) {
-//            copier->moveDirectory(filePath, dir.absoluteFilePath(info.fileName()));
-//        } else {
-//            copier->move(filePath, dir.absoluteFilePath(info.fileName()));
-//        }
-//        i++;
-//    }
-//}
-
-//void RenameCommand::setPath(const QString &path)
-//{
-//    m_path = path;
-//}
-
-//void RenameCommand::setNewName(const QString &name)
-//{
-//    m_newName = name;
-//}
-
-//void RenameCommand::redo()
-//{
-//    QFile(m_path).rename(m_newName);
-//}
-
-//void RenameCommand::undo()
-//{
-//    QFileInfo info(m_path);
-//    QString newPath = info.dir().absoluteFilePath(m_newName);
-//    QFile(newPath).rename(info.fileName());
-//}
-
-//void LinkCommand::redo()
-//{
-//    bool result = true;
-//    for (int i = 0; i < m_paths.size(); i++) {
-//        result &= QFile::link(m_paths[i], m_linkPaths[i]);
-//    }
-//    if (!result) {
-//    }
-//}
-
-//void LinkCommand::undo()
-//{
-//    bool result = true;
-//    for (int i = 0; i < m_paths.size(); i++) {
-//        result &= QFile::remove(m_linkPaths[i]);
-//    }
-//    if (!result) {
-//    }
-//}
-
-//void LinkCommand::appendPaths(const QString &sourcePath, const QString &linkPath)
-//{
-//    m_paths.append(sourcePath);
-//    m_linkPaths.append(linkPath);
-//}
-
-/* ================================ FileSystemManager ================================ */
 
 FileSystemManager::FileSystemManager(QObject *parent) :
     QObject(parent),
@@ -362,15 +185,9 @@ int FileSystemManager::copy(const QStringList &files, const QString &destination
 {
     Q_D(FileSystemManager);
 
-    int index = d->currentIndex + 1;
-    FileOperation op(Copy, files, destination, index);
-    op.setState(FileOperation::Working);
+    int index = d->newOperation(Copy, files, destination);
 
-    d->operations.erase(d->operations.begin() + index, d->operations.end());
-    d->operations.append(op);
-    d->currentIndex = index;
-
-    CopyCommand2 *cmd = new CopyCommand2;
+    CopyCommand *cmd = new CopyCommand;
     cmd->setManager(this);
     cmd->setManagerPrivate(d);
     cmd->setOperationIndex(index);
@@ -381,7 +198,43 @@ int FileSystemManager::copy(const QStringList &files, const QString &destination
 
 int FileSystemManager::move(const QStringList &files, const QString &destination)
 {
-    return -1;
+    Q_D(FileSystemManager);
+
+    int index = d->newOperation(Move, files, destination);
+
+    MoveCommand *cmd = new MoveCommand;
+    cmd->setManager(this);
+    cmd->setManagerPrivate(d);
+    cmd->setOperationIndex(index);
+    d->undoStack->push(cmd);
+
+    return index;
+}
+
+int FileSystemManager::link(const QStringList &files, const QString &destination)
+{
+    Q_D(FileSystemManager);
+
+    int index = d->newOperation(Link, files, destination);
+
+    LinkCommand *cmd = new LinkCommand;
+    cmd->setManager(this);
+    cmd->setManagerPrivate(d);
+    cmd->setOperationIndex(index);
+    d->undoStack->push(cmd);
+
+    return index;
+}
+
+int FileSystemManager::remove(const QStringList &files)
+{
+    Q_D(FileSystemManager);
+
+    int index = d->newOperation(Remove, files, QString());
+
+    QFileCopier *copier = d->copier(index);
+    copier->remove(files);
+    return index;
 }
 
 QList<FileSystemManager::FileOperation> FileSystemManager::operations() const
