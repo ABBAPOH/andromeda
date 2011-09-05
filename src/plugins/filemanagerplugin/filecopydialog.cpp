@@ -98,7 +98,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
                            arg(copier->isDir(id) ? tr("Folder") : tr("File")).
                            arg(destInfo.fileName()));
 
-        connect(dialog, SIGNAL(cancelAll()), copier, SLOT(skipAll()));
+        connect(dialog, SIGNAL(cancelAll()), copier, SLOT(cancelAll()));
         connect(dialog, SIGNAL(overwrite()), copier, SLOT(overwrite()));
         connect(dialog, SIGNAL(overwriteAll()), copier, SLOT(overwriteAll()));
         connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));

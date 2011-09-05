@@ -140,12 +140,18 @@ void QFileCopierThread::cancel()
         requests[id].canceled = true;
     }
     cancelAllRequest = true;
+
+    if (waitingForInteraction)
+        interactionCondition.wakeOne();
 }
 
 void QFileCopierThread::cancel(int id)
 {
     QWriteLocker l(&lock);
     requests[id].canceled = true;
+
+    if (waitingForInteraction && m_currentId == id)
+        interactionCondition.wakeOne();
 }
 
 void QFileCopierThread::overwriteChildren(int id)
