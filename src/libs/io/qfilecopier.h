@@ -36,6 +36,7 @@ public:
         NoError,
         SourceNotExists,
         DestinationExists,
+        DestinationAndSourceEqual,
         CannotCreateDestinationDirectory,
         CannotOpenSourceFile,
         CannotOpenDestinationFile,
@@ -94,6 +95,9 @@ public slots:
 
     void overwrite();
     void overwriteAll();
+
+    void rename();
+    void renameAll();
 
     void reset();
     void resetSkip();
