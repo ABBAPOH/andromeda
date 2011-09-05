@@ -24,24 +24,21 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setRootPath("/");
     model->setFilter(QDir::AllDirs | QDir::System | QDir::Hidden | QDir::Files /*| QDir::NoDotAndDotDot*/);
 
-//    view = new FileManagerWidget(this);
     dualPane = new DualPaneWidget(0, this);
     dualPane->setDualPaneModeEnabled(true);
 
-//    setCentralWidget(view);
     setCentralWidget(dualPane);
 
-//    connect(panel, SIGNAL(folderClicked(QString)), this, SLOT(onClick(QString)));
     connect(panel, SIGNAL(currentPathChanged(QString)), dualPane, SLOT(setCurrentPath(QString)));
 
     QMenu * menu = menuBar()->addMenu("Edit");
-//    menu->addAction("Undo", view, SLOT(undo()), tr("Ctrl+Z"));
-//    menu->addAction("Redo", view, SLOT(redo()), tr("Ctrl+Shift+Z"));
-//    menu->addSeparator();
-//    menu->addAction("Copy", view, SLOT(copy()), tr("Ctrl+C"));
-//    menu->addAction("Paste", view, SLOT(paste()), tr("Ctrl+V"));
-//    menu->addSeparator();
-//    menu->addAction("Remove", view, SLOT(remove()), tr("Ctrl+Shift+Backspace"));
+    menu->addAction("Undo", view, SLOT(undo()), tr("Ctrl+Z"));
+    menu->addAction("Redo", view, SLOT(redo()), tr("Ctrl+Shift+Z"));
+    menu->addSeparator();
+    menu->addAction("Copy", view, SLOT(copy()), tr("Ctrl+C"));
+    menu->addAction("Paste", view, SLOT(paste()), tr("Ctrl+V"));
+    menu->addSeparator();
+    menu->addAction("Remove", view, SLOT(remove()), tr("Ctrl+Shift+Backspace"));
 
     menu->addAction("Undo", dualPane, SLOT(undo()), tr("Ctrl+Z"));
     menu->addAction("Redo", dualPane, SLOT(redo()), tr("Ctrl+Shift+Z"));
