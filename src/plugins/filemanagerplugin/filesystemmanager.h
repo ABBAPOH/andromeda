@@ -43,7 +43,8 @@ public:
             m_type(type),
             m_sources(sources),
             m_dest(dest),
-            m_index(index)
+            m_index(index),
+            m_undo(false)
         {
         }
 
@@ -52,7 +53,8 @@ public:
             m_sources(other.m_sources),
             m_dest(other.m_dest),
             m_destinationPaths(other.m_destinationPaths),
-            m_index(other.m_index)
+            m_index(other.m_index),
+            m_undo(other.m_undo)
         {
         }
 
@@ -62,9 +64,11 @@ public:
         inline QString destination() const { return m_dest; }
         inline QStringList destinationPaths() const { return m_destinationPaths; }
         inline int index() const { return m_index; }
+        inline bool isUndo() const { return m_undo; }
 
     protected:
         inline void setState(State state) { m_state = state; }
+        inline void setUndo(bool yes) { m_undo = yes; }
 
     private:
         State m_state;
@@ -73,6 +77,7 @@ public:
         QString m_dest;
         QStringList m_destinationPaths;
         int m_index;
+        bool m_undo;
 
         friend class FileSystemManager;
         friend class FileSystemManagerPrivate;

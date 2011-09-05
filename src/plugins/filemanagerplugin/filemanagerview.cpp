@@ -42,7 +42,10 @@ FileManagerView::FileManagerView(QObject *parent) :
     m_widget->addAction(a);
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
 
-//    actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
+    actionManager->command(Constants::Ids::Actions::Redo)->action(m_widget, SLOT(redo()));
+    actionManager->command(Constants::Ids::Actions::Undo)->action(m_widget, SLOT(undo()));
+
+    //    actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
     actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));
     actionManager->command(Constants::Ids::Actions::Paste)->action(m_widget, SLOT(paste()));
     actionManager->command(Constants::Ids::Actions::SelectAll)->action(m_widget, SLOT(selectAll()));
