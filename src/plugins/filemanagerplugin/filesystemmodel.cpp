@@ -48,18 +48,16 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
         m_manager->copy(files, to);
         break;
     }
-#ifndef Q_CC_MSVC
-#warning "TODO: implement"
-#endif
-//    case Qt::LinkAction: {
-//        LinkCommand * command = new LinkCommand();
-//        for (; it != urls.constEnd(); ++it) {
-//            QString path = (*it).toLocalFile();
-//            command->appendPaths(path, to + QFileInfo(path).fileName());
-//        }
-//        m_manager->undoStack()->push(command);
-//        break;
-//    }
+    case Qt::LinkAction: {
+        QStringList files;
+        foreach (const QUrl &url, urls) {
+            QString path = url.toLocalFile();
+            files.append(path);
+            success = true;
+        }
+        m_manager->link(files, to);
+        break;
+    }
     case Qt::MoveAction: {
         QStringList files;
         foreach (const QUrl &url, urls) {
