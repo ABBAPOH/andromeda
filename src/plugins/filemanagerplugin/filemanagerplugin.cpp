@@ -6,6 +6,7 @@
 #include <actionmanager.h>
 #include <command.h>
 #include <commandcontainer.h>
+#include <constants.h>
 #include <perspective.h>
 #include <guicontroller.h>
 #include <CorePlugin>
@@ -30,14 +31,14 @@ bool FileManagerPluginImpl::initialize()
     GuiController::instance()->addFactory(new FileManagerFactory);
     GuiController::instance()->addFactory(new NavigationPanelFactory);
 
-    Perspective *perspective = new Perspective("FileManagerPerspective");
+    Perspective *perspective = new Perspective(Constants::Ids::Perspectives::FileManagerPerspective, this);
     perspective->addView("NavigationPanel", 0);
     perspective->addView("FileManager", 4);
     perspective->setProperty("MainView", "FileManager");
     GuiController::instance()->addPerspective(perspective);
 
     CorePlugin::Core::instance()->perspectiveManager()->addPerspective("inode/directory",
-                                                                       "FileManagerPerspective");
+                                                                       Constants::Ids::Perspectives::FileManagerPerspective);
 
     FileSystemModel *model = new FileSystemModel;
     addObject(model);
@@ -69,6 +70,11 @@ bool FileManagerPluginImpl::initialize()
     createGotoDirCommand(QDesktopServices::PicturesLocation, QIcon(":/images/icons/picturesFolder.png"));
 
     return true;
+}
+
+void FileManagerPluginImpl::shutdown()
+{
+    GuiController::instance()->removePerspective(Constants::Ids::Perspectives::FileManagerPerspective);
 }
 
 void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation location, const QIcon &icon, const QKeySequence &key)

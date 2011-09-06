@@ -128,7 +128,15 @@ void GuiController::addPerspective(Perspective *perspective)
         qWarning() << "GuiController already contains perspective with id" << id;
     }
     d->perspectives.insert(id, perspective);
-    perspective->setParent(this);
+    if (!perspective->parent())
+        perspective->setParent(this);
+}
+
+void GuiController::removePerspective(const QString &id)
+{
+    Q_D(GuiController);
+
+    d->perspectives.remove(id);
 }
 
 Perspective * GuiController::perspective(const QString &id) const

@@ -86,17 +86,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->toolBar = new QToolBar(this);
 
-    QAction *backAction = actionManager->command(Constants::Ids::Actions::Back)->action();
+    QAction *backAction = actionManager->command(Constants::Ids::Actions::Back)->action(this);
     backAction->setIcon(QIcon(":/images/icons/back.png"));
     addAction(backAction);
 
-    QAction *forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action();
+    QAction *forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action(this);
     forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
     addAction(forwardAction);
 
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
-    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
+    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->action(this));
 
     CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);

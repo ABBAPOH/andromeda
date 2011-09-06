@@ -66,6 +66,12 @@ const char * const Goto = "Actions.Goto %1";
 
 } // namespace Actions
 
+namespace Perspectives {
+
+const char * const FileManagerPerspective = "FileManagerPerspective";
+
+}
+
 } // namespace Ids
 
 } // namespace Constants

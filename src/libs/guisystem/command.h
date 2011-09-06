@@ -49,7 +49,7 @@ public:
     };
     Q_ENUMS(CommandContext)
 
-    QAction *action();
+    QAction *action(QObject *parent = 0);
     QAction *action(QWidget *w, const char *slot);
 
     QAction *commandAction() const;
