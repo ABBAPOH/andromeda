@@ -10,11 +10,14 @@
 namespace GuiSystem {
 
 class PerspectiveInstance;
+
 class PerspectivePrivate;
 class GUISYSTEM_EXPORT Perspective : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Perspective)
+    Q_DISABLE_COPY(Perspective)
+
 public:
     explicit Perspective(QObject *parent = 0);
     explicit Perspective(const QString &id, QObject *parent = 0);
@@ -32,9 +35,6 @@ public:
 
     Perspective *parentPerspective() const;
 
-    void load(const QString &file);
-    void save(const QString &file, const QByteArray format = QByteArray());
-
     void addView(const QString &id, int viewArea);
     void removeView(const QString &id);
 
@@ -42,8 +42,12 @@ public:
     int viewArea(const QString &id) const;
     QVariant viewProperty(const QString &id, const QString &viewProperty) const;
 
+    bool load(const QString &file);
+    bool save(const QString &file, const QByteArray &format = QByteArray());
+
 protected:
     PerspectivePrivate *d_ptr;
+
     friend class PerspectiveInstance;
 };
 

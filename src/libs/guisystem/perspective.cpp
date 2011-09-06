@@ -96,42 +96,8 @@ Perspective * Perspective::parentPerspective() const
     return d_func()->parent;
 }
 
-void Perspective::load(const QString &file)
-{
-    QList<IIOHandler *> handlers = GuiController::instance()->handlers();
-    IIOHandler *handler = 0;
-
-    for (int i = 0; i < handlers.size(); i++) {
-        if (handlers[i]->canHandle(file)) {
-            handler = handlers[i];
-            break;
-        }
-    }
-
-    if (!handler)
-        return;
-
-    handler->read(file, this);
-}
-
-void Perspective::save(const QString &file, const QByteArray format)
-{
-    IIOHandler *handler = 0;
-    if (!format.isEmpty()) {
-        handler = GuiController::instance()->handler(format);
-    } else {
-        handler = GuiController::instance()->handler(QFileInfo(file).suffix().toUtf8());
-    }
-
-    if (!handler)
-        return;
-
-    if (handler->canWrite()) {
-        handler->write(file, this);
-    }
-}
-
 void Perspective::addView(const QString &id, int area)
+
 {
     Q_D(Perspective);
 
@@ -172,3 +138,39 @@ QVariant Perspective::viewProperty(const QString &id, const QString &property) c
     return d->views.value(id)->properties.value(property);
 }
 
+bool Perspective::load(const QString &file)
+{
+    QList<IIOHandler *> handlers = GuiController::instance()->handlers();
+    IIOHandler *handler = 0;
+
+    for (int i = 0; i < handlers.size(); i++) {
+        if (handlers[i]->canHandle(file)) {
+            handler = handlers[i];
+            break;
+        }
+    }
+
+    if (!handler)
+        return false;
+
+    return handler->read(file, this);
+}
+
+bool Perspective::save(const QString &file, const QByteArray &format)
+{
+    IIOHandler *handler = 0;
+    if (!format.isEmpty()) {
+        handler = GuiController::instance()->handler(format);
+    } else {
+        handler = GuiController::instance()->handler(QFileInfo(file).suffix().toUtf8());
+    }
+
+    if (!handler)
+        return false;
+
+    if (handler->canWrite()) {
+        return handler->write(file, this);
+    } else {
+        return false;
+    }
+}
