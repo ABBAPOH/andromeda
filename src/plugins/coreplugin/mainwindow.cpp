@@ -96,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     d->toolBar->addAction(backAction);
     d->toolBar->addAction(forwardAction);
-    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->action(this));
+    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
 
     CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);
