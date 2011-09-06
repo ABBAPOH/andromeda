@@ -11,15 +11,11 @@ class TestView2 : public IView
 public:
     explicit TestView2(QObject *parent = 0);
 
-    QString type() const
-    {
-        return "TestType 2";
-    }
-
     QWidget *widget() const
     {
         return m_widget;
     }
+
     QToolBar *toolBar() const
     {
         return m_toolBar;
@@ -48,9 +44,9 @@ public:
         return "TestView ";
     }
 
-    IView *createView() const
+    IView *createView()
     {
-        return new TestView2;
+        return new TestView2(this);
     }
 };
 

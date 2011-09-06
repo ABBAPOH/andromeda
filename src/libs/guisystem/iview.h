@@ -5,7 +5,6 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
 class QWidget;
@@ -13,14 +12,16 @@ class QToolBar;
 
 namespace GuiSystem {
 
-//class State;
 class PerspectiveInstance;
+class IViewFactory;
+
 class IViewPrivate;
 class GUISYSTEM_EXPORT IView : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(IView)
     Q_DISABLE_COPY(IView)
+
 public:
     explicit IView(QObject *parent = 0);
     virtual ~IView();
@@ -28,12 +29,11 @@ public:
     virtual void initialize() {}
     virtual void shutdown() {}
 
-    virtual QString type() const = 0;
-
     virtual QWidget *widget() const = 0;
     virtual QToolBar *toolBar() const { return 0; }
 
-    QString factoryId() const;
+    QString id() const;
+    QString type() const;
 
     QWidget *container() const;
     void setContainer(QWidget *widget);
@@ -42,7 +42,7 @@ public:
     void setPerspectiveInstance(PerspectiveInstance *state);
 
 protected:
-    void setFactoryId(const QString &id);
+    void setFactory(IViewFactory *factory);
 
 protected:
     IViewPrivate *d_ptr;

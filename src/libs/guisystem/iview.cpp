@@ -1,9 +1,11 @@
 #include "iview.h"
 
+#include "iviewfactory.h"
+
 #include <QtCore/QDebug>
+#include <QtCore/QPointer>
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QWidget>
 
 namespace GuiSystem {
 
@@ -11,8 +13,7 @@ class IViewPrivate
 {
 public:
     QPointer<QWidget> container;
-    QString factoryId;
-//    State *state;
+    IViewFactory *factory;
     PerspectiveInstance *instance;
 };
 
@@ -34,9 +35,14 @@ IView::~IView()
     delete d_ptr;
 }
 
-QString IView::factoryId() const
+QString IView::id() const
 {
-    return d_func()->factoryId;
+    return d_func()->factory->id();
+}
+
+QString IView::type() const
+{
+    return d_func()->factory->type();
 }
 
 QWidget * IView::container() const
@@ -59,9 +65,9 @@ void IView::setPerspectiveInstance(PerspectiveInstance *instance)
     d_func()->instance = instance;
 }
 
-void IView::setFactoryId(const QString &id)
+void IView::setFactory(IViewFactory *factory)
 {
-    d_func()->factoryId = id;
+    d_func()->factory = factory;
 }
 
 ViewWidget::ViewWidget(QWidget *parent) :
@@ -106,4 +112,3 @@ QWidget * ViewWidget::widget() const
 {
     return m_view ? m_view->widget() : 0;
 }
-
