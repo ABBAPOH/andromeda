@@ -123,7 +123,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(backAction, SIGNAL(triggered()), SLOT(back()));
     connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
-    resize(640, 480);
+    resize(800, 600);
     newTab();
 }
 
