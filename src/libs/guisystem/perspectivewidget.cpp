@@ -131,7 +131,8 @@ void PerspectiveWidget::createInstance(Perspective *p, int index)
         view->setContainer(viewWidget);
 
         CentralWidget *widget = static_cast<CentralWidget *>(d->layout->widget(index));
-        widget->addWidget(viewWidget, view->area());
-        widget->showArea(view->area());
+        int area = p->viewArea(view->factoryId());
+        widget->addWidget(viewWidget, area);
+        widget->showArea(area);
     }
 }
