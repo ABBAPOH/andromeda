@@ -4,9 +4,6 @@
 #include "guisystem_global.h"
 
 #include <QtGui/QWidget>
-#include <QHash>
-
-class QStackedLayout;
 
 namespace GuiSystem {
 
@@ -20,13 +17,14 @@ class GUISYSTEM_EXPORT PerspectiveWidget : public QWidget
     Q_OBJECT
     Q_DECLARE_PRIVATE(PerspectiveWidget)
     Q_DISABLE_COPY(PerspectiveWidget)
+
 public:
     explicit PerspectiveWidget(QWidget *parent = 0);
     ~PerspectiveWidget();
 
-    PerspectiveInstance * currentInstance() const;
+    PerspectiveInstance * instance() const;
 
-    Perspective *currentPerspective() const;
+    Perspective *perspective() const;
     void openPerspective(const QString &perspective);
     void closePerspective(const QString &perspective);
 
