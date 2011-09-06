@@ -9,12 +9,14 @@ namespace GuiSystem {
 
 class IView;
 class Perspective;
+
 class PerspectiveInstancePrivate;
 class GUISYSTEM_EXPORT PerspectiveInstance : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PerspectiveInstance)
     Q_DISABLE_COPY(PerspectiveInstance)
+
 public:
     explicit PerspectiveInstance(QObject *parent = 0);
     explicit PerspectiveInstance(PerspectiveInstance *parent);
@@ -25,7 +27,7 @@ public:
 
     PerspectiveInstance *parentInstance() const;
 
-    QList<IView *> views();
+    QList<IView *> views() const;
     IView *view(const QString &id) const;
 
 protected:

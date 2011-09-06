@@ -1,18 +1,20 @@
 #include "perspectiveinstance.h"
 
-#include <QtCore/QDebug>
-
-#include "perspective.h"
-#include "guicontroller.h"
-#include "iviewfactory.h"
 #include "iview.h"
+#include "iviewfactory.h"
+#include "guicontroller.h"
+#include "perspective.h"
+
+#include <QtCore/QDebug>
 
 namespace GuiSystem {
 
 class PerspectiveInstancePrivate
 {
     Q_DECLARE_PUBLIC(PerspectiveInstance)
+
     PerspectiveInstance *q_ptr;
+
 public:
     PerspectiveInstancePrivate(PerspectiveInstance *qq) :
         q_ptr(qq),
@@ -26,9 +28,6 @@ public:
 
     void createViews();
     void initializeViews();
-
-// deprecated:
-    int index;
 };
 
 } // namespace GuiSystem
@@ -104,7 +103,7 @@ PerspectiveInstance * PerspectiveInstance::parentInstance() const
     return d_func()->parentInstance;
 }
 
-QList<IView *> PerspectiveInstance::views()
+QList<IView *> PerspectiveInstance::views() const
 {
     return d_func()->mapToView.values();
 }
