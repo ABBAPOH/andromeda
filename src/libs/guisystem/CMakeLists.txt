@@ -14,7 +14,6 @@ set( HEADERS
 #    perspectiveswitcher.h
     perspectivewidget.h
 #    state.h
-    viewoptions.h
    )
 set( SOURCES
     actionmanager.cpp
@@ -31,7 +30,6 @@ set( SOURCES
 #    perspectiveswitcher.cpp
     perspectivewidget.cpp
 #    state.cpp
-    viewoptions.cpp
    )
 set( FORMS
    )

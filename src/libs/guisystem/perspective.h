@@ -6,8 +6,6 @@
 
 #include "guisystem_global.h"
 
-#include "viewoptions.h"
-
 namespace GuiSystem {
 
 class PerspectiveInstance;
@@ -33,10 +31,12 @@ public:
     void load(const QString &file);
     void save(const QString &file, const QByteArray format = QByteArray());
 
-    void addView(const ViewOptions &options);
-    void addView(const QString &id, int area, int width = 0, int height = 0);
+    void addView(const QString &id, int viewArea);
+    void removeView(const QString &id);
+
     QStringList views() const;
-    ViewOptions viewOptions(const QString &id) const;
+    int viewArea(const QString &id) const;
+    QVariant viewProperty(const QString &id, const QString &viewProperty) const;
 
 protected:
     PerspectivePrivate *d_ptr;

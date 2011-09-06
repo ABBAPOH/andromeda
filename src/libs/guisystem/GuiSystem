@@ -9,4 +9,3 @@
 #include "perspectiveinstance.h"
 #include "perspectiveswitcher.h"
 #include "perspectivewidget.h"
-#include "viewoptions.h"
