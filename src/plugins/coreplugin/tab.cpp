@@ -70,7 +70,7 @@ IMainView * TabPrivate::getMainView(const QString &perspective)
     GuiController *controller = GuiController::instance();
     QString id = controller->perspective(perspective)->property("MainView").toString();
 
-    return qobject_cast<IMainView*>(perspectiveWidget->currentInstance()->view(id));
+    return qobject_cast<IMainView*>(perspectiveWidget->instance()->view(id));
 }
 
 QString TabPrivate::getPerspective(const QString &path)

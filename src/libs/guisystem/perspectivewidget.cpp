@@ -1,6 +1,7 @@
 #include "perspectivewidget.h"
 
 #include <QtCore/QEvent>
+#include <QtCore/QHash>
 #include <QtGui/QStackedLayout>
 
 #include "centralwidget.h"
@@ -40,12 +41,12 @@ PerspectiveWidget::~PerspectiveWidget()
     delete d_ptr;
 }
 
-PerspectiveInstance * PerspectiveWidget::currentInstance() const
+PerspectiveInstance * PerspectiveWidget::instance() const
 {
     return d_func()->currentInstance;
 }
 
-Perspective * PerspectiveWidget::currentPerspective() const
+Perspective * PerspectiveWidget::perspective() const
 {
     Q_D(const PerspectiveWidget);
 
@@ -70,9 +71,6 @@ QList<Perspective *> parentPerspectives(Perspective *child)
     return result;
 }
 
-#ifndef Q_CC_MSVC
-#warning "TODO: hide and show areas properly"
-#endif
 void PerspectiveWidget::openPerspective(const QString &perspective)
 {
     Q_D(PerspectiveWidget);
@@ -82,7 +80,7 @@ void PerspectiveWidget::openPerspective(const QString &perspective)
     if (!p)
         return;
 
-    if (this->currentPerspective() == p)
+    if (this->perspective() == p)
         return;
 
     QList<Perspective *> perspectives = parentPerspectives(p);
@@ -92,6 +90,7 @@ void PerspectiveWidget::openPerspective(const QString &perspective)
     PerspectiveInstance *topInstance = d->mapToInstace.value(perspectives.first());
     if (!topInstance) {
         CentralWidget *widget = new CentralWidget(this);
+// fixme: do not hide views that will be used
         for (int i = CentralWidget::Left; i <= CentralWidget::Central; i++) {
             widget->hideArea(i);
         }
