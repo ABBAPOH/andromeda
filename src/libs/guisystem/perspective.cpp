@@ -165,12 +165,8 @@ bool Perspective::save(const QString &file, const QByteArray &format)
         handler = GuiController::instance()->handler(QFileInfo(file).suffix().toUtf8());
     }
 
-    if (!handler)
+    if (!handler || !handler->canWrite())
         return false;
 
-    if (handler->canWrite()) {
-        return handler->write(file, this);
-    } else {
-        return false;
-    }
+    return handler->write(file, this);
 }
