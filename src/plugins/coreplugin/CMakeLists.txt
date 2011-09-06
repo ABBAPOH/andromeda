@@ -37,7 +37,7 @@ qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/shared/widgets )
+include_directories( ${PROJECT_SOURCE_DIR}/src/libs/widgets )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
 
