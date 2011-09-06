@@ -2,6 +2,10 @@
 
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>
+#ifdef Q_CC_MSVC
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
+#endif
 
 #include <actionmanager.h>
 #include <command.h>
@@ -75,6 +79,9 @@ bool FileManagerPluginImpl::initialize()
 void FileManagerPluginImpl::shutdown()
 {
     GuiController::instance()->removePerspective(Constants::Ids::Perspectives::FileManagerPerspective);
+#ifdef Q_CC_MSVC
+    qApp->clipboard()->clear();
+#endif
 }
 
 void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation location, const QIcon &icon, const QKeySequence &key)
