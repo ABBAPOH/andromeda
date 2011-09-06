@@ -92,11 +92,6 @@ void FileManagerView::initialize()
 {
 }
 
-QString FileManagerView::type() const
-{
-    return "filemanager";
-}
-
 QWidget * FileManagerView::widget() const
 {
     return m_widget;
@@ -146,10 +141,15 @@ void FileManagerPlugin::FileManagerView::setViewMode(int mode)
 
 QString FileManagerFactory::id() const
 {
-    return "FileManager";
+    return QLatin1String("FileManager");
 }
 
-GuiSystem::IView * FileManagerPlugin::FileManagerFactory::createView() const
+QString FileManagerFactory::type() const
 {
-    return new FileManagerView;
+    return QLatin1String("FileManager");
+}
+
+IView * FileManagerFactory::createView()
+{
+    return new FileManagerView(this);
 }

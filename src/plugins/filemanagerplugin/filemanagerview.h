@@ -41,9 +41,10 @@ public:
     ~FileManagerFactory() {}
 
     QString id() const;
+    QString type() const;
 
 protected:
-    GuiSystem::IView *createView() const;
+    GuiSystem::IView *createView();
 };
 
 } // namespace FileManagerPlugin

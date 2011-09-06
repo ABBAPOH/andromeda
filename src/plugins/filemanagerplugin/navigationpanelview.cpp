@@ -21,11 +21,6 @@ void NavigationPanelView::initialize()
             view->widget(), SLOT(setCurrentPath(QString)));
 }
 
-QString NavigationPanelView::type() const
-{
-    return "";
-}
-
 QWidget * NavigationPanelView::widget() const
 {
     return m_widget;
@@ -33,10 +28,15 @@ QWidget * NavigationPanelView::widget() const
 
 QString NavigationPanelFactory::id() const
 {
-    return "NavigationPanel";
+    return QLatin1String("NavigationPanel");
 }
 
-GuiSystem::IView * FileManagerPlugin::NavigationPanelFactory::createView() const
+QString NavigationPanelFactory::type() const
 {
-    return new NavigationPanelView;
+    return QLatin1String("FileManager");
+}
+
+GuiSystem::IView * FileManagerPlugin::NavigationPanelFactory::createView()
+{
+    return new NavigationPanelView(this);
 }

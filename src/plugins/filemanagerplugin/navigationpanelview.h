@@ -14,9 +14,6 @@ public:
     explicit NavigationPanelView(QObject *parent = 0);
 
     void initialize();
-
-    QString type() const;
-
     QWidget *widget() const;
 
 private:
@@ -31,9 +28,10 @@ public:
     ~NavigationPanelFactory() {}
 
     QString id() const;
+    QString type() const;
 
 protected:
-    GuiSystem::IView *createView() const;
+    GuiSystem::IView *createView();
 };
 
 } // namespace FileManagerPlugin
