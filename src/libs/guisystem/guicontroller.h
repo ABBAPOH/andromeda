@@ -32,6 +32,7 @@ public:
     void removeHandler(IIOHandler *handler);
 
     void addPerspective(Perspective *perspective);
+    void removePerspective(const QString &id);
     Perspective *perspective(const QString &id) const;
 
     QStringList perspectiveIds() const;

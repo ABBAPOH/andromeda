@@ -226,12 +226,10 @@ QStringList FileManagerWidget::selectedPaths() const
     Q_D(const FileManagerWidget);
 
     QStringList result;
-    QModelIndexList list = d->currentView->selectionModel()->selectedRows();
-
-    foreach (QModelIndex index, list) {
+    foreach (const QModelIndex &index, d->selectedIndexes()) {
         result.append(d->model->filePath(index));
     }
-    return result;
+    return QStringList(result);
 }
 
 FileManagerWidget::ViewMode FileManagerWidget::viewMode() const

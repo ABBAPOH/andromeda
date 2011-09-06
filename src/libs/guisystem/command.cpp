@@ -125,7 +125,7 @@ Command::~Command()
     Also command sets action's text, icon and shortcut default values (as passed to setDefault* methods).
     This action can be used in widgets and will be automatically triggered when Command is triggered.
 */
-QAction * Command::action()
+QAction * Command::action(QObject *parent)
 {
     Q_D(Command);
 
@@ -133,7 +133,7 @@ QAction * Command::action()
         return d->realAction;
     }
 
-    QAction *a = new QAction(this);
+    QAction *a = new QAction(parent ? parent : this);
     a->setObjectName(id());
     a->setIcon(defaultIcon());
     a->setShortcut(defaultShortcut());
@@ -151,7 +151,7 @@ QAction * Command::action()
 */
 QAction * Command::action(QWidget *w, const char *slot)
 {
-    QAction * a = action();
+    QAction * a = action(w);
     w->addAction(a);
     connect(a, SIGNAL(triggered()), w, slot);
     return a;
@@ -235,7 +235,7 @@ void Command::setContext(Command::CommandContext context)
     }
 
     if (context == ApplicationCommand) {
-        d->realAction = action();
+        d->realAction = action(this);
         d->action->setEnabled(true);
     }
 

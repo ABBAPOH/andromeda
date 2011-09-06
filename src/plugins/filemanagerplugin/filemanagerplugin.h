@@ -16,6 +16,7 @@ public:
     explicit FileManagerPluginImpl(QObject *parent = 0);
 
     bool initialize();
+    void shutdown();
     void createGotoDirCommand(QDesktopServices::StandardLocation location,
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());

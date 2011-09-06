@@ -37,7 +37,7 @@ FileManagerView::FileManagerView(QObject *parent) :
     actionManager->command(Constants::Ids::Actions::Rename)->action(m_widget, SLOT(rename()));
     actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
 
-    QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action();
+    QAction *a = actionManager->command(Constants::Ids::Actions::DualPane)->action(this);
     a->setChecked(enableDualPane);
     m_widget->addAction(a);
     connect(a, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
@@ -65,19 +65,19 @@ FileManagerView::FileManagerView(QObject *parent) :
     QAction *action = 0;
     QSignalMapper *viewMapper = new QSignalMapper(this);
 
-    action = actionManager->command(Constants::Ids::Actions::IconMode)->action();
+    action = actionManager->command(Constants::Ids::Actions::IconMode)->action(this);
     viewMapper->setMapping(action, 1);
     connect(action, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(action);
     action->setChecked(mode == 1);
 
-    action = actionManager->command(Constants::Ids::Actions::ColumnMode)->action();
+    action = actionManager->command(Constants::Ids::Actions::ColumnMode)->action(this);
     viewMapper->setMapping(action, 3);
     connect(action, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(action);
     action->setChecked(mode == 3);
 
-    action = actionManager->command(Constants::Ids::Actions::TreeMode)->action();
+    action = actionManager->command(Constants::Ids::Actions::TreeMode)->action(this);
     viewMapper->setMapping(action, 4);
     connect(action, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(action);
