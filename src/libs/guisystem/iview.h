@@ -33,14 +33,6 @@ public:
     virtual QWidget *widget() const = 0;
     virtual QToolBar *toolBar() const { return 0; }
 
-    void setArea(int area) { m_area = area; }
-
-    // FIXME: changebal area when switching tabs
-    int area() const
-    {
-        return m_area;
-    }
-
     QString factoryId() const;
 
     QWidget *container() const;
@@ -52,11 +44,8 @@ public:
 protected:
     void setFactoryId(const QString &id);
 
+protected:
     IViewPrivate *d_ptr;
-
-//private:
-    // FIXME: remove area
-    int m_area;
 
     friend class IViewFactory;
 };
