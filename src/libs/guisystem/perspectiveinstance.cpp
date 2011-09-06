@@ -53,7 +53,8 @@ void PerspectiveInstancePrivate::createViews()
         IView *view = factory->view();
         mapToView.insert(id, view);
         view->setPerspectiveInstance(q);
-        view->setOptions(perspective->viewOptions(id));
+        view->setArea(perspective->viewArea(id));
+//        view->setOptions(perspective->viewOptions(id));
     }
 }
 

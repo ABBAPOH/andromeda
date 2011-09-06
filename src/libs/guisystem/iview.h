@@ -8,8 +8,6 @@
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
-#include "viewoptions.h"
-
 class QWidget;
 class QToolBar;
 
@@ -35,13 +33,7 @@ public:
     virtual QWidget *widget() const = 0;
     virtual QToolBar *toolBar() const { return 0; }
 
-    virtual void setOptions(const ViewOptions &options)
-    {
-        m_area = options.area();
-        m_options = options;
-    }
-
-    ViewOptions options() const { return m_options; }
+    void setArea(int area) { m_area = area; }
 
     // FIXME: changebal area when switching tabs
     int area() const
@@ -65,7 +57,6 @@ protected:
 //private:
     // FIXME: remove area
     int m_area;
-    ViewOptions m_options;
 
     friend class IViewFactory;
 };

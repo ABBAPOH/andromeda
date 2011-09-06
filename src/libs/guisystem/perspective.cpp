@@ -2,12 +2,20 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QMap>
+#include <QtCore/QVariant>
 
 #include "guicontroller.h"
 #include "iiohandler.h"
 #include "perspectiveinstance.h"
 
 namespace GuiSystem {
+
+struct Data
+{
+    QString id;
+    int area;
+    QVariantMap properties;
+};
 
 class PerspectivePrivate
 {
@@ -17,7 +25,7 @@ public:
     QString name;
     Perspective *parent;
 
-    QMap<QString, ViewOptions> views;
+    QMap<QString, Data*> views;
 };
 
 } // namespace GuiSystem
@@ -48,6 +56,7 @@ Perspective::Perspective(const QString &id, Perspective *parent) :
 
 Perspective::~Perspective()
 {
+    qDeleteAll(d_func()->views);
     delete d_ptr;
 }
 
@@ -111,18 +120,24 @@ void Perspective::save(const QString &file, const QByteArray format)
     }
 }
 
-void Perspective::addView(const ViewOptions &options)
+void Perspective::addView(const QString &id, int area)
 {
     Q_D(Perspective);
 
-    d->views.insert(options.id(), options);
+    Data *data = new Data;
+    data->id = id;
+    data->area = area;
+    d->views.insert(id, data);
 }
 
-void Perspective::addView(const QString &id, int area, int width, int height)
+void Perspective::removeView(const QString &id)
 {
-    ViewOptions options(id, area, width, height);
+    Q_D(Perspective);
 
-    addView(options);
+    Data * data = d->views.take(id);
+    if (data) {
+        delete data;
+    }
 }
 
 QStringList Perspective::views() const
@@ -132,10 +147,17 @@ QStringList Perspective::views() const
     return d->views.keys();
 }
 
-ViewOptions Perspective::viewOptions(const QString &id) const
+int Perspective::viewArea(const QString &id) const
 {
     Q_D(const Perspective);
 
-    return d->views.value(id);
+    return d->views.value(id)->area;
+}
+
+QVariant Perspective::viewProperty(const QString &id, const QString &property) const
+{
+    Q_D(const Perspective);
+
+    return d->views.value(id)->properties.value(property);
 }
 
