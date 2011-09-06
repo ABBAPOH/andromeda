@@ -22,6 +22,7 @@ class PerspectivePrivate
 public:
     PerspectivePrivate() : parent(0) {}
     QString id;
+    QIcon icon;
     QString name;
     Perspective *parent;
 
@@ -68,6 +69,16 @@ QString Perspective::id() const
 void Perspective::setId(const QString &id)
 {
     d_func()->id = id;
+}
+
+QIcon Perspective::icon() const
+{
+    return d_func()->icon;
+}
+
+void Perspective::setIcon(const QIcon &icon)
+{
+    d_func()->icon = icon;
 }
 
 QString Perspective::name() const

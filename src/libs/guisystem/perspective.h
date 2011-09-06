@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+#include <QtGui/QIcon>
 
 #include "guisystem_global.h"
 
@@ -22,6 +23,9 @@ public:
 
     QString id() const;
     void setId(const QString &id);
+
+    QIcon icon() const;
+    void setIcon(const QIcon &icon);
 
     QString name() const;
     void setName(const QString &name);
