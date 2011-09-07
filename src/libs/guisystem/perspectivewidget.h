@@ -5,6 +5,8 @@
 
 #include <QtGui/QWidget>
 
+class QSettings;
+
 namespace GuiSystem {
 
 class CentralWidget;
@@ -27,6 +29,9 @@ public:
     Perspective *perspective() const;
     void openPerspective(const QString &perspective);
     void closePerspective(const QString &perspective);
+
+    void restoreSession(QSettings &s);
+    void saveSession(QSettings &s);
 
 protected:
     void createInstance(Perspective * p, int index);

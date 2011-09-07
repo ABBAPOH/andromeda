@@ -1,13 +1,13 @@
 #include "coreplugin.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
 #include <QtGui/QMenu>
 
 #include "constants.h"
 #include "core.h"
-#include "mainwindow.h"
 #include "perspectivemanager.h"
 #include "settingsdialog_p.h"
 
@@ -36,7 +36,9 @@ bool CorePluginImpl::initialize()
 
     createActions();
     connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
-    QTimer::singleShot(0, this, SLOT(newWindow()));
+    connect(PluginManager::instance(), SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
+
+    connect(qApp, SIGNAL(lastWindowClosed()), SLOT(quit()));
 
     return true;
 }
@@ -48,6 +50,7 @@ void CorePluginImpl::shutdown()
 void CorePluginImpl::newWindow()
 {
     MainWindow *window = new MainWindow();
+    window->newTab();
 // TODO: explore why crashes (deletes after coreplugin is unloaded
 //    window->setAttribute(Qt::WA_DeleteOnClose);
     window->installEventFilter(this);
@@ -55,6 +58,7 @@ void CorePluginImpl::newWindow()
     ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
     window->show();
     addObject(window);
+    m_windows.append(window);
 }
 
 void CorePluginImpl::showPluginView()
@@ -67,6 +71,49 @@ void CorePluginImpl::handleMessage(const QString &message)
 {
     if (message == QLatin1String("activate"))
         newWindow();
+}
+
+void CorePluginImpl::restoreSession()
+{
+    QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
+    int windowCount = s.beginReadArray(QLatin1String("windows"));
+
+    if (!windowCount)
+        newWindow();
+
+    for (int i = 0; i < windowCount; i++) {
+        s.setArrayIndex(i);
+        MainWindow *window = new MainWindow();
+        window->restoreSession(s);
+        window->installEventFilter(this);
+        ActionManager::instance()->command(Constants::Ids::Actions::NewTab)->action(window, SLOT(newTab()));
+        ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
+        window->show();
+        addObject(window);
+        m_windows.append(window);
+    }
+    s.endArray();
+}
+
+void CorePluginImpl::saveSession()
+{
+    QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
+    s.clear();
+    int windowCount = m_windows.count();
+
+    s.beginWriteArray(QLatin1String("windows"), windowCount);
+    for (int i = 0; i < windowCount; i++) {
+        s.setArrayIndex(i);
+        m_windows[i]->saveSession(s);
+    }
+    s.endArray();
+}
+
+void CorePluginImpl::quit()
+{
+    saveSession();
+    QMetaObject::invokeMethod(PluginManager::instance(), "unloadPlugins", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
 }
 
 void CorePluginImpl::createActions()
@@ -134,7 +181,7 @@ void CorePluginImpl::createActions()
     removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
     fileContainer->addCommand(removeCommand, group);
 
-#ifndef Q_OS_MAC
+//#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
     fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileQuit);
 
@@ -143,8 +190,8 @@ void CorePluginImpl::createActions()
     exitCommand->setDefaultShortcut(tr("Ctrl+Q"));
     exitCommand->setContext(Command::ApplicationCommand);
     fileContainer->addCommand(exitCommand, group);
-    connect(exitCommand->commandAction(), SIGNAL(triggered()), qApp, SLOT(quit()));
-#endif
+    connect(exitCommand->commandAction(), SIGNAL(triggered()), this, SLOT(quit()));
+//#endif
 
     // ================ Edit Menu ================
     CommandContainer *editContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
@@ -264,6 +311,7 @@ bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
         if (e->type() == QEvent::Close) {
             MainWindow *w = qobject_cast<MainWindow *>(o);
             if (w) {
+                m_windows.removeAll(w);
                 removeObject(w);
                 w->deleteLater();
             }

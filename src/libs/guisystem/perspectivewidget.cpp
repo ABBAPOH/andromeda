@@ -2,6 +2,7 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QHash>
+#include <QtCore/QSettings>
 #include <QtGui/QStackedLayout>
 
 #include "centralwidget.h"
@@ -111,13 +112,33 @@ void PerspectiveWidget::openPerspective(const QString &perspective)
     d->layout->setCurrentIndex(index);
 }
 
+void PerspectiveWidget::restoreSession(QSettings &s)
+{
+    QString id = s.value(QLatin1String("perspective")).toString();
+    openPerspective(id);
+    foreach (IView *view, instance()->views()) {
+        s.beginGroup(view->id());
+        view->restoreSession(s);
+        s.endGroup();
+    }
+}
+
+void PerspectiveWidget::saveSession(QSettings &s)
+{
+    s.setValue(QLatin1String("perspective"), perspective()->id());
+    foreach (IView *view, instance()->views()) {
+        s.beginGroup(view->id());
+        view->saveSession(s);
+        s.endGroup();
+    }
+}
+
 void PerspectiveWidget::createInstance(Perspective *p, int index)
 {
     Q_D(PerspectiveWidget);
 
-    if (d->mapToInstace.contains(p)) {
+    if (d->mapToInstace.contains(p))
         return;
-    }
 
     PerspectiveInstance *parent = d->mapToInstace.value(p->parentPerspective());
     PerspectiveInstance *instance = new PerspectiveInstance(parent);

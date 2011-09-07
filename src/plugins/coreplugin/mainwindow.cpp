@@ -2,6 +2,7 @@
 #include "mainwindow_p.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
 #include <QtGui/QDesktopServices>
@@ -10,7 +11,6 @@
 #include <QtGui/QDirModel>
 #include <QtGui/QCompleter>
 
-#include <QDebug>
 #include <CorePlugin>
 
 #include <actionmanager.h>
@@ -35,6 +35,12 @@ CorePlugin::Tab * MainWindowPrivate::currentTab() const
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
     currentTab()->setCurrentPath(path);
+}
+
+void MainWindowPrivate::onPathChanged(const QString &s)
+{
+    if (sender() == currentTab())
+        lineEdit->setText(s);
 }
 
 void MainWindowPrivate::onDisplayNameChanged(const QString &name)
@@ -124,12 +130,58 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
 
     resize(800, 600);
-    newTab();
 }
 
 MainWindow::~MainWindow()
 {
     delete d_ptr;
+}
+
+void MainWindow::restoreSession(QSettings &s)
+{
+    Q_D(MainWindow);
+
+#ifdef Q_OS_MAC // QTBUG-3116
+    QRect geometry = s.value(QLatin1String("geometry")).toRect();
+    geometry.setHeight(geometry.height() + 38); // 38 is toolbar height. i hope:(
+    setGeometry(geometry);
+#else
+    setGeometry(s.value(QLatin1String("geometry")).toRect());
+#endif
+    restoreState(s.value(QLatin1String("state")).toByteArray());
+
+    int tabCount = s.beginReadArray(QLatin1String("tabs"));
+    for (int i = 0; i < tabCount; i++) {
+        s.setArrayIndex(i);
+
+        Tab *tab = new Tab(d->tabWidget);
+        tab->setVisible(true);
+        connect(tab, SIGNAL(currentPathChanged(QString)), d, SLOT(onPathChanged(QString)));
+        connect(tab, SIGNAL(displayNameChanged(QString)), d, SLOT(onDisplayNameChanged(QString)));
+        d->tabWidget->addTab(tab, "tab");
+        tab->restoreSession(s);
+    }
+    s.endArray();
+
+    d->tabWidget->setCurrentIndex(s.value(QLatin1String("currentTab")).toInt());
+}
+
+void MainWindow::saveSession(QSettings &s)
+{
+    Q_D(MainWindow);
+
+    s.setValue(QLatin1String("geometry"), geometry());
+    s.setValue(QLatin1String("state"), saveState());
+    s.setValue(QLatin1String("currentTab"), d->tabWidget->currentIndex());
+
+    int tabCount = d->tabWidget->count();
+    s.beginWriteArray(QLatin1String("tabs"), tabCount);
+    for (int i = 0; i < tabCount; i++) {
+        Tab *tab = static_cast<Tab*>(d->tabWidget->widget(i));
+        s.setArrayIndex(i);
+        tab->saveSession(s);
+    }
+    s.endArray();
 }
 
 void MainWindow::back()

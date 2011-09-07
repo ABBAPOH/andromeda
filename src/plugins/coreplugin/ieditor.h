@@ -14,12 +14,16 @@ class COREPLUGIN_EXPORT IEditor : public GuiSystem::IView
     Q_DISABLE_COPY(IEditor)
 
 public:
-    explicit IEditor(QObject *parent = 0) : GuiSystem::IView(parent) {}
+    explicit IEditor(QObject *parent = 0);
 
     virtual bool open(const QString &path) = 0;
     virtual bool open(const HistoryItem &item) = 0;
 
     virtual HistoryItem currentItem() const = 0;
+    QString currentPath() const;
+
+    void restoreSession(const QSettings &s);
+    void saveSession(QSettings &s);
 
 signals:
     void openRequested(const QString &path);

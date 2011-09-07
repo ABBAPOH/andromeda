@@ -7,8 +7,8 @@ set( HEADERS
     coreplugin.h
     history.h
     historyitem.h
-    ioptionspage.h
     ieditor.h
+    ioptionspage.h
     mainwindow.h
     mainwindow_p.h
     perspectivemanager.h
@@ -21,6 +21,7 @@ set( SOURCES
     coreplugin.cpp
     history.cpp
     historyitem.cpp
+    ieditor.cpp
     ioptionspage.cpp
     mainwindow.cpp
     perspectivemanager.cpp

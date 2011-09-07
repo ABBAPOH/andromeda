@@ -2,6 +2,7 @@
 #define COREPLUGIN_H
 
 #include <iplugin.h>
+#include "mainwindow.h"
 
 using namespace ExtensionSystem;
 
@@ -20,11 +21,19 @@ public slots:
     void showPluginView();
     void handleMessage(const QString &);
 
+    void restoreSession();
+    void saveSession();
+
+    void quit();
+
 private:
     void createActions();
 
 protected:
     bool eventFilter(QObject *, QEvent *);
+
+private:
+    QList<CorePlugin::MainWindow *> m_windows;
 };
 
 #endif // COREPLUGIN_H
