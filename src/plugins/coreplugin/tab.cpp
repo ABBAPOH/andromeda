@@ -29,6 +29,7 @@ public:
     QString currentPath;
     History *history;
     bool ignoreSignals;
+    IEditor *editor;
 
 protected:
     Tab *q_ptr;
@@ -54,7 +55,7 @@ void Tab::onIndexChanged(int index)
     d->openPerspective(item);
     d->ignoreSignals = false;
     emit currentPathChanged(d->currentPath);
-    emit displayNameChanged(displayName());
+    emit changed();
 }
 
 QString getMimeType(const QString &path)
@@ -91,11 +92,13 @@ bool TabPrivate::openPerspective(const QString &path)
 
     IEditor *view = getMainView(perspective);
     if (view) {
+        editor = view;
         view->open(path);
         QObject::connect(view, SIGNAL(pathChanged(QString)), q_func(),
                          SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
         QObject::connect(view, SIGNAL(openRequested(QString)), q_func(),
                          SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+        QObject::connect(view, SIGNAL(changed()), q_func(), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = view->currentItem();
         item.setUserData("perspective", perspective);
         history->appendItem(item);
@@ -110,6 +113,7 @@ void TabPrivate::openPerspective(const HistoryItem &item)
 
     IEditor *view = getMainView(perspective);
     if (view) {
+        editor = view;
         view->open(item);
     }
 }
@@ -123,6 +127,7 @@ Tab::Tab(QWidget *parent) :
     d->history = new History(this);
     d->perspectiveWidget = new PerspectiveWidget(this);
     d->ignoreSignals = false;
+    d->editor = 0;
 
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), SLOT(onIndexChanged(int)));
 }
@@ -151,7 +156,7 @@ void Tab::setCurrentPath(const QString & currentPath)
         if (d->openPerspective(d->currentPath)) {
             d->ignoreSignals = false;
             emit currentPathChanged(d->currentPath);
-            emit displayNameChanged(displayName());
+            emit changed();
         }
 //    }
     d->ignoreSignals = false;
@@ -176,14 +181,16 @@ void Tab::restoreSession(QSettings &s)
     QString perspective = d->perspectiveWidget->perspective()->id();
     IEditor *view = d->getMainView(perspective);
     if (view) {
+        d->editor = view;
         d->currentPath = view->currentPath();
         emit currentPathChanged(d->currentPath);
-        emit displayNameChanged(displayName());
+        emit changed();
 
         QObject::connect(view, SIGNAL(pathChanged(QString)), this,
                          SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
         QObject::connect(view, SIGNAL(openRequested(QString)), this,
                          SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+        QObject::connect(view, SIGNAL(changed()), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = view->currentItem();
         item.setUserData("perspective", perspective);
         d->history->appendItem(item);
@@ -202,10 +209,32 @@ void Tab::resizeEvent(QResizeEvent *e)
     d_func()->perspectiveWidget->resize(e->size());
 }
 
-QString Tab::displayName() const
+QIcon Tab::icon() const
 {
-    QFileInfo fi(currentPath());
-    if (fi.exists())
-        return fi.fileName();
+    Q_D(const Tab);
+
+    if (d->editor)
+        return d->editor->icon();
+
+    return QIcon();
+}
+
+QString Tab::title() const
+{
+    Q_D(const Tab);
+
+    if (d->editor)
+        return d->editor->title();
+
+    return QString();
+}
+
+QString Tab::windowTitle() const
+{
+    Q_D(const Tab);
+
+    if (d->editor)
+        return d->editor->windowTitle();
+
     return QString();
 }

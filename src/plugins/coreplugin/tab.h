@@ -20,13 +20,14 @@ class COREPLUGIN_EXPORT Tab : public QWidget
     Q_DISABLE_COPY(Tab)
 
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
-    Q_PROPERTY(QString displayName READ displayName NOTIFY displayNameChanged)
 public:
     explicit Tab(QWidget *parent = 0);
     ~Tab();
 
     QString currentPath() const;
-    QString displayName() const;
+    QIcon icon() const;
+    QString title() const;
+    QString windowTitle() const;
 
     History *history() const;
 
@@ -40,7 +41,7 @@ public slots:
 
 signals:
     void currentPathChanged(const QString & currentPath);
-    void displayNameChanged(const QString & currentPath);
+    void changed();
 
 private slots:
     void onIndexChanged(int index);
