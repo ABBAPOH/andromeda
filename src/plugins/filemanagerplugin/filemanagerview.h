@@ -1,6 +1,7 @@
 #ifndef FILEMANAGERVIEW_H
 #define FILEMANAGERVIEW_H
 
+#include <QtCore/QPointer>
 #include <ieditor.h>
 #include <iviewfactory.h>
 
@@ -14,6 +15,7 @@ class FileManagerView : public CorePlugin::IEditor
 
 public:
     explicit FileManagerView(QObject *parent = 0);
+    ~FileManagerView();
 
     // from IView
     void initialize();
@@ -35,7 +37,7 @@ private slots:
     void setViewMode(int);
 
 private:
-    DualPaneWidget *m_widget;
+    QPointer<DualPaneWidget> m_widget;
     const GuiSystem::State *m_state;
 };
 

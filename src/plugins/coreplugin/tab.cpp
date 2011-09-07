@@ -63,6 +63,8 @@ QString getMimeType(const QString &path)
     QFileInfo info(path);
     if (info.isDir())
         return QLatin1String("inode/directory");
+    if (path.startsWith("http://"))
+        return QLatin1String("text/html");
     return QString();
 }
 

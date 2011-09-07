@@ -32,8 +32,8 @@ FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
 
 bool FileManagerPluginImpl::initialize()
 {
-    GuiController::instance()->addFactory(new FileManagerFactory);
-    GuiController::instance()->addFactory(new NavigationPanelFactory);
+    GuiController::instance()->addFactory(new FileManagerFactory(this));
+    GuiController::instance()->addFactory(new NavigationPanelFactory(this));
 
     Perspective *perspective = new Perspective(Constants::Ids::Perspectives::FileManagerPerspective, this);
     perspective->addView("NavigationPanel", 0);
