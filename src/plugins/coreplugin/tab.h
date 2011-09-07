@@ -20,6 +20,7 @@ class COREPLUGIN_EXPORT Tab : public QWidget
     Q_DISABLE_COPY(Tab)
 
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+
 public:
     explicit Tab(QWidget *parent = 0);
     ~Tab();
