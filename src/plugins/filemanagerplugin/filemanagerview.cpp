@@ -89,6 +89,11 @@ FileManagerView::FileManagerView(QObject *parent) :
     settings.endGroup();
 }
 
+FileManagerView::~FileManagerView()
+{
+    delete m_widget;
+}
+
 void FileManagerView::initialize()
 {
 }
