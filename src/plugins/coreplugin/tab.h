@@ -10,7 +10,7 @@
 
 namespace CorePlugin {
 
-class IMainView;
+class IEditor;
 
 class TabPrivate;
 class COREPLUGIN_EXPORT Tab : public QWidget

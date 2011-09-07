@@ -1,15 +1,17 @@
 #ifndef FILEMANAGERVIEW_H
 #define FILEMANAGERVIEW_H
 
-#include <imainview.h>
+#include <ieditor.h>
 #include <iviewfactory.h>
 
 namespace FileManagerPlugin {
 
 class DualPaneWidget;
-class FileManagerView : public CorePlugin::IMainView
+class FileManagerView : public CorePlugin::IEditor
 {
     Q_OBJECT
+    Q_DISABLE_COPY(FileManagerView)
+
 public:
     explicit FileManagerView(QObject *parent = 0);
 
@@ -18,7 +20,7 @@ public:
     QString type() const;
     QWidget *widget() const;
 
-    // from IMainView
+    // from IEditor
     bool open(const QString &path);
     bool open(const CorePlugin::HistoryItem &item);
 

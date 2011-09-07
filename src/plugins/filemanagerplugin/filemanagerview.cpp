@@ -17,7 +17,7 @@ using namespace FileManagerPlugin;
 using namespace GuiSystem;
 
 FileManagerView::FileManagerView(QObject *parent) :
-    IMainView(parent)
+    IEditor(parent)
 {
     QSettings settings;
     settings.beginGroup("FileManager");

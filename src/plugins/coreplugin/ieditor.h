@@ -8,11 +8,13 @@
 
 namespace CorePlugin {
 
-class COREPLUGIN_EXPORT IMainView : public GuiSystem::IView
+class COREPLUGIN_EXPORT IEditor : public GuiSystem::IView
 {
     Q_OBJECT
+    Q_DISABLE_COPY(IEditor)
+
 public:
-    explicit IMainView(QObject *parent = 0);
+    explicit IEditor(QObject *parent = 0) : GuiSystem::IView(parent) {}
 
     virtual bool open(const QString &path) = 0;
     virtual bool open(const HistoryItem &item) = 0;
@@ -23,9 +25,6 @@ signals:
     void openRequested(const QString &path);
     void pathChanged(const QString &);
     void currentItemChanged();
-
-private slots:
-    void onPathChanged(const QString &);
 };
 
 } // namespace CorePlugin
