@@ -9,8 +9,8 @@
 #include <perspectiveinstance.h>
 
 #include "core.h"
-#include "perspectivemanager.h"
 #include "ieditor.h"
+#include "perspectivemanager.h"
 
 namespace CorePlugin {
 
