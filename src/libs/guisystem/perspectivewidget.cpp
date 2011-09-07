@@ -142,6 +142,7 @@ void PerspectiveWidget::createInstance(Perspective *p, int index)
 
     PerspectiveInstance *parent = d->mapToInstace.value(p->parentPerspective());
     PerspectiveInstance *instance = new PerspectiveInstance(parent);
+    instance->setPerspectiveWidget(this);
     d->mapToInstace.insert(p, instance);
 
     instance->setPerspective(p);

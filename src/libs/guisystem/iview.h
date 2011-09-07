@@ -13,8 +13,9 @@ class QSettings;
 
 namespace GuiSystem {
 
-class PerspectiveInstance;
 class IViewFactory;
+class PerspectiveInstance;
+class PerspectiveWidget;
 
 class IViewPrivate;
 class GUISYSTEM_EXPORT IView : public QObject
@@ -44,6 +45,8 @@ public:
 
     PerspectiveInstance *perspectiveInstance() const;
     void setPerspectiveInstance(PerspectiveInstance *state);
+
+    PerspectiveWidget *perspectiveWidget() const;
 
 protected:
     void setFactory(IViewFactory *factory);

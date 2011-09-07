@@ -1,6 +1,7 @@
 #include "iview.h"
 
 #include "iviewfactory.h"
+#include "perspectiveinstance.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QPointer>
@@ -15,6 +16,7 @@ public:
     QPointer<QWidget> container;
     IViewFactory *factory;
     PerspectiveInstance *instance;
+    PerspectiveWidget *widget;
 };
 
 } // namespace GuiSystem
@@ -63,6 +65,11 @@ PerspectiveInstance * IView::perspectiveInstance() const
 void IView::setPerspectiveInstance(PerspectiveInstance *instance)
 {
     d_func()->instance = instance;
+}
+
+PerspectiveWidget * IView::perspectiveWidget() const
+{
+    return perspectiveInstance()->perspectiveWidget();
 }
 
 void IView::setFactory(IViewFactory *factory)
