@@ -2,7 +2,7 @@
 #include "core.h"
 #include "history.h"
 #include "historyitem.h"
-#include "imainview.h"
+#include "ieditor.h"
 #include "ioptionspage.h"
 #include "perspectivemanager.h"
 #include "settingsdialog.h"

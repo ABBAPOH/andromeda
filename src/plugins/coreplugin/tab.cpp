@@ -10,7 +10,7 @@
 
 #include "core.h"
 #include "perspectivemanager.h"
-#include "imainview.h"
+#include "ieditor.h"
 
 namespace CorePlugin {
 
@@ -20,7 +20,7 @@ class TabPrivate
 public:
     TabPrivate(Tab *qq) : q_ptr(qq) {}
 
-    IMainView *getMainView(const QString &perspective);
+    IEditor *getMainView(const QString &perspective);
     QString getPerspective(const QString &path);
     bool openPerspective(const QString &path);
     void openPerspective(const HistoryItem &item);
@@ -65,12 +65,12 @@ QString getMimeType(const QString &path)
     return QString();
 }
 
-IMainView * TabPrivate::getMainView(const QString &perspective)
+IEditor * TabPrivate::getMainView(const QString &perspective)
 {
     GuiController *controller = GuiController::instance();
     QString id = controller->perspective(perspective)->property("MainView").toString();
 
-    return qobject_cast<IMainView*>(perspectiveWidget->instance()->view(id));
+    return qobject_cast<IEditor*>(perspectiveWidget->instance()->view(id));
 }
 
 QString TabPrivate::getPerspective(const QString &path)
@@ -89,7 +89,7 @@ bool TabPrivate::openPerspective(const QString &path)
 
     perspectiveWidget->openPerspective(perspective);
 
-    IMainView *view = getMainView(perspective);
+    IEditor *view = getMainView(perspective);
     if (view) {
         view->open(path);
         QObject::connect(view, SIGNAL(pathChanged(QString)), q_func(),
@@ -108,7 +108,7 @@ void TabPrivate::openPerspective(const HistoryItem &item)
     QString perspective = item.userData("perspective").toString();
     perspectiveWidget->openPerspective(perspective);
 
-    IMainView *view = getMainView(perspective);
+    IEditor *view = getMainView(perspective);
     if (view) {
         view->open(item);
     }
