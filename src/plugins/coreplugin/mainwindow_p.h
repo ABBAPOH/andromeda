@@ -54,6 +54,7 @@ public:
     QToolBar *toolBar;
     QTabWidget *tabWidget;
 
+    Tab *addTab(int *index = 0);
     int currentIndex() const;
     CorePlugin::Tab *currentTab() const;
 
