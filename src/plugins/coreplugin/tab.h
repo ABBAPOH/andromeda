@@ -32,6 +32,9 @@ public:
 
     GuiSystem::PerspectiveWidget *perspectiveWidget() const;
 
+    void restoreSession(QSettings &s);
+    void saveSession(QSettings &s);
+
 public slots:
     void setCurrentPath(const QString &currentPath);
 

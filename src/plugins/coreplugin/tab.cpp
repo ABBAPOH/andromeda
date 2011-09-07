@@ -167,6 +167,36 @@ PerspectiveWidget * Tab::perspectiveWidget() const
     return d_func()->perspectiveWidget;
 }
 
+void Tab::restoreSession(QSettings &s)
+{
+    Q_D(Tab);
+
+    d->perspectiveWidget->restoreSession(s);
+
+    QString perspective = d->perspectiveWidget->perspective()->id();
+    IEditor *view = d->getMainView(perspective);
+    if (view) {
+        d->currentPath = view->currentPath();
+        emit currentPathChanged(d->currentPath);
+        emit displayNameChanged(displayName());
+
+        QObject::connect(view, SIGNAL(pathChanged(QString)), this,
+                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+        QObject::connect(view, SIGNAL(openRequested(QString)), this,
+                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+        HistoryItem item = view->currentItem();
+        item.setUserData("perspective", perspective);
+        d->history->appendItem(item);
+    }
+}
+
+void Tab::saveSession(QSettings &s)
+{
+    Q_D(Tab);
+
+    d->perspectiveWidget->saveSession(s);
+}
+
 void Tab::resizeEvent(QResizeEvent *e)
 {
     d_func()->perspectiveWidget->resize(e->size());

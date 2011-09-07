@@ -3,6 +3,8 @@
 
 #include <QtGui/QMainWindow>
 
+class QSettings;
+
 namespace CorePlugin {
 
 class MainWindowPrivate;
@@ -13,6 +15,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void restoreSession(QSettings &s);
+    void saveSession(QSettings &s);
 
 public slots:
     void back();

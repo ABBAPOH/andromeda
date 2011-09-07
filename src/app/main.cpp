@@ -37,7 +37,9 @@ static inline QString getPluginPath()
 
 int main(int argc, char *argv[])
 {
-    QtSingleApplication app("Andromeda", argc, argv);
+    QtSingleApplication app(QLatin1String("Andromeda"), argc, argv);
+    app.setOrganizationName(QLatin1String("arch"));
+    app.setApplicationName(QLatin1String("Andromeda"));
 
     if (app.isRunning()) {
         app.sendMessage(QLatin1String("activate"));
@@ -59,11 +61,6 @@ int main(int argc, char *argv[])
 
     PluginView view;
     manager.addObject(&view, QLatin1String("pluginView"));
-
-    QObject::connect(&app, SIGNAL(lastWindowClosed()),
-                     &manager, SLOT(unloadPlugins()), Qt::QueuedConnection);
-    QObject::connect(&manager, SIGNAL(pluginsUnloaded()),
-                     &app, SLOT(quit()), Qt::QueuedConnection);
 
     return app.exec();
 }

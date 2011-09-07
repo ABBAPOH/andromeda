@@ -9,6 +9,7 @@
 
 class QWidget;
 class QToolBar;
+class QSettings;
 
 namespace GuiSystem {
 
@@ -31,6 +32,9 @@ public:
 
     virtual QWidget *widget() const = 0;
     virtual QToolBar *toolBar() const { return 0; }
+
+    virtual void restoreSession(const QSettings &s) {}
+    virtual void saveSession(QSettings &s) {}
 
     QString id() const;
     QString type() const;
