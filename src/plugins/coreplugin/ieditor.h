@@ -8,6 +8,8 @@
 
 namespace CorePlugin {
 
+class MainWindow;
+
 class COREPLUGIN_EXPORT IEditor : public GuiSystem::IView
 {
     Q_OBJECT
@@ -24,6 +26,8 @@ public:
 
     void restoreSession(const QSettings &s);
     void saveSession(QSettings &s);
+
+    MainWindow *mainWindow() const;
 
 signals:
     void openRequested(const QString &path);
