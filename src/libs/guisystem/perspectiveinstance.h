@@ -9,6 +9,7 @@ namespace GuiSystem {
 
 class IView;
 class Perspective;
+class PerspectiveWidget;
 
 class PerspectiveInstancePrivate;
 class GUISYSTEM_EXPORT PerspectiveInstance : public QObject
@@ -24,6 +25,9 @@ public:
 
     Perspective *perspective() const;
     void setPerspective(Perspective *perspective);
+
+    PerspectiveWidget *perspectiveWidget() const;
+    void setPerspectiveWidget(PerspectiveWidget *widget);
 
     PerspectiveInstance *parentInstance() const;
 

@@ -25,6 +25,7 @@ public:
     Perspective *perspective;
     QHash<QString, IView *> mapToView;
     PerspectiveInstance *parentInstance;
+    PerspectiveWidget *widget;
 
     void createViews();
     void initializeViews();
@@ -115,4 +116,14 @@ IView * PerspectiveInstance::view(const QString &id) const
         return result;
 
     return parentInstance() ? parentInstance()->view(id) : 0;
+}
+
+PerspectiveWidget * PerspectiveInstance::perspectiveWidget() const
+{
+    return d_func()->widget;
+}
+
+void PerspectiveInstance::setPerspectiveWidget(PerspectiveWidget *widget)
+{
+    d_func()->widget = widget;
 }
