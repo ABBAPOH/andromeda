@@ -22,6 +22,18 @@
 using namespace CorePlugin;
 using namespace GuiSystem;
 
+Tab * MainWindowPrivate::addTab(int *index)
+{
+    Tab *tab = new Tab(tabWidget);
+    connect(tab, SIGNAL(currentPathChanged(QString)), SLOT(onPathChanged(QString)));
+    connect(tab, SIGNAL(displayNameChanged(QString)), SLOT(onDisplayNameChanged(QString)));
+    int i = tabWidget->addTab(tab, "tab");
+    if (index)
+        *index = i;
+
+    return tab;
+}
+
 int MainWindowPrivate::currentIndex() const
 {
     return tabWidget->currentIndex();
@@ -154,11 +166,7 @@ void MainWindow::restoreSession(QSettings &s)
     for (int i = 0; i < tabCount; i++) {
         s.setArrayIndex(i);
 
-        Tab *tab = new Tab(d->tabWidget);
-        tab->setVisible(true);
-        connect(tab, SIGNAL(currentPathChanged(QString)), d, SLOT(onPathChanged(QString)));
-        connect(tab, SIGNAL(displayNameChanged(QString)), d, SLOT(onDisplayNameChanged(QString)));
-        d->tabWidget->addTab(tab, "tab");
+        Tab *tab = d->addTab();
         tab->restoreSession(s);
     }
     s.endArray();
@@ -198,10 +206,8 @@ void MainWindow::newTab()
 {
     Q_D(MainWindow);
 
-    Tab *tab = new Tab(d->tabWidget);
-    connect(tab, SIGNAL(currentPathChanged(QString)), d->lineEdit, SLOT(setText(QString)));
-    connect(tab, SIGNAL(displayNameChanged(QString)), d, SLOT(onDisplayNameChanged(QString)));
-    int index = d->tabWidget->addTab(tab, "tab");
+    int index = -1;
+    Tab *tab = d->addTab(&index);
     tab->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
     d->tabWidget->setCurrentIndex(index);
 }
