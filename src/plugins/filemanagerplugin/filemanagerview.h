@@ -26,6 +26,10 @@ public:
 
     CorePlugin::HistoryItem currentItem() const;
 
+    QIcon icon() const;
+    QString title() const;
+    QString windowTitle() const;
+
 private slots:
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);

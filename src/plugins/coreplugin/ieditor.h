@@ -24,6 +24,10 @@ public:
     virtual HistoryItem currentItem() const = 0;
     QString currentPath() const;
 
+    virtual QIcon icon() const { return QIcon(); }
+    virtual QString title() const { return QString(); }
+    virtual QString windowTitle() const { return QString(); }
+
     void restoreSession(const QSettings &s);
     void saveSession(QSettings &s);
 
@@ -33,6 +37,7 @@ signals:
     void openRequested(const QString &path);
     void pathChanged(const QString &);
     void currentItemChanged();
+    void changed();
 };
 
 } // namespace CorePlugin

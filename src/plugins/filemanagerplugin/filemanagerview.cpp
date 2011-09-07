@@ -3,6 +3,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
+#include <QtGui/QFileIconProvider>
 
 #include <actionmanager.h>
 #include <command.h>
@@ -119,6 +120,24 @@ CorePlugin::HistoryItem FileManagerView::currentItem() const
     return m_widget->history()->currentItem();
 }
 
+QIcon FileManagerView::icon() const
+{
+    return QFileIconProvider().icon(QFileInfo(currentPath()));
+}
+
+QString FileManagerPlugin::FileManagerView::title() const
+{
+    QFileInfo fi(currentPath());
+    if (fi.exists())
+        return fi.fileName();
+    return QString();
+}
+
+QString FileManagerView::windowTitle() const
+{
+    return title();
+}
+
 void FileManagerView::setDualPaneModeEnabled(bool on)
 {
     QSettings settings;
@@ -153,3 +172,4 @@ IView * FileManagerFactory::createView()
 {
     return new FileManagerView(this);
 }
+

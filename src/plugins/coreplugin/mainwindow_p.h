@@ -61,7 +61,7 @@ public:
 public slots:
     void onTextEntered(const QString &);
     void onPathChanged(const QString &);
-    void onDisplayNameChanged(const QString &);
+    void onChanged();
 };
 
 } // namespace CorePlugin

@@ -26,7 +26,7 @@ Tab * MainWindowPrivate::addTab(int *index)
 {
     Tab *tab = new Tab(tabWidget);
     connect(tab, SIGNAL(currentPathChanged(QString)), SLOT(onPathChanged(QString)));
-    connect(tab, SIGNAL(displayNameChanged(QString)), SLOT(onDisplayNameChanged(QString)));
+    connect(tab, SIGNAL(changed()), SLOT(onChanged()));
     int i = tabWidget->addTab(tab, "tab");
     if (index)
         *index = i;
@@ -55,14 +55,17 @@ void MainWindowPrivate::onPathChanged(const QString &s)
         lineEdit->setText(s);
 }
 
-void MainWindowPrivate::onDisplayNameChanged(const QString &name)
+void MainWindowPrivate::onChanged()
 {
     Tab *tab = qobject_cast<Tab *>(sender());
     if (!tab)
         return;
 
     int index = tabWidget->indexOf(tab);
-    tabWidget->setTabText(index, name);
+    tabWidget->setTabText(index, tab->title());
+
+    q_func()->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
+    q_func()->setWindowIcon(tab->icon());
 }
 
 MainWindow::MainWindow(QWidget *parent) :
