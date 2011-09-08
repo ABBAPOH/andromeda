@@ -11,6 +11,8 @@ namespace FileManagerPlugin {
 class FileCopyDialogPrivate: public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PUBLIC(FileCopyDialog)
+
 public:
     FileCopyDialogPrivate(FileCopyDialog *qq) : QObject(), q_ptr(qq) {}
     void addWidget(QWidget *widget);
