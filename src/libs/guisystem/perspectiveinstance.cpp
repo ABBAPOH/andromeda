@@ -79,6 +79,11 @@ PerspectiveInstance::PerspectiveInstance(PerspectiveInstance *parent) :
 
 PerspectiveInstance::~PerspectiveInstance()
 {
+    QList<IView*> viewList = views();
+    foreach (IView* view, viewList) {
+        view->shutdown();
+    }
+    qDeleteAll(viewList);
     delete d_ptr;
 }
 
