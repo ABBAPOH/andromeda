@@ -227,7 +227,7 @@ void MainWindow::closeTab(int index)
     if (index == -1)
         index = d->tabWidget->currentIndex();
     QWidget *widget = d->tabWidget->widget(index);
-    d->tabWidget->currentWidget()->hide();
+    widget->hide();
     d->tabWidget->removeTab(index);
     widget->deleteLater();
 }
