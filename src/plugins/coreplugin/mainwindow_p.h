@@ -53,10 +53,16 @@ public:
     EnteredLineEdit *lineEdit;
     QToolBar *toolBar;
     QTabWidget *tabWidget;
+    QAction *backAction;
+    QAction *forwardAction;
+    QAction *upAction;
 
     Tab *addTab(int *index = 0);
     int currentIndex() const;
     CorePlugin::Tab *currentTab() const;
+    void setupActions();
+    void setupToolBar();
+    void setupUi();
 
 public slots:
     void onTextEntered(const QString &);
