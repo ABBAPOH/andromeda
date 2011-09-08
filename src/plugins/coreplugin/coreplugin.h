@@ -26,6 +26,9 @@ public slots:
 
     void quit();
 
+    void about();
+    void aboutQt();
+
 private:
     void createActions();
 

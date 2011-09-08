@@ -5,6 +5,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
 #include <QtGui/QMenu>
+#include <QtGui/QMessageBox>
 
 #include "constants.h"
 #include "core.h"
@@ -114,6 +115,16 @@ void CorePluginImpl::quit()
     saveSession();
     QMetaObject::invokeMethod(PluginManager::instance(), "unloadPlugins", Qt::QueuedConnection);
     QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
+}
+
+void CorePluginImpl::about()
+{
+    QMessageBox::about(0, tr("About Andromeda"), tr("Crossplatform file manager."));
+}
+
+void CorePluginImpl::aboutQt()
+{
+    QMessageBox::aboutQt(0);
 }
 
 void CorePluginImpl::createActions()
@@ -304,10 +315,26 @@ void CorePluginImpl::createActions()
 
     Command *pluginsCommand = new Command(Constants::Ids::Actions::Plugins, this);
     pluginsCommand->setDefaultText(tr("Plugins..."));
-//    pluginsCommand->setAlwaysEnabled(true);
     pluginsCommand->setContext(Command::ApplicationCommand);
     connect(pluginsCommand->action(), SIGNAL(triggered()), SLOT(showPluginView()));
     toolsContainer->addCommand(pluginsCommand);
+
+    // ================ Help Menu ================
+    CommandContainer *helpContainer = new CommandContainer(Constants::Ids::Menus::Help, this);
+    helpContainer->setTitle(tr("Help"));
+    menuBarContainer->addContainer(helpContainer);
+
+    Command *aboutCommand = new Command(Constants::Ids::Actions::Plugins, this);
+    aboutCommand->setDefaultText(tr("About..."));
+    aboutCommand->setContext(Command::ApplicationCommand);
+    connect(aboutCommand->action(), SIGNAL(triggered()), SLOT(about()));
+    helpContainer->addCommand(aboutCommand);
+
+    Command *aboutQtCommand = new Command(Constants::Ids::Actions::Plugins, this);
+    aboutQtCommand->setDefaultText(tr("About Qt..."));
+    aboutQtCommand->setContext(Command::ApplicationCommand);
+    connect(aboutQtCommand->action(), SIGNAL(triggered()), SLOT(aboutQt()));
+    helpContainer->addCommand(aboutQtCommand);
 }
 
 bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
@@ -326,3 +353,4 @@ bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)
+
