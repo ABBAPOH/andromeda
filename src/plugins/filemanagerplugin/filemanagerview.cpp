@@ -132,7 +132,11 @@ QIcon FileManagerView::icon() const
 
 QString FileManagerPlugin::FileManagerView::title() const
 {
-    QFileInfo fi(currentPath());
+    QString path = currentPath();
+    if (path.endsWith(QLatin1Char('/')))
+        path = path.left(path.length() - 1);
+
+    QFileInfo fi(path);
     if (fi.exists())
         return fi.fileName();
     return QString();
@@ -177,4 +181,3 @@ IView * FileManagerFactory::createView()
 {
     return new FileManagerView(this);
 }
-
