@@ -36,6 +36,7 @@ public:
     QString currentPath() const;
 
     bool dualPaneModeEnabled() const;
+    FileManagerWidget::ViewMode viewMode() const;
 
 signals:
     void activePaneChanged(Pane pane);
