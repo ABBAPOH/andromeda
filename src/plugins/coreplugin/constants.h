@@ -14,6 +14,7 @@ const char * const Edit = "Menus.Edit";
 const char * const View = "Menus.View";
 const char * const GoTo = "Menus.GoTo";
 const char * const Tools = "Menus.Tools";
+const char * const Help = "Menus.Help";
 
 } // namespace Menus
 
