@@ -61,6 +61,7 @@ public:
 public slots:
     void onTextEntered(const QString &);
     void onPathChanged(const QString &);
+    void onCurrentChanged(int);
     void onChanged();
 };
 

@@ -1,5 +1,5 @@
-BUG-1 [Open] Path it addresbar is not chaged when closing tab.
-BUG-2 [Open] Focus is not passed to old editor when closing tab.
+BUG-1 [Closed] Path it addresbar is not chaged when closing tab.
+BUG-2 [Closed] Focus is not passed to old editor when closing tab.
 BUG-3 [Closed] When closing not active tab, active tab disappeared.
 BUG-4 [Closed] If file info has / at end of path, tab has empty name.
 BUG-5 [Open] Sometimes checkable actions can't be checked (maybe followed by BUG-3).

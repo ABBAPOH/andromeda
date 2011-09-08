@@ -55,6 +55,15 @@ void MainWindowPrivate::onPathChanged(const QString &s)
         lineEdit->setText(s);
 }
 
+void MainWindowPrivate::onCurrentChanged(int index)
+{
+    Tab *tab = qobject_cast<Tab *>(tabWidget->widget(index));
+    if (!tab)
+        return;
+
+    lineEdit->setText(tab->currentPath());
+}
+
 void MainWindowPrivate::onChanged()
 {
     Tab *tab = qobject_cast<Tab *>(sender());
@@ -78,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     d->tabWidget->setDocumentMode(true);
     d->tabWidget->setTabsClosable(true);
     setCentralWidget(d->tabWidget);
+    connect(d->tabWidget, SIGNAL(currentChanged(int)), d, SLOT(onCurrentChanged(int)));
 
     d->lineEdit = new EnteredLineEdit(this);
     d->lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -224,10 +234,14 @@ void MainWindow::closeTab(int index)
         return;
     }
 
-    if (index == -1)
+    if (index == -1) {
         index = d->tabWidget->currentIndex();
+    }
+
+    if (index == d->tabWidget->currentIndex())
+        d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1); // switch to other tab before closing to prevent losing focus
+
     QWidget *widget = d->tabWidget->widget(index);
-    widget->hide();
     d->tabWidget->removeTab(index);
     widget->deleteLater();
 }
