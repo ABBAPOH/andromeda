@@ -32,14 +32,17 @@ void FileManagerWidgetPrivate::initViews()
     QTreeView *tableView = new QTreeView(q);
     QTreeView *treeView = new QTreeView(q);
 
-//    iconView->setGridSize(QSize(150, 100));
+    iconView->setLayoutDirection(Qt::LeftToRight);
+    iconView->setViewMode(QListView::IconMode);
     iconView->setGridSize(QSize(100, 100));
     iconView->setWordWrap(true);
-    iconView->setViewMode(QListView::IconMode);
     iconView->setFlow(QListView::LeftToRight);
-    iconView->setMovement(QListView::Snap);
-//    iconView->setMovement(QListView::Static);
+
     iconView->setResizeMode(QListView::Adjust);
+    iconView->setMovement(QListView::Static);
+    iconView->setDragEnabled(true);
+    iconView->viewport()->setAcceptDrops(true);
+    iconView->setMouseTracking(true);
 
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setRootIsDecorated(false);
@@ -59,6 +62,7 @@ void FileManagerWidgetPrivate::initViews()
         views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         views[i]->setAcceptDrops(true);
         views[i]->setEditTriggers(QAbstractItemView::SelectedClicked);
+//        QAbstractItemView::InternalMove
         layout->addWidget(views[i]);
 //        views[i]->setDragEnabled(true);
         connect(views[i], SIGNAL(doubleClicked(QModelIndex)),
