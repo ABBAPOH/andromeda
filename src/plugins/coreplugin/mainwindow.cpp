@@ -44,6 +44,99 @@ CorePlugin::Tab * MainWindowPrivate::currentTab() const
     return qobject_cast<CorePlugin::Tab *>(tabWidget->currentWidget());
 }
 
+void MainWindowPrivate::setupActions()
+{
+    Q_Q(MainWindow);
+
+    ActionManager *actionManager = ActionManager::instance();
+
+    // LineEdit
+    actionManager->command(Constants::Ids::Actions::Undo)->action(lineEdit, SLOT(undo()));
+    actionManager->command(Constants::Ids::Actions::Redo)->action(lineEdit, SLOT(redo()));
+
+    QAction *a = new QAction(this);
+    a->setSeparator(true);
+    lineEdit->addAction(a);
+
+    actionManager->command(Constants::Ids::Actions::Cut)->action(lineEdit, SLOT(cut()));
+    actionManager->command(Constants::Ids::Actions::Copy)->action(lineEdit, SLOT(copy()));
+    actionManager->command(Constants::Ids::Actions::Paste)->action(lineEdit, SLOT(paste()));
+    actionManager->command(Constants::Ids::Actions::SelectAll)->action(lineEdit, SLOT(selectAll()));
+
+    // ToolBar
+    backAction = actionManager->command(Constants::Ids::Actions::Back)->action(this);
+    backAction->setIcon(QIcon(":/images/icons/back.png"));
+    connect(backAction, SIGNAL(triggered()), q, SLOT(back()));
+    q->addAction(backAction);
+
+    forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action(this);
+    forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
+    connect(forwardAction, SIGNAL(triggered()), q, SLOT(forward()));
+    q->addAction(forwardAction);
+
+    upAction = actionManager->command(Constants::Ids::Actions::Up)->commandAction();
+
+    // GoTo menu
+    CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
+    QSignalMapper *gotoMapper = new QSignalMapper(this);
+    foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::Locations)) {
+        QAction *action = cmd->action();
+        gotoMapper->setMapping(action, cmd->data().toString());
+        connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
+        action->setParent(this);
+        q->addAction(action);
+    }
+    connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(onTextEntered(QString)));
+}
+
+void MainWindowPrivate::setupToolBar()
+{
+    Q_Q(MainWindow);
+
+    toolBar = new QToolBar(q);
+
+    toolBar->addAction(backAction);
+    toolBar->addAction(forwardAction);
+    toolBar->addAction(upAction);
+
+    toolBar->addSeparator();
+    toolBar->addWidget(lineEdit);
+
+    q->addToolBar(toolBar);
+    q->setUnifiedTitleAndToolBarOnMac(true);
+}
+
+void MainWindowPrivate::setupUi()
+{
+    Q_Q(MainWindow);
+
+    tabWidget = new MyTabWidget;
+    tabWidget->setDocumentMode(true);
+    tabWidget->setTabsClosable(true);
+    q->setCentralWidget(tabWidget);
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onCurrentChanged(int)));
+    connect(tabWidget, SIGNAL(tabCloseRequested(int)), q, SLOT(closeTab(int)));
+    connect(tabWidget, SIGNAL(tabBarDoubleClicked()), q, SLOT(newTab()));
+
+    lineEdit = new EnteredLineEdit(q);
+    lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
+    connect(lineEdit, SIGNAL(textEntered(QString)), this, SLOT(onTextEntered(QString)));
+
+// ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
+// This is an example how to use completers to help directory listing.
+// I'm not sure if it shouldn't be a part of plugins (standalone for web...)
+// TODO/FIXME: QFileSystemModel is probably broken for qcompleter so the obsolete
+//             QDirModel is used here.
+//    QFileSystemModel * dirModel = new QFileSystemModel(this);
+    QDirModel *dirModel = new QDirModel(this);
+//    dirModel->setRootPath(QDir::rootPath());
+    QCompleter *completer = new QCompleter(dirModel, lineEdit);
+    completer->setCompletionMode(QCompleter::InlineCompletion);
+    lineEdit->setCompleter(completer);
+
+    q->resize(800, 600);
+}
+
 void MainWindowPrivate::onTextEntered(const QString &path)
 {
     currentTab()->setCurrentPath(path);
@@ -66,6 +159,8 @@ void MainWindowPrivate::onCurrentChanged(int index)
 
 void MainWindowPrivate::onChanged()
 {
+    Q_Q(MainWindow);
+
     Tab *tab = qobject_cast<Tab *>(sender());
     if (!tab)
         return;
@@ -73,8 +168,8 @@ void MainWindowPrivate::onChanged()
     int index = tabWidget->indexOf(tab);
     tabWidget->setTabText(index, tab->title());
 
-    q_func()->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
-    q_func()->setWindowIcon(tab->icon());
+    q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
+    q->setWindowIcon(tab->icon());
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -83,78 +178,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     Q_D(MainWindow);
 
-    d->tabWidget = new MyTabWidget;
-    d->tabWidget->setDocumentMode(true);
-    d->tabWidget->setTabsClosable(true);
-    setCentralWidget(d->tabWidget);
-    connect(d->tabWidget, SIGNAL(currentChanged(int)), d, SLOT(onCurrentChanged(int)));
+    d->setupUi();
+    d->setupActions();
+    d->setupToolBar();
 
-    d->lineEdit = new EnteredLineEdit(this);
-    d->lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
-
-// ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
-    // This is an example how to use completers to help directory listing.
-    // I'm not sure if it shouldn't be a part of plugins (standalone for web...)
-    // TODO/FIXME: QFileSystemModel is probably broken for qcompleter so the obsolete
-    //             QDirModel is used here.
-//    QFileSystemModel * dirModel = new QFileSystemModel(this);
-    QDirModel *dirModel = new QDirModel(this);
-//    dirModel->setRootPath(QDir::rootPath());
-    QCompleter *completer = new QCompleter(dirModel, d->lineEdit);
-    completer->setCompletionMode(QCompleter::InlineCompletion);
-    d->lineEdit->setCompleter(completer);
-
-    ActionManager *actionManager = ActionManager::instance();
-    actionManager->command(Constants::Ids::Actions::Undo)->action(d->lineEdit, SLOT(undo()));
-    actionManager->command(Constants::Ids::Actions::Redo)->action(d->lineEdit, SLOT(redo()));
-    QAction *a = new QAction(this);
-    a->setSeparator(true);
-    d->lineEdit->addAction(a);
-    actionManager->command(Constants::Ids::Actions::Cut)->action(d->lineEdit, SLOT(cut()));
-    actionManager->command(Constants::Ids::Actions::Copy)->action(d->lineEdit, SLOT(copy()));
-    actionManager->command(Constants::Ids::Actions::Paste)->action(d->lineEdit, SLOT(paste()));
-    actionManager->command(Constants::Ids::Actions::SelectAll)->action(d->lineEdit, SLOT(selectAll()));
-
-    d->toolBar = new QToolBar(this);
-
-    QAction *backAction = actionManager->command(Constants::Ids::Actions::Back)->action(this);
-    backAction->setIcon(QIcon(":/images/icons/back.png"));
-    addAction(backAction);
-
-    QAction *forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action(this);
-    forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
-    addAction(forwardAction);
-
-    d->toolBar->addAction(backAction);
-    d->toolBar->addAction(forwardAction);
-    d->toolBar->addAction(actionManager->command(Constants::Ids::Actions::Up)->commandAction());
-
-    CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
-    QSignalMapper *gotoMapper = new QSignalMapper(this);
-    foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::Locations)) {
-        QAction *action = cmd->action();
-        gotoMapper->setMapping(action, cmd->data().toString());
-        connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
-        action->setParent(this);
-        addAction(action);
-    }
-    connect(gotoMapper, SIGNAL(mapped(QString)), d, SLOT(onTextEntered(QString)));
-
-    d->toolBar->addSeparator();
-    d->toolBar->addWidget(d->lineEdit);
-
-    addToolBar(d->toolBar);
-    setUnifiedTitleAndToolBarOnMac(true);
-
-    setMenuBar(actionManager->container(Constants::Ids::Menus::MenuBar)->menuBar());
-
-    connect(d->lineEdit, SIGNAL(textEntered(QString)), d, SLOT(onTextEntered(QString)));
-    connect(d->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
-    connect(d->tabWidget, SIGNAL(tabBarDoubleClicked()), SLOT(newTab()));
-    connect(backAction, SIGNAL(triggered()), SLOT(back()));
-    connect(forwardAction, SIGNAL(triggered()), SLOT(forward()));
-
-    resize(800, 600);
+    setMenuBar(ActionManager::instance()->container(Constants::Ids::Menus::MenuBar)->menuBar());
 }
 
 MainWindow::~MainWindow()
