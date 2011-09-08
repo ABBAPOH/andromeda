@@ -147,6 +147,20 @@ QString FileManagerView::windowTitle() const
     return title();
 }
 
+void FileManagerView::restoreSession(const QSettings &s)
+{
+    m_widget->setViewMode((FileManagerWidget::ViewMode)s.value(QLatin1String("viewMode")).toInt());
+    m_widget->setDualPaneModeEnabled(s.value(QLatin1String("dualPaneModeEnabled")).toBool());
+    IEditor::restoreSession(s);
+}
+
+void FileManagerView::saveSession(QSettings &s)
+{
+    IEditor::saveSession(s);
+    s.setValue(QLatin1String("viewMode"), (int)m_widget->viewMode());
+    s.setValue(QLatin1String("dualPaneModeEnabled"), m_widget->dualPaneModeEnabled());
+}
+
 void FileManagerView::setDualPaneModeEnabled(bool on)
 {
     QSettings settings;

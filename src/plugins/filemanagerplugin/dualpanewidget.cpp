@@ -122,16 +122,6 @@ void DualPaneWidget::setCurrentPath(const QString &path)
         d->panes[RightPane]->setCurrentPath(path);
 }
 
-void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
-{
-    Q_D(DualPaneWidget);
-
-    d->viewMode = mode;
-    if (!d->dualPaneModeEnabled) {
-        d->panes[LeftPane]->setViewMode(mode);
-    }
-}
-
 bool DualPaneWidget::dualPaneModeEnabled() const
 {
     return d_func()->dualPaneModeEnabled;
@@ -151,6 +141,21 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
         d->panes[RightPane]->hide();
         d->panes[LeftPane]->setViewMode(d->viewMode);
         setActivePane(LeftPane);
+    }
+}
+
+FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
+{
+    return d_func()->viewMode;
+}
+
+void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
+{
+    Q_D(DualPaneWidget);
+
+    d->viewMode = mode;
+    if (!d->dualPaneModeEnabled) {
+        d->panes[LeftPane]->setViewMode(mode);
     }
 }
 

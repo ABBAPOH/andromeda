@@ -32,6 +32,9 @@ public:
     QString title() const;
     QString windowTitle() const;
 
+    void restoreSession(const QSettings &s);
+    void saveSession(QSettings &s);
+
 private slots:
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
