@@ -150,7 +150,7 @@ void CorePluginImpl::createActions()
 #else
     openCommand->setDefaultShortcut(tr("Return"));
 #endif
-    openCommand->setContext(Command::WindowCommand);
+    openCommand->setContext(Command::WidgetCommand);
     fileContainer->addCommand(openCommand, group);
 
     Command *closeTabCommand = new Command(Constants::Ids::Actions::CloseTab, this);
