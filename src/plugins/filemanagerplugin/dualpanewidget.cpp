@@ -271,14 +271,14 @@ bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
             d->activePane = LeftPane;
             swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
             emit activePaneChanged(d->activePane);
+            emit currentPathChanged(activeWidget()->currentPath());
         }
         if (watched == d->panes[RightPane] && d->activePane != RightPane) {
             d->activePane = RightPane;
             swapPalettes(d->panes[RightPane], d->panes[LeftPane]);
             emit activePaneChanged(d->activePane);
+            emit currentPathChanged(activeWidget()->currentPath());
         }
-
-        emit currentPathChanged(activeWidget()->currentPath());
     }
 
     return false;
