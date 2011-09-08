@@ -1,0 +1,11 @@
+BUG-1 [Open] Path it addresbar is not chaged when closing tab.
+BUG-2 [Open] Focus is not passed to old editor when closing tab.
+BUG-3 [Open] When closing not active tab, active tab disappeared.
+BUG-4 [Open] If file info has / at end of path, tab has empty name.
+BUG-5 [Open] Sometimes checkable actions can't be checked (maybe followed by BUG-3).
+BUG-6 [Open] Restore view mode with session.
+BUG-7 [Open] Remove hotkey for win/lin.
+BUG-8 [Open] Selection sometimes can't be cleared in icon mode.
+BUG-9 [Open] Different menus when files are selected and not selected in views.
+BUG-10 [Open] Duplicate item in history after right click
+BUG-11 [Open] File renaming can't be confirmed by 'return'
