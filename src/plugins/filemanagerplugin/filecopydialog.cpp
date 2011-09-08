@@ -92,7 +92,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
     QFileInfo destInfo(copier->destinationFilePath(id));
 
     if (error == QFileCopier::DestinationExists) {
-        FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog();
+        FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog(q_func());
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setIcon(QFileIconProvider().icon(destInfo));
         dialog->setMessage(tr("%1 \"%2\" is already exists. Would you like to replace it?").
@@ -105,6 +105,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         connect(dialog, SIGNAL(skip()), copier, SLOT(skip()));
         connect(dialog, SIGNAL(skipAll()), copier, SLOT(skipAll()));
 
+        dialog->setWindowModality(Qt::WindowModal);
         dialog->show();
     } else if (error == QFileCopier::DestinationAndSourceEqual) {
         copier->rename();
@@ -113,7 +114,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         int enumIndex = metaObject->indexOfEnumerator("Error");
         QMetaEnum metaEnum = metaObject->enumerator(enumIndex);
 
-        FileCopyErrorDialog *dialog = new FileCopyErrorDialog();
+        FileCopyErrorDialog *dialog = new FileCopyErrorDialog(q_func());
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setIcon(QFileIconProvider().icon(destInfo));
         dialog->setMessage(tr("Error occured for %1 \"%2\": %3").
@@ -124,6 +125,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         connect(dialog, SIGNAL(abort()), copier, SLOT(cancelAll()));
         connect(dialog, SIGNAL(ignore()), copier, SLOT(skip()));
         connect(dialog, SIGNAL(retry()), copier, SLOT(retry()));
+        dialog->setWindowModality(Qt::WindowModal);
 
         dialog->show();
     }
