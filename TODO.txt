@@ -1,35 +1,23 @@
 // TODO alpha
 Extension System:
 - Maybe plugin downloading from server
-- Spec editing utility
-- Spec binary format
 - Make PluginManager non-static
 - List for dependencies, not text
 - Extendable description/licence in plugin info
 - Do not use focus on widgets in plugin info
+- Restart plugins when dependencies are resolved
 
 Guisystem:
-- Store view's sessions
 - Implement different options (ie hidden by default, etc)
 
 Coreplugin:
-- Help menu (About, About Qt, Help)
-- Unload factories and their views
-- Delete views and widgets with Perspecive instance (if not implemented)
 - Clone tabs
 - History preview on long press on back/forward; in GoTo menu
 
 IO:
-- QFileCopier
 - QMimeType
 
 FilemanagerPlugin:
-- Action to hide navigation widget
-- Actions to select view mode (icon, column, tree)
-- Actions for dual pane mode (copy, move, etc)
-- Action to rename files
-- Disable 'Paste' action if clipboard is empty
-- Action to hide/show hidden files
 - Text and paddings sizes for IconView
 - Column view bigger (resisable) column size
 - Store inner path for ColumnView in history
@@ -37,11 +25,8 @@ FilemanagerPlugin:
 - Add preview to column view
 - Do not show empty network folder
 - Same elements in history with treeview and clicks (switching views add new element to history)
-- Reverse selection in FMWidget
 
 App
-- Icon on windows
-- Desktop + icon files on linux
 - Translations
 - License
 
