@@ -178,7 +178,12 @@ void CorePluginImpl::createActions()
 
     Command *removeCommand = new Command(Constants::Ids::Actions::Remove, this);
     removeCommand->setDefaultText(tr("Remove"));
+#ifdef Q_OS_MAC
     removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
+#else
+    removeCommand->setDefaultShortcut(tr("Shift+Del"));
+#endif
+
     fileContainer->addCommand(removeCommand, group);
 
 //#ifndef Q_OS_MAC
