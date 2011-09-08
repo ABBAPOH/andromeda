@@ -175,6 +175,7 @@ void FileManagerWidget::setCurrentPath(const QString &path)
         d->currentPath = path;
         QModelIndex index = d->model->index(path);
         if (d->model->isDir(index)) {
+            d->currentView->selectionModel()->clear(); // to prevent bug with selecting dir we enter in
             d->currentView->setRootIndex(index);
 
             CorePlugin::HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
