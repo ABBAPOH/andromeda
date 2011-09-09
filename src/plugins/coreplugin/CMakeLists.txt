@@ -12,9 +12,10 @@ set( HEADERS
     mainwindow.h
     mainwindow_p.h
     perspectivemanager.h
-    tab.h
     settingsdialog.h
     settingsdialog_p.h
+    tab.h
+    tabbar.h
    )
 set( SOURCES
     core.cpp
@@ -25,8 +26,9 @@ set( SOURCES
     ioptionspage.cpp
     mainwindow.cpp
     perspectivemanager.cpp
-    tab.cpp
     settingsdialog.cpp
+    tab.cpp
+    tabbar.cpp
    )
 set( FORMS
    )
