@@ -112,6 +112,8 @@ protected:
     PluginSpecPrivate *d_ptr;
 };
 
+typedef QList<PluginSpec*> PluginSpecList;
+
 } // namespace ExtensionSystem
 
 #endif // PLUGINSPEC_H
