@@ -44,7 +44,6 @@ PluginManager::~PluginManager()
 {
     Q_D(PluginManager);
     unloadPlugins();
-    qDeleteAll(d->pluginSpecs);
 }
 
 /*!
