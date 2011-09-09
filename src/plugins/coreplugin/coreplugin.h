@@ -34,9 +34,6 @@ private:
 
 protected:
     bool eventFilter(QObject *, QEvent *);
-
-private:
-    QList<CorePlugin::MainWindow *> m_windows;
 };
 
 #endif // COREPLUGIN_H

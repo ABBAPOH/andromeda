@@ -1,9 +1,9 @@
 #include "coreplugin.h"
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
+#include <QtGui/QApplication>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
 
@@ -59,7 +59,6 @@ void CorePluginImpl::newWindow()
     ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
     window->show();
     addObject(window);
-    m_windows.append(window);
 }
 
 void CorePluginImpl::showPluginView()
@@ -91,7 +90,6 @@ void CorePluginImpl::restoreSession()
         ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
         window->show();
         addObject(window);
-        m_windows.append(window);
     }
     s.endArray();
 }
@@ -100,12 +98,18 @@ void CorePluginImpl::saveSession()
 {
     QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
     s.clear();
-    int windowCount = m_windows.count();
+    QList<MainWindow*> windows;
+    foreach (QWidget *widget, qApp->topLevelWidgets()) {
+        MainWindow* window = qobject_cast<MainWindow*>(widget);
+        if (window)
+            windows.append(window);
+    }
+    int windowCount = windows.count();
 
     s.beginWriteArray(QLatin1String("windows"), windowCount);
     for (int i = 0; i < windowCount; i++) {
         s.setArrayIndex(i);
-        m_windows[i]->saveSession(s);
+        windows[i]->saveSession(s);
     }
     s.endArray();
 }
@@ -343,7 +347,6 @@ bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
         if (e->type() == QEvent::Close) {
             MainWindow *w = qobject_cast<MainWindow *>(o);
             if (w) {
-                m_windows.removeAll(w);
                 removeObject(w);
                 w->deleteLater();
             }
