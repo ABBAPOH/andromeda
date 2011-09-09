@@ -28,7 +28,7 @@ public:
 
     Perspective *perspective() const;
     void openPerspective(const QString &perspective);
-    void closePerspective(const QString &perspective);
+    void closePerspective();
 
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
