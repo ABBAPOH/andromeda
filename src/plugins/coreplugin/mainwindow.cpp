@@ -35,16 +35,6 @@ Tab * MainWindowPrivate::addTab(int *index)
     return tab;
 }
 
-int MainWindowPrivate::currentIndex() const
-{
-    return tabWidget->currentIndex();
-}
-
-CorePlugin::Tab * MainWindowPrivate::currentTab() const
-{
-    return qobject_cast<CorePlugin::Tab *>(tabWidget->currentWidget());
-}
-
 void MainWindowPrivate::setupActions()
 {
     Q_Q(MainWindow);
@@ -144,7 +134,9 @@ void MainWindowPrivate::setupUi()
 
 void MainWindowPrivate::onPathChanged(const QString &s)
 {
-    if (sender() == currentTab())
+    Q_Q(MainWindow);
+
+    if (sender() == q->currentTab())
         lineEdit->setText(s);
 }
 
@@ -189,6 +181,21 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete d_ptr;
+}
+
+int MainWindow::currentIndex() const
+{
+    return d_func()->tabWidget->currentIndex();
+}
+
+Tab * MainWindow::currentTab() const
+{
+    return qobject_cast<CorePlugin::Tab *>(d_func()->tabWidget->currentWidget());
+}
+
+int MainWindow::count() const
+{
+    return d_func()->tabWidget->count();
 }
 
 void MainWindow::restoreSession(QSettings &s)
@@ -247,12 +254,12 @@ QList<MainWindow *> MainWindow::windows()
 
 void MainWindow::back()
 {
-    d_func()->currentTab()->history()->back();
+    currentTab()->history()->back();
 }
 
 void MainWindow::forward()
 {
-    d_func()->currentTab()->history()->forward();
+    currentTab()->history()->forward();
 }
 
 void MainWindow::open(const QString &path)
@@ -262,7 +269,7 @@ void MainWindow::open(const QString &path)
     if (d->tabWidget->count() == 0)
         openNewTab(path);
     else
-        d->currentTab()->open(path);
+        currentTab()->open(path);
 }
 
 void MainWindow::openNewTab(const QString &path)
@@ -312,3 +319,4 @@ void MainWindow::closeTab(int index)
     d->tabWidget->removeTab(index);
     widget->deleteLater();
 }
+
