@@ -23,7 +23,12 @@ public slots:
     void back();
     void forward();
 
+    void open(const QString &path);
+    void openNewTab(const QString &path);
+    static void openNewWindow(const QString &path);
+
     void newTab();
+    static void newWindow();
     void closeTab(int index = -1);
 
 protected:
