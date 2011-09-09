@@ -46,13 +46,7 @@ bool CorePluginImpl::initialize()
 
 void CorePluginImpl::shutdown()
 {
-    QList<MainWindow*> windows;
-    foreach (QWidget *widget, qApp->topLevelWidgets()) {
-        MainWindow* window = qobject_cast<MainWindow*>(widget);
-        if (window)
-            windows.append(window);
-    }
-    qDeleteAll(windows);
+    qDeleteAll(MainWindow::windows());
 }
 
 void CorePluginImpl::newWindow()
@@ -94,12 +88,7 @@ void CorePluginImpl::saveSession()
 {
     QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
     s.clear();
-    QList<MainWindow*> windows;
-    foreach (QWidget *widget, qApp->topLevelWidgets()) {
-        MainWindow* window = qobject_cast<MainWindow*>(widget);
-        if (window)
-            windows.append(window);
-    }
+    QList<MainWindow*> windows = MainWindow::windows();
     int windowCount = windows.count();
 
     s.beginWriteArray(QLatin1String("windows"), windowCount);

@@ -19,6 +19,8 @@ public:
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
 
+    static QList<MainWindow*> windows();
+
 public slots:
     void back();
     void forward();
