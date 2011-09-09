@@ -7,6 +7,8 @@ class QSettings;
 
 namespace CorePlugin {
 
+class Tab;
+
 class MainWindowPrivate;
 class MainWindow : public QMainWindow
 {
@@ -15,6 +17,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    int currentIndex() const;
+    Tab *currentTab() const;
+    int count() const;
 
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
