@@ -5,6 +5,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
+#include <QtGui/QApplication>
 #include <QtGui/QDesktopServices>
 
 //#include <QtGui/QFileSystemModel>
@@ -231,6 +232,17 @@ void MainWindow::saveSession(QSettings &s)
         tab->saveSession(s);
     }
     s.endArray();
+}
+
+QList<MainWindow *> MainWindow::windows()
+{
+    QList<MainWindow*> result;
+    foreach (QWidget *widget, qApp->topLevelWidgets()) {
+        MainWindow* window = qobject_cast<MainWindow*>(widget);
+        if (window)
+            result.append(window);
+    }
+    return result;
 }
 
 void MainWindow::back()
