@@ -338,19 +338,4 @@ void CorePluginImpl::createActions()
     helpContainer->addCommand(aboutQtCommand);
 }
 
-bool CorePluginImpl::eventFilter(QObject *o, QEvent *e)
-{
-    if (o->isWidgetType()) {
-        if (e->type() == QEvent::Close) {
-            MainWindow *w = qobject_cast<MainWindow *>(o);
-            if (w) {
-                removeObject(w);
-                w->deleteLater();
-            }
-        }
-    }
-    return false;
-}
-
 Q_EXPORT_PLUGIN(CorePluginImpl)
-
