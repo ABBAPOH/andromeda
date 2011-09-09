@@ -112,6 +112,11 @@ void PerspectiveWidget::openPerspective(const QString &perspective)
     d->layout->setCurrentIndex(index);
 }
 
+void PerspectiveWidget::closePerspective()
+{
+    // todo : impelement
+}
+
 void PerspectiveWidget::restoreSession(QSettings &s)
 {
     QString id = s.value(QLatin1String("perspective")).toString();
