@@ -50,6 +50,9 @@ void MainWindowPrivate::setupActions()
 
     ActionManager *actionManager = ActionManager::instance();
 
+    actionManager->command(Constants::Ids::Actions::NewTab)->action(q, SLOT(newTab()));
+    actionManager->command(Constants::Ids::Actions::CloseTab)->action(q, SLOT(closeTab()));
+
     // LineEdit
     actionManager->command(Constants::Ids::Actions::Undo)->action(lineEdit, SLOT(undo()));
     actionManager->command(Constants::Ids::Actions::Redo)->action(lineEdit, SLOT(redo()));
@@ -86,7 +89,7 @@ void MainWindowPrivate::setupActions()
         action->setParent(this);
         q->addAction(action);
     }
-    connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(onTextEntered(QString)));
+    connect(gotoMapper, SIGNAL(mapped(QString)), q, SLOT(open(QString)));
 }
 
 void MainWindowPrivate::setupToolBar()
@@ -120,7 +123,7 @@ void MainWindowPrivate::setupUi()
 
     lineEdit = new EnteredLineEdit(q);
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
-    connect(lineEdit, SIGNAL(textEntered(QString)), this, SLOT(onTextEntered(QString)));
+    connect(lineEdit, SIGNAL(textEntered(QString)), q, SLOT(open(QString)));
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.
@@ -135,11 +138,6 @@ void MainWindowPrivate::setupUi()
     lineEdit->setCompleter(completer);
 
     q->resize(800, 600);
-}
-
-void MainWindowPrivate::onTextEntered(const QString &path)
-{
-    currentTab()->setCurrentPath(path);
 }
 
 void MainWindowPrivate::onPathChanged(const QString &s)
@@ -243,14 +241,42 @@ void MainWindow::forward()
     d_func()->currentTab()->history()->forward();
 }
 
-void MainWindow::newTab()
+void MainWindow::open(const QString &path)
+{
+    Q_D(MainWindow);
+
+    if (d->tabWidget->count() == 0)
+        openNewTab(path);
+    else
+        d->currentTab()->setCurrentPath(path);
+}
+
+void MainWindow::openNewTab(const QString &path)
 {
     Q_D(MainWindow);
 
     int index = -1;
     Tab *tab = d->addTab(&index);
-    tab->setCurrentPath(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    tab->setCurrentPath(path);
     d->tabWidget->setCurrentIndex(index);
+}
+
+void MainWindow::openNewWindow(const QString &path)
+{
+    MainWindow *window = new MainWindow();
+    window->open(path);
+    window->setAttribute(Qt::WA_DeleteOnClose);
+    window->show();
+}
+
+void MainWindow::newTab()
+{
+    openNewTab(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+}
+
+void MainWindow::newWindow()
+{
+    openNewWindow(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
 }
 
 void MainWindow::closeTab(int index)

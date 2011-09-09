@@ -39,26 +39,25 @@ bool CorePluginImpl::initialize()
     connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
     connect(PluginManager::instance(), SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
 
-    connect(qApp, SIGNAL(lastWindowClosed()), SLOT(quit()));
+    connect(qApp, SIGNAL(lastWindowClosed()), SLOT(quit()), Qt::QueuedConnection);
 
     return true;
 }
 
 void CorePluginImpl::shutdown()
 {
+    QList<MainWindow*> windows;
+    foreach (QWidget *widget, qApp->topLevelWidgets()) {
+        MainWindow* window = qobject_cast<MainWindow*>(widget);
+        if (window)
+            windows.append(window);
+    }
+    qDeleteAll(windows);
 }
 
 void CorePluginImpl::newWindow()
 {
-    MainWindow *window = new MainWindow();
-    window->newTab();
-// TODO: explore why crashes (deletes after coreplugin is unloaded
-//    window->setAttribute(Qt::WA_DeleteOnClose);
-    window->installEventFilter(this);
-    ActionManager::instance()->command(Constants::Ids::Actions::NewTab)->action(window, SLOT(newTab()));
-    ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
-    window->show();
-    addObject(window);
+    MainWindow::newWindow();
 }
 
 void CorePluginImpl::showPluginView()
@@ -83,13 +82,11 @@ void CorePluginImpl::restoreSession()
 
     for (int i = 0; i < windowCount; i++) {
         s.setArrayIndex(i);
+
         MainWindow *window = new MainWindow();
+        window->setAttribute(Qt::WA_DeleteOnClose);
         window->restoreSession(s);
-        window->installEventFilter(this);
-        ActionManager::instance()->command(Constants::Ids::Actions::NewTab)->action(window, SLOT(newTab()));
-        ActionManager::instance()->command(Constants::Ids::Actions::CloseTab)->action(window, SLOT(closeTab()));
         window->show();
-        addObject(window);
     }
     s.endArray();
 }
@@ -117,6 +114,7 @@ void CorePluginImpl::saveSession()
 void CorePluginImpl::quit()
 {
     saveSession();
+
     QMetaObject::invokeMethod(PluginManager::instance(), "unloadPlugins", Qt::QueuedConnection);
     QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
 }
