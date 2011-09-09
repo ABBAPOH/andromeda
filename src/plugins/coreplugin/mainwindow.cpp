@@ -115,6 +115,7 @@ void MainWindowPrivate::setupUi()
 
     tabWidget = new MyTabWidget;
     tabWidget->setDocumentMode(true);
+    tabWidget->setMovable(true);
     tabWidget->setTabsClosable(true);
     q->setCentralWidget(tabWidget);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onCurrentChanged(int)));
