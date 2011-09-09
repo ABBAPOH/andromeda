@@ -42,7 +42,6 @@ PluginManager::PluginManager(QObject *parent) :
 */
 PluginManager::~PluginManager()
 {
-    Q_D(PluginManager);
     unloadPlugins();
 }
 
