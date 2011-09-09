@@ -84,7 +84,6 @@ void CorePluginImpl::restoreSession()
         s.setArrayIndex(i);
 
         MainWindow *window = new MainWindow();
-        window->setAttribute(Qt::WA_DeleteOnClose);
         window->restoreSession(s);
         window->show();
     }
