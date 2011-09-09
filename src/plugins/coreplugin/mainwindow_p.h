@@ -3,6 +3,8 @@
 
 #include "mainwindow.h"
 
+#include "tabbar.h"
+
 #include <QtCore/QEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QTabWidget>
@@ -16,7 +18,10 @@ class MyTabWidget : public QTabWidget
 public:
     MyTabWidget(QWidget *parent = 0) : QTabWidget(parent)
     {
-        tabBar()->installEventFilter(this);
+        TabBar *tabBar = new TabBar;
+        tabBar->setSwitchTabsOnDrag(true);
+        tabBar->installEventFilter(this);
+        setTabBar(tabBar);
     }
 
 signals:
