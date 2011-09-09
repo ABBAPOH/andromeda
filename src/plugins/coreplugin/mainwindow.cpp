@@ -181,6 +181,7 @@ MainWindow::MainWindow(QWidget *parent) :
     d->setupToolBar();
 
     setMenuBar(ActionManager::instance()->container(Constants::Ids::Menus::MenuBar)->menuBar());
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
 MainWindow::~MainWindow()
@@ -265,7 +266,6 @@ void MainWindow::openNewWindow(const QString &path)
 {
     MainWindow *window = new MainWindow();
     window->open(path);
-    window->setAttribute(Qt::WA_DeleteOnClose);
     window->show();
 }
 
