@@ -99,6 +99,10 @@ void PluginManager::unloadPlugins()
     foreach (PluginSpec *spec, d->pluginSpecs) {
         spec->unload();
     }
+
+    qDeleteAll(d->pluginSpecs);
+    d->pluginSpecs.clear();
+
     d->loaded = false;
     emit pluginsUnloaded();
 }
