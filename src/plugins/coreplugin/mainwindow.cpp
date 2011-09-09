@@ -250,7 +250,7 @@ void MainWindow::open(const QString &path)
     if (d->tabWidget->count() == 0)
         openNewTab(path);
     else
-        d->currentTab()->setCurrentPath(path);
+        d->currentTab()->open(path);
 }
 
 void MainWindow::openNewTab(const QString &path)
@@ -259,7 +259,7 @@ void MainWindow::openNewTab(const QString &path)
 
     int index = -1;
     Tab *tab = d->addTab(&index);
-    tab->setCurrentPath(path);
+    tab->open(path);
     d->tabWidget->setCurrentIndex(index);
 }
 

@@ -97,9 +97,9 @@ bool TabPrivate::openPerspective(const QString &path)
         editor = e;
         e->open(path);
         QObject::connect(e, SIGNAL(pathChanged(QString)), q_func(),
-                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+                         SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(e, SIGNAL(openRequested(QString)), q_func(),
-                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+                         SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(e, SIGNAL(changed()), q_func(), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = e->currentItem();
         item.setUserData("perspective", perspective);
@@ -144,7 +144,7 @@ QString Tab::currentPath() const
     return d_func()->currentPath;
 }
 
-void Tab::setCurrentPath(const QString & currentPath)
+void Tab::open(const QString & currentPath)
 {
     Q_D(Tab);
 
@@ -189,9 +189,9 @@ void Tab::restoreSession(QSettings &s)
         emit changed();
 
         QObject::connect(editor, SIGNAL(pathChanged(QString)), this,
-                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+                         SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(editor, SIGNAL(openRequested(QString)), this,
-                         SLOT(setCurrentPath(QString)), Qt::UniqueConnection);
+                         SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(editor, SIGNAL(changed()), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = editor->currentItem();
         item.setUserData("perspective", perspective);

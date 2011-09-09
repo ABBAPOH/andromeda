@@ -19,7 +19,7 @@ class COREPLUGIN_EXPORT Tab : public QWidget
     Q_DECLARE_PRIVATE(Tab)
     Q_DISABLE_COPY(Tab)
 
-    Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+    Q_PROPERTY(QString currentPath READ currentPath WRITE open NOTIFY currentPathChanged)
 
 public:
     explicit Tab(QWidget *parent = 0);
@@ -38,7 +38,7 @@ public:
     void saveSession(QSettings &s);
 
 public slots:
-    void setCurrentPath(const QString &currentPath);
+    void open(const QString &path);
 
 signals:
     void currentPathChanged(const QString & currentPath);
