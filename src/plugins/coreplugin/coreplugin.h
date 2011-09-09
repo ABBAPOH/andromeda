@@ -31,9 +31,6 @@ public slots:
 
 private:
     void createActions();
-
-protected:
-    bool eventFilter(QObject *, QEvent *);
 };
 
 #endif // COREPLUGIN_H
