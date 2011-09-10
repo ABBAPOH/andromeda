@@ -8,6 +8,7 @@
 #include <actionmanager.h>
 #include <command.h>
 #include <constants.h>
+#include <mainwindow.h>
 #include <pluginmanager.h>
 
 #include "dualpanewidget.h"
@@ -30,7 +31,7 @@ FileManagerView::FileManagerView(QObject *parent) :
     m_widget->setDualPaneModeEnabled(enableDualPane);
     m_widget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
-    connect(m_widget, SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
+    connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
 
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
     actionManager->command(Constants::Ids::Actions::Open)->action(m_widget, SLOT(open()));
@@ -159,6 +160,11 @@ void FileManagerView::saveSession(QSettings &s)
     IEditor::saveSession(s);
     s.setValue(QLatin1String("viewMode"), (int)m_widget->viewMode());
     s.setValue(QLatin1String("dualPaneModeEnabled"), m_widget->dualPaneModeEnabled());
+}
+
+void FileManagerView::onOpenRequested(const QString &path)
+{
+    mainWindow()->open(path);
 }
 
 void FileManagerView::setDualPaneModeEnabled(bool on)
