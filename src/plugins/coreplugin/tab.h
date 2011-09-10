@@ -46,6 +46,7 @@ signals:
 
 private slots:
     void onIndexChanged(int index);
+    void onPathChanged(const QString &path);
 
 protected:
     void resizeEvent(QResizeEvent *);

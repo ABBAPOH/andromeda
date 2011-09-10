@@ -58,6 +58,13 @@ void Tab::onIndexChanged(int index)
     emit changed();
 }
 
+void Tab::onPathChanged(const QString &path)
+{
+    Q_D(Tab);
+    d->currentPath = path;
+    emit currentPathChanged(path);
+}
+
 QString getMimeType(const QString &path)
 {
     QFileInfo info(path);
@@ -97,7 +104,7 @@ bool TabPrivate::openPerspective(const QString &path)
         editor = e;
         e->open(path);
         QObject::connect(e, SIGNAL(pathChanged(QString)), q_func(),
-                         SLOT(open(QString)), Qt::UniqueConnection);
+                         SLOT(onPathChanged(QString)), Qt::UniqueConnection);
         QObject::connect(e, SIGNAL(openRequested(QString)), q_func(),
                          SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(e, SIGNAL(changed()), q_func(), SIGNAL(changed()), Qt::UniqueConnection);
