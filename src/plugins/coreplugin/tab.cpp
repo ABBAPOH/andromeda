@@ -197,8 +197,6 @@ void Tab::restoreSession(QSettings &s)
 
         QObject::connect(editor, SIGNAL(pathChanged(QString)), this,
                          SLOT(open(QString)), Qt::UniqueConnection);
-        QObject::connect(editor, SIGNAL(openRequested(QString)), this,
-                         SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(editor, SIGNAL(changed()), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = editor->currentItem();
         item.setUserData("perspective", perspective);

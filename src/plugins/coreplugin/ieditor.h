@@ -34,7 +34,6 @@ public:
     MainWindow *mainWindow() const;
 
 signals:
-    void openRequested(const QString &path);
     void pathChanged(const QString &);
     void currentItemChanged();
     void changed();

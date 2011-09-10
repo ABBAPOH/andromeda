@@ -36,6 +36,7 @@ public:
     void saveSession(QSettings &s);
 
 private slots:
+    void onOpenRequested(const QString &path);
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
 
