@@ -105,8 +105,6 @@ bool TabPrivate::openPerspective(const QString &path)
         e->open(path);
         QObject::connect(e, SIGNAL(pathChanged(QString)), q_func(),
                          SLOT(onPathChanged(QString)), Qt::UniqueConnection);
-        QObject::connect(e, SIGNAL(openRequested(QString)), q_func(),
-                         SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(e, SIGNAL(changed()), q_func(), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = e->currentItem();
         item.setUserData("perspective", perspective);
