@@ -9,6 +9,7 @@ set( HEADERS
     filecopytask_p.h
     filecopydialog.h
     filecopydialog_p.h
+    fileinfodialog.h
     filemanagerplugin.h
     filemanagerview.h
     filemanagerwidget.h
@@ -27,6 +28,7 @@ set( SOURCES
     filecopyreplacedialog.cpp
     filecopytask.cpp
     filecopydialog.cpp
+    fileinfodialog.cpp
     filemanagerplugin.cpp
     filemanagerview.cpp
     filemanagerwidget.cpp
@@ -40,6 +42,7 @@ set( FORMS
     filecopyerrordialog.ui
     filecopyreplacedialog.ui
     filecopywidget.ui
+    fileinfodialog.ui
    )
 
 set( RESOURCES resources.qrc )
