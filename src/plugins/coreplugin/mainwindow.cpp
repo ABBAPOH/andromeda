@@ -70,6 +70,26 @@ void MainWindowPrivate::setupActions()
 
     upAction = actionManager->command(Constants::Ids::Actions::Up)->commandAction();
 
+    nextTabAction = new QAction(q);
+#ifdef Q_OS_MAC
+    nextTabAction->setShortcut(tr("Ctrl+Right"));
+#else
+    nextTabAction->setShortcut(tr("Ctrl+Tab"));
+#endif
+    nextTabAction->setShortcutContext(Qt::WindowShortcut);
+    connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextTab()));
+    q->addAction(nextTabAction);
+
+    prevTabAction = new QAction(q);
+#ifdef Q_OS_MAC
+    prevTabAction->setShortcut(tr("Ctrl+Left"));
+#else
+    prevTabAction->setShortcut(tr("Ctrl+Shift+Tab"));
+#endif
+    prevTabAction->setShortcutContext(Qt::WindowShortcut);
+    connect(prevTabAction, SIGNAL(triggered()), q, SLOT(prevTab()));
+    q->addAction(prevTabAction);
+
     // GoTo menu
     CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);
@@ -318,5 +338,21 @@ void MainWindow::closeTab(int index)
     QWidget *widget = d->tabWidget->widget(index);
     d->tabWidget->removeTab(index);
     widget->deleteLater();
+}
+
+void MainWindow::nextTab()
+{
+    Q_D(MainWindow);
+
+    int index = d->tabWidget->currentIndex();
+    d->tabWidget->setCurrentIndex(index == d->tabWidget->count() - 1 ? 0 : index + 1);
+}
+
+void MainWindow::prevTab()
+{
+    Q_D(MainWindow);
+
+    int index = d->tabWidget->currentIndex();
+    d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
 }
 
