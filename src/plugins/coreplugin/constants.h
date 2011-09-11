@@ -21,6 +21,7 @@ const char * const Help = "Menus.Help";
 namespace MenuGroups {
 
 const char * const FileNew = "FileNew";
+const char * const FileInfo = "FileInfo";
 const char * const FileChange = "FileChange";
 const char * const FileQuit = "FileQuit";
 
@@ -37,6 +38,7 @@ namespace Actions {
 
 const char * const NewWindow = "Actions.NewWindow";
 const char * const NewTab = "Actions.NewTab";
+const char * const FileInfo = "Actions.FileInfo";
 const char * const NewFolder = "Actions.NewFolder";
 const char * const Open = "Actions.Open";
 const char * const CloseTab = "Actions.CloseTab";

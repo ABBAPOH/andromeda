@@ -12,6 +12,7 @@
 #include <pluginmanager.h>
 
 #include "dualpanewidget.h"
+#include "fileinfodialog.h"
 #include "filemanagerwidget.h"
 #include "filesystemmodel.h"
 
@@ -54,15 +55,19 @@ FileManagerView::FileManagerView(QObject *parent) :
 
     actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
 
-    QAction * showHiddenFilesAct = actionManager->command(Constants::Ids::Actions::ShowHiddenFiles)->action();
-    m_widget->addAction(showHiddenFilesAct);
+    QAction * showHiddenFilesAct = actionManager->command(Constants::Ids::Actions::ShowHiddenFiles)->action(this);
     connect(showHiddenFilesAct, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
+    m_widget->addAction(showHiddenFilesAct);
 
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
     mode = enableDualPane ? -1 : mode;
     if (!enableDualPane)
         setViewMode(mode);
+
+    QAction *showFileInfoAction = actionManager->command(Constants::Ids::Actions::FileInfo)->action(this);
+    connect(showFileInfoAction, SIGNAL(triggered()), SLOT(showFileInfo()));
+    m_widget->addAction(showFileInfoAction);
 
     QAction *action = 0;
     QSignalMapper *viewMapper = new QSignalMapper(this);
@@ -210,4 +215,15 @@ QString FileManagerFactory::type() const
 IView * FileManagerFactory::createView()
 {
     return new FileManagerView(this);
+}
+
+#include <QApplication>
+void FileManagerView::showFileInfo()
+{
+    foreach(const QString &path, m_widget->activeWidget()->selectedPaths()) {
+        FileInfoDialog *dialog = new FileInfoDialog(m_widget);
+        dialog->setFileInfo(QFileInfo(path));
+        dialog->show();
+        qApp->processEvents();
+    }
 }

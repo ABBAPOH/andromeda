@@ -160,6 +160,14 @@ void CorePluginImpl::createActions()
     closeTabCommand->setContext(Command::WindowCommand);
     fileContainer->addCommand(closeTabCommand, group);
 
+    // ================ File Menu (Info) ================
+    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileInfo);
+
+    Command *fileInfoCommand = new Command(Constants::Ids::Actions::FileInfo, this);
+    fileInfoCommand->setDefaultText(tr("File info"));
+    fileInfoCommand->setDefaultShortcut(tr("Ctrl+I"));
+    fileContainer->addCommand(fileInfoCommand, group);
+
     // ================ File Menu (Change) ================
     fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileChange);
 

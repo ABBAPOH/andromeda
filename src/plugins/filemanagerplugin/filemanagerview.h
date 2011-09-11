@@ -42,6 +42,8 @@ private slots:
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
 
+    void showFileInfo();
+
 private:
     QPointer<DualPaneWidget> m_widget;
     const GuiSystem::State *m_state;
