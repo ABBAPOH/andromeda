@@ -178,7 +178,10 @@ void FileManagerWidget::setCurrentPath(const QString &path)
             d->currentView->selectionModel()->clear(); // to prevent bug with selecting dir we enter in
             d->currentView->setRootIndex(index);
 
-            CorePlugin::HistoryItem item(path, QFileInfo(path).fileName(), QIcon(), QDateTime::currentDateTime());
+            CorePlugin::HistoryItem item;
+            item.setPath(path);
+            item.setTitle(QFileInfo(path).fileName());
+            item.setLastVisited(QDateTime::currentDateTime());
             d->history->appendItem(item);
 
             emit currentPathChanged(path);

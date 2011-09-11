@@ -19,22 +19,9 @@ public:
 
 using namespace CorePlugin;
 
-HistoryItem::HistoryItem() :
+HistoryItem::HistoryItem(const QString &path) :
     data(new HistoryItemData)
 {
-    data->valid = false;
-}
-
-HistoryItem::HistoryItem(QString path,
-                         QString title,
-                         QIcon icon,
-                         QDateTime lastVisited) :
-    data(new HistoryItemData)
-{
-    data->icon = icon;
-    data->valid = true;
-    data->lastVisited = lastVisited;
-    data->title = title;
     data->path = path;
 }
 
@@ -59,14 +46,14 @@ QIcon HistoryItem::icon() const
     return data->icon;
 }
 
-//void HistoryItem::setIcon(const QIcon &icon)
-//{
-//    data->icon = icon;
-//}
+void HistoryItem::setIcon(const QIcon &icon)
+{
+    data->icon = icon;
+}
 
 bool HistoryItem::isValid() const
 {
-    return data->valid;
+    return !data->path.isEmpty();
 }
 
 QDateTime HistoryItem::lastVisited() const
@@ -74,9 +61,25 @@ QDateTime HistoryItem::lastVisited() const
     return data->lastVisited;
 }
 
+void HistoryItem::setLastVisited(const QDateTime &visited)
+{
+    if (lastVisited() == visited)
+        return;
+
+    data->lastVisited = visited;
+}
+
 QString HistoryItem::title() const
 {
     return data->title;
+}
+
+void HistoryItem::setTitle(const QString &newTitle)
+{
+    if (title() == newTitle)
+        return;
+
+    data->title = newTitle;
 }
 
 QString HistoryItem::path() const
@@ -84,12 +87,20 @@ QString HistoryItem::path() const
     return data->path;
 }
 
+void HistoryItem::setPath(const QString &newPath)
+{
+    if (path() == newPath)
+        return;
+
+    data->path = newPath;
+}
+
 QVariant HistoryItem::userData(const QString &key) const
 {
     return data->userData.value(key);
 }
 
-QVariantHash &HistoryItem::userData() const
+QVariantHash HistoryItem::userData() const
 {
     return data->userData;
 }
@@ -99,7 +110,7 @@ void HistoryItem::setUserData(const QString &key, const QVariant & data)
    this->data->userData[key] = data;
 }
 
-bool HistoryItem::operator==(const HistoryItem &other)
+bool HistoryItem::operator==(const HistoryItem &other) const
 {
     return data == other.data;
 }
