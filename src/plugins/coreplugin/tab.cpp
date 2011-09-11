@@ -14,6 +14,8 @@
 
 namespace CorePlugin {
 
+inline uint qHash(const CorePlugin::HistoryItem &item) { return qHash(item.path()); }
+
 class TabPrivate
 {
     Q_DECLARE_PUBLIC(Tab)
@@ -30,6 +32,7 @@ public:
     History *history;
     bool ignoreSignals;
     IEditor *editor;
+    QHash<HistoryItem, QString> mapToPerspective;
 
 protected:
     Tab *q_ptr;
@@ -107,7 +110,7 @@ bool TabPrivate::openPerspective(const QString &path)
                          SLOT(onPathChanged(QString)), Qt::UniqueConnection);
         QObject::connect(e, SIGNAL(changed()), q_func(), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = e->currentItem();
-        item.setUserData("perspective", perspective);
+        mapToPerspective.insert(item, perspective);
         history->appendItem(item);
     }
     return true;
@@ -115,7 +118,7 @@ bool TabPrivate::openPerspective(const QString &path)
 
 void TabPrivate::openPerspective(const HistoryItem &item)
 {
-    QString perspective = item.userData("perspective").toString();
+    QString perspective = mapToPerspective.value(item);
     perspectiveWidget->openPerspective(perspective);
 
     IEditor *e = getEditor(perspective);
@@ -197,7 +200,7 @@ void Tab::restoreSession(QSettings &s)
                          SLOT(open(QString)), Qt::UniqueConnection);
         QObject::connect(editor, SIGNAL(changed()), SIGNAL(changed()), Qt::UniqueConnection);
         HistoryItem item = editor->currentItem();
-        item.setUserData("perspective", perspective);
+        d->mapToPerspective.insert(item, perspective);
         d->history->appendItem(item);
     }
 }

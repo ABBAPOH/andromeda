@@ -32,10 +32,11 @@ bool WebViewEditor::open(const HistoryItem &item)
 
 HistoryItem WebViewEditor::currentItem() const
 {
-    HistoryItem h(m_webView->url().toString(),
-                  m_webView->title(),
-                  m_webView->icon(),
-                  QDateTime::currentDateTime());
+    HistoryItem h;
+    h.setPath(m_webView->url().toString());
+    h.setTitle(m_webView->title());
+    h.setIcon(m_webView->icon());
+    h.setLastVisited(QDateTime::currentDateTime());
     return h;
 }
 

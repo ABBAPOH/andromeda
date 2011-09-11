@@ -3,10 +3,11 @@
 
 #include "coreplugin_global.h"
 
-#include <QtCore/QExplicitlySharedDataPointer>
+#include <QtCore/QSharedDataPointer>
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
+#include <QHash>
 
 namespace CorePlugin {
 
@@ -14,28 +15,33 @@ class HistoryItemData;
 class COREPLUGIN_EXPORT HistoryItem
 {
 public:
-    HistoryItem();
-    HistoryItem(QString path,
-                QString title = QString(),
-                QIcon icon = QIcon(),
-                QDateTime lastVisited = QDateTime::currentDateTime());
+    HistoryItem(const QString &path = QString());
     HistoryItem(const HistoryItem &);
     HistoryItem &operator=(const HistoryItem &);
     ~HistoryItem();
 
     QIcon icon() const;
-    bool isValid() const;
-    QDateTime lastVisited() const;
-    QString title() const;
-    QString path() const;
-    QVariant userData(const QString &key) const;
-    QVariantHash &userData() const;
-    void setUserData(const QString &key, const QVariant & data);
+    void setIcon(const QIcon &icon);
 
-    bool operator==(const HistoryItem &other);
+    bool isValid() const;
+
+    QDateTime lastVisited() const;
+    void setLastVisited(const QDateTime &visited);
+
+    QString title() const;
+    void setTitle(const QString &title);
+
+    QString path() const;
+    void setPath(const QString &path);
+
+    QVariant userData(const QString &key) const;
+    QVariantHash userData() const;
+    void setUserData(const QString &key, const QVariant &data);
+
+    bool operator==(const HistoryItem &other) const;
 
 private:
-    QExplicitlySharedDataPointer<HistoryItemData> data;
+    QSharedDataPointer<HistoryItemData> data;
 };
 
 } // namespace CorePlugin
