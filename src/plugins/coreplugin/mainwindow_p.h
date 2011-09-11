@@ -58,9 +58,13 @@ public:
     EnteredLineEdit *lineEdit;
     QToolBar *toolBar;
     QTabWidget *tabWidget;
+
     QAction *backAction;
     QAction *forwardAction;
     QAction *upAction;
+
+    QAction *nextTabAction;
+    QAction *prevTabAction;
 
     Tab *addTab(int *index = 0);
     void setupActions();
