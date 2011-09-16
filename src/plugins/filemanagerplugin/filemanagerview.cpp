@@ -110,20 +110,30 @@ bool FileManagerView::open(const QString &path)
     return true;
 }
 
-bool FileManagerView::open(const CorePlugin::HistoryItem &item)
+QString FileManagerView::currentPath() const
 {
-    if (m_widget->leftWidget()->history()->items().contains(item)) {
-        m_widget->leftWidget()->history()->goToItem(item);
-    }
-    if (m_widget->rightWidget()->history()->items().contains(item)) {
-        m_widget->rightWidget()->history()->goToItem(item);
-    }
-    return true;
+    return m_widget->currentPath();
 }
 
-CorePlugin::HistoryItem FileManagerView::currentItem() const
+int FileManagerView::currentIndex() const
 {
-    return m_widget->history()->currentItem();
+    if (m_widget->activePane() == DualPaneWidget::LeftPane)
+        return m_widget->leftWidget()->history()->currentItemIndex(); // 0, 1, 2
+    else
+        return -m_widget->rightWidget()->history()->currentItemIndex() - 2; // -2, -3, -4
+}
+
+void FileManagerView::setCurrentIndex(int index)
+{
+    DualPaneWidget::Pane pane;
+    if (index < -1) {
+        pane = DualPaneWidget::RightPane;
+        index = -index - 2;
+    } else {
+        pane = DualPaneWidget::LeftPane;
+    }
+    m_widget->setActivePane(pane);
+    m_widget->activeWidget()->history()->setCurrentItemIndex(index);
 }
 
 QIcon FileManagerView::icon() const

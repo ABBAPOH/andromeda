@@ -26,6 +26,8 @@ public:
     QString getPerspective(const QString &path);
     bool openPerspective(const QString &path);
     void openPerspective(const HistoryItem &item);
+    void setEditor(IEditor *e);
+    void addItem(IEditor *e, const QString &path);
 
     GuiSystem::PerspectiveWidget *perspectiveWidget;
     QString currentPath;
@@ -64,7 +66,13 @@ void Tab::onIndexChanged(int index)
 void Tab::onPathChanged(const QString &path)
 {
     Q_D(Tab);
+
+    if (d->ignoreSignals)
+        return;
+
+    d->addItem(qobject_cast<IEditor*>(sender()), path);
     d->currentPath = path;
+
     emit currentPathChanged(path);
 }
 
@@ -104,28 +112,54 @@ bool TabPrivate::openPerspective(const QString &path)
 
     IEditor *e = getEditor(perspective);
     if (e) {
-        editor = e;
+        setEditor(e);
         e->open(path);
-        QObject::connect(e, SIGNAL(pathChanged(QString)), q_func(),
-                         SLOT(onPathChanged(QString)), Qt::UniqueConnection);
-        QObject::connect(e, SIGNAL(changed()), q_func(), SIGNAL(changed()), Qt::UniqueConnection);
-        HistoryItem item = e->currentItem();
-        mapToPerspective.insert(item, perspective);
-        history->appendItem(item);
+        addItem(e, path);
     }
     return true;
 }
 
 void TabPrivate::openPerspective(const HistoryItem &item)
 {
-    QString perspective = mapToPerspective.value(item);
+    QString perspective = item.userData(QLatin1String("perspective")).toString();
     perspectiveWidget->openPerspective(perspective);
 
     IEditor *e = getEditor(perspective);
     if (e) {
         editor = e;
-        e->open(item);
+        int index = item.userData(QLatin1String("index")).toInt();
+        if (index != -1) {
+            e->setCurrentIndex(index);
+        } else {
+            e->open(item.path());
+        }
     }
+}
+
+void TabPrivate::setEditor(CorePlugin::IEditor *e)
+{
+    Q_Q(Tab);
+
+    editor = e;
+    QObject::connect(editor, SIGNAL(pathChanged(QString)), q,
+                     SLOT(onPathChanged(QString)), Qt::UniqueConnection);
+    QObject::connect(editor, SIGNAL(changed()), q, SIGNAL(changed()), Qt::UniqueConnection);
+}
+
+void TabPrivate::addItem(IEditor *e, const QString &path)
+{
+    if (!e)
+        return;
+
+    QString perspective = perspectiveWidget->instance()->perspective()->id();
+    HistoryItem item;
+    item.setPath(path);
+    item.setIcon(e->icon());
+    item.setLastVisited(QDateTime::currentDateTime());
+    item.setTitle(e->title());
+    item.setUserData(QLatin1String("index"), e->currentIndex());
+    item.setUserData(QLatin1String("perspective"), perspective);
+    history->appendItem(item);
 }
 
 Tab::Tab(QWidget *parent) :
@@ -161,14 +195,14 @@ void Tab::open(const QString & currentPath)
 
     d->ignoreSignals = true;
 
-//    if (d->currentPath != currentPath) {
+    if (d->currentPath != currentPath) {
         d->currentPath = currentPath;
         if (d->openPerspective(d->currentPath)) {
             d->ignoreSignals = false;
             emit currentPathChanged(d->currentPath);
             emit changed();
         }
-//    }
+    }
     d->ignoreSignals = false;
 }
 
@@ -191,17 +225,12 @@ void Tab::restoreSession(QSettings &s)
     QString perspective = d->perspectiveWidget->perspective()->id();
     IEditor *editor = d->getEditor(perspective);
     if (editor) {
-        d->editor = editor;
         d->currentPath = editor->currentPath();
+        d->setEditor(editor);
+        d->addItem(editor, d->currentPath);
+
         emit currentPathChanged(d->currentPath);
         emit changed();
-
-        QObject::connect(editor, SIGNAL(pathChanged(QString)), this,
-                         SLOT(open(QString)), Qt::UniqueConnection);
-        QObject::connect(editor, SIGNAL(changed()), SIGNAL(changed()), Qt::UniqueConnection);
-        HistoryItem item = editor->currentItem();
-        d->mapToPerspective.insert(item, perspective);
-        d->history->appendItem(item);
     }
 }
 

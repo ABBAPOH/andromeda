@@ -11,11 +11,6 @@ IEditor::IEditor(QObject *parent) :
 {
 }
 
-QString IEditor::currentPath() const
-{
-    return currentItem().path();
-}
-
 void IEditor::restoreSession(const QSettings &s)
 {
     open(s.value(QLatin1String("currentPath")).toString());

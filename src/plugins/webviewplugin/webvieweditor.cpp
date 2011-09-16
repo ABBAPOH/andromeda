@@ -25,19 +25,9 @@ bool WebViewEditor::open(const QString &path)
     return true;
 }
 
-bool WebViewEditor::open(const HistoryItem &item)
+QString WebViewPlugin::WebViewEditor::currentPath() const
 {
-    return open(item.path());
-}
-
-HistoryItem WebViewEditor::currentItem() const
-{
-    HistoryItem h;
-    h.setPath(m_webView->url().toString());
-    h.setTitle(m_webView->title());
-    h.setIcon(m_webView->icon());
-    h.setLastVisited(QDateTime::currentDateTime());
-    return h;
+    return m_webView->url().toString();
 }
 
 void WebViewEditor::onUrlClicked(const QUrl &url)
