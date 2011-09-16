@@ -39,3 +39,12 @@ if( ENABLE_TESTS )
     add_custom_target( test-verbose )
     add_custom_command( TARGET test-verbose POST_BUILD COMMAND ${CMAKE_CTEST_COMMAND} ${CTEST_ARGUMENTS} )
 endif()
+
+# make uninstall
+configure_file(
+    "${CMAKE_SOURCE_DIR}/Uninstall.cmake.in"
+    "${CMAKE_BINARY_DIR}/Uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/Uninstall.cmake)
