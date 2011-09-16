@@ -70,7 +70,7 @@ public slots:
     void showHiddenFiles(bool show);
 
 protected:
-    bool eventFilter(QObject * watched, QEvent * event);
+    bool eventFilter(QObject *, QEvent *);
 
     DualPaneWidgetPrivate *d_ptr;
 };
