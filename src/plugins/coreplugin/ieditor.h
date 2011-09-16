@@ -19,10 +19,11 @@ public:
     explicit IEditor(QObject *parent = 0);
 
     virtual bool open(const QString &path) = 0;
-    virtual bool open(const HistoryItem &item) = 0;
 
-    virtual HistoryItem currentItem() const = 0;
-    QString currentPath() const;
+    virtual QString currentPath() const = 0;
+
+    virtual int currentIndex() const { return -1; }
+    virtual void setCurrentIndex(int index) { Q_UNUSED(index); }
 
     virtual QIcon icon() const { return QIcon(); }
     virtual QString title() const { return QString(); }

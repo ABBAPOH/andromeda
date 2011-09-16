@@ -27,9 +27,8 @@ public:
     void close() {}
 
     bool open(const QString &path);
-    bool open(const CorePlugin::HistoryItem &item);
 
-    CorePlugin::HistoryItem currentItem() const;
+    QString currentPath() const;
 
     QWidget *widget() const { return m_webView; }
     QToolBar *toolBar() const { return 0; }

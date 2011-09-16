@@ -24,9 +24,11 @@ public:
 
     // from IEditor
     bool open(const QString &path);
-    bool open(const CorePlugin::HistoryItem &item);
 
-    CorePlugin::HistoryItem currentItem() const;
+    QString currentPath() const;
+
+    int currentIndex() const;
+    void setCurrentIndex(int index);
 
     QIcon icon() const;
     QString title() const;
