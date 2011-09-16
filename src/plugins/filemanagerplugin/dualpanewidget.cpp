@@ -87,7 +87,15 @@ DualPaneWidget::Pane DualPaneWidget::activePane() const
 
 void DualPaneWidget::setActivePane(DualPaneWidget::Pane pane)
 {
-// TODO: implement
+    Q_D(DualPaneWidget);
+
+    if (d->activePane == pane)
+        return;
+
+    d->activePane = pane;
+    swapPalettes(d->panes[pane], d->panes[(pane + 1)%2]);
+    emit activePaneChanged(d->activePane);
+    emit currentPathChanged(activeWidget()->currentPath());
 }
 
 FileManagerWidget * DualPaneWidget::activeWidget() const
@@ -262,22 +270,15 @@ void DualPaneWidget::showHiddenFiles(bool show)
     activeWidget()->showHiddenFiles(show);
 }
 
-bool DualPaneWidget::eventFilter(QObject *watched, QEvent *event)
+bool DualPaneWidget::eventFilter(QObject *o, QEvent *e)
 {
     Q_D(DualPaneWidget);
 
-    if (event->type() == QEvent::FocusIn) {
-        if (watched == d->panes[LeftPane] && d->activePane != LeftPane) {
-            d->activePane = LeftPane;
-            swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
-            emit activePaneChanged(d->activePane);
-            emit currentPathChanged(activeWidget()->currentPath());
-        }
-        if (watched == d->panes[RightPane] && d->activePane != RightPane) {
-            d->activePane = RightPane;
-            swapPalettes(d->panes[RightPane], d->panes[LeftPane]);
-            emit activePaneChanged(d->activePane);
-            emit currentPathChanged(activeWidget()->currentPath());
+    if (e->type() == QEvent::FocusIn) {
+        if (o == d->panes[LeftPane]) {
+            setActivePane(LeftPane);
+        } else if (o == d->panes[RightPane]) {
+            setActivePane(RightPane);
         }
     }
 
