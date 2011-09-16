@@ -152,6 +152,9 @@ FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
     model->setReadOnly(false);
     setModel(model);
 
+//    ((QTreeView*)d->views[FileManagerWidget::TableView])->setColumnWidth(0, 250);
+    ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
+
     setViewMode(ListView);
 }
 
