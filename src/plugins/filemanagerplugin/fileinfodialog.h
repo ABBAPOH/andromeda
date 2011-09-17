@@ -22,6 +22,11 @@ public:
 private:
     void updateUi();
 
+private slots:
+    void onActivatedUser(int);
+    void onActivatedGroup(int);
+    void onActivatedOther(int);
+
 private:
     Ui::FileInfoDialog *ui;
     QFileInfo m_fileInfo;
