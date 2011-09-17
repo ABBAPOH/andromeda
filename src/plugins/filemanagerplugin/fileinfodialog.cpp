@@ -10,6 +10,10 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowFlags(Qt::Window);
+
+    connect(ui->userPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedUser(int)));
+    connect(ui->groupPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedGroup(int)));
+    connect(ui->otherPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedOther(int)));
 }
 
 FileInfoDialog::~FileInfoDialog()
@@ -44,7 +48,7 @@ static QString sizeToString(qint64 size)
 #include <QFileIconProvider>
 void FileInfoDialog::updateUi()
 {
-    ui->label->setPixmap(QFileIconProvider().icon(m_fileInfo).pixmap(32));
+    ui->iconLabel->setPixmap(QFileIconProvider().icon(m_fileInfo).pixmap(32));
     ui->nameLabel->setText(m_fileInfo.fileName());
     ui->mimeTypeLabel->setText(QString());
     ui->sizeLabel->setText(sizeToString(m_fileInfo.size()));
@@ -52,4 +56,29 @@ void FileInfoDialog::updateUi()
     ui->createdLabel->setText(m_fileInfo.created().toString(Qt::SystemLocaleShortDate));
     ui->modifiedLabel->setText(m_fileInfo.lastModified().toString(Qt::SystemLocaleShortDate));
     ui->acceccedLabel->setText(m_fileInfo.lastRead().toString(Qt::SystemLocaleShortDate));
+
+    ui->userPermissionsComboBox->setCurrentIndex((m_fileInfo.permissions() & QFile::WriteOwner) ? 1 : 0);
+    ui->groupPermissionsComboBox->setCurrentIndex((m_fileInfo.permissions() & QFile::WriteGroup) ? 1 : 0);
+    ui->otherPermissionsComboBox->setCurrentIndex((m_fileInfo.permissions() & QFile::WriteOther) ? 1 : 0);
+}
+
+void FileInfoDialog::onActivatedUser(int i)
+{
+    m_fileInfo.refresh();
+    QFile::Permissions flags = (i == 1) ? (QFile::WriteOwner | QFile::ReadOwner) : (QFile::ReadOwner);
+    QFile::setPermissions(m_fileInfo.filePath(), (m_fileInfo.permissions() & 0x1FF) | flags );
+}
+
+void FileInfoDialog::onActivatedGroup(int i)
+{
+    m_fileInfo.refresh();
+    QFile::Permissions flags = (i == 1) ? (QFile::WriteGroup | QFile::ReadGroup) : (QFile::ReadGroup);
+    QFile::setPermissions(m_fileInfo.filePath(), (m_fileInfo.permissions() & 0xFC7) | flags );
+}
+
+void FileInfoDialog::onActivatedOther(int i)
+{
+    m_fileInfo.refresh();
+    QFile::Permissions flags = (i == 1) ? (QFile::WriteOther | QFile::ReadOther) : (QFile::ReadOther);
+    QFile::setPermissions(m_fileInfo.filePath(), (m_fileInfo.permissions() & 0xFF8) | flags );
 }
