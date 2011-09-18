@@ -1,4 +1,4 @@
-#include "ioptionspage.h"
+#include "isettingspage.h"
 
 #include <pluginmanager.h>
 
@@ -6,7 +6,7 @@
 
 using namespace CorePlugin;
 
-IOptionsPage::IOptionsPage(const QString &id, const QString &category, QObject *parent) :
+ISettingsPage::ISettingsPage(const QString &id, const QString &category, QObject *parent) :
     QObject(parent),
     m_id(id),
     m_category(category)
@@ -14,7 +14,7 @@ IOptionsPage::IOptionsPage(const QString &id, const QString &category, QObject *
     ExtensionSystem::PluginManager::instance()->object<CategoryModel>("CategoryModel")->addPage(this);
 }
 
-IOptionsPage::~IOptionsPage()
+ISettingsPage::~ISettingsPage()
 {
     ExtensionSystem::PluginManager::instance()->object<CategoryModel>("CategoryModel")->removePage(this);
 }

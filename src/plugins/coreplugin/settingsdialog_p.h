@@ -6,7 +6,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QIcon>
 
-#include "ioptionspage.h"
+#include "isettingspage.h"
 
 class QTabWidget;
 
@@ -17,7 +17,7 @@ public:
     QString id;
     QString displayName() { return pages.isEmpty() ? QString() : pages.first()->displayCategory(); }
     QIcon icon() const { return pages.isEmpty() ? QIcon() : pages.first()->categoryIcon(); }
-    QList<IOptionsPage *> pages;
+    QList<ISettingsPage *> pages;
     int index;
 };
 
@@ -31,15 +31,15 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    void addPage(IOptionsPage* page);
-    void removePage(IOptionsPage* page);
+    void addPage(ISettingsPage* page);
+    void removePage(ISettingsPage* page);
 
     const QList<Category*> &categories() const { return m_categories; }
     Category *findCategoryById(const QString &id);
 
 signals:
-    void pageAdded(IOptionsPage* page);
-    void pageRemoved(IOptionsPage* page);
+    void pageAdded(ISettingsPage* page);
+    void pageRemoved(ISettingsPage* page);
 
 private:
     QList<Category*> m_categories;

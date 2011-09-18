@@ -9,12 +9,12 @@ class QIcon;
 
 namespace CorePlugin {
 
-class COREPLUGIN_EXPORT IOptionsPage : public QObject
+class COREPLUGIN_EXPORT ISettingsPage : public QObject
 {
     Q_OBJECT
 public:
-    IOptionsPage(const QString &id, const QString &category, QObject *parent = 0);
-    virtual ~IOptionsPage();
+    ISettingsPage(const QString &id, const QString &category, QObject *parent = 0);
+    virtual ~ISettingsPage();
 
     QString id() const { return m_id; }
     QString category() const { return m_category; }
