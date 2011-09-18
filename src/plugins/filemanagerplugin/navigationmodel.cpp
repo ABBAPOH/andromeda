@@ -169,27 +169,9 @@ QStringList NavigationModel::mimeTypes() const
     return QStringList() << "text/uri-list";
 }
 
-QMimeData * NavigationModel::mimeData(const QModelIndexList &indexes) const
+bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
+                                   int row, int /*column*/, const QModelIndex &parent)
 {
-    Q_D(const NavigationModel);
-
-    QMimeData *data = new QMimeData();
-    QList<QUrl> urls;
-    foreach (const QModelIndex &index, indexes) {
-        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
-        if (item->type == TreeItem::ChildItem && item->parent() == d->foldersItem) {
-            urls.append(QUrl::fromLocalFile(item->path));
-        }
-    }
-    data->setUrls(urls);
-    return data;
-}
-
-#include <QDebug>
-bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
-                                   int row, int column, const QModelIndex &parent)
-{
-    qDebug() << "NavigationModel::dropMimeData" << row << column << parent;
     if (!data->hasUrls())
         return false;
 
@@ -206,7 +188,7 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         }
     }
 
-    beginInsertRows(parent, row, row + urls.size());
+    beginInsertRows(parent, row, row + urls.size() - 1);
     for (int i = 0; i < urls.size(); i++) {
         QString path = urls[i].toLocalFile();
         QFileInfo info(path);
@@ -327,7 +309,7 @@ void NavigationModel::addFolder(const QString &path)
     Q_D(NavigationModel);
 
     QFileInfo info(path);
-    if (!info.isDir() || !info.exists())
+    if (/*!info.isDir() ||*/ !info.exists())
         return;
 
     QString canonicalPath = info.canonicalFilePath();
@@ -346,60 +328,42 @@ void NavigationModel::removeFolder(const QString &path)
     d->removeItem(path);
 }
 
-//NavigationModel::StandardLocations NavigationModel::standardLocations() const
-//{
-//    Q_D(const NavigationModel);
+NavigationModel::StandardLocations NavigationModel::standardLocations() const
+{
+    Q_D(const NavigationModel);
 
-//    return d->locations;
-//}
+    return d->locations;
+}
+
+static QString locationToString(NavigationModel::StandardLocations locations)
+{
+    switch (locations) {
+    case NavigationModel::DesktopLocation : return QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
+    case NavigationModel::DocumentsLocation : return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+    case NavigationModel::MusicLocation : return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
+    case NavigationModel::PicturesLocation : return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
+    case NavigationModel::HomeLocation : return QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
+    case NavigationModel::ApplicationsLocation : return QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
+    default: return QString();
+    }
+}
+
+void NavigationModel::setStandardLocation(StandardLocation loc, bool on)
+{
+    QString path = locationToString(loc);
+    if (on)
+        addFolder(path);
+    else
+        removeFolder(path);
+}
 
 void NavigationModel::setStandardLocations(StandardLocations locations)
 {
-//    Q_D(NavigationModel);
+    Q_D(NavigationModel);
 
-//    d->locations = locations;
+    d->locations = locations;
 
-    QString path;
-
-    path = QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
-    if (locations & DesktopLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
-
-    path = QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
-    if (locations & HomeLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
-
-    path = QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
-    if (locations & ApplicationsLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
-
-    path = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-    if (locations & DocumentsLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
-
-    path = QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
-    if (locations & MusicLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
-
-    path = QDesktopServices::storageLocation(QDesktopServices::MoviesLocation);
-    if (locations & MoviesLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
-
-    path = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
-    if (locations & PicturesLocation)
-        addFolder(path);
-    else
-        removeFolder(path);
+    for (int i = 0; i < (ApplicationsLocation << 1); i = (i << 1)) {
+        setStandardLocation((StandardLocation)i, (locations & i));
+    }
 }

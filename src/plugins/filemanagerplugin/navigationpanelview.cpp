@@ -17,7 +17,7 @@ void NavigationPanelView::initialize()
 {
     IView *view = perspectiveInstance()->view("FileManager");
 
-    connect(m_widget, SIGNAL(currentPathChanged(QString)),
+    connect(m_widget, SIGNAL(triggered(QString)),
             view->widget(), SLOT(setCurrentPath(QString)));
 }
 

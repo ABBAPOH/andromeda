@@ -109,7 +109,7 @@ public:
 
     QFileIconProvider iconProvider;
 
-//    NavigationModel::StandardLocations locations;
+    NavigationModel::StandardLocations locations;
 
     void insertItem(TreeItem *parent, const QString &name, const QString &path);
     void removeItem(const QString &path);

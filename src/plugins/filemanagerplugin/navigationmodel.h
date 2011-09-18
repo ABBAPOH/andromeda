@@ -32,7 +32,6 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 
     QStringList mimeTypes() const;
-    QMimeData *mimeData(const QModelIndexList &indexes) const;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                               int row, int column, const QModelIndex &parent);
 
@@ -49,7 +48,8 @@ public:
     void addFolder(const QString &path);
     void removeFolder(const QString &path);
 
-//    StandardLocations standardLocations() const;
+    StandardLocations standardLocations() const;
+    void setStandardLocation(StandardLocation loc, bool on);
     void setStandardLocations(StandardLocations locations);
 
 protected:
