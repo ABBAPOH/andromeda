@@ -8,7 +8,7 @@
 
 namespace CorePlugin {
 
-class IOptionsPage;
+class ISettingsPage;
 class Category;
 class CategoryModel;
 class SettingsDialog : public QDialog
@@ -23,8 +23,8 @@ public:
 
 private slots:
     void currentChanged(const QModelIndex &current);
-    void onPageAdded(IOptionsPage *page);
-    void onPageRemoved(IOptionsPage *page);
+    void onPageAdded(ISettingsPage *page);
+    void onPageRemoved(ISettingsPage *page);
 
 private:
     void setupUi();
@@ -38,7 +38,7 @@ private:
     QListView *m_categoryList;
     QLabel *m_headerLabel;
     QMap<Category *, QTabWidget *> m_tabWidgets;
-    QMap<IOptionsPage *, QWidget *> m_widgets;
+    QMap<ISettingsPage *, QWidget *> m_widgets;
 };
 
 } // namespace CorePlugin

@@ -3,7 +3,7 @@
 #include "history.h"
 #include "historyitem.h"
 #include "ieditor.h"
-#include "ioptionspage.h"
+#include "isettingspage.h"
 #include "perspectivemanager.h"
 #include "settingsdialog.h"
 #include "tab.h"

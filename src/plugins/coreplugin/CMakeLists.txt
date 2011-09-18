@@ -8,7 +8,7 @@ set( HEADERS
     history.h
     historyitem.h
     ieditor.h
-    ioptionspage.h
+    isettingspage.h
     mainwindow.h
     mainwindow_p.h
     perspectivemanager.h
@@ -24,7 +24,7 @@ set( SOURCES
     history.cpp
     historyitem.cpp
     ieditor.cpp
-    ioptionspage.cpp
+    isettingspage.cpp
     mainwindow.cpp
     perspectivemanager.cpp
     settings.cpp

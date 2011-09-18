@@ -12,7 +12,7 @@ using namespace CorePlugin;
 const int categoryIconSize = 24;
 
 // Helpers to sort by category. id
-bool optionsPageLessThan(const IOptionsPage *p1, const IOptionsPage *p2)
+bool optionsPageLessThan(const ISettingsPage *p1, const ISettingsPage *p2)
 {
     if (const int cc = p1->category().compare(p2->category()))
         return cc < 0;
@@ -53,7 +53,7 @@ QVariant CategoryModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void CategoryModel::addPage(IOptionsPage *page)
+void CategoryModel::addPage(ISettingsPage *page)
 {
     const QString &categoryId = page->category();
     Category *category = findCategoryById(categoryId);
@@ -69,7 +69,7 @@ void CategoryModel::addPage(IOptionsPage *page)
     category->pages.append(page);
 }
 
-void CategoryModel::removePage(IOptionsPage *page)
+void CategoryModel::removePage(ISettingsPage *page)
 {
     const QString &categoryId = page->category();
     Category *category = findCategoryById(categoryId);
@@ -158,8 +158,8 @@ void SettingsDialog::setModel(CategoryModel *model)
     m_categoryList->setModel(m_model);
     connect(m_categoryList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(currentChanged(QModelIndex)), Qt::UniqueConnection);
-    connect(m_model, SIGNAL(pageAdded(IOptionsPage*)), SLOT(onPageRemoved(IOptionsPage*)));
-    connect(m_model, SIGNAL(pageRemoved(IOptionsPage*)), SLOT(onPageRemoved(IOptionsPage*)));
+    connect(m_model, SIGNAL(pageAdded(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
+    connect(m_model, SIGNAL(pageRemoved(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
 }
 
 void SettingsDialog::currentChanged(const QModelIndex &current)
@@ -168,7 +168,7 @@ void SettingsDialog::currentChanged(const QModelIndex &current)
         showCategory(current.row());
 }
 
-void SettingsDialog::onPageAdded(IOptionsPage *page)
+void SettingsDialog::onPageAdded(ISettingsPage *page)
 {
     Category *category = m_model->findCategoryById(page->category());
     QTabWidget *widget = m_tabWidgets.value(category);
@@ -176,7 +176,7 @@ void SettingsDialog::onPageAdded(IOptionsPage *page)
     widget->insertTab(index, page->createPage(widget), page->displayName());
 }
 
-void SettingsDialog::onPageRemoved(IOptionsPage *page)
+void SettingsDialog::onPageRemoved(ISettingsPage *page)
 {
     QWidget *widget = m_widgets.take(page);
     delete widget;
@@ -219,7 +219,7 @@ void SettingsDialog::showCategory(int index)
     m_currentCategory = category->id;
     const int currentTabIndex = m_tabWidgets.value(category)->currentIndex();
     if (currentTabIndex != -1) {
-        IOptionsPage *page = category->pages.at(currentTabIndex);
+        ISettingsPage *page = category->pages.at(currentTabIndex);
         m_currentPage = page->id();
     }
 
@@ -234,7 +234,7 @@ void SettingsDialog::ensureCategoryWidget(Category *category)
 
     QTabWidget *tabWidget = new QTabWidget;
     for (int j = 0; j < category->pages.size(); ++j) {
-        IOptionsPage *page = category->pages.at(j);
+        ISettingsPage *page = category->pages.at(j);
         QWidget *widget = page->createPage(0);
         m_widgets.insert(page, widget);
         tabWidget->addTab(widget, page->displayName());
