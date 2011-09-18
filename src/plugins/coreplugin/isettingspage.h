@@ -12,12 +12,14 @@ namespace CorePlugin {
 class COREPLUGIN_EXPORT ISettingsPage : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(ISettingsPage)
+
 public:
     ISettingsPage(const QString &id, const QString &category, QObject *parent = 0);
     virtual ~ISettingsPage();
 
-    QString id() const { return m_id; }
-    QString category() const { return m_category; }
+    inline QString id() const { return m_id; }
+    inline QString category() const { return m_category; }
 
     virtual QString displayName() const = 0;
     virtual QString displayCategory() const = 0;
