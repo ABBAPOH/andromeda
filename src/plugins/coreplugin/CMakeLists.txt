@@ -12,6 +12,7 @@ set( HEADERS
     mainwindow.h
     mainwindow_p.h
     perspectivemanager.h
+    settings.h
     settingsdialog.h
     settingsdialog_p.h
     tab.h
@@ -26,6 +27,7 @@ set( SOURCES
     ioptionspage.cpp
     mainwindow.cpp
     perspectivemanager.cpp
+    settings.cpp
     settingsdialog.cpp
     tab.cpp
     tabbar.cpp
