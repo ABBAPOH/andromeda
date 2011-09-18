@@ -34,9 +34,13 @@ protected:
 
 signals:
     void currentPathChanged(const QString & path);
+    void triggered(const QString & path);
 
 private slots:
     void onClick(const QModelIndex &index);
+    void onCustomContextMenuRequested(QPoint p);
+    void onOpenTriggered();
+    void onRemoveTriggered();
 
 protected:
     NavigationPanelPrivate *d_ptr;
