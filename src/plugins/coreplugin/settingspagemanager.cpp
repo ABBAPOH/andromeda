@@ -28,6 +28,7 @@ SettingsPageManager::SettingsPageManager(QObject *parent) :
     QObject(parent),
     d_ptr(new SettingsPageManagerPrivate)
 {
+    setObjectName(QLatin1String("SettingsPageManager"));
 }
 
 SettingsPageManager::~SettingsPageManager()
