@@ -198,35 +198,7 @@ SettingsDialog::~SettingsDialog()
 }
 
 /*!
-    \internal
-*/
-void SettingsDialog::currentChanged(const QModelIndex &current)
-{
-    if (current.isValid())
-        d_func()->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
-}
 
-/*!
-    \internal
-*/
-void SettingsDialog::onPageAdded(ISettingsPage *page)
-{
-    Q_D(SettingsDialog);
-
-    QString category = page->category();
-    d->addCategory(category);
-    d->addPage(page);
-}
-
-/*!
-    \internal
-*/
-void SettingsDialog::onPageRemoved(ISettingsPage *page)
-{
-    d_func()->removePage(page);
-}
-
-/*!
     \brief Returns SettingsManager assigned to this dialog.
 */
 SettingsPageManager *SettingsDialog::settingsPageManager() const
@@ -256,4 +228,33 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
     }
     connect(d->manager, SIGNAL(pageAdded(ISettingsPage*)), SLOT(onPageAdded(ISettingsPage*)));
     connect(d->manager, SIGNAL(pageRemoved(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
+}
+
+/*!
+    \internal
+*/
+void SettingsDialog::currentChanged(const QModelIndex &current)
+{
+    if (current.isValid())
+        d_func()->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
+}
+
+/*!
+    \internal
+*/
+void SettingsDialog::onPageAdded(ISettingsPage *page)
+{
+    Q_D(SettingsDialog);
+
+    QString category = page->category();
+    d->addCategory(category);
+    d->addPage(page);
+}
+
+/*!
+    \internal
+*/
+void SettingsDialog::onPageRemoved(ISettingsPage *page)
+{
+    d_func()->removePage(page);
 }
