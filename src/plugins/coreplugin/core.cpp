@@ -4,6 +4,7 @@
 #include <pluginmanager.h>
 
 #include "perspectivemanager.h"
+#include "settings.h"
 
 /*!
     \namespace Core
@@ -73,4 +74,9 @@ PerspectiveManager * Core::perspectiveManager() const
     Q_D(const Core);
 
     return d->pool->object<PerspectiveManager>("perspectiveManager");
+}
+
+Settings * Core::settings() const
+{
+    return d_func()->pool->object<Settings>("settings");
 }
