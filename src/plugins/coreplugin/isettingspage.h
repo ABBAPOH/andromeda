@@ -4,6 +4,8 @@
 #include <coreplugin_global.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtGui/QIcon>
 
 class QIcon;
 
@@ -21,9 +23,11 @@ public:
     inline QString id() const { return m_id; }
     inline QString category() const { return m_category; }
 
-    virtual QString displayName() const = 0;
-    virtual QString displayCategory() const = 0;
-    virtual QIcon displayIcon() const = 0;
+    virtual QString name() const = 0;
+    virtual QIcon icon() const = 0;
+
+    virtual QString categoryName() const { return QString(); }
+    virtual QIcon categoryIcon() const { return QIcon(); }
 
     virtual QWidget *createPage(QWidget *parent) = 0;
 

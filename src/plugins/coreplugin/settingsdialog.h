@@ -9,36 +9,32 @@
 namespace CorePlugin {
 
 class ISettingsPage;
+class SettingsPageManager;
+
 class Category;
 class CategoryModel;
+
+class SettingsDialogPrivate;
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(SettingsDialog)
+    Q_DISABLE_COPY(SettingsDialog)
+
 public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
 
-    CategoryModel *model();
-    void setModel(CategoryModel *model);
+    SettingsPageManager *settingsPageManager() const;
+    void setSettingsPageManager(SettingsPageManager *manager);
 
 private slots:
     void currentChanged(const QModelIndex &current);
     void onPageAdded(ISettingsPage *page);
     void onPageRemoved(ISettingsPage *page);
 
-private:
-    void setupUi();
-    void showCategory(int index);
-    void ensureCategoryWidget(Category *category);
-
-    CategoryModel *m_model;
-    QString m_currentCategory;
-    QString m_currentPage;
-    QStackedLayout *m_stackedLayout;
-    QListView *m_categoryList;
-    QLabel *m_headerLabel;
-    QMap<Category *, QTabWidget *> m_tabWidgets;
-    QMap<ISettingsPage *, QWidget *> m_widgets;
+protected:
+    SettingsDialogPrivate *d_ptr;
 };
 
 } // namespace CorePlugin

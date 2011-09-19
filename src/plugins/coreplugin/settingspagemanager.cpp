@@ -9,7 +9,6 @@ namespace CorePlugin {
 struct Category
 {
     QString id;
-    QIcon icon;
     QList<ISettingsPage *> pages;
 };
 
@@ -56,10 +55,15 @@ void SettingsPageManager::addPage(ISettingsPage *page)
         return;
 
     QString categoryId = page->category();
-    if (!categoryEsists(categoryId))
-        addCategory(categoryId, page->displayIcon());
-
+//    if (!categoryEsists(categoryId))
+//        addCategory(categoryId, page->displayName(), page->displayIcon());
     Category *c = d->categories.value(categoryId);
+    if (!c) {
+        c = new Category;
+        c->id = categoryId;
+        d->categories.insert(categoryId, c);
+    }
+
     c->pages.append(page);
     d->pages.insert(page->id(), page);
 
@@ -89,41 +93,6 @@ void SettingsPageManager::removePage(ISettingsPage *page)
 QStringList SettingsPageManager::categories() const
 {
     return d_func()->categories.keys();
-}
-
-void SettingsPageManager::addCategory(const QString &id, const QIcon &icon)
-{
-    Q_D(SettingsPageManager);
-
-    Category *c = new Category;
-    c->id = id;
-    c->icon = icon;
-
-    d->categories.insert(id, c);
-}
-
-void SettingsPageManager::removeCategory(const QString &category)
-{
-    Q_D(SettingsPageManager);
-
-    Category *c = d->categories.take(category);
-    if (c) {
-        delete c;
-    }
-}
-
-bool SettingsPageManager::categoryEsists(const QString &category) const
-{
-    return d_func()->categories.contains(category);
-}
-
-QIcon SettingsPageManager::categoryIcon(const QString &category) const
-{
-    Category *c = d_func()->categories.value(category);
-    if (c)
-        return c->icon;
-
-    return QIcon();
 }
 
 QList<ISettingsPage *> SettingsPageManager::pages() const

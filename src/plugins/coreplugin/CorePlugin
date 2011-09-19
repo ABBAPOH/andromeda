@@ -6,4 +6,5 @@
 #include "isettingspage.h"
 #include "perspectivemanager.h"
 #include "settingsdialog.h"
+#include "settingspagemanager.h"
 #include "tab.h"

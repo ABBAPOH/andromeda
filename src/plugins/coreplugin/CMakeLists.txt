@@ -14,7 +14,6 @@ set( HEADERS
     perspectivemanager.h
     settings.h
     settingsdialog.h
-    settingsdialog_p.h
     settingspagemanager.h
     tab.h
     tabbar.h

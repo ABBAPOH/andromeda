@@ -24,11 +24,7 @@ public:
     void removePage(ISettingsPage* page);
 
     QStringList categories() const;
-    void addCategory(const QString &id, const QIcon &icon = QIcon());
-    void removeCategory(const QString &category);
 
-    bool categoryEsists(const QString &category) const;
-    QIcon categoryIcon(const QString &category) const;
     QList<ISettingsPage *> pages() const;
     QList<ISettingsPage *> pages(const QString &category) const;
 
