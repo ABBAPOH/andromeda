@@ -163,6 +163,15 @@ void SettingsDialogPrivate::setupUi()
     q->setMinimumSize(1024, 576);
 }
 
+/*!
+    \class SettingsDialog
+
+    \brief SettingsDialog represents application preferences.
+*/
+
+/*!
+    \brief Creates an empty SettingsDialog with the given \a parent.
+*/
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     d_ptr(new SettingsDialogPrivate(this))
@@ -180,17 +189,26 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     setObjectName(QLatin1String("SettingsDialog"));
 }
 
+/*!
+    \brief Destroys SettingsDialog.
+*/
 SettingsDialog::~SettingsDialog()
 {
     delete d_ptr;
 }
 
+/*!
+    \internal
+*/
 void SettingsDialog::currentChanged(const QModelIndex &current)
 {
     if (current.isValid())
         d_func()->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
 }
 
+/*!
+    \internal
+*/
 void SettingsDialog::onPageAdded(ISettingsPage *page)
 {
     Q_D(SettingsDialog);
@@ -200,16 +218,25 @@ void SettingsDialog::onPageAdded(ISettingsPage *page)
     d->addPage(page);
 }
 
+/*!
+    \internal
+*/
 void SettingsDialog::onPageRemoved(ISettingsPage *page)
 {
     d_func()->removePage(page);
 }
 
+/*!
+    \brief Returns SettingsManager assigned to this dialog.
+*/
 SettingsPageManager *SettingsDialog::settingsPageManager() const
 {
     return d_func()->manager;
 }
 
+/*!
+    \brief Assigned \a manager to this dialog fill it with settings pages.
+*/
 void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
 {
     Q_D(SettingsDialog);
