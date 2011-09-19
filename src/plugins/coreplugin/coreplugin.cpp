@@ -10,6 +10,7 @@
 #include "constants.h"
 #include "core.h"
 #include "perspectivemanager.h"
+#include "settings.h"
 #include "settingspagemanager.h"
 #include "settingsdialog.h"
 
@@ -34,6 +35,10 @@ bool CorePluginImpl::initialize()
 {
     addObject(new Core);
     addObject(new PerspectiveManager);
+
+    Settings *settings = new Settings;
+    settings->setObjectName("settings");
+    addObject(settings);
 
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));

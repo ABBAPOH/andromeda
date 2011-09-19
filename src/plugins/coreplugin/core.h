@@ -8,6 +8,8 @@
 namespace CorePlugin {
 
 class PerspectiveManager;
+class Settings;
+
 class CorePrivate;
 class COREPLUGIN_EXPORT Core : public QObject
 {
@@ -25,6 +27,7 @@ public:
     }
 
     PerspectiveManager *perspectiveManager() const;
+    Settings *settings() const;
 
     QObject *getObject(const QString &name);
 
