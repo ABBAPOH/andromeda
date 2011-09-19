@@ -1,101 +1,14 @@
 #include "settingsdialog.h"
-#include "settingsdialog_p.h"
+
+#include "isettingspage.h"
+#include "settingspagemanager.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QLineEdit>
+#include <QtGui/QStandardItemModel>
 #include <QtGui/QScrollBar>
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTabWidget>
-
-using namespace CorePlugin;
-
-const int categoryIconSize = 24;
-
-// Helpers to sort by category. id
-bool optionsPageLessThan(const ISettingsPage *p1, const ISettingsPage *p2)
-{
-    if (const int cc = p1->category().compare(p2->category()))
-        return cc < 0;
-    return p1->id().compare(p2->id()) < 0;
-}
-
-CategoryModel::CategoryModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-    QPixmap empty(categoryIconSize, categoryIconSize);
-    empty.fill(Qt::transparent);
-    m_emptyIcon = QIcon(empty);
-}
-
-CategoryModel::~CategoryModel()
-{
-    qDeleteAll(m_categories);
-}
-
-int CategoryModel::rowCount(const QModelIndex &parent) const
-{
-    return parent.isValid() ? 0 : m_categories.size();
-}
-
-QVariant CategoryModel::data(const QModelIndex &index, int role) const
-{
-    switch (role) {
-    case Qt::DisplayRole:
-        return m_categories.at(index.row())->displayName();
-    case Qt::DecorationRole: {
-        QIcon icon = m_categories.at(index.row())->icon();
-            if (icon.isNull())
-                icon = m_emptyIcon;
-            return icon;
-        }
-    }
-
-    return QVariant();
-}
-
-void CategoryModel::addPage(ISettingsPage *page)
-{
-    const QString &categoryId = page->category();
-    Category *category = findCategoryById(categoryId);
-    if (!category) {
-        category = new Category;
-        category->id = categoryId;
-        category->index = -1;
-        beginInsertRows(QModelIndex(), m_categories.size(), m_categories.size());
-        m_categories.append(category);
-        qStableSort(category->pages.begin(), category->pages.end(), optionsPageLessThan);
-        endInsertRows();
-    }
-    category->pages.append(page);
-}
-
-void CategoryModel::removePage(ISettingsPage *page)
-{
-    const QString &categoryId = page->category();
-    Category *category = findCategoryById(categoryId);
-    if (category) {
-        emit pageRemoved(page);
-
-        if (category->pages.isEmpty()) {
-            int index = m_categories.indexOf(category);
-            beginRemoveRows(QModelIndex(), index, index);
-            m_categories.takeAt(index);
-            delete category;
-            endRemoveRows();
-        }
-    }
-}
-
-Category *CategoryModel::findCategoryById(const QString &id)
-{
-    for (int i = 0; i < m_categories.size(); ++i) {
-        Category *category = m_categories.at(i);
-        if (category->id == id)
-            return category;
-    }
-
-    return 0;
-}
 
 // ----------- Category list view
 
@@ -133,116 +46,188 @@ public:
     }
 };
 
-SettingsDialog::SettingsDialog(QWidget *parent) :
-    QDialog(parent),
-    m_model(0),
-    m_stackedLayout(new QStackedLayout),
-    m_categoryList(new CategoryListView),
-    m_headerLabel(new QLabel)
+namespace CorePlugin {
+
+class SettingsDialogPrivate
 {
-    setupUi();
+    Q_DECLARE_PUBLIC(SettingsDialog)
+
+public:
+    SettingsDialogPrivate(SettingsDialog *qq) : q_ptr(qq) {}
+
+    QLabel *headerLabel;
+    QHBoxLayout *headerLayout;
+    QStackedLayout *stackedLayout;
+    QGridLayout *mainLayout;
+    QListView *categoryList;
+
+    QList<QString> categories;
+    QList<QTabWidget *> tabWidgets;
+    QMap<ISettingsPage *, QWidget *> widgets;
+
+    SettingsPageManager *manager;
+    QStandardItemModel *model;
+
+    void addCategory(const QString &id);
+    void addPage(ISettingsPage *page);
+    void removePage(ISettingsPage *page);
+
+    void setupUi();
+
+private:
+    SettingsDialog *q_ptr;
+};
+
+} // namespace CorePlugin
+
+using namespace CorePlugin;
+
+const int categoryIconSize = 24;
+
+void SettingsDialogPrivate::addCategory(const QString &id)
+{
+    if (categories.contains(id))
+        return;
+
+    ISettingsPage *page = manager->pages(id).first();
+
+    QStandardItem *item = new QStandardItem;
+    item->setIcon(page->categoryIcon());
+    item->setText(page->categoryName());
+    item->setData(categories.size());
+
+    model->appendRow(item);
+    categories.append(id);
+
+    QTabWidget *widget = new QTabWidget;
+    stackedLayout->addWidget(widget);
+    tabWidgets.append(widget);
 }
 
-SettingsDialog::~SettingsDialog()
+void SettingsDialogPrivate::addPage(ISettingsPage *page)
 {
+    int index = categories.indexOf(page->category());
+
+    QTabWidget *tabWidget = static_cast<QTabWidget *>(stackedLayout->widget(index));
+    QWidget *widget = page->createPage(tabWidget);
+    widgets.insert(page, widget);
+    tabWidget->addTab(widget, page->name());
 }
 
-CategoryModel * SettingsDialog::model()
+void SettingsDialogPrivate::removePage(ISettingsPage *page)
 {
-    return m_model;
+    QWidget *widget = widgets.take(page);
+    if (widget) {
+        delete widget;
+    }
 }
 
-void SettingsDialog::setModel(CategoryModel *model)
+void SettingsDialogPrivate::setupUi()
 {
-    m_model = model;
-    m_categoryList->setModel(m_model);
-    connect(m_categoryList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-            this, SLOT(currentChanged(QModelIndex)), Qt::UniqueConnection);
-    connect(m_model, SIGNAL(pageAdded(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
-    connect(m_model, SIGNAL(pageRemoved(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
-}
+    Q_Q(SettingsDialog);
 
-void SettingsDialog::currentChanged(const QModelIndex &current)
-{
-    if (current.isValid())
-        showCategory(current.row());
-}
+    headerLabel = new QLabel;
+    headerLabel->setAlignment(Qt::AlignHCenter);
 
-void SettingsDialog::onPageAdded(ISettingsPage *page)
-{
-    Category *category = m_model->findCategoryById(page->category());
-    QTabWidget *widget = m_tabWidgets.value(category);
-    int index = category->pages.indexOf(page);
-    widget->insertTab(index, page->createPage(widget), page->displayName());
-}
-
-void SettingsDialog::onPageRemoved(ISettingsPage *page)
-{
-    QWidget *widget = m_widgets.take(page);
-    delete widget;
-}
-
-void SettingsDialog::setupUi()
-{
     // Header label with large font and a bit of spacing (align with group boxes)
-    QFont headerLabelFont = m_headerLabel->font();
+    QFont headerLabelFont = headerLabel->font();
     headerLabelFont.setBold(true);
     // Paranoia: Should a font be set in pixels...
     const int pointSize = headerLabelFont.pointSize();
     if (pointSize > 0)
         headerLabelFont.setPointSize(pointSize + 2);
-    m_headerLabel->setFont(headerLabelFont);
+    headerLabel->setFont(headerLabelFont);
 
-    QHBoxLayout *headerLayout = new QHBoxLayout;
     const int leftMargin = qApp->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
     QSpacerItem *spacer = new QSpacerItem(leftMargin, 0, QSizePolicy::Fixed, QSizePolicy::Ignored);
+
+    headerLayout = new QHBoxLayout;
     headerLayout->addSpacerItem(spacer);
-    m_headerLabel->setAlignment(Qt::AlignHCenter);
-    headerLayout->addWidget(m_headerLabel);
+    headerLayout->addWidget(headerLabel);
 
-    m_stackedLayout->setMargin(0);
+    categoryList = new CategoryListView;
+    categoryList->setIconSize(QSize(categoryIconSize, categoryIconSize));
+    categoryList->setSelectionMode(QAbstractItemView::SingleSelection);
+    categoryList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    categoryList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QGridLayout *mainLayout = new QGridLayout;
-    mainLayout->addLayout(headerLayout,     0, 1, 1, 1);
-    mainLayout->addWidget(m_categoryList,   0, 0, 2, 1);
-    mainLayout->addLayout(m_stackedLayout,  1, 1, 1, 1);
+    stackedLayout = new QStackedLayout;
+    stackedLayout->setMargin(0);
+
+    mainLayout = new QGridLayout;
+    mainLayout->addLayout(headerLayout,  0, 1, 1, 1);
+    mainLayout->addWidget(categoryList,  0, 0, 2, 1);
+    mainLayout->addLayout(stackedLayout, 1, 1, 1, 1);
     mainLayout->setColumnStretch(1, 4);
-    setLayout(mainLayout);
-    setMinimumSize(1024, 576);
+    q->setLayout(mainLayout);
+    q->setMinimumSize(1024, 576);
 }
 
-void SettingsDialog::showCategory(int index)
+SettingsDialog::SettingsDialog(QWidget *parent) :
+    QDialog(parent),
+    d_ptr(new SettingsDialogPrivate(this))
 {
-    Category *category = m_model->categories().at(index);
-    ensureCategoryWidget(category);
-    // Update current category and page
-    m_currentCategory = category->id;
-    const int currentTabIndex = m_tabWidgets.value(category)->currentIndex();
-    if (currentTabIndex != -1) {
-        ISettingsPage *page = category->pages.at(currentTabIndex);
-        m_currentPage = page->id();
-    }
+    Q_D(SettingsDialog);
 
-    m_stackedLayout->setCurrentIndex(category->index);
-    m_headerLabel->setText(category->displayName());
+    d->manager = 0;
+    d->model = new QStandardItemModel(this);
+    d->setupUi();
+
+    d->categoryList->setModel(d->model);
+    connect(d->categoryList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+            this, SLOT(currentChanged(QModelIndex)), Qt::UniqueConnection);
+
+    setObjectName(QLatin1String("SettingsDialog"));
 }
 
-void SettingsDialog::ensureCategoryWidget(Category *category)
+SettingsDialog::~SettingsDialog()
 {
-    if (m_tabWidgets.value(category) != 0)
-        return;
+    delete d_ptr;
+}
 
-    QTabWidget *tabWidget = new QTabWidget;
-    for (int j = 0; j < category->pages.size(); ++j) {
-        ISettingsPage *page = category->pages.at(j);
-        QWidget *widget = page->createPage(0);
-        m_widgets.insert(page, widget);
-        tabWidget->addTab(widget, page->displayName());
+void SettingsDialog::currentChanged(const QModelIndex &current)
+{
+    if (current.isValid())
+        d_func()->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
+}
+
+void SettingsDialog::onPageAdded(ISettingsPage *page)
+{
+    Q_D(SettingsDialog);
+
+    QString category = page->category();
+    d->addCategory(category);
+    d->addPage(page);
+}
+
+void SettingsDialog::onPageRemoved(ISettingsPage *page)
+{
+    QWidget *widget = d_func()->widgets.take(page);
+    delete widget;
+}
+
+SettingsPageManager *SettingsDialog::settingsPageManager() const
+{
+    return d_func()->manager;
+}
+
+void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
+{
+    Q_D(SettingsDialog);
+
+    if (d->manager) {
+        // clear;
+        disconnect(d->manager, 0, this, 0);
     }
 
-    connect(tabWidget, SIGNAL(currentChanged(int)),
-            this, SLOT(currentTabChanged(int)));
+    d->manager = manager;
 
-    m_tabWidgets.insert(category, tabWidget);
-    category->index = m_stackedLayout->addWidget(tabWidget);
+    foreach (const QString &category, manager->categories()) {
+        d->addCategory(category);
+        foreach (ISettingsPage *page, d->manager->pages(category)) {
+            d->addPage(page);
+        }
+    }
+    connect(d->manager, SIGNAL(pageAdded(ISettingsPage*)), SLOT(onPageAdded(ISettingsPage*)));
+    connect(d->manager, SIGNAL(pageRemoved(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
 }
