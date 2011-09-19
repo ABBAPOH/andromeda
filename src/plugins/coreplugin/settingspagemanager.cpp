@@ -104,6 +104,10 @@ void SettingsPageManager::removePage(ISettingsPage *page)
 
     foreach (Category *c, d->categories) {
         c->pages.removeAll(page);
+        if (c->pages.isEmpty()) {
+            d->categories.remove(c->id);
+            delete c;
+        }
     }
     d->pages.remove(page->id());
 
