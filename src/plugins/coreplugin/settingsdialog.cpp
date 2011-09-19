@@ -202,8 +202,7 @@ void SettingsDialog::onPageAdded(ISettingsPage *page)
 
 void SettingsDialog::onPageRemoved(ISettingsPage *page)
 {
-    QWidget *widget = d_func()->widgets.take(page);
-    delete widget;
+    d_func()->removePage(page);
 }
 
 SettingsPageManager *SettingsDialog::settingsPageManager() const
