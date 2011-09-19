@@ -10,7 +10,8 @@
 #include "constants.h"
 #include "core.h"
 #include "perspectivemanager.h"
-#include "settingsdialog_p.h"
+#include "settingspagemanager.h"
+#include "settingsdialog.h"
 
 #include <actionmanager.h>
 #include <command.h>
@@ -33,7 +34,10 @@ bool CorePluginImpl::initialize()
 {
     addObject(new Core);
     addObject(new PerspectiveManager);
-    addObject(new CategoryModel);
+
+    SettingsPageManager *pageManager = new SettingsPageManager;
+    pageManager->setObjectName(QLatin1String("settingsPageManager"));
+    addObject(pageManager);
 
     createActions();
     connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
@@ -58,6 +62,15 @@ void CorePluginImpl::showPluginView()
 {
     PluginView *view = object<PluginView>(QLatin1String("pluginView"));
     view->exec();
+}
+
+void CorePluginImpl::prefenrences()
+{
+    SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
+
+    SettingsDialog settingsDialog;
+    settingsDialog.setSettingsPageManager(pageManager);
+    settingsDialog.exec();
 }
 
 void CorePluginImpl::handleMessage(const QString &message)
@@ -247,6 +260,16 @@ void CorePluginImpl::createActions()
     selectAllCommand->setDefaultText(tr("Select All"));
     selectAllCommand->setDefaultShortcut(tr("Ctrl+A"));
     editContainer->addCommand(selectAllCommand, group);
+
+    // ================ Edit Menu (CopyPaste) ================
+    editContainer->addGroup(group = Constants::Ids::MenuGroups::EditPreferences);
+
+    Command *preferencesCommand = new Command(Constants::Ids::Actions::Preferences, this);
+    preferencesCommand->setDefaultText(tr("Preferences"));
+    preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
+    preferencesCommand->setContext(Command::ApplicationCommand);
+    editContainer->addCommand(preferencesCommand, group);
+    connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
 
     // ================ View Menu ================
     CommandContainer *viewContainer = new CommandContainer(Constants::Ids::Menus::View, this);
