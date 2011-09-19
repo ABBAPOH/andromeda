@@ -2,6 +2,7 @@
 
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>
+#include <QtGui/QFileIconProvider>
 #ifdef Q_CC_MSVC
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
@@ -17,13 +18,15 @@
 
 #include "filecopydialog.h"
 #include "filemanagerview.h"
+#include "filemanagersettingspage.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 #include "navigationpanelview.h"
 
-using namespace FileManagerPlugin;
 using namespace ExtensionSystem;
 using namespace GuiSystem;
+using namespace CorePlugin;
+using namespace FileManagerPlugin;
 
 FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
     ExtensionSystem::IPlugin()
@@ -32,6 +35,9 @@ FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
 
 bool FileManagerPluginImpl::initialize()
 {
+    SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
+    pageManager->addPage(new FileManagerSettingsPage);
+
     GuiController::instance()->addFactory(new FileManagerFactory(this));
     GuiController::instance()->addFactory(new NavigationPanelFactory(this));
 

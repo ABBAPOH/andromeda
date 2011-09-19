@@ -5,10 +5,12 @@ set( HEADERS
     webviewplugin_global.h
     webvieweditor.h
     webviewplugin.h
+    webviewsettingspage.h
 )
 set( SOURCES
     webvieweditor.cpp
     webviewplugin.cpp
+    webviewsettingspage.cpp
    )
 set( FORMS
    )
