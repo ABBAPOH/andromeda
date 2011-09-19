@@ -56,7 +56,7 @@ void SettingsPageManager::addPage(ISettingsPage *page)
 
     QString categoryId = page->category();
     if (!categoryEsists(categoryId))
-        addCategory(categoryId, page->categoryIcon());
+        addCategory(categoryId, page->displayIcon());
 
     Category *c = d->categories.value(categoryId);
     c->pages.append(page);
