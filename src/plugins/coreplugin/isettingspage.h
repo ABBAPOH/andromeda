@@ -18,7 +18,6 @@ class COREPLUGIN_EXPORT ISettingsPage : public QObject
 
 public:
     ISettingsPage(const QString &id, const QString &category, QObject *parent = 0);
-    virtual ~ISettingsPage();
 
     inline QString id() const { return m_id; }
     inline QString category() const { return m_category; }
