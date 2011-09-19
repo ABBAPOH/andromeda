@@ -27,6 +27,7 @@ const char * const FileQuit = "FileQuit";
 
 const char * const EditRedo = "EditRedo";
 const char * const EditCopyPaste = "EditCopyPate";
+const char * const EditPreferences = "EditPreferences";
 
 const char * const ViewViewMode = "ViewViewMode";
 
@@ -52,6 +53,7 @@ const char * const Cut = "Actions.Cut";
 const char * const Copy = "Actions.Copy";
 const char * const Paste = "Actions.Paste";
 const char * const SelectAll = "Actions.SelectAll";
+const char * const Preferences = "Actions.Preferences";
 const char * const Plugins = "Actions.Plugins";
 
 const char * const IconMode = "Actions.IconMode";

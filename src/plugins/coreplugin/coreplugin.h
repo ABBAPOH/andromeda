@@ -19,6 +19,8 @@ public:
 public slots:
     void newWindow();
     void showPluginView();
+    void prefenrences();
+
     void handleMessage(const QString &);
 
     void restoreSession();
