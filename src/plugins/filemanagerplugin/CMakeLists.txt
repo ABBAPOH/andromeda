@@ -14,6 +14,7 @@ set( HEADERS
     filemanagerview.h
     filemanagerwidget.h
     filemanagerwidget_p.h
+    filemanagersettingspage.h
     filesystemmodel.h
     filesystemmanager.h
     filesystemmanager_p.h
@@ -34,6 +35,7 @@ set( SOURCES
     filemanagerwidget.cpp
     filesystemmodel.cpp
     filesystemmanager.cpp
+    filemanagersettingspage.cpp
     navigationmodel.cpp
     navigationpanel.cpp
     navigationpanelview.cpp

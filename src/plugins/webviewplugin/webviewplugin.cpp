@@ -1,15 +1,19 @@
 #include "webviewplugin.h"
 
 #include <QtCore/QtPlugin>
+#include <QtGui/QFileIconProvider>
 #include <core.h>
 #include <guicontroller.h>
 #include <perspective.h>
 #include <perspectivemanager.h>
+#include <settingspagemanager.h>
 
 #include "webvieweditor.h"
+#include "webviewsettingspage.h"
 
-using namespace WebViewPlugin;
 using namespace GuiSystem;
+using namespace CorePlugin;
+using namespace WebViewPlugin;
 
 WebViewPluginImpl::WebViewPluginImpl() :
     ExtensionSystem::IPlugin()
@@ -18,6 +22,9 @@ WebViewPluginImpl::WebViewPluginImpl() :
 
 bool WebViewPluginImpl::initialize()
 {
+    SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
+    pageManager->addPage(new WebViewSettingsPage);
+
     GuiController::instance()->addFactory(new WebViewFactory(this));
 
     Perspective *perspective = new Perspective("WebViewPerspective", this);
