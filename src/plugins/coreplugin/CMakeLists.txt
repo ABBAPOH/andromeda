@@ -15,6 +15,7 @@ set( HEADERS
     settings.h
     settingsdialog.h
     settingsdialog_p.h
+    settingspagemanager.h
     tab.h
     tabbar.h
    )
@@ -29,6 +30,7 @@ set( SOURCES
     perspectivemanager.cpp
     settings.cpp
     settingsdialog.cpp
+    settingspagemanager.cpp
     tab.cpp
     tabbar.cpp
    )
