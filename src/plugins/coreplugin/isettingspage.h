@@ -23,7 +23,7 @@ public:
 
     virtual QString displayName() const = 0;
     virtual QString displayCategory() const = 0;
-    virtual QIcon categoryIcon() const = 0;
+    virtual QIcon displayIcon() const = 0;
 
     virtual QWidget *createPage(QWidget *parent) = 0;
 

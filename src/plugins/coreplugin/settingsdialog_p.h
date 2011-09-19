@@ -16,7 +16,7 @@ class Category {
 public:
     QString id;
     QString displayName() { return pages.isEmpty() ? QString() : pages.first()->displayCategory(); }
-    QIcon icon() const { return pages.isEmpty() ? QIcon() : pages.first()->categoryIcon(); }
+    QIcon icon() const { return pages.isEmpty() ? QIcon() : pages.first()->displayIcon(); }
     QList<ISettingsPage *> pages;
     int index;
 };
