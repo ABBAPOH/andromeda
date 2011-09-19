@@ -23,6 +23,15 @@ public:
 
 using namespace CorePlugin;
 
+/*!
+    \class SettingsPageManager
+
+    \brief The SettingsPageManager class contains implementations of ISettingsPage interface used in SettingsDialog
+*/
+
+/*!
+    \brief Creates a SettingsPageManager with the given \a parent.
+*/
 SettingsPageManager::SettingsPageManager(QObject *parent) :
     QObject(parent),
     d_ptr(new SettingsPageManagerPrivate)
@@ -30,6 +39,9 @@ SettingsPageManager::SettingsPageManager(QObject *parent) :
     setObjectName(QLatin1String("SettingsPageManager"));
 }
 
+/*!
+    \brief Destroys SettingsPageManager.
+*/
 SettingsPageManager::~SettingsPageManager()
 {
     Q_D(SettingsPageManager);
@@ -39,11 +51,17 @@ SettingsPageManager::~SettingsPageManager()
     delete d_ptr;
 }
 
+/*!
+    \brief Returns previously added page with \a id.
+*/
 ISettingsPage * SettingsPageManager::page(const QString &id) const
 {
     return d_func()->pages.value(id);
 }
 
+/*!
+    \brief Adds new page to this manager.
+*/
 void SettingsPageManager::addPage(ISettingsPage *page)
 {
     Q_D(SettingsPageManager);
@@ -71,6 +89,9 @@ void SettingsPageManager::addPage(ISettingsPage *page)
     emit pageAdded(page);
 }
 
+/*!
+    \brief Removes page from this manager.
+*/
 void SettingsPageManager::removePage(ISettingsPage *page)
 {
     Q_D(SettingsPageManager);
@@ -90,11 +111,17 @@ void SettingsPageManager::removePage(ISettingsPage *page)
     emit pageRemoved(page);
 }
 
+/*!
+    \brief Returns list of all categories in this manager.
+*/
 QStringList SettingsPageManager::categories() const
 {
     return d_func()->categories.keys();
 }
 
+/*!
+    \brief Returns list of all pages added to this manager.
+*/
 QList<ISettingsPage *> SettingsPageManager::pages() const
 {
     QList<ISettingsPage *> result;
@@ -106,6 +133,9 @@ QList<ISettingsPage *> SettingsPageManager::pages() const
     return result;
 }
 
+/*!
+    \brief Returns list of all pages with category \a category.
+*/
 QList<ISettingsPage *> SettingsPageManager::pages(const QString &category) const
 {
     Category *c = d_func()->categories.value(category);
@@ -115,6 +145,9 @@ QList<ISettingsPage *> SettingsPageManager::pages(const QString &category) const
     return QList<ISettingsPage*>();
 }
 
+/*!
+    \internal
+*/
 void SettingsPageManager::onDestroyed(QObject *o)
 {
     ISettingsPage *page = static_cast<ISettingsPage*>(o);
