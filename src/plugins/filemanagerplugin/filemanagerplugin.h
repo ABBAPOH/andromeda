@@ -6,6 +6,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
+#include "navigationmodel.h"
 
 class FileManagerPluginImpl : public ExtensionSystem::IPlugin
 {
@@ -19,6 +20,8 @@ public:
     void createGotoDirCommand(QDesktopServices::StandardLocation location,
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());
+private slots:
+    void onStandardLocationsChanged(NavigationModel::StandardLocations);
 };
 
 #endif // FILEMANAGERPLUGIN_H

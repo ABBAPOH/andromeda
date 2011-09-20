@@ -10,7 +10,10 @@ class FILEMANAGERPLUGIN_EXPORT NavigationModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(NavigationModel)
-    Q_PROPERTY(StandardLocations standardLocations READ standardLocations WRITE setStandardLocations)
+    Q_PROPERTY(StandardLocations standardLocations
+               READ standardLocations
+               WRITE setStandardLocations
+               NOTIFY standardLocationsChanged)
 
 public:
     enum StandardLocation {
@@ -55,6 +58,9 @@ public:
     StandardLocations standardLocations() const;
     void setStandardLocation(StandardLocation loc, bool on);
     void setStandardLocations(StandardLocations locations);
+
+signals:
+    void standardLocationsChanged(NavigationModel::StandardLocations);
 
 protected:
     NavigationModelPrivate *d_ptr;

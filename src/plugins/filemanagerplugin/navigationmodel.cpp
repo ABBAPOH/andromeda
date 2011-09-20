@@ -12,6 +12,7 @@
 
 class QDriveInfo;
 
+// todo: refactor model
 NavigationModelPrivate::NavigationModelPrivate(NavigationModel *qq) :
     q_ptr(qq)
 {
@@ -79,6 +80,42 @@ void NavigationModelPrivate::onDriveAdded(const QString &path)
 void NavigationModelPrivate::onDriveRemoved(const QString &path)
 {
     removeItem(path);
+}
+
+static QString locationToString(NavigationModel::StandardLocations locations)
+{
+    switch (locations) {
+    case NavigationModel::DesktopLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
+    case NavigationModel::DocumentsLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+    case NavigationModel::MusicLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
+    case NavigationModel::MoviesLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::MoviesLocation);
+    case NavigationModel::PicturesLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
+    case NavigationModel::HomeLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
+    case NavigationModel::ApplicationsLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
+    case NavigationModel::DownloadsLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::HomeLocation) + QLatin1String("/Downloads");
+    default: return QString();
+    }
+}
+
+NavigationModel::StandardLocation pathToLocation(const QString &path)
+{
+    QStringList locations;
+    for (int i = NavigationModel::DesktopLocation; i <= NavigationModel::StandardLocationCount; i = (i << 1)) {
+        locations.append(locationToString((NavigationModel::StandardLocation)i));
+    }
+    int index = locations.indexOf(path);
+    if (index != -1)
+        return (NavigationModel::StandardLocation)(NavigationModel::DesktopLocation << index);
+
+    return NavigationModel::NoLocation;
 }
 
 NavigationModel::NavigationModel(QObject *parent) :
@@ -200,6 +237,13 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction /*actio
         item->icon = d->iconProvider.icon(info);
 
         d->mapToItem.insert(path, item);
+
+        StandardLocation loc = pathToLocation(path);
+        if (loc != NoLocation) {
+            d->locations = d->locations | loc;
+            emit standardLocationsChanged(d->locations);
+        }
+
     }
     endInsertRows();
     return true;
@@ -319,6 +363,12 @@ void NavigationModel::addFolder(const QString &path)
         return;
 
     d->insertItem(d->foldersItem, name, canonicalPath);
+
+    StandardLocation loc = pathToLocation(canonicalPath);
+    if (loc != NoLocation) {
+        d->locations = d->locations | loc;
+        emit standardLocationsChanged(d->locations);
+    }
 }
 
 void NavigationModel::removeFolder(const QString &path)
@@ -326,6 +376,13 @@ void NavigationModel::removeFolder(const QString &path)
     Q_D(NavigationModel);
 
     d->removeItem(path);
+
+    StandardLocation loc = pathToLocation(path);
+    if (loc != NoLocation) {
+        d->locations = d->locations & ~loc;
+        emit standardLocationsChanged(d->locations);
+    }
+
 }
 
 NavigationModel::StandardLocations NavigationModel::standardLocations() const
@@ -335,29 +392,6 @@ NavigationModel::StandardLocations NavigationModel::standardLocations() const
     return d->locations;
 }
 
-static QString locationToString(NavigationModel::StandardLocations locations)
-{
-    switch (locations) {
-    case NavigationModel::DesktopLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
-    case NavigationModel::DocumentsLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-    case NavigationModel::MusicLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
-    case NavigationModel::MoviesLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::MoviesLocation);
-    case NavigationModel::PicturesLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
-    case NavigationModel::HomeLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
-    case NavigationModel::ApplicationsLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
-    case NavigationModel::DownloadsLocation :
-        return QDesktopServices::storageLocation(QDesktopServices::HomeLocation) + QLatin1String("/Downloads");
-    default: return QString();
-    }
-}
-
 void NavigationModel::setStandardLocation(StandardLocation loc, bool on)
 {
     QString path = locationToString(loc);
@@ -365,15 +399,28 @@ void NavigationModel::setStandardLocation(StandardLocation loc, bool on)
         addFolder(path);
     else
         removeFolder(path);
+    emit standardLocationsChanged(standardLocations());
 }
 
 void NavigationModel::setStandardLocations(StandardLocations locations)
 {
     Q_D(NavigationModel);
 
+    if (d->locations == locations)
+        return;
+
     d->locations = locations;
 
     for (int i = DesktopLocation; i <= StandardLocationCount; i = (i << 1)) {
-        setStandardLocation((StandardLocation)i, (locations & i));
+//        setStandardLocation((StandardLocation)i, (locations & i));
+        StandardLocation loc = (StandardLocation)i;
+        bool on = (locations & i);
+        QString path = locationToString(loc);
+        if (on)
+            addFolder(path);
+        else
+            removeFolder(path);
+
     }
+    emit standardLocationsChanged(d->locations);
 }
