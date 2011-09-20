@@ -169,7 +169,11 @@ IView * FileManagerFactory::createView()
 #include <QApplication>
 void FileManagerView::showFileInfo()
 {
-    foreach(const QString &path, m_widget->activeWidget()->selectedPaths()) {
+    QStringList paths = m_widget->activeWidget()->selectedPaths();
+    if (paths.isEmpty())
+        paths.append(m_widget->currentPath());
+
+    foreach (const QString &path, paths) {
         FileInfoDialog *dialog = new FileInfoDialog(m_widget);
         dialog->setFileInfo(QFileInfo(path));
         dialog->show();
