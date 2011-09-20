@@ -7,11 +7,10 @@
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
 
-//namespace FileManagerPlugin {
-
 class FileManagerPluginImpl : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
+
 public:
     explicit FileManagerPluginImpl(QObject *parent = 0);
 
@@ -21,7 +20,5 @@ public:
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());
 };
-
-//} // namespace FileManagerPlugin
 
 #endif // FILEMANAGERPLUGIN_H
