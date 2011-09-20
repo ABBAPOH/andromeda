@@ -338,12 +338,20 @@ NavigationModel::StandardLocations NavigationModel::standardLocations() const
 static QString locationToString(NavigationModel::StandardLocations locations)
 {
     switch (locations) {
-    case NavigationModel::DesktopLocation : return QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
-    case NavigationModel::DocumentsLocation : return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-    case NavigationModel::MusicLocation : return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
-    case NavigationModel::PicturesLocation : return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
-    case NavigationModel::HomeLocation : return QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
-    case NavigationModel::ApplicationsLocation : return QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
+    case NavigationModel::DesktopLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
+    case NavigationModel::DocumentsLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+    case NavigationModel::MusicLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
+    case NavigationModel::PicturesLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
+    case NavigationModel::HomeLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
+    case NavigationModel::ApplicationsLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
+    case NavigationModel::DownloadsLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::HomeLocation) + QLatin1String("/Downloads");
     default: return QString();
     }
 }
@@ -363,7 +371,7 @@ void NavigationModel::setStandardLocations(StandardLocations locations)
 
     d->locations = locations;
 
-    for (int i = 0; i < (ApplicationsLocation << 1); i = (i << 1)) {
+    for (int i = DesktopLocation; i <= StandardLocationCount; i = (i << 1)) {
         setStandardLocation((StandardLocation)i, (locations & i));
     }
 }

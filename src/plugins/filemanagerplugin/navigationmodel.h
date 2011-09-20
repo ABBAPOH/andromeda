@@ -19,7 +19,9 @@ public:
         MoviesLocation = 0x08,
         PicturesLocation = 0x10,
         HomeLocation = 0x20,
-        ApplicationsLocation = 0x40
+        ApplicationsLocation = 0x40,
+        DownloadsLocation = 0x080,
+        StandardLocationCount = 0x080
     };
 
     Q_DECLARE_FLAGS(StandardLocations, StandardLocation)
