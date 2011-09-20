@@ -5,6 +5,8 @@
 #include <ieditor.h>
 #include <iviewfactory.h>
 
+class QActionGroup;
+
 namespace FileManagerPlugin {
 
 class DualPaneWidget;
@@ -39,6 +41,7 @@ public:
 
 private slots:
     void onOpenRequested(const QString &path);
+    void onCustomContextMenuRequested(const QPoint &pos);
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
 
@@ -65,6 +68,7 @@ private:
 
     QAction *showHiddenFilesAction;
 
+    QActionGroup *viewModeGroup;
     QAction *iconModeAction;
     QAction *columnModeAction;
     QAction *treeModeAction;

@@ -4,6 +4,7 @@
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
+#include <QtGui/QMenu>
 
 #include <actionmanager.h>
 #include <command.h>
@@ -30,9 +31,10 @@ FileManagerView::FileManagerView(QObject *parent) :
 
     m_widget = new DualPaneWidget(model);
     m_widget->setDualPaneModeEnabled(enableDualPane);
-    m_widget->setContextMenuPolicy(Qt::ActionsContextMenu);
+    m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(pathChanged(QString)));
     connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
+    connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
 
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
@@ -131,6 +133,38 @@ void FileManagerView::onOpenRequested(const QString &path)
     mainWindow()->open(path);
 }
 
+void FileManagerView::onCustomContextMenuRequested(const QPoint &pos)
+{
+    QStringList paths = m_widget->activeWidget()->selectedPaths();
+
+    QMenu *menu = new QMenu;
+    if (paths.isEmpty()) {
+        menu->addAction(newFolderAction);
+        menu->addSeparator();
+        menu->addAction(showFileInfoAction);
+        menu->addSeparator();
+        menu->addAction(pasteAction);
+        menu->addAction(selectAllAction);
+        menu->addSeparator();
+        QMenu * viewModeMenu = menu->addMenu(tr("View Mode"));
+        viewModeMenu->addAction(iconModeAction);
+        viewModeMenu->addAction(columnModeAction);
+        viewModeMenu->addAction(treeModeAction);
+        viewModeMenu->addAction(dualPaneModeAction);
+    } else {
+        menu->addAction(openAction);
+        menu->addSeparator();
+        menu->addAction(showFileInfoAction);
+        menu->addSeparator();
+        menu->addAction(renameAction);
+        menu->addAction(removeAction);
+        menu->addSeparator();
+        menu->addAction(copyAction);
+    }
+    menu->exec(m_widget->mapToGlobal(pos));
+    delete menu;
+}
+
 void FileManagerView::setDualPaneModeEnabled(bool on)
 {
     QSettings settings;
@@ -194,8 +228,8 @@ void FileManagerView::createActions()
     connect(showFileInfoAction, SIGNAL(triggered()), SLOT(showFileInfo()));
     m_widget->addAction(showFileInfoAction);
 
-    undoAction = actionManager->command(Constants::Ids::Actions::Redo)->action(m_widget, SLOT(redo()));
-    redoAction = actionManager->command(Constants::Ids::Actions::Undo)->action(m_widget, SLOT(undo()));
+    redoAction = actionManager->command(Constants::Ids::Actions::Redo)->action(m_widget, SLOT(redo()));
+    undoAction = actionManager->command(Constants::Ids::Actions::Undo)->action(m_widget, SLOT(undo()));
 
     //    actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
     copyAction = actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));
@@ -234,6 +268,12 @@ void FileManagerView::createActions()
     connect(dualPaneModeAction, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
     m_widget->addAction(dualPaneModeAction);
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
+
+    viewModeGroup = new QActionGroup(this);
+    viewModeGroup->addAction(iconModeAction);
+    viewModeGroup->addAction(columnModeAction);
+    viewModeGroup->addAction(treeModeAction);
+    viewModeGroup->addAction(dualPaneModeAction);
 
     connect(viewMapper, SIGNAL(mapped(int)), SLOT(setViewMode(int)));
 }
