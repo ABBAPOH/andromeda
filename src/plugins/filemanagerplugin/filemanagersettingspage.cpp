@@ -1,5 +1,7 @@
 #include "filemanagersettingspage.h"
 
+#include "filemanagersettingswidget.h"
+
 #include <QtGui/QFileIconProvider>
 #include <QtGui/QLabel>
 
@@ -27,9 +29,7 @@ QIcon FileManagerSettingsPage::icon() const
 
 QWidget *FileManagerSettingsPage::createPage(QWidget *parent)
 {
-    QLabel *label = new QLabel("Not implemented", parent);
-    label->setAlignment(Qt::AlignCenter);
-    return label;
+    return new FileManagerSettingsWidget(parent);
 }
 
 QIcon FileManagerSettingsPage::categoryIcon() const

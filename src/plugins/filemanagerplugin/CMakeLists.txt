@@ -15,6 +15,7 @@ set( HEADERS
     filemanagerwidget.h
     filemanagerwidget_p.h
     filemanagersettingspage.h
+    filemanagersettingswidget.h
     filesystemmodel.h
     filesystemmanager.h
     filesystemmanager_p.h
@@ -36,6 +37,7 @@ set( SOURCES
     filesystemmodel.cpp
     filesystemmanager.cpp
     filemanagersettingspage.cpp
+    filemanagersettingswidget.cpp
     navigationmodel.cpp
     navigationpanel.cpp
     navigationpanelview.cpp
@@ -45,6 +47,7 @@ set( FORMS
     filecopyreplacedialog.ui
     filecopywidget.ui
     fileinfodialog.ui
+    filemanagersettingswidget.ui
    )
 
 set( RESOURCES resources.qrc )
