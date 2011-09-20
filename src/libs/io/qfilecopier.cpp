@@ -805,7 +805,6 @@ void QFileCopierPrivate::enqueueOperation(Task::Type operationType, const QStrin
                                           const QString &destinationPath, QFileCopier::CopyFlags flags)
 {
     QList<Task> taskList;
-    taskList.reserve(sourcePaths.size());
     foreach (const QString &path, sourcePaths) {
         Task t;
         t.source = path;
