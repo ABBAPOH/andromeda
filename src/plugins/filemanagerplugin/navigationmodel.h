@@ -10,6 +10,8 @@ class FILEMANAGERPLUGIN_EXPORT NavigationModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(NavigationModel)
+    Q_PROPERTY(StandardLocations standardLocations READ standardLocations WRITE setStandardLocations)
+
 public:
     enum StandardLocation {
         NoLocation = 0x00,
