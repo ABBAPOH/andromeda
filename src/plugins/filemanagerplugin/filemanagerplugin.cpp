@@ -38,6 +38,8 @@ bool FileManagerPluginImpl::initialize()
 {
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");
+    connect(navigationModel, SIGNAL(standardLocationsChanged(NavigationModel::StandardLocations)),
+            SLOT(onStandardLocationsChanged(NavigationModel::StandardLocations)));
     addObject(navigationModel);
     CorePlugin::Core::instance()->settings()->addObject(navigationModel, "fileManager/standardLocations");
 
@@ -129,4 +131,10 @@ void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocat
     container->addCommand(cmd, Constants::Ids::MenuGroups::Locations);
 }
 
+void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::StandardLocations loc)
+{
+    CorePlugin::Core::instance()->settings()->setValue("fileManager/standardLocations", (int)loc);
+}
+
 Q_EXPORT_PLUGIN(FileManagerPluginImpl)
+
