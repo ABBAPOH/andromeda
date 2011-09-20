@@ -344,6 +344,8 @@ static QString locationToString(NavigationModel::StandardLocations locations)
         return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
     case NavigationModel::MusicLocation :
         return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
+    case NavigationModel::MoviesLocation :
+        return QDesktopServices::storageLocation(QDesktopServices::MoviesLocation);
     case NavigationModel::PicturesLocation :
         return QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
     case NavigationModel::HomeLocation :
