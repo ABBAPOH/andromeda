@@ -197,7 +197,7 @@ void CorePluginImpl::createActions()
     Command *renameCommand = new Command(Constants::Ids::Actions::Rename, this);
     renameCommand->setDefaultText(tr("Rename"));
 #ifdef Q_OS_MAC
-    renameCommand->setDefaultShortcut(tr("Return"));
+//    renameCommand->setDefaultShortcut(tr("Return")); // Can't set shorcut to prevent overriding edit triggers
 #else
     renameCommand->setDefaultShortcut(tr("F2"));
 #endif
