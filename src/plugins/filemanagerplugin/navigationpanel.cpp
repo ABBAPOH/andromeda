@@ -97,6 +97,22 @@ QString NavigationPanel::currentPath() const
     return d_func()->currentPath;
 }
 
+NavigationModel * NavigationPanel::model() const
+{
+    return d_func()->model;
+}
+
+void NavigationPanel::setModel(NavigationModel *model)
+{
+    Q_D(NavigationPanel);
+
+    if (d->model != model) {
+        d->model = model;
+        d->treeView->setModel(model);
+        d->treeView->expandAll();
+    }
+}
+
 void NavigationPanel::resizeEvent(QResizeEvent * event)
 {
     Q_D(NavigationPanel);

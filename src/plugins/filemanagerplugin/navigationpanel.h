@@ -29,6 +29,9 @@ public:
 
     QString currentPath() const;
 
+    NavigationModel *model() const;
+    void setModel(NavigationModel *model);
+
 protected:
     void resizeEvent(QResizeEvent *);
 
