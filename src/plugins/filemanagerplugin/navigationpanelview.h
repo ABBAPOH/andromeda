@@ -10,6 +10,7 @@ class NavigationPanel;
 class NavigationPanelView : public GuiSystem::IView
 {
     Q_OBJECT
+
 public:
     explicit NavigationPanelView(QObject *parent = 0);
 
