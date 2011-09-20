@@ -1,8 +1,10 @@
 #include "navigationpanelview.h"
 
+#include <core.h>
 #include <perspectiveinstance.h>
 
 #include "filemanagerview.h"
+#include "navigationmodel.h"
 #include "navigationpanel.h"
 
 using namespace FileManagerPlugin;
@@ -11,6 +13,7 @@ NavigationPanelView::NavigationPanelView(QObject *parent) :
     GuiSystem::IView(parent)
 {
     m_widget = new NavigationPanel;
+    m_widget->setModel(ExtensionSystem::PluginManager::instance()->object<NavigationModel>("navigationModel"));
 }
 
 void NavigationPanelView::initialize()

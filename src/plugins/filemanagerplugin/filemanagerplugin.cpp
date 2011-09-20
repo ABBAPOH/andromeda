@@ -21,6 +21,7 @@
 #include "filemanagersettingspage.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
+#include "navigationmodel.h"
 #include "navigationpanelview.h"
 
 using namespace ExtensionSystem;
@@ -35,6 +36,11 @@ FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
 
 bool FileManagerPluginImpl::initialize()
 {
+    NavigationModel *navigationModel = new NavigationModel;
+    navigationModel->setObjectName("navigationModel");
+    addObject(navigationModel);
+    CorePlugin::Core::instance()->settings()->addObject(navigationModel, "fileManager/standardLocations");
+
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new FileManagerSettingsPage);
 
