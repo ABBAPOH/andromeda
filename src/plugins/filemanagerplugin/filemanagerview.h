@@ -45,8 +45,30 @@ private slots:
     void showFileInfo();
 
 private:
+    void createActions();
+
+private:
     QPointer<DualPaneWidget> m_widget;
     const GuiSystem::State *m_state;
+
+    QAction *openAction;
+    QAction *newFolderAction;
+    QAction *renameAction;
+    QAction *removeAction;
+    QAction *showFileInfoAction;
+
+    QAction *undoAction;
+    QAction *redoAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+    QAction *selectAllAction;
+
+    QAction *showHiddenFilesAction;
+
+    QAction *iconModeAction;
+    QAction *columnModeAction;
+    QAction *treeModeAction;
+    QAction *dualPaneModeAction;
 };
 
 class FileManagerFactory : public GuiSystem::IViewFactory
