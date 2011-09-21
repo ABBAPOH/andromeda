@@ -248,26 +248,22 @@ void FileManagerView::createActions()
 
     QSignalMapper *viewMapper = new QSignalMapper(this);
 
-    iconModeAction = actionManager->command(Constants::Ids::Actions::IconMode)->action(this);
+    iconModeAction = actionManager->command(Constants::Ids::Actions::IconMode)->action(viewMapper, SLOT(map()));
     viewMapper->setMapping(iconModeAction, 1);
-    connect(iconModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(iconModeAction);
     iconModeAction->setChecked(viewMode == 1);
 
-    columnModeAction = actionManager->command(Constants::Ids::Actions::ColumnMode)->action(this);
+    columnModeAction = actionManager->command(Constants::Ids::Actions::ColumnMode)->action(viewMapper, SLOT(map()));
     viewMapper->setMapping(columnModeAction, 3);
-    connect(columnModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(columnModeAction);
     columnModeAction->setChecked(viewMode == 3);
 
-    treeModeAction = actionManager->command(Constants::Ids::Actions::TreeMode)->action(this);
+    treeModeAction = actionManager->command(Constants::Ids::Actions::TreeMode)->action(viewMapper, SLOT(map()));
     viewMapper->setMapping(treeModeAction, 4);
-    connect(treeModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(treeModeAction);
     treeModeAction->setChecked(viewMode == 4);
 
-    dualPaneModeAction = actionManager->command(Constants::Ids::Actions::DualPane)->action(this);
-    connect(dualPaneModeAction, SIGNAL(toggled(bool)), this, SLOT(setDualPaneModeEnabled(bool)));
+    dualPaneModeAction = actionManager->command(Constants::Ids::Actions::DualPane)->action(this, SLOT(setDualPaneModeEnabled(bool)));
     m_widget->addAction(dualPaneModeAction);
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 
