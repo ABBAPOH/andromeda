@@ -4,6 +4,7 @@
 #include "io_global.h"
 
 #include <QtCore/QObject>
+#include <limits.h>
 
 class QFileCopierPrivate;
 class IO_EXPORT QFileCopier : public QObject
