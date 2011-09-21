@@ -137,32 +137,32 @@ void CorePluginImpl::aboutQt()
 
 void CorePluginImpl::createActions()
 {
-    CommandContainer *menuBarContainer = new CommandContainer(Constants::Ids::Menus::MenuBar, this);
+    CommandContainer *menuBarContainer = new CommandContainer(Constants::Menus::MenuBar, this);
 
     const char *group = 0;
 
     // ================ File Menu ================
-    CommandContainer *fileContainer = new CommandContainer(Constants::Ids::Menus::File, this);
+    CommandContainer *fileContainer = new CommandContainer(Constants::Menus::File, this);
     fileContainer->setTitle(tr("File"));
     menuBarContainer->addContainer(fileContainer);
 
     // ================ File Menu (New) ================
-    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileNew);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileNew);
 
-    Command *newWindowCommand = new Command(Constants::Ids::Actions::NewWindow, this);
+    Command *newWindowCommand = new Command(Constants::Actions::NewWindow, this);
     newWindowCommand->setDefaultText(tr("New window"));
     newWindowCommand->setDefaultShortcut(tr("Ctrl+N"));
     newWindowCommand->setContext(Command::ApplicationCommand);
     connect(newWindowCommand->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
     fileContainer->addCommand(newWindowCommand, group);
 
-    Command *newTabCommand = new Command(Constants::Ids::Actions::NewTab, this);
+    Command *newTabCommand = new Command(Constants::Actions::NewTab, this);
     newTabCommand->setDefaultText(tr("New tab"));
     newTabCommand->setDefaultShortcut(tr("Ctrl+T"));
     newTabCommand->setContext(Command::WindowCommand);
     fileContainer->addCommand(newTabCommand, group);
 
-    Command *openCommand = new Command(Constants::Ids::Actions::Open, this);
+    Command *openCommand = new Command(Constants::Actions::Open, this);
     openCommand->setDefaultText(tr("Open"));
 #ifdef Q_OS_MAC
     openCommand->setDefaultShortcut(tr("Ctrl+O"));
@@ -172,29 +172,29 @@ void CorePluginImpl::createActions()
     openCommand->setContext(Command::WidgetCommand);
     fileContainer->addCommand(openCommand, group);
 
-    Command *closeTabCommand = new Command(Constants::Ids::Actions::CloseTab, this);
+    Command *closeTabCommand = new Command(Constants::Actions::CloseTab, this);
     closeTabCommand->setDefaultText(tr("Close"));
     closeTabCommand->setDefaultShortcut(tr("Ctrl+W"));
     closeTabCommand->setContext(Command::WindowCommand);
     fileContainer->addCommand(closeTabCommand, group);
 
     // ================ File Menu (Info) ================
-    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileInfo);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileInfo);
 
-    Command *fileInfoCommand = new Command(Constants::Ids::Actions::FileInfo, this);
+    Command *fileInfoCommand = new Command(Constants::Actions::FileInfo, this);
     fileInfoCommand->setDefaultText(tr("File info"));
     fileInfoCommand->setDefaultShortcut(tr("Ctrl+I"));
     fileContainer->addCommand(fileInfoCommand, group);
 
     // ================ File Menu (Change) ================
-    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileChange);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileChange);
 
-    Command *newFolderCommand = new Command(Constants::Ids::Actions::NewFolder, this);
+    Command *newFolderCommand = new Command(Constants::Actions::NewFolder, this);
     newFolderCommand->setDefaultText(tr("New folder"));
     newFolderCommand->setDefaultShortcut(tr("Ctrl+Shift+N"));
     fileContainer->addCommand(newFolderCommand, group);
 
-    Command *renameCommand = new Command(Constants::Ids::Actions::Rename, this);
+    Command *renameCommand = new Command(Constants::Actions::Rename, this);
     renameCommand->setDefaultText(tr("Rename"));
 #ifdef Q_OS_MAC
 //    renameCommand->setDefaultShortcut(tr("Return")); // Can't set shorcut to prevent overriding edit triggers
@@ -203,7 +203,7 @@ void CorePluginImpl::createActions()
 #endif
     fileContainer->addCommand(renameCommand, group);
 
-    Command *removeCommand = new Command(Constants::Ids::Actions::Remove, this);
+    Command *removeCommand = new Command(Constants::Actions::Remove, this);
     removeCommand->setDefaultText(tr("Remove"));
 #ifdef Q_OS_MAC
     removeCommand->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
@@ -215,9 +215,9 @@ void CorePluginImpl::createActions()
 
 //#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
-    fileContainer->addGroup(group = Constants::Ids::MenuGroups::FileQuit);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileQuit);
 
-    Command *exitCommand = new Command(Constants::Ids::Actions::Exit, this);
+    Command *exitCommand = new Command(Constants::Actions::Exit, this);
     exitCommand->setDefaultText(tr("Quit Andromeda"));
     exitCommand->setDefaultShortcut(tr("Ctrl+Q"));
     exitCommand->setContext(Command::ApplicationCommand);
@@ -226,50 +226,50 @@ void CorePluginImpl::createActions()
 //#endif
 
     // ================ Edit Menu ================
-    CommandContainer *editContainer = new CommandContainer(Constants::Ids::Menus::Edit, this);
+    CommandContainer *editContainer = new CommandContainer(Constants::Menus::Edit, this);
     editContainer->setTitle(tr("Edit"));
     menuBarContainer->addContainer(editContainer);
 
     // ================ Edit Menu (Redo) ================
-    editContainer->addGroup(group = Constants::Ids::MenuGroups::EditRedo);
+    editContainer->addGroup(group = Constants::MenuGroups::EditRedo);
 
-    Command *undoCommand = new Command(Constants::Ids::Actions::Undo, this);
+    Command *undoCommand = new Command(Constants::Actions::Undo, this);
     undoCommand->setDefaultText(tr("Undo"));
     undoCommand->setDefaultShortcut(tr("Ctrl+Z"));
     editContainer->addCommand(undoCommand, group);
 
-    Command *redoCommand = new Command(Constants::Ids::Actions::Redo, this);
+    Command *redoCommand = new Command(Constants::Actions::Redo, this);
     redoCommand->setDefaultText(tr("Redo"));
     redoCommand->setDefaultShortcut(tr("Ctrl+Shift+Z"));
     editContainer->addCommand(redoCommand, group);
 
     // ================ Edit Menu (CopyPaste) ================
-    editContainer->addGroup(group = Constants::Ids::MenuGroups::EditCopyPaste);
+    editContainer->addGroup(group = Constants::MenuGroups::EditCopyPaste);
 
-    Command *cutCommand = new Command(Constants::Ids::Actions::Cut, this);
+    Command *cutCommand = new Command(Constants::Actions::Cut, this);
     cutCommand->setDefaultText(tr("Cut"));
     cutCommand->setDefaultShortcut(tr("Ctrl+X"));
     editContainer->addCommand(cutCommand, group);
 
-    Command *copyCommand = new Command(Constants::Ids::Actions::Copy, this);
+    Command *copyCommand = new Command(Constants::Actions::Copy, this);
     copyCommand->setDefaultText(tr("Copy"));
     copyCommand->setDefaultShortcut(tr("Ctrl+C"));
     editContainer->addCommand(copyCommand, group);
 
-    Command *pasteCommand = new Command(Constants::Ids::Actions::Paste, this);
+    Command *pasteCommand = new Command(Constants::Actions::Paste, this);
     pasteCommand->setDefaultText(tr("Paste"));
     pasteCommand->setDefaultShortcut(tr("Ctrl+V"));
     editContainer->addCommand(pasteCommand, group);
 
-    Command *selectAllCommand = new Command(Constants::Ids::Actions::SelectAll, this);
+    Command *selectAllCommand = new Command(Constants::Actions::SelectAll, this);
     selectAllCommand->setDefaultText(tr("Select All"));
     selectAllCommand->setDefaultShortcut(tr("Ctrl+A"));
     editContainer->addCommand(selectAllCommand, group);
 
     // ================ Edit Menu (CopyPaste) ================
-    editContainer->addGroup(group = Constants::Ids::MenuGroups::EditPreferences);
+    editContainer->addGroup(group = Constants::MenuGroups::EditPreferences);
 
-    Command *preferencesCommand = new Command(Constants::Ids::Actions::Preferences, this);
+    Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));
     preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
     preferencesCommand->setContext(Command::ApplicationCommand);
@@ -277,34 +277,34 @@ void CorePluginImpl::createActions()
     connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
 
     // ================ View Menu ================
-    CommandContainer *viewContainer = new CommandContainer(Constants::Ids::Menus::View, this);
+    CommandContainer *viewContainer = new CommandContainer(Constants::Menus::View, this);
     viewContainer->setTitle(tr("View"));
     menuBarContainer->addContainer(viewContainer);
 
-    viewContainer->addGroup(group = Constants::Ids::MenuGroups::ViewViewMode, true);
+    viewContainer->addGroup(group = Constants::MenuGroups::ViewViewMode, true);
 
-    Command *iconModeCommand = new Command(Constants::Ids::Actions::IconMode, this);
+    Command *iconModeCommand = new Command(Constants::Actions::IconMode, this);
     iconModeCommand->setDefaultText(tr("Icon View"));
     iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
     iconModeCommand->setCheckable(true);
     iconModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(iconModeCommand, group);
 
-    Command *columnModeCommand = new Command(Constants::Ids::Actions::ColumnMode, this);
+    Command *columnModeCommand = new Command(Constants::Actions::ColumnMode, this);
     columnModeCommand->setDefaultText(tr("Column View"));
     columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
     columnModeCommand->setCheckable(true);
     columnModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(columnModeCommand, group);
 
-    Command *treeModeCommand = new Command(Constants::Ids::Actions::TreeMode, this);
+    Command *treeModeCommand = new Command(Constants::Actions::TreeMode, this);
     treeModeCommand->setDefaultText(tr("Tree View"));
     treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
     treeModeCommand->setCheckable(true);
     treeModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(treeModeCommand, group);
 
-    Command *dualPaneCommand = new Command(Constants::Ids::Actions::DualPane, this);
+    Command *dualPaneCommand = new Command(Constants::Actions::DualPane, this);
     dualPaneCommand->setDefaultText(tr("Dual Pane"));
     dualPaneCommand->setDefaultShortcut(tr("Ctrl+4"));
     // TODO: change API or realization!!!
@@ -313,50 +313,50 @@ void CorePluginImpl::createActions()
     viewContainer->addCommand(dualPaneCommand, group);
 
     // ================ GoTo Menu ================
-    CommandContainer *goToContainer = new CommandContainer(Constants::Ids::Menus::GoTo, this);
+    CommandContainer *goToContainer = new CommandContainer(Constants::Menus::GoTo, this);
     goToContainer->setTitle(tr("Go to"));
     menuBarContainer->addContainer(goToContainer);
 
     // ================ GoTo Menu (default) ================
-    Command *backCommand = new Command(Constants::Ids::Actions::Back, this);
+    Command *backCommand = new Command(Constants::Actions::Back, this);
     backCommand->setDefaultText(tr("Back"));
     backCommand->setDefaultShortcut(tr("Ctrl+["));
     goToContainer->addCommand(backCommand);
 
-    Command *forwardCommand = new Command(Constants::Ids::Actions::Forward, this);
+    Command *forwardCommand = new Command(Constants::Actions::Forward, this);
     forwardCommand->setDefaultText(tr("Forward"));
     forwardCommand->setDefaultShortcut(tr("Ctrl+]"));
     goToContainer->addCommand(forwardCommand);
 
-    Command *upOneLevelCommand = new Command(Constants::Ids::Actions::Up, this);
+    Command *upOneLevelCommand = new Command(Constants::Actions::Up, this);
     upOneLevelCommand->setDefaultText(tr("Up one level"));
     upOneLevelCommand->setDefaultIcon(QIcon(":/images/icons/up.png"));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
 
     // ================ Tools Menu ================
-    CommandContainer *toolsContainer = new CommandContainer(Constants::Ids::Menus::Tools, this);
+    CommandContainer *toolsContainer = new CommandContainer(Constants::Menus::Tools, this);
     toolsContainer->setTitle(tr("Tools"));
     menuBarContainer->addContainer(toolsContainer);
 
-    Command *pluginsCommand = new Command(Constants::Ids::Actions::Plugins, this);
+    Command *pluginsCommand = new Command(Constants::Actions::Plugins, this);
     pluginsCommand->setDefaultText(tr("Plugins..."));
     pluginsCommand->setContext(Command::ApplicationCommand);
     connect(pluginsCommand->action(), SIGNAL(triggered()), SLOT(showPluginView()));
     toolsContainer->addCommand(pluginsCommand);
 
     // ================ Help Menu ================
-    CommandContainer *helpContainer = new CommandContainer(Constants::Ids::Menus::Help, this);
+    CommandContainer *helpContainer = new CommandContainer(Constants::Menus::Help, this);
     helpContainer->setTitle(tr("Help"));
     menuBarContainer->addContainer(helpContainer);
 
-    Command *aboutCommand = new Command(Constants::Ids::Actions::Plugins, this);
+    Command *aboutCommand = new Command(Constants::Actions::Plugins, this);
     aboutCommand->setDefaultText(tr("About..."));
     aboutCommand->setContext(Command::ApplicationCommand);
     connect(aboutCommand->action(), SIGNAL(triggered()), SLOT(about()));
     helpContainer->addCommand(aboutCommand);
 
-    Command *aboutQtCommand = new Command(Constants::Ids::Actions::Plugins, this);
+    Command *aboutQtCommand = new Command(Constants::Actions::Plugins, this);
     aboutQtCommand->setDefaultText(tr("About Qt..."));
     aboutQtCommand->setContext(Command::ApplicationCommand);
     connect(aboutQtCommand->action(), SIGNAL(triggered()), SLOT(aboutQt()));

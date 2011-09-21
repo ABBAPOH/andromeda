@@ -3,8 +3,6 @@
 
 namespace Constants {
 
-namespace Ids {
-
 namespace Menus {
 
 const char * const MenuBar = "Menus.MenuBar";
@@ -76,8 +74,6 @@ namespace Perspectives {
 const char * const FileManagerPerspective = "FileManagerPerspective";
 
 }
-
-} // namespace Ids
 
 } // namespace Constants
 

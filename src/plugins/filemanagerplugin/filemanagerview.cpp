@@ -219,28 +219,28 @@ void FileManagerView::createActions()
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
 
-    openAction = actionManager->command(Constants::Ids::Actions::Open)->action(m_widget, SLOT(open()));
+    openAction = actionManager->command(Constants::Actions::Open)->action(m_widget, SLOT(open()));
     openAction->setShortcut(QKeySequence());
-    newFolderAction = actionManager->command(Constants::Ids::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
-    renameAction = actionManager->command(Constants::Ids::Actions::Rename)->action(m_widget, SLOT(rename()));
+    newFolderAction = actionManager->command(Constants::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
+    renameAction = actionManager->command(Constants::Actions::Rename)->action(m_widget, SLOT(rename()));
     renameAction->setShortcut(QKeySequence());
-    removeAction = actionManager->command(Constants::Ids::Actions::Remove)->action(m_widget, SLOT(remove()));
+    removeAction = actionManager->command(Constants::Actions::Remove)->action(m_widget, SLOT(remove()));
 
-    showFileInfoAction = actionManager->command(Constants::Ids::Actions::FileInfo)->action(this);
+    showFileInfoAction = actionManager->command(Constants::Actions::FileInfo)->action(this);
     connect(showFileInfoAction, SIGNAL(triggered()), SLOT(showFileInfo()));
     m_widget->addAction(showFileInfoAction);
 
-    redoAction = actionManager->command(Constants::Ids::Actions::Redo)->action(m_widget, SLOT(redo()));
-    undoAction = actionManager->command(Constants::Ids::Actions::Undo)->action(m_widget, SLOT(undo()));
+    redoAction = actionManager->command(Constants::Actions::Redo)->action(m_widget, SLOT(redo()));
+    undoAction = actionManager->command(Constants::Actions::Undo)->action(m_widget, SLOT(undo()));
 
-    //    actionManager->command(Constants::Ids::Actions::Cut)->action(m_widget, SLOT(cut()));
-    copyAction = actionManager->command(Constants::Ids::Actions::Copy)->action(m_widget, SLOT(copy()));
-    pasteAction = actionManager->command(Constants::Ids::Actions::Paste)->action(m_widget, SLOT(paste()));
-    selectAllAction = actionManager->command(Constants::Ids::Actions::SelectAll)->action(m_widget, SLOT(selectAll()));
+    //    actionManager->command(Constants::Actions::Cut)->action(m_widget, SLOT(cut()));
+    copyAction = actionManager->command(Constants::Actions::Copy)->action(m_widget, SLOT(copy()));
+    pasteAction = actionManager->command(Constants::Actions::Paste)->action(m_widget, SLOT(paste()));
+    selectAllAction = actionManager->command(Constants::Actions::SelectAll)->action(m_widget, SLOT(selectAll()));
 
-    actionManager->command(Constants::Ids::Actions::Up)->action(m_widget, SLOT(up()));
+    actionManager->command(Constants::Actions::Up)->action(m_widget, SLOT(up()));
 
-    showHiddenFilesAction = actionManager->command(Constants::Ids::Actions::ShowHiddenFiles)->action(this);
+    showHiddenFilesAction = actionManager->command(Constants::Actions::ShowHiddenFiles)->action(this);
     connect(showHiddenFilesAction, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
     m_widget->addAction(showHiddenFilesAction);
 
@@ -248,22 +248,22 @@ void FileManagerView::createActions()
 
     QSignalMapper *viewMapper = new QSignalMapper(this);
 
-    iconModeAction = actionManager->command(Constants::Ids::Actions::IconMode)->action(viewMapper, SLOT(map()));
+    iconModeAction = actionManager->command(Constants::Actions::IconMode)->action(viewMapper, SLOT(map()));
     viewMapper->setMapping(iconModeAction, 1);
     m_widget->addAction(iconModeAction);
     iconModeAction->setChecked(viewMode == 1);
 
-    columnModeAction = actionManager->command(Constants::Ids::Actions::ColumnMode)->action(viewMapper, SLOT(map()));
+    columnModeAction = actionManager->command(Constants::Actions::ColumnMode)->action(viewMapper, SLOT(map()));
     viewMapper->setMapping(columnModeAction, 3);
     m_widget->addAction(columnModeAction);
     columnModeAction->setChecked(viewMode == 3);
 
-    treeModeAction = actionManager->command(Constants::Ids::Actions::TreeMode)->action(viewMapper, SLOT(map()));
+    treeModeAction = actionManager->command(Constants::Actions::TreeMode)->action(viewMapper, SLOT(map()));
     viewMapper->setMapping(treeModeAction, 4);
     m_widget->addAction(treeModeAction);
     treeModeAction->setChecked(viewMode == 4);
 
-    dualPaneModeAction = actionManager->command(Constants::Ids::Actions::DualPane)->action(this, SLOT(setDualPaneModeEnabled(bool)));
+    dualPaneModeAction = actionManager->command(Constants::Actions::DualPane)->action(this, SLOT(setDualPaneModeEnabled(bool)));
     m_widget->addAction(dualPaneModeAction);
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 
