@@ -50,7 +50,8 @@ public:
     Q_ENUMS(CommandContext)
 
     QAction *action(QObject *parent = 0);
-    QAction *action(QWidget *w, const char *slot);
+    QAction *action(QObject *parent, const char *slot);
+    QAction *action(QWidget *widget, const char *slot);
 
     QAction *commandAction() const;
 

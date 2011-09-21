@@ -144,16 +144,33 @@ QAction * Command::action(QObject *parent)
     return a;
 }
 
+
 /*!
     \brief Creates new action with objectName equal to command's id.
 
-    This overload adds newly created action to widget \a w and connects triggered() signal to \a slot
+    This overload connects action's triggered() signal to slot \a slot
 */
-QAction * Command::action(QWidget *w, const char *slot)
+QAction * Command::action(QObject *parent, const char *slot)
 {
-    QAction * a = action(w);
-    w->addAction(a);
-    connect(a, SIGNAL(triggered()), w, slot);
+    QAction *a = action(parent);
+
+    if (isCheckable())
+        connect(a, SIGNAL(toggled(bool)), parent, slot);
+    else
+        connect(a, SIGNAL(triggered()), parent, slot);
+
+    return a;
+}
+
+/*!
+    \brief Creates new action with objectName equal to command's id.
+
+    This overload adds newly created action to widget \a w and connects triggered() signal to slot \a slot
+*/
+QAction * Command::action(QWidget *widget, const char *slot)
+{
+    QAction *a = action((QObject *)widget, slot);
+    widget->addAction(a);
     return a;
 }
 
