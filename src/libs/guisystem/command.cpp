@@ -385,9 +385,12 @@ void Command::onToggle(bool checked)
 {
     Q_D(Command);
 
-    if (d->realAction && d->action->isCheckable()) {
+    if (d->realAction && d->action->isCheckable() && d->realAction->isChecked() != checked) {
         d->realAction->setChecked(checked);
     }
+
+    if (sender() == d->realAction && d->action->isChecked() != checked)
+        d->action->setChecked(checked);
 }
 
 /*!
@@ -400,7 +403,11 @@ void Command::setRealAction(QAction *action)
     Q_D(Command);
 
     if (d->realAction != action) {
+        if (d->realAction)
+            disconnect(d->realAction, 0, this, 0);
         d->realAction = action;
         d->update();
+        if (d->realAction)
+            connect(d->realAction, SIGNAL(toggled(bool)), SLOT(onToggle(bool)));
     }
 }
