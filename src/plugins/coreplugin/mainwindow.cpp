@@ -41,34 +41,34 @@ void MainWindowPrivate::setupActions()
 
     ActionManager *actionManager = ActionManager::instance();
 
-    actionManager->command(Constants::Ids::Actions::NewTab)->action(q, SLOT(newTab()));
-    actionManager->command(Constants::Ids::Actions::CloseTab)->action(q, SLOT(closeTab()));
+    actionManager->command(Constants::Actions::NewTab)->action(q, SLOT(newTab()));
+    actionManager->command(Constants::Actions::CloseTab)->action(q, SLOT(closeTab()));
 
     // LineEdit
-    actionManager->command(Constants::Ids::Actions::Undo)->action(lineEdit, SLOT(undo()));
-    actionManager->command(Constants::Ids::Actions::Redo)->action(lineEdit, SLOT(redo()));
+    actionManager->command(Constants::Actions::Undo)->action(lineEdit, SLOT(undo()));
+    actionManager->command(Constants::Actions::Redo)->action(lineEdit, SLOT(redo()));
 
     QAction *a = new QAction(this);
     a->setSeparator(true);
     lineEdit->addAction(a);
 
-    actionManager->command(Constants::Ids::Actions::Cut)->action(lineEdit, SLOT(cut()));
-    actionManager->command(Constants::Ids::Actions::Copy)->action(lineEdit, SLOT(copy()));
-    actionManager->command(Constants::Ids::Actions::Paste)->action(lineEdit, SLOT(paste()));
-    actionManager->command(Constants::Ids::Actions::SelectAll)->action(lineEdit, SLOT(selectAll()));
+    actionManager->command(Constants::Actions::Cut)->action(lineEdit, SLOT(cut()));
+    actionManager->command(Constants::Actions::Copy)->action(lineEdit, SLOT(copy()));
+    actionManager->command(Constants::Actions::Paste)->action(lineEdit, SLOT(paste()));
+    actionManager->command(Constants::Actions::SelectAll)->action(lineEdit, SLOT(selectAll()));
 
     // ToolBar
-    backAction = actionManager->command(Constants::Ids::Actions::Back)->action(this);
+    backAction = actionManager->command(Constants::Actions::Back)->action(this);
     backAction->setIcon(QIcon(":/images/icons/back.png"));
     connect(backAction, SIGNAL(triggered()), q, SLOT(back()));
     q->addAction(backAction);
 
-    forwardAction = actionManager->command(Constants::Ids::Actions::Forward)->action(this);
+    forwardAction = actionManager->command(Constants::Actions::Forward)->action(this);
     forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
     connect(forwardAction, SIGNAL(triggered()), q, SLOT(forward()));
     q->addAction(forwardAction);
 
-    upAction = actionManager->command(Constants::Ids::Actions::Up)->commandAction();
+    upAction = actionManager->command(Constants::Actions::Up)->commandAction();
 
     nextTabAction = new QAction(q);
 #ifdef Q_OS_MAC
@@ -91,9 +91,9 @@ void MainWindowPrivate::setupActions()
     q->addAction(prevTabAction);
 
     // GoTo menu
-    CommandContainer *gotoMenu = actionManager->container(Constants::Ids::Menus::GoTo);
+    CommandContainer *gotoMenu = actionManager->container(Constants::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);
-    foreach (Command *cmd, gotoMenu->commands(Constants::Ids::MenuGroups::Locations)) {
+    foreach (Command *cmd, gotoMenu->commands(Constants::MenuGroups::Locations)) {
         QAction *action = cmd->action();
         gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
@@ -194,7 +194,7 @@ MainWindow::MainWindow(QWidget *parent) :
     d->setupActions();
     d->setupToolBar();
 
-    setMenuBar(ActionManager::instance()->container(Constants::Ids::Menus::MenuBar)->menuBar());
+    setMenuBar(ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar());
     setAttribute(Qt::WA_DeleteOnClose);
 }
 

@@ -49,31 +49,31 @@ bool FileManagerPluginImpl::initialize()
     GuiController::instance()->addFactory(new FileManagerFactory(this));
     GuiController::instance()->addFactory(new NavigationPanelFactory(this));
 
-    Perspective *perspective = new Perspective(Constants::Ids::Perspectives::FileManagerPerspective, this);
+    Perspective *perspective = new Perspective(Constants::Perspectives::FileManagerPerspective, this);
     perspective->addView("NavigationPanel", 0);
     perspective->addView("FileManager", 4);
     perspective->setProperty("MainView", "FileManager");
     GuiController::instance()->addPerspective(perspective);
 
     CorePlugin::Core::instance()->perspectiveManager()->addPerspective("inode/directory",
-                                                                       Constants::Ids::Perspectives::FileManagerPerspective);
+                                                                       Constants::Perspectives::FileManagerPerspective);
 
     FileSystemModel *model = new FileSystemModel;
     addObject(model);
     addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
 
-    CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Ids::Menus::View);
+    CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Menus::View);
 
-    Command * showHiddenFilesCommand = new Command(Constants::Ids::Actions::ShowHiddenFiles, this);
+    Command * showHiddenFilesCommand = new Command(Constants::Actions::ShowHiddenFiles, this);
     showHiddenFilesCommand->setDefaultText(tr("Show Hidden Files"));
     showHiddenFilesCommand->setCheckable(true);
     showHiddenFilesCommand->setDefaultShortcut(tr("Ctrl+."));
     showHiddenFilesCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(showHiddenFilesCommand);
 
-    CommandContainer *goToContainer = ActionManager::instance()->container(Constants::Ids::Menus::GoTo);
+    CommandContainer *goToContainer = ActionManager::instance()->container(Constants::Menus::GoTo);
     // ================ GoTo Menu (Locations) ================
-    goToContainer->addGroup(Constants::Ids::MenuGroups::Locations);
+    goToContainer->addGroup(Constants::MenuGroups::Locations);
 
     createGotoDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
     createGotoDirCommand(QDesktopServices::HomeLocation,
@@ -92,7 +92,7 @@ bool FileManagerPluginImpl::initialize()
 
 void FileManagerPluginImpl::shutdown()
 {
-    GuiController::instance()->removePerspective(Constants::Ids::Perspectives::FileManagerPerspective);
+    GuiController::instance()->removePerspective(Constants::Perspectives::FileManagerPerspective);
 #ifdef Q_CC_MSVC
     qApp->clipboard()->clear();
 #endif
@@ -100,13 +100,13 @@ void FileManagerPluginImpl::shutdown()
 
 void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation location, const QIcon &icon, const QKeySequence &key)
 {
-    GuiSystem::CommandContainer * container = ActionManager::instance()->container(Constants::Ids::Menus::GoTo);
+    GuiSystem::CommandContainer * container = ActionManager::instance()->container(Constants::Menus::GoTo);
     QDir dir(QDesktopServices::storageLocation(location));
 
     if (!dir.exists())
         return;
 
-    QString id = QString(QLatin1String(Constants::Ids::Actions::Goto)).arg(location);
+    QString id = QString(QLatin1String(Constants::Actions::Goto)).arg(location);
     Command *cmd = new Command(id.toLatin1(), this);
     cmd->setData(dir.absolutePath());
     QString displayName(QDesktopServices::displayName(location));
@@ -128,7 +128,7 @@ void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocat
     cmd->setData(dir.absolutePath());
     cmd->setContext(Command::ApplicationCommand);
 
-    container->addCommand(cmd, Constants::Ids::MenuGroups::Locations);
+    container->addCommand(cmd, Constants::MenuGroups::Locations);
 }
 
 void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::StandardLocations loc)
