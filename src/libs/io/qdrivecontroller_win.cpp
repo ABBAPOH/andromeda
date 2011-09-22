@@ -140,9 +140,9 @@ static inline QString className()
 
 static inline HWND dw_create_internal_window(const void* userData)
 {
+    QString className = ::className();
     HINSTANCE hi = qWinAppInst();
 
-    QString className = ::className(); // not to destroy temporary variable
     WNDCLASS wc;
     wc.style = 0;
     wc.lpfnWndProc = dw_internal_proc;
@@ -209,17 +209,31 @@ void QDriveWatcher::stop_sys()
     }
 }
 
+QString getEmptyLetter()
+{
+    char driveName[] = "Z:";
+    quint32 driveBits = quint32(::GetLogicalDrives()) & 0x3ffffff;
+
+    for (int i = 25; i >= 0; i--) {
+        if (driveBits & (1 << i)) {
+            driveName[0] -= 25 - i;
+            break;
+        }
+    }
+    return QLatin1String(driveName);
+}
+
 bool QDriveController::mount(const QString &device, const QString &path)
 {
-    QString targetPath = QDir::toNativeSeparators(path);
-    if (!targetPath.endsWith('\\'))
-        targetPath.append('\\');
+    QString targetPath = QDir::toNativeSeparators(path.isEmpty() ? getEmptyLetter() : path);
+    if (targetPath.endsWith(QLatin1Char('\\')))
+        targetPath = targetPath.left(targetPath.length()-1);
 
     if (device.startsWith(QLatin1String("\\\\?\\"))) { // GUID
 
         bool result = SetVolumeMountPoint((wchar_t*)targetPath.utf16(), (wchar_t*)device.utf16());
         if (!result) {
-            d->setLastError(GetLastError());
+            d->setError(GetLastError());
             return false;
         }
 
@@ -233,18 +247,20 @@ bool QDriveController::mount(const QString &device, const QString &path)
 
         DWORD result = WNetAddConnection2(&resource, 0, 0, CONNECT_UPDATE_PROFILE);
         if (result != NO_ERROR) {
-            d->setLastError(result);
+            d->setError(result);
             return false;
         }
 
     } else {
 
-        if (QFileInfo(device).isDir()) {
-            QDriveInfo driveInfo(device);
+        QDriveInfo driveInfo(device);
+        if (driveInfo.isValid()) {
             QString guid = driveInfo.device();
             return mount(guid, targetPath);
+        } else {
+            d->setError(ERROR_BAD_PATHNAME);
+            return false;
         }
-        return false;
 
     }
 
@@ -262,7 +278,7 @@ bool QDriveController::unmount(const QString &path)
 
         DWORD result = WNetCancelConnection2((wchar_t*)targetPath.utf16(), CONNECT_UPDATE_PROFILE, true);
         if (result != NO_ERROR) {
-            d->setLastError(result);
+            d->setError(result);
             return false;
         }
 
@@ -273,11 +289,49 @@ bool QDriveController::unmount(const QString &path)
 
         bool result = DeleteVolumeMountPoint((wchar_t*)targetPath.utf16());
         if (!result) {
-            d->setLastError(GetLastError());
+            d->setError(GetLastError());
             return false;
         }
 
     }
 
     return true;
+}
+
+static bool ejectCDRom(bool eject, const QString &drive, QDriveControllerPrivate::Error &error)
+{
+    wchar_t buffer[255] = L"";
+    MCI_OPEN_PARMS open;
+    DWORD flags;
+
+    ZeroMemory(&open, sizeof(MCI_OPEN_PARMS));
+
+    open.lpstrDeviceType = (LPWSTR) MCI_DEVTYPE_CD_AUDIO;
+    open.lpstrElementName = (wchar_t*)drive.utf16();
+
+    flags = MCI_OPEN_TYPE | MCI_OPEN_TYPE_ID;
+
+    MCIERROR result = mciSendCommand(0, MCI_OPEN, flags, (DWORD) &open);
+    if (result == 0) {
+        result = mciSendCommand(open.wDeviceID, MCI_SET, (eject) ? MCI_SET_DOOR_OPEN : MCI_SET_DOOR_CLOSED, 0);
+        mciSendCommand(open.wDeviceID, MCI_CLOSE, MCI_WAIT, 0);
+    }
+
+    if (result) {
+        mciGetErrorString(result, buffer, 255);
+        error.code = result;
+        error.string = QString::fromWCharArray(buffer, 255);
+        return false;
+    }
+
+    return true;
+}
+
+bool QDriveController::eject(const QString &path)
+{
+    QDriveInfo info(path);
+    if (info.type() == QDriveInfo::CdromDrive)
+        return ejectCDRom(true, info.rootPath(), d->error);
+
+    return unmount(path);
 }

@@ -17,7 +17,7 @@ public:
     int error() const;
     QString errorString() const;
 
-    bool mount(const QString &device, const QString &path);
+    bool mount(const QString &device, const QString &path = QString());
     bool unmount(const QString &path);
     bool eject(const QString &path);
 
@@ -26,7 +26,6 @@ Q_SIGNALS:
     void driveUnmounted(const QString &path);
 
 protected:
-    Q_DECLARE_PRIVATE(QDriveController)
     QDriveControllerPrivate *const d;
 };
 

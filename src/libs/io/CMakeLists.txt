@@ -1,3 +1,9 @@
+function( qt4_wrap_single_cpp SOURCE )
+    get_filename_component( SOURCENAME ${SOURCE} NAME_WE )
+    qt4_generate_moc( ${SOURCE} ${CMAKE_CURRENT_BINARY_DIR}/${SOURCENAME}.moc )
+    set_source_files_properties( ${SOURCE}  OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${SOURCENAME}.moc )
+endfunction( qt4_wrap_single_cpp )
+
 set( GLOBAL_HEADERS
     IO
     QDriveInfo
@@ -35,12 +41,9 @@ set( LIBS
     userenv Netapi32 Mpr
    )
 
-elseif( APPLE )
+qt4_wrap_single_cpp( qdrivecontroller_win.cpp )
 
-set( HEADERS
-    ${HEADERS}
-    qdrivecontroller_mac_p.h
-   )
+elseif( APPLE )
 
 set( SOURCES
     ${SOURCES}
@@ -52,18 +55,17 @@ set( LIBS
     "-framework CoreServices" "-framework DiskArbitration" "-framework IOKit"
    )
 
-elseif( UNIX )
+qt4_wrap_single_cpp( qdrivecontroller_mac.cpp )
 
-set( HEADERS
-    ${HEADERS}
-    qdrivecontroller_linux_p.h
-   )
+elseif( UNIX )
 
 set( SOURCES
     ${SOURCES}
     qdrivecontroller_linux.cpp
     qdriveinfo_linux.cpp
    )
+
+qt4_wrap_single_cpp( qdrivecontroller_linux.cpp )
 
 endif()
 
