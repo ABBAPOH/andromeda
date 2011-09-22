@@ -8,7 +8,7 @@ BUG-7 [Closed] Remove hotkey for win/lin.
 BUG-8 [Open] Selection sometimes can't be cleared in icon mode.
 BUG-9 [Closed] Different menus when files are selected and not selected in views.
 BUG-10 [Closed] Duplicate item in history after right click
-BUG-11 [Open] File renaming can't be confirmed by 'return'
+BUG-11 [Closed] File renaming can't be confirmed by 'return'
 BUG-12 [Open] DriveController doesn't remove disk when mouting *.iso using Daemon Tools
 BUG-13 [Open] Disable Back & Forward actions if can't go back/forward
 BUG-14 [Open] Disable Undo & Redo actions if can't undo/redo

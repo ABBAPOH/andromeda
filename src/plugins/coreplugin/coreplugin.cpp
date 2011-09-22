@@ -167,7 +167,7 @@ void CorePluginImpl::createActions()
 #ifdef Q_OS_MAC
     openCommand->setDefaultShortcut(tr("Ctrl+O"));
 #else
-    openCommand->setDefaultShortcut(tr("Return"));
+//    openCommand->setDefaultShortcut(tr("Return"));
 #endif
     openCommand->setContext(Command::WidgetCommand);
     fileContainer->addCommand(openCommand, group);
