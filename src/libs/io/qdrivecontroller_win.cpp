@@ -19,6 +19,14 @@
 
 Q_CORE_EXPORT HINSTANCE qWinAppInst();
 
+class QDriveWatcherEngine
+{
+public:
+    QDriveWatcher *watcher;
+    QSet<QString> drives;
+    HWND hwnd;
+};
+
 static inline QStringList drivesFromMask(quint32 driveBits)
 {
         QStringList ret;
@@ -71,10 +79,12 @@ LRESULT CALLBACK dw_internal_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
                 DEV_BROADCAST_VOLUME *db_volume = (DEV_BROADCAST_VOLUME *)lpdb;
                 QStringList drives = drivesFromMask(db_volume->dbcv_unitmask);
 #ifdef GWLP_USERDATA
-                QDriveWatcher *watcher = (QDriveWatcher *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+                QDriveWatcherEngine *engine = (QDriveWatcherEngine *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+//                QDriveWatcher *watcher = (QDriveWatcher *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 #else
-                QDriveWatcher *watcher = (QDriveWatcher *)GetWindowLong(hwnd, GWL_USERDATA);
+                QDriveWatcherEngine *engine = (QDriveWatcherEngine *)GetWindowLong(hwnd, GWL_USERDATA);
 #endif
+                QDriveWatcher *watcher = engine->watcher;
 
                 if (wParam == DBT_DEVICEARRIVAL) {
                     foreach (const QString &drive, drives) {
@@ -86,6 +96,10 @@ LRESULT CALLBACK dw_internal_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
                         else
                             qWarning("Drive %c: Device has been added.", drive.at(0).toAscii());
 #endif
+                        if (engine->drives.contains(drive)) {
+                            watcher->emitDriveRemoved(drive);
+                        }
+                        engine->drives.insert(drive);
                         watcher->emitDriveAdded(drive);
                     }
                 } else if (wParam == DBT_DEVICEQUERYREMOVE) {
@@ -185,18 +199,14 @@ static inline void dw_destroy_internal_window(HWND hwnd)
     UnregisterClass(reinterpret_cast<const wchar_t *>(className().utf16()), qWinAppInst());
 }
 
-
-class QDriveWatcherEngine
-{
-public:
-    HWND hwnd;
-};
-
-
 bool QDriveWatcher::start_sys()
 {
     engine = new QDriveWatcherEngine;
-    engine->hwnd = dw_create_internal_window(this);
+    engine->watcher = this;
+    foreach (const QDriveInfo &info, QDriveInfo::drives()) {
+        engine->drives.insert(info.rootPath());
+    }
+    engine->hwnd = dw_create_internal_window(engine);
     return engine->hwnd;
 }
 
