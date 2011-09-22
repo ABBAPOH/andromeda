@@ -1,6 +1,8 @@
 #ifndef SETTINGSPAGEMANAGER_H
 #define SETTINGSPAGEMANAGER_H
 
+#include "coreplugin_global.h"
+
 #include <QtCore/QObject>
 #include <QtGui/QIcon>
 
@@ -9,7 +11,7 @@ namespace CorePlugin {
 class ISettingsPage;
 
 class SettingsPageManagerPrivate;
-class SettingsPageManager : public QObject
+class COREPLUGIN_EXPORT SettingsPageManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SettingsPageManager)

@@ -1,13 +1,15 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "coreplugin_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
 namespace CorePlugin {
 
 class SettingsPrivate;
-class Settings : public QObject
+class COREPLUGIN_EXPORT Settings : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Settings)

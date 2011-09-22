@@ -1,6 +1,8 @@
 #ifndef MAINWINDOWPLUGIN_MAINWINDOW_H
 #define MAINWINDOWPLUGIN_MAINWINDOW_H
 
+#include "coreplugin_global.h"
+
 #include <QtGui/QMainWindow>
 
 class QSettings;
@@ -10,7 +12,7 @@ namespace CorePlugin {
 class Tab;
 
 class MainWindowPrivate;
-class MainWindow : public QMainWindow
+class COREPLUGIN_EXPORT MainWindow : public QMainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MainWindow)
