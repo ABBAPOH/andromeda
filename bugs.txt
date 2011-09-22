@@ -15,4 +15,4 @@ BUG-14 [Open] Disable Undo & Redo actions if can't undo/redo
 BUG-15 [Open] Disable 'Paste' action if clipboard is empty
 BUG-16 [Open] Undo manager should not try undo running operations (or cancel them, removing target file)
 BUG-17 [Open] Slow copying files (use bigger buffer?)
-BUG-18 [Open] Determine if action in widget toggled to toggle Command too
+BUG-18 [Closed] Determine if action in widget toggled to toggle Command too
