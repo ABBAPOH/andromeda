@@ -220,10 +220,8 @@ void FileManagerView::createActions()
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
 
     openAction = actionManager->command(Constants::Actions::Open)->action(m_widget, SLOT(open()));
-    openAction->setShortcut(QKeySequence());
     newFolderAction = actionManager->command(Constants::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
     renameAction = actionManager->command(Constants::Actions::Rename)->action(m_widget, SLOT(rename()));
-    renameAction->setShortcut(QKeySequence());
     removeAction = actionManager->command(Constants::Actions::Remove)->action(m_widget, SLOT(remove()));
 
     showFileInfoAction = actionManager->command(Constants::Actions::FileInfo)->action(this);
