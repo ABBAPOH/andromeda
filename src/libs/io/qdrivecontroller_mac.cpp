@@ -3,19 +3,52 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
+#include <QtCore/QSet>
+#include <QtCore/QThread>
 
 #include <CoreServices/CoreServices.h>
 #include <CoreFoundation/CFRunLoop.h>
 
+#include <DiskArbitration/DiskArbitration.h>
+
 #include <IOKit/storage/IOCDMedia.h>
 #include <IOKit/storage/IODVDMedia.h>
 
-#include <QDebug>
 #include <QChar>
 
 #include "qdriveinfo.h"
 
 #define TIME_INTERVAL 1
+
+class QDriveWatcherEngine : public QThread
+{
+    Q_OBJECT
+
+public:
+    QDriveWatcherEngine();
+    ~QDriveWatcherEngine();
+
+    void stop();
+
+    void addDrive(const QString &path);
+    void removeDrive(const QString &path);
+    void updateDrives();
+
+protected:
+    void run();
+
+Q_SIGNALS:
+    void driveAdded(const QString &path);
+    void driveRemoved(const QString &path);
+
+private:
+    void populateVolumes();
+
+    volatile bool m_running;
+
+    DASessionRef m_session;
+    QSet<QString> volumes;
+};
 
 QString CFStringToQString(CFStringRef string)
 {
@@ -92,10 +125,15 @@ void unmountCallback(DADiskRef disk, void *context)
     }
 }
 
+DADissenterRef unmountCallback2(DADiskRef disk, void *context)
+{
+    unmountCallback(disk, context);
+    return 0;
+}
 
-QDriveWatcherEngine::QDriveWatcherEngine()
-    : QThread(),
-      m_running(false)
+QDriveWatcherEngine::QDriveWatcherEngine() :
+    QThread(),
+    m_running(false)
 {
     m_session = DASessionCreate(kCFAllocatorDefault);
 
@@ -111,8 +149,11 @@ QDriveWatcherEngine::QDriveWatcherEngine()
     DARegisterDiskDisappearedCallback(m_session,
                                       kDADiskDescriptionMatchVolumeMountable,
                                       unmountCallback,
-                                      this);
-
+                                      this); // to catch event about ejecting
+    DARegisterDiskUnmountApprovalCallback(m_session,
+                                          kDADiskDescriptionMatchVolumeMountable,
+                                          unmountCallback2,
+                                          this); // to catch event about unmounting and ejecting
     start();
 }
 
@@ -188,7 +229,6 @@ void QDriveWatcherEngine::updateDrives()
     }
 }
 
-
 bool QDriveWatcher::start_sys()
 {
     engine = new QDriveWatcherEngine;
@@ -232,9 +272,7 @@ bool QDriveController::mount(const QString &device, const QString &path)
 
         OSStatus status = FSMountServerVolumeSync(url, mountUrl, 0, 0, &refNum, 0);
         if (status != noErr) {
-            qDebug() << status;
-            qDebug() << "failed mount";
-            d->setLastError(status);
+            d->setError(status);
             result =  false;
         }
 
@@ -250,11 +288,9 @@ bool QDriveController::mount(const QString &device, const QString &path)
                                                         device.length());
         CFShow(disk);
 
-        OSStatus status = FSMountLocalVolumeSync(disk, mountUrl, &refNum, /*kFSIterateReserved*/0);
+        OSStatus status = FSMountLocalVolumeSync(disk, 0, &refNum, /*kFSIterateReserved*/0);
         if (status != noErr) {
-            qDebug() << status;
-            qDebug() << "failed mount";
-            d->setLastError(status);
+            d->setError(status);
             result = false;
         }
         CFRelease(disk);
@@ -273,16 +309,12 @@ static FSVolumeRefNum getRefNumByPath(const QString &path)
     FSRef fsref;
     result = FSPathMakeRef((const UInt8*)path.toUtf8().constData(), &fsref, 0);
     if (result != noErr) {
-        qDebug() << result;
-        qDebug() << "failed getting FSRef";
         return kFSInvalidVolumeRefNum;
     }
 
     FSCatalogInfo catalogInfo;
     result = FSGetCatalogInfo(&fsref, kFSCatInfoVolume, &catalogInfo, 0, 0, 0);
     if (result != noErr) {
-        qDebug() << result;
-        qDebug() << "failed getting info";
         return kFSInvalidVolumeRefNum;
     }
 
@@ -301,8 +333,7 @@ bool QDriveController::unmount(const QString &path)
     result = FSUnmountVolumeSync(refNum, 0, &dissenter);
 
     if (result != noErr) {
-        qDebug() << result;
-        qDebug() << "failed unmount";
+        d->setError(result);
         return false;
     }
 
@@ -321,10 +352,11 @@ bool QDriveController::eject(const QString &path)
     result = FSEjectVolumeSync(refNum, 0, &dissenter);
 
     if (result != noErr) {
-        qDebug() << result;
-        qDebug() << "failed eject";
+        d->setError(result);
         return false;
     }
 
     return true;
 }
+
+#include "qdrivecontroller_mac.moc"
