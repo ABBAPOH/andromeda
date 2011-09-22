@@ -38,7 +38,7 @@ set( SOURCES
    )
 
 set( LIBS
-    userenv Netapi32 Mpr
+    userenv Netapi32 Mpr user32 Winmm
    )
 
 qt4_wrap_single_cpp( qdrivecontroller_win.cpp )
