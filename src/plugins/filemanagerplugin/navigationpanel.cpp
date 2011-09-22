@@ -106,6 +106,9 @@ void NavigationPanel::setModel(NavigationModel *model)
 {
     Q_D(NavigationPanel);
 
+    if (d->model && d->model->QObject::parent() == this)
+        d->model->deleteLater();
+
     if (d->model != model) {
         d->model = model;
         d->treeView->setModel(model);

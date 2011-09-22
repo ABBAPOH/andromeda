@@ -73,7 +73,11 @@ void NavigationModelPrivate::onDriveAdded(const QString &path)
 
     if (info.type() == QDriveInfo::RemoteDrive)
         insertItem(networkItem, name, path);
+#ifndef Q_OS_WIN
     else if (info.type() != QDriveInfo::InvalidDrive)
+#else
+    else // awful hack for unmounting *.iso
+#endif
         insertItem(drivesItem, name, path);
 }
 
