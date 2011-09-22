@@ -1,6 +1,8 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
+#include "coreplugin_global.h"
+
 #include <QtGui/QDialog>
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
@@ -15,7 +17,7 @@ class Category;
 class CategoryModel;
 
 class SettingsDialogPrivate;
-class SettingsDialog : public QDialog
+class COREPLUGIN_EXPORT SettingsDialog : public QDialog
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SettingsDialog)
