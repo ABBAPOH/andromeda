@@ -1,5 +1,7 @@
 set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
+    abstracteditor.h
+    abstracteditorfactory.h
     constants.h
     coreplugin_global.h
     core.h
@@ -19,6 +21,8 @@ set( HEADERS
     tabbar.h
    )
 set( SOURCES
+    abstracteditor.cpp
+    abstracteditorfactory.cpp
     core.cpp
     coreplugin.cpp
     history.cpp
