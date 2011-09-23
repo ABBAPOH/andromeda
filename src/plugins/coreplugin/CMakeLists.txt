@@ -7,6 +7,7 @@ set( HEADERS
     core.h
     core_p.h
     coreplugin.h
+    editormanager.h
     history.h
     historyitem.h
     ieditor.h
@@ -25,6 +26,7 @@ set( SOURCES
     abstracteditorfactory.cpp
     core.cpp
     coreplugin.cpp
+    editormanager.cpp
     history.cpp
     historyitem.cpp
     ieditor.cpp
