@@ -10,6 +10,7 @@ set( HEADERS
     filecopydialog.h
     filecopydialog_p.h
     fileinfodialog.h
+    filemanagereditor.h
     filemanagerplugin.h
     filemanagerview.h
     filemanagerwidget.h
@@ -31,6 +32,7 @@ set( SOURCES
     filecopytask.cpp
     filecopydialog.cpp
     fileinfodialog.cpp
+    filemanagereditor.cpp
     filemanagerplugin.cpp
     filemanagerview.cpp
     filemanagerwidget.cpp
@@ -65,10 +67,11 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/mainwindowplugin )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
+include_directories( ${PROJECT_SOURCE_DIR}/src/libs/widgets )
 
 add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )
 
 add_library( filemanagerplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
-target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io coreplugin )
+target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io coreplugin widgets )
 add_dependencies( filemanagerplugin plugineditor)
 install_plugin( filemanagerplugin )
