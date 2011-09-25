@@ -9,6 +9,7 @@ class QSettings;
 
 namespace CorePlugin {
 
+class AbstractEditor;
 class Tab;
 
 class MainWindowPrivate;
@@ -26,6 +27,9 @@ public:
 
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
+
+    AbstractEditor *currentEditor() const;
+    MainWindow *currentWindow() const;
 
     static QList<MainWindow*> windows();
 

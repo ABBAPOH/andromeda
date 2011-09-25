@@ -161,6 +161,11 @@ QString Tab::windowTitle() const
     return QString();
 }
 
+AbstractEditor * Tab::currentEditor() const
+{
+    return d_func()->editor;
+}
+
 History * Tab::history() const
 {
     return d_func()->history;
