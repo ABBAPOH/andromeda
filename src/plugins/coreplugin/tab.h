@@ -4,13 +4,12 @@
 #include "coreplugin_global.h"
 
 #include <QtGui/QWidget>
-#include <perspectivewidget.h>
 
 #include "history.h"
 
-namespace CorePlugin {
+class QSettings;
 
-class IEditor;
+namespace CorePlugin {
 
 class TabPrivate;
 class COREPLUGIN_EXPORT Tab : public QWidget
@@ -25,6 +24,8 @@ public:
     explicit Tab(QWidget *parent = 0);
     ~Tab();
 
+    void open(const QString &path);
+
     QString currentPath() const;
     QIcon icon() const;
     QString title() const;
@@ -32,13 +33,8 @@ public:
 
     History *history() const;
 
-    GuiSystem::PerspectiveWidget *perspectiveWidget() const;
-
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
-
-public slots:
-    void open(const QString &path);
 
 signals:
     void currentPathChanged(const QString & currentPath);
@@ -49,7 +45,7 @@ private slots:
     void onPathChanged(const QString &path);
 
 protected:
-    void resizeEvent(QResizeEvent *);
+//    void resizeEvent(QResizeEvent *);
 
 protected:
     TabPrivate *d_ptr;
