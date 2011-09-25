@@ -12,13 +12,10 @@
 #include <command.h>
 #include <commandcontainer.h>
 #include <constants.h>
-#include <perspective.h>
-#include <guicontroller.h>
 #include <CorePlugin>
 
 #include "filecopydialog.h"
 #include "filemanagereditor.h"
-#include "filemanagerview.h"
 #include "filemanagersettingspage.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
@@ -48,16 +45,6 @@ bool FileManagerPluginImpl::initialize()
 
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new FileManagerSettingsPage);
-
-    GuiController::instance()->addFactory(new FileManagerFactory(this));
-
-    Perspective *perspective = new Perspective(Constants::Perspectives::FileManagerPerspective, this);
-    perspective->addView("FileManager", 4);
-    perspective->setProperty("MainView", "FileManager");
-    GuiController::instance()->addPerspective(perspective);
-
-    CorePlugin::Core::instance()->perspectiveManager()->addPerspective("inode/directory",
-                                                                       Constants::Perspectives::FileManagerPerspective);
 
     FileSystemModel *model = new FileSystemModel;
     addObject(model);
@@ -93,7 +80,6 @@ bool FileManagerPluginImpl::initialize()
 
 void FileManagerPluginImpl::shutdown()
 {
-    GuiController::instance()->removePerspective(Constants::Perspectives::FileManagerPerspective);
 #ifdef Q_CC_MSVC
     qApp->clipboard()->clear();
 #endif
