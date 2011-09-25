@@ -1,12 +1,14 @@
 #include "webvieweditor.h"
 
+#include <QtGui/QResizeEvent>
+
 using namespace WebViewPlugin;
 using namespace CorePlugin;
 
-WebViewEditor::WebViewEditor(QObject *parent) :
-    IEditor(parent)
+WebViewEditor::WebViewEditor(QWidget *parent) :
+    AbstractEditor(parent)
 {
-    m_webView = new QWebView;
+    m_webView = new QWebView(this);
     m_webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
 
@@ -30,13 +32,18 @@ QString WebViewPlugin::WebViewEditor::currentPath() const
     return m_webView->url().toString();
 }
 
+void WebViewEditor::resizeEvent(QResizeEvent *e)
+{
+    m_webView->resize(e->size());
+}
+
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     m_webView->setUrl(url);
-    emit pathChanged(url.toString());
+    emit currentPathChanged(url.toString());
 }
 
-GuiSystem::IView * WebViewPlugin::WebViewFactory::createView()
+CorePlugin::AbstractEditor * WebViewPlugin::WebViewEditorFactory::createEditor(QWidget *parent)
 {
-    return new WebViewEditor(this);
+    return new WebViewEditor(parent);
 }

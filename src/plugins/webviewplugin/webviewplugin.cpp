@@ -2,8 +2,9 @@
 
 #include <QtCore/QtPlugin>
 #include <QtGui/QFileIconProvider>
+
 #include <core.h>
-#include <guicontroller.h>
+#include <editormanager.h>
 #include <perspective.h>
 #include <perspectivemanager.h>
 #include <settingspagemanager.h>
@@ -25,15 +26,7 @@ bool WebViewPluginImpl::initialize()
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new WebViewSettingsPage);
 
-    GuiController::instance()->addFactory(new WebViewFactory(this));
-
-    Perspective *perspective = new Perspective("WebViewPerspective", this);
-    perspective->addView("WebView", 0);
-    perspective->setProperty("MainView", "WebView");
-    GuiController::instance()->addPerspective(perspective);
-
-    CorePlugin::Core::instance()->perspectiveManager()->addPerspective("text/html",
-                                                                       "WebViewPerspective");
+    Core::instance()->editorManager()->addFactory(new WebViewEditorFactory(this));
 
     return true;
 }
