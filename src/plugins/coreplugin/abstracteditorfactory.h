@@ -19,7 +19,9 @@ public:
     ~AbstractEditorFactory();
 
     AbstractEditor *editor(QWidget *parent);
+
     virtual QStringList mimeTypes() = 0;
+    virtual QByteArray id() const = 0;
 
 protected:
     virtual AbstractEditor *createEditor(QWidget *parent) = 0;
