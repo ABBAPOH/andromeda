@@ -1,5 +1,6 @@
 #include "abstracteditor.h"
 #include "abstracteditorfactory.h"
+#include "mainwindow.h"
 
 #include <QtCore/QSettings>
 
@@ -100,7 +101,7 @@ void AbstractEditor::setFactory(AbstractEditorFactory *factory)
 
     Calls open with "currentPath" value in settings.
 */
-void AbstractEditor::restoreSession(const QSettings &s)
+void AbstractEditor::restoreSession(QSettings &s)
 {
     open(s.value(QLatin1String("currentPath")).toString());
 }
@@ -113,4 +114,19 @@ void AbstractEditor::restoreSession(const QSettings &s)
 void AbstractEditor::saveSession(QSettings &s)
 {
     s.setValue(QLatin1String("currentPath"), currentPath());
+}
+
+/*!
+    \brief Returns MainWindow that contains this editor.
+*/
+MainWindow * AbstractEditor::mainWindow() const
+{
+    QWidget *w = (QWidget *)this;
+    while (w->parentWidget()) {
+        w = w->parentWidget();
+    }
+
+    MainWindow *window = qobject_cast<MainWindow*>(w);
+    Q_ASSERT_X(window, "IEditor::mainWindow", "Attempt to use IEditor not within MainWindow");
+    return window;
 }
