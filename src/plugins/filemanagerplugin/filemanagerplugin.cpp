@@ -23,7 +23,6 @@
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 #include "navigationmodel.h"
-#include "navigationpanelview.h"
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -51,10 +50,8 @@ bool FileManagerPluginImpl::initialize()
     pageManager->addPage(new FileManagerSettingsPage);
 
     GuiController::instance()->addFactory(new FileManagerFactory(this));
-    GuiController::instance()->addFactory(new NavigationPanelFactory(this));
 
     Perspective *perspective = new Perspective(Constants::Perspectives::FileManagerPerspective, this);
-    perspective->addView("NavigationPanel", 0);
     perspective->addView("FileManager", 4);
     perspective->setProperty("MainView", "FileManager");
     GuiController::instance()->addPerspective(perspective);
