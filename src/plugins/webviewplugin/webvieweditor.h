@@ -6,21 +6,21 @@
 #include <QtCore/QPointer>
 #include <QtGui/QToolBar>
 #include <QtWebKit/QWebView>
-#include <ieditor.h>
-#include <iviewfactory.h>
+#include <abstracteditor.h>
+#include <abstracteditorfactory.h>
 #include <historyitem.h>
 
 class QWebView;
 
 namespace WebViewPlugin {
 
-class WEBVIEWPLUGIN_EXPORT WebViewEditor : public CorePlugin::IEditor
+class WEBVIEWPLUGIN_EXPORT WebViewEditor : public CorePlugin::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebViewEditor)
 
 public:
-    explicit WebViewEditor(QObject *parent = 0);
+    explicit WebViewEditor(QWidget *parent = 0);
     ~WebViewEditor();
 
     bool create() { return false; }
@@ -37,27 +37,30 @@ public:
     QString title() const { return m_webView->title(); }
     QString windowTitle() const { return m_webView->windowTitle(); }
 
+protected:
+    void resizeEvent(QResizeEvent *);
+
 private slots:
     void onUrlClicked(const QUrl &url);
 
 private:
-    QPointer<QWebView> m_webView;
+    QWebView *m_webView;
 };
 
-class WebViewFactory : public GuiSystem::IViewFactory
+class WebViewEditorFactory : public CorePlugin::AbstractEditorFactory
 {
     Q_OBJECT
-    Q_DISABLE_COPY(WebViewFactory)
+    Q_DISABLE_COPY(WebViewEditorFactory)
 
 public:
-    explicit WebViewFactory(QObject * parent = 0) : GuiSystem::IViewFactory(parent) {}
-    ~WebViewFactory() {}
+    explicit WebViewEditorFactory(QObject * parent = 0) : CorePlugin::AbstractEditorFactory(parent) {}
+    ~WebViewEditorFactory() {}
 
-    QString id() const { return "WebView"; }
-    QString type() const { return "WebView"; }
+    QByteArray id() const { return "WebView"; }
+    QStringList mimeTypes() { return QStringList() << "text/html"; }
 
 protected:
-    GuiSystem::IView *createView();
+    CorePlugin::AbstractEditor *createEditor(QWidget *parent);
 };
 
 } // namespace WebViewPlugin
