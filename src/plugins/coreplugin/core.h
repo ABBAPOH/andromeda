@@ -7,6 +7,7 @@
 
 namespace CorePlugin {
 
+class EditorManager;
 class PerspectiveManager;
 class Settings;
 
@@ -26,7 +27,9 @@ public:
         return ExtensionSystem::PluginManager::instance()->object<Core>("core");
     }
 
+    EditorManager *editorManager() const;
     PerspectiveManager *perspectiveManager() const;
+
     Settings *settings() const;
 
     QObject *getObject(const QString &name);
