@@ -4,42 +4,71 @@
 
 #include <QtCore/QStringList>
 
+namespace CorePlugin {
+
+class EditorManagerPrivate
+{
+public:
+    QHash<QString, AbstractEditorFactory *> factories;
+    QHash<QString, AbstractEditorFactory *> factoriesById;
+};
+
+} // namespace CorePlugin
+
 using namespace CorePlugin;
 
 EditorManager::EditorManager(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    d_ptr(new EditorManagerPrivate)
 {
+}
+
+EditorManager::~EditorManager()
+{
+    delete d_ptr;
 }
 
 QList<AbstractEditorFactory *> EditorManager::factories() const
 {
-    return m_factories.values();
+    return d_func()->factories.values();
 }
 
 AbstractEditorFactory * EditorManager::factory(const QString &mimeType) const
 {
-    return m_factories.value(mimeType);
+    return d_func()->factories.value(mimeType);
+}
+
+AbstractEditorFactory * EditorManager::factoryById(const QString &id) const
+{
+    return d_func()->factoriesById.value(id);
 }
 
 void EditorManager::addFactory(AbstractEditorFactory *factory)
 {
+    Q_D(EditorManager);
+
     if (!factory)
         return;
 
     foreach (const QString &mimeType, factory->mimeTypes()) {
-        m_factories.insert(mimeType, factory);
+        d->factories.insert(mimeType, factory);
     }
+    d->factoriesById.insert(factory->id(), factory);
+
     connect(factory, SIGNAL(destroyed(QObject *)), this, SLOT(onDestroyed(QObject*)));
 }
 
 void EditorManager::removeFactory(AbstractEditorFactory *factory)
 {
+    Q_D(EditorManager);
+
     if (!factory)
         return;
 
-    foreach (const QString &mimeType, m_factories.keys(factory)) {
-        m_factories.remove(mimeType);
+    foreach (const QString &mimeType, d->factories.keys(factory)) {
+        d->factories.remove(mimeType);
     }
+    d->factoriesById.remove(d->factoriesById.key(factory));
 
     disconnect(factory, 0, this, 0);
 }
@@ -47,6 +76,15 @@ void EditorManager::removeFactory(AbstractEditorFactory *factory)
 AbstractEditor * EditorManager::editor(const QString &mimeType, QWidget *parent)
 {
     AbstractEditorFactory *f = factory(mimeType);
+    if (f)
+        return f->editor(parent);
+
+    return 0;
+}
+
+AbstractEditor * EditorManager::editorById(const QString &id, QWidget *parent)
+{
+    AbstractEditorFactory *f = factoryById(id);
     if (f)
         return f->editor(parent);
 
