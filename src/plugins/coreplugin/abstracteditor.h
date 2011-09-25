@@ -9,6 +9,7 @@ class QSettings;
 namespace CorePlugin {
 
 class AbstractEditorFactory;
+class MainWindow;
 
 class AbstractEditor : public QWidget
 {
@@ -32,10 +33,10 @@ public:
     virtual QString title() const { return QString(); }
     virtual QString windowTitle() const { return QString(); }
 
-    void restoreSession(const QSettings &s);
-    void saveSession(QSettings &s);
+    virtual void restoreSession(QSettings &s);
+    virtual void saveSession(QSettings &s);
 
-//    MainWindow *mainWindow() const;
+    MainWindow *mainWindow() const;
 
 signals:
     void currentPathChanged(const QString &);
