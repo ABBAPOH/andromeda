@@ -11,6 +11,8 @@ class QSettings;
 
 namespace CorePlugin {
 
+class AbstractEditor;
+
 class TabPrivate;
 class COREPLUGIN_EXPORT Tab : public QWidget
 {
@@ -31,6 +33,7 @@ public:
     QString title() const;
     QString windowTitle() const;
 
+    AbstractEditor *currentEditor() const;
     History *history() const;
 
     void restoreSession(QSettings &s);

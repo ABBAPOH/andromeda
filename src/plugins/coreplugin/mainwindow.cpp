@@ -210,7 +210,7 @@ int MainWindow::currentIndex() const
 
 Tab * MainWindow::currentTab() const
 {
-    return qobject_cast<CorePlugin::Tab *>(d_func()->tabWidget->currentWidget());
+    return qobject_cast<Tab *>(d_func()->tabWidget->currentWidget());
 }
 
 int MainWindow::count() const
@@ -259,6 +259,16 @@ void MainWindow::saveSession(QSettings &s)
         tab->saveSession(s);
     }
     s.endArray();
+}
+
+AbstractEditor * MainWindow::currentEditor() const
+{
+    return currentTab()->currentEditor();
+}
+
+MainWindow * MainWindow::currentWindow() const
+{
+    return qobject_cast<MainWindow *>(qApp->activeWindow());
 }
 
 QList<MainWindow *> MainWindow::windows()
