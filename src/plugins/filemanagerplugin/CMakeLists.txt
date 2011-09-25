@@ -12,7 +12,6 @@ set( HEADERS
     fileinfodialog.h
     filemanagereditor.h
     filemanagerplugin.h
-    filemanagerview.h
     filemanagerwidget.h
     filemanagerwidget_p.h
     filemanagersettingspage.h
@@ -33,7 +32,6 @@ set( SOURCES
     fileinfodialog.cpp
     filemanagereditor.cpp
     filemanagerplugin.cpp
-    filemanagerview.cpp
     filemanagerwidget.cpp
     filesystemmodel.cpp
     filesystemmanager.cpp
