@@ -17,6 +17,7 @@
 #include <CorePlugin>
 
 #include "filecopydialog.h"
+#include "filemanagereditor.h"
 #include "filemanagerview.h"
 #include "filemanagersettingspage.h"
 #include "filesystemmanager.h"
@@ -36,6 +37,9 @@ FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
 
 bool FileManagerPluginImpl::initialize()
 {
+    FileManagerEditorFactory *f = new FileManagerEditorFactory(this);
+    Core::instance()->editorManager()->addFactory(f);
+
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");
     connect(navigationModel, SIGNAL(standardLocationsChanged(NavigationModel::StandardLocations)),
