@@ -17,6 +17,7 @@
 #include <actionmanager.h>
 #include <command.h>
 #include <commandcontainer.h>
+#include <editormanager.h>
 #include <pluginview.h>
 
 using namespace CorePlugin;
@@ -39,6 +40,10 @@ bool CorePluginImpl::initialize()
     Settings *settings = new Settings;
     settings->setObjectName("settings");
     addObject(settings);
+
+    EditorManager *editorManager = new EditorManager;
+    editorManager->setObjectName("editorManager");
+    addObject(editorManager);
 
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));
