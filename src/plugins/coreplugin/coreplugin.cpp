@@ -335,6 +335,16 @@ void CorePluginImpl::createActions()
     toolsContainer->addCommand(pluginsCommand);
     connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
 
+    // ================ Tools Menu (Preferences) ================
+    toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
+
+    Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
+    preferencesCommand->setDefaultText(tr("Preferences"));
+    preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
+    preferencesCommand->setContext(Command::ApplicationCommand);
+    toolsContainer->addCommand(preferencesCommand, group);
+    connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
+
     // ================ Help Menu ================
     CommandContainer *helpContainer = new CommandContainer(Constants::Menus::Help, this);
     helpContainer->setTitle(tr("Help"));
@@ -351,16 +361,6 @@ void CorePluginImpl::createActions()
     aboutQtCommand->setContext(Command::ApplicationCommand);
     connect(aboutQtCommand->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
     helpContainer->addCommand(aboutQtCommand);
-
-    // ================ Tools Menu (Preferences) ================
-    helpContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
-
-    Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
-    preferencesCommand->setDefaultText(tr("Preferences"));
-    preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
-    preferencesCommand->setContext(Command::ApplicationCommand);
-    helpContainer->addCommand(preferencesCommand, group);
-    connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)
