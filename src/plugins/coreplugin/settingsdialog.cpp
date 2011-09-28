@@ -163,7 +163,7 @@ void SettingsDialogPrivate::setupUi()
     mainLayout->addLayout(stackedLayout, 1, 1, 1, 1);
     mainLayout->setColumnStretch(1, 4);
     q->setLayout(mainLayout);
-    q->setMinimumSize(1024, 576);
+    q->resize(1024, 576);
 }
 
 /*!
