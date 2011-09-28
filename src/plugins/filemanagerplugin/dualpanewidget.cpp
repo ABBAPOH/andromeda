@@ -68,6 +68,7 @@ DualPaneWidget::DualPaneWidget(FileSystemModel *model, QWidget *parent) :
 
     connect(d->panes[LeftPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
     connect(d->panes[RightPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
+    setObjectName(QLatin1String("DualPaneWidget"));
 }
 
 DualPaneWidget::~DualPaneWidget()
