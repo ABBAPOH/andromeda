@@ -219,6 +219,19 @@ void FileManagerEditor::onSelectedPathsChanged()
     removeAction->setEnabled(enabled);
 //    cutAction->setEnabled(enabled);
     copyAction->setEnabled(enabled);
+
+    if (!paths.isEmpty()) {
+        if (paths.size() == 1) {
+            cutAction->setText(tr("Cut %1").arg(QFileInfo(paths[0]).fileName()));
+            copyAction->setText(tr("Copy %1").arg(QFileInfo(paths[0]).fileName()));
+        } else {
+            cutAction->setText(tr("Cut %1 items").arg(paths.size()));
+            copyAction->setText(tr("Copy %1 items").arg(paths.size()));
+        }
+    } else {
+        cutAction->setText(tr("Copy"));
+        copyAction->setText(tr("Copy"));
+    }
 }
 
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot)
@@ -250,7 +263,7 @@ void FileManagerEditor::createActions()
     redoAction = createAction(tr("Redo"), Constants::Actions::Redo, m_widget, SLOT(redo()));
     undoAction = createAction(tr("Undo"), Constants::Actions::Undo, m_widget, SLOT(undo()));
 
-//    cutAction = createAction(tr("Cut"), Constants::Actions::Cut, m_widget, SLOT(cut()));
+    cutAction = createAction(tr("Cut"), Constants::Actions::Cut, m_widget, SLOT(cut()));
     copyAction = createAction(tr("Copy"), Constants::Actions::Copy, m_widget, SLOT(copy()));
     pasteAction = createAction(tr("Paste"), Constants::Actions::Paste, m_widget, SLOT(paste()));
     selectAllAction = createAction(tr("Select all"), Constants::Actions::SelectAll, m_widget, SLOT(selectAll()));
@@ -266,7 +279,7 @@ void FileManagerEditor::createActions()
     openAction->setEnabled(false);
     renameAction->setEnabled(false);
     removeAction->setEnabled(false);
-//    cutAction->setEnabled(false);
+    cutAction->setEnabled(false);
     copyAction->setEnabled(false);
 
     int viewMode = m_widget->viewMode();
