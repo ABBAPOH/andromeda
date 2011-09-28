@@ -252,11 +252,13 @@ void CorePluginImpl::createActions()
     editContainer->addGroup(group = Constants::MenuGroups::EditCopyPaste);
 
     Command *cutCommand = new Command(Constants::Actions::Cut, this);
+    cutCommand->setAttributes(Command::AttributeUpdateText);
     cutCommand->setDefaultText(tr("Cut"));
     cutCommand->setDefaultShortcut(tr("Ctrl+X"));
     editContainer->addCommand(cutCommand, group);
 
     Command *copyCommand = new Command(Constants::Actions::Copy, this);
+    copyCommand->setAttributes(Command::AttributeUpdateText);
     copyCommand->setDefaultText(tr("Copy"));
     copyCommand->setDefaultShortcut(tr("Ctrl+C"));
     editContainer->addCommand(copyCommand, group);
