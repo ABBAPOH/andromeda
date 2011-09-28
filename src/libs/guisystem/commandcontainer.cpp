@@ -12,15 +12,11 @@ namespace GuiSystem {
 
 struct Group
 {
-    explicit Group(const QByteArray &id) : id(id), actionGroup(0) {}
-    ~Group()
-    {
-        delete actionGroup;
-    }
+    explicit Group(const QByteArray &id) : id(id) {}
+    ~Group() {}
 
     QByteArray id;
     QObjectList objects;
-    QActionGroup *actionGroup;
 };
 
 class CommandContainerPrivate
@@ -95,7 +91,6 @@ void CommandContainer::addCommand(Command *command, const QByteArray &group)
         return;
     }
     g->objects.append(command);
-    g->actionGroup->addAction(command->commandAction());
 }
 
 /*!
@@ -119,13 +114,11 @@ void CommandContainer::addContainer(CommandContainer *container, const QByteArra
     Commands in group are combined together as a single unit; they are seprarated in menus and toolbars.
     If \a exclusive is set to true, only one Command in a group can be checked at a time.
 */
-void CommandContainer::addGroup(const QByteArray &id, bool exclusive)
+void CommandContainer::addGroup(const QByteArray &id)
 {
     Q_D(CommandContainer);
 
     Group *g = new Group(id);
-    g->actionGroup = new QActionGroup(this);
-    g->actionGroup->setExclusive(exclusive);
     d->groups.append(g);
 }
 

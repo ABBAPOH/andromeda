@@ -286,7 +286,7 @@ void CorePluginImpl::createActions()
     viewContainer->setTitle(tr("View"));
     menuBarContainer->addContainer(viewContainer);
 
-    viewContainer->addGroup(group = Constants::MenuGroups::ViewViewMode, true);
+    viewContainer->addGroup(group = Constants::MenuGroups::ViewViewMode);
 
     Command *iconModeCommand = new Command(Constants::Actions::IconMode, this);
     iconModeCommand->setDefaultText(tr("Icon View"));
