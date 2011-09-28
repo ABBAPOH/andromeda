@@ -234,8 +234,7 @@ void FileManagerEditor::onSelectedPathsChanged()
     }
 }
 
-QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id,
-                                          QWidget *w, const char *slot,
+QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, const char *slot,
                                           bool checkable)
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
@@ -244,10 +243,10 @@ QAction * FileManagerEditor::createAction(const QString &text, const QByteArray 
      action->setText(text);
      action->setCheckable(checkable);
      if (!checkable)
-         connect(action, SIGNAL(triggered()), w, slot);
+         connect(action, SIGNAL(triggered()), m_widget, slot);
      else
-         connect(action, SIGNAL(toggled(bool)), w, slot);
-     w->addAction(action);
+         connect(action, SIGNAL(toggled(bool)), m_widget, slot);
+     m_widget->addAction(action);
      actionManager->registerAction(action, id);
      return action;
 }
@@ -274,32 +273,32 @@ void FileManagerEditor::createActions()
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
 
-    openAction = createAction(tr("Open"), Constants::Actions::Open, m_widget, SLOT(open()));
-    newFolderAction = createAction(tr("New Folder"), Constants::Actions::NewFolder, m_widget, SLOT(newFolder()));
-    renameAction = createAction(tr("Rename"), Constants::Actions::Rename, m_widget, SLOT(rename()));
-    removeAction = createAction(tr("Remove"), Constants::Actions::Remove, m_widget, SLOT(remove()));
+    openAction = createAction(tr("Open"), Constants::Actions::Open, SLOT(open()));
+    newFolderAction = createAction(tr("New Folder"), Constants::Actions::NewFolder, SLOT(newFolder()));
+    renameAction = createAction(tr("Rename"), Constants::Actions::Rename, SLOT(rename()));
+    removeAction = createAction(tr("Remove"), Constants::Actions::Remove, SLOT(remove()));
 
     showFileInfoAction = new QAction(tr("File info"), this);
     connect(showFileInfoAction, SIGNAL(triggered()), this, SLOT(showFileInfo()));
     m_widget->addAction(showFileInfoAction);
     actionManager->registerAction(showFileInfoAction, Constants::Actions::FileInfo);
 
-    redoAction = createAction(tr("Redo"), Constants::Actions::Redo, m_widget, SLOT(redo()));
-    undoAction = createAction(tr("Undo"), Constants::Actions::Undo, m_widget, SLOT(undo()));
+    redoAction = createAction(tr("Redo"), Constants::Actions::Redo, SLOT(redo()));
+    undoAction = createAction(tr("Undo"), Constants::Actions::Undo, SLOT(undo()));
     redoAction->setEnabled(false);
     undoAction->setEnabled(false);
     connect(m_widget, SIGNAL(canRedoChanged(bool)), redoAction, SLOT(setEnabled(bool)));
     connect(m_widget, SIGNAL(canUndoChanged(bool)), undoAction, SLOT(setEnabled(bool)));
 
-    cutAction = createAction(tr("Cut"), Constants::Actions::Cut, m_widget, SLOT(cut()));
-    copyAction = createAction(tr("Copy"), Constants::Actions::Copy, m_widget, SLOT(copy()));
-    pasteAction = createAction(tr("Paste"), Constants::Actions::Paste, m_widget, SLOT(paste()));
-    selectAllAction = createAction(tr("Select all"), Constants::Actions::SelectAll, m_widget, SLOT(selectAll()));
+    cutAction = createAction(tr("Cut"), Constants::Actions::Cut, SLOT(cut()));
+    copyAction = createAction(tr("Copy"), Constants::Actions::Copy, SLOT(copy()));
+    pasteAction = createAction(tr("Paste"), Constants::Actions::Paste, SLOT(paste()));
+    selectAllAction = createAction(tr("Select all"), Constants::Actions::SelectAll, SLOT(selectAll()));
 
 //    actionManager->command(Constants::Actions::Up)->action(m_widget, SLOT(up()));
 
     showHiddenFilesAction = createAction(tr("Show hidden files"), Constants::Actions::ShowHiddenFiles,
-                                         m_widget, SLOT(showHiddenFiles(bool)), true);
+                                         SLOT(showHiddenFiles(bool)), true);
 
     openAction->setEnabled(false);
     renameAction->setEnabled(false);
@@ -321,7 +320,7 @@ void FileManagerEditor::createViewActions()
     columnModeAction = createViewAction(tr("Column view"), Constants::Actions::ColumnMode, 3);
     treeModeAction = createViewAction(tr("Tree view"), Constants::Actions::TreeMode, 4);
     dualPaneModeAction = createAction(tr("Dual pane"), Constants::Actions::DualPane,
-                                      m_widget, SLOT(setDualPaneModeEnabled(bool)), true);
+                                      SLOT(setDualPaneModeEnabled(bool)), true);
 
     viewModeGroup->addAction(dualPaneModeAction);
 

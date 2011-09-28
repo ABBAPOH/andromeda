@@ -47,8 +47,7 @@ private slots:
 
 private:
     QAction * createAction(const QString &text, const QByteArray &id,
-                           QWidget *w, const char *slot,
-                           bool checkable = false);
+                           const char *slot, bool checkable = false);
     QAction * createViewAction(const QString &text, const QByteArray &id, int mode);
     void createActions();
     void createViewActions();
