@@ -41,6 +41,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
         setViewMode(mode);
     m_widget->setDualPaneModeEnabled(enableDualPane);
     m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_widget->setFocus();
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(currentPathChanged(QString)));
     connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
     connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
