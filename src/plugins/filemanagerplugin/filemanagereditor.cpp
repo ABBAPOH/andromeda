@@ -262,6 +262,10 @@ void FileManagerEditor::createActions()
 
     redoAction = createAction(tr("Redo"), Constants::Actions::Redo, m_widget, SLOT(redo()));
     undoAction = createAction(tr("Undo"), Constants::Actions::Undo, m_widget, SLOT(undo()));
+    redoAction->setEnabled(false);
+    undoAction->setEnabled(false);
+    connect(m_widget, SIGNAL(canRedoChanged(bool)), redoAction, SLOT(setEnabled(bool)));
+    connect(m_widget, SIGNAL(canUndoChanged(bool)), undoAction, SLOT(setEnabled(bool)));
 
     cutAction = createAction(tr("Cut"), Constants::Actions::Cut, m_widget, SLOT(cut()));
     copyAction = createAction(tr("Copy"), Constants::Actions::Copy, m_widget, SLOT(copy()));

@@ -42,6 +42,8 @@ signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);
     void openRequested(const QString &path);
+    void canUndoChanged(bool);
+    void canRedoChanged(bool);
     void selectedPathsChanged();
 
 public slots:
