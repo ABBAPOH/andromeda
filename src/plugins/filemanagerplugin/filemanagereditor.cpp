@@ -207,58 +207,79 @@ void FileManagerEditor::showFileInfo()
     }
 }
 
+QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot)
+{
+    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+
+     QAction *action = new QAction(this);
+     action->setText(text);
+     connect(action, SIGNAL(triggered()), w, slot);
+     w->addAction(action);
+     actionManager->registerAction(action, id);
+     return action;
+}
+
 void FileManagerEditor::createActions()
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
 
-    openAction = actionManager->command(Constants::Actions::Open)->action(m_widget, SLOT(open()));
-    newFolderAction = actionManager->command(Constants::Actions::NewFolder)->action(m_widget, SLOT(newFolder()));
-    renameAction = actionManager->command(Constants::Actions::Rename)->action(m_widget, SLOT(rename()));
-    removeAction = actionManager->command(Constants::Actions::Remove)->action(m_widget, SLOT(remove()));
+    openAction = createAction(tr("Open"), Constants::Actions::Open, m_widget, SLOT(open()));
+    newFolderAction = createAction(tr("New Folder"), Constants::Actions::NewFolder, m_widget, SLOT(newFolder()));
+    renameAction = createAction(tr("Rename"), Constants::Actions::Rename, m_widget, SLOT(rename()));
+    removeAction = createAction(tr("Remove"), Constants::Actions::Remove, m_widget, SLOT(remove()));
 
-    showFileInfoAction = actionManager->command(Constants::Actions::FileInfo)->action(this);
-    connect(showFileInfoAction, SIGNAL(triggered()), SLOT(showFileInfo()));
+    showFileInfoAction = new QAction(tr("File info"), this);
+    connect(showFileInfoAction, SIGNAL(triggered()), this, SLOT(showFileInfo()));
     m_widget->addAction(showFileInfoAction);
+    actionManager->registerAction(showFileInfoAction, Constants::Actions::FileInfo);
 
-    redoAction = actionManager->command(Constants::Actions::Redo)->action(m_widget, SLOT(redo()));
-    undoAction = actionManager->command(Constants::Actions::Undo)->action(m_widget, SLOT(undo()));
+    redoAction = createAction(tr("Redo"), Constants::Actions::Redo, m_widget, SLOT(redo()));
+    undoAction = createAction(tr("Undo"), Constants::Actions::Undo, m_widget, SLOT(undo()));
 
-    //    actionManager->command(Constants::Actions::Cut)->action(m_widget, SLOT(cut()));
-    copyAction = actionManager->command(Constants::Actions::Copy)->action(m_widget, SLOT(copy()));
-    pasteAction = actionManager->command(Constants::Actions::Paste)->action(m_widget, SLOT(paste()));
-    selectAllAction = actionManager->command(Constants::Actions::SelectAll)->action(m_widget, SLOT(selectAll()));
+//    cutAction = createAction(tr("Cut"), Constants::Actions::Cut, m_widget, SLOT(cut()));
+    copyAction = createAction(tr("Copy"), Constants::Actions::Copy, m_widget, SLOT(copy()));
+    pasteAction = createAction(tr("Paste"), Constants::Actions::Paste, m_widget, SLOT(paste()));
+    selectAllAction = createAction(tr("Select all"), Constants::Actions::SelectAll, m_widget, SLOT(selectAll()));
 
-    actionManager->command(Constants::Actions::Up)->action(m_widget, SLOT(up()));
+//    actionManager->command(Constants::Actions::Up)->action(m_widget, SLOT(up()));
 
-    showHiddenFilesAction = actionManager->command(Constants::Actions::ShowHiddenFiles)->action(this);
+    showHiddenFilesAction = new QAction(tr("Show hidden files"), this);
     showHiddenFilesAction->setCheckable(true);
     connect(showHiddenFilesAction, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
     m_widget->addAction(showHiddenFilesAction);
+    actionManager->registerAction(showHiddenFilesAction, Constants::Actions::ShowHiddenFiles);
 
     int viewMode = m_widget->viewMode();
 
     QSignalMapper *viewMapper = new QSignalMapper(this);
 
-    iconModeAction = actionManager->command(Constants::Actions::IconMode)->action(viewMapper, SLOT(map()));
+    iconModeAction = new QAction(tr("Icon view"), this);
     iconModeAction->setCheckable(true);
     viewMapper->setMapping(iconModeAction, 1);
+    connect(iconModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(iconModeAction);
+    actionManager->registerAction(iconModeAction, Constants::Actions::IconMode);
 
-    columnModeAction = actionManager->command(Constants::Actions::ColumnMode)->action(viewMapper, SLOT(map()));
+    columnModeAction = new QAction(tr("Column view"), this);
     columnModeAction->setCheckable(true);
     viewMapper->setMapping(columnModeAction, 3);
+    connect(columnModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     m_widget->addAction(columnModeAction);
+    actionManager->registerAction(columnModeAction, Constants::Actions::ColumnMode);
 
-    treeModeAction = actionManager->command(Constants::Actions::TreeMode)->action(viewMapper, SLOT(map()));
+    treeModeAction = new QAction(tr("Tree view"), this);
     treeModeAction->setCheckable(true);
+    connect(treeModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
     viewMapper->setMapping(treeModeAction, 4);
     m_widget->addAction(treeModeAction);
+    actionManager->registerAction(treeModeAction, Constants::Actions::TreeMode);
 
-    dualPaneModeAction = actionManager->command(Constants::Actions::DualPane)->action();
+    dualPaneModeAction = new QAction(tr("Dual pane"), this);
     dualPaneModeAction->setParent(this);
     connect(dualPaneModeAction, SIGNAL(toggled(bool)), SLOT(setDualPaneModeEnabled(bool)));
     dualPaneModeAction->setCheckable(true);
     m_widget->addAction(dualPaneModeAction);
+    actionManager->registerAction(dualPaneModeAction, Constants::Actions::DualPane);
 
     viewModeGroup = new QActionGroup(this);
     viewModeGroup->addAction(iconModeAction);

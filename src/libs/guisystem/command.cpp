@@ -106,58 +106,6 @@ Command::~Command()
 */
 
 /*!
-    \brief Creates new action with objectName equal to command's id.
-
-    Also command sets action's text, icon and shortcut default values (as passed to setDefault* methods).
-    This action can be used in widgets and will be automatically triggered when Command is triggered.
-*/
-QAction * Command::action(QObject *parent)
-{
-    Q_D(Command);
-
-    if (d->context == ApplicationCommand) {
-        return d->realAction;
-    }
-
-    QAction *a = new QAction(parent ? parent : this);
-    a->setObjectName(id());
-    a->setIcon(defaultIcon());
-    a->setShortcut(defaultShortcut());
-    a->setShortcutContext(Qt::WidgetShortcut);
-    a->setText(defaultText());
-    a->setData(data());
-    a->setCheckable(d_func()->action->isCheckable());
-    return a;
-}
-
-
-/*!
-    \brief Creates new action with objectName equal to command's id.
-
-    This overload connects action's triggered() signal to slot \a slot
-*/
-QAction * Command::action(QObject *parent, const char *slot)
-{
-    QAction *a = action(parent);
-
-    connect(a, SIGNAL(triggered()), parent, slot);
-
-    return a;
-}
-
-/*!
-    \brief Creates new action with objectName equal to command's id.
-
-    This overload adds newly created action to widget \a w and connects triggered() signal to slot \a slot
-*/
-QAction * Command::action(QWidget *widget, const char *slot)
-{
-    QAction *a = action((QObject *)widget, slot);
-    widget->addAction(a);
-    return a;
-}
-
-/*!
     \brief Returns inner Command's action which is used in menus and menubars.
 */
 QAction * Command::commandAction() const
@@ -208,12 +156,10 @@ void Command::setContext(Command::CommandContext context)
 {
     Q_D(Command);
     if (d->context == ApplicationCommand) {
-        delete d->realAction;
         d->action->setEnabled(false);
     }
 
     if (context == ApplicationCommand) {
-        d->realAction = action(this);
         d->action->setEnabled(true);
     }
 

@@ -35,42 +35,60 @@ Tab * MainWindowPrivate::addTab(int *index)
     return tab;
 }
 
+void MainWindowPrivate::createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot)
+{
+    ActionManager *actionManager = ActionManager::instance();
+
+    action = new QAction(this);
+    action->setText(text);
+    connect(action, SIGNAL(triggered()), w, slot);
+    w->addAction(action);
+    actionManager->registerAction(action, id);
+}
+
 void MainWindowPrivate::setupActions()
 {
     Q_Q(MainWindow);
 
     ActionManager *actionManager = ActionManager::instance();
 
-    actionManager->command(Constants::Actions::NewTab)->action(q, SLOT(newTab()));
-    actionManager->command(Constants::Actions::CloseTab)->action(q, SLOT(closeTab()));
+    newTabAction = new QAction(this);
+    connect(newTabAction, SIGNAL(triggered()), q, SLOT(newTab()));
+    q->addAction(newTabAction);
+    actionManager->registerAction(newTabAction, Constants::Actions::NewTab);
+
+    closeTabAction = new QAction(this);
+    connect(closeTabAction, SIGNAL(triggered()), q, SLOT(closeTab()));
+    q->addAction(closeTabAction);
+    actionManager->registerAction(closeTabAction, Constants::Actions::CloseTab);
 
     // LineEdit
-    actionManager->command(Constants::Actions::Undo)->action(lineEdit, SLOT(undo()));
-    actionManager->command(Constants::Actions::Redo)->action(lineEdit, SLOT(redo()));
+    createAction(undoAction, tr("Undo"), Constants::Actions::Undo, lineEdit, SLOT(undo()));
+    createAction(redoAction, tr("Redo"), Constants::Actions::Redo, lineEdit, SLOT(redo()));
 
     QAction *a = new QAction(this);
     a->setSeparator(true);
     lineEdit->addAction(a);
 
-    actionManager->command(Constants::Actions::Cut)->action(lineEdit, SLOT(cut()));
-    actionManager->command(Constants::Actions::Copy)->action(lineEdit, SLOT(copy()));
-    actionManager->command(Constants::Actions::Paste)->action(lineEdit, SLOT(paste()));
-    actionManager->command(Constants::Actions::SelectAll)->action(lineEdit, SLOT(selectAll()));
+    createAction(cutAction, tr("Cut"), Constants::Actions::Cut, lineEdit, SLOT(cut()));
+    createAction(copyAction, tr("Copy"), Constants::Actions::Copy, lineEdit, SLOT(copy()));
+    createAction(pasteAction, tr("Paste"), Constants::Actions::Paste, lineEdit, SLOT(paste()));
+    createAction(selectAllAction, tr("Select All"), Constants::Actions::SelectAll, lineEdit, SLOT(selectAll()));
 
     // ToolBar
-    backAction = actionManager->command(Constants::Actions::Back)->action(this);
-    backAction->setIcon(QIcon(":/images/icons/back.png"));
+    backAction = new QAction(QIcon(":/images/icons/back.png"), tr("Back"), this);
     connect(backAction, SIGNAL(triggered()), q, SLOT(back()));
     q->addAction(backAction);
+    actionManager->registerAction(backAction, Constants::Actions::Back);
 
-    forwardAction = actionManager->command(Constants::Actions::Forward)->action(this);
-    forwardAction->setIcon(QIcon(":/images/icons/forward.png"));
+    forwardAction = new QAction(QIcon(":/images/icons/forward.png"), tr("Forward"), this);
     connect(forwardAction, SIGNAL(triggered()), q, SLOT(forward()));
     q->addAction(forwardAction);
+    actionManager->registerAction(backAction, Constants::Actions::Forward);
 
     upAction = actionManager->command(Constants::Actions::Up)->commandAction();
 
-    nextTabAction = new QAction(q);
+    nextTabAction = new QAction(this);
 #ifdef Q_OS_MAC
     nextTabAction->setShortcut(tr("Ctrl+Right"));
 #else
@@ -94,10 +112,12 @@ void MainWindowPrivate::setupActions()
     CommandContainer *gotoMenu = actionManager->container(Constants::Menus::GoTo);
     QSignalMapper *gotoMapper = new QSignalMapper(this);
     foreach (Command *cmd, gotoMenu->commands(Constants::MenuGroups::Locations)) {
-        QAction *action = cmd->action();
+//        QAction *action = cmd->action();
+        QAction *action = new QAction(this);
         gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
         action->setParent(this);
+        actionManager->registerAction(action, cmd->id());
         q->addAction(action);
     }
     connect(gotoMapper, SIGNAL(mapped(QString)), q, SLOT(open(QString)));
