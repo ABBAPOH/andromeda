@@ -69,6 +69,11 @@ DualPaneWidget::DualPaneWidget(FileSystemModel *model, QWidget *parent) :
     connect(d->panes[LeftPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
     connect(d->panes[RightPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
 
+    connect(d->panes[LeftPane],  SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
+    connect(d->panes[RightPane], SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
+    connect(d->panes[LeftPane],  SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
+    connect(d->panes[RightPane], SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
+
     connect(d->panes[LeftPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
     connect(d->panes[RightPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
 

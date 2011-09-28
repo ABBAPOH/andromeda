@@ -11,7 +11,7 @@ BUG-10 [Closed] Duplicate item in history after right click
 BUG-11 [Closed] File renaming can't be confirmed by 'return'
 BUG-12 [Closed] DriveController doesn't remove disk when mouting *.iso using Daemon Tools
 BUG-13 [Open] Disable Back & Forward actions if can't go back/forward
-BUG-14 [Open] Disable Undo & Redo actions if can't undo/redo
+BUG-14 [Closed] Disable Undo & Redo actions if can't undo/redo
 BUG-15 [Open] Disable 'Paste' action if clipboard is empty
 BUG-16 [Open] Undo manager should not try undo running operations (or cancel them, removing target file)
 BUG-17 [Open] Slow copying files (use bigger buffer?)
