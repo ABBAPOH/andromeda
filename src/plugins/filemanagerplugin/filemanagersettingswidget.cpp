@@ -9,16 +9,32 @@
 
 using namespace CorePlugin;
 
+int readFlags()
+{
+    int flags = 0;
+
+    Settings *s = Core::instance()->settings();
+    s->beginGroup(QLatin1String("fileManager"));
+    if (s->contains(QLatin1String("standardLocations"))) {
+        flags = s->value(QLatin1String("standardLocations")).toInt();
+    } else {
+        flags = NavigationModel::DesktopLocation |
+                NavigationModel::DocumentsLocation |
+                NavigationModel::HomeLocation |
+                NavigationModel::ApplicationsLocation;
+    }
+    s->endGroup();
+
+    return flags;
+}
+
 FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileManagerSettingsWidget)
 {
     ui->setupUi(this);
 
-    Settings *s = Core::instance()->settings();
-    s->beginGroup("fileManager");
-    int flags = s->value(QLatin1String("standardLocations")).toInt();
-    s->endGroup();
+    int flags = readFlags();
 
     ui->applicationsCheckBox->setChecked(flags & NavigationModel::ApplicationsLocation);
     ui->desktopCheckBox->setChecked(flags & NavigationModel::DesktopLocation);
@@ -55,21 +71,15 @@ FileManagerSettingsWidget::~FileManagerSettingsWidget()
 
 void FileManagerSettingsWidget::onChecked(bool checked)
 {
-    Settings *s = Core::instance()->settings();
-    s->beginGroup("fileManager");
-    int flags = 0;
-    if (s->contains(QLatin1String("standardLocations"))) {
-        flags = s->value(QLatin1String("standardLocations")).toInt();
-    } else {
-        flags = NavigationModel::DesktopLocation |
-                NavigationModel::DocumentsLocation |
-                NavigationModel::HomeLocation |
-                NavigationModel::ApplicationsLocation;
-    }
+    int flags = readFlags();
+
     if (checked)
         flags = flags | sender()->property("flag").toInt();
     else
         flags = flags & ~sender()->property("flag").toInt();
+
+    Settings *s = Core::instance()->settings();
+    s->beginGroup(QLatin1String("fileManager"));
     s->setValue(QLatin1String("standardLocations"), flags);
     s->endGroup();
 }
