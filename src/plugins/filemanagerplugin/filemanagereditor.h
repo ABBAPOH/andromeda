@@ -42,6 +42,7 @@ private slots:
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
     void showFileInfo();
+    void onSelectedPathsChanged();
 
 private:
     QAction * createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot);

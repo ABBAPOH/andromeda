@@ -44,6 +44,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     m_widget->setFocus();
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(currentPathChanged(QString)));
     connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
+    connect(m_widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
     connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
 
     m_panel = new NavigationPanel(splitter);
@@ -208,6 +209,18 @@ void FileManagerEditor::showFileInfo()
     }
 }
 
+void FileManagerEditor::onSelectedPathsChanged()
+{
+    QStringList paths = m_widget->activeWidget()->selectedPaths();
+    bool enabled = !paths.empty();
+
+    openAction->setEnabled(enabled);
+    renameAction->setEnabled(enabled);
+    removeAction->setEnabled(enabled);
+//    cutAction->setEnabled(enabled);
+    copyAction->setEnabled(enabled);
+}
+
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot)
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
@@ -249,6 +262,12 @@ void FileManagerEditor::createActions()
     connect(showHiddenFilesAction, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
     m_widget->addAction(showHiddenFilesAction);
     actionManager->registerAction(showHiddenFilesAction, Constants::Actions::ShowHiddenFiles);
+
+    openAction->setEnabled(false);
+    renameAction->setEnabled(false);
+    removeAction->setEnabled(false);
+//    cutAction->setEnabled(false);
+    copyAction->setEnabled(false);
 
     int viewMode = m_widget->viewMode();
 

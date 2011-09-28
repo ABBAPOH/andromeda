@@ -68,6 +68,10 @@ DualPaneWidget::DualPaneWidget(FileSystemModel *model, QWidget *parent) :
 
     connect(d->panes[LeftPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
     connect(d->panes[RightPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
+
+    connect(d->panes[LeftPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
+    connect(d->panes[RightPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
+
     setObjectName(QLatin1String("DualPaneWidget"));
 }
 
@@ -234,6 +238,10 @@ void DualPaneWidget::undo()
 void DualPaneWidget::redo()
 {
     activeWidget()->redo();
+}
+
+void DualPaneWidget::cut()
+{
 }
 
 void DualPaneWidget::copy()

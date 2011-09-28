@@ -42,6 +42,7 @@ signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);
     void openRequested(const QString &path);
+    void selectedPathsChanged();
 
 public slots:
     void setActivePane(Pane pane);
@@ -59,6 +60,7 @@ public slots:
 
     void undo();
     void redo();
+    void cut();
     void copy();
     void paste();
     void selectAll();
