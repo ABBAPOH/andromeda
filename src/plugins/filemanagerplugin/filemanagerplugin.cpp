@@ -112,7 +112,7 @@ void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocat
         cmd->setDefaultIcon(icon);
 
     cmd->setData(dir.absolutePath());
-    cmd->setContext(Command::ApplicationCommand);
+    cmd->setContext(Command::WindowCommand);
 
     container->addCommand(cmd, Constants::MenuGroups::Locations);
 }
