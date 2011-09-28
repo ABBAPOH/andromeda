@@ -25,11 +25,11 @@ const char * const FileQuit = "FileQuit";
 
 const char * const EditRedo = "EditRedo";
 const char * const EditCopyPaste = "EditCopyPate";
-const char * const EditPreferences = "EditPreferences";
 
 const char * const ViewViewMode = "ViewViewMode";
 
 const char * const Locations = "GotoLocations";
+const char * const ToolsPreferences = "ToolsPreferences";
 
 } // namespace Groups
 
@@ -51,8 +51,6 @@ const char * const Cut = "Actions.Cut";
 const char * const Copy = "Actions.Copy";
 const char * const Paste = "Actions.Paste";
 const char * const SelectAll = "Actions.SelectAll";
-const char * const Preferences = "Actions.Preferences";
-const char * const Plugins = "Actions.Plugins";
 
 const char * const IconMode = "Actions.IconMode";
 const char * const ColumnMode = "Actions.ColumnMode";
@@ -66,6 +64,11 @@ const char * const Forward = "Actions.Forward";
 const char * const Up = "Actions.Up";
 
 const char * const Goto = "Actions.Goto %1";
+
+const char * const About = "Actions.About";
+const char * const AboutQt = "Actions.AboutQt";
+const char * const Preferences = "Actions.Preferences";
+const char * const Plugins = "Actions.Plugins";
 
 } // namespace Actions
 
