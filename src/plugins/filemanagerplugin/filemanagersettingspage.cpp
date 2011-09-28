@@ -14,7 +14,7 @@ FileManagerSettingsPage::FileManagerSettingsPage(QObject *parent) :
 
 QString FileManagerSettingsPage::name() const
 {
-    return tr("File Manager");
+    return tr("Global");
 }
 
 QString FileManagerSettingsPage::categoryName() const

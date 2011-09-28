@@ -10,7 +10,7 @@ WebViewSettingsPage::WebViewSettingsPage(QObject *parent) :
 
 QString WebViewSettingsPage::name() const
 {
-    return tr("Web View");
+    return tr("Global");
 }
 
 QIcon WebViewSettingsPage::icon() const
