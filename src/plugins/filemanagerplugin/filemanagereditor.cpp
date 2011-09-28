@@ -231,6 +231,7 @@ void FileManagerEditor::createActions()
     actionManager->command(Constants::Actions::Up)->action(m_widget, SLOT(up()));
 
     showHiddenFilesAction = actionManager->command(Constants::Actions::ShowHiddenFiles)->action(this);
+    showHiddenFilesAction->setCheckable(true);
     connect(showHiddenFilesAction, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
     m_widget->addAction(showHiddenFilesAction);
 
@@ -239,18 +240,22 @@ void FileManagerEditor::createActions()
     QSignalMapper *viewMapper = new QSignalMapper(this);
 
     iconModeAction = actionManager->command(Constants::Actions::IconMode)->action(viewMapper, SLOT(map()));
+    iconModeAction->setCheckable(true);
     viewMapper->setMapping(iconModeAction, 1);
     m_widget->addAction(iconModeAction);
 
     columnModeAction = actionManager->command(Constants::Actions::ColumnMode)->action(viewMapper, SLOT(map()));
+    columnModeAction->setCheckable(true);
     viewMapper->setMapping(columnModeAction, 3);
     m_widget->addAction(columnModeAction);
 
     treeModeAction = actionManager->command(Constants::Actions::TreeMode)->action(viewMapper, SLOT(map()));
+    treeModeAction->setCheckable(true);
     viewMapper->setMapping(treeModeAction, 4);
     m_widget->addAction(treeModeAction);
 
     dualPaneModeAction = actionManager->command(Constants::Actions::DualPane)->action(this, SLOT(setDualPaneModeEnabled(bool)));
+    dualPaneModeAction->setCheckable(true);
     m_widget->addAction(dualPaneModeAction);
 
     viewModeGroup = new QActionGroup(this);

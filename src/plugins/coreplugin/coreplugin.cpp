@@ -291,29 +291,24 @@ void CorePluginImpl::createActions()
     Command *iconModeCommand = new Command(Constants::Actions::IconMode, this);
     iconModeCommand->setDefaultText(tr("Icon View"));
     iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
-    iconModeCommand->setCheckable(true);
     iconModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(iconModeCommand, group);
 
     Command *columnModeCommand = new Command(Constants::Actions::ColumnMode, this);
     columnModeCommand->setDefaultText(tr("Column View"));
     columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
-    columnModeCommand->setCheckable(true);
     columnModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(columnModeCommand, group);
 
     Command *treeModeCommand = new Command(Constants::Actions::TreeMode, this);
     treeModeCommand->setDefaultText(tr("Tree View"));
     treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
-    treeModeCommand->setCheckable(true);
     treeModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(treeModeCommand, group);
 
     Command *dualPaneCommand = new Command(Constants::Actions::DualPane, this);
     dualPaneCommand->setDefaultText(tr("Dual Pane"));
     dualPaneCommand->setDefaultShortcut(tr("Ctrl+4"));
-    // TODO: change API or realization!!!
-    dualPaneCommand->setCheckable(true);
     dualPaneCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(dualPaneCommand, group);
 
