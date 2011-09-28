@@ -47,6 +47,7 @@ signals:
     void openRequested(const QString &path);
     void canUndoChanged(bool);
     void canRedoChanged(bool);
+    void selectedPathsChanged();
 
 public slots:
     void setCurrentPath(const QString &path);

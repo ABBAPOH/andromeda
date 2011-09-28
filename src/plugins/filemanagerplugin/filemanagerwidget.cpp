@@ -221,6 +221,12 @@ void FileManagerWidget::setModel(FileSystemModel *model)
     if (d->model == model)
         return;
 
+    if (d->model) {
+        for (int i = 0; i < MaxViews; i++) {
+            disconnect(d->views[i]->selectionModel(), 0, this, 0);
+        }
+    }
+
     if (d->model && d->model->QObject::parent() == this)
         delete d->model;
 
@@ -229,6 +235,8 @@ void FileManagerWidget::setModel(FileSystemModel *model)
 
     for (int i = 0; i < MaxViews; i++) {
         d->views[i]->setModel(model);
+        connect(d->views[i]->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                SIGNAL(selectedPathsChanged()));
     }
 }
 
