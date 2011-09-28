@@ -4,13 +4,14 @@
 #include <QtGui/QKeySequence>
 
 #include "actionmanager.h"
+#include "proxyaction.h"
 
 namespace GuiSystem {
 
 class CommandPrivate
 {
 public:
-    QAction *action;
+    ProxyAction *action;
     QAction *realAction;
 
     Command::Attributes attributes;
@@ -33,24 +34,15 @@ using namespace GuiSystem;
 
 void CommandPrivate::update()
 {
-    if (attributes & Command::AttributeHide)
-        action->setVisible((bool)realAction);
-    if (attributes & Command::AttributeUpdateText)
-        action->setText(realAction ? realAction->text() : defaultText);
-    if (attributes & Command::AttributeUpdateIcon)
-        action->setIcon(realAction ? realAction->icon() : defaultIcon);
-    if (!(attributes & Command::AttributeNonConfigurable)) {
-        action->setShortcut(realAction ? realAction->shortcut() : defaultShortcut);
+//    if (attributes & Command::AttributeHide)
+//        action->setVisible((bool)realAction);
+    if (attributes & Command::AttributeUpdateText && !realAction)
+        action->setText(defaultText);
+    if (attributes & Command::AttributeUpdateIcon && !realAction)
+        action->setIcon(defaultIcon);
+    if (attributes & Command::AttributeUpdateShortcut && !realAction) {
+        action->setShortcut(defaultShortcut);
     }
-
-    bool checkable = realAction ? realAction->isCheckable() : false;
-    action->setCheckable(checkable);
-    if (checkable) {
-        action->blockSignals(true); // prevent from throwing signal on focus change
-        action->setChecked(realAction->isChecked());
-        action->blockSignals(false);
-    }
-    action->setEnabled(alwaysEnabled || (realAction ? realAction->isEnabled() : false));
 }
 
 /*!
@@ -74,14 +66,11 @@ Command::Command(const QByteArray &id, QObject *parent) :
     Q_D(Command);
 
     d->id = id;
-    d->action = new QAction(this);
+    d->action = new ProxyAction(this);
     d->action->setEnabled(false);
     d->realAction = 0;
     d->alwaysEnabled = false;
     d->context = WidgetCommand;
-
-    connect(d->action, SIGNAL(triggered(bool)), SLOT(onTrigger(bool)));
-    connect(d->action, SIGNAL(toggled(bool)), SLOT(onToggle(bool)));
 
     ActionManager::instance()->registerCommand(this);
 
@@ -201,8 +190,9 @@ void Command::setAttributes(Attributes attrs)
     if (d->attributes != attrs) {
         d->attributes = attrs;
 
-        if (attrs & AttributeHide && !d->realAction)
-            d->action->setVisible(false);
+//        if (attrs & AttributeHide && !d->realAction)
+//            d->action->setVisible(false);
+        d->action->setAttributes(ProxyAction::Attributes((int)attrs));
 
         emit changed();
     }
@@ -278,7 +268,7 @@ void Command::setDefaultShortcut(const QKeySequence &key)
 
     if (d->defaultShortcut != key) {
         d->defaultShortcut = key;
-        if (!d->realAction)
+        if (!d->realAction || !(d->attributes & AttributeUpdateShortcut))
             d->action->setShortcut(key);
 
         emit changed();
@@ -303,7 +293,7 @@ void Command::setDefaultIcon(const QIcon &icon)
     Q_D(Command);
 
     d->defaultIcon = icon;
-    if (!d->realAction)
+    if (!d->realAction || !(d->attributes & AttributeUpdateIcon))
         d->action->setIcon(icon);
 
     emit changed();
@@ -328,7 +318,7 @@ void Command::setDefaultText(const QString &text)
 
     if (d->defaultText != text) {
         d->defaultText = text;
-        if (!d->realAction)
+        if (!d->realAction || !(d->attributes & AttributeUpdateText))
             d->action->setText(text);
 
         emit changed();
@@ -365,37 +355,6 @@ QByteArray Command::id() const
 /*!
     \internal
 
-    Called whe user triggers non-checkable action.
-*/
-void Command::onTrigger(bool checked)
-{
-    Q_D(Command);
-
-    if (d->realAction && !d->action->isCheckable()) {
-        d->realAction->trigger();
-    }
-}
-
-/*!
-    \internal
-
-    Called whe user triggers checkable action or when it is toggled programmatically.
-*/
-void Command::onToggle(bool checked)
-{
-    Q_D(Command);
-
-    if (d->realAction && d->action->isCheckable() && d->realAction->isChecked() != checked) {
-        d->realAction->setChecked(checked);
-    }
-
-    if (sender() == d->realAction && d->action->isChecked() != checked)
-        d->action->setChecked(checked);
-}
-
-/*!
-    \internal
-
     Links \a action to this Command.
 */
 void Command::setRealAction(QAction *action)
@@ -403,11 +362,8 @@ void Command::setRealAction(QAction *action)
     Q_D(Command);
 
     if (d->realAction != action) {
-        if (d->realAction)
-            disconnect(d->realAction, 0, this, 0);
         d->realAction = action;
+        d->action->setAction(action);
         d->update();
-        if (d->realAction)
-            connect(d->realAction, SIGNAL(toggled(bool)), SLOT(onToggle(bool)));
     }
 }
