@@ -130,3 +130,8 @@ MainWindow * AbstractEditor::mainWindow() const
     Q_ASSERT_X(window, "IEditor::mainWindow", "Attempt to use IEditor not within MainWindow");
     return window;
 }
+
+AbstractEditor * AbstractEditor::currentEditor()
+{
+    return MainWindow::currentWindow()->currentEditor();
+}
