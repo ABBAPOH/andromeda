@@ -84,7 +84,7 @@ void MainWindowPrivate::setupActions()
     forwardAction = new QAction(QIcon(":/images/icons/forward.png"), tr("Forward"), this);
     connect(forwardAction, SIGNAL(triggered()), q, SLOT(forward()));
     q->addAction(forwardAction);
-    actionManager->registerAction(backAction, Constants::Actions::Forward);
+    actionManager->registerAction(forwardAction, Constants::Actions::Forward);
 
     upAction = actionManager->command(Constants::Actions::Up)->commandAction();
 
