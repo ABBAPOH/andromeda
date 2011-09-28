@@ -252,6 +252,24 @@ QAction * FileManagerEditor::createAction(const QString &text, const QByteArray 
      return action;
 }
 
+QAction * FileManagerEditor::createViewAction(const QString &text, const QByteArray &id, int mode)
+{
+    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+
+    QAction *action = new QAction(this);
+    action->setText(text);
+    action->setCheckable(true);
+    viewModeGroup->addAction(action);
+
+    viewModeMapper->setMapping(action, mode);
+    connect(action, SIGNAL(toggled(bool)), viewModeMapper, SLOT(map()));
+
+    m_widget->addAction(action);
+    actionManager->registerAction(action, id);
+
+    return action;
+}
+
 void FileManagerEditor::createActions()
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
@@ -289,50 +307,33 @@ void FileManagerEditor::createActions()
     cutAction->setEnabled(false);
     copyAction->setEnabled(false);
 
+    createViewActions();
+}
+
+void FileManagerEditor::createViewActions()
+{
     int viewMode = m_widget->viewMode();
 
-    QSignalMapper *viewMapper = new QSignalMapper(this);
-
-    iconModeAction = new QAction(tr("Icon view"), this);
-    iconModeAction->setCheckable(true);
-    viewMapper->setMapping(iconModeAction, 1);
-    connect(iconModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
-    m_widget->addAction(iconModeAction);
-    actionManager->registerAction(iconModeAction, Constants::Actions::IconMode);
-
-    columnModeAction = new QAction(tr("Column view"), this);
-    columnModeAction->setCheckable(true);
-    viewMapper->setMapping(columnModeAction, 3);
-    connect(columnModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
-    m_widget->addAction(columnModeAction);
-    actionManager->registerAction(columnModeAction, Constants::Actions::ColumnMode);
-
-    treeModeAction = new QAction(tr("Tree view"), this);
-    treeModeAction->setCheckable(true);
-    connect(treeModeAction, SIGNAL(toggled(bool)), viewMapper, SLOT(map()));
-    viewMapper->setMapping(treeModeAction, 4);
-    m_widget->addAction(treeModeAction);
-    actionManager->registerAction(treeModeAction, Constants::Actions::TreeMode);
-
-    dualPaneModeAction = new QAction(tr("Dual pane"), this);
-    dualPaneModeAction->setParent(this);
-    connect(dualPaneModeAction, SIGNAL(toggled(bool)), SLOT(setDualPaneModeEnabled(bool)));
-    dualPaneModeAction->setCheckable(true);
-    m_widget->addAction(dualPaneModeAction);
-    actionManager->registerAction(dualPaneModeAction, Constants::Actions::DualPane);
-
     viewModeGroup = new QActionGroup(this);
-    viewModeGroup->addAction(iconModeAction);
-    viewModeGroup->addAction(columnModeAction);
-    viewModeGroup->addAction(treeModeAction);
+    viewModeMapper = new QSignalMapper(this);
+
+    iconModeAction = createViewAction(tr("Icon view"), Constants::Actions::IconMode, 1);
+    columnModeAction = createViewAction(tr("Column view"), Constants::Actions::ColumnMode, 3);
+    treeModeAction = createViewAction(tr("Tree view"), Constants::Actions::TreeMode, 4);
+    dualPaneModeAction = createAction(tr("Dual pane"), Constants::Actions::DualPane,
+                                      m_widget, SLOT(setDualPaneModeEnabled(bool)), true);
+
     viewModeGroup->addAction(dualPaneModeAction);
 
-    iconModeAction->setChecked(viewMode == 1);
-    columnModeAction->setChecked(viewMode == 3);
-    treeModeAction->setChecked(viewMode == 4);
+    switch (viewMode) {
+    case 1: iconModeAction->setChecked(true); break;
+    case 3: columnModeAction->setChecked(true); break;
+    case 4: treeModeAction->setChecked(true); break;
+    default: break;
+    }
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 
-    connect(viewMapper, SIGNAL(mapped(int)), SLOT(setViewMode(int)));
+    connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setViewMode(int)));
 }
 
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
