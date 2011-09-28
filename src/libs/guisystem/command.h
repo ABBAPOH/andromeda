@@ -35,10 +35,11 @@ public:
     ~Command();
 
     enum Attribute {
+        AttributeNonConfigurable = 0,
         AttributeHide = 1,
         AttributeUpdateText = 2,
         AttributeUpdateIcon = 4,
-        AttributeNonConfigurable = 8
+        AttributeUpdateShortcut = 8
     };
     Q_DECLARE_FLAGS(Attributes, Attribute)
 
@@ -80,10 +81,6 @@ public:
 
 signals:
     void changed();
-
-private slots:
-    void onTrigger(bool);
-    void onToggle(bool);
 
 protected:
     void setRealAction(QAction *commandAction);

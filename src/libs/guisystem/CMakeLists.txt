@@ -13,6 +13,7 @@ set( HEADERS
     perspectiveinstance.h
 #    perspectiveswitcher.h
     perspectivewidget.h
+    proxyaction.h
 #    state.h
    )
 set( SOURCES
@@ -29,6 +30,7 @@ set( SOURCES
     perspectiveinstance.cpp
 #    perspectiveswitcher.cpp
     perspectivewidget.cpp
+    proxyaction.cpp
 #    state.cpp
    )
 set( FORMS
