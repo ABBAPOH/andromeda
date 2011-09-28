@@ -27,7 +27,7 @@ public:
 
     void addCommand(Command *command, const QByteArray &group = QByteArray());
     void addContainer(CommandContainer *container, const QByteArray &group = QByteArray());
-    void addGroup(const QByteArray &id, bool exclusive = false);
+    void addGroup(const QByteArray &id);
 
     void clear();
 
