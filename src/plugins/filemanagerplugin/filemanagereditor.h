@@ -45,7 +45,9 @@ private slots:
     void onSelectedPathsChanged();
 
 private:
-    QAction * createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot);
+    QAction * createAction(const QString &text, const QByteArray &id,
+                           QWidget *w, const char *slot,
+                           bool checkable = false);
     void createActions();
 
 private:

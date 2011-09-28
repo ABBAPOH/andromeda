@@ -234,13 +234,19 @@ void FileManagerEditor::onSelectedPathsChanged()
     }
 }
 
-QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot)
+QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id,
+                                          QWidget *w, const char *slot,
+                                          bool checkable)
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
 
      QAction *action = new QAction(this);
      action->setText(text);
-     connect(action, SIGNAL(triggered()), w, slot);
+     action->setCheckable(checkable);
+     if (!checkable)
+         connect(action, SIGNAL(triggered()), w, slot);
+     else
+         connect(action, SIGNAL(toggled(bool)), w, slot);
      w->addAction(action);
      actionManager->registerAction(action, id);
      return action;
@@ -274,11 +280,8 @@ void FileManagerEditor::createActions()
 
 //    actionManager->command(Constants::Actions::Up)->action(m_widget, SLOT(up()));
 
-    showHiddenFilesAction = new QAction(tr("Show hidden files"), this);
-    showHiddenFilesAction->setCheckable(true);
-    connect(showHiddenFilesAction, SIGNAL(toggled(bool)), m_widget, SLOT(showHiddenFiles(bool)));
-    m_widget->addAction(showHiddenFilesAction);
-    actionManager->registerAction(showHiddenFilesAction, Constants::Actions::ShowHiddenFiles);
+    showHiddenFilesAction = createAction(tr("Show hidden files"), Constants::Actions::ShowHiddenFiles,
+                                         m_widget, SLOT(showHiddenFiles(bool)), true);
 
     openAction->setEnabled(false);
     renameAction->setEnabled(false);
