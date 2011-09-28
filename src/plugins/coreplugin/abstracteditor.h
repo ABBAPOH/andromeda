@@ -38,6 +38,9 @@ public:
 
     MainWindow *mainWindow() const;
 
+    static AbstractEditor *currentEditor();
+    template<class T> static T *currentEditor() { return qobject_cast<T*>(currentEditor()); }
+
 signals:
     void currentPathChanged(const QString &);
 
