@@ -29,8 +29,8 @@ public:
     void saveSession(QSettings &s);
 
     AbstractEditor *currentEditor() const;
-    MainWindow *currentWindow() const;
 
+    static MainWindow *currentWindow();
     static QList<MainWindow*> windows();
 
 public slots:

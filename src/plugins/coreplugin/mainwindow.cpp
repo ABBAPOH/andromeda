@@ -286,7 +286,7 @@ AbstractEditor * MainWindow::currentEditor() const
     return currentTab()->currentEditor();
 }
 
-MainWindow * MainWindow::currentWindow() const
+MainWindow * MainWindow::currentWindow()
 {
     return qobject_cast<MainWindow *>(qApp->activeWindow());
 }
