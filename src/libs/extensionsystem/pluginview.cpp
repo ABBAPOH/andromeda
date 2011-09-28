@@ -27,8 +27,12 @@ PluginView::PluginView(QWidget *parent) :
     ui->treeView->hideColumn(10);
     ui->treeView->hideColumn(11);
 
+    ui->pushButton_More->setEnabled(false);
+
     connect(ui->pushButton_More, SIGNAL(clicked()), SLOT(showFullInfo()));
     connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showFullInfo(QModelIndex)));
+    connect(ui->treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(onSelectionChanged()));
 }
 
 PluginView::~PluginView()
@@ -53,4 +57,14 @@ void PluginView::showFullInfo(const QModelIndex & i)
     }
     m_fullPluginView->setIndex(index);
     m_fullPluginView->exec();
+}
+
+void PluginView::onSelectionChanged()
+{
+    QItemSelectionModel *model = ui->treeView->selectionModel();
+    if (model) {
+        // check if plugin selected
+        bool enable = model->currentIndex().parent().isValid();
+        ui->pushButton_More->setEnabled(enable);
+    }
 }

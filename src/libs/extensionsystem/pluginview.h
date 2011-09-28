@@ -29,6 +29,7 @@ private:
 
 private slots:
     void showFullInfo(const QModelIndex &index = QModelIndex());
+    void onSelectionChanged();
 };
 
 } // namespace ExtensionSystem
