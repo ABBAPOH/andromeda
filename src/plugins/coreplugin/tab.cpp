@@ -124,6 +124,8 @@ void Tab::open(const QString &path)
         editor->open(path);
     }
 
+    emit currentPathChanged(d->currentPath);
+    emit changed();
 }
 
 QString Tab::currentPath() const
