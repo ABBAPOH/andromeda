@@ -254,7 +254,9 @@ void FileManagerEditor::createActions()
     viewMapper->setMapping(treeModeAction, 4);
     m_widget->addAction(treeModeAction);
 
-    dualPaneModeAction = actionManager->command(Constants::Actions::DualPane)->action(this, SLOT(setDualPaneModeEnabled(bool)));
+    dualPaneModeAction = actionManager->command(Constants::Actions::DualPane)->action();
+    dualPaneModeAction->setParent(this);
+    connect(dualPaneModeAction, SIGNAL(toggled(bool)), SLOT(setDualPaneModeEnabled(bool)));
     dualPaneModeAction->setCheckable(true);
     m_widget->addAction(dualPaneModeAction);
 
