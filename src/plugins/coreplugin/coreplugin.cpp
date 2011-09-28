@@ -271,16 +271,6 @@ void CorePluginImpl::createActions()
     selectAllCommand->setDefaultShortcut(tr("Ctrl+A"));
     editContainer->addCommand(selectAllCommand, group);
 
-    // ================ Edit Menu (CopyPaste) ================
-    editContainer->addGroup(group = Constants::MenuGroups::EditPreferences);
-
-    Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
-    preferencesCommand->setDefaultText(tr("Preferences"));
-    preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
-    preferencesCommand->setContext(Command::ApplicationCommand);
-    editContainer->addCommand(preferencesCommand, group);
-    connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
-
     // ================ View Menu ================
     CommandContainer *viewContainer = new CommandContainer(Constants::Menus::View, this);
     viewContainer->setTitle(tr("View"));
@@ -350,17 +340,27 @@ void CorePluginImpl::createActions()
     helpContainer->setTitle(tr("Help"));
     menuBarContainer->addContainer(helpContainer);
 
-    Command *aboutCommand = new Command(Constants::Actions::Plugins, this);
+    Command *aboutCommand = new Command(Constants::Actions::About, this);
     aboutCommand->setDefaultText(tr("About..."));
     aboutCommand->setContext(Command::ApplicationCommand);
     connect(aboutCommand->commandAction(), SIGNAL(triggered()), SLOT(about()));
     helpContainer->addCommand(aboutCommand);
 
-    Command *aboutQtCommand = new Command(Constants::Actions::Plugins, this);
+    Command *aboutQtCommand = new Command(Constants::Actions::AboutQt, this);
     aboutQtCommand->setDefaultText(tr("About Qt..."));
     aboutQtCommand->setContext(Command::ApplicationCommand);
     connect(aboutQtCommand->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
     helpContainer->addCommand(aboutQtCommand);
+
+    // ================ Tools Menu (Preferences) ================
+    helpContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
+
+    Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
+    preferencesCommand->setDefaultText(tr("Preferences"));
+    preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
+    preferencesCommand->setContext(Command::ApplicationCommand);
+    helpContainer->addCommand(preferencesCommand, group);
+    connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)
