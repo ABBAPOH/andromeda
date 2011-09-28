@@ -17,8 +17,6 @@ public:
     Command::Attributes attributes;
     Command::CommandContext context;
 
-    bool alwaysEnabled;
-
     QKeySequence defaultShortcut;
     QIcon defaultIcon;
     QString defaultText;
@@ -69,7 +67,6 @@ Command::Command(const QByteArray &id, QObject *parent) :
     d->action = new ProxyAction(this);
     d->action->setEnabled(false);
     d->realAction = 0;
-    d->alwaysEnabled = false;
     d->context = WidgetCommand;
 
     ActionManager::instance()->registerCommand(this);
