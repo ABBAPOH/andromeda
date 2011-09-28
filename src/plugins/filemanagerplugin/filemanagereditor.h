@@ -44,6 +44,7 @@ private slots:
     void showFileInfo();
 
 private:
+    QAction * createAction(const QString &text, const QByteArray &id, QWidget *w, const char *slot);
     void createActions();
 
 private:
@@ -59,6 +60,7 @@ private:
 
     QAction *undoAction;
     QAction *redoAction;
+    QAction *cutAction;
     QAction *copyAction;
     QAction *pasteAction;
     QAction *selectAllAction;

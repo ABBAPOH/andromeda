@@ -342,8 +342,8 @@ void CorePluginImpl::createActions()
     Command *pluginsCommand = new Command(Constants::Actions::Plugins, this);
     pluginsCommand->setDefaultText(tr("Plugins..."));
     pluginsCommand->setContext(Command::ApplicationCommand);
-    connect(pluginsCommand->action(), SIGNAL(triggered()), SLOT(showPluginView()));
     toolsContainer->addCommand(pluginsCommand);
+    connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
 
     // ================ Help Menu ================
     CommandContainer *helpContainer = new CommandContainer(Constants::Menus::Help, this);
@@ -353,13 +353,13 @@ void CorePluginImpl::createActions()
     Command *aboutCommand = new Command(Constants::Actions::Plugins, this);
     aboutCommand->setDefaultText(tr("About..."));
     aboutCommand->setContext(Command::ApplicationCommand);
-    connect(aboutCommand->action(), SIGNAL(triggered()), SLOT(about()));
+    connect(aboutCommand->commandAction(), SIGNAL(triggered()), SLOT(about()));
     helpContainer->addCommand(aboutCommand);
 
     Command *aboutQtCommand = new Command(Constants::Actions::Plugins, this);
     aboutQtCommand->setDefaultText(tr("About Qt..."));
     aboutQtCommand->setContext(Command::ApplicationCommand);
-    connect(aboutQtCommand->action(), SIGNAL(triggered()), SLOT(aboutQt()));
+    connect(aboutQtCommand->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
     helpContainer->addCommand(aboutQtCommand);
 }
 

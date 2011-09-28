@@ -31,6 +31,8 @@ public:
 
     static ActionManager *instance();
 
+    void registerAction(QAction *action, const QByteArray &id);
+
 protected:
     void registerCommand(Command *cmd);
     void registerContainer(CommandContainer *c);

@@ -66,7 +66,19 @@ public:
     QAction *nextTabAction;
     QAction *prevTabAction;
 
+    QAction *newTabAction;
+    QAction *closeTabAction;
+
+    QAction *undoAction;
+    QAction *redoAction;
+
+    QAction *cutAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+    QAction *selectAllAction;
+
     Tab *addTab(int *index = 0);
+    void createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot);
     void setupActions();
     void setupToolBar();
     void setupUi();

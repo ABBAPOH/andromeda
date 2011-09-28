@@ -75,6 +75,11 @@ ActionManager *ActionManager::instance()
     return get_instance();
 }
 
+void ActionManager::registerAction(QAction *action, const QByteArray &id)
+{
+    action->setObjectName(QString(id));
+}
+
 /*!
     \internal
 */
