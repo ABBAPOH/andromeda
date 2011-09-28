@@ -137,13 +137,16 @@ void SettingsDialogPrivate::setupUi()
     if (pointSize > 0)
         headerLabelFont.setPointSize(pointSize + 2);
     headerLabel->setFont(headerLabelFont);
+    headerLabel->setAlignment(Qt::AlignLeft);
 
-    const int leftMargin = qApp->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
-    QSpacerItem *spacer = new QSpacerItem(leftMargin, 0, QSizePolicy::Fixed, QSizePolicy::Ignored);
+//    const int leftMargin = qApp->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
+//    QSpacerItem *spacer = new QSpacerItem(leftMargin, 0, QSizePolicy::Fixed, QSizePolicy::Ignored);
 
     headerLayout = new QHBoxLayout;
-    headerLayout->addSpacerItem(spacer);
+//    headerLayout->addSpacerItem(spacer);
     headerLayout->addWidget(headerLabel);
+    headerLayout->setSpacing(0);
+    headerLayout->setMargin(0);
 
     categoryList = new CategoryListView;
     categoryList->setIconSize(QSize(categoryIconSize, categoryIconSize));
@@ -235,8 +238,12 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
 */
 void SettingsDialog::currentChanged(const QModelIndex &current)
 {
-    if (current.isValid())
-        d_func()->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
+    Q_D(SettingsDialog);
+
+    if (current.isValid()) {
+        d->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
+        d->headerLabel->setText(current.data(Qt::DisplayRole).toString());
+    }
 }
 
 /*!
