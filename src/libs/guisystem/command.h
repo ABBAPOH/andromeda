@@ -22,7 +22,6 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_DISABLE_COPY(Command)
 
     Q_PROPERTY(Attributes attributes READ attributes WRITE setAttributes)
-    Q_PROPERTY(bool isCheckable READ isCheckable WRITE setCheckable)
     Q_PROPERTY(CommandContext context READ context WRITE setContext)
     Q_PROPERTY(QKeySequence defaultShortcut READ defaultShortcut WRITE setDefaultShortcut)
     Q_PROPERTY(QIcon defaultIcon READ defaultIcon WRITE setDefaultIcon)
@@ -58,9 +57,6 @@ public:
 
     Attributes attributes() const;
     void setAttributes(Attributes attr);
-
-    bool isCheckable() const;
-    void setCheckable(bool);
 
     CommandContext context() const;
     void setContext(CommandContext context);

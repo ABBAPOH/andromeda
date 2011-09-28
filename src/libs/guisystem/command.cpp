@@ -140,10 +140,7 @@ QAction * Command::action(QObject *parent, const char *slot)
 {
     QAction *a = action(parent);
 
-    if (isCheckable())
-        connect(a, SIGNAL(toggled(bool)), parent, slot);
-    else
-        connect(a, SIGNAL(triggered()), parent, slot);
+    connect(a, SIGNAL(triggered()), parent, slot);
 
     return a;
 }
@@ -190,29 +187,6 @@ void Command::setAttributes(Attributes attrs)
 //        if (attrs & AttributeHide && !d->realAction)
 //            d->action->setVisible(false);
         d->action->setAttributes(ProxyAction::Attributes((int)attrs));
-
-        emit changed();
-    }
-}
-
-/*!
-    \property Command::isCheckable
-
-    \brief Whether action in menu can be checked, or not.
-
-    Default value is false.
-*/
-bool Command::isCheckable() const
-{
-    return d_func()->action->isCheckable();
-}
-
-void Command::setCheckable(bool b)
-{
-    Q_D(Command);
-
-    if (d->action->isCheckable() != b) {
-        d->action->setCheckable(b);
 
         emit changed();
     }

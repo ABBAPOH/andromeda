@@ -54,7 +54,6 @@ bool FileManagerPluginImpl::initialize()
 
     Command * showHiddenFilesCommand = new Command(Constants::Actions::ShowHiddenFiles, this);
     showHiddenFilesCommand->setDefaultText(tr("Show Hidden Files"));
-    showHiddenFilesCommand->setCheckable(true);
     showHiddenFilesCommand->setDefaultShortcut(tr("Ctrl+."));
     showHiddenFilesCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(showHiddenFilesCommand);
