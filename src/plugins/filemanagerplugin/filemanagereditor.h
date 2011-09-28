@@ -6,6 +6,7 @@
 
 class MiniSplitter;
 class QActionGroup;
+class QSignalMapper;
 
 namespace FileManagerPlugin {
 
@@ -48,7 +49,9 @@ private:
     QAction * createAction(const QString &text, const QByteArray &id,
                            QWidget *w, const char *slot,
                            bool checkable = false);
+    QAction * createViewAction(const QString &text, const QByteArray &id, int mode);
     void createActions();
+    void createViewActions();
 
 private:
     MiniSplitter *splitter;
@@ -69,6 +72,8 @@ private:
     QAction *selectAllAction;
 
     QAction *showHiddenFilesAction;
+
+    QSignalMapper *viewModeMapper;
 
     QActionGroup *viewModeGroup;
     QAction *iconModeAction;
