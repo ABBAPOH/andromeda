@@ -25,7 +25,7 @@ FileSystemManager * FileSystemModel::fileSystemManager() const
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && index.column() == 0 && role == Qt::UserRole)
-        return imageProvider()->image(QFileInfo(filePath(index)));
+        return imageProvider()->image(QFileInfo(filePath(index)), QSize(512, 512));
 
     return QFileSystemModel::data(index, role);
 }
