@@ -19,8 +19,6 @@
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 
-#define MaxViews 5
-
 namespace FileManagerPlugin {
 
 class FileManagerWidgetPrivate : public QObject
@@ -41,7 +39,7 @@ public:
 
     FileManagerWidget::ViewMode viewMode;
     QAbstractItemView * currentView;
-    QAbstractItemView * views[MaxViews];
+    QAbstractItemView * views[FileManagerWidget::MaxViews];
     QStackedLayout * layout;
 
     FileSystemModel *model;

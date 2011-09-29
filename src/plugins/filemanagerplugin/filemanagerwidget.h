@@ -22,7 +22,7 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_DECLARE_PRIVATE(FileManagerWidget)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
 public:
-    enum ViewMode { ListView = 0, IconView, TableView, ColumnView, TreeView };
+    enum ViewMode { ListView = 0, IconView, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
     Q_ENUMS(ViewMode)
 
 //    explicit FileManagerWidget(QWidget *parent = 0);
