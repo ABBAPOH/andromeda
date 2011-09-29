@@ -2,8 +2,10 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include <QtGui/QStackedLayout>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QDesktopServices>
 
 #include "abstracteditor.h"
 #include "abstracteditorfactory.h"
@@ -106,8 +108,6 @@ void Tab::open(const QString &path)
     if (d->currentPath == path)
         return;
 
-    d->currentPath = path;
-
     QString mimeType = getMimeType(path);
     EditorManager *manager = Core::instance()->editorManager();
     AbstractEditorFactory *factory = manager->factory(mimeType);
@@ -122,7 +122,12 @@ void Tab::open(const QString &path)
         }
         d->setEditor(editor);
         editor->open(path);
+    } else {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        return;
     }
+
+    d->currentPath = path;
 
     emit currentPathChanged(d->currentPath);
     emit changed();
