@@ -1,11 +1,13 @@
 set( HEADERS
     widgets_global.h
+    coverflow.h
     minisplitter.h
     enteredlineedit.h
     qxtflowview.h
     qxtflowview_p.h
    )
 set( SOURCES
+    coverflow.cpp
     minisplitter.cpp
     enteredlineedit.cpp
     qxtflowview.cpp
