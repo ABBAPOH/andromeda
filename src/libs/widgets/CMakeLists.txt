@@ -2,10 +2,14 @@ set( HEADERS
     widgets_global.h
     minisplitter.h
     enteredlineedit.h
+    qxtflowview.h
+    qxtflowview_p.h
    )
 set( SOURCES
     minisplitter.cpp
     enteredlineedit.cpp
+    qxtflowview.cpp
+    qxtflowview_p.cpp
    )
 set( FORMS
    )
