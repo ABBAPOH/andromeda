@@ -4,6 +4,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QAction>
 //#include <QDebug>
+#include <coverflow.h>
 
 using namespace FileManagerPlugin;
 
@@ -31,6 +32,7 @@ void FileManagerWidgetPrivate::initViews()
 //    QTableView *tableView = new QTableView(q);
     QTreeView *tableView = new QTreeView(q);
     QTreeView *treeView = new QTreeView(q);
+    CoverFlow *coverFlow = new CoverFlow(q);
 
     iconView->setLayoutDirection(Qt::LeftToRight);
     iconView->setViewMode(QListView::IconMode);
@@ -48,14 +50,18 @@ void FileManagerWidgetPrivate::initViews()
     tableView->setRootIsDecorated(false);
     tableView->setItemsExpandable(false);
 
+    coverFlow->setPictureColumn(0);
+    coverFlow->setPictureRole(Qt::UserRole);
+
     views[FileManagerWidget::ListView] = listView;
     views[FileManagerWidget::IconView] = iconView;
     views[FileManagerWidget::ColumnView] = columnView;
     views[FileManagerWidget::TableView] = tableView;
     views[FileManagerWidget::TreeView] = treeView;
+    views[FileManagerWidget::CoverFlow] = coverFlow->treeView();
     blockEvents = false;
 
-    for (int i = 0; i < MaxViews; i++) {
+    for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
         views[i]->setFocusProxy(q);
         views[i]->setSelectionMode(QAbstractItemView::ContiguousSelection);
         views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -63,12 +69,19 @@ void FileManagerWidgetPrivate::initViews()
         views[i]->setAcceptDrops(true);
         views[i]->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
 //        QAbstractItemView::InternalMove
-        layout->addWidget(views[i]);
+//        layout->addWidget(views[i]);
 //        views[i]->setDragEnabled(true);
         connect(views[i], SIGNAL(doubleClicked(QModelIndex)),
                 this, SLOT(onDoubleClick(QModelIndex)),
                 Qt::QueuedConnection);
     }
+
+    layout->addWidget(listView);
+    layout->addWidget(iconView);
+    layout->addWidget(columnView);
+    layout->addWidget(tableView);
+    layout->addWidget(treeView);
+    layout->addWidget(coverFlow);
 }
 
 void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
