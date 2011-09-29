@@ -14,13 +14,14 @@ public:
 
     FileSystemManager *fileSystemManager() const;
 
-protected:
+    QVariant data(const QModelIndex &index, int role) const;
     bool dropMimeData(const QMimeData *data,
                       Qt::DropAction action,
                       int row,
                       int column,
                       const QModelIndex &parent
                       );
+protected:
     FileSystemManager *m_manager; // can be safely changed to d_ptr
 };
 

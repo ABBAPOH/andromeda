@@ -2,10 +2,13 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
+#include <fileimageprovider.h>
 
 #include "filesystemmanager.h"
 
 using namespace FileManagerPlugin;
+
+Q_GLOBAL_STATIC(FileImageProvider, imageProvider)
 
 FileSystemModel::FileSystemModel(QObject *parent) :
     QFileSystemModel(parent),
@@ -17,6 +20,14 @@ FileSystemModel::FileSystemModel(QObject *parent) :
 FileSystemManager * FileSystemModel::fileSystemManager() const
 {
     return m_manager;
+}
+
+QVariant FileSystemModel::data(const QModelIndex &index, int role) const
+{
+    if (index.isValid() && index.column() == 0 && role == Qt::UserRole)
+        return imageProvider()->image(QFileInfo(filePath(index)));
+
+    return QFileSystemModel::data(index, role);
 }
 
 bool FileSystemModel::dropMimeData(const QMimeData *data,
