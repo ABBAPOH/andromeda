@@ -12,6 +12,7 @@ set( GLOBAL_HEADERS
    )
 set( HEADERS
     io_global.h
+    fileimageprovider.h
     qdrivecontroller.h
     qdrivecontroller_p.h
     qdriveinfo.h
@@ -21,6 +22,7 @@ set( HEADERS
     qsystemerror_p.h
    )
 set( SOURCES
+    fileimageprovider.cpp
     qdrivecontroller.cpp
     qdriveinfo.cpp
     qfilecopier.cpp
@@ -52,7 +54,7 @@ set( SOURCES
    )
 
 set( LIBS
-    "-framework CoreServices" "-framework DiskArbitration" "-framework IOKit"
+    "-framework CoreServices" "-framework DiskArbitration" "-framework IOKit" "-framework QuickLook"
    )
 
 qt4_wrap_single_cpp( qdrivecontroller_mac.cpp )
