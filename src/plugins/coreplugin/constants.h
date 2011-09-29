@@ -55,6 +55,7 @@ const char * const SelectAll = "Actions.SelectAll";
 const char * const IconMode = "Actions.IconMode";
 const char * const ColumnMode = "Actions.ColumnMode";
 const char * const TreeMode = "Actions.TreeViewMode";
+const char * const CoverFlowMode = "Actions.CoverFlowMode";
 const char * const DualPane = "Actions.DualPane";
 
 const char * const ShowHiddenFiles = "Actions.ShowHiddenFiles";

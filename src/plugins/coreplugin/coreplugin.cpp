@@ -298,9 +298,15 @@ void CorePluginImpl::createActions()
     treeModeCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(treeModeCommand, group);
 
+    Command *coverFlowModeCommand = new Command(Constants::Actions::CoverFlowMode, this);
+    coverFlowModeCommand->setDefaultText(tr("Cover flow"));
+    coverFlowModeCommand->setDefaultShortcut(tr("Ctrl+4"));
+    coverFlowModeCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(coverFlowModeCommand, group);
+
     Command *dualPaneCommand = new Command(Constants::Actions::DualPane, this);
     dualPaneCommand->setDefaultText(tr("Dual Pane"));
-    dualPaneCommand->setDefaultShortcut(tr("Ctrl+4"));
+    dualPaneCommand->setDefaultShortcut(tr("Ctrl+5"));
     dualPaneCommand->setContext(Command::WindowCommand);
     viewContainer->addCommand(dualPaneCommand, group);
 

@@ -121,9 +121,10 @@ void FileManagerEditor::restoreSession(QSettings &s)
     m_widget->setViewMode((FileManagerWidget::ViewMode)viewMode);
     m_widget->setDualPaneModeEnabled(dualPaneModeEnabled);
 
-    iconModeAction->setChecked(viewMode == 1);
-    columnModeAction->setChecked(viewMode == 3);
-    treeModeAction->setChecked(viewMode == 4);
+    iconModeAction->setChecked(viewMode == FileManagerWidget::IconView);
+    columnModeAction->setChecked(viewMode == FileManagerWidget::ColumnView);
+    treeModeAction->setChecked(viewMode == FileManagerWidget::TreeView);
+    coverFlowModeAction->setChecked(viewMode == FileManagerWidget::CoverFlow);
     dualPaneModeAction->setChecked(dualPaneModeEnabled);
 }
 
@@ -316,18 +317,20 @@ void FileManagerEditor::createViewActions()
     viewModeGroup = new QActionGroup(this);
     viewModeMapper = new QSignalMapper(this);
 
-    iconModeAction = createViewAction(tr("Icon view"), Constants::Actions::IconMode, 1);
-    columnModeAction = createViewAction(tr("Column view"), Constants::Actions::ColumnMode, 3);
-    treeModeAction = createViewAction(tr("Tree view"), Constants::Actions::TreeMode, 4);
+    iconModeAction = createViewAction(tr("Icon view"), Constants::Actions::IconMode, FileManagerWidget::IconView);
+    columnModeAction = createViewAction(tr("Column view"), Constants::Actions::ColumnMode, FileManagerWidget::ColumnView);
+    treeModeAction = createViewAction(tr("Tree view"), Constants::Actions::TreeMode, FileManagerWidget::TableView);
+    coverFlowModeAction = createViewAction(tr("Cover flow"), Constants::Actions::CoverFlowMode, FileManagerWidget::CoverFlow);
     dualPaneModeAction = createAction(tr("Dual pane"), Constants::Actions::DualPane,
                                       SLOT(setDualPaneModeEnabled(bool)), true);
 
     viewModeGroup->addAction(dualPaneModeAction);
 
     switch (viewMode) {
-    case 1: iconModeAction->setChecked(true); break;
-    case 3: columnModeAction->setChecked(true); break;
-    case 4: treeModeAction->setChecked(true); break;
+    case FileManagerWidget::IconView: iconModeAction->setChecked(true); break;
+    case FileManagerWidget::ColumnView: columnModeAction->setChecked(true); break;
+    case FileManagerWidget::TableView: treeModeAction->setChecked(true); break;
+    case FileManagerWidget::CoverFlow: coverFlowModeAction->setChecked(true); break;
     default: break;
     }
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
