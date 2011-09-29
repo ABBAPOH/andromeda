@@ -78,6 +78,7 @@ private:
     QAction *iconModeAction;
     QAction *columnModeAction;
     QAction *treeModeAction;
+    QAction *coverFlowModeAction;
     QAction *dualPaneModeAction;
 };
 
