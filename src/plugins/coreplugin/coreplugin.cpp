@@ -167,7 +167,7 @@ void CorePluginImpl::createFileMenu()
     menuBarContainer->addContainer(container);
 
     // ================ File Menu (New) ================
-    container->addGroup(group = Constants::MenuGroups::FileNew, 0);
+    container->addGroup(group = Constants::MenuGroups::FileNew);
 
     cmd = new Command(Constants::Actions::NewWindow, tr("Ctrl+N"), tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
@@ -193,7 +193,7 @@ void CorePluginImpl::createFileMenu()
 
 //#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
-    container->addGroup(group = Constants::MenuGroups::FileQuit, 150);
+    container->addGroup(group = Constants::MenuGroups::FileQuit);
 
     cmd = new Command(Constants::Actions::Exit, tr("Ctrl+Q"), tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
@@ -217,7 +217,7 @@ void CorePluginImpl::createEditMenu()
     menuBarContainer->addContainer(container);
 
     // ================ Edit Menu (Redo) ================
-    container->addGroup(group = Constants::MenuGroups::EditRedo, 0);
+    container->addGroup(group = Constants::MenuGroups::EditRedo);
 
     cmd = new Command(Constants::Actions::Undo, tr("Ctrl+Z"), tr("Undo"), this);
     container->addCommand(cmd, group);
@@ -226,7 +226,7 @@ void CorePluginImpl::createEditMenu()
     container->addCommand(cmd, group);
 
     // ================ Edit Menu (CopyPaste) ================
-    container->addGroup(group = Constants::MenuGroups::EditCopyPaste, 50);
+    container->addGroup(group = Constants::MenuGroups::EditCopyPaste);
 
     cmd = new Command(Constants::Actions::Cut, tr("Ctrl+X"), tr("Cut"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
@@ -300,7 +300,7 @@ void CorePluginImpl::createToolsMenu()
     connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
 
     // ================ Tools Menu (Preferences) ================
-    toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences, 50);
+    toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));
