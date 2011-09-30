@@ -142,8 +142,20 @@ void CorePluginImpl::aboutQt()
 
 void CorePluginImpl::createActions()
 {
-    CommandContainer *menuBarContainer = new CommandContainer(Constants::Menus::MenuBar, this);
+    new CommandContainer(Constants::Menus::MenuBar, this);
 
+    createFileMenu();
+    createEditMenu();
+    createViewMenu();
+    createGoToMenu();
+    createToolsMenu();
+    createHelpMenu();
+}
+
+void CorePluginImpl::createFileMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
     const char *group = 0;
 
     // ================ File Menu ================
@@ -229,6 +241,13 @@ void CorePluginImpl::createActions()
     fileContainer->addCommand(exitCommand, group);
     connect(exitCommand->commandAction(), SIGNAL(triggered()), this, SLOT(quit()));
 #endif
+}
+
+void CorePluginImpl::createEditMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+    const char *group = 0;
 
     // ================ Edit Menu ================
     CommandContainer *editContainer = new CommandContainer(Constants::Menus::Edit, this);
@@ -272,11 +291,25 @@ void CorePluginImpl::createActions()
     selectAllCommand->setDefaultText(tr("Select All"));
     selectAllCommand->setDefaultShortcut(tr("Ctrl+A"));
     editContainer->addCommand(selectAllCommand, group);
+}
+
+void CorePluginImpl::createViewMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+//    const char *group = 0;
 
     // ================ View Menu ================
     CommandContainer *viewContainer = new CommandContainer(Constants::Menus::View, this);
     viewContainer->setTitle(tr("View"));
     menuBarContainer->addContainer(viewContainer);
+}
+
+void CorePluginImpl::createGoToMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+//    const char *group = 0;
 
     // ================ GoTo Menu ================
     CommandContainer *goToContainer = new CommandContainer(Constants::Menus::GoTo, this);
@@ -299,6 +332,13 @@ void CorePluginImpl::createActions()
     upOneLevelCommand->setDefaultIcon(QIcon(":/images/icons/up.png"));
     upOneLevelCommand->setDefaultShortcut(tr("Ctrl+Up"));
     goToContainer->addCommand(upOneLevelCommand);
+}
+
+void CorePluginImpl::createToolsMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+    const char *group = 0;
 
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Menus::Tools, this);
@@ -320,6 +360,14 @@ void CorePluginImpl::createActions()
     preferencesCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(preferencesCommand, group);
     connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
+
+}
+
+void CorePluginImpl::createHelpMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+//    const char *group = 0;
 
     // ================ Help Menu ================
     CommandContainer *helpContainer = new CommandContainer(Constants::Menus::Help, this);

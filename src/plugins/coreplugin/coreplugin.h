@@ -33,6 +33,12 @@ public slots:
 
 private:
     void createActions();
+    void createFileMenu();
+    void createEditMenu();
+    void createViewMenu();
+    void createGoToMenu();
+    void createToolsMenu();
+    void createHelpMenu();
 };
 
 #endif // COREPLUGIN_H
