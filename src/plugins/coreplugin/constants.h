@@ -7,43 +7,44 @@ namespace Menus {
 
 const char * const MenuBar = "Menus.MenuBar";
 
-const char * const File = "Menus.File";
-const char * const Edit = "Menus.Edit";
-const char * const View = "Menus.View";
-const char * const GoTo = "Menus.GoTo";
-const char * const Tools = "Menus.Tools";
-const char * const Help = "Menus.Help";
+const char * const File = "Menus:1.File";
+const char * const Edit = "Menus:2.Edit";
+const char * const View = "Menus:3.View";
+const char * const GoTo = "Menus:4.GoTo";
+const char * const Tools = "Menus:5.Tools";
+const char * const Help = "Menus:6.Help";
 
 } // namespace Menus
 
 namespace MenuGroups {
 
-const char * const FileNew = "FileNew";
-const char * const FileInfo = "FileInfo";
-const char * const FileChange = "FileChange";
-const char * const FileQuit = "FileQuit";
+const char * const FileNew = "MenuGroups:1.File.New";
+const char * const FileInfo = "MenuGroups:2.File.Info";
+const char * const FileChange = "MenuGroups:3.File.Change";
+const char * const FileQuit = "MenuGroups:4.File.Quit";
 
-const char * const EditRedo = "EditRedo";
-const char * const EditCopyPaste = "EditCopyPate";
+const char * const EditRedo = "MenuGroups:1.Edit.Redo";
+const char * const EditCopyPaste = "MenuGroups:2.Edit.CopyPate";
 
-const char * const ViewViewMode = "ViewViewMode";
+const char * const ViewViewMode = "MenuGroups:1.View.ViewMode";
 
-const char * const Locations = "GotoLocations";
-const char * const ToolsPreferences = "ToolsPreferences";
+const char * const Locations = "MenuGroups:1.Goto.Locations";
+
+const char * const ToolsPreferences = "MenuGroups:1.Tools.Preferences";
 
 } // namespace Groups
 
 namespace Actions {
 
-const char * const NewWindow = "Actions.NewWindow";
-const char * const NewTab = "Actions.NewTab";
-const char * const FileInfo = "Actions.FileInfo";
-const char * const NewFolder = "Actions.NewFolder";
-const char * const Open = "Actions.Open";
-const char * const CloseTab = "Actions.CloseTab";
-const char * const Rename = "Actions.Rename";
-const char * const Remove = "Actions.Remove";
-const char * const Exit = "Actions.Exit";
+const char * const NewWindow = "Actions:1.NewWindow";
+const char * const NewTab = "Actions:2.NewTab";
+const char * const FileInfo = "Actions:3.FileInfo";
+const char * const NewFolder = "Actions:4.NewFolder";
+const char * const Open = "Actions:5.Open";
+const char * const CloseTab = "Actions:6.CloseTab";
+const char * const Rename = "Actions:7.Rename";
+const char * const Remove = "Actions:8.Remove";
+const char * const Exit = "Actions:9.Exit";
 
 const char * const Undo = "Actions.Undo";
 const char * const Redo = "Actions.Redo";

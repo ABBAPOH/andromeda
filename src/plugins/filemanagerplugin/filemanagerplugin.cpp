@@ -83,7 +83,7 @@ void FileManagerPluginImpl::createFileMenu()
     container = ActionManager::instance()->container(Constants::Menus::File);
 
     // ================ File Menu (Info) ================
-    container->addGroup(group = Constants::MenuGroups::FileInfo, 50);
+    container->addGroup(group = Constants::MenuGroups::FileInfo);
 
     cmd = new Command(Constants::Actions::FileInfo, this);
     cmd->setDefaultText(tr("File info"));
@@ -91,7 +91,7 @@ void FileManagerPluginImpl::createFileMenu()
     container->addCommand(cmd, group);
 
     // ================ File Menu (Change) ================
-    container->addGroup(group = Constants::MenuGroups::FileChange, 100);
+    container->addGroup(group = Constants::MenuGroups::FileChange);
 
     cmd = new Command(Constants::Actions::NewFolder, this);
     cmd->setDefaultText(tr("New folder"));
@@ -126,7 +126,7 @@ void FileManagerPluginImpl::createViewMenu()
     container = ActionManager::instance()->container(Constants::Menus::View);
 
     // ================ GoTo Menu (View Mode) ================
-    container->addGroup(group = Constants::MenuGroups::ViewViewMode, -50);
+    container->addGroup(group = Constants::MenuGroups::ViewViewMode);
 
     cmd = new Command(Constants::Actions::IconMode, this);
     cmd->setDefaultText(tr("Icon View"));
@@ -170,7 +170,7 @@ void FileManagerPluginImpl::createGoToMenu()
     CommandContainer *container = ActionManager::instance()->container(Constants::Menus::GoTo);
 
     // ================ GoTo Menu (Locations) ================
-    container->addGroup(Constants::MenuGroups::Locations, 50);
+    container->addGroup(Constants::MenuGroups::Locations);
 
     createGoToDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
     createGoToDirCommand(QDesktopServices::HomeLocation,

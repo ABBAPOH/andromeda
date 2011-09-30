@@ -13,12 +13,10 @@ namespace GuiSystem {
 struct Group
 {
     explicit Group(const QByteArray &arr) : id(arr) {}
-    Group(const QByteArray &arr, int w) : id(arr), weight(w) {}
     ~Group() {}
 
     QByteArray id;
     QObjectList objects;
-    int weight;
 };
 
 class CommandContainerPrivate
@@ -80,10 +78,29 @@ CommandContainer::~CommandContainer()
     delete d_ptr;
 }
 
+bool commandLessThen(QObject *o1, QObject *o2)
+{
+    QByteArray id1, id2;
+
+    Command *c1 = qobject_cast<Command *>(o1);
+    if (c1)
+        id1 = c1->id();
+    else
+        id1 = qobject_cast<CommandContainer *>(o1)->id();
+
+    Command *c2 = qobject_cast<Command *>(o2);
+    if (c2)
+        id2 = c2->id();
+    else
+        id2 = qobject_cast<CommandContainer *>(o2)->id();
+
+    return id1 < id2;
+}
+
 /*!
     \brief Adds \a command to a \a group.
 */
-void CommandContainer::addCommand(Command *command, const QByteArray &group)
+void CommandContainer::addCommand(Command *c, const QByteArray &group)
 {
     Q_D(CommandContainer);
 
@@ -92,13 +109,14 @@ void CommandContainer::addCommand(Command *command, const QByteArray &group)
         qWarning() << "CommandContainer::addCommand" << "id =" << d->id << ": Can't find group " << group;
         return;
     }
-    g->objects.append(command);
+    QObjectList::iterator i = qLowerBound(g->objects.begin(), g->objects.end(), c, commandLessThen);
+    g->objects.insert(i, c);
 }
 
 /*!
     \brief Adds \a container to a \a group.
 */
-void CommandContainer::addContainer(CommandContainer *container, const QByteArray &group)
+void CommandContainer::addContainer(CommandContainer *c, const QByteArray &group)
 {
     Q_D(CommandContainer);
 
@@ -107,15 +125,13 @@ void CommandContainer::addContainer(CommandContainer *container, const QByteArra
         qWarning() << "CommandContainer::addCommand" << "id =" << d->id << ": Can't find group " << group;
         return;
     }
-    g->objects.append(container);
+    QObjectList::iterator i = qLowerBound(g->objects.begin(), g->objects.end(), c, commandLessThen);
+    g->objects.insert(i, c);
 }
 
 bool groupLessThen(Group *g1, Group *g2)
 {
-    if (g1->weight == g2->weight)
-        return (g1->id < g2->id);
-    else
-        return g1->weight < g2->weight;
+    return (g1->id < g2->id);
 }
 
 /*!
@@ -124,11 +140,11 @@ bool groupLessThen(Group *g1, Group *g2)
     Commands in group are combined together as a single unit; they are seprarated in menus and toolbars.
     If \a exclusive is set to true, only one Command in a group can be checked at a time.
 */
-void CommandContainer::addGroup(const QByteArray &id, int weight)
+void CommandContainer::addGroup(const QByteArray &id)
 {
     Q_D(CommandContainer);
 
-    Group *g = new Group(id, weight);
+    Group *g = new Group(id);
     QList<Group*>::iterator i = qLowerBound(d->groups.begin(), d->groups.end(), g, groupLessThen);
     d->groups.insert(i, g);
 }
