@@ -12,11 +12,13 @@ namespace GuiSystem {
 
 struct Group
 {
-    explicit Group(const QByteArray &id) : id(id) {}
+    explicit Group(const QByteArray &arr) : id(arr) {}
+    Group(const QByteArray &arr, int w) : id(arr), weight(w) {}
     ~Group() {}
 
     QByteArray id;
     QObjectList objects;
+    int weight;
 };
 
 class CommandContainerPrivate
@@ -108,18 +110,27 @@ void CommandContainer::addContainer(CommandContainer *container, const QByteArra
     g->objects.append(container);
 }
 
+bool groupLessThen(Group *g1, Group *g2)
+{
+    if (g1->weight == g2->weight)
+        return (g1->id < g2->id);
+    else
+        return g1->weight < g2->weight;
+}
+
 /*!
     \brief Adds group with \a id to this container.
 
     Commands in group are combined together as a single unit; they are seprarated in menus and toolbars.
     If \a exclusive is set to true, only one Command in a group can be checked at a time.
 */
-void CommandContainer::addGroup(const QByteArray &id)
+void CommandContainer::addGroup(const QByteArray &id, int weight)
 {
     Q_D(CommandContainer);
 
-    Group *g = new Group(id);
-    d->groups.append(g);
+    Group *g = new Group(id, weight);
+    QList<Group*>::iterator i = qLowerBound(d->groups.begin(), d->groups.end(), g, groupLessThen);
+    d->groups.insert(i, g);
 }
 
 /*!

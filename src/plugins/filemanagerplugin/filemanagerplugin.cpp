@@ -50,7 +50,41 @@ bool FileManagerPluginImpl::initialize()
     addObject(model);
     addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
 
+    const char *group = 0;
     CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Menus::View);
+
+    // ================ GoTo Menu (View Mode) ================
+    viewContainer->addGroup(group = Constants::MenuGroups::ViewViewMode, -50);
+
+    Command *iconModeCommand = new Command(Constants::Actions::IconMode, this);
+    iconModeCommand->setDefaultText(tr("Icon View"));
+    iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
+    iconModeCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(iconModeCommand, group);
+
+    Command *columnModeCommand = new Command(Constants::Actions::ColumnMode, this);
+    columnModeCommand->setDefaultText(tr("Column View"));
+    columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
+    columnModeCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(columnModeCommand, group);
+
+    Command *treeModeCommand = new Command(Constants::Actions::TreeMode, this);
+    treeModeCommand->setDefaultText(tr("Tree View"));
+    treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
+    treeModeCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(treeModeCommand, group);
+
+    Command *coverFlowModeCommand = new Command(Constants::Actions::CoverFlowMode, this);
+    coverFlowModeCommand->setDefaultText(tr("Cover flow"));
+    coverFlowModeCommand->setDefaultShortcut(tr("Ctrl+4"));
+    coverFlowModeCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(coverFlowModeCommand, group);
+
+    Command *dualPaneCommand = new Command(Constants::Actions::DualPane, this);
+    dualPaneCommand->setDefaultText(tr("Dual Pane"));
+    dualPaneCommand->setDefaultShortcut(tr("Ctrl+5"));
+    dualPaneCommand->setContext(Command::WindowCommand);
+    viewContainer->addCommand(dualPaneCommand, group);
 
     Command * showHiddenFilesCommand = new Command(Constants::Actions::ShowHiddenFiles, this);
     showHiddenFilesCommand->setDefaultText(tr("Show Hidden Files"));
@@ -60,7 +94,7 @@ bool FileManagerPluginImpl::initialize()
 
     CommandContainer *goToContainer = ActionManager::instance()->container(Constants::Menus::GoTo);
     // ================ GoTo Menu (Locations) ================
-    goToContainer->addGroup(Constants::MenuGroups::Locations);
+    goToContainer->addGroup(Constants::MenuGroups::Locations, 50);
 
     createGotoDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
     createGotoDirCommand(QDesktopServices::HomeLocation,
