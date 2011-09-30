@@ -50,63 +50,7 @@ bool FileManagerPluginImpl::initialize()
     addObject(model);
     addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
 
-    const char *group = 0;
-    CommandContainer *viewContainer = ActionManager::instance()->container(Constants::Menus::View);
-
-    // ================ GoTo Menu (View Mode) ================
-    viewContainer->addGroup(group = Constants::MenuGroups::ViewViewMode, -50);
-
-    Command *iconModeCommand = new Command(Constants::Actions::IconMode, this);
-    iconModeCommand->setDefaultText(tr("Icon View"));
-    iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
-    iconModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(iconModeCommand, group);
-
-    Command *columnModeCommand = new Command(Constants::Actions::ColumnMode, this);
-    columnModeCommand->setDefaultText(tr("Column View"));
-    columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
-    columnModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(columnModeCommand, group);
-
-    Command *treeModeCommand = new Command(Constants::Actions::TreeMode, this);
-    treeModeCommand->setDefaultText(tr("Tree View"));
-    treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
-    treeModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(treeModeCommand, group);
-
-    Command *coverFlowModeCommand = new Command(Constants::Actions::CoverFlowMode, this);
-    coverFlowModeCommand->setDefaultText(tr("Cover flow"));
-    coverFlowModeCommand->setDefaultShortcut(tr("Ctrl+4"));
-    coverFlowModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(coverFlowModeCommand, group);
-
-    Command *dualPaneCommand = new Command(Constants::Actions::DualPane, this);
-    dualPaneCommand->setDefaultText(tr("Dual Pane"));
-    dualPaneCommand->setDefaultShortcut(tr("Ctrl+5"));
-    dualPaneCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(dualPaneCommand, group);
-
-    Command * showHiddenFilesCommand = new Command(Constants::Actions::ShowHiddenFiles, this);
-    showHiddenFilesCommand->setDefaultText(tr("Show Hidden Files"));
-    showHiddenFilesCommand->setDefaultShortcut(tr("Ctrl+."));
-    showHiddenFilesCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(showHiddenFilesCommand);
-
-    CommandContainer *goToContainer = ActionManager::instance()->container(Constants::Menus::GoTo);
-    // ================ GoTo Menu (Locations) ================
-    goToContainer->addGroup(Constants::MenuGroups::Locations, 50);
-
-    createGotoDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
-    createGotoDirCommand(QDesktopServices::HomeLocation,
-                         QIcon::fromTheme("go-home", QIcon(":/images/icons/homeFolder.png")),
-                         tr("Ctrl+Shift+H"));
-    createGotoDirCommand(QDesktopServices::DocumentsLocation, QIcon(":/images/icons/documentsFolder.png"), tr("Ctrl+Shift+O"));
-#ifdef Q_OS_MAC
-    createGotoDirCommand(QDesktopServices::ApplicationsLocation, QIcon(":/images/icons/appsFolder.png"), tr("Ctrl+Shift+A"));
-#endif
-    createGotoDirCommand(QDesktopServices::MusicLocation, QIcon(":/images/icons/musicFolder.png"));
-    createGotoDirCommand(QDesktopServices::MoviesLocation, QIcon(":/images/icons/movieFolder.png"));
-    createGotoDirCommand(QDesktopServices::PicturesLocation, QIcon(":/images/icons/picturesFolder.png"));
+    createActions();
 
     return true;
 }
@@ -118,7 +62,130 @@ void FileManagerPluginImpl::shutdown()
 #endif
 }
 
-void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocation location, const QIcon &icon, const QKeySequence &key)
+void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::StandardLocations loc)
+{
+    CorePlugin::Core::instance()->settings()->setValue("fileManager/standardLocations", (int)loc);
+}
+
+void FileManagerPluginImpl::createActions()
+{
+    createFileMenu();
+    createViewMenu();
+    createGoToMenu();
+}
+
+void FileManagerPluginImpl::createFileMenu()
+{
+    Command *cmd = 0;
+    CommandContainer *container = 0;
+    const char *group = 0;
+
+    container = ActionManager::instance()->container(Constants::Menus::File);
+
+    // ================ File Menu (Info) ================
+    container->addGroup(group = Constants::MenuGroups::FileInfo, 50);
+
+    cmd = new Command(Constants::Actions::FileInfo, this);
+    cmd->setDefaultText(tr("File info"));
+    cmd->setDefaultShortcut(tr("Ctrl+I"));
+    container->addCommand(cmd, group);
+
+    // ================ File Menu (Change) ================
+    container->addGroup(group = Constants::MenuGroups::FileChange, 100);
+
+    cmd = new Command(Constants::Actions::NewFolder, this);
+    cmd->setDefaultText(tr("New folder"));
+    cmd->setDefaultShortcut(tr("Ctrl+Shift+N"));
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::Rename, this);
+    cmd->setDefaultText(tr("Rename"));
+#ifdef Q_OS_MAC
+//    renameCommand->setDefaultShortcut(tr("Return")); // Can't set shorcut to prevent overriding edit triggers
+#else
+    renameCommand->setDefaultShortcut(tr("F2"));
+#endif
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::Remove, this);
+    cmd->setDefaultText(tr("Remove"));
+#ifdef Q_OS_MAC
+    cmd->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
+#else
+    removeCommand->setDefaultShortcut(tr("Shift+Del"));
+#endif
+    container->addCommand(cmd, group);
+}
+
+void FileManagerPluginImpl::createViewMenu()
+{
+    Command *cmd = 0;
+    CommandContainer *container = 0;
+    const char *group = 0;
+
+    container = ActionManager::instance()->container(Constants::Menus::View);
+
+    // ================ GoTo Menu (View Mode) ================
+    container->addGroup(group = Constants::MenuGroups::ViewViewMode, -50);
+
+    cmd = new Command(Constants::Actions::IconMode, this);
+    cmd->setDefaultText(tr("Icon View"));
+    cmd->setDefaultShortcut(tr("Ctrl+1"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::ColumnMode, this);
+    cmd->setDefaultText(tr("Column View"));
+    cmd->setDefaultShortcut(tr("Ctrl+2"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::TreeMode, this);
+    cmd->setDefaultText(tr("Tree View"));
+    cmd->setDefaultShortcut(tr("Ctrl+3"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::CoverFlowMode, this);
+    cmd->setDefaultText(tr("Cover flow"));
+    cmd->setDefaultShortcut(tr("Ctrl+4"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::DualPane, this);
+    cmd->setDefaultText(tr("Dual Pane"));
+    cmd->setDefaultShortcut(tr("Ctrl+5"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::ShowHiddenFiles, this);
+    cmd->setDefaultText(tr("Show Hidden Files"));
+    cmd->setDefaultShortcut(tr("Ctrl+."));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+}
+
+void FileManagerPluginImpl::createGoToMenu()
+{
+    CommandContainer *container = ActionManager::instance()->container(Constants::Menus::GoTo);
+
+    // ================ GoTo Menu (Locations) ================
+    container->addGroup(Constants::MenuGroups::Locations, 50);
+
+    createGoToDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
+    createGoToDirCommand(QDesktopServices::HomeLocation,
+                         QIcon::fromTheme("go-home", QIcon(":/images/icons/homeFolder.png")),
+                         tr("Ctrl+Shift+H"));
+    createGoToDirCommand(QDesktopServices::DocumentsLocation, QIcon(":/images/icons/documentsFolder.png"), tr("Ctrl+Shift+O"));
+#ifdef Q_OS_MAC
+    createGoToDirCommand(QDesktopServices::ApplicationsLocation, QIcon(":/images/icons/appsFolder.png"), tr("Ctrl+Shift+A"));
+#endif
+    createGoToDirCommand(QDesktopServices::MusicLocation, QIcon(":/images/icons/musicFolder.png"));
+    createGoToDirCommand(QDesktopServices::MoviesLocation, QIcon(":/images/icons/movieFolder.png"));
+    createGoToDirCommand(QDesktopServices::PicturesLocation, QIcon(":/images/icons/picturesFolder.png"));
+}
+
+void FileManagerPluginImpl::createGoToDirCommand(QDesktopServices::StandardLocation location, const QIcon &icon, const QKeySequence &key)
 {
     GuiSystem::CommandContainer * container = ActionManager::instance()->container(Constants::Menus::GoTo);
     QDir dir(QDesktopServices::storageLocation(location));
@@ -149,11 +216,6 @@ void FileManagerPluginImpl::createGotoDirCommand(QDesktopServices::StandardLocat
     cmd->setContext(Command::WindowCommand);
 
     container->addCommand(cmd, Constants::MenuGroups::Locations);
-}
-
-void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::StandardLocations loc)
-{
-    CorePlugin::Core::instance()->settings()->setValue("fileManager/standardLocations", (int)loc);
 }
 
 Q_EXPORT_PLUGIN(FileManagerPluginImpl)

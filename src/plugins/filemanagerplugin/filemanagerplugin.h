@@ -17,11 +17,17 @@ public:
 
     bool initialize();
     void shutdown();
-    void createGotoDirCommand(QDesktopServices::StandardLocation location,
-                              const QIcon &icon = QIcon(),
-                              const QKeySequence &key = QKeySequence());
 private slots:
     void onStandardLocationsChanged(NavigationModel::StandardLocations);
+
+private:
+    void createActions();
+    void createFileMenu();
+    void createViewMenu();
+    void createGoToMenu();
+    void createGoToDirCommand(QDesktopServices::StandardLocation location,
+                              const QIcon &icon = QIcon(),
+                              const QKeySequence &key = QKeySequence());
 };
 
 #endif // FILEMANAGERPLUGIN_H
