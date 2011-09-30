@@ -152,7 +152,7 @@ void CorePluginImpl::createActions()
     menuBarContainer->addContainer(fileContainer);
 
     // ================ File Menu (New) ================
-    fileContainer->addGroup(group = Constants::MenuGroups::FileNew);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileNew, 0);
 
     Command *newWindowCommand = new Command(Constants::Actions::NewWindow, this);
     newWindowCommand->setDefaultText(tr("New window"));
@@ -184,7 +184,7 @@ void CorePluginImpl::createActions()
     fileContainer->addCommand(closeTabCommand, group);
 
     // ================ File Menu (Info) ================
-    fileContainer->addGroup(group = Constants::MenuGroups::FileInfo);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileInfo, 50);
 
     Command *fileInfoCommand = new Command(Constants::Actions::FileInfo, this);
     fileInfoCommand->setDefaultText(tr("File info"));
@@ -192,7 +192,7 @@ void CorePluginImpl::createActions()
     fileContainer->addCommand(fileInfoCommand, group);
 
     // ================ File Menu (Change) ================
-    fileContainer->addGroup(group = Constants::MenuGroups::FileChange);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileChange, 100);
 
     Command *newFolderCommand = new Command(Constants::Actions::NewFolder, this);
     newFolderCommand->setDefaultText(tr("New folder"));
@@ -218,9 +218,9 @@ void CorePluginImpl::createActions()
 
     fileContainer->addCommand(removeCommand, group);
 
-//#ifndef Q_OS_MAC
+#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
-    fileContainer->addGroup(group = Constants::MenuGroups::FileQuit);
+    fileContainer->addGroup(group = Constants::MenuGroups::FileQuit, 150);
 
     Command *exitCommand = new Command(Constants::Actions::Exit, this);
     exitCommand->setDefaultText(tr("Quit Andromeda"));
@@ -228,7 +228,7 @@ void CorePluginImpl::createActions()
     exitCommand->setContext(Command::ApplicationCommand);
     fileContainer->addCommand(exitCommand, group);
     connect(exitCommand->commandAction(), SIGNAL(triggered()), this, SLOT(quit()));
-//#endif
+#endif
 
     // ================ Edit Menu ================
     CommandContainer *editContainer = new CommandContainer(Constants::Menus::Edit, this);
@@ -236,7 +236,7 @@ void CorePluginImpl::createActions()
     menuBarContainer->addContainer(editContainer);
 
     // ================ Edit Menu (Redo) ================
-    editContainer->addGroup(group = Constants::MenuGroups::EditRedo);
+    editContainer->addGroup(group = Constants::MenuGroups::EditRedo, 0);
 
     Command *undoCommand = new Command(Constants::Actions::Undo, this);
     undoCommand->setDefaultText(tr("Undo"));
@@ -249,7 +249,7 @@ void CorePluginImpl::createActions()
     editContainer->addCommand(redoCommand, group);
 
     // ================ Edit Menu (CopyPaste) ================
-    editContainer->addGroup(group = Constants::MenuGroups::EditCopyPaste);
+    editContainer->addGroup(group = Constants::MenuGroups::EditCopyPaste, 50);
 
     Command *cutCommand = new Command(Constants::Actions::Cut, this);
     cutCommand->setAttributes(Command::AttributeUpdateText);
@@ -277,38 +277,6 @@ void CorePluginImpl::createActions()
     CommandContainer *viewContainer = new CommandContainer(Constants::Menus::View, this);
     viewContainer->setTitle(tr("View"));
     menuBarContainer->addContainer(viewContainer);
-
-    viewContainer->addGroup(group = Constants::MenuGroups::ViewViewMode);
-
-    Command *iconModeCommand = new Command(Constants::Actions::IconMode, this);
-    iconModeCommand->setDefaultText(tr("Icon View"));
-    iconModeCommand->setDefaultShortcut(tr("Ctrl+1"));
-    iconModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(iconModeCommand, group);
-
-    Command *columnModeCommand = new Command(Constants::Actions::ColumnMode, this);
-    columnModeCommand->setDefaultText(tr("Column View"));
-    columnModeCommand->setDefaultShortcut(tr("Ctrl+2"));
-    columnModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(columnModeCommand, group);
-
-    Command *treeModeCommand = new Command(Constants::Actions::TreeMode, this);
-    treeModeCommand->setDefaultText(tr("Tree View"));
-    treeModeCommand->setDefaultShortcut(tr("Ctrl+3"));
-    treeModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(treeModeCommand, group);
-
-    Command *coverFlowModeCommand = new Command(Constants::Actions::CoverFlowMode, this);
-    coverFlowModeCommand->setDefaultText(tr("Cover flow"));
-    coverFlowModeCommand->setDefaultShortcut(tr("Ctrl+4"));
-    coverFlowModeCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(coverFlowModeCommand, group);
-
-    Command *dualPaneCommand = new Command(Constants::Actions::DualPane, this);
-    dualPaneCommand->setDefaultText(tr("Dual Pane"));
-    dualPaneCommand->setDefaultShortcut(tr("Ctrl+5"));
-    dualPaneCommand->setContext(Command::WindowCommand);
-    viewContainer->addCommand(dualPaneCommand, group);
 
     // ================ GoTo Menu ================
     CommandContainer *goToContainer = new CommandContainer(Constants::Menus::GoTo, this);
@@ -344,7 +312,7 @@ void CorePluginImpl::createActions()
     connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
 
     // ================ Tools Menu (Preferences) ================
-    toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
+    toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences, 50);
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));
