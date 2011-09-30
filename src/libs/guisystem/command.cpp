@@ -11,6 +11,8 @@ namespace GuiSystem {
 class CommandPrivate
 {
 public:
+    CommandPrivate(const QByteArray &id, Command *qq);
+
     ProxyAction *action;
     QAction *realAction;
 
@@ -29,6 +31,15 @@ public:
 } // namespace GuiSystem
 
 using namespace GuiSystem;
+
+CommandPrivate::CommandPrivate(const QByteArray &id, Command *qq)
+{
+    this->id = id;
+    action = new ProxyAction(qq);
+    action->setEnabled(false);
+    realAction = 0;
+    context = Command::WidgetCommand;
+}
 
 void CommandPrivate::update()
 {
@@ -54,24 +65,58 @@ void CommandPrivate::update()
     triggered too.
 */
 
+Command::Command(const QByteArray &id,
+                 const QIcon &icon,
+                 const QKeySequence &key,
+                 const QString &text,
+                 QObject *parent) :
+    QObject(parent),
+    d_ptr(new CommandPrivate(id, this))
+{
+    setAttributes(AttributeNonConfigurable);
+    setDefaultIcon(icon);
+    setDefaultShortcut(key);
+    setDefaultText(text);
+
+    ActionManager::instance()->registerCommand(this);
+}
+
+Command::Command(const QByteArray &id,
+                 const QKeySequence &key,
+                 const QString &text,
+                 QObject *parent) :
+    QObject(parent),
+    d_ptr(new CommandPrivate(id, this))
+{
+    setAttributes(AttributeNonConfigurable);
+    setDefaultShortcut(key);
+    setDefaultText(text);
+
+    ActionManager::instance()->registerCommand(this);
+}
+
+Command::Command(const QByteArray &id,
+                 const QString &text,
+                 QObject *parent) :
+    QObject(parent),
+    d_ptr(new CommandPrivate(id, this))
+{
+    setAttributes(AttributeNonConfigurable);
+    setDefaultText(text);
+
+    ActionManager::instance()->registerCommand(this);
+}
+
 /*!
     \brief Constructs Command with \a id and register it in ActionManager.
 */
 Command::Command(const QByteArray &id, QObject *parent) :
     QObject(parent),
-    d_ptr(new CommandPrivate)
+    d_ptr(new CommandPrivate(id, this))
 {
-    Q_D(Command);
-
-    d->id = id;
-    d->action = new ProxyAction(this);
-    d->action->setEnabled(false);
-    d->realAction = 0;
-    d->context = WidgetCommand;
+    setAttributes(AttributeNonConfigurable);
 
     ActionManager::instance()->registerCommand(this);
-
-    setAttributes(AttributeNonConfigurable);
 }
 
 /*!

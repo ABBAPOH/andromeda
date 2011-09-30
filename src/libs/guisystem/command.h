@@ -30,9 +30,6 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_PROPERTY(QByteArray id READ id)
 
 public:
-    explicit Command(const QByteArray &id, QObject *parent = 0);
-    ~Command();
-
     enum Attribute {
         AttributeNonConfigurable = 0,
         AttributeHide = 1,
@@ -48,6 +45,21 @@ public:
         ApplicationCommand
     };
     Q_ENUMS(CommandContext)
+
+    Command(const QByteArray &id,
+            const QIcon &icon,
+            const QKeySequence &key,
+            const QString &text,
+            QObject *parent = 0);
+    Command(const QByteArray &id,
+            const QKeySequence &key,
+            const QString &text,
+            QObject *parent = 0);
+    Command(const QByteArray &id,
+            const QString &text,
+            QObject *parent = 0);
+    explicit Command(const QByteArray &id, QObject *parent = 0);
+    ~Command();
 
     QAction *commandAction() const;
 
