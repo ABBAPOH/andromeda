@@ -107,20 +107,6 @@ void MainWindowPrivate::setupActions()
     prevTabAction->setShortcutContext(Qt::WindowShortcut);
     connect(prevTabAction, SIGNAL(triggered()), q, SLOT(prevTab()));
     q->addAction(prevTabAction);
-
-    // GoTo menu
-    CommandContainer *gotoMenu = actionManager->container(Constants::Menus::GoTo);
-    QSignalMapper *gotoMapper = new QSignalMapper(this);
-    foreach (Command *cmd, gotoMenu->commands(Constants::MenuGroups::Locations)) {
-//        QAction *action = cmd->action();
-        QAction *action = new QAction(this);
-        gotoMapper->setMapping(action, cmd->data().toString());
-        connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
-        action->setParent(this);
-        actionManager->registerAction(action, cmd->id());
-        q->addAction(action);
-    }
-    connect(gotoMapper, SIGNAL(mapped(QString)), q, SLOT(open(QString)));
 }
 
 void MainWindowPrivate::setupToolBar()
@@ -385,4 +371,3 @@ void MainWindow::prevTab()
     int index = d->tabWidget->currentIndex();
     d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
 }
-
