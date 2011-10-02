@@ -86,7 +86,10 @@ void MainWindowPrivate::setupActions()
     q->addAction(forwardAction);
     actionManager->registerAction(forwardAction, Constants::Actions::Forward);
 
-    upAction = actionManager->command(Constants::Actions::Up)->commandAction();
+    upAction = new QAction(QIcon(":/images/icons/up.png"), tr("Up one level"), this);
+    connect(upAction, SIGNAL(triggered()), q, SLOT(up()));
+    q->addAction(upAction);
+    actionManager->registerAction(upAction, Constants::Actions::Up);
 
     nextTabAction = new QAction(this);
 #ifdef Q_OS_MAC
@@ -296,6 +299,11 @@ void MainWindow::back()
 void MainWindow::forward()
 {
     currentTab()->history()->forward();
+}
+
+void MainWindow::up()
+{
+    currentTab()->up();
 }
 
 void MainWindow::open(const QString &path)

@@ -26,8 +26,6 @@ public:
     explicit Tab(QWidget *parent = 0);
     ~Tab();
 
-    void open(const QString &path);
-
     QString currentPath() const;
     QIcon icon() const;
     QString title() const;
@@ -38,6 +36,11 @@ public:
 
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
+
+public slots:
+    void open(const QString &path);
+
+    void up();
 
 signals:
     void currentPathChanged(const QString & currentPath);
