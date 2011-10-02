@@ -1,6 +1,7 @@
 #include "tab.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 #include <QtGui/QStackedLayout>
@@ -101,38 +102,6 @@ Tab::~Tab()
     delete d_ptr;
 }
 
-void Tab::open(const QString &path)
-{
-    Q_D(Tab);
-
-    if (d->currentPath == path)
-        return;
-
-    QString mimeType = getMimeType(path);
-    EditorManager *manager = Core::instance()->editorManager();
-    AbstractEditorFactory *factory = manager->factory(mimeType);
-    if (factory) {
-        QString id = factory->id();
-        AbstractEditor *editor = d->editorHash.value(id);
-        if (!editor) {
-            editor = manager->editor(mimeType, this);
-            int index = d->layout->addWidget(editor);
-            d->layout->setCurrentIndex(index);
-            d->editorHash.insert(id, editor);
-        }
-        d->setEditor(editor);
-        editor->open(path);
-    } else {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-        return;
-    }
-
-    d->currentPath = path;
-
-    emit currentPathChanged(d->currentPath);
-    emit changed();
-}
-
 QString Tab::currentPath() const
 {
     return d_func()->currentPath;
@@ -197,6 +166,51 @@ void Tab::saveSession(QSettings &s)
 
     s.setValue(QLatin1String("editor"), d->editor->factory()->id());
     d->editor->saveSession(s);
+}
+
+void Tab::open(const QString &path)
+{
+    Q_D(Tab);
+
+    if (d->currentPath == path)
+        return;
+
+    QString mimeType = getMimeType(path);
+    EditorManager *manager = Core::instance()->editorManager();
+    AbstractEditorFactory *factory = manager->factory(mimeType);
+    if (factory) {
+        QString id = factory->id();
+        AbstractEditor *editor = d->editorHash.value(id);
+        if (!editor) {
+            editor = manager->editor(mimeType, this);
+            int index = d->layout->addWidget(editor);
+            d->layout->setCurrentIndex(index);
+            d->editorHash.insert(id, editor);
+        }
+        d->setEditor(editor);
+        editor->open(path);
+    } else {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        return;
+    }
+
+    d->currentPath = path;
+
+    emit currentPathChanged(d->currentPath);
+    emit changed();
+}
+
+void Tab::up()
+{
+    QString path = currentPath();
+    // we can't use QDir::cleanPath because it breaks urls
+    // remove / at end of path
+    if (path != QLatin1String("/"))
+        if (path.endsWith(QLatin1Char('/')))
+            path = path.left(path.length() - 1);
+
+    QFileInfo info(path);
+    open(info.path());
 }
 
 void Tab::onIndexChanged(int index)

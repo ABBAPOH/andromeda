@@ -36,6 +36,7 @@ public:
 public slots:
     void back();
     void forward();
+    void up();
 
     void open(const QString &path);
     void openNewTab(const QString &path);
