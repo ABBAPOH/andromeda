@@ -8,6 +8,8 @@
 #include <QtGui/QKeySequence>
 #include "navigationmodel.h"
 
+class QSignalMapper;
+
 class FileManagerPluginImpl : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
@@ -17,8 +19,10 @@ public:
 
     bool initialize();
     void shutdown();
+
 private slots:
     void onStandardLocationsChanged(NavigationModel::StandardLocations);
+    void goTo(const QString &s);
 
 private:
     void createActions();
@@ -28,6 +32,10 @@ private:
     void createGoToDirCommand(QDesktopServices::StandardLocation location,
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());
+    void createGoToActions();
+
+private:
+    QSignalMapper *gotoMapper;
 };
 
 #endif // FILEMANAGERPLUGIN_H

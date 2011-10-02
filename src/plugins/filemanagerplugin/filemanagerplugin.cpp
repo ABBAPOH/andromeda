@@ -2,6 +2,8 @@
 
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>
+#include <QtCore/QSignalMapper>
+#include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
 #ifdef Q_CC_MSVC
 #include <QtGui/QApplication>
@@ -67,11 +69,20 @@ void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::Standard
     CorePlugin::Core::instance()->settings()->setValue("fileManager/standardLocations", (int)loc);
 }
 
+void FileManagerPluginImpl::goTo(const QString &s)
+{
+    MainWindow *window = MainWindow::currentWindow();
+    if (window) {
+        window->open(s);
+    }
+}
+
 void FileManagerPluginImpl::createActions()
 {
     createFileMenu();
     createViewMenu();
     createGoToMenu();
+    createGoToActions();
 }
 
 void FileManagerPluginImpl::createFileMenu()
@@ -213,9 +224,25 @@ void FileManagerPluginImpl::createGoToDirCommand(QDesktopServices::StandardLocat
         cmd->setDefaultIcon(icon);
 
     cmd->setData(dir.absolutePath());
-    cmd->setContext(Command::WindowCommand);
+    cmd->setContext(Command::ApplicationCommand);
 
     container->addCommand(cmd, Constants::MenuGroups::Locations);
+}
+
+void FileManagerPluginImpl::createGoToActions()
+{
+    ActionManager * actionManager = ActionManager::instance();
+    CommandContainer *gotoMenu = actionManager->container(Constants::Menus::GoTo);
+    gotoMapper = new QSignalMapper(this);
+    foreach (Command *cmd, gotoMenu->commands(Constants::MenuGroups::Locations)) {
+        QAction *action = cmd->commandAction();
+        gotoMapper->setMapping(action, cmd->data().toString());
+        connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
+        action->setParent(this);
+        actionManager->registerAction(action, cmd->id());
+    }
+    connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(goTo(QString)));
+
 }
 
 Q_EXPORT_PLUGIN(FileManagerPluginImpl)
