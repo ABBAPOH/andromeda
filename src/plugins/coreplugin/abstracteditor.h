@@ -1,6 +1,8 @@
 #ifndef ABSTRACTEDITOR_H
 #define ABSTRACTEDITOR_H
 
+#include "coreplugin_global.h"
+
 #include <QtGui/QIcon>
 #include <QtGui/QWidget>
 
@@ -11,7 +13,7 @@ namespace CorePlugin {
 class AbstractEditorFactory;
 class MainWindow;
 
-class AbstractEditor : public QWidget
+class COREPLUGIN_EXPORT AbstractEditor : public QWidget
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractEditor)
