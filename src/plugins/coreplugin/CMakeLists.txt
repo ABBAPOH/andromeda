@@ -10,11 +10,9 @@ set( HEADERS
     editormanager.h
     history.h
     historyitem.h
-    ieditor.h
     isettingspage.h
     mainwindow.h
     mainwindow_p.h
-    perspectivemanager.h
     settings.h
     settingsdialog.h
     settingspagemanager.h
@@ -29,10 +27,8 @@ set( SOURCES
     editormanager.cpp
     history.cpp
     historyitem.cpp
-    ieditor.cpp
     isettingspage.cpp
     mainwindow.cpp
-    perspectivemanager.cpp
     settings.cpp
     settingsdialog.cpp
     settingspagemanager.cpp

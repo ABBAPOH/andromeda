@@ -9,7 +9,6 @@
 
 #include "constants.h"
 #include "core.h"
-#include "perspectivemanager.h"
 #include "settings.h"
 #include "settingspagemanager.h"
 #include "settingsdialog.h"
@@ -35,7 +34,6 @@ CorePluginImpl::~CorePluginImpl()
 bool CorePluginImpl::initialize()
 {
     addObject(new Core);
-    addObject(new PerspectiveManager);
 
     Settings *settings = new Settings;
     settings->setObjectName("settings");

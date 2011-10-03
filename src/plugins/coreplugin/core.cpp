@@ -4,7 +4,6 @@
 #include <pluginmanager.h>
 
 #include "editormanager.h"
-#include "perspectivemanager.h"
 #include "settings.h"
 
 /*!
@@ -73,13 +72,6 @@ QObject *Core::getObject(const QString &name)
 EditorManager * Core::editorManager() const
 {
     return d_func()->pool->object<EditorManager>("editorManager");
-}
-
-PerspectiveManager * Core::perspectiveManager() const
-{
-    Q_D(const Core);
-
-    return d->pool->object<PerspectiveManager>("perspectiveManager");
 }
 
 Settings * Core::settings() const

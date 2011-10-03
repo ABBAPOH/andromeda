@@ -6,7 +6,6 @@
 #include <core.h>
 #include <editormanager.h>
 #include <perspective.h>
-#include <perspectivemanager.h>
 #include <settingspagemanager.h>
 
 #include "webvieweditor.h"

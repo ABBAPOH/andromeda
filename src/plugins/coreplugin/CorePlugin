@@ -11,7 +11,3 @@
 #include "settingsdialog.h"
 #include "settingspagemanager.h"
 #include "tab.h"
-
-// deprecated:
-#include "ieditor.h"
-#include "perspectivemanager.h"
