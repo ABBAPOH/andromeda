@@ -1,6 +1,8 @@
 #ifndef EDITORMANAGER_H
 #define EDITORMANAGER_H
 
+#include "coreplugin_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 
@@ -10,7 +12,7 @@ class AbstractEditor;
 class AbstractEditorFactory;
 
 class EditorManagerPrivate;
-class EditorManager : public QObject
+class COREPLUGIN_EXPORT EditorManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(EditorManager)
