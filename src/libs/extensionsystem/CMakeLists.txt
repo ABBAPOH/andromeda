@@ -4,6 +4,7 @@ set( GLOBAL_HEADERS ExtensionSystem extensionsystem_global.h)
 set( HEADERS
     iplugin.h
     mutablepluginspec.h
+    options.h
     plugineditor.h
     pluginmanager.h
     pluginmanager_p.h
@@ -19,6 +20,7 @@ set( HEADERS
 set( SOURCES
     iplugin.cpp
     mutablepluginspec.cpp
+    options.cpp
     plugineditor.cpp
     pluginmanager.cpp
     pluginspec.cpp
