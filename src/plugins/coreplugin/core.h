@@ -28,7 +28,6 @@ public:
     }
 
     EditorManager *editorManager() const;
-    PerspectiveManager *perspectiveManager() const;
 
     Settings *settings() const;
 
