@@ -112,9 +112,9 @@ void FileManagerPluginImpl::createFileMenu()
     cmd = new Command(Constants::Actions::Rename, this);
     cmd->setDefaultText(tr("Rename"));
 #ifdef Q_OS_MAC
-//    renameCommand->setDefaultShortcut(tr("Return")); // Can't set shorcut to prevent overriding edit triggers
+//    cmd->setDefaultShortcut(tr("Return")); // Can't set shorcut to prevent overriding edit triggers
 #else
-    renameCommand->setDefaultShortcut(tr("F2"));
+    cmd->setDefaultShortcut(tr("F2"));
 #endif
     container->addCommand(cmd, group);
 
@@ -123,7 +123,7 @@ void FileManagerPluginImpl::createFileMenu()
 #ifdef Q_OS_MAC
     cmd->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
 #else
-    removeCommand->setDefaultShortcut(tr("Shift+Del"));
+    cmd->setDefaultShortcut(tr("Shift+Del"));
 #endif
     container->addCommand(cmd, group);
 }
