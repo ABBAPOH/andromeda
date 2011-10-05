@@ -10,6 +10,7 @@ set( HEADERS
     pluginmanager_p.h
     pluginspec.h
     pluginspec_p.h
+    pluginspecformathandler_p.h
     pluginview.h
     pluginviewmodel.h
     pluginviewmodel_p.h
@@ -24,6 +25,7 @@ set( SOURCES
     plugineditor.cpp
     pluginmanager.cpp
     pluginspec.cpp
+    pluginspecformathandler.cpp
     pluginview.cpp
     pluginviewmodel.cpp
     fullpluginview.cpp
