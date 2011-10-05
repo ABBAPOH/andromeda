@@ -14,7 +14,7 @@ bool convert(const QString &source, const QString &dest)
 
     PluginSpec::Format format;
     if (f.peek(4) == "SPEC")
-        format = PluginSpec::TextFormat;
+        format = PluginSpec::XmlFormat;
     else
         format = PluginSpec::BinaryFormat;
 
