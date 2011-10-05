@@ -97,11 +97,11 @@ void MainWindow::setupUi()
 
     int format = settings->value("format").toInt();
 
-    saveTextAction = formatMenu->addAction(tr("Text format"));
-    saveTextAction->setCheckable(true);
+    saveXmlAction = formatMenu->addAction(tr("Xml format"));
+    saveXmlAction->setCheckable(true);
     if (format == 0)
-        saveTextAction->setChecked(true);
-    formatGroup->addAction(saveTextAction);
+        saveXmlAction->setChecked(true);
+    formatGroup->addAction(saveXmlAction);
 
     saveBinaryAction = formatMenu->addAction(tr("Binary format"));
     saveBinaryAction->setCheckable(true);
@@ -114,8 +114,8 @@ void MainWindow::setupUi()
 
 PluginSpec::Format MainWindow::format()
 {
-    if (saveTextAction->isChecked())
-        return PluginSpec::TextFormat;
+    if (saveXmlAction->isChecked())
+        return PluginSpec::XmlFormat;
     if (saveBinaryAction->isChecked())
         return PluginSpec::BinaryFormat;
     return PluginSpec::BinaryFormat;

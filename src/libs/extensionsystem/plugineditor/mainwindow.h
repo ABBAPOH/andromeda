@@ -34,7 +34,7 @@ private:
     QAction *quitAction;
 
     QMenu *formatMenu;
-    QAction *saveTextAction;
+    QAction *saveXmlAction;
     QAction *saveBinaryAction;
 
     ExtensionSystem::MutablePluginSpec *pluginSpec;
