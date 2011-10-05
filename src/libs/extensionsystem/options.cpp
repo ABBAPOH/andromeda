@@ -9,6 +9,14 @@ class OptionData : public QSharedData
 {
 public:
     OptionData() : multiple(false), single(false) {}
+    OptionData(const OptionData &o) :
+        name(o.name),
+        shortName(o.shortName),
+        description(o.description),
+        values(o.values),
+        multiple(o.multiple),
+        single(o.single)
+    {}
 
     QString name;
     QChar shortName;
@@ -179,7 +187,7 @@ bool Options::parse(const QStringList &lst)
 
         if (!opt.multiple() && opt.count() < argRead + 1) {
             qWarning() << "QOptions::parse:"
-                       << "Too many arguments for option" << opt.name();
+                       << "Too many arguments for option" << opt.name() << opt.multiple();
             return false;
         }
         bool ok;
@@ -214,7 +222,12 @@ bool Options::parse(const QStringList &lst)
         }
 
         if (opt.d->single) {
-            singleValue = value;
+            if (opt.multiple()) {
+                list.append(value);
+                singleValue = list;
+            } else {
+                singleValue = value;
+            }
         } else {
             if (!opt.multiple() || argRead + 1 < opt.count()) {
                 multiValue[opt.name(argRead)] = value;
