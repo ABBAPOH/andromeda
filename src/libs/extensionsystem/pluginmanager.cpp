@@ -34,6 +34,10 @@ PluginManager::PluginManager(QObject *parent) :
     connect(d->watcher, SIGNAL(directoryChanged(QString)), SLOT(updateDirectory(QString)));
     connect(d->watcher, SIGNAL(fileChanged(QString)), SLOT(updateLibrary(QString)));
     startTimer(5000);
+
+    d->formatHandlers.resize(2);
+    d->formatHandlers[PluginSpec::XmlFormat] = new PluginSpecXmlHandler;
+    d->formatHandlers[PluginSpec::BinaryFormat] = new PluginSpecBinaryHandler;
 }
 
 /*!
@@ -43,6 +47,8 @@ PluginManager::PluginManager(QObject *parent) :
 PluginManager::~PluginManager()
 {
     unloadPlugins();
+
+    qDeleteAll(d_func()->formatHandlers);
 }
 
 /*!
@@ -175,11 +181,8 @@ void PluginManager::timerEvent(QTimerEvent *event)
 }
 
 // ============= PluginManagerPrivate =============
-PluginManagerPrivate::PluginManagerPrivate()
-{
-}
 
-//static bool lessThanByPluginName(const PluginSpec *first, const PluginSpec *second)
+    //static bool lessThanByPluginName(const PluginSpec *first, const PluginSpec *second)
 //{
 //    return first->name() < second->name();
 //}
