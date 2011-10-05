@@ -17,8 +17,10 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void testSerialiseText();
+    void testSerialiseXml();
     void testSerialiseBinary();
     void benchmarkText();
+    void benchmarkXml();
     void benchmarkBinary();
 
 private:
@@ -60,6 +62,16 @@ void PluginSpecTest::testSerialiseText()
     compareSpecs(&spec, &spec2);
 }
 
+void PluginSpecTest::testSerialiseXml()
+{
+    spec.write(QLatin1String("Xml.pluginspec"), PluginSpec::XmlFormat);
+
+    PluginSpec spec2;
+    spec2.read(QLatin1String("Xml.pluginspec"));
+
+    compareSpecs(&spec, &spec2);
+}
+
 void PluginSpecTest::testSerialiseBinary()
 {
     spec.write(QLatin1String("Binary.pluginspec"), PluginSpec::BinaryFormat);
@@ -78,6 +90,17 @@ void PluginSpecTest::benchmarkText()
         spec.write(QLatin1String("Text.pluginspec"), PluginSpec::TextFormat);
 
         spec2.read(QLatin1String("Text.pluginspec"));
+    }
+}
+
+void PluginSpecTest::benchmarkXml()
+{
+    PluginSpec spec2;
+
+    QBENCHMARK {
+        spec.write(QLatin1String("Xml.pluginspec"), PluginSpec::XmlFormat);
+
+        spec2.read(QLatin1String("Xml.pluginspec"));
     }
 }
 

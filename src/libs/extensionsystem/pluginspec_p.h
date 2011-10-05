@@ -54,6 +54,8 @@ public:
 
     bool readTextFormat(const QString &path);
     bool writeTextFormat(const QString &path);
+    bool readXmlFormat(const QString &path);
+    bool writeXmlFormat(const QString &path);
 };
 
 QDataStream & operator>>(QDataStream &s, PluginSpecPrivate &pluginSpec);

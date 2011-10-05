@@ -6,7 +6,9 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QSettings>
 #include <QtCore/QStringList>
-#include <QDebug>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QXmlStreamWriter>
+#include <QtCore/QDebug>
 
 #include "pluginmanager.h"
 
@@ -324,6 +326,224 @@ bool PluginSpecPrivate::writeTextFormat(const QString &path)
         specFile.setValue(QString::number(counter++), l);
     }
     specFile.endGroup();
+
+    return true;
+}
+
+static void readXmlPluginSpecDependencies(PluginSpecPrivate *d, QXmlStreamReader &reader)
+{
+    QString name;
+    bool readingElement = false;
+    while (!reader.atEnd()) {
+        reader.readNext();
+        name = reader.name().toString();
+        switch (reader.tokenType()) {
+
+        case QXmlStreamReader::StartElement:
+
+            if (readingElement)
+                reader.raiseError(QObject::tr("Unexpected token '%1'").arg(name));
+            readingElement = true;
+
+            if (name == QLatin1String("dependency")) {
+                QString depName = reader.attributes().value(QLatin1String("name")).toString();
+                QString depVersion = reader.attributes().value(QLatin1String("version")).toString();
+                d->dependencies.append(PluginDependency(depName, depVersion));
+            } else {
+                reader.raiseError(QObject::tr("Unknown element '%1'").arg(name));
+            }
+
+            break;
+
+        case QXmlStreamReader::EndElement:
+
+            readingElement = false;
+
+            if (name == QLatin1String("dependency"))
+                break;
+
+            if (name == QLatin1String("dependencyList"))
+                return;
+
+            reader.raiseError(QObject::tr("Expected </dependencyList>"));
+            break;
+
+        case QXmlStreamReader::Comment:
+            break;
+
+        case QXmlStreamReader::Characters:
+
+            if (!reader.text().toString().trimmed().isEmpty())
+                reader.raiseError(QObject::tr("Unexpected character sequence"));
+            break;
+
+        default:
+            reader.raiseError(QObject::tr("Unexpected token"));
+            break;
+        }
+    }
+}
+
+static void readXmlPluginSpecAttributes(PluginSpecPrivate *d, QXmlStreamReader &reader)
+{
+    QString name;
+    while (!reader.atEnd()) {
+        reader.readNext();
+        name = reader.name().toString();
+        switch (reader.tokenType()) {
+        case QXmlStreamReader::StartElement:
+
+            if (name == QLatin1String("vendor")) {
+                d->vendor = reader.readElementText();
+            } else if (name == QLatin1String("copyright")) {
+                d->copyright = reader.readElementText();
+            } else if (name == QLatin1String("license")) {
+                d->license = reader.readElementText();
+            } else if (name == QLatin1String("category")) {
+                d->category = reader.readElementText();
+            } else if (name == QLatin1String("description")) {
+                d->description = reader.readElementText();
+            } else if (name == QLatin1String("url")) {
+                d->url = reader.readElementText();
+            } else if (name == QLatin1String("dependencyList")) {
+                readXmlPluginSpecDependencies(d, reader);
+                if (reader.hasError())
+                    return;
+            } else {
+                reader.raiseError(QObject::tr("Unknown element %1").arg(name));
+            }
+
+            break;
+        case QXmlStreamReader::EndElement:
+
+            if (name == QLatin1String("plugin"))
+                return;
+
+            reader.raiseError(QObject::tr("Expected </plugin>"));
+            break;
+
+        case QXmlStreamReader::Comment:
+            break;
+
+        case QXmlStreamReader::Characters:
+
+            if (!reader.text().toString().trimmed().isEmpty())
+                reader.raiseError(QObject::tr("Unexpected character sequence"));
+            break;
+
+        default:
+            reader.raiseError(QObject::tr("Unexpected token"));
+            break;
+        }
+    }
+}
+
+static void readXmlPluginSpec(PluginSpecPrivate *d, QXmlStreamReader &reader)
+{
+    if (reader.atEnd()) {
+        reader.raiseError("Empty xml file");
+        return;
+    }
+
+    QString name;
+    while (!reader.atEnd()) {
+        reader.readNext();
+        switch (reader.tokenType()) {
+        case QXmlStreamReader::StartElement:
+
+            name = reader.name().toString();
+            if (name == QLatin1String("plugin")) {
+
+                d->name = reader.attributes().value(QLatin1String("name")).toString();
+                d->version = Version(reader.attributes().value(QLatin1String("version")).toString());
+                d->compatibilityVersion = Version(reader.attributes().value(QLatin1String("compatVersion")).toString());
+                readXmlPluginSpecAttributes(d, reader);
+
+            } else {
+                reader.raiseError(QObject::tr("Unknown element %1").arg(name));
+            }
+
+            break;
+
+        case QXmlStreamReader::StartDocument:
+        case QXmlStreamReader::Comment:
+        case QXmlStreamReader::Characters:
+            break;
+
+        case QXmlStreamReader::EndElement:
+
+            reader.raiseError(QObject::tr("Expected end of document"));
+            break;
+
+        case QXmlStreamReader::EndDocument:
+            return;
+
+        default:
+            qDebug() << reader.tokenString();
+            reader.raiseError(QObject::tr("Unexpected token"));
+            break;
+        }
+    }
+}
+
+bool PluginSpecPrivate::readXmlFormat(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly)) {
+        qWarning() << "Can't open file" << path << "for reading.";
+        return false;
+    }
+
+    QXmlStreamReader reader(&file);
+
+    readXmlPluginSpec(this, reader);
+
+    if (reader.hasError()) {
+        qWarning() << (QObject::tr("Error parsing file %1: %2, at line %3, column %4")
+                       .arg(file.fileName())
+                       .arg(reader.errorString())
+                       .arg(reader.lineNumber())
+                       .arg(reader.columnNumber()));
+        return false;
+    }
+    return true;
+}
+
+bool PluginSpecPrivate::writeXmlFormat(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QFile::WriteOnly)) {
+        qWarning() << "Can't open file" << path << "for writing.";
+        return false;
+    }
+
+    QXmlStreamWriter writer(&file);
+    writer.setAutoFormatting(true);
+    writer.writeStartElement(QLatin1String("plugin"));
+    writer.writeAttribute(QLatin1String("name"), name);
+    writer.writeAttribute(QLatin1String("version"), version.toString());
+    writer.writeAttribute(QLatin1String("compatVersion"), compatibilityVersion.toString());
+
+    writer.writeTextElement(QLatin1String("vendor"), vendor);
+    writer.writeTextElement(QLatin1String("copyright"), copyright);
+    writer.writeTextElement(QLatin1String("license"), license);
+    writer.writeTextElement(QLatin1String("category"), category);
+    writer.writeTextElement(QLatin1String("description"), description);
+    writer.writeTextElement(QLatin1String("url"), url);
+
+    if (!dependencies.isEmpty()) {
+        writer.writeStartElement(QLatin1String("dependencyList"));
+
+        foreach (const PluginDependency &dependency, dependencies) {
+            writer.writeStartElement(QLatin1String("dependency"));
+            writer.writeAttribute(QLatin1String("name"), dependency.name());
+            writer.writeAttribute(QLatin1String("version"), dependency.version().toString());
+            writer.writeEndElement();
+        }
+        writer.writeEndElement();
+    }
+
+    writer.writeEndElement();
 
     return true;
 }
@@ -720,6 +940,9 @@ bool PluginSpec::read(const QString &path)
         QDataStream s(&file);
         s.setByteOrder(QDataStream::BigEndian);
         s >> *this->d_func();
+    } else if (file.peek(10).contains("<plugin")) {
+        if (!d->readXmlFormat(path))
+            return false;
     } else {
         file.close();
 
@@ -750,6 +973,8 @@ bool PluginSpec::write(const QString &path, Format format)
         s.setByteOrder(QDataStream::BigEndian);
 
         s << *this->d_func();
+    } else if (format == XmlFormat) {
+        return d_func()->writeXmlFormat(path);
     } else if (format == TextFormat) {
         return d_func()->writeTextFormat(path);
     }
