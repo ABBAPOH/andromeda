@@ -357,12 +357,12 @@ int Option::count() const
     return d->values.count();
 }
 
-Options::Type Option::type(int index)
+Options::Type Option::type(int index) const
 {
     return (d->multiple && index >= count()) ? d->values[count() - 1].first : d->values[index].first;
 }
 
-QString Option::name(int index)
+QString Option::name(int index) const
 {
     return d->values[index].second;
 }
