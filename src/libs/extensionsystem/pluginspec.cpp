@@ -594,6 +594,17 @@ bool PluginSpec::read(const QString &path)
         }
     }
 
+    // TODO: implement
+    // validate();
+
+    foreach (const Option &opt, d->options) {
+        Options &opts = PluginManager::instance()->d_func()->options();
+        opts.addOption(opt);
+        if (!d->defaultOption.isEmpty() && opts.defaultOption().isEmpty())
+            opts.setDefaultOption(d->defaultOption);
+
+    }
+
     d->libraryPath = d->getLibraryPath(path);
     d->loader->setFileName(d->libraryPath);
 
