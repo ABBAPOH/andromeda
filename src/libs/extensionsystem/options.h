@@ -73,8 +73,8 @@ public:
 
     void addValue(Options::Type type, const QString &name);
     int count() const;
-    Options::Type type(int index);
-    QString name(int index);
+    Options::Type type(int index) const;
+    QString name(int index) const;
 
     bool isSingle() const;
     void setSingle(bool b);
