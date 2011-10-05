@@ -5,4 +5,9 @@
     <category>Core</category>
     <description>This plugin contains main classes for Andromeda.</description>
     <url></url>
+    <options default="files">
+        <option name="files" type="QString" multiple="true">
+            <description>List of urls to open with Andromeda</description>
+        </option>
+    </options>
 </plugin>
