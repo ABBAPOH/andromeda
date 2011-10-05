@@ -4,6 +4,8 @@
 #include "pluginspec.h"
 #include "iplugin.h"
 
+#include "options.h"
+
 class QPluginLoader;
 
 namespace ExtensionSystem {
@@ -42,6 +44,8 @@ public:
 
     QString errorString;
     bool hasError;
+
+    QList<Option> options;
 
     bool load();
     bool loadLibrary();
