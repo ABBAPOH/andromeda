@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     QStringList args6;
     QStringList args7;
     QStringList args8;
+    QStringList args9;
 
     args1 << QString("andromeda --option1 string --option2 10 --longoption 1.11 oN abc def").split(' ');
     args2 << QString("andromeda --option1 string --option3 10").split(' ');
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
     args6 << QString("andromeda --option1 string bla bla bla").split(' ');
     args7 << QString("andromeda --option1 string 11.1 Yes bla").split(' ');
     args8 << QString("andromeda -1 string -2 10 -l 1.11 oN abc def").split(' ');
+    args9 << QString("andromeda --files file1 file2 file3 file111").split(' ');
 
     Options opts;
     opts.addOption('1', "option1", Options::String, "String option");
@@ -37,7 +39,13 @@ int main(int argc, char *argv[])
     opt.addValue(Options::String, "strings");
     opt.setMultiple(true);
     opts.addOption(opt);
-    opts.setDefaultOption("longoption");
+//    opts.setDefaultOption("longoption");
+
+    Option optFiles("files", "FILES!!!1");
+    optFiles.addValue(Options::String, QString());
+    optFiles.setMultiple(true);
+    optFiles.setSingle(true);
+    opts.addOption(optFiles);
 
     qDebug() << "parse2" << opts.parse(args2); qDebug(); opts.clear();
     qDebug() << "parse3" << opts.parse(args3); qDebug(); opts.clear();
@@ -46,6 +54,7 @@ int main(int argc, char *argv[])
     qDebug() << "parse6" << opts.parse(args6); qDebug(); opts.clear();
     qDebug() << "parse7" << opts.parse(args7); qDebug(); opts.clear();
     qDebug() << "parse8" << opts.parse(args8); qDebug(); opts.clear();
+    qDebug() << "parse9" << opts.parse(args9); qDebug(); opts.clear();
     qDebug() << "parse1" << opts.parse(args1); qDebug(); /*opts.clear();*/
 
     qDebug() << opts.values();
