@@ -29,6 +29,11 @@ Options::Options()
     addOption(d);
 }
 
+QList<Option> Options::options() const
+{
+    return nameToOption.values();
+}
+
 bool Options::addOption(const QChar shortName, const QString &name, Options::Type type, const QString &description)
 {
     Option opt(shortName, name, description);

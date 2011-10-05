@@ -27,6 +27,7 @@ public:
 
     Options();
 
+    QList<Option> options() const;
     bool addOption(const QChar shortName, const QString &name, Type type, const QString &description);
     bool addOption(const QString &name, Type type, const QString &description);
     bool addOption(const Option &option);
