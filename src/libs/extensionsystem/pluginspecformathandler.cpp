@@ -173,6 +173,39 @@ bool PluginSpecXmlHandler::write(QIODevice *device, PluginSpecPrivate *d)
         writer.writeEndElement();
     }
 
+    if (!d->options.isEmpty()) {
+        writer.writeStartElement(QLatin1String("options"));
+
+        foreach (const Option &opt, d->options) {
+            writer.writeStartElement(QLatin1String("option"));
+
+            writer.writeAttribute(QLatin1String("name"), opt.name());
+            if (opt.shortName() != QChar())
+                writer.writeAttribute(QLatin1String("shortName"), opt.shortName());
+            if ( opt.multiple())
+                writer.writeAttribute(QLatin1String("multiple"), QLatin1String("true"));
+
+            if (opt.isSingle()) {
+                writer.writeAttribute(QLatin1String("type"), QVariant::typeToName((QVariant::Type)opt.type(0)));
+            } else {
+                for (int i = 0; i < opt.count(); i++) {
+                    writer.writeStartElement(QLatin1String("value"));
+
+                    writer.writeAttribute(QLatin1String("name"), opt.name(i));
+                    writer.writeAttribute(QLatin1String("type"), QVariant::typeToName((QVariant::Type)opt.type(i)));
+
+                    writer.writeEndElement();
+                }
+            }
+
+            if (!opt.description().isEmpty())
+                writer.writeTextElement(QLatin1String("description"), opt.description());
+
+            writer.writeEndElement();
+        }
+        writer.writeEndElement();
+    }
+
     writer.writeEndElement();
 
     return true;
@@ -253,7 +286,10 @@ static void readXmlPluginSpecOption(PluginSpecPrivate *d, QXmlStreamReader &read
                 QXmlStreamAttributes attrs = reader.attributes();
                 QString type = attrs.value(QLatin1String("type")).toString();
                 QString name = attrs.value(QLatin1String("name")).toString();
-                option.addValue((Options::Type)QVariant::nameToType(type.toLatin1()), name);
+                QVariant::Type t = QVariant::nameToType(type.toLatin1());
+                if (t == QVariant::Invalid)
+                    reader.raiseError(QObject::tr("Unknown type %1").arg(type));
+                option.addValue((Options::Type)t, name);
                 option.setSingle(false);
 
             } else if (name == QLatin1String("description")) {
@@ -326,7 +362,10 @@ static void readXmlPluginSpecOptions(PluginSpecPrivate *d, QXmlStreamReader &rea
 
                 readXmlPluginSpecOption(d, reader, opt);
                 if (opt.isSingle()) {
-                    opt.addValue((Options::Type)QVariant::nameToType(type.toLatin1()), QString());
+                    QVariant::Type t = QVariant::nameToType(type.toLatin1());
+                    if (t == QVariant::Invalid)
+                        reader.raiseError(QObject::tr("Unknown type %1").arg(type));
+                    opt.addValue((Options::Type)t, QString());
                 }
                 d->options.append(opt);
             } else {
