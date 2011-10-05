@@ -56,7 +56,7 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
     Q_PROPERTY(bool canBeUnloaded READ canBeUnloaded)
 
 public:
-    enum Format { TextFormat, BinaryFormat };
+    enum Format { TextFormat, XmlFormat, BinaryFormat };
 
     explicit PluginSpec(QObject *parent = 0);
     explicit PluginSpec(const QString & path);
