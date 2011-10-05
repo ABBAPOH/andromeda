@@ -55,11 +55,6 @@ public:
     static int compareVersion(const Version &version1, const Version &version2);
     QString getLibraryPath(const QString &path);
     void setError(const QString &message);
-
-    bool readTextFormat(const QString &path);
-    bool writeTextFormat(const QString &path);
-    bool readXmlFormat(const QString &path);
-    bool writeXmlFormat(const QString &path);
 };
 
 QDataStream & operator>>(QDataStream &s, PluginSpecPrivate &pluginSpec);
