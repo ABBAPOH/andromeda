@@ -46,6 +46,7 @@ public:
     bool hasError;
 
     QList<Option> options;
+    QString defaultOption;
 
     bool load();
     bool loadLibrary();

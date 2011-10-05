@@ -176,6 +176,10 @@ bool PluginSpecXmlHandler::write(QIODevice *device, PluginSpecPrivate *d)
     if (!d->options.isEmpty()) {
         writer.writeStartElement(QLatin1String("options"));
 
+        if (!d->defaultOption.isEmpty()) {
+            writer.writeAttribute(QLatin1String("default"), d->defaultOption);
+        }
+
         foreach (const Option &opt, d->options) {
             writer.writeStartElement(QLatin1String("option"));
 
@@ -334,6 +338,8 @@ static void readXmlPluginSpecOption(PluginSpecPrivate *d, QXmlStreamReader &read
 
 static void readXmlPluginSpecOptions(PluginSpecPrivate *d, QXmlStreamReader &reader)
 {
+    d->defaultOption = reader.attributes().value(QLatin1String("default")).toString();
+
     QString name;
     bool readingElement = false;
     while (!reader.atEnd()) {
