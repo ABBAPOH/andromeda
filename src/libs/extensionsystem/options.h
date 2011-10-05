@@ -76,6 +76,9 @@ public:
     Options::Type type(int index);
     QString name(int index);
 
+    bool isSingle() const;
+    void setSingle(bool b);
+
 private:
     bool isValid();
 

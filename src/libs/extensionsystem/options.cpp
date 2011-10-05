@@ -33,7 +33,7 @@ bool Options::addOption(const QChar shortName, const QString &name, Options::Typ
 {
     Option opt(shortName, name, description);
     opt.addValue(type, QString());
-    opt.d->single = true;
+    opt.setSingle(true);
     return addOption(opt);
 }
 
@@ -41,7 +41,7 @@ bool Options::addOption(const QString &name, Options::Type type, const QString &
 {
     Option opt(name, description);
     opt.addValue(type, QString());
-    opt.d->single = true;
+    opt.setSingle(true);
     return addOption(opt);
 }
 
@@ -365,6 +365,16 @@ Options::Type Option::type(int index)
 QString Option::name(int index)
 {
     return d->values[index].second;
+}
+
+bool Option::isSingle() const
+{
+    return d->single;
+}
+
+void Option::setSingle(bool b)
+{
+    d->single = b;
 }
 
 bool Option::isValid()
