@@ -2,6 +2,7 @@
 #include <QtTest/QtTest>
 
 #include <pluginspec.h>
+#include <pluginmanager.h>
 #include <mutablepluginspec.h>
 
 using namespace ExtensionSystem;
@@ -16,10 +17,8 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void testSerialiseText();
     void testSerialiseXml();
     void testSerialiseBinary();
-    void benchmarkText();
     void benchmarkXml();
     void benchmarkBinary();
 
@@ -36,6 +35,8 @@ PluginSpecTest::PluginSpecTest()
 
 void PluginSpecTest::initTestCase()
 {
+    PluginManager *m = new PluginManager(this);
+
     spec.setName(QLatin1String("Name"));
     spec.setVersion(Version::fromString(QLatin1String("1.2.3.4")));
     spec.setCompatibilityVersion(Version::fromString(QLatin1String("1.2.3.4")));
@@ -50,16 +51,6 @@ void PluginSpecTest::initTestCase()
 
 void PluginSpecTest::cleanupTestCase()
 {
-}
-
-void PluginSpecTest::testSerialiseText()
-{
-    spec.write(QLatin1String("Text.pluginspec"), PluginSpec::TextFormat);
-
-    PluginSpec spec2;
-    spec2.read(QLatin1String("Text.pluginspec"));
-
-    compareSpecs(&spec, &spec2);
 }
 
 void PluginSpecTest::testSerialiseXml()
@@ -80,17 +71,6 @@ void PluginSpecTest::testSerialiseBinary()
     spec2.read(QLatin1String("Binary.pluginspec"));
 
     compareSpecs(&spec, &spec2);
-}
-
-void PluginSpecTest::benchmarkText()
-{
-    PluginSpec spec2;
-
-    QBENCHMARK {
-        spec.write(QLatin1String("Text.pluginspec"), PluginSpec::TextFormat);
-
-        spec2.read(QLatin1String("Text.pluginspec"));
-    }
 }
 
 void PluginSpecTest::benchmarkXml()
