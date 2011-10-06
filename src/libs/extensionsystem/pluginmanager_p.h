@@ -13,10 +13,16 @@ class QFileSystemWatcher;
 namespace ExtensionSystem {
 
 class PluginSpec;
+
+class PluginManager;
 class PluginManagerPrivate : public QObjectPoolPrivate
 {
+    PluginManager *q_ptr;
+
+    Q_DECLARE_PUBLIC(PluginManager)
+
 public:
-    PluginManagerPrivate() {}
+    PluginManagerPrivate(PluginManager *qq) : q_ptr(qq) {}
 
     bool load();
     QStringList getSpecFiles(QStringList folders);
@@ -30,6 +36,7 @@ public:
     PluginSpecFormatHandler* handler(PluginSpec::Format f) const { return formatHandlers[f]; }
 
     Options &options() { return opts; }
+    QVariantMap options(const QString &name);
 
 public:
     QFileSystemWatcher *watcher;
