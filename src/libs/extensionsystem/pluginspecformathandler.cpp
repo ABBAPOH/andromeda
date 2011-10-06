@@ -17,15 +17,24 @@ bool PluginSpecBinaryHandler::canRead(QIODevice *device)
 
 bool PluginSpecBinaryHandler::read(QIODevice *device, PluginSpecPrivate *d)
 {
+    clearError();
+
     QDataStream s(device);
     s.setByteOrder(QDataStream::BigEndian);
     s >> *d;
+
+    if (s.status() != QDataStream::Ok) {
+        setErrorString(QObject::tr("Cannot read binary file format"));
+        return false;
+    }
 
     return true;
 }
 
 bool PluginSpecBinaryHandler::write(QIODevice *device, PluginSpecPrivate *d)
 {
+    clearError();
+
     QDataStream s(device);
     s.setByteOrder(QDataStream::BigEndian);
     s << *d;
@@ -130,13 +139,14 @@ bool PluginSpecXmlHandler::canRead(QIODevice *device)
 
 bool PluginSpecXmlHandler::read(QIODevice *device, PluginSpecPrivate *d)
 {
+    clearError();
+
     QXmlStreamReader reader(device);
 
     readXmlPluginSpec(d, reader);
 
     if (reader.hasError()) {
-        // TODO: move error to spec
-        qWarning() << (QObject::tr("Error parsing xml stream: %1, at line %4, column %3")
+        setErrorString(QObject::tr("Error parsing xml stream: %1, at line %4, column %3")
                        .arg(reader.errorString())
                        .arg(reader.lineNumber())
                        .arg(reader.columnNumber()));
@@ -147,6 +157,8 @@ bool PluginSpecXmlHandler::read(QIODevice *device, PluginSpecPrivate *d)
 
 bool PluginSpecXmlHandler::write(QIODevice *device, PluginSpecPrivate *d)
 {
+    clearError();
+
     QXmlStreamWriter writer(device);
     writer.setAutoFormatting(true);
     writer.writeStartElement(QLatin1String("plugin"));

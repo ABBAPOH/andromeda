@@ -584,12 +584,21 @@ bool PluginSpec::read(const QString &path)
     Q_D(PluginSpec);
 
     QFile file(path);
-    file.open(QIODevice::ReadOnly);
+    if (!file.open(QIODevice::ReadOnly)) {
+        d->setError(tr("Failed to open file %1 : '%2'").
+                    arg(path).
+                    arg(file.errorString()));
+        return false;
+    }
 
     foreach (PluginSpecFormatHandler *h, PluginManager::instance()->d_func()->handlers()) {
         if (h && h->canRead(&file)) {
-            if (!h->read(&file, d))
+            if (!h->read(&file, d)) {
+                d->setError(tr("Cannot read file %1 : '%2'").
+                            arg(path).
+                            arg(h->errorString()));
                 return false;
+            }
             break;
         }
     }
@@ -599,7 +608,11 @@ bool PluginSpec::read(const QString &path)
 
     foreach (const Option &opt, d->options) {
         Options &opts = PluginManager::instance()->d_func()->options();
-        opts.addOption(opt);
+        if (!opts.addOption(opt)) {
+            d->setError(tr("Failed to add option %1 : '%2'").
+                        arg(opt.name()).
+                        arg(opts.errorString()));
+        }
         if (!d->defaultOption.isEmpty() && opts.defaultOption().isEmpty())
             opts.setDefaultOption(d->defaultOption);
 
@@ -619,14 +632,25 @@ bool PluginSpec::read(const QString &path)
 
 bool PluginSpec::write(const QString &path, Format format)
 {
+    Q_D(PluginSpec);
+
     PluginSpecFormatHandler *h = PluginManager::instance()->d_func()->handler(format);
     if (h) {
         QFile file(path);
-        if (!file.open(QIODevice::WriteOnly))
+        if (!file.open(QIODevice::WriteOnly)) {
+            d->setError(tr("Failed to open file %1 : '%2'").
+                        arg(path).
+                        arg(file.errorString()));
             return false;
+        }
 
-        return h->write(&file, d_func());
+        if (!h->write(&file, d_func())) {
+            d->setError(tr("Failed to write file %1 : '%2'").
+                        arg(path).
+                        arg(h->errorString()));
+            return false;
+        }
     }
 
-    return false;
+    return true;
 }
