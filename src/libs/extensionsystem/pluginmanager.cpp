@@ -215,12 +215,16 @@ bool PluginManagerPrivate::load()
     // get all specs from files
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
 
-    if (!newSpecs.isEmpty()) {
-        // enables new plugins
-        enableSpecs(newSpecs);
-        return true; // return true if we have new plugins
+    if (newSpecs.isEmpty()) {
+        // TODO: error about no specs?
+        return false;
     }
-    return false;
+
+    // TODO: error about not initialized specs
+    // enables new plugins
+    enableSpecs(newSpecs);
+
+    return true; // return true if we have new plugins
 }
 
 QStringList PluginManagerPrivate::getSpecFiles(QStringList folders)
