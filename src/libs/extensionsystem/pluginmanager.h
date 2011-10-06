@@ -59,6 +59,7 @@ private:
     static PluginManager *m_instance;
 
     friend class PluginSpec;
+    friend class PluginSpecPrivate;
 };
 
 } // namespace ExtensionSystem
