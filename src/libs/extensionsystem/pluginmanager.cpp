@@ -90,6 +90,7 @@ void PluginManager::loadPlugins()
     if (!d->load()) {
         qWarning() << "PluginManager warning: Couldn't load plugins";
         qWarning() << "Searched paths:" << qApp->libraryPaths();
+        return;
     }
     d->loaded = true;
 
@@ -219,19 +220,22 @@ void PluginManager::timerEvent(QTimerEvent *event)
 
 bool PluginManagerPrivate::load()
 {
-    QStringList specFiles = getSpecFiles(foldersToBeLoaded);
+    QStringList folders = foldersToBeLoaded;
     foldersToBeLoaded.clear();
+
+    QStringList specFiles = getSpecFiles(folders);
 
     // get all specs from files
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
 
-    if (newSpecs.isEmpty()) {
-        // TODO: error about no specs?
+    if (pluginSpecs.isEmpty()) {
+        setErrorString(QObject::tr("No plugins found in (%1)").
+                       arg(folders.join(QLatin1String(", "))));
         return false;
     }
 
     if (!opts.parse(arguments)) {
-        qWarning() << "PluginManager::load:" << "Error parsing options";
+        setErrorString(QObject::tr("Error parsing options : '%1'").arg(opts.errorString()));
         return false;
     }
 
@@ -259,17 +263,17 @@ QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
     QList<PluginSpec*> result;
     foreach (const QString &specFile, specFiles) {
         if (!pathToSpec.contains(specFile)) {
-//            PluginSpec *spec = new PluginSpec(specFile);
-            PluginSpec *spec = new PluginSpec();
-            spec->read(specFile);
 
-            if (!spec->hasError()) {
-                pluginSpecs.append(spec);
-                pathToSpec.insert(specFile, spec);
-                result.append(spec);
-            } else {
-                delete spec;
+            PluginSpec *spec = new PluginSpec();
+            pathToSpec.insert(specFile, spec);
+
+            if (!spec->read(specFile)) {
+                invalidSpecs.append(spec);
+                continue;
             }
+
+            pluginSpecs.append(spec);
+            result.append(spec);
         }
     }
     return result;
@@ -297,6 +301,11 @@ void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
     foreach (PluginSpec *spec, specsToBeEnabled) {
         if (spec->loadOnStartup()) {
             spec->load();
+            if (spec->hasError()) {
+                // TODO: handle ?
+//                pluginSpecs.removeOne(spec);
+//                invalidSpecs.append(spec);
+            }
         }
     }
 }
@@ -319,7 +328,7 @@ void PluginManagerPrivate::clearError()
     errorString = QObject::tr("No error");
 }
 
-void PluginManagerPrivate::raiseError(const QString &message)
+void PluginManagerPrivate::setErrorString(const QString &message)
 {
     hasError = true;
     errorString = message;

@@ -64,7 +64,6 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
     loadOnStartup(true),
     hasError(false)
 {
-    errorString = "Unknown Error";
 }
 
 bool PluginSpecPrivate::load()
@@ -104,7 +103,7 @@ bool PluginSpecPrivate::load()
 #endif
     QVariantMap options = PluginManager::instance()->d_func()->options(name);
     if (!plugin->initialize(options)) {
-        setError("Failed to initialize plugin");
+        setError(QObject::tr("Failed to initialize plugin %1").arg(name));
         return false;
     }
 #ifdef DEBUG_OUTPUT
@@ -125,13 +124,12 @@ bool PluginSpecPrivate::loadLibrary()
         return false;
     }
 
-    IPlugin *plugin = qobject_cast<IPlugin *>(object);
+    plugin = qobject_cast<IPlugin *>(object);
     if (!plugin) {
         setError(QObject::tr("Can't load plugin: not a valid plugin", "PluginSpec"));
         return false;
     }
 
-    this->plugin = plugin;
     return true;
 }
 
@@ -148,7 +146,7 @@ bool PluginSpecPrivate::unload()
         spec->unload();
         if (spec->loaded()) {
             ok = false;
-            errorMessage += "Can't unload plugin: " + spec->name() + " is not unloaded";
+            errorMessage += QObject::tr("Can't unload plugin: %1 is not unloaded").arg(spec->name());
         }
     }
 
@@ -177,7 +175,7 @@ bool PluginSpecPrivate::unload()
 bool PluginSpecPrivate::unloadLibrary()
 {
     if (!loader->unload()) {
-        setError("Can't unload plugin library: " + loader->errorString());
+        setError(QObject::tr("Can't unload plugin library: %1").arg(loader->errorString()));
         return false;
     }
     plugin = 0;
@@ -469,6 +467,8 @@ void PluginSpec::load()
     if (d->loaded)
         return;
 
+    d->clearError();
+
     if (d->load()) {
         d->loaded = true;
         emit loadedChanged(true);
@@ -485,6 +485,8 @@ void PluginSpec::unload()
 
     if (!d->loaded)
         return;
+
+    d->clearError();
 
     if (d->unload()) {
         d->loaded = false;
@@ -554,7 +556,9 @@ bool PluginSpec::hasError() const
 */
 QString PluginSpec::errorString() const
 {
-    return d_func()->errorString;
+    Q_D(const PluginSpec);
+
+    return !d->errorString.isEmpty() ? d->errorString : tr("No error", "PluginSpec");
 }
 
 /*!
