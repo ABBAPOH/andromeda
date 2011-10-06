@@ -131,6 +131,16 @@ void PluginManager::setDefaultPlugins(const QStringList &plugins)
     d_func()->defaultPlugins = plugins;
 }
 
+bool PluginManager::hasError() const
+{
+    return d_func()->hasError;
+}
+
+QString PluginManager::errorString() const
+{
+    return d_func()->errorString;
+}
+
 QString PluginManager::pluginsFolder() const
 {
     return d_func()->pluginsFolder;
@@ -301,4 +311,17 @@ QVariantMap PluginManagerPrivate::options(const QString &name)
         result.insert(name, opts.values().value(name));
     }
     return result;
+}
+
+void PluginManagerPrivate::clearError()
+{
+    hasError = false;
+    errorString = QObject::tr("No error");
+}
+
+void PluginManagerPrivate::raiseError(const QString &message)
+{
+    hasError = true;
+    errorString = message;
+    emit q_func()->error(message);
 }
