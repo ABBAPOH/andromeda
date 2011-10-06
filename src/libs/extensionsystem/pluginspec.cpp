@@ -62,7 +62,8 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
     loader(new QPluginLoader(q_ptr)),
     loaded(false),
     loadOnStartup(true),
-    hasError(false)
+    hasError(false),
+    isDefault(false)
 {
 }
 
@@ -523,10 +524,9 @@ void PluginSpec::setLoadOnStartup(bool yes)
 
 bool PluginSpec::canBeUnloaded() const
 {
-    foreach (PluginSpec *spec, dependentSpecs()) {
-        if (spec->loaded())
-            return false;
-    }
+    if (d_func()->isDefault)
+        return false;
+
     return true;
 }
 
@@ -599,15 +599,21 @@ bool PluginSpec::read(const QString &path)
     // TODO: implement
     // validate();
 
-    foreach (const Option &opt, d->options) {
-        Options &opts = PluginManager::instance()->d_func()->options();
+    Options &opts = PluginManager::instance()->d_func()->options();
+    d->isDefault = PluginManager::instance()->defaultPlugins().contains(name());
+    foreach (Option opt, d->options) {
+        if (!d->isDefault)
+            opt.setShortName(QChar());
+
         if (!opts.addOption(opt)) {
             d->setError(tr("Failed to add option %1 : '%2'").
                         arg(opt.name()).
                         arg(opts.errorString()));
         }
-        if (!d->defaultOption.isEmpty() && opts.defaultOption().isEmpty())
-            opts.setDefaultOption(d->defaultOption);
+        if (!d->defaultOption.isEmpty() && opts.defaultOption().isEmpty()) {
+            if (d->isDefault)
+                opts.setDefaultOption(d->defaultOption);
+        }
 
     }
 

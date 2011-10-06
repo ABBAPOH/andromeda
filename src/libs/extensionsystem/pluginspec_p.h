@@ -41,6 +41,7 @@ public:
 
     bool loaded;
     bool loadOnStartup;
+    bool isDefault;
 
     QString errorString;
     bool hasError;
