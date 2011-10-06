@@ -63,13 +63,25 @@ bool Options::addOption(const Option &option)
     QString name = option.name();
     QChar c = option.shortName();
 
+    m_errorString.clear();
+
     if (nameToOption.contains(name)) {
-        qWarning() << "QOptions::addOption:" << "Already have option with name" << name;
+        m_errorString = QObject::tr("Already have option with name %1").arg(name);
         return false;
     }
 
     if (shortToName.contains(c)) {
-        qWarning() << "QOptions::addOption:" << "Already have option with short name" << c;
+        m_errorString = QObject::tr("Already have option with short name %1").arg(c);
+        return false;
+    }
+
+    QSet<QString> valueNames;
+    for (int i = 0; i < option.count(); i++) {
+        valueNames.insert(option.name(i));
+    }
+
+    if (valueNames.count() < option.count()) {
+        m_errorString = QObject::tr("Option %1 has duplicate value names").arg(name);
         return false;
     }
 
@@ -94,6 +106,11 @@ QString Options::defaultOption() const
 void Options::setDefaultOption(const QString &name)
 {
     m_defaultOption = name;
+}
+
+QString Options::errorString() const
+{
+    return (!m_errorString.isEmpty()) ? m_errorString : QObject::tr("No error");
 }
 
 bool stringToBool(bool *ok, const QString &s)
@@ -136,6 +153,8 @@ bool Options::parse(const QStringList &lst)
     QVariantMap multiValue;
     QVariantList list;
 
+    m_errorString.clear();
+
     while (++argi < arguments.count()) {
         QString arg = arguments[argi];
         QVariant value;
@@ -149,8 +168,7 @@ bool Options::parse(const QStringList &lst)
                 if (argRead >= opt.count()) {
                     QString name = opt.name();
                     if (m_values.contains(name)) {
-                        qWarning() << "QOptions::parse:"
-                                   << "Redeclaration of option" << name;
+                        m_errorString = QObject::tr("Redeclaration of option %1").arg(name);
                         return false;
                     }
                     m_values.insert(opt.name(), opt.d->single ? singleValue : QVariant(multiValue));
@@ -159,8 +177,7 @@ bool Options::parse(const QStringList &lst)
                     list.clear();
                     opt = nameToOption.value(m_defaultOption, Option());
                 } else {
-                    qWarning() << "QOptions::parse:"
-                               << "Not enough arguments for option" << opt.name();
+                    m_errorString = QObject::tr("Not enough arguments for option %1").arg(opt.name());
                     return false;
                 }
             }
@@ -168,7 +185,7 @@ bool Options::parse(const QStringList &lst)
             arg = arg.mid(2);
 
             if (!nameToOption.contains(arg)) {
-                qWarning() << "QOptions::parse:" << "unknown option" << arg;
+                m_errorString = QObject::tr("Unknown option %1").arg(arg);
                 return false;
             }
 
@@ -187,8 +204,7 @@ bool Options::parse(const QStringList &lst)
         }
 
         if (!opt.multiple() && opt.count() < argRead + 1) {
-            qWarning() << "QOptions::parse:"
-                       << "Too many arguments for option" << opt.name() << opt.multiple();
+            m_errorString = QObject::tr("Too many arguments for option %1").arg(opt.name());
             return false;
         }
         bool ok;
@@ -212,13 +228,20 @@ bool Options::parse(const QStringList &lst)
             value = arg; ok = true;
             break;
         default:
-            qWarning() << "Unknown type" << opt.type(argRead);
+            QVariant::Type variantType = QVariant::Type(opt.type(argRead));
+
+            if (variantType == QVariant::Invalid)
+                m_errorString = QObject::tr("Unknown type");
+            else
+                m_errorString = QObject::tr("Unsupported type %1").
+                        arg(QVariant::typeToName(variantType));
+
             return false;
         }
         if (!ok) {
-            qWarning() << "QOptions::parse:"
-                       << "Type mismatch for argument" << arg << ": expected"
-                       << QVariant::typeToName((QVariant::Type)opt.type(argRead));
+            m_errorString = QObject::tr("Type mismatch for argument %1 (expected %2)").
+                    arg(arg).
+                    arg(QVariant::typeToName((QVariant::Type)opt.type(argRead)));
             return false;
         }
 
@@ -242,8 +265,7 @@ bool Options::parse(const QStringList &lst)
         if (!opt.multiple() && argRead == opt.count() - 1) {
             QString name = opt.name();
             if (m_values.contains(name)) {
-                qWarning() << "QOptions::parse:"
-                           << "Redeclaration of option" << name;
+                m_errorString = QObject::tr("Redeclaration of option %1").arg(name);
                 return false;
             }
             m_values.insert(opt.name(), opt.d->single ? singleValue : QVariant(multiValue));
@@ -260,8 +282,7 @@ bool Options::parse(const QStringList &lst)
     if ( (opt.multiple() && argRead >= opt.count()-1) || (!opt.multiple() && argRead == opt.count()) ) {
         QString name = opt.name();
         if (m_values.contains(name)) {
-            qWarning() << "QOptions::parse:"
-                       << "Redeclaration of option" << name;
+            m_errorString = QObject::tr("Redeclaration of option %1").arg(name);
             return false;
         }
         m_values.insert(opt.name(), opt.d->single ? singleValue : QVariant(multiValue));
@@ -269,8 +290,7 @@ bool Options::parse(const QStringList &lst)
         multiValue.clear();
         list.clear();
     } else {
-        qWarning() << "QOptions::parse:"
-                   << "Not enough arguments for option" << opt.name();
+        m_errorString = QObject::tr("Not enough arguments for option %1").arg(opt.name());
         return false;
     }
 
@@ -361,11 +381,6 @@ void Option::setMultiple(bool b)
 
 void Option::addValue(Options::Type type, const QString &name)
 {
-    for (int i = 0; i < d->values.size(); i++) {
-        if (d->values[i].second == name)
-            return;
-    }
-
     d->values.append(QPair<Options::Type, QString>(type, name));
 }
 
