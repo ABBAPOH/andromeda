@@ -45,6 +45,8 @@ public:
     QVector<PluginSpecFormatHandler*> formatHandlers;
 
     Options opts;
+
+    QStringList defaultPlugins;
 };
 
 } // namespace ExtensionSystem
