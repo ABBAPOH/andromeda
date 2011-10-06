@@ -324,17 +324,6 @@ PluginSpec::~PluginSpec()
 }
 
 /*!
-    \fn PluginSpec::PluginSpec(const QString & path)
-    \internal
-    Constructs PluginSpec using data received from file located at \a path.
-*/
-PluginSpec::PluginSpec(const QString & path) :
-    d_ptr(new PluginSpecPrivate(this))
-{
-    read(path);
-}
-
-/*!
     \fn QString PluginSpec::name() const
     \brief Returns name of the plugin.
     Name and version are used to resolve dependencies.
@@ -457,6 +446,15 @@ QString PluginSpec::libraryPath() const
 }
 
 /*!
+    \fn bool PluginSpec::loaded() const
+    \brief Returns if plugin is loaded.
+*/
+bool PluginSpec::loaded() const
+{
+    return d_func()->loaded;
+}
+
+/*!
     \fn void PluginSpec::load()
     \brief Loads plugin into memory and initialises it.
 */
@@ -507,13 +505,9 @@ void PluginSpec::setLoaded(bool yes)
         unload();
 }
 
-/*!
-    \fn bool PluginSpec::loaded() const
-    \brief Returns if plugin is loaded.
-*/
-bool PluginSpec::loaded() const
+bool PluginSpec::loadOnStartup() const
 {
-    return d_func()->loaded;
+    return d_func()->loadOnStartup;
 }
 
 void PluginSpec::setLoadOnStartup(bool yes)
@@ -525,11 +519,6 @@ void PluginSpec::setLoadOnStartup(bool yes)
 
     d->loadOnStartup = yes;
     emit loadOnStartupChanged(yes);
-}
-
-bool PluginSpec::loadOnStartup() const
-{
-    return d_func()->loadOnStartup;
 }
 
 bool PluginSpec::canBeUnloaded() const

@@ -183,6 +183,11 @@ PluginSpec *PluginManager::plugin(const QString &name) const
     return 0;
 }
 
+QStringList PluginManager::specErrors() const
+{
+    return d_func()->specErrors.values();
+}
+
 void PluginManager::updateDirectory(const QString &dirPath)
 {
     Q_D(PluginManager);
@@ -265,13 +270,17 @@ QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
         if (!pathToSpec.contains(specFile)) {
 
             PluginSpec *spec = new PluginSpec();
-            pathToSpec.insert(specFile, spec);
-
             if (!spec->read(specFile)) {
-                invalidSpecs.append(spec);
+                specErrors.insert(specFile,
+                                  QObject::tr("Failed to read spec file %1 : '%2'").
+                                  arg(specFile).
+                                  arg(spec->errorString()));
+//                invalidSpecs.append(spec);
+                delete spec;
                 continue;
             }
 
+            pathToSpec.insert(specFile, spec);
             pluginSpecs.append(spec);
             result.append(spec);
         }
@@ -301,11 +310,6 @@ void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
     foreach (PluginSpec *spec, specsToBeEnabled) {
         if (spec->loadOnStartup()) {
             spec->load();
-            if (spec->hasError()) {
-                // TODO: handle ?
-//                pluginSpecs.removeOne(spec);
-//                invalidSpecs.append(spec);
-            }
         }
     }
 }
