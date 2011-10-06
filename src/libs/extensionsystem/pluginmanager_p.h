@@ -46,6 +46,7 @@ public:
 
     Options opts;
 
+    QStringList arguments;
     QStringList defaultPlugins;
 };
 

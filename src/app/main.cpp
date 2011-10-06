@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     PluginManager manager;
     manager.setPluginsFolder(QLatin1String("andromeda"));
     manager.setDefaultPlugins(QStringList() << QLatin1String("Core Plugin"));
+    manager.setArguments(app.arguments());
     manager.loadPlugins();
 
     PluginView view;
