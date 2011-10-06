@@ -4,6 +4,8 @@
 #include "qobjectpool.h"
 #include "pluginspec.h"
 
+#include <QtCore/QStringList>
+
 namespace ExtensionSystem {
 
 class PluginManagerPrivate;
@@ -14,12 +16,16 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_DISABLE_COPY(PluginManager)
     Q_PROPERTY(bool loaded READ loaded)
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
+    Q_PROPERTY(QStringList defaultPlugins READ defaultPlugins WRITE setDefaultPlugins)
 
 public:
     explicit PluginManager(QObject *parent = 0);
     ~PluginManager();
 
     static PluginManager *instance();
+
+    QStringList defaultPlugins() const;
+    void setDefaultPlugins(const QStringList &plugins);
 
     bool loaded();
 

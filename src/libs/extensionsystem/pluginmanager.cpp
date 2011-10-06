@@ -111,6 +111,16 @@ void PluginManager::unloadPlugins()
     emit pluginsUnloaded();
 }
 
+QStringList PluginManager::defaultPlugins() const
+{
+    return d_func()->defaultPlugins;
+}
+
+void PluginManager::setDefaultPlugins(const QStringList &plugins)
+{
+    d_func()->defaultPlugins = plugins;
+}
+
 QString PluginManager::pluginsFolder() const
 {
     return d_func()->pluginsFolder;
