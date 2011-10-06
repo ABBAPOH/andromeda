@@ -7,7 +7,7 @@ WebViewTest::WebViewTest()
 {
 }
 
-bool WebViewTest::initialize()
+bool WebViewTest::initialize(const QVariantMap &)
 {
     qDebug("WebViewTest::initialize");
     QWebView * view = new QWebView();

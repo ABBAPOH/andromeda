@@ -4,6 +4,10 @@
 #include "extensionsystem_global.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QMap>
+
+class QVariant;
+typedef QMap<QString, QVariant> QVariantMap;
 
 namespace ExtensionSystem {
 
@@ -18,7 +22,7 @@ public:
     IPlugin();
     virtual ~IPlugin();
 
-    virtual bool initialize() = 0;
+    virtual bool initialize(const QVariantMap &options) = 0;
     virtual void shutdown() {}
 
 protected:
