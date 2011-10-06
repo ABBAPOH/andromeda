@@ -38,11 +38,18 @@ public:
     Options &options() { return opts; }
     QVariantMap options(const QString &name);
 
+    void clearError();
+    void raiseError(const QString &message);
+
 public:
     QFileSystemWatcher *watcher;
     int updateTimer;
 
     QString pluginsFolder;
+
+    bool hasError;
+    QString errorString;
+
     bool loaded;
     QList<PluginSpec *> pluginSpecs; // contains all specs
 
