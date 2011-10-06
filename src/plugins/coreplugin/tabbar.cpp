@@ -66,8 +66,15 @@ void TabBar::setSwitchTimeout(int milliseconds)
     m_switchTimeout = milliseconds;
 }
 
-/*!\reimp
- */
+void TabBar::changeTab()
+{
+    setCurrentIndex(m_tabIndex);
+    m_timer->stop();
+}
+
+/*!
+    \reimp
+*/
 void TabBar::dragEnterEvent(QDragEnterEvent *event)
 {
     if (m_switchTabsOnDrag)
@@ -76,8 +83,9 @@ void TabBar::dragEnterEvent(QDragEnterEvent *event)
         event->ignore();
 }
 
-/*!\reimp
- */
+/*!
+    \reimp
+*/
 void TabBar::dragMoveEvent(QDragMoveEvent *event)
 {
     event->ignore();
@@ -89,15 +97,19 @@ void TabBar::dragMoveEvent(QDragMoveEvent *event)
     }
 }
 
-/*!\reimp
- */
+/*!
+    \reimp
+*/
 void TabBar::dragLeaveEvent(QDragLeaveEvent * event)
 {
     m_timer->stop();
 }
 
-void TabBar::changeTab()
+/*!
+    \reimp
+*/
+QSize TabBar::tabSizeHint(int index) const
 {
-    setCurrentIndex(m_tabIndex);
-    m_timer->stop();
+    QSize s = QTabBar::tabSizeHint(index);
+    return QSize(200, s.height());
 }

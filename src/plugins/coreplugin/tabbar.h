@@ -33,6 +33,8 @@ protected:
      void dragMoveEvent(QDragMoveEvent *event);
      void dragLeaveEvent(QDragLeaveEvent * event);
 
+     QSize tabSizeHint(int index) const;
+
 private:
      int m_tabIndex;
      QTimer * m_timer;
