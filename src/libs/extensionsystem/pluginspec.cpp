@@ -271,10 +271,9 @@ QString PluginSpecPrivate::getLibraryPath(const QString &path)
 
 void PluginSpecPrivate::setError(const QString &message)
 {
-    qWarning() << "PluginSpec error:" << message;
     hasError = true;
     errorString = message;
-    emit q_ptr->error(message);
+    emit q_func()->error(message);
 }
 
 /*!
@@ -541,21 +540,21 @@ bool PluginSpec::canBeUnloaded() const
 }
 
 /*!
-    \fn QString PluginSpec::errorString()
-    \brief Returns message of last occured error.
-*/
-QString PluginSpec::errorString() const
-{
-    return d_func()->errorString;
-}
-
-/*!
     \fn bool PluginSpec::hasError()
     \brief Returns true if error occured.
 */
 bool PluginSpec::hasError() const
 {
     return d_func()->hasError;
+}
+
+/*!
+    \fn QString PluginSpec::errorString()
+    \brief Returns message of last occured error.
+*/
+QString PluginSpec::errorString() const
+{
+    return d_func()->errorString;
 }
 
 /*!

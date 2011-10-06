@@ -85,8 +85,8 @@ public:
     bool loadOnStartup() const;
     bool canBeUnloaded() const;
 
-    QString errorString() const;
     bool hasError() const;
+    QString errorString() const;
 
     IPlugin *plugin() const;
 
