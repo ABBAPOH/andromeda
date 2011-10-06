@@ -23,7 +23,7 @@ PluginManager *PluginManager::instance()
     \brief Creates PluginManager with given \a parent.
 */
 PluginManager::PluginManager(QObject *parent) :
-    QObjectPool(*new PluginManagerPrivate, parent)
+    QObjectPool(*new PluginManagerPrivate(this), parent)
 {
     Q_D(PluginManager);
     Q_ASSERT(!m_instance);
@@ -220,6 +220,11 @@ bool PluginManagerPrivate::load()
         return false;
     }
 
+    if (!opts.parse(arguments)) {
+        qWarning() << "PluginManager::load:" << "Error parsing options";
+        return false;
+    }
+
     // TODO: error about not initialized specs
     // enables new plugins
     enableSpecs(newSpecs);
@@ -284,4 +289,16 @@ void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
             spec->load();
         }
     }
+}
+
+QVariantMap PluginManagerPrivate::options(const QString &name)
+{
+    QVariantMap result;
+
+    PluginSpec *plugin = q_func()->plugin(name);
+    foreach (const Option &option, plugin->d_func()->options) {
+        QString name = option.name();
+        result.insert(name, opts.values().value(name));
+    }
+    return result;
 }
