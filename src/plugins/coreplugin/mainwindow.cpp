@@ -188,6 +188,9 @@ void MainWindowPrivate::onChanged()
 
     int index = tabWidget->indexOf(tab);
     tabWidget->setTabText(index, tab->title());
+#ifndef Q_OS_MAC
+    tabWidget->setTabIcon(index, tab->icon());
+#endif
 
     q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
     q->setWindowIcon(tab->icon());
