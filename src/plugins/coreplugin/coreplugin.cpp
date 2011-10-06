@@ -31,8 +31,10 @@ CorePluginImpl::~CorePluginImpl()
 {
 }
 
-bool CorePluginImpl::initialize()
+#include <QDebug>
+bool CorePluginImpl::initialize(const QVariantMap &options)
 {
+    urls = options.value("files").toStringList();
     addObject(new Core);
 
     Settings *settings = new Settings;
@@ -89,6 +91,14 @@ void CorePluginImpl::handleMessage(const QString &message)
 
 void CorePluginImpl::restoreSession()
 {
+    if (!urls.isEmpty()) {
+        MainWindow *window = new MainWindow();
+        foreach (const QString &url, urls)
+            window->openNewTab(url);
+        window->show();
+        return;
+    }
+
     QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
     int windowCount = s.beginReadArray(QLatin1String("windows"));
 

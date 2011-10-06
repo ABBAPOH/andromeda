@@ -9,7 +9,7 @@ class WebViewPluginImpl : public ExtensionSystem::IPlugin
 public:
     WebViewPluginImpl();
 
-    bool initialize();
+    bool initialize(const QVariantMap &);
     void shutdown();
 };
 

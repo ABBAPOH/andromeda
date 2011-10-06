@@ -20,7 +20,7 @@ WebViewPluginImpl::WebViewPluginImpl() :
 {
 }
 
-bool WebViewPluginImpl::initialize()
+bool WebViewPluginImpl::initialize(const QVariantMap &)
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new WebViewSettingsPage);

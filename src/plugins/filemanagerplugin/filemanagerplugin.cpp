@@ -33,7 +33,7 @@ FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
 {
 }
 
-bool FileManagerPluginImpl::initialize()
+bool FileManagerPluginImpl::initialize(const QVariantMap &options)
 {
     FileManagerEditorFactory *f = new FileManagerEditorFactory(this);
     Core::instance()->editorManager()->addFactory(f);

@@ -13,7 +13,7 @@ public:
     CorePluginImpl();
     ~CorePluginImpl();
 
-    bool initialize();
+    bool initialize(const QVariantMap &);
     void shutdown();
 
 public slots:
@@ -39,6 +39,9 @@ private:
     void createGoToMenu();
     void createToolsMenu();
     void createHelpMenu();
+
+private:
+    QStringList urls;
 };
 
 #endif // COREPLUGIN_H
