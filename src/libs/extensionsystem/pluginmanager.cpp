@@ -51,6 +51,16 @@ PluginManager::~PluginManager()
     qDeleteAll(d_func()->formatHandlers);
 }
 
+QStringList PluginManager::arguments() const
+{
+    return d_func()->arguments;
+}
+
+void PluginManager::setArguments(const QStringList &arguments)
+{
+     d_func()->arguments = arguments;
+}
+
 /*!
     \fn void PluginManager::loadPlugins()
     \brief Loads all plugins from plugins folder.

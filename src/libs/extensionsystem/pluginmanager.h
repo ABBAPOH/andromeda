@@ -15,14 +15,18 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_DECLARE_PRIVATE(PluginManager)
     Q_DISABLE_COPY(PluginManager)
     Q_PROPERTY(bool loaded READ loaded)
-    Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
+    Q_PROPERTY(QStringList arguments READ arguments WRITE setArguments)
     Q_PROPERTY(QStringList defaultPlugins READ defaultPlugins WRITE setDefaultPlugins)
+    Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
 
 public:
     explicit PluginManager(QObject *parent = 0);
     ~PluginManager();
 
     static PluginManager *instance();
+
+    QStringList arguments() const;
+    void setArguments(const QStringList &arguments);
 
     QStringList defaultPlugins() const;
     void setDefaultPlugins(const QStringList &plugins);
