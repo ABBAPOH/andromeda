@@ -6,6 +6,7 @@ Extension System:
 - Extendable description/licence in plugin info
 - Do not use focus on widgets in plugin info
 - Restart plugins when dependencies are resolved
+- Add help for Options
 
 Guisystem:
 - Implement different options (ie hidden by default, etc)
