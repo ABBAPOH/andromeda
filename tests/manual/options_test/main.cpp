@@ -47,15 +47,15 @@ int main(int argc, char *argv[])
     optFiles.setSingle(true);
     opts.addOption(optFiles);
 
-    qDebug() << "parse2" << opts.parse(args2); qDebug(); opts.clear();
-    qDebug() << "parse3" << opts.parse(args3); qDebug(); opts.clear();
-    qDebug() << "parse4" << opts.parse(args4); qDebug(); opts.clear();
-    qDebug() << "parse5" << opts.parse(args5); qDebug(); opts.clear();
-    qDebug() << "parse6" << opts.parse(args6); qDebug(); opts.clear();
-    qDebug() << "parse7" << opts.parse(args7); qDebug(); opts.clear();
-    qDebug() << "parse8" << opts.parse(args8); qDebug(); opts.clear();
-    qDebug() << "parse9" << opts.parse(args9); qDebug(); opts.clear();
-    qDebug() << "parse1" << opts.parse(args1); qDebug(); /*opts.clear();*/
+    qDebug() << "parse2" << opts.parse(args2); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse3" << opts.parse(args3); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse4" << opts.parse(args4); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse5" << opts.parse(args5); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse6" << opts.parse(args6); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse7" << opts.parse(args7); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse8" << opts.parse(args8); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse9" << opts.parse(args9); qDebug() << opts.errorString(); qDebug(); opts.clear();
+    qDebug() << "parse1" << opts.parse(args1); qDebug() << opts.errorString(); qDebug(); /*opts.clear();*/
 
     qDebug() << opts.values();
 

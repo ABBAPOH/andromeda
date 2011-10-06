@@ -37,6 +37,8 @@ public:
     QString defaultOption() const;
     void setDefaultOption(const QString &name);
 
+    QString errorString() const;
+
     bool parse(const QStringList &arguments);
 
     QVariantMap values() const;
@@ -46,6 +48,7 @@ private:
     QMap<QChar, QString> shortToName;
 
     QString m_defaultOption;
+    QString m_errorString;
 
     QVariantMap m_values;
 };
