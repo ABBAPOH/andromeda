@@ -125,6 +125,7 @@ QChar stringToChar(bool *ok, const QString &s)
     return QChar();
 }
 
+// FIXME: default&multiple option with empty argument list
 bool Options::parse(const QStringList &lst)
 {
     QStringList arguments = lst;
@@ -256,9 +257,7 @@ bool Options::parse(const QStringList &lst)
         argRead++;
     }
 
-    qDebug("end while");
-
-    if (argRead >= opt.count() && (opt.multiple() || argRead == opt.count())) {
+    if ( (opt.multiple() && argRead >= opt.count()-1) || (!opt.multiple() && argRead == opt.count()) ) {
         QString name = opt.name();
         if (m_values.contains(name)) {
             qWarning() << "QOptions::parse:"
