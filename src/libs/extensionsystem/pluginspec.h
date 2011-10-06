@@ -111,6 +111,8 @@ signals:
 
 protected:
     PluginSpecPrivate *d_ptr;
+
+    friend class PluginManagerPrivate;
 };
 
 typedef QList<PluginSpec*> PluginSpecList;
