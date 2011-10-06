@@ -308,7 +308,7 @@ void PluginManagerPrivate::fileChanged(const QString &specPath)
 void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
 {
     foreach (PluginSpec *spec, specsToBeEnabled) {
-        if (spec->loadOnStartup()) {
+        if (spec->loadOnStartup() || spec->d_func()->isDefault) {
             spec->load();
         }
     }

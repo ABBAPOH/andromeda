@@ -83,6 +83,10 @@ Qt::ItemFlags PluginViewModel::flags(const QModelIndex &index) const
     Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
     if (index.column() == 1 || index.column() == 2) {
         flags |= /*Qt::ItemIsEditable |*/ Qt::ItemIsUserCheckable;
+        Node *node = static_cast<Node*>(index.internalPointer());
+        if (!node->isCategory && !node->spec->canBeUnloaded()) {
+            flags &= ~Qt::ItemIsEnabled;
+        }
     }
     return flags;
 }
