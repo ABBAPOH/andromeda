@@ -14,6 +14,7 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_OBJECT
     Q_DECLARE_PRIVATE(PluginManager)
     Q_DISABLE_COPY(PluginManager)
+
     Q_PROPERTY(bool hasError READ hasError)
     Q_PROPERTY(QString errorString READ errorString)
     Q_PROPERTY(bool loaded READ loaded)
@@ -43,6 +44,8 @@ public:
 
     QList<PluginSpec *> plugins() const;
     PluginSpec *plugin(const QString &name) const;
+
+    QStringList specErrors() const;
 
 signals:
     void pluginsChanged();

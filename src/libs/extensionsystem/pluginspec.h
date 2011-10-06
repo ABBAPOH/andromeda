@@ -59,8 +59,6 @@ public:
     enum Format { XmlFormat, BinaryFormat };
 
     explicit PluginSpec(QObject *parent = 0);
-    explicit PluginSpec(const QString & path);
-//    explicit PluginSpec(QIODevice *device);
     ~PluginSpec();
 
     QString name() const;
@@ -82,7 +80,10 @@ public:
     QString libraryPath() const; // path to library
 
     bool loaded() const;
+
     bool loadOnStartup() const;
+    void setLoadOnStartup(bool yes);
+
     bool canBeUnloaded() const;
 
     bool hasError() const;
@@ -102,7 +103,6 @@ public slots:
     void load();
     void unload();
     void setLoaded(bool yes);
-    void setLoadOnStartup(bool yes);
 
 signals:
     void loadedChanged(bool loaded);

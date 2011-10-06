@@ -52,7 +52,7 @@ public:
 
     bool loaded;
     QList<PluginSpec *> pluginSpecs; // contains all specs
-    QList<PluginSpec *> invalidSpecs; // contains all specs
+    QMap<QString, QString> specErrors;
 
     QHash<QString, PluginSpec*> pathToSpec; // maps file to spec
     QStringList foldersToBeLoaded; // folders to be loaded on startup or after watcher event
