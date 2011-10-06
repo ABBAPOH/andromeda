@@ -31,7 +31,6 @@ CorePluginImpl::~CorePluginImpl()
 {
 }
 
-#include <QDebug>
 bool CorePluginImpl::initialize(const QVariantMap &options)
 {
     urls = options.value("files").toStringList();
