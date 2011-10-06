@@ -56,6 +56,7 @@ public:
     static int compareVersion(const Version &version1, const Version &version2);
     QString getLibraryPath(const QString &path);
     void setError(const QString &message);
+    void clearError() { errorString.clear(); hasError = false; }
 };
 
 QDataStream & operator>>(QDataStream &s, PluginSpecPrivate &pluginSpec);
