@@ -24,6 +24,7 @@ WebViewEditor::~WebViewEditor()
 bool WebViewEditor::open(const QUrl &url)
 {
     m_webView->setUrl(url);
+    emit currentUrlChanged(url);
     return true;
 }
 
