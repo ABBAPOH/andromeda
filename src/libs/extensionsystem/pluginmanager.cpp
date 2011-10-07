@@ -132,14 +132,14 @@ void PluginManager::setDefaultPlugins(const QStringList &plugins)
     d_func()->defaultPlugins = plugins;
 }
 
-bool PluginManager::hasError() const
+bool PluginManager::hasErrors() const
 {
-    return d_func()->hasError;
+    return d_func()->hasErrors;
 }
 
-QString PluginManager::errorString() const
+QStringList PluginManager::errors() const
 {
-    return d_func()->errorString;
+    return d_func()->errors;
 }
 
 QString PluginManager::pluginsFolder() const
@@ -181,11 +181,6 @@ PluginSpec *PluginManager::plugin(const QString &name) const
             return d->pluginSpecs[i];
     }
     return 0;
-}
-
-QStringList PluginManager::specErrors() const
-{
-    return d_func()->specErrors.values();
 }
 
 void PluginManager::updateDirectory(const QString &dirPath)
@@ -234,13 +229,13 @@ bool PluginManagerPrivate::load()
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
 
     if (pluginSpecs.isEmpty()) {
-        setErrorString(QObject::tr("No plugins found in (%1)").
+        addErrorString(QObject::tr("No plugins found in (%1)").
                        arg(folders.join(QLatin1String(", "))));
         return false;
     }
 
     if (!opts.parse(arguments)) {
-        setErrorString(QObject::tr("Error parsing options : '%1'").arg(opts.errorString()));
+        addErrorString(QObject::tr("Error parsing options : '%1'").arg(opts.errorString()));
         return false;
     }
 
@@ -271,11 +266,9 @@ QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
 
             PluginSpec *spec = new PluginSpec();
             if (!spec->read(specFile)) {
-                specErrors.insert(specFile,
-                                  QObject::tr("Failed to read spec file %1 : '%2'").
-                                  arg(specFile).
-                                  arg(spec->errorString()));
-//                invalidSpecs.append(spec);
+                addErrorString(QObject::tr("Failed to read spec file %1 : '%2'").
+                               arg(specFile).
+                               arg(spec->errorString()));
                 delete spec;
                 continue;
             }
@@ -328,13 +321,13 @@ QVariantMap PluginManagerPrivate::options(const QString &name)
 
 void PluginManagerPrivate::clearError()
 {
-    hasError = false;
-    errorString = QObject::tr("No error");
+    hasErrors = false;
+    errors.clear();
 }
 
-void PluginManagerPrivate::setErrorString(const QString &message)
+void PluginManagerPrivate::addErrorString(const QString &message)
 {
-    hasError = true;
-    errorString = message;
+    hasErrors = true;
+    errors.append(message);
     emit q_func()->error(message);
 }

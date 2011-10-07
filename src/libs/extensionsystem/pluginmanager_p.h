@@ -39,7 +39,7 @@ public:
     QVariantMap options(const QString &name);
 
     void clearError();
-    void setErrorString(const QString &message);
+    void addErrorString(const QString &message);
 
 public:
     QFileSystemWatcher *watcher;
@@ -47,12 +47,11 @@ public:
 
     QString pluginsFolder;
 
-    bool hasError;
-    QString errorString;
+    bool hasErrors;
+    QStringList errors;
 
     bool loaded;
     QList<PluginSpec *> pluginSpecs; // contains all specs
-    QMap<QString, QString> specErrors;
 
     QHash<QString, PluginSpec*> pathToSpec; // maps file to spec
     QStringList foldersToBeLoaded; // folders to be loaded on startup or after watcher event
