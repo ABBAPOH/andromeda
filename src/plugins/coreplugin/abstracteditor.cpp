@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 
 using namespace CorePlugin;
 
@@ -103,7 +104,7 @@ void AbstractEditor::setFactory(AbstractEditorFactory *factory)
 */
 void AbstractEditor::restoreSession(QSettings &s)
 {
-    open(s.value(QLatin1String("currentPath")).toString());
+    open(s.value(QLatin1String("currentPath")).toUrl());
 }
 
 /*!
@@ -113,7 +114,7 @@ void AbstractEditor::restoreSession(QSettings &s)
 */
 void AbstractEditor::saveSession(QSettings &s)
 {
-    s.setValue(QLatin1String("currentPath"), currentPath());
+    s.setValue(QLatin1String("currentPath"), currentUrl());
 }
 
 /*!

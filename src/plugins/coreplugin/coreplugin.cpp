@@ -3,6 +3,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
+#include <QtCore/QUrl>
 #include <QtGui/QApplication>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
@@ -93,7 +94,7 @@ void CorePluginImpl::restoreSession()
     if (!urls.isEmpty()) {
         MainWindow *window = new MainWindow();
         foreach (const QString &url, urls)
-            window->openNewTab(url);
+            window->openNewTab(QUrl::fromUserInput(url));
         window->show();
         return;
     }

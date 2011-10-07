@@ -3,6 +3,7 @@
 
 #include "coreplugin_global.h"
 
+#include <QtCore/QUrl>
 #include <QtGui/QWidget>
 
 #include "history.h"
@@ -20,13 +21,13 @@ class COREPLUGIN_EXPORT Tab : public QWidget
     Q_DECLARE_PRIVATE(Tab)
     Q_DISABLE_COPY(Tab)
 
-    Q_PROPERTY(QString currentPath READ currentPath WRITE open NOTIFY currentPathChanged)
+    Q_PROPERTY(QUrl currentUrl READ currentUrl WRITE open NOTIFY currentUrlChanged)
 
 public:
     explicit Tab(QWidget *parent = 0);
     ~Tab();
 
-    QString currentPath() const;
+    QUrl currentUrl() const;
     QIcon icon() const;
     QString title() const;
     QString windowTitle() const;
@@ -38,17 +39,17 @@ public:
     void saveSession(QSettings &s);
 
 public slots:
-    void open(const QString &path);
+    void open(const QUrl &url);
 
     void up();
 
 signals:
-    void currentPathChanged(const QString & currentPath);
+    void currentUrlChanged(const QUrl &url);
     void changed();
 
 private slots:
     void onIndexChanged(int index);
-    void onPathChanged(const QString &path);
+    void onUrlChanged(const QUrl &url);
 
 protected:
 //    void resizeEvent(QResizeEvent *);

@@ -26,9 +26,9 @@ public:
     bool create() { return false; }
     void close() {}
 
-    bool open(const QString &path);
+    bool open(const QUrl &url);
 
-    QString currentPath() const;
+    QUrl currentUrl() const;
 
     QWidget *widget() const { return m_webView; }
     QToolBar *toolBar() const { return 0; }

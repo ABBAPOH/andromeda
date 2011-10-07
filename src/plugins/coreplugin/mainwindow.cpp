@@ -26,7 +26,7 @@ using namespace GuiSystem;
 Tab * MainWindowPrivate::addTab(int *index)
 {
     Tab *tab = new Tab(tabWidget);
-    connect(tab, SIGNAL(currentPathChanged(QString)), SLOT(onPathChanged(QString)));
+    connect(tab, SIGNAL(currentUrlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
     connect(tab, SIGNAL(changed()), SLOT(onChanged()));
     int i = tabWidget->addTab(tab, "tab");
     if (index)
@@ -144,7 +144,7 @@ void MainWindowPrivate::setupUi()
 
     lineEdit = new EnteredLineEdit(q);
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
-    connect(lineEdit, SIGNAL(textEntered(QString)), q, SLOT(open(QString)));
+    connect(lineEdit, SIGNAL(textEntered(QString)), this, SLOT(onUserInput(QString)));
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.
@@ -161,12 +161,25 @@ void MainWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
-void MainWindowPrivate::onPathChanged(const QString &s)
+void MainWindowPrivate::onUserInput(const QString &userInput)
+{
+    q_func()->open(QUrl::fromUserInput(userInput));
+}
+
+static inline QString urlToUserOputput(const QUrl &url)
+{
+    if (url.scheme() == QLatin1String("file"))
+        return url.toLocalFile();
+    else
+        return url.toString();
+}
+
+void MainWindowPrivate::onUrlChanged(const QUrl &url)
 {
     Q_Q(MainWindow);
 
     if (sender() == q->currentTab())
-        lineEdit->setText(s);
+        lineEdit->setText(urlToUserOputput(url));
 }
 
 void MainWindowPrivate::onCurrentChanged(int index)
@@ -175,7 +188,7 @@ void MainWindowPrivate::onCurrentChanged(int index)
     if (!tab)
         return;
 
-    lineEdit->setText(tab->currentPath());
+    lineEdit->setText(urlToUserOputput(tab->currentUrl()));
 }
 
 void MainWindowPrivate::onChanged()
@@ -309,27 +322,27 @@ void MainWindow::up()
     currentTab()->up();
 }
 
-void MainWindow::open(const QString &path)
+void MainWindow::open(const QUrl &url)
 {
     Q_D(MainWindow);
 
     if (d->tabWidget->count() == 0)
-        openNewTab(path);
+        openNewTab(url);
     else
-        currentTab()->open(path);
+        currentTab()->open(url);
 }
 
-void MainWindow::openNewTab(const QString &path)
+void MainWindow::openNewTab(const QUrl &url)
 {
     Q_D(MainWindow);
 
     int index = -1;
     Tab *tab = d->addTab(&index);
-    tab->open(path);
+    tab->open(url);
     d->tabWidget->setCurrentIndex(index);
 }
 
-void MainWindow::openNewWindow(const QString &path)
+void MainWindow::openNewWindow(const QUrl &path)
 {
     MainWindow *window = new MainWindow();
     window->open(path);
@@ -338,12 +351,12 @@ void MainWindow::openNewWindow(const QString &path)
 
 void MainWindow::newTab()
 {
-    openNewTab(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    openNewTab(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
 }
 
 void MainWindow::newWindow()
 {
-    openNewWindow(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    openNewWindow(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
 }
 
 void MainWindow::closeTab(int index)

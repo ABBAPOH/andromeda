@@ -6,6 +6,7 @@
 #include <QtGui/QMainWindow>
 
 class QSettings;
+class QUrl;
 
 namespace CorePlugin {
 
@@ -38,9 +39,9 @@ public slots:
     void forward();
     void up();
 
-    void open(const QString &path);
-    void openNewTab(const QString &path);
-    static void openNewWindow(const QString &path);
+    void open(const QUrl &url);
+    void openNewTab(const QUrl &url);
+    static void openNewWindow(const QUrl &url);
 
     void newTab();
     static void newWindow();

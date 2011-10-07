@@ -8,6 +8,7 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
+#include <QtCore/QUrl>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QMenu>
 #include <QtGui/QFileIconProvider>
@@ -42,7 +43,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     m_widget->setDualPaneModeEnabled(enableDualPane);
     m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
     m_widget->setFocus();
-    connect(m_widget, SIGNAL(currentPathChanged(QString)), SIGNAL(currentPathChanged(QString)));
+    connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
     connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
     connect(m_widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
     connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
@@ -58,15 +59,15 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     createActions();
 }
 
-bool FileManagerEditor::open(const QString &path)
+bool FileManagerEditor::open(const QUrl &url)
 {
-    m_widget->setCurrentPath(path);
+    m_widget->setCurrentPath(url.toLocalFile());
     return true;
 }
 
-QString FileManagerEditor::currentPath() const
+QUrl FileManagerEditor::currentUrl() const
 {
-    return m_widget->currentPath();
+    return QUrl::fromLocalFile(m_widget->currentPath());
 }
 
 int FileManagerEditor::currentIndex() const
@@ -92,12 +93,12 @@ void FileManagerEditor::setCurrentIndex(int index)
 
 QIcon FileManagerEditor::icon() const
 {
-    return QFileIconProvider().icon(QFileInfo(currentPath()));
+    return QFileIconProvider().icon(QFileInfo(m_widget->currentPath()));
 }
 
 QString FileManagerPlugin::FileManagerEditor::title() const
 {
-    QString path = currentPath();
+    QString path = m_widget->currentPath();
     if (path.endsWith(QLatin1Char('/')))
         path = path.left(path.length() - 1);
 
@@ -140,9 +141,14 @@ void FileManagerEditor::resizeEvent(QResizeEvent *e)
     splitter->resize(e->size());
 }
 
+void FileManagerEditor::onCurrentPathChanged(const QString &path)
+{
+    emit currentUrlChanged(QUrl::fromLocalFile(path));
+}
+
 void FileManagerEditor::onOpenRequested(const QString &path)
 {
-    mainWindow()->open(path);
+    mainWindow()->open(QUrl::fromLocalFile(path));
 }
 
 void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)

@@ -20,9 +20,9 @@ public:
     explicit FileManagerEditor(QWidget *parent = 0);
 
     // from AbstractEditor
-    bool open(const QString &path);
+    bool open(const QUrl &url);
 
-    QString currentPath() const;
+    QUrl currentUrl() const;
 
     int currentIndex() const;
     void setCurrentIndex(int index);
@@ -38,6 +38,7 @@ protected:
     void resizeEvent(QResizeEvent *);
 
 private slots:
+    void onCurrentPathChanged(const QString &path);
     void onOpenRequested(const QString &path);
     void onCustomContextMenuRequested(const QPoint &pos);
     void setDualPaneModeEnabled(bool on);

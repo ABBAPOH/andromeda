@@ -7,6 +7,7 @@
 #include <QtGui/QWidget>
 
 class QSettings;
+class QUrl;
 
 namespace CorePlugin {
 
@@ -24,9 +25,9 @@ public:
 
     AbstractEditorFactory *factory() const;
 
-    virtual bool open(const QString &path) = 0;
+    virtual bool open(const QUrl &url) = 0;
 
-    virtual QString currentPath() const = 0;
+    virtual QUrl currentUrl() const = 0;
 
     virtual int currentIndex() const { return -1; }
     virtual void setCurrentIndex(int index) { Q_UNUSED(index); }
@@ -44,7 +45,7 @@ public:
     template<class T> static T *currentEditor() { return qobject_cast<T*>(currentEditor()); }
 
 signals:
-    void currentPathChanged(const QString &);
+    void currentUrlChanged(const QUrl &);
 
     void iconChanged(const QIcon &icon);
     void titleChanged(const QString &title);

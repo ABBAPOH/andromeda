@@ -21,15 +21,15 @@ WebViewEditor::~WebViewEditor()
     delete m_webView;
 }
 
-bool WebViewEditor::open(const QString &path)
+bool WebViewEditor::open(const QUrl &url)
 {
-    m_webView->setUrl(path);
+    m_webView->setUrl(url);
     return true;
 }
 
-QString WebViewPlugin::WebViewEditor::currentPath() const
+QUrl WebViewPlugin::WebViewEditor::currentUrl() const
 {
-    return m_webView->url().toString();
+    return m_webView->url();
 }
 
 void WebViewEditor::resizeEvent(QResizeEvent *e)
@@ -40,7 +40,7 @@ void WebViewEditor::resizeEvent(QResizeEvent *e)
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     m_webView->setUrl(url);
-    emit currentPathChanged(url.toString());
+    emit currentUrlChanged(url);
 }
 
 CorePlugin::AbstractEditor * WebViewPlugin::WebViewEditorFactory::createEditor(QWidget *parent)
