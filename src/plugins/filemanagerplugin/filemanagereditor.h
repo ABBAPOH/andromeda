@@ -43,6 +43,7 @@ private slots:
     void onCustomContextMenuRequested(const QPoint &pos);
     void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
+    void showLeftPanel(bool);
     void showFileInfo();
     void onSelectedPathsChanged();
 
@@ -72,6 +73,7 @@ private:
     QAction *selectAllAction;
 
     QAction *showHiddenFilesAction;
+    QAction *showLeftPanelAction;
 
     QSignalMapper *viewModeMapper;
 
