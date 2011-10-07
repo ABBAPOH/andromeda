@@ -2,6 +2,8 @@ add_subdirectory( plugineditor )
 
 set( GLOBAL_HEADERS ExtensionSystem extensionsystem_global.h)
 set( HEADERS
+    errorsdialog.h
+    fullpluginview.h
     iplugin.h
     mutablepluginspec.h
     options.h
@@ -14,11 +16,12 @@ set( HEADERS
     pluginview.h
     pluginviewmodel.h
     pluginviewmodel_p.h
-    fullpluginview.h
     qobjectpool.h
     qobjectpool_p.h
    )
 set( SOURCES
+    errorsdialog.cpp
+    fullpluginview.cpp
     iplugin.cpp
     mutablepluginspec.cpp
     options.cpp
@@ -28,7 +31,6 @@ set( SOURCES
     pluginspecformathandler.cpp
     pluginview.cpp
     pluginviewmodel.cpp
-    fullpluginview.cpp
     qobjectpool.cpp
    )
 set( FORMS

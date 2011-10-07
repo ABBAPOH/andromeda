@@ -6,6 +6,7 @@
 
 #include <pluginmanager.h>
 #include <pluginview.h>
+#include <errorsdialog.h>
 
 using namespace ExtensionSystem;
 
@@ -60,6 +61,16 @@ int main(int argc, char *argv[])
     manager.setDefaultPlugins(QStringList() << QLatin1String("Core Plugin"));
     manager.setArguments(app.arguments());
     manager.loadPlugins();
+
+    if (manager.hasErrors()) {
+        ErrorsDialog dlg;
+        dlg.setMessage(QObject::tr("Errors occured during loading plugins."));
+        dlg.setErrors(manager.errors());
+        dlg.exec();
+    }
+
+    if (manager.plugins().isEmpty())
+        return 1;
 
     PluginView view;
     manager.addObject(&view, QLatin1String("pluginView"));
