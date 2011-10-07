@@ -168,6 +168,7 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
         viewModeMenu->addAction(iconModeAction);
         viewModeMenu->addAction(columnModeAction);
         viewModeMenu->addAction(treeModeAction);
+        viewModeMenu->addAction(coverFlowModeAction);
         viewModeMenu->addAction(dualPaneModeAction);
     } else {
         menu->addAction(openAction);
