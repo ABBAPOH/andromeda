@@ -84,7 +84,8 @@ public:
     void setupUi();
 
 public slots:
-    void onPathChanged(const QString &);
+    void onUserInput(const QString &);
+    void onUrlChanged(const QUrl &);
     void onCurrentChanged(int);
     void onChanged();
 };

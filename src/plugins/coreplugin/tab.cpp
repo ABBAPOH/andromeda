@@ -22,7 +22,7 @@ public:
     TabPrivate(Tab *qq) : q_ptr(qq) {}
 
     QStackedLayout *layout;
-    QString currentPath;
+    QUrl currentUrl;
     AbstractEditor *editor;
     QHash<QString, AbstractEditor *> editorHash;
     History *history;
@@ -40,13 +40,15 @@ protected:
 
 using namespace CorePlugin;
 
-QString getMimeType(const QString &path)
+QString getMimeType(const QUrl &url)
 {
-    QFileInfo info(path);
-    if (info.isDir())
-        return QLatin1String("inode/directory");
-    if (path.startsWith("http://"))
+    if (url.scheme() == QLatin1String("file")) {
+        QFileInfo info(url.toLocalFile());
+        if (info.isDir())
+            return QLatin1String("inode/directory");
+    } else if(url.scheme() == QLatin1String("http")) {
         return QLatin1String("text/html");
+    }
     return QString();
 }
 
@@ -59,8 +61,8 @@ void TabPrivate::setEditor(AbstractEditor *e)
     }
 
     editor = e;
-    QObject::connect(editor, SIGNAL(currentPathChanged(QString)),
-                     q, SLOT(onPathChanged(QString)));
+    QObject::connect(editor, SIGNAL(currentUrlChanged(QUrl)),
+                     q, SLOT(onUrlChanged(QUrl)));
     QObject::connect(editor, SIGNAL(iconChanged(QIcon)), q, SIGNAL(changed()));
     QObject::connect(editor, SIGNAL(titleChanged(QString)), q, SIGNAL(changed()));
     QObject::connect(editor, SIGNAL(windowTitleChanged(QString)), q, SIGNAL(changed()));
@@ -102,9 +104,9 @@ Tab::~Tab()
     delete d_ptr;
 }
 
-QString Tab::currentPath() const
+QUrl Tab::currentUrl() const
 {
-    return d_func()->currentPath;
+    return d_func()->currentUrl;
 }
 
 QIcon Tab::icon() const
@@ -168,14 +170,17 @@ void Tab::saveSession(QSettings &s)
     d->editor->saveSession(s);
 }
 
-void Tab::open(const QString &path)
+void Tab::open(const QUrl &url)
 {
     Q_D(Tab);
 
-    if (d->currentPath == path)
+    if (url.isEmpty())
         return;
 
-    QString mimeType = getMimeType(path);
+    if (d->currentUrl == url)
+        return;
+
+    QString mimeType = getMimeType(url);
     EditorManager *manager = Core::instance()->editorManager();
     AbstractEditorFactory *factory = manager->factory(mimeType);
     if (factory) {
@@ -188,21 +193,22 @@ void Tab::open(const QString &path)
             d->editorHash.insert(id, editor);
         }
         d->setEditor(editor);
-        editor->open(path);
+        editor->open(url);
     } else {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        QDesktopServices::openUrl(url);
         return;
     }
 
-    d->currentPath = path;
+    d->currentUrl = url;
 
-    emit currentPathChanged(d->currentPath);
+    emit currentUrlChanged(d->currentUrl);
     emit changed();
 }
 
 void Tab::up()
 {
-    QString path = currentPath();
+    QUrl url = currentUrl();
+    QString path = url.path();
     // we can't use QDir::cleanPath because it breaks urls
     // remove / at end of path
     if (path != QLatin1String("/"))
@@ -210,7 +216,8 @@ void Tab::up()
             path = path.left(path.length() - 1);
 
     QFileInfo info(path);
-    open(info.path());
+    url.setPath(info.path());
+    open(url);
 }
 
 void Tab::onIndexChanged(int index)
@@ -222,7 +229,7 @@ void Tab::onIndexChanged(int index)
     if (!item.isValid())
         return;
 
-    d->currentPath = item.path();
+    d->currentUrl = item.path();
 
     d->ignoreSignals = true;
 
@@ -237,22 +244,22 @@ void Tab::onIndexChanged(int index)
     }
 
     d->ignoreSignals = false;
-    emit currentPathChanged(d->currentPath);
+    emit currentUrlChanged(d->currentUrl);
     emit changed();
 }
 
-void Tab::onPathChanged(const QString &path)
+void Tab::onUrlChanged(const QUrl &url)
 {
     Q_D(Tab);
 
     if (d->ignoreSignals)
         return;
 
-    d->addItem(qobject_cast<AbstractEditor*>(sender()), path);
-    if (d->currentPath != path) {
-        d->currentPath = path;
+    d->addItem(qobject_cast<AbstractEditor*>(sender()), url.toString());
+    if (d->currentUrl != url) {
+        d->currentUrl = url;
 
-        emit currentPathChanged(path);
+        emit currentUrlChanged(url);
         emit changed();
     }
 }
