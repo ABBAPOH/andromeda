@@ -230,8 +230,8 @@ void FileManagerEditor::onSelectedPathsChanged()
 
     if (!paths.isEmpty()) {
         if (paths.size() == 1) {
-            cutAction->setText(tr("Cut %1").arg(QFileInfo(paths[0]).fileName()));
-            copyAction->setText(tr("Copy %1").arg(QFileInfo(paths[0]).fileName()));
+            cutAction->setText(tr("Cut \"%1\"").arg(QFileInfo(paths[0]).fileName()));
+            copyAction->setText(tr("Copy \"%1\"").arg(QFileInfo(paths[0]).fileName()));
         } else {
             cutAction->setText(tr("Cut %1 items").arg(paths.size()));
             copyAction->setText(tr("Copy %1 items").arg(paths.size()));
