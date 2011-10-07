@@ -286,7 +286,7 @@ void CorePluginImpl::createGoToMenu()
     cmd->setDefaultShortcut(tr("Ctrl+]"));
     container->addCommand(cmd);
 
-    cmd = new Command(Constants::Actions::Up, QIcon(":/images/icons/up.png"), tr("Ctrl+Up"), tr("Up one level"), this);
+    cmd = new Command(Constants::Actions::Up, tr("Ctrl+Up"), tr("Up one level"), this);
     container->addCommand(cmd);
 }
 
