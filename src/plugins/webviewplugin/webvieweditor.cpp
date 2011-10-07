@@ -12,8 +12,8 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
 
-    connect(m_webView, SIGNAL(titleChanged(QString)), SIGNAL(changed()));
-    connect(m_webView, SIGNAL(iconChanged()), SIGNAL(changed()));
+    connect(m_webView, SIGNAL(titleChanged(QString)), SIGNAL(titleChanged(QString)));
+    connect(m_webView, SIGNAL(iconChanged()), SLOT(onIconChanged()));
 }
 
 WebViewEditor::~WebViewEditor()
@@ -41,6 +41,11 @@ void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     m_webView->setUrl(url);
     emit currentUrlChanged(url);
+}
+
+void WebViewEditor::onIconChanged()
+{
+    emit iconChanged(m_webView->icon());
 }
 
 CorePlugin::AbstractEditor * WebViewPlugin::WebViewEditorFactory::createEditor(QWidget *parent)

@@ -42,6 +42,7 @@ protected:
 
 private slots:
     void onUrlClicked(const QUrl &url);
+    void onIconChanged();
 
 private:
     QWebView *m_webView;
