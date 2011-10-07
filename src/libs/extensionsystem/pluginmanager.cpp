@@ -38,6 +38,8 @@ PluginManager::PluginManager(QObject *parent) :
     d->formatHandlers.resize(2);
     d->formatHandlers[PluginSpec::XmlFormat] = new PluginSpecXmlHandler;
     d->formatHandlers[PluginSpec::BinaryFormat] = new PluginSpecBinaryHandler;
+
+    d->clearError();
 }
 
 /*!
