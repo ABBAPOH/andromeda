@@ -62,8 +62,8 @@ PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
     loader(new QPluginLoader(q_ptr)),
     loaded(false),
     loadOnStartup(true),
-    hasError(false),
-    isDefault(false)
+    isDefault(false),
+    hasError(false)
 {
 }
 
