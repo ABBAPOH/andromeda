@@ -59,6 +59,7 @@ const char * const TreeMode = "Actions.3.TreeViewMode";
 const char * const CoverFlowMode = "Actions.4.CoverFlowMode";
 const char * const DualPane = "Actions.5.DualPane";
 
+const char * const ShowLeftPanel = "Actions.ShowLeftPanel";
 const char * const ShowHiddenFiles = "Actions.ShowHiddenFiles";
 
 const char * const Back = "Actions.Back";

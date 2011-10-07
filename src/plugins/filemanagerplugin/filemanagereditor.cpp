@@ -32,11 +32,13 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
     mode = enableDualPane ? -1 : mode;
+    bool showLeftPanel = settings.contains("showLeftPanel") ? settings.value("showLeftPanel").toBool() : true;
     settings.endGroup();
 
     FileSystemModel *model = ExtensionSystem::PluginManager::instance()->object<FileSystemModel>("FileSystemModel");
 
     splitter = new MiniSplitter(this);
+
     m_widget = new DualPaneWidget(model,  splitter);
     if (!enableDualPane)
         setViewMode(mode);
@@ -51,12 +53,14 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     m_panel = new NavigationPanel(splitter);
     m_panel->setModel(ExtensionSystem::PluginManager::instance()->object<NavigationModel>("navigationModel"));
     connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
+    m_panel->setVisible(showLeftPanel);
 
     splitter->addWidget(m_panel);
     splitter->addWidget(m_widget);
     splitter->setSizes(QList<int>() << 100 << 400);
 
     createActions();
+    showLeftPanelAction->setChecked(showLeftPanel); // FIXME
 }
 
 bool FileManagerEditor::open(const QUrl &url)
@@ -204,6 +208,16 @@ void FileManagerEditor::setViewMode(int mode)
     m_widget->setViewMode((FileManagerWidget::ViewMode)mode);
 }
 
+void FileManagerEditor::showLeftPanel(bool show)
+{
+    QSettings s;
+    s.beginGroup("FileManager");
+    s.setValue("showLeftPanel", show);
+    s.endGroup();
+
+    m_panel->setVisible(show);
+}
+
 void FileManagerEditor::showFileInfo()
 {
     QStringList paths = m_widget->activeWidget()->selectedPaths();
@@ -307,6 +321,12 @@ void FileManagerEditor::createActions()
 
     showHiddenFilesAction = createAction(tr("Show hidden files"), Constants::Actions::ShowHiddenFiles,
                                          SLOT(showHiddenFiles(bool)), true);
+
+    showLeftPanelAction = new QAction(tr("Show left panel"), this);
+    showLeftPanelAction->setCheckable(true);
+    this->addAction(showLeftPanelAction);
+    connect(showLeftPanelAction, SIGNAL(toggled(bool)), this, SLOT(showLeftPanel(bool)));
+    actionManager->registerAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
 
     openAction->setEnabled(false);
     renameAction->setEnabled(false);

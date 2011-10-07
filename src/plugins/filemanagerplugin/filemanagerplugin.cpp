@@ -174,6 +174,12 @@ void FileManagerPluginImpl::createViewMenu()
     cmd->setDefaultShortcut(tr("Ctrl+."));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::ShowLeftPanel, this);
+    cmd->setDefaultText(tr("Show left panel"));
+    cmd->setDefaultShortcut(tr("Ctrl+L"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
 }
 
 void FileManagerPluginImpl::createGoToMenu()
