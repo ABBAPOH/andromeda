@@ -51,17 +51,26 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     restoreDefaults();
 }
 
+/*!
+  \reimp
+*/
 bool FileManagerEditor::open(const QUrl &url)
 {
     m_widget->setCurrentPath(url.toLocalFile());
     return true;
 }
 
+/*!
+  \reimp
+*/
 QUrl FileManagerEditor::currentUrl() const
 {
     return QUrl::fromLocalFile(m_widget->currentPath());
 }
 
+/*!
+  \reimp
+*/
 int FileManagerEditor::currentIndex() const
 {
     if (m_widget->activePane() == DualPaneWidget::LeftPane)
@@ -70,6 +79,9 @@ int FileManagerEditor::currentIndex() const
         return -m_widget->rightWidget()->history()->currentItemIndex() - 2; // -2, -3, -4
 }
 
+/*!
+  \reimp
+*/
 void FileManagerEditor::setCurrentIndex(int index)
 {
     DualPaneWidget::Pane pane;
@@ -83,11 +95,17 @@ void FileManagerEditor::setCurrentIndex(int index)
     m_widget->activeWidget()->history()->setCurrentItemIndex(index);
 }
 
+/*!
+  \reimp
+*/
 QIcon FileManagerEditor::icon() const
 {
     return QFileIconProvider().icon(QFileInfo(m_widget->currentPath()));
 }
 
+/*!
+  \reimp
+*/
 QString FileManagerEditor::title() const
 {
     QString path = m_widget->currentPath();
@@ -100,11 +118,17 @@ QString FileManagerEditor::title() const
     return QString();
 }
 
+/*!
+  \reimp
+*/
 QString FileManagerEditor::windowTitle() const
 {
     return title();
 }
 
+/*!
+  \reimp
+*/
 void FileManagerEditor::restoreSession(QSettings &s)
 {
     AbstractEditor::restoreSession(s);
@@ -122,6 +146,9 @@ void FileManagerEditor::restoreSession(QSettings &s)
     splitter->setSizes(variantListToIntList(lst));
 }
 
+/*!
+  \reimp
+*/
 void FileManagerEditor::saveSession(QSettings &s)
 {
     AbstractEditor::saveSession(s);
@@ -136,21 +163,39 @@ void FileManagerEditor::saveSession(QSettings &s)
     s.setValue(QLatin1String("splitterSizes"), intListToVariantList(splitter->sizes()));
 }
 
+/*!
+  \reimp
+*/
 void FileManagerEditor::resizeEvent(QResizeEvent *e)
 {
     splitter->resize(e->size());
 }
 
+/*!
+  \internal
+
+  Reemits DualPaneWidget::currentPathChanged() signal as an QUrl
+*/
 void FileManagerEditor::onCurrentPathChanged(const QString &path)
 {
     emit currentUrlChanged(QUrl::fromLocalFile(path));
 }
 
+/*!
+  \internal
+
+  Opens file in current tab
+*/
 void FileManagerEditor::onOpenRequested(const QString &path)
 {
     mainWindow()->open(QUrl::fromLocalFile(path));
 }
 
+/*!
+  \internal
+
+  Shows DualPaneWidget's context menu
+*/
 void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
 {
     QStringList paths = m_widget->activeWidget()->selectedPaths();
@@ -184,6 +229,11 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
     delete menu;
 }
 
+/*!
+  \internal
+
+  Sets DualPaneWidget's view mode.
+*/
 void FileManagerEditor::setViewMode(int mode)
 {
     if (mode == DualPane) {
@@ -194,6 +244,11 @@ void FileManagerEditor::setViewMode(int mode)
     }
 }
 
+/*!
+  \internal
+
+  Sets DualPaneWidget's view mode and stores is to settings as default mode.
+*/
 void FileManagerEditor::setAndSaveViewMode(int mode)
 {
     QSettings settings;
@@ -204,6 +259,11 @@ void FileManagerEditor::setAndSaveViewMode(int mode)
     setViewMode(mode);
 }
 
+/*!
+  \internal
+
+  Shows or hides left panel and sets default visibility.
+*/
 void FileManagerEditor::showLeftPanel(bool show)
 {
     QSettings s;
@@ -214,6 +274,11 @@ void FileManagerEditor::showLeftPanel(bool show)
     m_panel->setVisible(show);
 }
 
+/*!
+  \internal
+
+  Shows FileInfoDialog.
+*/
 void FileManagerEditor::showFileInfo()
 {
     QStringList paths = m_widget->activeWidget()->selectedPaths();
@@ -227,6 +292,11 @@ void FileManagerEditor::showFileInfo()
     }
 }
 
+/*!
+  \internal
+
+  Updates FileManager actions that depends on selection.
+*/
 void FileManagerEditor::onSelectedPathsChanged()
 {
     QStringList paths = m_widget->activeWidget()->selectedPaths();
@@ -252,12 +322,22 @@ void FileManagerEditor::onSelectedPathsChanged()
     }
 }
 
+/*!
+ \internal
+
+ Stores default splitter size.
+*/
 void FileManagerEditor::onSplitterMoved(int, int)
 {
     QVariant list = intListToVariantList(splitter->sizes());
     Core::instance()->settings()->setValue("FileManager/lastSplitterSizes", list);
 }
 
+/*!
+ \internal
+
+ Creates UI objects.
+*/
 void FileManagerEditor::setupUi()
 {
     ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
@@ -277,6 +357,11 @@ void FileManagerEditor::setupUi()
     splitter->addWidget(m_widget);
 }
 
+/*!
+  \internal
+
+  Connects UI objects to private slots.
+*/
 void FileManagerEditor::setupConnections()
 {
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
@@ -289,6 +374,12 @@ void FileManagerEditor::setupConnections()
     connect(splitter, SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
 }
 
+/*!
+  \internal
+
+  Creates \a checkable action with \a text, connects it to DualPaneWidget's \a slot
+  and registers it in ActionManager with \a id.
+*/
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, const char *slot,
                                           bool checkable)
 {
@@ -306,6 +397,11 @@ QAction * FileManagerEditor::createAction(const QString &text, const QByteArray 
      return action;
 }
 
+/*!
+  \internal
+
+  Creates action with \a text for view mode \a mode.
+*/
 QAction * FileManagerEditor::createViewAction(const QString &text, const QByteArray &id, int mode)
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
@@ -324,6 +420,11 @@ QAction * FileManagerEditor::createViewAction(const QString &text, const QByteAr
     return action;
 }
 
+/*!
+  \internal
+
+  Creates all actions.
+*/
 void FileManagerEditor::createActions()
 {
     GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
@@ -370,6 +471,11 @@ void FileManagerEditor::createActions()
     createViewActions();
 }
 
+/*!
+  \internal
+
+  Creates view actions.
+*/
 void FileManagerEditor::createViewActions()
 {
     int viewMode = m_widget->viewMode();
@@ -398,6 +504,11 @@ void FileManagerEditor::createViewActions()
     connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setAndSaveViewMode(int)));
 }
 
+/*!
+  \internal
+
+  Restores FileManagerEditor's default settings.
+*/
 void FileManagerEditor::restoreDefaults()
 {
     QSettings settings;
