@@ -17,6 +17,10 @@ class FileManagerEditor : public CorePlugin::AbstractEditor
 {
     Q_OBJECT
 public:
+    enum ViewMode {
+        ListView = 0, IconView, ColumnView, TableView, TreeView, CoverFlow, DualPane
+    };
+
     explicit FileManagerEditor(QWidget *parent = 0);
 
     // from AbstractEditor
@@ -41,8 +45,8 @@ private slots:
     void onCurrentPathChanged(const QString &path);
     void onOpenRequested(const QString &path);
     void onCustomContextMenuRequested(const QPoint &pos);
-    void setDualPaneModeEnabled(bool on);
     void setViewMode(int);
+    void setAndSaveViewMode(int);
     void showLeftPanel(bool);
     void showFileInfo();
     void onSelectedPathsChanged();
