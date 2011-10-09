@@ -121,24 +121,16 @@ void FileManagerEditor::restoreSession(QSettings &s)
     dualPaneModeAction->setChecked(dualPaneModeEnabled);
 
     QVariantList lst = s.value(QLatin1String("splitterSizes")).toList();
-    QList<int> sizes;
-    foreach (const QVariant &v, lst) {
-        sizes.append(v.toInt());
-    }
-    splitter->setSizes(sizes);
+    splitter->setSizes(variantListToIntList(lst));
 }
 
 void FileManagerEditor::saveSession(QSettings &s)
 {
     AbstractEditor::saveSession(s);
+
     s.setValue(QLatin1String("viewMode"), (int)m_widget->viewMode());
     s.setValue(QLatin1String("dualPaneModeEnabled"), m_widget->dualPaneModeEnabled());
-
-    QVariantList lst;
-    foreach (int size, splitter->sizes()) {
-        lst.append(size);
-    }
-    s.setValue(QLatin1String("splitterSizes"), lst);
+    s.setValue(QLatin1String("splitterSizes"), intListToVariantList(splitter->sizes()));
 }
 
 void FileManagerEditor::resizeEvent(QResizeEvent *e)
