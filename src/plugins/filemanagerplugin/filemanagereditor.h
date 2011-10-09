@@ -46,6 +46,7 @@ private slots:
     void showLeftPanel(bool);
     void showFileInfo();
     void onSelectedPathsChanged();
+    void onSplitterMoved(int,int);
 
 private:
     QAction * createAction(const QString &text, const QByteArray &id,
