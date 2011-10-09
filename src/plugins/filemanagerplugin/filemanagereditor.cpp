@@ -110,15 +110,13 @@ void FileManagerEditor::restoreSession(QSettings &s)
     AbstractEditor::restoreSession(s);
 
     int viewMode = s.value(QLatin1String("viewMode")).toInt();
-    bool dualPaneModeEnabled = s.value(QLatin1String("dualPaneModeEnabled")).toBool();
-    m_widget->setViewMode((FileManagerWidget::ViewMode)viewMode);
-    m_widget->setDualPaneModeEnabled(dualPaneModeEnabled);
+    setViewMode(viewMode);
 
-    iconModeAction->setChecked(viewMode == FileManagerWidget::IconView);
-    columnModeAction->setChecked(viewMode == FileManagerWidget::ColumnView);
-    treeModeAction->setChecked(viewMode == FileManagerWidget::TreeView);
-    coverFlowModeAction->setChecked(viewMode == FileManagerWidget::CoverFlow);
-    dualPaneModeAction->setChecked(dualPaneModeEnabled);
+    iconModeAction->setChecked(viewMode == IconView);
+    columnModeAction->setChecked(viewMode == ColumnView);
+    treeModeAction->setChecked(viewMode == TreeView);
+    coverFlowModeAction->setChecked(viewMode == CoverFlow);
+    dualPaneModeAction->setChecked(viewMode == DualPane);
 
     QVariantList lst = s.value(QLatin1String("splitterSizes")).toList();
     splitter->setSizes(variantListToIntList(lst));
@@ -128,8 +126,13 @@ void FileManagerEditor::saveSession(QSettings &s)
 {
     AbstractEditor::saveSession(s);
 
-    s.setValue(QLatin1String("viewMode"), (int)m_widget->viewMode());
-    s.setValue(QLatin1String("dualPaneModeEnabled"), m_widget->dualPaneModeEnabled());
+    int mode = 0;
+    if (m_widget->dualPaneModeEnabled())
+        mode = DualPane;
+    else
+        mode = m_widget->viewMode();
+
+    s.setValue(QLatin1String("viewMode"), mode);
     s.setValue(QLatin1String("splitterSizes"), intListToVariantList(splitter->sizes()));
 }
 
@@ -181,24 +184,24 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
     delete menu;
 }
 
-void FileManagerEditor::setDualPaneModeEnabled(bool on)
-{
-    QSettings settings;
-    settings.beginGroup("FileManager");
-    settings.setValue("dualPaneModeEnabled", on);
-    settings.endGroup();
-    m_widget->setDualPaneModeEnabled(on);
-}
-
 void FileManagerEditor::setViewMode(int mode)
 {
-    setDualPaneModeEnabled(false);
+    if (mode == DualPane) {
+        m_widget->setDualPaneModeEnabled(true);
+    } else {
+        m_widget->setDualPaneModeEnabled(false);
+        m_widget->setViewMode((FileManagerWidget::ViewMode)mode);
+    }
+}
 
+void FileManagerEditor::setAndSaveViewMode(int mode)
+{
     QSettings settings;
     settings.beginGroup("FileManager");
     settings.setValue("viewMode", mode);
     settings.endGroup();
-    m_widget->setViewMode((FileManagerWidget::ViewMode)mode);
+
+    setViewMode(mode);
 }
 
 void FileManagerEditor::showLeftPanel(bool show)
@@ -374,41 +377,37 @@ void FileManagerEditor::createViewActions()
     viewModeGroup = new QActionGroup(this);
     viewModeMapper = new QSignalMapper(this);
 
-    iconModeAction = createViewAction(tr("Icon view"), Constants::Actions::IconMode, FileManagerWidget::IconView);
-    columnModeAction = createViewAction(tr("Column view"), Constants::Actions::ColumnMode, FileManagerWidget::ColumnView);
-    treeModeAction = createViewAction(tr("Tree view"), Constants::Actions::TreeMode, FileManagerWidget::TableView);
-    coverFlowModeAction = createViewAction(tr("Cover flow"), Constants::Actions::CoverFlowMode, FileManagerWidget::CoverFlow);
-    dualPaneModeAction = createAction(tr("Dual pane"), Constants::Actions::DualPane,
-                                      SLOT(setDualPaneModeEnabled(bool)), true);
+    iconModeAction = createViewAction(tr("Icon view"), Constants::Actions::IconMode, IconView);
+    columnModeAction = createViewAction(tr("Column view"), Constants::Actions::ColumnMode, ColumnView);
+    treeModeAction = createViewAction(tr("Tree view"), Constants::Actions::TreeMode, TreeView);
+    coverFlowModeAction = createViewAction(tr("Cover flow"), Constants::Actions::CoverFlowMode, CoverFlow);
+    dualPaneModeAction = createViewAction(tr("Dual pane"), Constants::Actions::DualPane, DualPane);
 
     viewModeGroup->addAction(dualPaneModeAction);
 
     switch (viewMode) {
-    case FileManagerWidget::IconView: iconModeAction->setChecked(true); break;
-    case FileManagerWidget::ColumnView: columnModeAction->setChecked(true); break;
-    case FileManagerWidget::TableView: treeModeAction->setChecked(true); break;
-    case FileManagerWidget::CoverFlow: coverFlowModeAction->setChecked(true); break;
+    case IconView: iconModeAction->setChecked(true); break;
+    case ColumnView: columnModeAction->setChecked(true); break;
+    case TreeView: treeModeAction->setChecked(true); break;
+    case CoverFlow: coverFlowModeAction->setChecked(true); break;
+    case DualPane: coverFlowModeAction->setChecked(true); break;
     default: break;
     }
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 
-    connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setViewMode(int)));
+    connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setAndSaveViewMode(int)));
 }
 
 void FileManagerEditor::restoreDefaults()
 {
     QSettings settings;
     settings.beginGroup("FileManager");
-    bool enableDualPane = settings.value("dualPaneModeEnabled").toBool();
     int mode = settings.value("viewMode").toInt();
     mode = mode == 0 ? 1 : mode;
-    mode = enableDualPane ? -1 : mode;
     bool showLeftPanel = settings.contains("showLeftPanel") ? settings.value("showLeftPanel").toBool() : true;
     settings.endGroup();
 
-    if (!enableDualPane)
-        setViewMode(mode);
-    m_widget->setDualPaneModeEnabled(enableDualPane);
+    setViewMode(mode);
 
     m_panel->setVisible(showLeftPanel);
 
