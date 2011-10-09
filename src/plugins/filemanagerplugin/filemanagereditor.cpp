@@ -45,51 +45,10 @@ using namespace FileManagerPlugin;
 FileManagerEditor::FileManagerEditor(QWidget *parent) :
     AbstractEditor(parent)
 {
-    QSettings settings;
-    settings.beginGroup("FileManager");
-    bool enableDualPane = settings.value("dualPaneModeEnabled").toBool();
-    int mode = settings.value("viewMode").toInt();
-    mode = mode == 0 ? 1 : mode;
-    mode = enableDualPane ? -1 : mode;
-    bool showLeftPanel = settings.contains("showLeftPanel") ? settings.value("showLeftPanel").toBool() : true;
-    settings.endGroup();
-
-    FileSystemModel *model = ExtensionSystem::PluginManager::instance()->object<FileSystemModel>("FileSystemModel");
-
-    splitter = new MiniSplitter(this);
-
-    m_widget = new DualPaneWidget(model,  splitter);
-    if (!enableDualPane)
-        setViewMode(mode);
-    m_widget->setDualPaneModeEnabled(enableDualPane);
-    m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_widget->setFocus();
-    connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
-    connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
-    connect(m_widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
-    connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
-
-    m_panel = new NavigationPanel(splitter);
-    m_panel->setModel(ExtensionSystem::PluginManager::instance()->object<NavigationModel>("navigationModel"));
-    connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
-    m_panel->setVisible(showLeftPanel);
-
-    splitter->addWidget(m_panel);
-    splitter->addWidget(m_widget);
-
-    QVariantList lst = settings.value(QLatin1String("FileManager/lastSplitterSizes")).toList();
-    QList<int> sizes;
-    if (!lst.isEmpty()) {
-        sizes = variantListToIntList(lst);
-    } else {
-        sizes << 200 << 600;
-    }
-    splitter->setSizes(sizes);
-
-    connect(splitter, SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
-
+    setupUi();
+    setupConnections();
     createActions();
-    showLeftPanelAction->setChecked(showLeftPanel); // FIXME
+    restoreDefaults();
 }
 
 bool FileManagerEditor::open(const QUrl &url)
@@ -129,7 +88,7 @@ QIcon FileManagerEditor::icon() const
     return QFileIconProvider().icon(QFileInfo(m_widget->currentPath()));
 }
 
-QString FileManagerPlugin::FileManagerEditor::title() const
+QString FileManagerEditor::title() const
 {
     QString path = m_widget->currentPath();
     if (path.endsWith(QLatin1Char('/')))
@@ -304,6 +263,37 @@ void FileManagerEditor::onSplitterMoved(int, int)
     Core::instance()->settings()->setValue("FileManager/lastSplitterSizes", list);
 }
 
+void FileManagerEditor::setupUi()
+{
+    ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
+    FileSystemModel *fsModel = pm->object<FileSystemModel>("FileSystemModel");
+    NavigationModel *nModel = pm->object<NavigationModel>("navigationModel");
+
+    splitter = new MiniSplitter(this);
+
+    m_widget = new DualPaneWidget(fsModel,  splitter);
+    m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_widget->setFocus();
+
+    m_panel = new NavigationPanel(splitter);
+    m_panel->setModel(nModel);
+
+    splitter->addWidget(m_panel);
+    splitter->addWidget(m_widget);
+}
+
+void FileManagerEditor::setupConnections()
+{
+    connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
+    connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
+    connect(m_widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
+    connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
+
+    connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
+
+    connect(splitter, SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
+}
+
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, const char *slot,
                                           bool checkable)
 {
@@ -411,6 +401,35 @@ void FileManagerEditor::createViewActions()
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 
     connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setViewMode(int)));
+}
+
+void FileManagerEditor::restoreDefaults()
+{
+    QSettings settings;
+    settings.beginGroup("FileManager");
+    bool enableDualPane = settings.value("dualPaneModeEnabled").toBool();
+    int mode = settings.value("viewMode").toInt();
+    mode = mode == 0 ? 1 : mode;
+    mode = enableDualPane ? -1 : mode;
+    bool showLeftPanel = settings.contains("showLeftPanel") ? settings.value("showLeftPanel").toBool() : true;
+    settings.endGroup();
+
+    if (!enableDualPane)
+        setViewMode(mode);
+    m_widget->setDualPaneModeEnabled(enableDualPane);
+
+    m_panel->setVisible(showLeftPanel);
+
+    QVariantList lst = settings.value(QLatin1String("FileManager/lastSplitterSizes")).toList();
+    QList<int> sizes;
+    if (!lst.isEmpty()) {
+        sizes = variantListToIntList(lst);
+    } else {
+        sizes << 200 << 600;
+    }
+    splitter->setSizes(sizes);
+
+    showLeftPanelAction->setChecked(showLeftPanel); // FIXME
 }
 
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :

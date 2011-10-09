@@ -49,11 +49,14 @@ private slots:
     void onSplitterMoved(int,int);
 
 private:
+    void setupUi();
+    void setupConnections();
     QAction * createAction(const QString &text, const QByteArray &id,
                            const char *slot, bool checkable = false);
     QAction * createViewAction(const QString &text, const QByteArray &id, int mode);
     void createActions();
     void createViewActions();
+    void restoreDefaults();
 
 private:
     MiniSplitter *splitter;
