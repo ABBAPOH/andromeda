@@ -15,10 +15,29 @@
 
 #include <actionmanager.h>
 #include <constants.h>
+#include <core.h>
 #include <mainwindow.h>
 #include <minisplitter.h>
 #include <pluginmanager.h>
-#include <QHBoxLayout>
+#include <settings.h>
+
+static QVariantList intListToVariantList(const QList<int> list)
+{
+    QVariantList lst;
+    foreach (int i, list) {
+        lst.append(i);
+    }
+    return lst;
+}
+
+static QList<int> variantListToIntList(const QVariantList &list)
+{
+    QList<int> result;
+    foreach (const QVariant &v, list) {
+        result.append(v.toInt());
+    }
+    return result;
+}
 
 using namespace CorePlugin;
 using namespace FileManagerPlugin;
@@ -57,7 +76,17 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
 
     splitter->addWidget(m_panel);
     splitter->addWidget(m_widget);
-    splitter->setSizes(QList<int>() << 100 << 400);
+
+    QVariantList lst = settings.value(QLatin1String("FileManager/lastSplitterSizes")).toList();
+    QList<int> sizes;
+    if (!lst.isEmpty()) {
+        sizes = variantListToIntList(lst);
+    } else {
+        sizes << 200 << 600;
+    }
+    splitter->setSizes(sizes);
+
+    connect(splitter, SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
 
     createActions();
     showLeftPanelAction->setChecked(showLeftPanel); // FIXME
@@ -267,6 +296,12 @@ void FileManagerEditor::onSelectedPathsChanged()
         cutAction->setText(tr("Copy"));
         copyAction->setText(tr("Copy"));
     }
+}
+
+void FileManagerEditor::onSplitterMoved(int, int)
+{
+    QVariant list = intListToVariantList(splitter->sizes());
+    Core::instance()->settings()->setValue("FileManager/lastSplitterSizes", list);
 }
 
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, const char *slot,
