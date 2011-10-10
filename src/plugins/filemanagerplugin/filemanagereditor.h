@@ -8,6 +8,10 @@ class MiniSplitter;
 class QActionGroup;
 class QSignalMapper;
 
+namespace CorePlugin {
+class Settings;
+}
+
 namespace FileManagerPlugin {
 
 class DualPaneWidget;
@@ -66,6 +70,8 @@ private:
     MiniSplitter *splitter;
     DualPaneWidget *m_widget;
     NavigationPanel *m_panel;
+
+    CorePlugin::Settings *m_settings;
 
     QAction *openAction;
     QAction *newFolderAction;

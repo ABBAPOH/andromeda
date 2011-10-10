@@ -251,10 +251,7 @@ void FileManagerEditor::setViewMode(int mode)
 */
 void FileManagerEditor::setAndSaveViewMode(int mode)
 {
-    QSettings settings;
-    settings.beginGroup("FileManager");
-    settings.setValue("viewMode", mode);
-    settings.endGroup();
+    m_settings->setValue(QLatin1String("fileManager/viewMode"), mode);
 
     setViewMode(mode);
 }
@@ -266,10 +263,7 @@ void FileManagerEditor::setAndSaveViewMode(int mode)
 */
 void FileManagerEditor::showLeftPanel(bool show)
 {
-    QSettings s;
-    s.beginGroup("FileManager");
-    s.setValue("showLeftPanel", show);
-    s.endGroup();
+    m_settings->setValue(QLatin1String("fileManager/showLeftPanel"), show);
 
     m_panel->setVisible(show);
 }
@@ -511,25 +505,29 @@ void FileManagerEditor::createViewActions()
 */
 void FileManagerEditor::restoreDefaults()
 {
-    QSettings settings;
-    settings.beginGroup("FileManager");
-    int mode = settings.value("viewMode").toInt();
-    mode = mode == 0 ? 1 : mode;
-    bool showLeftPanel = settings.contains("showLeftPanel") ? settings.value("showLeftPanel").toBool() : true;
-    settings.endGroup();
+    m_settings = Core::instance()->settings();
+
+    int mode = 1;
+    bool showLeftPanel = true;
+    QVariantList lst;
+
+    if (m_settings->contains(QLatin1String("fileManager/viewMode")))
+        mode = m_settings->value(QLatin1String("fileManager/viewMode")).toInt();
+
+    if (m_settings->contains(QLatin1String("fileManager/showLeftPanel")))
+        showLeftPanel =  m_settings->value(QLatin1String("fileManager/showLeftPanel")).toBool();
+
+    lst = m_settings->value(QLatin1String("fileManager/lastSplitterSizes")).toList();
 
     setViewMode(mode);
 
     m_panel->setVisible(showLeftPanel);
 
-    QVariantList lst = settings.value(QLatin1String("FileManager/lastSplitterSizes")).toList();
-    QList<int> sizes;
     if (!lst.isEmpty()) {
-        sizes = variantListToIntList(lst);
+        splitter->setSizes(variantListToIntList(lst));
     } else {
-        sizes << 200 << 600;
+        splitter->setSizes(QList<int>() << 200 << 600);
     }
-    splitter->setSizes(sizes);
 
     showLeftPanelAction->setChecked(showLeftPanel); // FIXME
 }
