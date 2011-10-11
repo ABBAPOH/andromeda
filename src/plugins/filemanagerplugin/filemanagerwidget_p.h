@@ -37,6 +37,11 @@ public:
 
     QModelIndexList selectedIndexes() const;
 
+public slots:
+    void onDoubleClick(const QModelIndex &index);
+    void onCurrentItemIndexChanged(int index);
+
+public:
     FileManagerWidget::ViewMode viewMode;
     QAbstractItemView * currentView;
     QAbstractItemView * views[FileManagerWidget::MaxViews];
@@ -50,10 +55,6 @@ public:
     CorePlugin::History * history;
 
     bool blockEvents;
-
-public slots:
-    void onDoubleClick(const QModelIndex &index);
-    void onCurrentItemIndexChanged(int index);
 };
 
 } // namespace FileManagerPlugin
