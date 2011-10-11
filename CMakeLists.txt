@@ -8,6 +8,10 @@ add_definitions( ${QT_DEFINITIONS} )
 add_definitions( -DUNICODE )
 
 include( "Install.cmake" )
+include( "ProjectInfo.cmake" )
+
+add_definitions( -DGIT_REVISION=\"${GIT_REVISION}\" )
+add_definitions( -DPROJECT_VERSION=\"${PROJECT_VERSION}\" )
 
 if(APPLE)
     set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
