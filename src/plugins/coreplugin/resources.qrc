@@ -13,5 +13,6 @@
         <file>images/icons/movieFolder.png</file>
         <file>images/icons/musicFolder.png</file>
         <file>images/icons/picturesFolder.png</file>
+        <file>images/icons/andromeda.png</file>
     </qresource>
 </RCC>
