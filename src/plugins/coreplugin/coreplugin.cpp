@@ -156,7 +156,12 @@ void CorePluginImpl::about()
             arg(QLatin1String("ABBAPOH")).
             arg(QLatin1String("ABBAPOH@nextmail.ru"));
 
-    QMessageBox::about(0, tr("About Andromeda"), text);
+//    QMessageBox::about(0, tr("About Andromeda"), text);
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("About Andromeda"));
+    msgBox.setText(text);
+    msgBox.setIconPixmap(QPixmap(":/images/icons/andromeda.png"));
+    msgBox.exec();
 }
 
 void CorePluginImpl::aboutQt()
