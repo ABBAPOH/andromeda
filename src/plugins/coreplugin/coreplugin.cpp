@@ -140,7 +140,23 @@ void CorePluginImpl::quit()
 
 void CorePluginImpl::about()
 {
-    QMessageBox::about(0, tr("About Andromeda"), tr("Crossplatform file manager."));
+    QString text = tr("<h3>Andromeda %1</h3><br/>"
+                      "Revision %2<br/>"
+                      "<br/>"
+                      "Copyright 2010-2011 %3<br/>"
+                      "Bugreports send to %4<br/>"
+                      "<br/>"
+                      "This is alpha version.<br/>"
+                      "<br/>"
+                      "The program is provided as is with no warranty of any kind, "
+                      "including the warranty of design, merchantability "
+                      "and fitness for a particular purpose.").
+            arg(QLatin1String(PROJECT_VERSION)).
+            arg(QString(QLatin1String(GIT_REVISION)).left(10)).
+            arg(QLatin1String("ABBAPOH")).
+            arg(QLatin1String("ABBAPOH@nextmail.ru"));
+
+    QMessageBox::about(0, tr("About Andromeda"), text);
 }
 
 void CorePluginImpl::aboutQt()
