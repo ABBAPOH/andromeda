@@ -15,22 +15,28 @@ void preloadLibraries()
     QStringList schemes = QWebSecurityOrigin::localSchemes(); // preloading WebKit
 }
 
-static inline QString getPluginPath()
+// returns root path of the application
+static QString getRootPath()
 {
     // Figure out root:  Up one from 'bin' or 'MacOs'
     QDir rootDir = QApplication::applicationDirPath();
     rootDir.cdUp();
-    const QString rootDirPath = rootDir.canonicalPath();
+    return rootDir.canonicalPath();
+}
+
+static inline QString getPluginPath()
+{
+    const QString rootDirPath = getRootPath();
     // Build path
     QString pluginPath = rootDirPath;
     pluginPath += QLatin1Char('/');
-#ifdef Q_OS_UNIX
-#ifndef Q_OS_MACX
+#if defined Q_OS_MACX
+#elif defined Q_OS_WIN
+#elif defined Q_OS_UNIX
     // not Mac UNIXes
     pluginPath += QLatin1String("lib");
     pluginPath += QLatin1String(LIB_SUFFIX);
     pluginPath += QLatin1String("/andromeda/");
-#endif
 #endif
     pluginPath += QLatin1String("plugins");
     return pluginPath;
