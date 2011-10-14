@@ -24,8 +24,13 @@ include( "Install.cmake" )
 include( "ProjectInfo.cmake" )
 include( "Linguist.cmake" )
 
-add_definitions( -DGIT_REVISION=\"${GIT_REVISION}\" )
-add_definitions( -DPROJECT_VERSION=\"${PROJECT_VERSION}\" )
+if(MSVC)
+    add_definitions( -DGIT_REVISION="\""${GIT_REVISION}"\"" )
+    add_definitions( -DPROJECT_VERSION=" \""${PROJECT_VERSION}"\" " )
+else(MSVC)
+    add_definitions( -DGIT_REVISION=\"${GIT_REVISION}\" )
+    add_definitions( -DPROJECT_VERSION=\"${PROJECT_VERSION}\" )
+endif(MSVC)
 
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 #-DCMAKE_BUILD_TYPE=Debug
