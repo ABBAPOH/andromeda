@@ -18,6 +18,40 @@ PluginManager *PluginManager::instance()
     return m_instance;
 }
 
+// returns root path of the application
+static QString getRootPath()
+{
+    // Figure out root:  Up one from 'bin' or 'MacOs'
+    QDir rootDir = QCoreApplication::applicationDirPath();
+    rootDir.cdUp();
+    return rootDir.canonicalPath();
+}
+
+static inline QString getDefaultTranslationsPath()
+{
+    const QString rootDirPath = getRootPath();
+    // Build path
+    QString result = rootDirPath;
+#if defined Q_OS_MACX
+    result += QLatin1Char('/');
+    result += QLatin1String("Resources");
+    result += QLatin1Char('/');
+    result += QLatin1String("translations");
+#elif defined Q_OS_WIN
+    result += QLatin1Char('/');
+    result += QLatin1String("translations");
+#elif defined Q_OS_UNIX
+    // not Mac UNIXes
+    result += QLatin1Char('/');
+    result += QLatin1String("share");
+    result += QLatin1Char('/');
+    result += qApp->applicationName();
+    result += QLatin1Char('/');
+    result += QLatin1String("translations");
+#endif
+    return result;
+}
+
 /*!
     \fn PluginManager::PluginManager(QObject *parent)
     \brief Creates PluginManager with given \a parent.
@@ -40,6 +74,7 @@ PluginManager::PluginManager(QObject *parent) :
     d->formatHandlers[PluginSpec::BinaryFormat] = new PluginSpecBinaryHandler;
 
     d->clearError();
+    setTranslationsDir(getDefaultTranslationsPath());
 }
 
 /*!
@@ -154,6 +189,16 @@ void PluginManager::setPluginsFolder(const QString &name)
     d_func()->pluginsFolder = name;
 }
 
+QString PluginManager::translationsDir() const
+{
+    return d_func()->translationsDir;
+}
+
+void PluginManager::setTranslationsDir(const QString &dir)
+{
+    d_func()->translationsDir = dir;
+}
+
 bool PluginManager::loaded()
 {
     return d_func()->loaded;
@@ -241,6 +286,8 @@ bool PluginManagerPrivate::load()
         return false;
     }
 
+    loadTranslations(specFiles);
+
     // TODO: error about not initialized specs
     // enables new plugins
     enableSpecs(newSpecs);
@@ -297,6 +344,22 @@ void PluginManagerPrivate::fileChanged(const QString &specPath)
         if (!spec->loaded()) {
             pathToSpec.remove(specPath);
         }
+    }
+}
+
+#include <QLocale>
+#include <QTranslator>
+void PluginManagerPrivate::loadTranslations(const QStringList &specFiles)
+{
+    foreach (const QString &specFile, specFiles) {
+        QFileInfo info(specFile);
+        QString locale = QLocale::system().name();
+        QString name = info.baseName();
+
+        QTranslator *translator = new QTranslator(q_func());
+
+        translator->load(name + QLatin1Char('_') + locale, translationsDir);
+        qApp->installTranslator(translator);
     }
 }
 

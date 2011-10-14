@@ -30,6 +30,7 @@ public:
 
     void fileChanged(const QString &libraryPath);
 
+    void loadTranslations(const QStringList &specFiles);
     void enableSpecs(QList<PluginSpec *> specs);
 
     QList<PluginSpecFormatHandler*> handlers() const { return formatHandlers.toList(); }
@@ -46,6 +47,7 @@ public:
     int updateTimer;
 
     QString pluginsFolder;
+    QString translationsDir;
 
     bool hasErrors;
     QStringList errors;
