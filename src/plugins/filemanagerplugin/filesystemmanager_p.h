@@ -20,6 +20,8 @@ public:
     QList<FileSystemManager::FileOperation> operations;
     int currentIndex;
     QMap<int, QFileCopier*> mapToCopier;
+    bool canUndo;
+    bool canRedo;
 
     QFileCopier *copier(int index);
     void registerCopier(QFileCopier *copier, int index);

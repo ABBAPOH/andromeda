@@ -39,6 +39,8 @@ int FileSystemManagerPrivate::newOperation(FileSystemManager::FileOperationType 
 
 void FileSystemManagerPrivate::onDone()
 {
+    Q_Q(FileSystemManager);
+
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
     int index = mapToCopier.key(copier);
     mapToCopier.remove(index);
@@ -48,6 +50,10 @@ void FileSystemManagerPrivate::onDone()
     op.setState(FileSystemManager::FileOperation::Done);
     if (op.isUndo()) {
         setOperationUndo(op, false);
+        if (!canRedo) {
+            canRedo = true;
+            emit q->canRedoChanged(true);
+        }
         return;
     }
 
@@ -56,6 +62,14 @@ void FileSystemManagerPrivate::onDone()
         dests.append(copier->destinationFilePath(i));
     }
     op.m_destinationPaths = dests;
+
+    if (!op.isUndo()) {
+//        bool b = q->canUndoChanged();
+        if (!canUndo) {
+            canUndo = true;
+            emit q->canUndoChanged(true);
+        }
+    }
 }
 
 class FileSystemCommand : public QUndoCommand
@@ -171,9 +185,11 @@ FileSystemManager::FileSystemManager(QObject *parent) :
 
     d->undoStack = new QUndoStack(this);
     d->currentIndex = -1;
+    d->canUndo = false;
+    d->canRedo = false;
 
-    connect(d->undoStack, SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
-    connect(d->undoStack, SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
+//    connect(d->undoStack, SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
+//    connect(d->undoStack, SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
 }
 
 FileSystemManager::~FileSystemManager()
@@ -259,6 +275,20 @@ QFileCopier * FileSystemManager::copier(int index) const
     return d_func()->mapToCopier.value(index);
 }
 
+bool FileSystemManager::canRedo() const
+{
+    Q_D(const FileSystemManager);
+
+    return d->canRedo && d->undoStack->canRedo();
+}
+
+bool FileSystemManager::canUndo() const
+{
+    Q_D(const FileSystemManager);
+
+    return d->canUndo && d->undoStack->canUndo();
+}
+
 void FileSystemManager::redo()
 {
     Q_D(FileSystemManager);
@@ -269,6 +299,11 @@ void FileSystemManager::redo()
     const FileSystemCommand *cmd = static_cast<const FileSystemCommand *>(d->undoStack->command(index));
 
     d->currentIndex = cmd->operationIndex();
+
+    if (!d->undoStack->canRedo()) {
+        d->canRedo = false;
+        emit canRedoChanged(false);
+    }
 }
 
 void FileSystemManager::undo()
@@ -281,4 +316,9 @@ void FileSystemManager::undo()
     const FileSystemCommand *cmd = static_cast<const FileSystemCommand *>(d->undoStack->command(index));
 
     d->currentIndex = cmd->operationIndex();
+
+    if (!d->undoStack->canUndo()) {
+        d->canUndo = false;
+        emit canUndoChanged(false);
+    }
 }

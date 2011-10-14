@@ -97,6 +97,9 @@ public:
 
     QFileCopier *copier(int index) const;
 
+    bool canRedo() const;
+    bool canUndo() const;
+
 public slots:
     void redo();
     void undo();
