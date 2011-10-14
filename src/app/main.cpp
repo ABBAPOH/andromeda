@@ -2,6 +2,8 @@
 #include <QtGui/QIcon>
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
+#include <QtCore/QLocale>
+#include <QtCore/QTranslator>
 #include <QtWebKit/QWebSecurityOrigin>
 
 #include <pluginmanager.h>
@@ -42,11 +44,46 @@ static inline QString getPluginPath()
     return pluginPath;
 }
 
+static inline QString getTranslationsPath()
+{
+    const QString rootDirPath = getRootPath();
+    // Build path
+    QString result = rootDirPath;
+#if defined Q_OS_MACX
+    result += QLatin1Char('/');
+    result += QLatin1String("Resources");
+    result += QLatin1Char('/');
+    result += QLatin1String("translations");
+#elif defined Q_OS_WIN
+    result += QLatin1Char('/');
+    result += QLatin1String("translations");
+#elif defined Q_OS_UNIX
+    // not Mac UNIXes
+    result += QLatin1Char('/');
+    result += QLatin1String("share");
+    result += QLatin1Char('/');
+    result += qApp->applicationName();
+    result += QLatin1Char('/');
+    result += QLatin1String("translations");
+#endif
+    return result;
+}
+
+static void loadQtTranslation()
+{
+    QString path = getTranslationsPath();
+    QString locale = QLocale::system().name();
+    QTranslator *qtTranslator = new QTranslator(qApp);
+
+    qtTranslator->load(QString("qt_") + locale, path);
+    qApp->installTranslator(qtTranslator);
+}
+
 int main(int argc, char *argv[])
 {
     QtSingleApplication app(QLatin1String("Andromeda"), argc, argv);
     app.setOrganizationName(QLatin1String("arch"));
-    app.setApplicationName(QLatin1String("Andromeda"));
+    app.setApplicationName(QLatin1String("andromeda"));
 
     if (app.isRunning()) {
         app.sendMessage(QLatin1String("activate"));
@@ -61,6 +98,7 @@ int main(int argc, char *argv[])
     app.addLibraryPath(getPluginPath());
 
     preloadLibraries();
+    loadQtTranslation();
 
     PluginManager manager;
     manager.setPluginsFolder(QLatin1String("andromeda"));
