@@ -42,11 +42,10 @@ set( RESOURCES resources.qrc )
 
 set( TS_FILES translations/coreplugin_ru.ts )
 
-qt4_wrap_ts( QM_FILES ${TS_FILES} )
-
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/widgets )
 
