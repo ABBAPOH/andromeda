@@ -7,19 +7,23 @@ include( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 add_definitions( -DUNICODE )
 
+if(APPLE)
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+    set( QM_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin/Andromeda.app/Contents/Resources/translations )
+elseif(WIN32)
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+    set( QM_OUTPUT_PATH ${PROJECT_BINARY_DIR}/translations )
+elseif(UNIX)
+    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib${LIB_SUFFIX} )
+    set( QM_OUTPUT_PATH ${PROJECT_BINARY_DIR}/share/andromeda/translations )
+endif()
+
 include( "Install.cmake" )
+include( "Linguist.cmake" )
 include( "ProjectInfo.cmake" )
 
 add_definitions( -DGIT_REVISION=\"${GIT_REVISION}\" )
 add_definitions( -DPROJECT_VERSION=\"${PROJECT_VERSION}\" )
-
-if(APPLE)
-    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
-elseif(WIN32)
-    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
-elseif(UNIX)
-    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib${LIB_SUFFIX} )
-endif()
 
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 #-DCMAKE_BUILD_TYPE=Debug
