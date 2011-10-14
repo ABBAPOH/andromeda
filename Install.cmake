@@ -8,6 +8,7 @@ if(UNIX AND NOT APPLE)
     set( INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin )
     set( INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/andromeda )
     set( INSTALL_PLUGIN_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/andromeda/plugins/andromeda )
+    set( INSTALL_TRANSLATIONS_DIR ${CMAKE_INSTALL_PREFIX}/share/andromeda )
 
     set( CMAKE_INSTALL_RPATH_USE_LINK_PATH true )
     set( CMAKE_INSTALL_RPATH ${INSTALL_LIB_DIR} )
@@ -26,6 +27,9 @@ if(UNIX AND NOT APPLE)
 	install( CODE "execute_process(COMMAND ${CMAKE_BINARY_DIR}/bin/plugineditor ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET}.spec ${INSTALL_PLUGIN_DIR}/${TARGET}.spec)" )
         install_spec(${TARGET}.spec)
     endfunction( install_plugin )
+
+    install( DIRECTORY ${QM_OUTPUT_PATH} DESTINATION ${INSTALL_TRANSLATIONS_DIR} )
+
 else()
     function( install_lib TARGET )
     endfunction( install_lib )
@@ -37,3 +41,4 @@ else()
         install_spec(${TARGET}.spec)
     endfunction( install_plugin )
 endif()
+
