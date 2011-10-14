@@ -98,7 +98,7 @@ void FileManagerPluginImpl::createFileMenu()
 
     cmd = new Command(Constants::Actions::FileInfo, this);
     cmd->setDefaultText(tr("File info"));
-    cmd->setDefaultShortcut(tr("Ctrl+I"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+I")));
     container->addCommand(cmd, group);
 
     // ================ File Menu (Change) ================
@@ -106,7 +106,7 @@ void FileManagerPluginImpl::createFileMenu()
 
     cmd = new Command(Constants::Actions::NewFolder, this);
     cmd->setDefaultText(tr("New folder"));
-    cmd->setDefaultShortcut(tr("Ctrl+Shift+N"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+N")));
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::Rename, this);
@@ -114,16 +114,16 @@ void FileManagerPluginImpl::createFileMenu()
 #ifdef Q_OS_MAC
 //    cmd->setDefaultShortcut(tr("Return")); // Can't set shorcut to prevent overriding edit triggers
 #else
-    cmd->setDefaultShortcut(tr("F2"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("F2")));
 #endif
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::Remove, this);
     cmd->setDefaultText(tr("Remove"));
 #ifdef Q_OS_MAC
-    cmd->setDefaultShortcut(tr("Ctrl+Shift+Backspace"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Backspace")));
 #else
-    cmd->setDefaultShortcut(tr("Shift+Del"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Shift+Del")));
 #endif
     container->addCommand(cmd, group);
 }
@@ -141,43 +141,43 @@ void FileManagerPluginImpl::createViewMenu()
 
     cmd = new Command(Constants::Actions::IconMode, this);
     cmd->setDefaultText(tr("Icon View"));
-    cmd->setDefaultShortcut(tr("Ctrl+1"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+1")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::ColumnMode, this);
     cmd->setDefaultText(tr("Column View"));
-    cmd->setDefaultShortcut(tr("Ctrl+2"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+2")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::TreeMode, this);
     cmd->setDefaultText(tr("Tree View"));
-    cmd->setDefaultShortcut(tr("Ctrl+3"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+3")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::CoverFlowMode, this);
     cmd->setDefaultText(tr("Cover flow"));
-    cmd->setDefaultShortcut(tr("Ctrl+4"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+4")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::DualPane, this);
     cmd->setDefaultText(tr("Dual Pane"));
-    cmd->setDefaultShortcut(tr("Ctrl+5"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+5")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::ShowHiddenFiles, this);
     cmd->setDefaultText(tr("Show Hidden Files"));
-    cmd->setDefaultShortcut(tr("Ctrl+."));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+.")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::ShowLeftPanel, this);
     cmd->setDefaultText(tr("Show left panel"));
-    cmd->setDefaultShortcut(tr("Ctrl+L"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+L")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 }
@@ -189,13 +189,19 @@ void FileManagerPluginImpl::createGoToMenu()
     // ================ GoTo Menu (Locations) ================
     container->addGroup(Constants::MenuGroups::Locations);
 
-    createGoToDirCommand(QDesktopServices::DesktopLocation, QIcon(":/images/icons/desktopFolder.png"), tr("Ctrl+Shift+D"));
+    createGoToDirCommand(QDesktopServices::DesktopLocation,
+                         QIcon(":/images/icons/desktopFolder.png"),
+                         QKeySequence(QLatin1String("Ctrl+Shift+D")));
     createGoToDirCommand(QDesktopServices::HomeLocation,
                          QIcon::fromTheme("go-home", QIcon(":/images/icons/homeFolder.png")),
-                         tr("Ctrl+Shift+H"));
-    createGoToDirCommand(QDesktopServices::DocumentsLocation, QIcon(":/images/icons/documentsFolder.png"), tr("Ctrl+Shift+O"));
+                         QKeySequence(QLatin1String("Ctrl+Shift+H")));
+    createGoToDirCommand(QDesktopServices::DocumentsLocation,
+                         QIcon(":/images/icons/documentsFolder.png"),
+                         QKeySequence(QLatin1String("Ctrl+Shift+O")));
 #ifdef Q_OS_MAC
-    createGoToDirCommand(QDesktopServices::ApplicationsLocation, QIcon(":/images/icons/appsFolder.png"), tr("Ctrl+Shift+A"));
+    createGoToDirCommand(QDesktopServices::ApplicationsLocation,
+                         QIcon(":/images/icons/appsFolder.png"),
+                         QKeySequence(QLatin1String("Ctrl+Shift+A")));
 #endif
     createGoToDirCommand(QDesktopServices::MusicLocation, QIcon(":/images/icons/musicFolder.png"));
     createGoToDirCommand(QDesktopServices::MoviesLocation, QIcon(":/images/icons/movieFolder.png"));
