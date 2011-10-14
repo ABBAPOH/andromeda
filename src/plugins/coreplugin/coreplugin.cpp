@@ -198,25 +198,25 @@ void CorePluginImpl::createFileMenu()
     // ================ File Menu (New) ================
     container->addGroup(group = Constants::MenuGroups::FileNew);
 
-    cmd = new Command(Constants::Actions::NewWindow, tr("Ctrl+N"), tr("New window"), this);
+    cmd = new Command(Constants::Actions::NewWindow, QKeySequence::New, tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
     container->addCommand(cmd, group);
     connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
 
-    cmd = new Command(Constants::Actions::NewTab, tr("Ctrl+T"), tr("New tab"), this);
+    cmd = new Command(Constants::Actions::NewTab, QKeySequence::AddTab, tr("New tab"), this);
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::Open, tr("Open"), this);
 #ifdef Q_OS_MAC
-    cmd->setDefaultShortcut(tr("Ctrl+O"));
+    cmd->setDefaultShortcut(QKeySequence::Open);
 #else
 //    openCommand->setDefaultShortcut(tr("Return"));
 #endif
     cmd->setContext(Command::WidgetCommand);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::CloseTab, tr("Ctrl+W"), tr("Close"), this);
+    cmd = new Command(Constants::Actions::CloseTab, QKeySequence::Close, tr("Close"), this);
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
@@ -224,8 +224,9 @@ void CorePluginImpl::createFileMenu()
     // ================ File Menu (Quit) ================
     container->addGroup(group = Constants::MenuGroups::FileQuit);
 
-    cmd = new Command(Constants::Actions::Exit, tr("Ctrl+Q"), tr("Quit Andromeda"), this);
+    cmd = new Command(Constants::Actions::Exit, QKeySequence::Quit, tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
+    cmd->commandAction()->setMenuRole(QAction::QuitRole);
     container->addCommand(cmd, group);
     connect(cmd->commandAction(), SIGNAL(triggered()), this, SLOT(quit()));
 //#endif
@@ -248,27 +249,27 @@ void CorePluginImpl::createEditMenu()
     // ================ Edit Menu (Redo) ================
     container->addGroup(group = Constants::MenuGroups::EditRedo);
 
-    cmd = new Command(Constants::Actions::Undo, tr("Ctrl+Z"), tr("Undo"), this);
+    cmd = new Command(Constants::Actions::Undo, QKeySequence::Undo, tr("Undo"), this);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::Redo, tr("Ctrl+Shift+Z"), tr("Redo"), this);
+    cmd = new Command(Constants::Actions::Redo, QKeySequence::Redo, tr("Redo"), this);
     container->addCommand(cmd, group);
 
     // ================ Edit Menu (CopyPaste) ================
     container->addGroup(group = Constants::MenuGroups::EditCopyPaste);
 
-    cmd = new Command(Constants::Actions::Cut, tr("Ctrl+X"), tr("Cut"), this);
+    cmd = new Command(Constants::Actions::Cut, QKeySequence::Cut, tr("Cut"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::Copy, tr("Ctrl+C"), tr("Copy"), this);
+    cmd = new Command(Constants::Actions::Copy, QKeySequence::Copy, tr("Copy"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::Paste, tr("Ctrl+V"), tr("Paste"), this);
+    cmd = new Command(Constants::Actions::Paste, QKeySequence::Paste, tr("Paste"), this);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::SelectAll, tr("Ctrl+A"), tr("Select All"), this);
+    cmd = new Command(Constants::Actions::SelectAll, QKeySequence::SelectAll, tr("Select All"), this);
     container->addCommand(cmd, group);
 }
 
@@ -300,14 +301,14 @@ void CorePluginImpl::createGoToMenu()
 
     // ================ GoTo Menu (default) ================
     cmd = new Command(Constants::Actions::Back, tr("Back"), this);
-    cmd->setDefaultShortcut(tr("Ctrl+["));
+    cmd->setDefaultShortcut(QKeySequence::Back);
     container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::Forward, tr("Forward"), this);
-    cmd->setDefaultShortcut(tr("Ctrl+]"));
+    cmd->setDefaultShortcut(QKeySequence::Forward);
     container->addCommand(cmd);
 
-    cmd = new Command(Constants::Actions::Up, tr("Ctrl+Up"), tr("Up one level"), this);
+    cmd = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Ctrl+Up")), tr("Up one level"), this);
     container->addCommand(cmd);
 }
 
@@ -333,8 +334,9 @@ void CorePluginImpl::createToolsMenu()
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));
-    preferencesCommand->setDefaultShortcut(tr("Ctrl+,"));
+    preferencesCommand->setDefaultShortcut(QKeySequence::Preferences);
     preferencesCommand->setContext(Command::ApplicationCommand);
+    preferencesCommand->commandAction()->setMenuRole(QAction::PreferencesRole);
     toolsContainer->addCommand(preferencesCommand, group);
     connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
 
@@ -354,13 +356,15 @@ void CorePluginImpl::createHelpMenu()
     container->setTitle(tr("Help"));
     menuBarContainer->addContainer(container);
 
-    cmd = new Command(Constants::Actions::About, tr("About..."), this);
+    cmd = new Command(Constants::Actions::About, tr("About Andromeda..."), this);
     cmd->setContext(Command::ApplicationCommand);
+    cmd->commandAction()->setMenuRole(QAction::AboutRole);
     container->addCommand(cmd);
     connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(about()));
 
     cmd = new Command(Constants::Actions::AboutQt, tr("About Qt..."), this);
     cmd->setContext(Command::ApplicationCommand);
+    cmd->commandAction()->setMenuRole(QAction::AboutQtRole);
     container->addCommand(cmd);
     connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
 }

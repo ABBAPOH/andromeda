@@ -93,9 +93,9 @@ void MainWindowPrivate::setupActions()
 
     nextTabAction = new QAction(this);
 #ifdef Q_OS_MAC
-    nextTabAction->setShortcut(tr("Ctrl+Right"));
+    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Right")));
 #else
-    nextTabAction->setShortcut(tr("Ctrl+Tab"));
+    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
 #endif
     nextTabAction->setShortcutContext(Qt::WindowShortcut);
     connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextTab()));
@@ -103,9 +103,9 @@ void MainWindowPrivate::setupActions()
 
     prevTabAction = new QAction(q);
 #ifdef Q_OS_MAC
-    prevTabAction->setShortcut(tr("Ctrl+Left"));
+    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Left")));
 #else
-    prevTabAction->setShortcut(tr("Ctrl+Shift+Tab"));
+    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
 #endif
     prevTabAction->setShortcutContext(Qt::WindowShortcut);
     connect(prevTabAction, SIGNAL(triggered()), q, SLOT(prevTab()));
