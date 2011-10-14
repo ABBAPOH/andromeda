@@ -7,6 +7,8 @@ include( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 add_definitions( -DUNICODE )
 
+include( "LibSuffix.cmake" )
+
 if(APPLE)
     set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
     set( QM_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin/Andromeda.app/Contents/Resources/translations )
@@ -19,8 +21,8 @@ elseif(UNIX)
 endif()
 
 include( "Install.cmake" )
-include( "Linguist.cmake" )
 include( "ProjectInfo.cmake" )
+include( "Linguist.cmake" )
 
 add_definitions( -DGIT_REVISION=\"${GIT_REVISION}\" )
 add_definitions( -DPROJECT_VERSION=\"${PROJECT_VERSION}\" )
