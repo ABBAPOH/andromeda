@@ -117,6 +117,7 @@ void MainWindowPrivate::setupToolBar()
     Q_Q(MainWindow);
 
     toolBar = new QToolBar(q);
+    toolBar->setFloatable(false);
 
     toolBar->addAction(backAction);
     toolBar->addAction(forwardAction);
