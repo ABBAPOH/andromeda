@@ -40,6 +40,10 @@ set( FORMS
 
 set( RESOURCES resources.qrc )
 
+set( TS_FILES translations/coreplugin_ru.ts )
+
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
+
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
@@ -48,7 +52,7 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/widgets )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
 
-add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
+add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES})
 target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem widgets)
 add_dependencies( coreplugin plugineditor)
 install_plugin( coreplugin )
