@@ -1,3 +1,5 @@
+file( MAKE_DIRECTORY ${QM_OUTPUT_PATH} )
+
 macro( qt4_wrap_ts outfiles )
 
     set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION ${QM_OUTPUT_PATH})
