@@ -59,7 +59,7 @@
     <message>
         <location filename="../coreplugin.cpp" line="143"/>
         <source>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Revision %2&lt;br/&gt;&lt;br/&gt;Copyright 2010-2011 %3&lt;br/&gt;Bugreports send to %4&lt;br/&gt;&lt;br/&gt;This is alpha version.&lt;br/&gt;&lt;br/&gt;The program is provided as is with no warranty of any kind, including the warranty of design, merchantability and fitness for a particular purpose.</source>
-        <translation>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Ревизия %2&lt;br/&gt;&lt;br/&gt;Права 2010-2011 %3&lt;br/&gt;Отчеты об ошибках присылайте на %4&lt;br/&gt;&lt;br/&gt;Это альфа версия программы.&lt;br/&gt;&lt;br/&gt;Программа предоставляется &quot;как есть&quot;, без каких-либо гарантий, включая гарантию на дизайн, коммерческой ценности и пригодности для конкретных целей.</translation>
+        <translation>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Ревизия %2&lt;br/&gt;&lt;br/&gt;Права 2010-2011 %3&lt;br/&gt;Отчеты об ошибках присылайте на %4&lt;br/&gt;&lt;br/&gt;Это альфа версия программы.&lt;br/&gt;&lt;br/&gt;Программа предоставляется &quot;как есть&quot;, без каких-либо гарантий, включая гарантию на дизайн, коммерческую ценность и пригодность для конкретных целей.</translation>
     </message>
     <message>
         <location filename="../coreplugin.cpp" line="161"/>
