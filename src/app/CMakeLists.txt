@@ -14,7 +14,7 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 #endif()
 
 if( WIN32 )
-    set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+#    set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
 endif()
 
 add_executable( andromeda MACOSX_BUNDLE WIN32 ${SOURCES} ${GUI_RESOURCES} )
