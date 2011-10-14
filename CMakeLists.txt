@@ -7,7 +7,7 @@ include( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 add_definitions( -DUNICODE )
 
-include( "LibSuffix.cmake" )
+include( "cmake/LibSuffix.cmake" )
 
 if(APPLE)
     set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
@@ -20,9 +20,9 @@ elseif(UNIX)
     set( QM_OUTPUT_PATH ${PROJECT_BINARY_DIR}/share/andromeda/translations )
 endif()
 
-include( "Install.cmake" )
-include( "ProjectInfo.cmake" )
-include( "Linguist.cmake" )
+include( "cmake/Install.cmake" )
+include( "cmake/ProjectInfo.cmake" )
+include( "cmake/Linguist.cmake" )
 
 if(MSVC)
     add_definitions( -DGIT_REVISION="\""${GIT_REVISION}"\"" )
@@ -57,7 +57,7 @@ endif()
 
 # make uninstall
 configure_file(
-    "${CMAKE_SOURCE_DIR}/Uninstall.cmake.in"
+    "${CMAKE_SOURCE_DIR}/cmake/Uninstall.cmake.in"
     "${CMAKE_BINARY_DIR}/Uninstall.cmake"
     IMMEDIATE @ONLY)
 
