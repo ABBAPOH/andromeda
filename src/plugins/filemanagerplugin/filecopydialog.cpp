@@ -152,7 +152,6 @@ FileCopyDialog::FileCopyDialog(FileSystemManager *manager, QWidget *parent) :
     d->ui->setupUi(this);
     d->manager = 0;
 
-    setWindowTitle(tr("Copying"));
     setFileSystemManager(manager);
 }
 
