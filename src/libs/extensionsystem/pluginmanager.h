@@ -21,6 +21,7 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_PROPERTY(QStringList arguments READ arguments WRITE setArguments)
     Q_PROPERTY(QStringList defaultPlugins READ defaultPlugins WRITE setDefaultPlugins)
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
+    Q_PROPERTY(QString translationsDir READ translationsDir WRITE setTranslationsDir)
 
 public:
     explicit PluginManager(QObject *parent = 0);
@@ -41,6 +42,9 @@ public:
 
     QString pluginsFolder() const;
     void setPluginsFolder(const QString &name);
+
+    QString translationsDir() const;
+    void setTranslationsDir(const QString &dir);
 
     QList<PluginSpec *> plugins() const;
     PluginSpec *plugin(const QString &name) const;
