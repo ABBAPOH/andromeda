@@ -1,10 +1,4 @@
-if(APPLE)
-    set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/Andromeda.app/Contents/plugins/andromeda )
-elseif(WIN32)
-    set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/plugins/andromeda )
-elseif( UNIX )
-    set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/andromeda/plugins/andromeda )
-endif()
+set( LIBRARY_OUTPUT_PATH ${APP_PLUGIN_PATH} )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )

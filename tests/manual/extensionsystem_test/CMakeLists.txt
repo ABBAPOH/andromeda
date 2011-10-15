@@ -1,5 +1,3 @@
-set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/plugins )
-
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 
 add_executable( extensionsystem_test main.cpp )
