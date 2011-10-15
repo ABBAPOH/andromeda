@@ -1,4 +1,4 @@
-set( LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH}/plugins )
+set( LIBRARY_OUTPUT_PATH ${APP_APPLICATION_PATH}/plugins )
 
 function( install_spec SPECFILE )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SPECFILE}

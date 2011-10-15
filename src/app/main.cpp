@@ -31,16 +31,22 @@ static inline QString getPluginPath()
     const QString rootDirPath = getRootPath();
     // Build path
     QString pluginPath = rootDirPath;
-    pluginPath += QLatin1Char('/');
 #if defined Q_OS_MACX
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("PlugIns");
 #elif defined Q_OS_WIN
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("plugins");
 #elif defined Q_OS_UNIX
     // not Mac UNIXes
+    pluginPath += QLatin1Char('/');
     pluginPath += QLatin1String("lib");
     pluginPath += QLatin1String(LIB_SUFFIX);
-    pluginPath += QLatin1String("/andromeda/");
-#endif
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("andromeda");
+    pluginPath += QLatin1Char('/');
     pluginPath += QLatin1String("plugins");
+#endif
     return pluginPath;
 }
 
