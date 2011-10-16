@@ -19,3 +19,6 @@ BUG-18 [Closed] Determine if action in widget toggled to toggle Command too
 BUG-19 [Closed] 'Multiple' flag in single options
 BUG-20 [Open] Missing attributes check in spec
 BUG-21 [Open] 'Validate' method in spec
+BUG-22 [Open] Draggable items in left panel
+BUG-23 [Open] Opening bundles on mac
+BUG-24 [Open] Select item by typing it's text in treeview
