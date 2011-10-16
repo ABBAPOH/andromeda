@@ -51,6 +51,7 @@ void FileManagerWidgetPrivate::initViews()
     tableView->setItemsExpandable(false);
 
     treeView->setAlternatingRowColors(true);
+    treeView->setExpandsOnDoubleClick(false);
 
     coverFlow->setPictureColumn(0);
     coverFlow->setPictureRole(Qt::UserRole);
