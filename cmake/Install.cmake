@@ -30,7 +30,7 @@ if(UNIX AND NOT APPLE)
         install_spec(${TARGET}.spec)
     endfunction( install_plugin )
 
-    install( DIRECTORY ${QM_OUTPUT_PATH} DESTINATION ${INSTALL_TRANSLATIONS_DIR} )
+    install( DIRECTORY ${APP_TRANSLATIONS_PATH} DESTINATION ${INSTALL_TRANSLATIONS_DIR} )
 
 else()
     function( install_lib TARGET )
