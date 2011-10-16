@@ -114,7 +114,7 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
 
     QString path = model->filePath(index);
     QFileInfo info(path);
-    if (info.isDir()) {
+    if (info.isDir() && !info.isBundle()) {
         q->setCurrentPath(info.absoluteFilePath());
     }  else {
         emit q->openRequested(path);
@@ -310,7 +310,8 @@ void FileManagerWidget::newFolder()
 void FileManagerWidget::open()
 {
     foreach (const QString path, selectedPaths()) {
-        if (QFileInfo(path).isDir()) {
+        QFileInfo info(path);
+        if (info.isDir() && !info.isBundle()) {
             setCurrentPath(path);
             return;
         } else {
