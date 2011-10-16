@@ -7,15 +7,19 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
-set( EXECUTABLE_OUTPUT_PATH ${APP_APPLICATION_PATH} )
-
 # on macosx the icons has to be part of sources. Bummer.
 #if( APPLE )
 #    set(GUI_RESOURCES andromeda.icns)
 #endif()
 
 if( WIN32 )
-#    set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+    set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+endif()
+
+if( APPLE )
+    set( EXECUTABLE_OUTPUT_PATH ${APP_APPLICATION_PATH} )
+else()
+    set( EXECUTABLE_OUTPUT_PATH ${APP_BINARY_PATH} )
 endif()
 
 add_executable( andromeda MACOSX_BUNDLE WIN32 ${SOURCES} ${GUI_RESOURCES} )
