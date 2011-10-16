@@ -44,7 +44,7 @@ QString getMimeType(const QUrl &url)
 {
     if (url.scheme() == QLatin1String("file")) {
         QFileInfo info(url.toLocalFile());
-        if (info.isDir())
+        if (info.isDir() && !info.isBundle())
             return QLatin1String("inode/directory");
     } else if(url.scheme() == QLatin1String("http")) {
         return QLatin1String("text/html");
