@@ -530,6 +530,10 @@ void FileManagerEditor::restoreDefaults()
     }
 
     showLeftPanelAction->setChecked(showLeftPanel); // FIXME
+
+    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/iconSize"));
+    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/gridSize"));
+    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/flow"));
 }
 
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :

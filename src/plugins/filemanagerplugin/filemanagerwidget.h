@@ -8,6 +8,7 @@
 #include <history.h>
 
 class QFileSystemModel;
+class QAbstractItemView;
 
 namespace FileManagerPlugin {
 
@@ -20,9 +21,16 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileManagerWidget)
+
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+    Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
+    Q_PROPERTY(Flow flow READ flow WRITE setFlow)
+    Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+
 public:
     enum ViewMode { ListView = 0, IconView, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
+    enum Flow { LeftToRight = 0, TopToBottom = 1 };
+    Q_ENUMS(Flow)
     Q_ENUMS(ViewMode)
 
 //    explicit FileManagerWidget(QWidget *parent = 0);
@@ -41,6 +49,15 @@ public:
     QStringList selectedPaths() const;
 
     ViewMode viewMode() const;
+
+    QSize gridSize() const;
+    void setGridSize(QSize s);
+
+    QSize iconSize() const;
+    void setIconSize(QSize s);
+
+    Flow flow() const;
+    void setFlow(Flow flow);
 
 signals:
     void currentPathChanged(const QString &path);
