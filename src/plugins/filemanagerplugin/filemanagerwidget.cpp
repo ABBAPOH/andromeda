@@ -34,14 +34,15 @@ void FileManagerWidgetPrivate::initViews()
     QTreeView *treeView = new QTreeView(q);
     CoverFlow *coverFlow = new CoverFlow(q);
 
-    iconView->setLayoutDirection(Qt::LeftToRight);
-    iconView->setViewMode(QListView::IconMode);
     iconView->setWordWrap(true);
+    iconView->setWrapping(true);
     iconView->setFlow(QListView::LeftToRight);
+    iconView->setViewMode(QListView::IconMode);
 #ifdef Q_OS_MAC
-    iconView->setGridSize(QSize(128, 128));
     iconView->setIconSize(QSize(64, 64));
+    iconView->setGridSize(QSize(128, 128));
 #else
+    iconView->setIconSize(QSize(32, 32));
     iconView->setGridSize(QSize(100, 100));
 #endif
 
@@ -178,6 +179,8 @@ FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
     ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
 
     setViewMode(ListView);
+    setFlow(LeftToRight);
+    setGridSize(QSize(128, 128));
 }
 
 FileManagerWidget::~FileManagerWidget()
@@ -458,4 +461,69 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
     } else {
         d->blockEvents = false;
     }
+}
+
+QSize FileManagerWidget::gridSize() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->gridSize;
+}
+
+void FileManagerWidget::setGridSize(QSize s)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->gridSize == s)
+        return;
+
+    d->gridSize = s;
+    QListView *view = (QListView *)d->views[IconView];
+    if (d->flow == TopToBottom)
+        s.setWidth(256);
+    view->setGridSize(s);
+}
+
+QSize FileManagerWidget::iconSize() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->views[IconView]->iconSize();
+}
+
+void FileManagerWidget::setIconSize(QSize s)
+{
+    Q_D(FileManagerWidget);
+
+    d->views[IconView]->setIconSize(s);
+}
+
+FileManagerWidget::Flow FileManagerWidget::flow() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->flow;
+}
+
+void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->flow == flow)
+        return;
+
+    QListView *view = (QListView *)d->views[IconView];
+    QSize s = d->gridSize;
+    if (flow == LeftToRight) {
+        view->setFlow(QListView::LeftToRight);
+        view->setViewMode(QListView::IconMode);
+        view->update();
+        d->flow = flow;
+    } else if (flow == TopToBottom) {
+        view->setFlow(QListView::TopToBottom);
+        view->setViewMode(QListView::ListMode);
+        d->flow = flow;
+        s.setWidth(256);
+    }
+    view->setGridSize(s);
 }

@@ -17,6 +17,15 @@ public:
 
 private slots:
     void onChecked(bool);
+    void onIconSizeChanged(int);
+    void onGridSizeChanged(int);
+    void onFlowChanged(int);
+
+private:
+    void setupLeftPanel();
+    void setupIconSize();
+    void setupGridSize();
+    void setupFlow();
 
 private:
     Ui::FileManagerSettingsWidget *ui;

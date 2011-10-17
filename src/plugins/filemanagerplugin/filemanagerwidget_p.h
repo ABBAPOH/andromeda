@@ -55,6 +55,8 @@ public:
     CorePlugin::History * history;
 
     bool blockEvents;
+    QSize gridSize;
+    FileManagerWidget::Flow flow;
 };
 
 } // namespace FileManagerPlugin
