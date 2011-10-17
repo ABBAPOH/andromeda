@@ -9,7 +9,7 @@
 
 using namespace CorePlugin;
 
-int readFlags()
+static int readFlags()
 {
     int flags = 0;
 
@@ -33,35 +33,6 @@ FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
     ui(new Ui::FileManagerSettingsWidget)
 {
     ui->setupUi(this);
-
-    int flags = readFlags();
-
-    ui->applicationsCheckBox->setChecked(flags & NavigationModel::ApplicationsLocation);
-    ui->desktopCheckBox->setChecked(flags & NavigationModel::DesktopLocation);
-    ui->documentsCheckBox->setChecked(flags & NavigationModel::DocumentsLocation);
-    ui->downloadsCheckBox->setChecked(flags & NavigationModel::DownloadsLocation);
-    ui->moviesCheckBox->setChecked(flags & NavigationModel::MoviesLocation);
-    ui->musicCheckBox->setChecked(flags & NavigationModel::MusicLocation);
-    ui->picturesCheckBox->setChecked(flags & NavigationModel::PicturesLocation);
-    ui->homeCheckBox->setChecked(flags & NavigationModel::HomeLocation);
-
-    ui->applicationsCheckBox->setProperty("flag", NavigationModel::ApplicationsLocation);
-    ui->desktopCheckBox->setProperty("flag", NavigationModel::DesktopLocation);
-    ui->documentsCheckBox->setProperty("flag", NavigationModel::DocumentsLocation);
-    ui->downloadsCheckBox->setProperty("flag", NavigationModel::DownloadsLocation);
-    ui->moviesCheckBox->setProperty("flag", NavigationModel::MoviesLocation);
-    ui->musicCheckBox->setProperty("flag", NavigationModel::MusicLocation);
-    ui->picturesCheckBox->setProperty("flag", NavigationModel::PicturesLocation);
-    ui->homeCheckBox->setProperty("flag", NavigationModel::HomeLocation);
-
-    connect(ui->applicationsCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->desktopCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->documentsCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->downloadsCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->moviesCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->musicCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->picturesCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
-    connect(ui->homeCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
 
     setupLeftPanel();
     setupIconSize();
@@ -117,6 +88,34 @@ void FileManagerSettingsWidget::onFlowChanged(int value)
 
 void FileManagerSettingsWidget::setupLeftPanel()
 {
+    int flags = readFlags();
+
+    ui->applicationsCheckBox->setChecked(flags & NavigationModel::ApplicationsLocation);
+    ui->desktopCheckBox->setChecked(flags & NavigationModel::DesktopLocation);
+    ui->documentsCheckBox->setChecked(flags & NavigationModel::DocumentsLocation);
+    ui->downloadsCheckBox->setChecked(flags & NavigationModel::DownloadsLocation);
+    ui->moviesCheckBox->setChecked(flags & NavigationModel::MoviesLocation);
+    ui->musicCheckBox->setChecked(flags & NavigationModel::MusicLocation);
+    ui->picturesCheckBox->setChecked(flags & NavigationModel::PicturesLocation);
+    ui->homeCheckBox->setChecked(flags & NavigationModel::HomeLocation);
+
+    ui->applicationsCheckBox->setProperty("flag", NavigationModel::ApplicationsLocation);
+    ui->desktopCheckBox->setProperty("flag", NavigationModel::DesktopLocation);
+    ui->documentsCheckBox->setProperty("flag", NavigationModel::DocumentsLocation);
+    ui->downloadsCheckBox->setProperty("flag", NavigationModel::DownloadsLocation);
+    ui->moviesCheckBox->setProperty("flag", NavigationModel::MoviesLocation);
+    ui->musicCheckBox->setProperty("flag", NavigationModel::MusicLocation);
+    ui->picturesCheckBox->setProperty("flag", NavigationModel::PicturesLocation);
+    ui->homeCheckBox->setProperty("flag", NavigationModel::HomeLocation);
+
+    connect(ui->applicationsCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->desktopCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->documentsCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->downloadsCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->moviesCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->musicCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->picturesCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
+    connect(ui->homeCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
 }
 
 void FileManagerSettingsWidget::setupIconSize()
