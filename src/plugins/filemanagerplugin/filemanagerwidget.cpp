@@ -26,7 +26,6 @@ void FileManagerWidgetPrivate::initViews()
 {
     Q_Q(FileManagerWidget);
 
-    QListView *listView = new QListView(q);
     QListView *iconView = new QListView(q);
     QColumnView *columnView = new QColumnView(q);
 //    QTableView *tableView = new QTableView(q);
@@ -62,7 +61,6 @@ void FileManagerWidgetPrivate::initViews()
     coverFlow->setPictureColumn(0);
     coverFlow->setPictureRole(Qt::UserRole);
 
-    views[FileManagerWidget::ListView] = listView;
     views[FileManagerWidget::IconView] = iconView;
     views[FileManagerWidget::ColumnView] = columnView;
     views[FileManagerWidget::TableView] = tableView;
@@ -86,7 +84,6 @@ void FileManagerWidgetPrivate::initViews()
                 Qt::QueuedConnection);
     }
 
-    layout->addWidget(listView);
     layout->addWidget(iconView);
     layout->addWidget(columnView);
     layout->addWidget(tableView);
@@ -178,7 +175,7 @@ FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
 //    ((QTreeView*)d->views[FileManagerWidget::TableView])->setColumnWidth(0, 250);
     ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
 
-    setViewMode(ListView);
+    setViewMode(IconView);
     setFlow(LeftToRight);
     setGridSize(QSize(128, 128));
 }

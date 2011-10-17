@@ -22,7 +22,7 @@ class FileManagerEditor : public CorePlugin::AbstractEditor
     Q_OBJECT
 public:
     enum ViewMode {
-        ListView = 0, IconView, ColumnView, TableView, TreeView, CoverFlow, DualPane
+        IconView = 0, ColumnView, TableView, TreeView, CoverFlow, DualPane
     };
 
     explicit FileManagerEditor(QWidget *parent = 0);
