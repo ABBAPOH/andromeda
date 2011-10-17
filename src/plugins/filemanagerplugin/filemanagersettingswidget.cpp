@@ -62,6 +62,10 @@ void FileManagerSettingsWidget::onChecked(bool checked)
 
 void FileManagerSettingsWidget::onIconSizeChanged(int value)
 {
+    int gridValue = ui->gridSizeSlider->value();
+    if (value > gridValue)
+        ui->gridSizeSlider->setValue(value);
+
     value *= 4;
     QSize size(value, value);
     ui->iconSizeLabel->setText(tr("Icon size: %1x%2").arg(value).arg(value));
@@ -72,6 +76,10 @@ void FileManagerSettingsWidget::onIconSizeChanged(int value)
 
 void FileManagerSettingsWidget::onGridSizeChanged(int value)
 {
+    int iconValue = ui->iconSizeSlider->value();
+    if (value < iconValue)
+        ui->iconSizeSlider->setValue(value);
+
     value *= 4;
     QSize size(value, value);
     ui->gridSizeLabel->setText(tr("Grid size: %1x%2").arg(value).arg(value));
