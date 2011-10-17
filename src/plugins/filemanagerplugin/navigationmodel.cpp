@@ -219,10 +219,13 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction /*actio
     Q_D(NavigationModel);
 
     const QList<QUrl> & urls = data->urls();
+
     for (int i = 0; i < urls.size(); i++) {
         QString path = urls[i].toLocalFile();
         TreeItem *item = d->mapToItem.value(path);
         if (item) {
+            if (item->row() < row)
+                row--;
             beginRemoveRows(parent, item->row(), item->row());
             delete item;
             endRemoveRows();
@@ -251,6 +254,22 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction /*actio
     }
     endInsertRows();
     return true;
+}
+
+QMimeData *NavigationModel::mimeData(const QModelIndexList &indexes) const
+{
+    Q_D(const NavigationModel);
+
+    QMimeData *data = new QMimeData;
+    QList<QUrl> urls;
+    foreach (const QModelIndex &index, indexes) {
+        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+        if (item->parent() == d->foldersItem) {
+            urls.append(QUrl::fromLocalFile(item->path));
+        }
+    }
+    data->setUrls(urls);
+    return data;
 }
 
 Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
