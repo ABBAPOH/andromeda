@@ -123,7 +123,7 @@ void FileManagerSettingsWidget::setupIconSize()
     Settings *s = Core::instance()->settings();
 
     int iconSize = s->value(QLatin1String("fileManager/iconSize")).toSize().height();
-    if (iconSize > 0) {
+    if (iconSize == -1) {
 #ifdef Q_OS_MAC
         iconSize = 64;
 #else
@@ -141,7 +141,7 @@ void FileManagerSettingsWidget::setupGridSize()
     Settings *s = Core::instance()->settings();
 
     int gridSize = s->value(QLatin1String("fileManager/gridSize")).toSize().height();
-    if (gridSize == 0) {
+    if (gridSize == -1) {
 #ifdef Q_OS_MAC
          gridSize = 128;
 #else
