@@ -28,7 +28,7 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
 
 public:
-    enum ViewMode { ListView = 0, IconView, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
+    enum ViewMode { IconView = 0, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
     enum Flow { LeftToRight = 0, TopToBottom = 1 };
     Q_ENUMS(Flow)
     Q_ENUMS(ViewMode)
