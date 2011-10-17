@@ -71,6 +71,7 @@ void FileManagerWidgetPrivate::initViews()
         views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         views[i]->setAcceptDrops(true);
         views[i]->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
+        views[i]->setTextElideMode(Qt::ElideMiddle);
 //        QAbstractItemView::InternalMove
 //        layout->addWidget(views[i]);
 //        views[i]->setDragEnabled(true);
