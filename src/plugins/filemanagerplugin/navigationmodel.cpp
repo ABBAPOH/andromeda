@@ -210,49 +210,63 @@ QStringList NavigationModel::mimeTypes() const
     return QStringList() << "text/uri-list";
 }
 
-bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
-                                   int row, int /*column*/, const QModelIndex &parent)
+bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
+                                   int row, int column, const QModelIndex &parent)
 {
     if (!data->hasUrls())
         return false;
 
     Q_D(NavigationModel);
 
-    const QList<QUrl> & urls = data->urls();
+    TreeItem *parentItem = static_cast<TreeItem*>(parent.internalPointer());
+    if (parentItem == d->foldersItem) {
 
-    for (int i = 0; i < urls.size(); i++) {
-        QString path = urls[i].toLocalFile();
-        TreeItem *item = d->mapToItem.value(path);
-        if (item) {
-            if (item->row() < row)
-                row--;
-            beginRemoveRows(parent, item->row(), item->row());
-            delete item;
-            endRemoveRows();
-        }
-    }
+        const QList<QUrl> & urls = data->urls();
 
-    beginInsertRows(parent, row, row + urls.size() - 1);
-    for (int i = 0; i < urls.size(); i++) {
-        QString path = urls[i].toLocalFile();
-        QFileInfo info(path);
-
-        TreeItem *item = new TreeItem(d->foldersItem, row + i);
-        item->type = TreeItem::ChildItem;
-        item->path = path;
-        item->name = info.fileName();
-        item->icon = d->iconProvider.icon(info);
-
-        d->mapToItem.insert(path, item);
-
-        StandardLocation loc = pathToLocation(path);
-        if (loc != NoLocation) {
-            d->locations = d->locations | loc;
-            emit standardLocationsChanged(d->locations);
+        for (int i = 0; i < urls.size(); i++) {
+            QString path = urls[i].toLocalFile();
+            TreeItem *item = d->mapToItem.value(path);
+            if (item) {
+                if (item->row() < row)
+                    row--;
+                beginRemoveRows(parent, item->row(), item->row());
+                delete item;
+                endRemoveRows();
+            }
         }
 
+        beginInsertRows(parent, row, row + urls.size() - 1);
+        for (int i = 0; i < urls.size(); i++) {
+            QString path = urls[i].toLocalFile();
+            QFileInfo info(path);
+
+            TreeItem *item = new TreeItem(d->foldersItem, row + i);
+            item->type = TreeItem::ChildItem;
+            item->path = path;
+            item->name = info.fileName();
+            item->icon = d->iconProvider.icon(info);
+
+            d->mapToItem.insert(path, item);
+
+            StandardLocation loc = pathToLocation(path);
+            if (loc != NoLocation) {
+                d->locations = d->locations | loc;
+                emit standardLocationsChanged(d->locations);
+            }
+
+        }
+        endInsertRows();
+    } else {
+        if (!data->hasFormat("user/navigationModel")) {
+            QStringList paths;
+            foreach (const QUrl &url, data->urls())
+                paths.append(url.toLocalFile());
+
+            emit pathsDropped(parentItem->path, paths);
+        } else {
+            return dropMimeData(data, action, parent.row(), column, parent.parent());
+        }
     }
-    endInsertRows();
     return true;
 }
 
@@ -269,6 +283,7 @@ QMimeData *NavigationModel::mimeData(const QModelIndexList &indexes) const
         }
     }
     data->setUrls(urls);
+    data->setData("user/navigationModel", "true");
     return data;
 }
 
@@ -281,7 +296,7 @@ Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
 
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
     if (item->type == TreeItem::ChildItem && item->parent() == d->foldersItem)
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled;
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
     if (item == d->foldersItem)
         return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;

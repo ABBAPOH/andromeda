@@ -55,6 +55,7 @@ private slots:
     void showFileInfo();
     void onSelectedPathsChanged();
     void onSplitterMoved(int,int);
+    void onPathsDropped(const QString &, const QStringList &, Qt::DropAction);
 
 private:
     void setupUi();

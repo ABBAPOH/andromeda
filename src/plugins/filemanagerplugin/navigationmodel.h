@@ -62,6 +62,7 @@ public:
 
 signals:
     void standardLocationsChanged(NavigationModel::StandardLocations);
+    void pathsDropped(const QString &parent, const QStringList &paths, Qt::DropAction action = Qt::CopyAction);
 
 protected:
     NavigationModelPrivate *d_ptr;
