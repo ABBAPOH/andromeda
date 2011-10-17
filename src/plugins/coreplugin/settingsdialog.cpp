@@ -3,6 +3,7 @@
 #include "isettingspage.h"
 #include "settingspagemanager.h"
 
+#include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QLineEdit>
 #include <QtGui/QStandardItemModel>
@@ -67,6 +68,7 @@ public:
 
     SettingsPageManager *manager;
     QStandardItemModel *model;
+    QAction *closeAction;
 
     void addCategory(const QString &id);
     void addPage(ISettingsPage *page);
@@ -164,6 +166,11 @@ void SettingsDialogPrivate::setupUi()
     mainLayout->setColumnStretch(1, 4);
     q->setLayout(mainLayout);
     q->resize(1024, 576);
+
+    closeAction = new QAction(q);
+    closeAction->setShortcut(QKeySequence::Close);
+    q->addAction(closeAction);
+    QObject::connect(closeAction, SIGNAL(triggered()), q, SLOT(reject()));
 }
 
 /*!
