@@ -70,7 +70,7 @@ void FileManagerWidgetPrivate::initViews()
 
     for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
         views[i]->setFocusProxy(q);
-        views[i]->setSelectionMode(QAbstractItemView::ContiguousSelection);
+        views[i]->setSelectionMode(QAbstractItemView::ExtendedSelection);
         views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
         views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         views[i]->setAcceptDrops(true);
