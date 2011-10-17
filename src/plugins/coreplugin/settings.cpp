@@ -168,6 +168,9 @@ void Settings::addObject(QObject *o, const QString &key)
 {
     Q_D(Settings);
 
+    if (d->settings->contains(key))
+        o->setProperty(keyToProperty(key), d->settings->value(key));
+
     d->hash.insert(d->longKey(key), o);
     connect(o, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
 }
