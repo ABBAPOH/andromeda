@@ -36,9 +36,14 @@ void FileManagerWidgetPrivate::initViews()
 
     iconView->setLayoutDirection(Qt::LeftToRight);
     iconView->setViewMode(QListView::IconMode);
-    iconView->setGridSize(QSize(100, 100));
     iconView->setWordWrap(true);
     iconView->setFlow(QListView::LeftToRight);
+#ifdef Q_OS_MAC
+    iconView->setGridSize(QSize(128, 128));
+    iconView->setIconSize(QSize(64, 64));
+#else
+    iconView->setGridSize(QSize(100, 100));
+#endif
 
     iconView->setResizeMode(QListView::Adjust);
     iconView->setMovement(QListView::Static);
