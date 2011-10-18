@@ -5,7 +5,6 @@
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
-#include <QtGui/QApplication>
 #include <QtGui/QDesktopServices>
 
 //#include <QtGui/QFileSystemModel>
@@ -135,10 +134,17 @@ void MainWindowPrivate::setupUi()
 {
     Q_Q(MainWindow);
 
+    newTabButton = new TabBarButton();
+    newTabButton->setIcon(QIcon(":/images/icons/addtab.png"));
+    newTabButton->setIconSize(QSize(32,32));
+    connect(newTabButton, SIGNAL(clicked()), q, SLOT(newTab()));
+
     tabWidget = new MyTabWidget;
     tabWidget->setDocumentMode(true);
     tabWidget->setMovable(true);
     tabWidget->setTabsClosable(true);
+    tabWidget->setCornerWidget(newTabButton);
+
     q->setCentralWidget(tabWidget);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onCurrentChanged(int)));
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), q, SLOT(closeTab(int)));
