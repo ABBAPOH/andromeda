@@ -6,7 +6,10 @@
 #include "tabbar.h"
 
 #include <QtCore/QEvent>
+#include <QtGui/QAbstractButton>
+#include <QtGui/QApplication>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QPainter>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <enteredlineedit.h>
@@ -45,6 +48,51 @@ protected:
     }
 };
 
+class TabBarButton : public QAbstractButton
+{
+public:
+    TabBarButton() :
+        QAbstractButton(),
+        hovered(false),
+        pressed(false)
+    {
+    }
+
+    void paintEvent(QPaintEvent *e)
+    {
+        QPainter p(this);
+
+        QStyleOptionTabBarBaseV2 opt;
+        opt.init(this);
+        // hardcoded document Mode
+        opt.documentMode = true;
+
+        int overlap = style()->pixelMetric(QStyle::PM_TabBarBaseOverlap, &opt, this);
+        QRect rect;
+        // hardcoded north position
+        rect.setRect(0, size().height() - overlap, size().width(), overlap);
+        opt.rect = rect;
+
+        qApp->style()->drawPrimitive(QStyle::PE_FrameTabBarBase, &opt, &p, this);
+
+        int w = iconSize().width();
+        int h = iconSize().height();
+        QIcon::Mode mode = pressed ? QIcon::Selected : QIcon::Normal;
+
+        icon().paint(&p, (width() - w)/2, (height() - h)/2, w, h, Qt::AlignCenter, mode);
+    }
+
+    QSize sizeHint() const { return iconSize(); }
+    void enterEvent(QEvent *) { hovered = true; update(); }
+    void leaveEvent(QEvent *) { hovered = false; update(); }
+    void mousePressEvent(QMouseEvent *e) { pressed = true; update(); QAbstractButton::mousePressEvent(e); }
+    void mouseReleaseEvent(QMouseEvent *e) { pressed = false; update(); QAbstractButton::mouseReleaseEvent(e); }
+
+private:
+    bool hovered;
+    bool pressed;
+};
+
 namespace CorePlugin {
 
 class MainWindowPrivate : public QObject
@@ -58,6 +106,7 @@ public:
     EnteredLineEdit *lineEdit;
     QToolBar *toolBar;
     QTabWidget *tabWidget;
+    TabBarButton *newTabButton;
 
     QAction *backAction;
     QAction *forwardAction;
