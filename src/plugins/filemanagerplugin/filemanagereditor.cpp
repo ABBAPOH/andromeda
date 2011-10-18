@@ -325,7 +325,7 @@ void FileManagerEditor::onSelectedPathsChanged()
 void FileManagerEditor::onSplitterMoved(int, int)
 {
     QVariant list = intListToVariantList(splitter->sizes());
-    Core::instance()->settings()->setValue("FileManager/lastSplitterSizes", list);
+    Core::instance()->settings()->setValue("fileManager/lastSplitterSizes", list);
 }
 
 /*!
