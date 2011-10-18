@@ -23,7 +23,7 @@ WebViewEditor::~WebViewEditor()
 
 bool WebViewEditor::open(const QUrl &url)
 {
-    m_webView->setUrl(url);
+    m_webView->load(url);
     emit currentUrlChanged(url);
     return true;
 }
@@ -40,7 +40,7 @@ void WebViewEditor::resizeEvent(QResizeEvent *e)
 
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
-    m_webView->setUrl(url);
+    m_webView->load(url);
     emit currentUrlChanged(url);
 }
 
