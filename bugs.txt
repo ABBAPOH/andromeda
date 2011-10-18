@@ -19,6 +19,22 @@ BUG-18 [Closed] Determine if action in widget toggled to toggle Command too
 BUG-19 [Closed] 'Multiple' flag in single options
 BUG-20 [Open] Missing attributes check in spec
 BUG-21 [Open] 'Validate' method in spec
-BUG-22 [Open] Draggable items in left panel
+BUG-22 [Closed] Draggable items in left panel
 BUG-23 [Closed] Opening bundles on mac
-BUG-24 [Open] Select item by typing it's text in treeview
+BUG-24 [Closed] Select item by typing it's text in treeview. Reason - QTBUG-18862
+BUG-25 [Open] "Compress" action to file menu
+BUG-26 [Open] "Send by email" action to file menu
+BUG-27 [Open] Preview in iconmode
+BUG-28 [Open] Dual pane actinos
+BUG-29 [Open] Display drive info (free/total size)
+BUG-30 [Open] Filter files (file search)
+BUG-31 [Open] Different sorting types
+BUG-32 [Open] Add README file
+BUG-33 [Open] Add "Open with" to file menu
+BUG-34 [Open] Different sorting and modes for Dual Pane
+BUG-35 [Open] Wrong size for left panel if it was hidden when starting program
+BUG-36 [Open] Bug when copying using column view
+BUG-37 [Open] Add "Open in new tab" action to file menu
+BUG-38 [Open] Do not install qt translations on Linux
+BUG-39 [Open] Update window title when switching tabs
+BUG-40 [Open] web view can't handle #tags
