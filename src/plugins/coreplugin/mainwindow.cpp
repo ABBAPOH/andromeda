@@ -143,6 +143,7 @@ void MainWindowPrivate::setupUi()
     tabWidget->setDocumentMode(true);
     tabWidget->setMovable(true);
     tabWidget->setTabsClosable(true);
+    tabWidget->setUsesScrollButtons(true);
     tabWidget->setCornerWidget(newTabButton);
 
     q->setCentralWidget(tabWidget);
