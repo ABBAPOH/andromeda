@@ -168,8 +168,15 @@ void Settings::addObject(QObject *o, const QString &key)
 {
     Q_D(Settings);
 
-    if (d->settings->contains(key))
-        o->setProperty(keyToProperty(key), d->settings->value(key));
+    QVariant value = d->settings->value(key);
+    if (value.isValid()) {
+#ifdef Q_OS_LINUX
+        // fucken linux
+        if (value.canConvert(QVariant::Int))
+            value = value.toInt();
+#endif
+        o->setProperty(keyToProperty(key), value);
+    }
 
     d->hash.insert(d->longKey(key), o);
     connect(o, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
