@@ -109,6 +109,9 @@ void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
 
 QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
 {
+    if (viewMode == FileManagerWidget::ColumnView)
+        return currentView->selectionModel()->selectedIndexes();
+
     return currentView->selectionModel()->selectedRows();
 }
 

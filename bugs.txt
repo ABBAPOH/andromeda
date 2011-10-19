@@ -33,7 +33,7 @@ BUG-32 [Closed] Add README file
 BUG-33 [Open] Add "Open with" to file menu
 BUG-34 [Open] Different sorting and modes for Dual Pane
 BUG-35 [Closed] Wrong size for left panel if it was hidden when starting program
-BUG-36 [Open] Bug when copying using column view
+BUG-36 [Closed] Bug when copying using column view
 BUG-37 [Open] Add "Open in new tab" action to file menu
 BUG-38 [Open] Do not install qt translations on Linux
 BUG-39 [Closed] Update window title when switching tabs
