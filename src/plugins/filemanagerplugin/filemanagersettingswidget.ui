@@ -149,26 +149,26 @@
       <item>
        <widget class="QLabel" name="gridSizeLabel">
         <property name="text">
-         <string>Grid size: 128x128</string>
+         <string>Grid size:</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QSlider" name="gridSizeSlider">
         <property name="minimum">
-         <number>4</number>
+         <number>1</number>
         </property>
         <property name="maximum">
-         <number>128</number>
+         <number>100</number>
         </property>
         <property name="singleStep">
-         <number>4</number>
+         <number>1</number>
         </property>
         <property name="pageStep">
-         <number>16</number>
+         <number>10</number>
         </property>
         <property name="value">
-         <number>32</number>
+         <number>25</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
