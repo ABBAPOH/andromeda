@@ -22,11 +22,23 @@ void FileManagerWidgetPrivate::setupUi()
     q->setMinimumSize(200, 200);
 }
 
+class ListView : public QListView
+{
+public:
+    ListView(QWidget *parent = 0) : QListView(parent) {}
+
+    void dropEvent(QDropEvent *e)
+    {
+        QListView::dropEvent(e);
+        doItemsLayout(); // fix for wrong layout after dropping
+    }
+};
+
 void FileManagerWidgetPrivate::initViews()
 {
     Q_Q(FileManagerWidget);
 
-    QListView *iconView = new QListView(q);
+    QListView *iconView = new ListView(q);
     QColumnView *columnView = new QColumnView(q);
 //    QTableView *tableView = new QTableView(q);
     QTreeView *tableView = new QTreeView(q);
