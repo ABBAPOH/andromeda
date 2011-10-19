@@ -170,6 +170,20 @@ void MainWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
+void MainWindowPrivate::updateUi(Tab *tab)
+{
+    Q_Q(MainWindow);
+
+    int index = tabWidget->indexOf(tab);
+    tabWidget->setTabText(index, tab->title());
+#ifndef Q_OS_MAC
+    tabWidget->setTabIcon(index, tab->icon());
+#endif
+
+    q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
+    q->setWindowIcon(tab->icon());
+}
+
 void MainWindowPrivate::onUserInput(const QString &userInput)
 {
     q_func()->open(QUrl::fromUserInput(userInput));
@@ -198,6 +212,8 @@ void MainWindowPrivate::onCurrentChanged(int index)
         return;
 
     lineEdit->setText(urlToUserOputput(tab->currentUrl()));
+
+    updateUi(tab);
 }
 
 void MainWindowPrivate::onChanged()
@@ -205,17 +221,10 @@ void MainWindowPrivate::onChanged()
     Q_Q(MainWindow);
 
     Tab *tab = qobject_cast<Tab *>(sender());
-    if (!tab)
+    if (!tab || tab != q->currentTab())
         return;
 
-    int index = tabWidget->indexOf(tab);
-    tabWidget->setTabText(index, tab->title());
-#ifndef Q_OS_MAC
-    tabWidget->setTabIcon(index, tab->icon());
-#endif
-
-    q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
-    q->setWindowIcon(tab->icon());
+    updateUi(tab);
 }
 
 MainWindow::MainWindow(QWidget *parent) :
