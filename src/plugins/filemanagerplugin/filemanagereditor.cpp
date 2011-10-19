@@ -208,6 +208,8 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
         viewModeMenu->addAction(dualPaneModeAction);
     } else {
         menu->addAction(openAction);
+        menu->addAction(openNewTabAction);
+        menu->addAction(openNewWindowAction);
         menu->addSeparator();
         menu->addAction(showFileInfoAction);
         menu->addSeparator();
@@ -334,6 +336,34 @@ void FileManagerEditor::onPathsDropped(const QString &destination, const QString
 
 /*!
  \internal
+*/
+void FileManagerEditor::openNewTab()
+{
+    QStringList paths = m_widget->activeWidget()->selectedPaths();
+    MainWindow *window = mainWindow();
+    foreach (const QString &path, paths) {
+        window->openNewTab(QUrl::fromLocalFile(path));
+    }
+}
+
+/*!
+ \internal
+*/
+void FileManagerEditor::openNewWindow()
+{
+    QStringList paths = m_widget->activeWidget()->selectedPaths();
+    if (paths.isEmpty())
+        return;
+
+    MainWindow *window = MainWindow::createWindow();
+    foreach (const QString &path, paths) {
+        window->openNewTab(QUrl::fromLocalFile(path));
+    }
+    window->show();
+}
+
+/*!
+ \internal
 
  Creates UI objects.
 */
@@ -434,6 +464,12 @@ void FileManagerEditor::createActions()
     newFolderAction = createAction(tr("New Folder"), Constants::Actions::NewFolder, SLOT(newFolder()));
     renameAction = createAction(tr("Rename"), Constants::Actions::Rename, SLOT(rename()));
     removeAction = createAction(tr("Remove"), Constants::Actions::Remove, SLOT(remove()));
+
+    openNewTabAction = new QAction(tr("Open in new tab"), this);
+    connect(openNewTabAction, SIGNAL(triggered()), SLOT(openNewTab()));
+
+    openNewWindowAction = new QAction(tr("Open in new window"), this);
+    connect(openNewWindowAction, SIGNAL(triggered()), SLOT(openNewWindow()));
 
     showFileInfoAction = new QAction(tr("File info"), this);
     connect(showFileInfoAction, SIGNAL(triggered()), this, SLOT(showFileInfo()));

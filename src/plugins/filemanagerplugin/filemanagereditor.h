@@ -56,6 +56,8 @@ private slots:
     void onSelectedPathsChanged();
     void onSplitterMoved(int,int);
     void onPathsDropped(const QString &, const QStringList &, Qt::DropAction);
+    void openNewTab();
+    void openNewWindow();
 
 private:
     void setupUi();
@@ -75,6 +77,8 @@ private:
     CorePlugin::Settings *m_settings;
 
     QAction *openAction;
+    QAction *openNewTabAction;
+    QAction *openNewWindowAction;
     QAction *newFolderAction;
     QAction *renameAction;
     QAction *removeAction;
