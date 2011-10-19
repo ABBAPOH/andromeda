@@ -34,6 +34,7 @@ public:
 
     static MainWindow *currentWindow();
     static QList<MainWindow*> windows();
+    static MainWindow *createWindow();
 
 public slots:
     void back();

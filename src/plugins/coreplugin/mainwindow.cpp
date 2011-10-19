@@ -331,6 +331,11 @@ QList<MainWindow *> MainWindow::windows()
     return result;
 }
 
+MainWindow * MainWindow::createWindow()
+{
+    return new MainWindow();
+}
+
 void MainWindow::back()
 {
     currentTab()->history()->back();
@@ -368,7 +373,7 @@ void MainWindow::openNewTab(const QUrl &url)
 
 void MainWindow::openNewWindow(const QUrl &path)
 {
-    MainWindow *window = new MainWindow();
+    MainWindow *window = createWindow();
     window->open(path);
     window->show();
 }
