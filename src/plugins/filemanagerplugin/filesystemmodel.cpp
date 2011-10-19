@@ -46,36 +46,27 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
     QString to = filePath(parent) + QDir::separator();
 
     QList<QUrl> urls = data->urls();
-    QList<QUrl>::const_iterator it = urls.constBegin();
+
+    QStringList files;
+    foreach (const QUrl &url, urls) {
+        QString path = url.toLocalFile();
+        if (QFileInfo(path).path() != filePath(parent))
+            files.append(path);
+    }
+
+    if (files.isEmpty())
+        return false;
 
     switch (action) {
     case Qt::CopyAction: {
-        QStringList files;
-        foreach (const QUrl &url, urls) {
-            QString path = url.toLocalFile();
-            files.append(path);
-            success = true;
-        }
         m_manager->copy(files, to);
         break;
     }
     case Qt::LinkAction: {
-        QStringList files;
-        foreach (const QUrl &url, urls) {
-            QString path = url.toLocalFile();
-            files.append(path);
-            success = true;
-        }
         m_manager->link(files, to);
         break;
     }
     case Qt::MoveAction: {
-        QStringList files;
-        foreach (const QUrl &url, urls) {
-            QString path = url.toLocalFile();
-            files.append(path);
-            success = true;
-        }
         m_manager->move(files, to);
         break;
     }
