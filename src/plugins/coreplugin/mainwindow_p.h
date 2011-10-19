@@ -131,6 +131,7 @@ public:
     void setupActions();
     void setupToolBar();
     void setupUi();
+    void updateUi(Tab *tab);
 
 public slots:
     void onUserInput(const QString &);
