@@ -180,8 +180,10 @@ void MainWindowPrivate::updateUi(Tab *tab)
     tabWidget->setTabIcon(index, tab->icon());
 #endif
 
-    q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
-    q->setWindowIcon(tab->icon());
+    if (tab = q->currentTab()) {
+        q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
+        q->setWindowIcon(tab->icon());
+    }
 }
 
 void MainWindowPrivate::onUserInput(const QString &userInput)
@@ -221,7 +223,7 @@ void MainWindowPrivate::onChanged()
     Q_Q(MainWindow);
 
     Tab *tab = qobject_cast<Tab *>(sender());
-    if (!tab || tab != q->currentTab())
+    if (!tab)
         return;
 
     updateUi(tab);
