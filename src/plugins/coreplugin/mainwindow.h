@@ -18,6 +18,7 @@ class COREPLUGIN_EXPORT MainWindow : public QMainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MainWindow)
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -49,6 +50,9 @@ public slots:
 
     void nextTab();
     void prevTab();
+
+protected:
+    void resizeEvent(QResizeEvent *);
 
 protected:
     MainWindowPrivate * d_ptr;
