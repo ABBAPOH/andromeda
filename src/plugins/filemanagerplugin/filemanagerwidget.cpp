@@ -523,4 +523,8 @@ void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
         s.setWidth(256);
     }
     view->setGridSize(s);
+    // fix dragging
+    view->setDragEnabled(true);
+    view->viewport()->setAcceptDrops(true);
+    view->setMouseTracking(true);
 }
