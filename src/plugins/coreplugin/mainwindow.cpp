@@ -369,6 +369,9 @@ void MainWindow::openNewTab(const QUrl &url)
     Tab *tab = d->addTab(&index);
     tab->open(url);
     d->tabWidget->setCurrentIndex(index);
+
+    if (!tab->currentEditor())
+        closeTab(index); // close tab or window if no editor found
 }
 
 void MainWindow::openNewWindow(const QUrl &path)
