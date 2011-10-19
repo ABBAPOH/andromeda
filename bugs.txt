@@ -29,7 +29,7 @@ BUG-28 [Open] Dual pane actinos
 BUG-29 [Open] Display drive info (free/total size)
 BUG-30 [Open] Filter files (file search)
 BUG-31 [Open] Different sorting types
-BUG-32 [Open] Add README file
+BUG-32 [Closed] Add README file
 BUG-33 [Open] Add "Open with" to file menu
 BUG-34 [Open] Different sorting and modes for Dual Pane
 BUG-35 [Closed] Wrong size for left panel if it was hidden when starting program
