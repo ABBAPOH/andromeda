@@ -241,6 +241,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setMenuBar(ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar());
     setAttribute(Qt::WA_DeleteOnClose);
+
+    QVariant value = Core::instance()->settings()->value(QLatin1String("mainWindow/geometry"));
+    if (value.isValid())
+        restoreGeometry(value.toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -414,4 +418,9 @@ void MainWindow::prevTab()
 
     int index = d->tabWidget->currentIndex();
     d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *)
+{
+    Core::instance()->settings()->setValue(QLatin1String("mainWindow/geometry"), saveGeometry());
 }
