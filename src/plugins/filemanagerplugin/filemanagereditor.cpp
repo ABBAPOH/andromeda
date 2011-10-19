@@ -22,24 +22,6 @@
 #include <pluginmanager.h>
 #include <settings.h>
 
-static QVariantList intListToVariantList(const QList<int> list)
-{
-    QVariantList lst;
-    foreach (int i, list) {
-        lst.append(i);
-    }
-    return lst;
-}
-
-static QList<int> variantListToIntList(const QVariantList &list)
-{
-    QList<int> result;
-    foreach (const QVariant &v, list) {
-        result.append(v.toInt());
-    }
-    return result;
-}
-
 using namespace CorePlugin;
 using namespace FileManagerPlugin;
 
@@ -133,6 +115,7 @@ QString FileManagerEditor::windowTitle() const
 void FileManagerEditor::restoreSession(QSettings &s)
 {
     AbstractEditor::restoreSession(s);
+    QVariant value;
 
     int viewMode = s.value(QLatin1String("viewMode")).toInt();
     setViewMode(viewMode);
@@ -143,8 +126,14 @@ void FileManagerEditor::restoreSession(QSettings &s)
     coverFlowModeAction->setChecked(viewMode == CoverFlow);
     dualPaneModeAction->setChecked(viewMode == DualPane);
 
-    QVariantList lst = s.value(QLatin1String("splitterSizes")).toList();
-    splitter->setSizes(variantListToIntList(lst));
+    value = s.value(QLatin1String("panelVisible"));
+    if (value.isValid())
+        m_panel->setVisible(value.toBool());
+
+    value = s.value(QLatin1String("splitterState"));
+    if (value.isValid()) {
+        splitter->restoreState(value.toByteArray());
+    }
 }
 
 /*!
@@ -160,8 +149,9 @@ void FileManagerEditor::saveSession(QSettings &s)
     else
         mode = m_widget->viewMode();
 
+    s.setValue(QLatin1String("panelVisible"), !m_panel->isHidden());
     s.setValue(QLatin1String("viewMode"), mode);
-    s.setValue(QLatin1String("splitterSizes"), intListToVariantList(splitter->sizes()));
+    s.setValue(QLatin1String("splitterState"), splitter->saveState());
 }
 
 /*!
@@ -324,8 +314,7 @@ void FileManagerEditor::onSelectedPathsChanged()
 */
 void FileManagerEditor::onSplitterMoved(int, int)
 {
-    QVariant list = intListToVariantList(splitter->sizes());
-    Core::instance()->settings()->setValue("fileManager/lastSplitterSizes", list);
+    Core::instance()->settings()->setValue("fileManager/splitterState", splitter->saveState());
 }
 
 /*!
@@ -533,16 +522,16 @@ void FileManagerEditor::restoreDefaults()
         mode = m_settings->value(QLatin1String("fileManager/viewMode")).toInt();
 
     if (m_settings->contains(QLatin1String("fileManager/showLeftPanel")))
-        showLeftPanel =  m_settings->value(QLatin1String("fileManager/showLeftPanel")).toBool();
+        showLeftPanel = m_settings->value(QLatin1String("fileManager/showLeftPanel")).toBool();
 
-    lst = m_settings->value(QLatin1String("fileManager/lastSplitterSizes")).toList();
+    QVariant value = m_settings->value(QLatin1String("fileManager/splitterState"));
 
     setViewMode(mode);
 
     m_panel->setVisible(showLeftPanel);
 
-    if (!lst.isEmpty()) {
-        splitter->setSizes(variantListToIntList(lst));
+    if (value.isValid()) {
+        splitter->restoreState(value.toByteArray());
     } else {
         splitter->setSizes(QList<int>() << 200 << 600);
     }
