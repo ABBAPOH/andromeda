@@ -62,9 +62,9 @@ void FileManagerSettingsWidget::onChecked(bool checked)
 
 void FileManagerSettingsWidget::onIconSizeChanged(int value)
 {
-    int gridValue = ui->gridSizeSlider->value();
-    if (value > gridValue)
-        ui->gridSizeSlider->setValue(value);
+//    int gridValue = ui->gridSizeSlider->value();
+//    if (value > gridValue)
+//        ui->gridSizeSlider->setValue(value);
 
     value *= 4;
     QSize size(value, value);
@@ -72,26 +72,39 @@ void FileManagerSettingsWidget::onIconSizeChanged(int value)
 
     Settings *s = Core::instance()->settings();
     s->setValue(QLatin1String("fileManager/iconSize"), size);
+
+    onGridSizeChanged(ui->gridSizeSlider->value());
+}
+
+static int calcGridSize(int iconSize, int factor, bool iconMode)
+{
+    const int minIconSize = 32;
+    const int minListSize = 2;
+
+    int gridSize = iconSize;
+    gridSize = gridSize + (iconMode ? minIconSize : minListSize);
+    gridSize *= 1 + 1.0*factor/100.0;
+    return gridSize;
 }
 
 void FileManagerSettingsWidget::onGridSizeChanged(int value)
 {
-    int iconValue = ui->iconSizeSlider->value();
-    if (value < iconValue)
-        ui->iconSizeSlider->setValue(value);
+    bool iconMode = ui->flowComboBox->currentIndex() == 0;
+    int iconSize = ui->iconSizeSlider->value()*4;
+    int gridSize = calcGridSize(iconSize, value, iconMode);
 
-    value *= 4;
-    QSize size(value, value);
-    ui->gridSizeLabel->setText(tr("Grid size: %1x%2").arg(value).arg(value));
-
+    QSize size(gridSize, gridSize);
     Settings *s = Core::instance()->settings();
     s->setValue(QLatin1String("fileManager/gridSize"), size);
+    s->setValue(QLatin1String("fileManager/gridSizeFactor"), value);
 }
 
 void FileManagerSettingsWidget::onFlowChanged(int value)
 {
     Settings *s = Core::instance()->settings();
     s->setValue(QLatin1String("fileManager/flow"), value);
+
+    onGridSizeChanged(ui->gridSizeSlider->value());
 }
 
 void FileManagerSettingsWidget::setupLeftPanel()
@@ -148,17 +161,15 @@ void FileManagerSettingsWidget::setupGridSize()
 {
     Settings *s = Core::instance()->settings();
 
-    int gridSize = s->value(QLatin1String("fileManager/gridSize")).toSize().height();
-    if (gridSize == -1) {
+    int factor = s->value(QLatin1String("fileManager/gridSizeFactor")).toInt();
+    if (factor == 0) {
 #ifdef Q_OS_MAC
-         gridSize = 128;
+         factor = 10;
 #else
          gridSize = 100;
 #endif
     }
-    ui->gridSizeLabel->setText(tr("Grid size: %1x%2").arg(gridSize).arg(gridSize));
-    ui->gridSizeSlider->setValue(gridSize/4);
-
+    ui->gridSizeSlider->setValue(factor);
 
     connect(ui->gridSizeSlider, SIGNAL(valueChanged(int)), SLOT(onGridSizeChanged(int)));
 }
