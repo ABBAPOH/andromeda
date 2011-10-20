@@ -161,14 +161,11 @@ void FileManagerSettingsWidget::setupGridSize()
 {
     Settings *s = Core::instance()->settings();
 
-    int factor = s->value(QLatin1String("fileManager/gridSizeFactor")).toInt();
-    if (factor == 0) {
-#ifdef Q_OS_MAC
-         factor = 10;
-#else
-         gridSize = 100;
-#endif
-    }
+    int factor = 10;
+    QVariant value = s->value(QLatin1String("fileManager/gridSizeFactor"));
+    if (value.isValid())
+        factor = value.toInt();
+
     ui->gridSizeSlider->setValue(factor);
 
     connect(ui->gridSizeSlider, SIGNAL(valueChanged(int)), SLOT(onGridSizeChanged(int)));
