@@ -81,6 +81,9 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     connect(d->panes[LeftPane], SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
     connect(d->panes[RightPane], SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
 
+    connect(d->panes[LeftPane], SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)));
+    connect(d->panes[RightPane], SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)));
+
     setObjectName(QLatin1String("DualPaneWidget"));
 }
 

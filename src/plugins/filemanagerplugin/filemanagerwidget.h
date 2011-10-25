@@ -89,7 +89,7 @@ signals:
     void currentPathChanged(const QString &path);
     void selectedPathsChanged();
     void sortingChanged();
-    void viewModeChanged(ViewMode mode);
+    void viewModeChanged(FileManagerWidget::ViewMode mode);
 
     void openRequested(const QString &path);
 
