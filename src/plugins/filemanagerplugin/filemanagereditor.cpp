@@ -118,15 +118,6 @@ void FileManagerEditor::restoreSession(QSettings &s)
     AbstractEditor::restoreSession(s);
     QVariant value;
 
-    int viewMode = s.value(QLatin1String("viewMode")).toInt();
-    setViewMode(viewMode);
-
-    iconModeAction->setChecked(viewMode == IconView);
-    columnModeAction->setChecked(viewMode == ColumnView);
-    treeModeAction->setChecked(viewMode == TreeView);
-    coverFlowModeAction->setChecked(viewMode == CoverFlow);
-    dualPaneModeAction->setChecked(viewMode == DualPane);
-
     value = s.value(QLatin1String("panelVisible"));
     if (value.isValid())
         m_panel->setVisible(value.toBool());
@@ -136,8 +127,15 @@ void FileManagerEditor::restoreSession(QSettings &s)
         splitter->restoreState(value.toByteArray());
     }
 
-    m_widget->setSortingOrder((Qt::SortOrder)s.value(QLatin1String("sortingOrder")).toInt());
-    m_widget->setSortingColumn((FileManagerWidget::Column)s.value(QLatin1String("sortingColumn")).toInt());
+    m_widget->restoreState(s.value(QLatin1String("state")).toByteArray());
+
+    int viewMode = m_widget->activeWidget()->viewMode();
+
+    iconModeAction->setChecked(viewMode == IconView);
+    columnModeAction->setChecked(viewMode == ColumnView);
+    treeModeAction->setChecked(viewMode == TreeView);
+    coverFlowModeAction->setChecked(viewMode == CoverFlow);
+    dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 }
 
 /*!
@@ -147,18 +145,9 @@ void FileManagerEditor::saveSession(QSettings &s)
 {
     AbstractEditor::saveSession(s);
 
-    int mode = 0;
-    if (m_widget->dualPaneModeEnabled())
-        mode = DualPane;
-    else
-        mode = m_widget->viewMode();
-
     s.setValue(QLatin1String("panelVisible"), !m_panel->isHidden());
-    s.setValue(QLatin1String("viewMode"), mode);
     s.setValue(QLatin1String("splitterState"), splitter->saveState());
-
-    s.setValue(QLatin1String("sortingOrder"), (int)m_widget->sortingOrder());
-    s.setValue(QLatin1String("sortingColumn"), (int)m_widget->sortingColumn());
+    s.setValue(QLatin1String("state"), m_widget->saveState());
 }
 
 /*!
