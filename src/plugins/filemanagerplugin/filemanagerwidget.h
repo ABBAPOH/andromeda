@@ -26,6 +26,7 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
     Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+    Q_PROPERTY(ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
     enum ViewMode { IconView = 0, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
@@ -74,6 +75,7 @@ public:
 
 signals:
     void currentPathChanged(const QString &path);
+    void viewModeChanged(ViewMode mode);
     void openRequested(const QString &path);
     void canUndoChanged(bool);
     void canRedoChanged(bool);

@@ -358,6 +358,8 @@ void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
 
         QModelIndex index = d->model->index(d->currentPath);
         d->currentView->setRootIndex(index);
+
+        emit viewModeChanged(d->viewMode);
     }
 }
 
