@@ -21,17 +21,18 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileManagerWidget)
+    Q_DISABLE_COPY(FileManagerWidget)
 
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
-    Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
+    Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
     Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
     Q_PROPERTY(ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
     enum ViewMode { IconView = 0, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
     enum Flow { LeftToRight = 0, TopToBottom = 1 };
-    enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateChangedColumn };
+    enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateColumn };
 
     Q_ENUMS(Flow)
     Q_ENUMS(ViewMode)
@@ -42,16 +43,8 @@ public:
 
     QString currentPath() const;
 
-    FileSystemManager *fileSystemManager() const;
-    void setFileSystemManager(FileSystemManager *manager);
-
-    CorePlugin::History *history() const;
-
-    FileSystemModel *model() const;
-
-    QStringList selectedPaths() const;
-
-    ViewMode viewMode() const;
+    Flow flow() const;
+    void setFlow(Flow flow);
 
     QSize gridSize() const;
     void setGridSize(QSize s);
@@ -59,8 +52,7 @@ public:
     QSize iconSize() const;
     void setIconSize(QSize s);
 
-    Flow flow() const;
-    void setFlow(Flow flow);
+    QStringList selectedPaths() const;
 
     Column sortingColumn() const;
     void setSortingColumn(Column column);
@@ -70,21 +62,31 @@ public:
 
     void setSorting(Column column, Qt::SortOrder order);
 
+    ViewMode viewMode() const;
+    void setViewMode(ViewMode mode);
+
+    FileSystemManager *fileSystemManager() const;
+    void setFileSystemManager(FileSystemManager *manager);
+
+    CorePlugin::History *history() const;
+
+    FileSystemModel *model() const;
+
     bool restoreState(const QByteArray &state);
     QByteArray saveState();
 
 signals:
-    void currentPathChanged(const QString &path);
-    void viewModeChanged(ViewMode mode);
-    void openRequested(const QString &path);
     void canUndoChanged(bool);
     void canRedoChanged(bool);
+    void currentPathChanged(const QString &path);
     void selectedPathsChanged();
     void sortingChanged();
+    void viewModeChanged(ViewMode mode);
+
+    void openRequested(const QString &path);
 
 public slots:
     void setCurrentPath(const QString &path);
-    void setViewMode(ViewMode mode);
 
     void newFolder();
     void open();
