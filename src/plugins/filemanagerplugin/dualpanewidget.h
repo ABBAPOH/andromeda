@@ -43,6 +43,9 @@ public:
     Qt::SortOrder sortingOrder() const;
     void setSortingOrder(Qt::SortOrder order);
 
+    bool restoreState(const QByteArray &state);
+    QByteArray saveState();
+
 signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);

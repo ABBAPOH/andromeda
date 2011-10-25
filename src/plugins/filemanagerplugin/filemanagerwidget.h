@@ -69,6 +69,9 @@ public:
 
     void setSorting(Column column, Qt::SortOrder order);
 
+    bool restoreState(const QByteArray &state);
+    QByteArray saveState();
+
 signals:
     void currentPathChanged(const QString &path);
     void openRequested(const QString &path);

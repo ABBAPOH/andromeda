@@ -1,6 +1,7 @@
 #include "filemanagerwidget.h"
 #include "filemanagerwidget_p.h"
 
+#include <QtCore/QBuffer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QAction>
 //#include <QDebug>
@@ -634,4 +635,47 @@ void FileManagerWidget::setSorting(FileManagerWidget::Column column, Qt::SortOrd
     d->sortingOrder = order;
     d->updateSorting();
     emit sortingChanged();
+}
+
+bool FileManagerWidget::restoreState(const QByteArray &state)
+{
+    if (state.isEmpty())
+        return false;
+
+    QByteArray data = state;
+    QBuffer buffer(&data);
+    buffer.open(QIODevice::ReadOnly);
+
+    QDataStream s(&buffer);
+    quint8 tmp;
+    QSize size;
+    s >> tmp;
+    setFlow((Flow)tmp);
+    s >> size;
+    setGridSize(size);
+    s >> size;
+    setIconSize(size);
+    s >> tmp;
+    setViewMode((FileManagerWidget::ViewMode)tmp);
+    s >> tmp;
+    setSortingColumn((FileManagerWidget::Column)tmp);
+    s >> tmp;
+    setSortingOrder((Qt::SortOrder)tmp);
+    return true;
+}
+
+QByteArray FileManagerWidget::saveState()
+{
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+
+    QDataStream s(&buffer);
+    s << (quint8)flow();
+    s << gridSize();
+    s << iconSize();
+    s << (quint8)viewMode();
+    s << (quint8)sortingColumn();
+    s << (quint8)sortingOrder();
+
+    return buffer.data();
 }

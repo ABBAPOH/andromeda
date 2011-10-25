@@ -1,5 +1,6 @@
 #include "dualpanewidget.h"
 
+#include <QtCore/QBuffer>
 #include <QtCore/QEvent>
 #include <QtGui/QHBoxLayout>
 
@@ -196,6 +197,44 @@ Qt::SortOrder DualPaneWidget::sortingOrder() const
 void DualPaneWidget::setSortingOrder(Qt::SortOrder order)
 {
     activeWidget()->setSortingOrder(order);
+}
+
+bool DualPaneWidget::restoreState(const QByteArray &state)
+{
+    if (state.isEmpty())
+        return false;
+
+    QByteArray data = state;
+    QBuffer buffer(&data);
+    buffer.open(QIODevice::ReadOnly);
+
+    QDataStream s(&buffer);
+    bool b;
+    QByteArray subState;
+    s >> b;
+    setDualPaneModeEnabled(b);
+    s >> subState;
+    leftWidget()->restoreState(subState);
+    if (b) {
+        s >> subState;
+        leftWidget()->restoreState(subState);
+    }
+
+    return true;
+}
+
+QByteArray DualPaneWidget::saveState()
+{
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+
+    QDataStream s(&buffer);
+    s << dualPaneModeEnabled();
+    s << leftWidget()->saveState();
+    if (dualPaneModeEnabled())
+        s << rightWidget()->saveState();
+
+    return buffer.data();
 }
 
 void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
