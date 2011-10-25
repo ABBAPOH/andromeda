@@ -363,6 +363,9 @@ void DualPaneWidget::updateState()
             leftWidget()->sortingColumn() != rightWidget()->sortingColumn())
         emit sortingChanged();
 
+    if (leftWidget()->viewMode() != rightWidget()->viewMode())
+        emit viewModeChanged(viewMode());
+
     emit currentPathChanged(activeWidget()->currentPath());
 }
 

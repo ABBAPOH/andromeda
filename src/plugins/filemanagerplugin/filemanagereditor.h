@@ -50,6 +50,7 @@ private slots:
     void onOpenRequested(const QString &path);
     void onCustomContextMenuRequested(const QPoint &pos);
     void setViewMode(int);
+    void onViewModeChanged();
     void setAndSaveViewMode(int);
     void setSortColumn(int);
     void setSortOrder(bool);
@@ -117,6 +118,7 @@ private:
     QAction *sortByDateAction;
 
     QAction *sortByDescendingOrderAction;
+    bool ignoreSignals;
 };
 
 class FileManagerEditorFactory : public CorePlugin::AbstractEditorFactory
