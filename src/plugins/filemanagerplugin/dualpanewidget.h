@@ -16,6 +16,8 @@ class FILEMANAGERPLUGIN_EXPORT DualPaneWidget : public QWidget
     Q_DECLARE_PRIVATE(DualPaneWidget)
     Q_PROPERTY(Pane activePane READ activePane WRITE setActivePane NOTIFY activePaneChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+    Q_PROPERTY(FileManagerPlugin::FileManagerWidget::ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
+
 public:
     enum Pane { LeftPane = 0, RightPane = 1 };
     Q_ENUMS(Pane)
@@ -54,6 +56,7 @@ signals:
     void canRedoChanged(bool);
     void selectedPathsChanged();
     void sortingChanged();
+    void viewModeChanged(FileManagerWidget::ViewMode mode);
 
 public slots:
     void setActivePane(Pane pane);
