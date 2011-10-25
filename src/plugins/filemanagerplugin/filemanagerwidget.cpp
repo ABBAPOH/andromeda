@@ -255,6 +255,16 @@ FileManagerWidget::~FileManagerWidget()
     delete d_ptr;
 }
 
+bool FileManagerWidget::canRedo() const
+{
+    return fileSystemManager()->canRedo();
+}
+
+bool FileManagerWidget::canUndo() const
+{
+    return fileSystemManager()->canUndo();
+}
+
 QString FileManagerWidget::currentPath() const
 {
     Q_D(const FileManagerWidget);

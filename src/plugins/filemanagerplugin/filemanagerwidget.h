@@ -23,10 +23,15 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_DECLARE_PRIVATE(FileManagerWidget)
     Q_DISABLE_COPY(FileManagerWidget)
 
+    Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
+    Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
     Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
     Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+    Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY currentPathChanged)
+    Q_PROPERTY(Column sortingColumn READ sortingColumn WRITE setSortingColumn NOTIFY sortingChanged)
+    Q_PROPERTY(Qt::SortOrder sortingOrder READ sortingOrder WRITE setSortingOrder NOTIFY sortingChanged)
     Q_PROPERTY(ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
@@ -40,6 +45,9 @@ public:
 
     explicit FileManagerWidget(QWidget *parent = 0);
     ~FileManagerWidget();
+
+    bool canRedo() const;
+    bool canUndo() const;
 
     QString currentPath() const;
 
@@ -76,8 +84,8 @@ public:
     QByteArray saveState();
 
 signals:
-    void canUndoChanged(bool);
     void canRedoChanged(bool);
+    void canUndoChanged(bool);
     void currentPathChanged(const QString &path);
     void selectedPathsChanged();
     void sortingChanged();
