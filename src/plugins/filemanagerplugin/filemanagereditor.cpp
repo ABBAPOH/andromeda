@@ -112,6 +112,7 @@ QString FileManagerEditor::windowTitle() const
 /*!
   \reimp
 */
+
 void FileManagerEditor::restoreSession(QSettings &s)
 {
     AbstractEditor::restoreSession(s);
@@ -134,6 +135,9 @@ void FileManagerEditor::restoreSession(QSettings &s)
     if (value.isValid()) {
         splitter->restoreState(value.toByteArray());
     }
+
+    m_widget->setSortingOrder((Qt::SortOrder)s.value(QLatin1String("sortingOrder")).toInt());
+    m_widget->setSortingColumn((FileManagerWidget::Column)s.value(QLatin1String("sortingColumn")).toInt());
 }
 
 /*!
@@ -152,6 +156,9 @@ void FileManagerEditor::saveSession(QSettings &s)
     s.setValue(QLatin1String("panelVisible"), !m_panel->isHidden());
     s.setValue(QLatin1String("viewMode"), mode);
     s.setValue(QLatin1String("splitterState"), splitter->saveState());
+
+    s.setValue(QLatin1String("sortingOrder"), (int)m_widget->sortingOrder());
+    s.setValue(QLatin1String("sortingColumn"), (int)m_widget->sortingColumn());
 }
 
 /*!
@@ -206,6 +213,13 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
         viewModeMenu->addAction(treeModeAction);
         viewModeMenu->addAction(coverFlowModeAction);
         viewModeMenu->addAction(dualPaneModeAction);
+        QMenu * sortByMenu = menu->addMenu(tr("Sort by"));
+        sortByMenu->addAction(sortByNameAction);
+        sortByMenu->addAction(sortByTypeAction);
+        sortByMenu->addAction(sortBySizeAction);
+        sortByMenu->addAction(sortByDateAction);
+        sortByMenu->addSeparator();
+        sortByMenu->addAction(sortByDescendingOrderAction);
     } else {
         menu->addAction(openAction);
         menu->addAction(openNewTabAction);
@@ -247,6 +261,45 @@ void FileManagerEditor::setAndSaveViewMode(int mode)
     m_settings->setValue(QLatin1String("fileManager/viewMode"), mode);
 
     setViewMode(mode);
+}
+
+/*!
+  \internal
+*/
+void FileManagerEditor::setSortColumn(int column)
+{
+    m_widget->blockSignals(true);
+    m_widget->setSortingColumn((FileManagerWidget::Column)column);
+    m_widget->blockSignals(false);
+}
+
+/*!
+  \internal
+*/
+void FileManagerEditor::setSortOrder(bool descending)
+{
+    m_widget->blockSignals(true);
+    m_widget->setSortingOrder((Qt::SortOrder)descending);
+    m_widget->blockSignals(false);
+}
+
+/*!
+  \internal
+*/
+void FileManagerEditor::onSortingChanged()
+{
+    int sortOrder = m_widget->sortingOrder();
+    int sortColumn = m_widget->sortingColumn();
+
+    m_settings->setValue(QLatin1String("fileManager/sortingOrder"), sortOrder);
+    m_settings->setValue(QLatin1String("fileManager/sortingColumn"), sortColumn);
+
+    sortByDescendingOrderAction->setChecked(sortOrder);
+
+    sortByNameAction->setChecked(sortColumn == FileManagerWidget::NameColumn);
+    sortBySizeAction->setChecked(sortColumn == FileManagerWidget::SizeColumn);
+    sortByTypeAction->setChecked(sortColumn == FileManagerWidget::TypeColumn);
+    sortByDateAction->setChecked(sortColumn == FileManagerWidget::DateChangedColumn);
 }
 
 /*!
@@ -399,6 +452,7 @@ void FileManagerEditor::setupConnections()
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
     connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
     connect(m_widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
+    connect(m_widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
     connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
 
     connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
@@ -445,6 +499,27 @@ QAction * FileManagerEditor::createViewAction(const QString &text, const QByteAr
 
     viewModeMapper->setMapping(action, mode);
     connect(action, SIGNAL(toggled(bool)), viewModeMapper, SLOT(map()));
+
+    m_widget->addAction(action);
+    actionManager->registerAction(action, id);
+
+    return action;
+}
+
+/*!
+  \internal
+*/
+QAction * FileManagerEditor::createSortByAction(const QString &text, const QByteArray &id, int mode)
+{
+    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+
+    QAction *action = new QAction(this);
+    action->setText(text);
+    action->setCheckable(true);
+    sortByGroup->addAction(action);
+
+    sortByMapper->setMapping(action, mode);
+    connect(action, SIGNAL(toggled(bool)), sortByMapper, SLOT(map()));
 
     m_widget->addAction(action);
     actionManager->registerAction(action, id);
@@ -507,6 +582,7 @@ void FileManagerEditor::createActions()
     copyAction->setEnabled(false);
 
     createViewActions();
+    createSortByActions();
 }
 
 /*!
@@ -542,6 +618,29 @@ void FileManagerEditor::createViewActions()
     connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setAndSaveViewMode(int)));
 }
 
+void FileManagerPlugin::FileManagerEditor::createSortByActions()
+{
+    sortByGroup = new QActionGroup(this);
+    sortByGroup->setExclusive(true);
+    sortByMapper = new QSignalMapper(this);
+
+    sortByNameAction = createSortByAction(tr("Sort by name"), Constants::Actions::SortByName, FileManagerWidget::NameColumn);
+    sortBySizeAction = createSortByAction(tr("Sort by size"), Constants::Actions::SortBySize, FileManagerWidget::SizeColumn);
+    sortByTypeAction = createSortByAction(tr("Sort by type"), Constants::Actions::SortByType, FileManagerWidget::TypeColumn);
+    sortByDateAction = createSortByAction(tr("Sort by date"), Constants::Actions::SortByDate, FileManagerWidget::DateChangedColumn);
+
+    sortByNameAction->setChecked(true);
+
+    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+    sortByDescendingOrderAction = new QAction(tr("Descending order"), this);
+    sortByDescendingOrderAction->setCheckable(true);
+    connect(sortByDescendingOrderAction, SIGNAL(triggered(bool)), this, SLOT(setSortOrder(bool)));
+    m_widget->addAction(sortByDescendingOrderAction);
+    actionManager->registerAction(sortByDescendingOrderAction, Constants::Actions::SortByDescendingOrder);
+
+    connect(sortByMapper, SIGNAL(mapped(int)), SLOT(setSortColumn(int)));
+}
+
 /*!
   \internal
 
@@ -574,6 +673,11 @@ void FileManagerEditor::restoreDefaults()
     }
 
     showLeftPanelAction->setChecked(showLeftPanel); // FIXME
+
+    int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder")).toInt();
+    int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn")).toInt();
+    m_widget->setSortingOrder((Qt::SortOrder)sortOrder);
+    m_widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
 
     m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/iconSize"));
     m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/gridSize"));

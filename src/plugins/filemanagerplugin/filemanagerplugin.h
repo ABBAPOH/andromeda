@@ -33,6 +33,7 @@ private:
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());
     void createGoToActions();
+    void createSortByActons();
 
 private:
     QSignalMapper *gotoMapper;

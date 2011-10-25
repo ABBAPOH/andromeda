@@ -9,8 +9,6 @@
 
 namespace FileManagerPlugin {
 
-class FileManagerWidget;
-
 class DualPaneWidgetPrivate;
 class FILEMANAGERPLUGIN_EXPORT DualPaneWidget : public QWidget
 {
@@ -39,6 +37,12 @@ public:
 
     void setFileSystemManager(FileSystemManager *manager);
 
+    FileManagerWidget::Column sortingColumn() const;
+    void setSortingColumn(FileManagerWidget::Column column);
+
+    Qt::SortOrder sortingOrder() const;
+    void setSortingOrder(Qt::SortOrder order);
+
 signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);
@@ -46,6 +50,7 @@ signals:
     void canUndoChanged(bool);
     void canRedoChanged(bool);
     void selectedPathsChanged();
+    void sortingChanged();
 
 public slots:
     void setActivePane(Pane pane);
@@ -75,8 +80,11 @@ public slots:
     void showHiddenFiles(bool show);
 
 protected:
+    void updateState();
+
     bool eventFilter(QObject *, QEvent *);
 
+protected:
     DualPaneWidgetPrivate *d_ptr;
 };
 

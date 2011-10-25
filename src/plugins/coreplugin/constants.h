@@ -13,6 +13,7 @@ const char * const View = "Menus:3.View";
 const char * const GoTo = "Menus:4.GoTo";
 const char * const Tools = "Menus:5.Tools";
 const char * const Help = "Menus:6.Help";
+const char * const SortBy = "Menus.SortBy";
 
 } // namespace Menus
 
@@ -27,6 +28,8 @@ const char * const EditRedo = "MenuGroups:1.Edit.Redo";
 const char * const EditCopyPaste = "MenuGroups:2.Edit.CopyPate";
 
 const char * const ViewViewMode = "MenuGroups:1.View.ViewMode";
+const char * const ViewSortBy = "MenuGroups:2.View.SortBy";
+const char * const ViewSortByOrder = "MenuGroups.View.ViewSortByOrder";
 
 const char * const Locations = "MenuGroups:1.Goto.Locations";
 
@@ -58,6 +61,12 @@ const char * const ColumnMode = "Actions.2.ColumnMode";
 const char * const TreeMode = "Actions.3.TreeViewMode";
 const char * const CoverFlowMode = "Actions.4.CoverFlowMode";
 const char * const DualPane = "Actions.5.DualPane";
+
+const char * const SortByName = "Actions.1.SortByName";
+const char * const SortBySize = "Actions.2.SortBySize";
+const char * const SortByType = "Actions.3.SortByType";
+const char * const SortByDate = "Actions.4.SortByDate";
+const char * const SortByDescendingOrder = "Actions.4.SortByDescendingOrder";
 
 const char * const ShowLeftPanel = "Actions.ShowLeftPanel";
 const char * const ShowHiddenFiles = "Actions.ShowHiddenFiles";
