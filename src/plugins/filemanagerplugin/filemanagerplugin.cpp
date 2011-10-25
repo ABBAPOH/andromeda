@@ -140,7 +140,7 @@ void FileManagerPluginImpl::createViewMenu()
 
     container = ActionManager::instance()->container(Constants::Menus::View);
 
-    // ================ GoTo Menu (View Mode) ================
+    // ================ View Menu (View Mode) ================
     container->addGroup(group = Constants::MenuGroups::ViewViewMode);
 
     cmd = new Command(Constants::Actions::IconMode, this);
