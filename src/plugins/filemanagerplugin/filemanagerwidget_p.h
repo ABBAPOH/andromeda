@@ -34,6 +34,7 @@ public:
     void initViews();
 
     void setFileSystemManager(FileSystemManager *manager);
+    void setModel(FileSystemModel *model);
 
     QModelIndexList selectedIndexes() const;
 

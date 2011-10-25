@@ -116,7 +116,34 @@ void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
             q, SIGNAL(canUndoChanged(bool)));
     connect(fileSystemManager, SIGNAL(canRedoChanged(bool)),
             q, SIGNAL(canRedoChanged(bool)));
+}
 
+void FileManagerWidgetPrivate::setModel(FileSystemModel *m)
+{
+    Q_Q(FileManagerWidget);
+
+    if (m == 0)
+        setModel(new FileSystemModel(this));
+
+    if (model == m)
+        return;
+
+    if (model) {
+        for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
+            disconnect(views[i]->selectionModel(), 0, q, 0);
+        }
+    }
+
+    if (model && model->QObject::parent() == this)
+        delete model;
+
+    model = m;
+
+    for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
+        views[i]->setModel(m);
+        connect(views[i]->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                q, SIGNAL(selectedPathsChanged()));
+    }
 }
 
 QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
@@ -163,7 +190,7 @@ static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QD
 //{
 //}
 
-FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
+FileManagerWidget::FileManagerWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new FileManagerWidgetPrivate(this))
 {
@@ -179,13 +206,11 @@ FileManagerWidget::FileManagerWidget(FileSystemModel *model, QWidget *parent) :
     d->history = new CorePlugin::History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
-    if (!model)
-        model = new FileSystemModel(this);
-
+    FileSystemModel *model = new FileSystemModel(this);
     model->setRootPath("/");
     model->setFilter(mBaseFilters);
     model->setReadOnly(false);
-    setModel(model);
+    d->setModel(model);
 
 //    ((QTreeView*)d->views[FileManagerWidget::TableView])->setColumnWidth(0, 250);
     ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
@@ -231,7 +256,23 @@ void FileManagerWidget::setCurrentPath(const QString &path)
 
 FileSystemManager * FileManagerWidget::fileSystemManager() const
 {
-    return d_func()->fileSystemManager;
+    Q_D(const FileManagerWidget);
+
+    if (!d->fileSystemManager) {
+        const_cast<FileManagerWidgetPrivate*>(d)->setFileSystemManager(d->model->fileSystemManager());
+    }
+
+    return d->fileSystemManager;
+}
+
+void FileManagerWidget::setFileSystemManager(FileSystemManager *manager)
+{
+    Q_D(FileManagerWidget);
+
+    if (!d->fileSystemManager) {
+        d->model->setFileSystemManager(manager);
+        d->setFileSystemManager(manager);
+    }
 }
 
 CorePlugin::History * FileManagerWidget::history() const
@@ -246,35 +287,6 @@ FileSystemModel * FileManagerWidget::model() const
     Q_D(const FileManagerWidget);
 
     return d->model;
-}
-
-void FileManagerWidget::setModel(FileSystemModel *model)
-{
-    Q_D(FileManagerWidget);
-
-    if (model == 0)
-        setModel(new FileSystemModel(this));
-
-    if (d->model == model)
-        return;
-
-    if (d->model) {
-        for (int i = 0; i < MaxViews; i++) {
-            disconnect(d->views[i]->selectionModel(), 0, this, 0);
-        }
-    }
-
-    if (d->model && d->model->QObject::parent() == this)
-        delete d->model;
-
-    d->model = model;
-    d->setFileSystemManager(model->fileSystemManager());
-
-    for (int i = 0; i < MaxViews; i++) {
-        d->views[i]->setModel(model);
-        connect(d->views[i]->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                SIGNAL(selectedPathsChanged()));
-    }
 }
 
 QStringList FileManagerWidget::selectedPaths() const
@@ -395,8 +407,6 @@ void FileManagerWidget::copy()
 
 void FileManagerWidget::paste()
 {
-    Q_D(FileManagerWidget);
-
     QClipboard * clipboard = QApplication::clipboard();
     const QMimeData * data = clipboard->mimeData();
     const QList<QUrl> & urls = data->urls();
@@ -405,7 +415,7 @@ void FileManagerWidget::paste()
     foreach (const QUrl &url, urls) {
         files.append(url.toLocalFile());
     }
-    d->fileSystemManager->copy(files, currentPath());
+    fileSystemManager()->copy(files, currentPath());
 }
 
 void FileManagerWidget::selectAll()

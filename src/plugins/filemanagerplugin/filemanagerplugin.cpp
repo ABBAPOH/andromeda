@@ -50,7 +50,11 @@ bool FileManagerPluginImpl::initialize(const QVariantMap &options)
 
     FileSystemModel *model = new FileSystemModel;
     addObject(model);
-    addObject(new FileCopyDialog(model->fileSystemManager()), "fileCopyDialog");
+
+    FileSystemManager *manager = new FileSystemManager(this);
+    addObject(manager, QLatin1String("fileSystemManager"));
+
+    addObject(new FileCopyDialog(manager), "fileCopyDialog");
 
     createActions();
 

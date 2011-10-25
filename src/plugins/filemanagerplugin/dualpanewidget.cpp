@@ -37,7 +37,7 @@ void swapPalettes(QWidget *active, QWidget *inactive)
 //{
 //}
 
-DualPaneWidget::DualPaneWidget(FileSystemModel *model, QWidget *parent) :
+DualPaneWidget::DualPaneWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new DualPaneWidgetPrivate)
 {
@@ -45,8 +45,8 @@ DualPaneWidget::DualPaneWidget(FileSystemModel *model, QWidget *parent) :
 
     d->activePane = LeftPane;
     d->dualPaneModeEnabled = false;
-    d->panes[LeftPane] = new FileManagerWidget(model, this);
-    d->panes[RightPane] = new FileManagerWidget(model, this);
+    d->panes[LeftPane] = new FileManagerWidget(this);
+    d->panes[RightPane] = new FileManagerWidget(this);
     d->panes[RightPane]->hide();
     d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
     swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
@@ -165,6 +165,14 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
 FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
 {
     return d_func()->viewMode;
+}
+
+void DualPaneWidget::setFileSystemManager(FileSystemManager *manager)
+{
+    Q_D(DualPaneWidget);
+
+    d->panes[LeftPane]->setFileSystemManager(manager);
+    d->panes[RightPane]->setFileSystemManager(manager);
 }
 
 void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)

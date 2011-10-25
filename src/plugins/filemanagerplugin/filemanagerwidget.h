@@ -33,18 +33,17 @@ public:
     Q_ENUMS(Flow)
     Q_ENUMS(ViewMode)
 
-//    explicit FileManagerWidget(QWidget *parent = 0);
-    explicit FileManagerWidget(FileSystemModel *model = 0, QWidget *parent = 0);
+    explicit FileManagerWidget(QWidget *parent = 0);
     ~FileManagerWidget();
 
     QString currentPath() const;
 
     FileSystemManager *fileSystemManager() const;
+    void setFileSystemManager(FileSystemManager *manager);
 
     CorePlugin::History *history() const;
 
     FileSystemModel *model() const;
-    void setModel(FileSystemModel *model);
 
     QStringList selectedPaths() const;
 
