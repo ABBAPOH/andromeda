@@ -34,6 +34,7 @@ public:
     }
 };
 
+#include <QHeaderView>
 void FileManagerWidgetPrivate::initViews()
 {
     Q_Q(FileManagerWidget);
@@ -66,9 +67,14 @@ void FileManagerWidgetPrivate::initViews()
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setRootIsDecorated(false);
     tableView->setItemsExpandable(false);
+    connect(tableView->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
+            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
 
     treeView->setAlternatingRowColors(true);
     treeView->setExpandsOnDoubleClick(false);
+    treeView->setSortingEnabled(true);
+    connect(treeView->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
+            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
 
     coverFlow->setPictureColumn(0);
     coverFlow->setPictureRole(Qt::UserRole);
@@ -154,6 +160,19 @@ QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
     return currentView->selectionModel()->selectedRows();
 }
 
+void FileManagerWidgetPrivate::updateSorting()
+{
+    QTreeView *view = 0;
+
+    view = static_cast<QTreeView*>(views[FileManagerWidget::TreeView]);
+    view->sortByColumn(sortingColumn, sortingOrder);
+
+    view = static_cast<QTreeView*>(views[FileManagerWidget::TableView]);
+    view->sortByColumn(sortingColumn, sortingOrder);
+
+    model->sort(sortingColumn, sortingOrder);
+}
+
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
 {
     Q_Q(FileManagerWidget);
@@ -182,6 +201,19 @@ void FileManagerWidgetPrivate::onCurrentItemIndexChanged(int index)
     }
 }
 
+void FileManagerWidgetPrivate::onSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
+{
+    Q_Q(FileManagerWidget);
+
+    if (sortingColumn == logicalIndex && sortingOrder == order)
+        return;
+
+    sortingColumn = (FileManagerWidget::Column)logicalIndex;
+    sortingOrder = order;
+
+    emit q->sortingChanged();
+}
+
 static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
 
 // todo : uncomment when c++0x will be standard
@@ -202,6 +234,8 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->currentView = 0;
     d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
     d->fileSystemManager = 0;
+    d->sortingColumn = (FileManagerWidget::Column)-1;
+    d->sortingOrder = (Qt::SortOrder)-1;
 
     d->history = new CorePlugin::History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -218,6 +252,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     setViewMode(IconView);
     setFlow(LeftToRight);
     setGridSize(QSize(128, 128));
+    setSorting(NameColumn, Qt::AscendingOrder);
 }
 
 FileManagerWidget::~FileManagerWidget()
@@ -552,4 +587,51 @@ void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
     view->setDragEnabled(true);
     view->viewport()->setAcceptDrops(true);
     view->setMouseTracking(true);
+}
+
+FileManagerWidget::Column FileManagerWidget::sortingColumn() const
+{
+    return d_func()->sortingColumn;
+}
+
+void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingColumn == column)
+        return;
+
+    d->sortingColumn = column;
+    d->updateSorting();
+    emit sortingChanged();
+}
+
+Qt::SortOrder FileManagerWidget::sortingOrder() const
+{
+    return d_func()->sortingOrder;
+}
+
+void FileManagerWidget::setSortingOrder(Qt::SortOrder order)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingOrder == order)
+        return;
+
+    d->sortingOrder = order;
+    d->updateSorting();
+    emit sortingChanged();
+}
+
+void FileManagerWidget::setSorting(FileManagerWidget::Column column, Qt::SortOrder order)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingColumn == column && d->sortingOrder == order)
+        return;
+
+    d->sortingColumn = column;
+    d->sortingOrder = order;
+    d->updateSorting();
+    emit sortingChanged();
 }

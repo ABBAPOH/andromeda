@@ -37,10 +37,12 @@ public:
     void setModel(FileSystemModel *model);
 
     QModelIndexList selectedIndexes() const;
+    void updateSorting();
 
 public slots:
     void onDoubleClick(const QModelIndex &index);
     void onCurrentItemIndexChanged(int index);
+    void onSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
 public:
     FileManagerWidget::ViewMode viewMode;
@@ -58,6 +60,9 @@ public:
     bool blockEvents;
     QSize gridSize;
     FileManagerWidget::Flow flow;
+
+    FileManagerWidget::Column sortingColumn;
+    Qt::SortOrder sortingOrder;
 };
 
 } // namespace FileManagerPlugin

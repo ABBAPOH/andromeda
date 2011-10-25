@@ -184,6 +184,40 @@ void FileManagerPluginImpl::createViewMenu()
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+L")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
+
+    // ================ View Menu (View Mode) ================
+    container->addGroup(group = Constants::MenuGroups::ViewSortBy);
+    CommandContainer *sortByMenu = new CommandContainer(Constants::Menus::SortBy, this);
+    sortByMenu->setTitle(tr("Sort by"));
+    container->addContainer(sortByMenu, group);
+    container = sortByMenu;
+
+    cmd = new Command(Constants::Actions::SortByName, this);
+    cmd->setDefaultText(tr("Sort by name"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+1")));
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::SortBySize, this);
+    cmd->setDefaultText(tr("Sort by size"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+2")));
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::SortByType, this);
+    cmd->setDefaultText(tr("Sort by type"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+3")));
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::SortByDate, this);
+    cmd->setDefaultText(tr("Sort by date"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
+    container->addCommand(cmd);
+
+    container->addGroup(group = Constants::MenuGroups::ViewSortByOrder);
+
+    cmd = new Command(Constants::Actions::SortByDescendingOrder, this);
+    cmd->setDefaultText(tr("Descending Order"));
+//    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
+    container->addCommand(cmd, group);
 }
 
 void FileManagerPluginImpl::createGoToMenu()
@@ -259,6 +293,10 @@ void FileManagerPluginImpl::createGoToActions()
     }
     connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(goTo(QString)));
 
+}
+
+void FileManagerPluginImpl::createSortByActons()
+{
 }
 
 Q_EXPORT_PLUGIN(FileManagerPluginImpl)

@@ -30,8 +30,11 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
 public:
     enum ViewMode { IconView = 0, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
     enum Flow { LeftToRight = 0, TopToBottom = 1 };
+    enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateChangedColumn };
+
     Q_ENUMS(Flow)
     Q_ENUMS(ViewMode)
+    Q_ENUMS(Column)
 
     explicit FileManagerWidget(QWidget *parent = 0);
     ~FileManagerWidget();
@@ -58,12 +61,21 @@ public:
     Flow flow() const;
     void setFlow(Flow flow);
 
+    Column sortingColumn() const;
+    void setSortingColumn(Column column);
+
+    Qt::SortOrder sortingOrder() const;
+    void setSortingOrder(Qt::SortOrder order);
+
+    void setSorting(Column column, Qt::SortOrder order);
+
 signals:
     void currentPathChanged(const QString &path);
     void openRequested(const QString &path);
     void canUndoChanged(bool);
     void canRedoChanged(bool);
     void selectedPathsChanged();
+    void sortingChanged();
 
 public slots:
     void setCurrentPath(const QString &path);

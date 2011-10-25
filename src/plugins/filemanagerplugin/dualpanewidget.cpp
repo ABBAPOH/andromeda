@@ -77,6 +77,9 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     connect(d->panes[LeftPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
     connect(d->panes[RightPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
 
+    connect(d->panes[LeftPane], SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
+    connect(d->panes[RightPane], SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
+
     setObjectName(QLatin1String("DualPaneWidget"));
 }
 
@@ -105,7 +108,7 @@ void DualPaneWidget::setActivePane(DualPaneWidget::Pane pane)
     d->activePane = pane;
     swapPalettes(d->panes[pane], d->panes[(pane + 1)%2]);
     emit activePaneChanged(d->activePane);
-    emit currentPathChanged(activeWidget()->currentPath());
+    updateState();
 }
 
 FileManagerWidget * DualPaneWidget::activeWidget() const
@@ -173,6 +176,26 @@ void DualPaneWidget::setFileSystemManager(FileSystemManager *manager)
 
     d->panes[LeftPane]->setFileSystemManager(manager);
     d->panes[RightPane]->setFileSystemManager(manager);
+}
+
+FileManagerWidget::Column DualPaneWidget::sortingColumn() const
+{
+    return activeWidget()->sortingColumn();
+}
+
+void DualPaneWidget::setSortingColumn(FileManagerWidget::Column column)
+{
+    activeWidget()->setSortingColumn(column);
+}
+
+Qt::SortOrder DualPaneWidget::sortingOrder() const
+{
+    return activeWidget()->sortingOrder();
+}
+
+void DualPaneWidget::setSortingOrder(Qt::SortOrder order)
+{
+    activeWidget()->setSortingOrder(order);
 }
 
 void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
@@ -292,6 +315,15 @@ void DualPaneWidget::showHiddenFiles(bool show)
     activeWidget()->showHiddenFiles(show);
 }
 
+void DualPaneWidget::updateState()
+{
+    if (leftWidget()->sortingOrder() != rightWidget()->sortingOrder() ||
+            leftWidget()->sortingColumn() != rightWidget()->sortingColumn())
+        emit sortingChanged();
+
+    emit currentPathChanged(activeWidget()->currentPath());
+}
+
 bool DualPaneWidget::eventFilter(QObject *o, QEvent *e)
 {
     Q_D(DualPaneWidget);
@@ -306,3 +338,4 @@ bool DualPaneWidget::eventFilter(QObject *o, QEvent *e)
 
     return false;
 }
+

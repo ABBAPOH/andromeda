@@ -51,6 +51,9 @@ private slots:
     void onCustomContextMenuRequested(const QPoint &pos);
     void setViewMode(int);
     void setAndSaveViewMode(int);
+    void setSortColumn(int);
+    void setSortOrder(bool);
+    void onSortingChanged();
     void showLeftPanel(bool);
     void showFileInfo();
     void onSelectedPathsChanged();
@@ -65,8 +68,10 @@ private:
     QAction * createAction(const QString &text, const QByteArray &id,
                            const char *slot, bool checkable = false);
     QAction * createViewAction(const QString &text, const QByteArray &id, int mode);
+    QAction * createSortByAction(const QString &text, const QByteArray &id, int mode);
     void createActions();
     void createViewActions();
+    void createSortByActions();
     void restoreDefaults();
 
 private:
@@ -102,6 +107,16 @@ private:
     QAction *treeModeAction;
     QAction *coverFlowModeAction;
     QAction *dualPaneModeAction;
+
+    QSignalMapper *sortByMapper;
+
+    QActionGroup *sortByGroup;
+    QAction *sortByNameAction;
+    QAction *sortBySizeAction;
+    QAction *sortByTypeAction;
+    QAction *sortByDateAction;
+
+    QAction *sortByDescendingOrderAction;
 };
 
 class FileManagerEditorFactory : public CorePlugin::AbstractEditorFactory
