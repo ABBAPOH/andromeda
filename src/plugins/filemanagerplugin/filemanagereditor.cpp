@@ -288,7 +288,7 @@ void FileManagerEditor::onSortingChanged()
     sortByNameAction->setChecked(sortColumn == FileManagerWidget::NameColumn);
     sortBySizeAction->setChecked(sortColumn == FileManagerWidget::SizeColumn);
     sortByTypeAction->setChecked(sortColumn == FileManagerWidget::TypeColumn);
-    sortByDateAction->setChecked(sortColumn == FileManagerWidget::DateChangedColumn);
+    sortByDateAction->setChecked(sortColumn == FileManagerWidget::DateColumn);
 }
 
 /*!
@@ -616,7 +616,7 @@ void FileManagerPlugin::FileManagerEditor::createSortByActions()
     sortByNameAction = createSortByAction(tr("Sort by name"), Constants::Actions::SortByName, FileManagerWidget::NameColumn);
     sortBySizeAction = createSortByAction(tr("Sort by size"), Constants::Actions::SortBySize, FileManagerWidget::SizeColumn);
     sortByTypeAction = createSortByAction(tr("Sort by type"), Constants::Actions::SortByType, FileManagerWidget::TypeColumn);
-    sortByDateAction = createSortByAction(tr("Sort by date"), Constants::Actions::SortByDate, FileManagerWidget::DateChangedColumn);
+    sortByDateAction = createSortByAction(tr("Sort by date"), Constants::Actions::SortByDate, FileManagerWidget::DateColumn);
 
     sortByNameAction->setChecked(true);
 

@@ -217,12 +217,6 @@ void FileManagerWidgetPrivate::onSortIndicatorChanged(int logicalIndex, Qt::Sort
 
 static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
 
-// todo : uncomment when c++0x will be standard
-//FileManagerWidget::FileManagerWidget(QWidget *parent) :
-//    FileManagerWidget(0, parent)
-//{
-//}
-
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new FileManagerWidgetPrivate(this))
@@ -290,6 +284,160 @@ void FileManagerWidget::setCurrentPath(const QString &path)
     }
 }
 
+FileManagerWidget::Flow FileManagerWidget::flow() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->flow;
+}
+
+void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->flow == flow)
+        return;
+
+    QListView *view = (QListView *)d->views[IconView];
+    QSize s = d->gridSize;
+    if (flow == LeftToRight) {
+        view->setFlow(QListView::LeftToRight);
+        view->setViewMode(QListView::IconMode);
+        view->update();
+        d->flow = flow;
+    } else if (flow == TopToBottom) {
+        view->setFlow(QListView::TopToBottom);
+        view->setViewMode(QListView::ListMode);
+        d->flow = flow;
+        s.setWidth(256);
+    }
+    view->setGridSize(s);
+    // fix dragging
+    view->setDragEnabled(true);
+    view->viewport()->setAcceptDrops(true);
+    view->setMouseTracking(true);
+}
+
+QSize FileManagerWidget::gridSize() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->gridSize;
+}
+
+void FileManagerWidget::setGridSize(QSize s)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->gridSize == s)
+        return;
+
+    d->gridSize = s;
+    QListView *view = (QListView *)d->views[IconView];
+    if (d->flow == TopToBottom)
+        s.setWidth(256);
+    view->setGridSize(s);
+}
+
+QSize FileManagerWidget::iconSize() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->views[IconView]->iconSize();
+}
+
+void FileManagerWidget::setIconSize(QSize s)
+{
+    Q_D(FileManagerWidget);
+
+    d->views[IconView]->setIconSize(s);
+}
+
+QStringList FileManagerWidget::selectedPaths() const
+{
+    Q_D(const FileManagerWidget);
+
+    QStringList result;
+    foreach (const QModelIndex &index, d->selectedIndexes()) {
+        result.append(d->model->filePath(index));
+    }
+    return QStringList(result);
+}
+
+FileManagerWidget::Column FileManagerWidget::sortingColumn() const
+{
+    return d_func()->sortingColumn;
+}
+
+void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingColumn == column)
+        return;
+
+    d->sortingColumn = column;
+    d->updateSorting();
+    emit sortingChanged();
+}
+
+Qt::SortOrder FileManagerWidget::sortingOrder() const
+{
+    return d_func()->sortingOrder;
+}
+
+void FileManagerWidget::setSortingOrder(Qt::SortOrder order)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingOrder == order)
+        return;
+
+    d->sortingOrder = order;
+    d->updateSorting();
+    emit sortingChanged();
+}
+
+void FileManagerWidget::setSorting(FileManagerWidget::Column column, Qt::SortOrder order)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingColumn == column && d->sortingOrder == order)
+        return;
+
+    d->sortingColumn = column;
+    d->sortingOrder = order;
+    d->updateSorting();
+    emit sortingChanged();
+}
+
+FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->viewMode;
+}
+
+void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->viewMode != mode) {
+        d->viewMode = mode;
+        bool focus = d->currentView ? d->currentView->hasFocus() : false;
+        d->layout->setCurrentIndex(mode);
+        d->currentView = d->views[mode];
+        if (focus) {
+            d->currentView->setFocus();
+        }
+
+        QModelIndex index = d->model->index(d->currentPath);
+        d->currentView->setRootIndex(index);
+
+        emit viewModeChanged(d->viewMode);
+    }
+}
+
 FileSystemManager * FileManagerWidget::fileSystemManager() const
 {
     Q_D(const FileManagerWidget);
@@ -325,42 +473,47 @@ FileSystemModel * FileManagerWidget::model() const
     return d->model;
 }
 
-QStringList FileManagerWidget::selectedPaths() const
+bool FileManagerWidget::restoreState(const QByteArray &state)
 {
-    Q_D(const FileManagerWidget);
+    if (state.isEmpty())
+        return false;
 
-    QStringList result;
-    foreach (const QModelIndex &index, d->selectedIndexes()) {
-        result.append(d->model->filePath(index));
-    }
-    return QStringList(result);
+    QByteArray data = state;
+    QBuffer buffer(&data);
+    buffer.open(QIODevice::ReadOnly);
+
+    QDataStream s(&buffer);
+    quint8 tmp;
+    QSize size;
+    s >> tmp;
+    setFlow((Flow)tmp);
+    s >> size;
+    setGridSize(size);
+    s >> size;
+    setIconSize(size);
+    s >> tmp;
+    setViewMode((FileManagerWidget::ViewMode)tmp);
+    s >> tmp;
+    setSortingColumn((FileManagerWidget::Column)tmp);
+    s >> tmp;
+    setSortingOrder((Qt::SortOrder)tmp);
+    return true;
 }
 
-FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
+QByteArray FileManagerWidget::saveState()
 {
-    Q_D(const FileManagerWidget);
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
 
-    return d->viewMode;
-}
+    QDataStream s(&buffer);
+    s << (quint8)flow();
+    s << gridSize();
+    s << iconSize();
+    s << (quint8)viewMode();
+    s << (quint8)sortingColumn();
+    s << (quint8)sortingOrder();
 
-void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->viewMode != mode) {
-        d->viewMode = mode;
-        bool focus = d->currentView ? d->currentView->hasFocus() : false;
-        d->layout->setCurrentIndex(mode);
-        d->currentView = d->views[mode];
-        if (focus) {
-            d->currentView->setFocus();
-        }
-
-        QModelIndex index = d->model->index(d->currentPath);
-        d->currentView->setRootIndex(index);
-
-        emit viewModeChanged(d->viewMode);
-    }
+    return buffer.data();
 }
 
 void FileManagerWidget::newFolder()
@@ -521,163 +674,4 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
     } else {
         d->blockEvents = false;
     }
-}
-
-QSize FileManagerWidget::gridSize() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->gridSize;
-}
-
-void FileManagerWidget::setGridSize(QSize s)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->gridSize == s)
-        return;
-
-    d->gridSize = s;
-    QListView *view = (QListView *)d->views[IconView];
-    if (d->flow == TopToBottom)
-        s.setWidth(256);
-    view->setGridSize(s);
-}
-
-QSize FileManagerWidget::iconSize() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->views[IconView]->iconSize();
-}
-
-void FileManagerWidget::setIconSize(QSize s)
-{
-    Q_D(FileManagerWidget);
-
-    d->views[IconView]->setIconSize(s);
-}
-
-FileManagerWidget::Flow FileManagerWidget::flow() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->flow;
-}
-
-void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->flow == flow)
-        return;
-
-    QListView *view = (QListView *)d->views[IconView];
-    QSize s = d->gridSize;
-    if (flow == LeftToRight) {
-        view->setFlow(QListView::LeftToRight);
-        view->setViewMode(QListView::IconMode);
-        view->update();
-        d->flow = flow;
-    } else if (flow == TopToBottom) {
-        view->setFlow(QListView::TopToBottom);
-        view->setViewMode(QListView::ListMode);
-        d->flow = flow;
-        s.setWidth(256);
-    }
-    view->setGridSize(s);
-    // fix dragging
-    view->setDragEnabled(true);
-    view->viewport()->setAcceptDrops(true);
-    view->setMouseTracking(true);
-}
-
-FileManagerWidget::Column FileManagerWidget::sortingColumn() const
-{
-    return d_func()->sortingColumn;
-}
-
-void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->sortingColumn == column)
-        return;
-
-    d->sortingColumn = column;
-    d->updateSorting();
-    emit sortingChanged();
-}
-
-Qt::SortOrder FileManagerWidget::sortingOrder() const
-{
-    return d_func()->sortingOrder;
-}
-
-void FileManagerWidget::setSortingOrder(Qt::SortOrder order)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->sortingOrder == order)
-        return;
-
-    d->sortingOrder = order;
-    d->updateSorting();
-    emit sortingChanged();
-}
-
-void FileManagerWidget::setSorting(FileManagerWidget::Column column, Qt::SortOrder order)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->sortingColumn == column && d->sortingOrder == order)
-        return;
-
-    d->sortingColumn = column;
-    d->sortingOrder = order;
-    d->updateSorting();
-    emit sortingChanged();
-}
-
-bool FileManagerWidget::restoreState(const QByteArray &state)
-{
-    if (state.isEmpty())
-        return false;
-
-    QByteArray data = state;
-    QBuffer buffer(&data);
-    buffer.open(QIODevice::ReadOnly);
-
-    QDataStream s(&buffer);
-    quint8 tmp;
-    QSize size;
-    s >> tmp;
-    setFlow((Flow)tmp);
-    s >> size;
-    setGridSize(size);
-    s >> size;
-    setIconSize(size);
-    s >> tmp;
-    setViewMode((FileManagerWidget::ViewMode)tmp);
-    s >> tmp;
-    setSortingColumn((FileManagerWidget::Column)tmp);
-    s >> tmp;
-    setSortingOrder((Qt::SortOrder)tmp);
-    return true;
-}
-
-QByteArray FileManagerWidget::saveState()
-{
-    QBuffer buffer;
-    buffer.open(QIODevice::WriteOnly);
-
-    QDataStream s(&buffer);
-    s << (quint8)flow();
-    s << gridSize();
-    s << iconSize();
-    s << (quint8)viewMode();
-    s << (quint8)sortingColumn();
-    s << (quint8)sortingOrder();
-
-    return buffer.data();
 }
