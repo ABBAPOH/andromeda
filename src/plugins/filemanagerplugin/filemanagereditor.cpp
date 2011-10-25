@@ -26,7 +26,8 @@ using namespace CorePlugin;
 using namespace FileManagerPlugin;
 
 FileManagerEditor::FileManagerEditor(QWidget *parent) :
-    AbstractEditor(parent)
+    AbstractEditor(parent),
+    ignoreSignals(false)
 {
     setupUi();
     setupConnections();
@@ -129,12 +130,6 @@ void FileManagerEditor::restoreSession(QSettings &s)
 
     m_widget->restoreState(s.value(QLatin1String("state")).toByteArray());
 
-    int viewMode = m_widget->activeWidget()->viewMode();
-
-    iconModeAction->setChecked(viewMode == IconView);
-    columnModeAction->setChecked(viewMode == ColumnView);
-    treeModeAction->setChecked(viewMode == TreeView);
-    coverFlowModeAction->setChecked(viewMode == CoverFlow);
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 }
 
@@ -240,6 +235,18 @@ void FileManagerEditor::setViewMode(int mode)
     }
 }
 
+void FileManagerEditor::onViewModeChanged()
+{
+    FileManagerWidget::ViewMode viewMode = m_widget->leftWidget()->viewMode();
+
+    ignoreSignals = true;
+    iconModeAction->setChecked(viewMode == FileManagerWidget::IconView);
+    columnModeAction->setChecked(viewMode == FileManagerWidget::ColumnView);
+    treeModeAction->setChecked(viewMode == FileManagerWidget::TreeView);
+    coverFlowModeAction->setChecked(viewMode == FileManagerWidget::CoverFlow);
+    ignoreSignals = false;
+}
+
 /*!
   \internal
 
@@ -247,9 +254,14 @@ void FileManagerEditor::setViewMode(int mode)
 */
 void FileManagerEditor::setAndSaveViewMode(int mode)
 {
+    if (ignoreSignals)
+        return;
+
     m_settings->setValue(QLatin1String("fileManager/viewMode"), mode);
 
+    m_widget->blockSignals(true);
     setViewMode(mode);
+    m_widget->blockSignals(false);
 }
 
 /*!
@@ -257,6 +269,9 @@ void FileManagerEditor::setAndSaveViewMode(int mode)
 */
 void FileManagerEditor::setSortColumn(int column)
 {
+    if (ignoreSignals)
+        return;
+
     m_widget->blockSignals(true);
     m_widget->setSortingColumn((FileManagerWidget::Column)column);
     m_widget->blockSignals(false);
@@ -267,6 +282,9 @@ void FileManagerEditor::setSortColumn(int column)
 */
 void FileManagerEditor::setSortOrder(bool descending)
 {
+    if (ignoreSignals)
+        return;
+
     m_widget->blockSignals(true);
     m_widget->setSortingOrder((Qt::SortOrder)descending);
     m_widget->blockSignals(false);
@@ -283,12 +301,14 @@ void FileManagerEditor::onSortingChanged()
     m_settings->setValue(QLatin1String("fileManager/sortingOrder"), sortOrder);
     m_settings->setValue(QLatin1String("fileManager/sortingColumn"), sortColumn);
 
+    ignoreSignals = true;
     sortByDescendingOrderAction->setChecked(sortOrder);
 
     sortByNameAction->setChecked(sortColumn == FileManagerWidget::NameColumn);
     sortBySizeAction->setChecked(sortColumn == FileManagerWidget::SizeColumn);
     sortByTypeAction->setChecked(sortColumn == FileManagerWidget::TypeColumn);
     sortByDateAction->setChecked(sortColumn == FileManagerWidget::DateColumn);
+    ignoreSignals = false;
 }
 
 /*!
@@ -442,6 +462,7 @@ void FileManagerEditor::setupConnections()
     connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
     connect(m_widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
     connect(m_widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
+    connect(m_widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged()));
     connect(m_widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
 
     connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
@@ -594,14 +615,6 @@ void FileManagerEditor::createViewActions()
 
     viewModeGroup->addAction(dualPaneModeAction);
 
-    switch (viewMode) {
-    case IconView: iconModeAction->setChecked(true); break;
-    case ColumnView: columnModeAction->setChecked(true); break;
-    case TreeView: treeModeAction->setChecked(true); break;
-    case CoverFlow: coverFlowModeAction->setChecked(true); break;
-    case DualPane: coverFlowModeAction->setChecked(true); break;
-    default: break;
-    }
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 
     connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setAndSaveViewMode(int)));
