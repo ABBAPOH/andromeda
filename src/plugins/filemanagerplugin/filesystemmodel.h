@@ -13,6 +13,7 @@ public:
     explicit FileSystemModel(QObject *parent = 0);
 
     FileSystemManager *fileSystemManager() const;
+    void setFileSystemManager(FileSystemManager *manager);
 
     QVariant data(const QModelIndex &index, int role) const;
     bool dropMimeData(const QMimeData *data,

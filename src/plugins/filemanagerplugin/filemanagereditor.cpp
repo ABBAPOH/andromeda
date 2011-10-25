@@ -370,19 +370,20 @@ void FileManagerEditor::openNewWindow()
 void FileManagerEditor::setupUi()
 {
     ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
-    FileSystemModel *fsModel = pm->object<FileSystemModel>("FileSystemModel");
-    NavigationModel *nModel = pm->object<NavigationModel>("navigationModel");
-    connect(nModel, SIGNAL(pathsDropped(QString,QStringList,Qt::DropAction)),
+    FileSystemManager *manager = pm->object<FileSystemManager>("fileSystemManager");
+    NavigationModel *model = pm->object<NavigationModel>("navigationModel");
+    connect(model, SIGNAL(pathsDropped(QString,QStringList,Qt::DropAction)),
             SLOT(onPathsDropped(QString,QStringList,Qt::DropAction)));
 
     splitter = new MiniSplitter(this);
 
-    m_widget = new DualPaneWidget(fsModel,  splitter);
+    m_widget = new DualPaneWidget(splitter);
+    m_widget->setFileSystemManager(manager);
     m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
     m_widget->setFocus();
 
     m_panel = new NavigationPanel(splitter);
-    m_panel->setModel(nModel);
+    m_panel->setModel(model);
 
     splitter->addWidget(m_panel);
     splitter->addWidget(m_widget);

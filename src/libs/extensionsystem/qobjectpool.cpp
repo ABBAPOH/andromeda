@@ -37,7 +37,7 @@ void QObjectPool::addObject(QObject * object, const QString &name)
         return;
     }
 
-    if (!name.isEmpty()) {
+    if (!name.isEmpty() || name == QLatin1String(object->metaObject()->className())) {
         object->setObjectName(name);
     }
 

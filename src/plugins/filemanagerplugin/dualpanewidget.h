@@ -22,8 +22,7 @@ public:
     enum Pane { LeftPane = 0, RightPane = 1 };
     Q_ENUMS(Pane)
 
-//    explicit DualPaneWidget(QWidget *parent = 0);
-    explicit DualPaneWidget(FileSystemModel *model = 0, QWidget *parent = 0);
+    explicit DualPaneWidget(QWidget *parent = 0);
     ~DualPaneWidget();
 
     CorePlugin::History *history() const;
@@ -37,6 +36,8 @@ public:
 
     bool dualPaneModeEnabled() const;
     FileManagerWidget::ViewMode viewMode() const;
+
+    void setFileSystemManager(FileSystemManager *manager);
 
 signals:
     void activePaneChanged(Pane pane);
