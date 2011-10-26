@@ -32,8 +32,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     setupUi();
     setupConnections();
     createActions();
-
-    m_settings = Core::instance()->settings();
+    setupSettings();
 }
 
 /*!
@@ -473,6 +472,18 @@ void FileManagerEditor::setupConnections()
 
 /*!
   \internal
+*/
+void FileManagerEditor::setupSettings()
+{
+    m_settings = Core::instance()->settings();
+
+    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/iconSize"));
+    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/gridSize"));
+    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/flow"));
+}
+
+/*!
+  \internal
 
   Creates \a checkable action with \a text, connects it to DualPaneWidget's \a slot
   and registers it in ActionManager with \a id.
@@ -680,10 +691,6 @@ void FileManagerEditor::restoreDefaults()
     int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn")).toInt();
     m_widget->setSortingOrder((Qt::SortOrder)sortOrder);
     m_widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
-
-    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/iconSize"));
-    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/gridSize"));
-    m_settings->addObject(m_widget->leftWidget(), QLatin1String("fileManager/flow"));
 }
 
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
