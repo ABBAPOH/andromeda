@@ -46,17 +46,16 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
 
     d->activePane = LeftPane;
     d->dualPaneModeEnabled = false;
+    d->panes[LeftPane] = 0;
+    d->panes[RightPane] = 0;
+    d->viewMode = FileManagerWidget::IconView;
 
     d->layout = new QHBoxLayout();
     d->layout->setMargin(0);
     d->layout->setSpacing(3);
-
     setLayout(d->layout);
 
     createLeftPane();
-    createRightPane();
-
-    d->viewMode = FileManagerWidget::IconView;
 
     setObjectName(QLatin1String("DualPaneWidget"));
 }
@@ -103,6 +102,7 @@ FileManagerWidget * DualPaneWidget::leftWidget() const
 
 FileManagerWidget * DualPaneWidget::rightWidget() const
 {
+    const_cast<DualPaneWidget*>(this)->ensureRightPaneCreated();
     return d_func()->panes[RightPane];
 }
 
@@ -132,12 +132,15 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
 
     d->dualPaneModeEnabled = on;
     if (on) {
+        ensureRightPaneCreated();
+
         d->panes[RightPane]->show();
         d->panes[LeftPane]->setViewMode(FileManagerWidget::TableView);
         if (d->panes[RightPane]->currentPath().isEmpty())
             d->panes[RightPane]->setCurrentPath(d->panes[LeftPane]->currentPath());
     } else {
-        d->panes[RightPane]->hide();
+        if (d->panes[RightPane])
+            d->panes[RightPane]->hide();
         d->panes[LeftPane]->setViewMode(d->viewMode);
         setActivePane(LeftPane);
     }
@@ -153,7 +156,8 @@ void DualPaneWidget::setFileSystemManager(FileSystemManager *manager)
     Q_D(DualPaneWidget);
 
     d->panes[LeftPane]->setFileSystemManager(manager);
-    d->panes[RightPane]->setFileSystemManager(manager);
+    if (d->panes[RightPane])
+        d->panes[RightPane]->setFileSystemManager(manager);
 }
 
 FileManagerWidget::Column DualPaneWidget::sortingColumn() const
@@ -192,9 +196,10 @@ bool DualPaneWidget::restoreState(const QByteArray &state)
     setDualPaneModeEnabled(b);
     s >> subState;
     leftWidget()->restoreState(subState);
-    if (b) {
-        s >> subState;
-        leftWidget()->restoreState(subState);
+    s >> subState;
+    if (!subState.isEmpty()) {
+        ensureRightPaneCreated();
+        rightWidget()->restoreState(subState);
     }
 
     return true;
@@ -208,7 +213,7 @@ QByteArray DualPaneWidget::saveState()
     QDataStream s(&buffer);
     s << dualPaneModeEnabled();
     s << leftWidget()->saveState();
-    if (dualPaneModeEnabled())
+    if (d_func()->panes[RightPane])
         s << rightWidget()->saveState();
 
     return buffer.data();
@@ -391,7 +396,14 @@ void DualPaneWidget::createRightPane()
 
     d->panes[RightPane]->hide();
     d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
+    d->panes[RightPane]->setFileSystemManager(d->panes[LeftPane]->fileSystemManager());
     d->layout->addWidget(d->panes[RightPane]);
 
     swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
+}
+
+void DualPaneWidget::ensureRightPaneCreated()
+{
+    if (!d_func()->panes[RightPane])
+        createRightPane();
 }

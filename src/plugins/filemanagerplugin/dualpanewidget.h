@@ -89,6 +89,7 @@ protected:
     FileManagerWidget *createPane();
     void createLeftPane();
     void createRightPane();
+    void ensureRightPaneCreated();
     void updateState();
 
     bool eventFilter(QObject *, QEvent *);
