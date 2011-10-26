@@ -36,6 +36,7 @@ public:
     virtual QString title() const { return QString(); }
     virtual QString windowTitle() const { return QString(); }
 
+    virtual void restoreDefaults() {}
     virtual void restoreSession(QSettings &s);
     virtual void saveSession(QSettings &s);
 

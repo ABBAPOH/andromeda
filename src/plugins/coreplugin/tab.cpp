@@ -188,6 +188,7 @@ void Tab::open(const QUrl &url)
         AbstractEditor *editor = d->editorHash.value(id);
         if (!editor) {
             editor = manager->editor(mimeType, this);
+            editor->restoreDefaults();
             int index = d->layout->addWidget(editor);
             d->layout->setCurrentIndex(index);
             d->editorHash.insert(id, editor);

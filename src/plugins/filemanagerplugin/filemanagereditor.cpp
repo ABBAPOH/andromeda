@@ -32,7 +32,8 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     setupUi();
     setupConnections();
     createActions();
-    restoreDefaults();
+
+    m_settings = Core::instance()->settings();
 }
 
 /*!
@@ -615,7 +616,7 @@ void FileManagerEditor::createViewActions()
 
     viewModeGroup->addAction(dualPaneModeAction);
 
-    dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
+    iconModeAction->setChecked(true);
 
     connect(viewModeMapper, SIGNAL(mapped(int)), SLOT(setAndSaveViewMode(int)));
 }
@@ -650,8 +651,6 @@ void FileManagerPlugin::FileManagerEditor::createSortByActions()
 */
 void FileManagerEditor::restoreDefaults()
 {
-    m_settings = Core::instance()->settings();
-
     int mode = 1;
     bool showLeftPanel = true;
     QVariantList lst;
@@ -674,6 +673,7 @@ void FileManagerEditor::restoreDefaults()
         splitter->setSizes(QList<int>() << 200 << 600);
     }
 
+    dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
     showLeftPanelAction->setChecked(showLeftPanel); // FIXME
 
     int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder")).toInt();
