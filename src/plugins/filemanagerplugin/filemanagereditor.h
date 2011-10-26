@@ -39,6 +39,7 @@ public:
     QString title() const;
     QString windowTitle() const;
 
+    void restoreDefaults();
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
 
@@ -73,7 +74,6 @@ private:
     void createActions();
     void createViewActions();
     void createSortByActions();
-    void restoreDefaults();
 
 private:
     MiniSplitter *splitter;
