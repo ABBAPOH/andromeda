@@ -67,6 +67,7 @@ private slots:
 private:
     void setupUi();
     void setupConnections();
+    void setupSettings();
     QAction * createAction(const QString &text, const QByteArray &id,
                            const char *slot, bool checkable = false);
     QAction * createViewAction(const QString &text, const QByteArray &id, int mode);
