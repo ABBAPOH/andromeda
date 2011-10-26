@@ -153,6 +153,7 @@ void MainWindowPrivate::setupUi()
 
     lineEdit = new EnteredLineEdit(q);
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
+    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
     connect(lineEdit, SIGNAL(textEntered(QString)), this, SLOT(onUserInput(QString)));
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
