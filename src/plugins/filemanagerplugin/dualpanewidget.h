@@ -86,6 +86,9 @@ public slots:
     void showHiddenFiles(bool show);
 
 protected:
+    FileManagerWidget *createPane();
+    void createLeftPane();
+    void createRightPane();
     void updateState();
 
     bool eventFilter(QObject *, QEvent *);

@@ -46,43 +46,17 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
 
     d->activePane = LeftPane;
     d->dualPaneModeEnabled = false;
-    d->panes[LeftPane] = new FileManagerWidget(this);
-    d->panes[RightPane] = new FileManagerWidget(this);
-    d->panes[RightPane]->hide();
-    d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
-    swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
 
     d->layout = new QHBoxLayout();
-    d->layout->addWidget(d->panes[LeftPane]);
-    d->layout->addWidget(d->panes[RightPane]);
     d->layout->setMargin(0);
     d->layout->setSpacing(3);
 
     setLayout(d->layout);
+
+    createLeftPane();
+    createRightPane();
+
     d->viewMode = FileManagerWidget::IconView;
-
-    d->panes[LeftPane]->installEventFilter(this);
-    d->panes[RightPane]->installEventFilter(this);
-
-    connect(d->panes[LeftPane], SIGNAL(currentPathChanged(QString)), SIGNAL(currentPathChanged(QString)));
-    connect(d->panes[RightPane], SIGNAL(currentPathChanged(QString)), SIGNAL(currentPathChanged(QString)));
-
-    connect(d->panes[LeftPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
-    connect(d->panes[RightPane], SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
-
-    connect(d->panes[LeftPane],  SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
-    connect(d->panes[RightPane], SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
-    connect(d->panes[LeftPane],  SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
-    connect(d->panes[RightPane], SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
-
-    connect(d->panes[LeftPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
-    connect(d->panes[RightPane], SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
-
-    connect(d->panes[LeftPane], SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
-    connect(d->panes[RightPane], SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
-
-    connect(d->panes[LeftPane], SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)));
-    connect(d->panes[RightPane], SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)));
 
     setObjectName(QLatin1String("DualPaneWidget"));
 }
@@ -384,3 +358,40 @@ bool DualPaneWidget::eventFilter(QObject *o, QEvent *e)
     return false;
 }
 
+FileManagerWidget * DualPaneWidget::createPane()
+{
+    FileManagerWidget *pane = new FileManagerWidget(this);
+
+    pane->installEventFilter(this);
+
+    connect(pane, SIGNAL(currentPathChanged(QString)), SIGNAL(currentPathChanged(QString)));
+    connect(pane, SIGNAL(openRequested(QString)), SIGNAL(openRequested(QString)));
+    connect(pane, SIGNAL(canRedoChanged(bool)), SIGNAL(canRedoChanged(bool)));
+    connect(pane, SIGNAL(canUndoChanged(bool)), SIGNAL(canUndoChanged(bool)));
+    connect(pane, SIGNAL(selectedPathsChanged()), SIGNAL(selectedPathsChanged()));
+    connect(pane, SIGNAL(sortingChanged()), SIGNAL(sortingChanged()));
+    connect(pane, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)));
+
+    return pane;
+}
+
+void FileManagerPlugin::DualPaneWidget::createLeftPane()
+{
+    Q_D(DualPaneWidget);
+
+    d->panes[LeftPane] = createPane();
+    d->layout->addWidget(d->panes[LeftPane]);
+}
+
+void DualPaneWidget::createRightPane()
+{
+    Q_D(DualPaneWidget);
+
+    d->panes[RightPane] = createPane();
+
+    d->panes[RightPane]->hide();
+    d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
+    d->layout->addWidget(d->panes[RightPane]);
+
+    swapPalettes(d->panes[LeftPane], d->panes[RightPane]);
+}
