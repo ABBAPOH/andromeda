@@ -36,14 +36,14 @@ void FileInfoDialog::setFileInfo(const QFileInfo &info)
 static QString sizeToString(qint64 size)
 {
     if (size > (qint64)1024*1024*1024*1024)
-        return QString::number(size/((qint64)1024*1024*1024*1024)) + "TB";
+        return QObject::tr("%1 TB").arg(size/((qint64)1024*1024*1024*1024));
     if (size > 1024*1024*1024)
-        return QString::number(size/(1024*1024*1024)) + "GB";
+        return QObject::tr("%1 GB").arg(size/(1024*1024*1024));
     if (size > 1024*1024)
-        return QString::number(size/(1024*1024)) + "MB";
+        return QObject::tr("%1 MB").arg(size/(1024*1024));
     if (size > 1024)
-        return QString::number(size/1024) + "kB";
-    return QString::number(size) + "b";
+        return QObject::tr("%1 kB").arg(size/1024);
+    return QObject::tr("%1 b").arg(size);
 }
 
 #include <QFileIconProvider>
