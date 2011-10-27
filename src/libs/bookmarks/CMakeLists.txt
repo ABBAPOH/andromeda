@@ -1,9 +1,12 @@
 set( GLOBAL_HEADERS bookmarks_global.h )
 set( HEADERS
     bookmark.h
+    bookmarksmodel.h
+    bookmarksmodel_p.h
    )
 set( SOURCES
     bookmark.cpp
+    bookmarksmodel.cpp
    )
 set( FORMS
    )
