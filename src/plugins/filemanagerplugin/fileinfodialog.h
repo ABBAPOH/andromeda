@@ -3,6 +3,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QWidget>
+#include <QDriveInfo>
 
 namespace Ui {
     class FileInfoDialog;
@@ -30,6 +31,7 @@ private slots:
 private:
     Ui::FileInfoDialog *ui;
     QFileInfo m_fileInfo;
+    QDriveInfo m_driveInfo;
 };
 
 #endif // FILEINFODIALOG_H
