@@ -29,6 +29,7 @@ QFileInfo FileInfoDialog::fileInfo() const
 void FileInfoDialog::setFileInfo(const QFileInfo &info)
 {
     m_fileInfo = info;
+    m_driveInfo = QDriveInfo(m_fileInfo.absoluteFilePath());
     updateUi();
 }
 
@@ -56,6 +57,12 @@ void FileInfoDialog::updateUi()
     ui->createdLabel->setText(m_fileInfo.created().toString(Qt::SystemLocaleShortDate));
     ui->modifiedLabel->setText(m_fileInfo.lastModified().toString(Qt::SystemLocaleShortDate));
     ui->acceccedLabel->setText(m_fileInfo.lastRead().toString(Qt::SystemLocaleShortDate));
+
+    ui->driveLabel->setText(m_driveInfo.name());
+    ui->mountPointLabel->setText(m_driveInfo.rootPath());
+    ui->fileSystemLabel->setText(m_driveInfo.fileSystemName());
+    ui->totalSizeLabel->setText(sizeToString(m_driveInfo.bytesTotal()));
+    ui->availableSizeLabel->setText(sizeToString(m_driveInfo.bytesAvailable()));
 
     ui->userPermissionsComboBox->setCurrentIndex((m_fileInfo.permissions() & QFile::WriteOwner) ? 1 : 0);
     ui->groupPermissionsComboBox->setCurrentIndex((m_fileInfo.permissions() & QFile::WriteGroup) ? 1 : 0);
