@@ -50,7 +50,7 @@ QAbstractItemModel * CoverFlow::model() const
 
 void CoverFlow::setModel(QAbstractItemModel *model)
 {
-    if (model) {
+    if (this->model()) {
         disconnect(m_treeView->selectionModel(), 0, m_flowView, 0);
         disconnect(m_flowView, 0, m_treeView, 0);
     }
