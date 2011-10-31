@@ -48,6 +48,8 @@ QString getMimeType(const QUrl &url)
             return QLatin1String("inode/directory");
     } else if(url.scheme() == QLatin1String("http")) {
         return QLatin1String("text/html");
+    } else if(url.scheme() == QLatin1String("about") && url.path() == QLatin1String("helloworld")) {
+        return QLatin1String("application/helloworld");
     }
     return QString();
 }

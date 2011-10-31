@@ -1,0 +1,29 @@
+set( GLOBAL_HEADERS helloworldplugin_global.h )
+
+set( HEADERS
+    helloworldeditor.h
+    helloworldplugin.h
+   )
+set( SOURCES
+    helloworldeditor.cpp
+    helloworldplugin.cpp
+   )
+set( FORMS
+   )
+
+set( RESOURCES resources.qrc )
+
+set( TS_FILES translations/helloworldplugin_ru.ts )
+
+qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
+qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_add_resources( QRC_SOURCES ${RESOURCES} )
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
+
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
+
+add_definitions( -DHELLOWORLDPLUGIN_LIBRARY )
+
+add_library( helloworldplugin SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
+target_link_libraries( helloworldplugin ${QT_LIBRARIES} extensionsystem coreplugin )
+install_plugin( helloworldplugin )
