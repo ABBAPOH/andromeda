@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/bookmarks.png</file>
+    </qresource>
+</RCC>

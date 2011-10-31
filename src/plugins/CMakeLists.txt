@@ -12,6 +12,7 @@ if( CMAKE_BUILD_TYPE STREQUAL "Release" )
 endif()
 
 add_subdirectory( coreplugin )
+add_subdirectory( bookmarksplugin )
 add_subdirectory( filemanagerplugin )
 add_subdirectory( helloworldplugin )
 add_subdirectory( webviewplugin )
