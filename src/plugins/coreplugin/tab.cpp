@@ -58,6 +58,9 @@ void TabPrivate::setEditor(AbstractEditor *e)
 {
     Q_Q(Tab);
 
+    if (editor == e)
+        return;
+
     if (editor) {
         QObject::disconnect(editor, 0, q, 0);
     }
@@ -271,6 +274,7 @@ void Tab::onIndexChanged(int index)
     } else {
         e->open(QUrl(item.path()));
     }
+    d->setEditor(e);
 
     d->ignoreSignals = false;
     emit currentUrlChanged(d->currentUrl);
