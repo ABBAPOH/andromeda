@@ -42,6 +42,7 @@ public slots:
     void up();
 
     void open(const QUrl &url);
+    void openEditor(const QString &id);
     void openNewTab(const QUrl &url);
     static void openNewWindow(const QUrl &url);
 
