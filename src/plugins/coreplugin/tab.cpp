@@ -194,6 +194,8 @@ void Tab::open(const QUrl &url)
             int index = d->layout->addWidget(editor);
             d->layout->setCurrentIndex(index);
             d->editorHash.insert(id, editor);
+        } else {
+            d->layout->setCurrentWidget(editor);
         }
         d->setEditor(editor);
         editor->open(url);
