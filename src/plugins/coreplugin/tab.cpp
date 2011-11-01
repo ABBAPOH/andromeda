@@ -234,7 +234,7 @@ void Tab::onIndexChanged(int index)
     if (!item.isValid())
         return;
 
-    d->currentUrl = item.path();
+    d->currentUrl = QUrl(item.path());
 
     d->ignoreSignals = true;
 
@@ -245,7 +245,7 @@ void Tab::onIndexChanged(int index)
     if (historyIndex != -1) {
         e->setCurrentIndex(historyIndex);
     } else {
-        e->open(item.path());
+        e->open(QUrl(item.path()));
     }
 
     d->ignoreSignals = false;

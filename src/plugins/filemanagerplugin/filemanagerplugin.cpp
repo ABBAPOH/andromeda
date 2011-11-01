@@ -77,7 +77,7 @@ void FileManagerPluginImpl::goTo(const QString &s)
 {
     MainWindow *window = MainWindow::currentWindow();
     if (window) {
-        window->open(s);
+        window->open(QUrl::fromLocalFile(s));
     }
 }
 
