@@ -40,6 +40,7 @@ public:
 
 public slots:
     void open(const QUrl &url);
+    void openEditor(const QString &id);
 
     void up();
 

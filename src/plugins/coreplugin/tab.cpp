@@ -210,6 +210,30 @@ void Tab::open(const QUrl &url)
     emit changed();
 }
 
+void Tab::openEditor(const QString &id)
+{
+    Q_D(Tab);
+
+    EditorManager *manager = Core::instance()->editorManager();
+    AbstractEditor *editor = d->editorHash.value(id);
+    if (!editor) {
+        editor = manager->editorById(id, this);
+        editor->restoreDefaults();
+        int index = d->layout->addWidget(editor);
+        d->layout->setCurrentIndex(index);
+        d->editorHash.insert(id, editor);
+    } else {
+        d->layout->setCurrentWidget(editor);
+    }
+    d->setEditor(editor);
+    editor->open(QUrl());
+
+    d->currentUrl = QUrl();
+
+    emit currentUrlChanged(d->currentUrl);
+    emit changed();
+}
+
 void Tab::up()
 {
     QUrl url = currentUrl();

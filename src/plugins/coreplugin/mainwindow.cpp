@@ -362,6 +362,23 @@ void MainWindow::open(const QUrl &url)
         currentTab()->open(url);
 }
 
+void MainWindow::openEditor(const QString &id)
+{
+    Q_D(MainWindow);
+
+    if (d->tabWidget->count() == 0) {
+        int index = -1;
+        Tab *tab = d->addTab(&index);
+        tab->openEditor(id);
+        d->tabWidget->setCurrentIndex(index);
+
+        if (!tab->currentEditor())
+            closeTab(index); // close tab or window if no editor found
+    } else {
+        currentTab()->openEditor(id);
+    }
+}
+
 void MainWindow::openNewTab(const QUrl &url)
 {
     Q_D(MainWindow);
