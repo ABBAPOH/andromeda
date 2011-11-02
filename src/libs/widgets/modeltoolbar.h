@@ -19,7 +19,7 @@ public:
     explicit ModelToolBar(const QString &title, QWidget *parent = 0);
     ~ModelToolBar();
 
-    void setModel(QAbstractItemModel *model);
+    virtual void setModel(QAbstractItemModel *model);
     QAbstractItemModel *model() const;
 
     void setRootIndex(const QModelIndex &index);
