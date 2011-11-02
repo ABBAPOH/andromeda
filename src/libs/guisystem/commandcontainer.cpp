@@ -201,7 +201,7 @@ QMenu * CommandContainer::menu() const
 {
     Q_D(const CommandContainer);
 
-    QMenu *menu = new QMenu;
+    QMenu *menu = createMenu();
     menu->setTitle(title());
     for (int i = 0; i < d->groups.size(); i++) {
         if (i != 0) {
@@ -258,7 +258,7 @@ QToolBar * CommandContainer::toolBar() const
 {
     Q_D(const CommandContainer);
 
-    QToolBar *toolBar = new QToolBar;
+    QToolBar *toolBar = createToolBar();
     for (int i = 0; i < d->groups.size(); i++) {
         Group * g = d->groups[i];
         foreach (QObject *o, g->objects) {
@@ -283,4 +283,14 @@ QString CommandContainer::title() const
 void CommandContainer::setTitle(const QString &title)
 {
     d_func()->title = title;
+}
+
+QMenu * CommandContainer::createMenu() const
+{
+    return new QMenu;
+}
+
+QToolBar * CommandContainer::createToolBar() const
+{
+    return new QToolBar;
 }
