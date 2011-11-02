@@ -43,6 +43,10 @@ public:
     void setTitle(const QString &title);
 
 protected:
+    virtual QMenu *createMenu() const;
+    virtual QToolBar *createToolBar() const;
+
+protected:
     CommandContainerPrivate *d_ptr;
 };
 
