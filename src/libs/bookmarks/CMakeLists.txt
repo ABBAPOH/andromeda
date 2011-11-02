@@ -2,6 +2,7 @@ set( GLOBAL_HEADERS bookmarks_global.h )
 set( HEADERS
     bookmark.h
     bookmarkdialog.h
+    bookmarksmenu.h
     bookmarksmodel.h
     bookmarksmodel_p.h
     bookmarkswidget.h
@@ -10,6 +11,7 @@ set( HEADERS
 set( SOURCES
     bookmark.cpp
     bookmarkdialog.cpp
+    bookmarksmenu.cpp
     bookmarksmodel.cpp
     bookmarkswidget.cpp
    )
