@@ -5,6 +5,7 @@ set( HEADERS
     bookmarksmenu.h
     bookmarksmodel.h
     bookmarksmodel_p.h
+    bookmarkstoolbar.h
     bookmarkswidget.h
     bookmarkswidget_p.h
    )
@@ -12,6 +13,7 @@ set( SOURCES
     bookmark.cpp
     bookmarkdialog.cpp
     bookmarksmenu.cpp
+    bookmarkstoolbar.cpp
     bookmarksmodel.cpp
     bookmarkswidget.cpp
    )
