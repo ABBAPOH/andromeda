@@ -18,7 +18,7 @@ public:
     ~ModelMenu();
 
     QAbstractItemModel *model() const;
-    void setModel(QAbstractItemModel *model);
+    virtual void setModel(QAbstractItemModel *model);
 
     int maxRows() const;
     void setMaxRows(int max);
