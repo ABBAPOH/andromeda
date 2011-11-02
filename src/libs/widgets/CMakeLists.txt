@@ -2,6 +2,7 @@ set( HEADERS
     widgets_global.h
     coverflow.h
     minisplitter.h
+    modelmenu.h
     enteredlineedit.h
     qxtflowview.h
     qxtflowview_p.h
@@ -9,6 +10,7 @@ set( HEADERS
 set( SOURCES
     coverflow.cpp
     minisplitter.cpp
+    modelmenu.cpp
     enteredlineedit.cpp
     qxtflowview.cpp
     qxtflowview_p.cpp
