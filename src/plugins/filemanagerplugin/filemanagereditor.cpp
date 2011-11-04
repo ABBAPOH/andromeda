@@ -614,8 +614,6 @@ void FileManagerEditor::createActions()
 */
 void FileManagerEditor::createViewActions()
 {
-    int viewMode = m_widget->viewMode();
-
     viewModeGroup = new QActionGroup(this);
     viewModeMapper = new QSignalMapper(this);
 
