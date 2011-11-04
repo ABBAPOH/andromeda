@@ -1,5 +1,6 @@
 #include "tab.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -48,8 +49,6 @@ QString getMimeType(const QUrl &url)
             return QLatin1String("inode/directory");
     } else if(url.scheme() == QLatin1String("http")) {
         return QLatin1String("text/html");
-    } else if(url.scheme() == QLatin1String("about") && url.path() == QLatin1String("helloworld")) {
-        return QLatin1String("application/helloworld");
     }
     return QString();
 }
@@ -185,6 +184,11 @@ void Tab::open(const QUrl &url)
     if (d->currentUrl == url)
         return;
 
+    if (url.scheme() == qApp->applicationName()) {
+        openEditor(url.host());
+        return;
+    }
+
     QString mimeType = getMimeType(url);
     EditorManager *manager = Core::instance()->editorManager();
     AbstractEditorFactory *factory = manager->factory(mimeType);
@@ -229,9 +233,12 @@ void Tab::openEditor(const QString &id)
         d->layout->setCurrentWidget(editor);
     }
     d->setEditor(editor);
-    editor->open(QUrl());
+    QUrl url;
+    url.setScheme(qApp->applicationName());
+    url.setHost(id);
+    editor->open(url);
 
-    d->currentUrl = QUrl();
+    d->currentUrl = url;
 
     emit currentUrlChanged(d->currentUrl);
     emit changed();
