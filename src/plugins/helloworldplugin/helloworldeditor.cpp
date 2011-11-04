@@ -51,12 +51,12 @@ HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :
 
 QStringList HelloWorldEditorFactory::mimeTypes()
 {
-    return QStringList() << QLatin1String("application/helloworld");
+    return QStringList();
 }
 
 QByteArray HelloWorldEditorFactory::id() const
 {
-    return "HelloWorld";
+    return "helloworld";
 }
 
 AbstractEditor * HelloWorldEditorFactory::createEditor(QWidget *parent)
