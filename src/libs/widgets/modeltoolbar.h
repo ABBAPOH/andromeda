@@ -32,6 +32,8 @@ signals:
 
 protected:
     virtual ModelMenu *createMenu();
+    virtual void prePopulated();
+    virtual void postPopulated();
 
     bool eventFilter(QObject *object, QEvent *event);
 
