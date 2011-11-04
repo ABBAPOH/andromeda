@@ -234,7 +234,7 @@ void MainWindowPrivate::updateUi(Tab *tab)
     tabWidget->setTabIcon(index, tab->icon());
 #endif
 
-    if (tab = q->currentTab()) {
+    if (tab == q->currentTab()) {
         q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
         q->setWindowIcon(tab->icon());
     }
