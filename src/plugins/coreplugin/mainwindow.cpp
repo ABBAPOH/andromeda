@@ -130,6 +130,59 @@ void MainWindowPrivate::setupToolBar()
     q->setUnifiedTitleAndToolBarOnMac(true);
 }
 
+void MainWindowPrivate::setupAlternateToolBar()
+{
+    Q_Q(MainWindow);
+
+    CommandContainer *c = ActionManager::instance()->container(Constants::Objects::AlternateToolbar);
+    if (!c)
+        return;
+
+    QToolBar *toolBar = c->toolBar();
+
+    if (!toolBar)
+        return;
+
+#if defined(Q_WS_MAC)
+    QWidget *centralWidget = new QWidget(q);
+    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    QFrame *frame = new QFrame(q);
+    QPalette framePalette = frame->palette();
+    framePalette.setColor(QPalette::Active, QPalette::Light, QColor(64, 64, 64));
+    framePalette.setColor(QPalette::Active, QPalette::Dark, QColor(192, 192, 192));
+    framePalette.setColor(QPalette::Inactive, QPalette::Light, QColor(135, 135, 135));
+    framePalette.setColor(QPalette::Inactive, QPalette::Dark, QColor(226, 226, 226));
+
+    frame->setLineWidth(1);
+    frame->setMidLineWidth(0);
+    frame->setFrameShape(QFrame::HLine);
+    frame->setFrameShadow(QFrame::Raised);
+    frame->setAttribute(Qt::WA_MacNoClickThrough, true);
+    frame->setPalette(framePalette);
+
+    QPalette toolBarPalette = toolBar->palette();
+    toolBarPalette.setColor(QPalette::Active, QPalette::Window, QColor(167, 167, 167));
+    toolBarPalette.setColor(QPalette::Inactive, QPalette::Window, QColor(207, 207, 207));
+
+    toolBar->setAutoFillBackground(true);
+    toolBar->setFixedHeight(19);
+    toolBar->setAttribute(Qt::WA_MacNoClickThrough, true);
+    toolBar->setBackgroundRole(QPalette::Window);
+    toolBar->setPalette(toolBarPalette);
+
+    layout->addWidget(frame);
+    layout->addWidget(toolBar);
+    layout->addWidget(tabWidget);
+    q->setCentralWidget(centralWidget);
+#else
+    q->addToolBarBreak();
+    q->addToolBar(alternateToolBar);
+#endif
+}
+
 void MainWindowPrivate::setupUi()
 {
     Q_Q(MainWindow);
@@ -239,13 +292,14 @@ MainWindow::MainWindow(QWidget *parent) :
     d->setupUi();
     d->setupActions();
     d->setupToolBar();
+    d->setupAlternateToolBar();
 
     setMenuBar(ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar());
     setAttribute(Qt::WA_DeleteOnClose);
 
     QVariant value = Core::instance()->settings()->value(QLatin1String("mainWindow/geometry"));
-    if (value.isValid())
-        restoreGeometry(value.toByteArray());
+//    if (value.isValid())
+//        restoreGeometry(value.toByteArray());
 }
 
 MainWindow::~MainWindow()

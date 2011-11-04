@@ -3,6 +3,12 @@
 
 namespace Constants {
 
+namespace Objects {
+
+const char * const AlternateToolbar = "AlternateToolbar";
+
+} // namespace Objects
+
 namespace Menus {
 
 const char * const MenuBar = "Menus.MenuBar";

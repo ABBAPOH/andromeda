@@ -130,6 +130,7 @@ public:
     void createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot);
     void setupActions();
     void setupToolBar();
+    void setupAlternateToolBar();
     void setupUi();
     void updateUi(Tab *tab);
 
