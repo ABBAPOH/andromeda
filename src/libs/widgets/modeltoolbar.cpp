@@ -96,6 +96,8 @@ void ModelToolBar::build()
 
     clear();
 
+    prePopulated();
+
     for (int i = 0; i < d->model->rowCount(d->rootIndex); ++i) {
         QModelIndex index = d->model->index(i, 0, d->rootIndex);
         QVariant variant;
@@ -122,6 +124,8 @@ void ModelToolBar::build()
             button->setArrowType(Qt::DownArrow);
         }
     }
+
+    postPopulated();
 }
 
 QModelIndex ModelToolBar::index(QAction *action)
@@ -140,6 +144,14 @@ QModelIndex ModelToolBar::index(QAction *action)
 ModelMenu *ModelToolBar::createMenu()
 {
     return new ModelMenu(this);
+}
+
+void ModelToolBar::prePopulated()
+{
+}
+
+void ModelToolBar::postPopulated()
+{
 }
 
 bool ModelToolBar::eventFilter(QObject *object, QEvent *event)
