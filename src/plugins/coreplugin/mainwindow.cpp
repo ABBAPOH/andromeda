@@ -274,8 +274,6 @@ void MainWindowPrivate::onCurrentChanged(int index)
 
 void MainWindowPrivate::onChanged()
 {
-    Q_Q(MainWindow);
-
     Tab *tab = qobject_cast<Tab *>(sender());
     if (!tab)
         return;

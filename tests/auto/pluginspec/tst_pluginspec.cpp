@@ -35,8 +35,6 @@ PluginSpecTest::PluginSpecTest()
 
 void PluginSpecTest::initTestCase()
 {
-    PluginManager *m = new PluginManager(this);
-
     spec.setName(QLatin1String("Name"));
     spec.setVersion(Version::fromString(QLatin1String("1.2.3.4")));
     spec.setCompatibilityVersion(Version::fromString(QLatin1String("1.2.3.4")));
