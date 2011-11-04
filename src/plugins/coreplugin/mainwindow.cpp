@@ -249,6 +249,8 @@ static inline QString urlToUserOputput(const QUrl &url)
 {
     if (url.scheme() == QLatin1String("file"))
         return url.toLocalFile();
+    else if (url.scheme() == qApp->applicationName())
+        return QString();
     else
         return url.toString();
 }
