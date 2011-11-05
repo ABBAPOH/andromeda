@@ -127,7 +127,7 @@ void MainWindowPrivate::setupToolBar()
     toolBar->addWidget(lineEdit);
 
     q->addToolBar(toolBar);
-//    q->setUnifiedTitleAndToolBarOnMac(true);
+    q->setUnifiedTitleAndToolBarOnMac(true);
 }
 
 void MainWindowPrivate::setupAlternateToolBar()
