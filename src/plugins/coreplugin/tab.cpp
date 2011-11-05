@@ -70,6 +70,7 @@ void TabPrivate::setEditor(AbstractEditor *e)
     QObject::connect(editor, SIGNAL(iconChanged(QIcon)), q, SIGNAL(changed()));
     QObject::connect(editor, SIGNAL(titleChanged(QString)), q, SIGNAL(changed()));
     QObject::connect(editor, SIGNAL(windowTitleChanged(QString)), q, SIGNAL(changed()));
+    QObject::connect(editor, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
 }
 
 void TabPrivate::addItem(AbstractEditor *e, const QString &path)
@@ -170,6 +171,9 @@ void Tab::saveSession(QSettings &s)
 {
     Q_D(Tab);
 
+    if (!d->editor)
+        return;
+
     s.setValue(QLatin1String("editor"), d->editor->factory()->id());
     d->editor->saveSession(s);
 }
@@ -225,10 +229,12 @@ void Tab::openEditor(const QString &id)
     AbstractEditor *editor = d->editorHash.value(id);
     if (!editor) {
         editor = manager->editorById(id, this);
-        editor->restoreDefaults();
-        int index = d->layout->addWidget(editor);
-        d->layout->setCurrentIndex(index);
-        d->editorHash.insert(id, editor);
+        if (editor) {
+            editor->restoreDefaults();
+            int index = d->layout->addWidget(editor);
+            d->layout->setCurrentIndex(index);
+            d->editorHash.insert(id, editor);
+        }
     } else {
         d->layout->setCurrentWidget(editor);
     }
@@ -276,10 +282,12 @@ void Tab::onIndexChanged(int index)
     d->layout->setCurrentIndex(layoutIndex);
     AbstractEditor *e = qobject_cast<AbstractEditor *>(d->layout->widget(layoutIndex));
     int historyIndex = item.userData(QLatin1String("index")).toInt();
-    if (historyIndex != -1) {
-        e->setCurrentIndex(historyIndex);
-    } else {
-        e->open(QUrl(item.path()));
+    if (e) {
+        if (historyIndex != -1) {
+            e->setCurrentIndex(historyIndex);
+        } else {
+            e->open(QUrl(item.path()));
+        }
     }
     d->setEditor(e);
 
@@ -301,5 +309,20 @@ void Tab::onUrlChanged(const QUrl &url)
 
         emit currentUrlChanged(url);
         emit changed();
+    }
+}
+
+void Tab::onDestroy(QObject *o)
+{
+    Q_D(Tab);
+
+    AbstractEditor *editor = static_cast<AbstractEditor *>(o);
+
+    if (d->editor == editor) {
+        d->editor = 0;
+    }
+
+    foreach (const QString &key, d->editorHash.keys(editor)) {
+        d->editorHash.remove(key);
     }
 }
