@@ -179,7 +179,7 @@ void MainWindowPrivate::setupAlternateToolBar()
     q->setCentralWidget(centralWidget);
 #else
     q->addToolBarBreak();
-    q->addToolBar(alternateToolBar);
+    q->addToolBar(toolBar);
 #endif
 }
 
