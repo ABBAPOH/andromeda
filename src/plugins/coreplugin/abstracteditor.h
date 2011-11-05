@@ -33,6 +33,7 @@ public:
     virtual void setCurrentIndex(int index) { Q_UNUSED(index); }
 
     virtual QIcon icon() const { return QIcon(); }
+    virtual QImage preview() const { return QImage(); }
     virtual QString title() const { return QString(); }
     virtual QString windowTitle() const { return QString(); }
 
