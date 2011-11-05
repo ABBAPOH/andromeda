@@ -242,11 +242,12 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
                 return item->name;
         }
     } else if (role == Qt::DecorationRole) {
-        if (index.column() == 0)
+        if (index.column() == 0) {
             if (item->type() == TreeItem::Item)
                 return item->bookmark.icon();
             else
                 return QFileIconProvider().icon(QFileIconProvider::Folder);
+        }
     } else if (role == DescriptionRole) {
         if (item->type() == TreeItem::Item)
             return item->bookmark.description();
