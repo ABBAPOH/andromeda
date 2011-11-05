@@ -127,7 +127,7 @@ void MainWindowPrivate::setupToolBar()
     toolBar->addWidget(lineEdit);
 
     q->addToolBar(toolBar);
-    q->setUnifiedTitleAndToolBarOnMac(true);
+//    q->setUnifiedTitleAndToolBarOnMac(true);
 }
 
 void MainWindowPrivate::setupAlternateToolBar()
@@ -178,6 +178,8 @@ void MainWindowPrivate::setupAlternateToolBar()
     layout->addWidget(tabWidget);
     q->setCentralWidget(centralWidget);
 #else
+    toolBar->setMovable(false);
+    toolBar->setFloatable(false);
     q->addToolBarBreak();
     q->addToolBar(toolBar);
 #endif
