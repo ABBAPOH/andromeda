@@ -15,11 +15,12 @@ struct TreeItem
     {
         m_type = type;
         m_parent = parent;
-        if (parent)
+        if (parent) {
             if (row == -1)
                 parent->m_children.append(this);
             else
                 parent->m_children.insert(row, this);
+        }
     }
 
     ~TreeItem()
