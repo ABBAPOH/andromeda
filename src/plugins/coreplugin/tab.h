@@ -51,6 +51,7 @@ signals:
 private slots:
     void onIndexChanged(int index);
     void onUrlChanged(const QUrl &url);
+    void onDestroy(QObject*);
 
 protected:
 //    void resizeEvent(QResizeEvent *);
