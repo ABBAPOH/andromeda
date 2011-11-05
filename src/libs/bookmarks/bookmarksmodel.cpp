@@ -7,7 +7,7 @@
 #include <QtCore/QMimeData>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QFileIconProvider>
-#include <QtGUi/QUndoStack>
+#include <QtGui/QUndoStack>
 
 using namespace Bookmarks;
 
