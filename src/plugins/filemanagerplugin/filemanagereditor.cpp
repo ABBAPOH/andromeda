@@ -12,6 +12,7 @@
 #include <QtCore/QSignalMapper>
 #include <QtCore/QUrl>
 #include <QtGui/QFileDialog>
+#include <QtGui/QMessageBox>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QMenu>
 #include <QtGui/QFileIconProvider>
@@ -459,6 +460,8 @@ void FileManagerEditor::selectProgram()
 
     m_settings->setValue(QLatin1String("filemanager/programsFolder"), QFileInfo(programPath).absolutePath());
 
+    bool result = true;
+    QStringList failedPaths;
     foreach (const QString path, m_widget->activeWidget()->selectedPaths()) {
         QString program;
         QStringList arguments;
@@ -469,7 +472,17 @@ void FileManagerEditor::selectProgram()
         program = programPath;
         arguments << path;
 #endif
-        QProcess::startDetached(program, arguments);
+        bool r = QProcess::startDetached(program, arguments);
+        if (!r)
+            failedPaths.append(path);
+        result &= r;
+    }
+
+    if (!result) {
+        QMessageBox::warning(this,
+                             tr("Can't open files"),
+                             tr("Andromeda failed to open some files :%1").
+                             arg(failedPaths.join(QLatin1String("\n"))));
     }
 }
 
