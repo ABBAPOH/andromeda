@@ -446,7 +446,14 @@ void FileManagerEditor::selectProgram()
         programsFolder = QLatin1String("/usr/bin");
 #endif
     }
-    QString programPath = QFileDialog::getOpenFileName(this, tr("Select program"), programsFolder);
+
+#ifdef Q_OS_WIN
+    QString filter = tr("Programs (*.exe *.cmd *.com *.bat);;All files (*)");
+#else
+    QString filter;
+#endif;
+
+    QString programPath = QFileDialog::getOpenFileName(this, tr("Select program"), programsFolder, filter);
     if (programPath.isEmpty())
         return;
 
