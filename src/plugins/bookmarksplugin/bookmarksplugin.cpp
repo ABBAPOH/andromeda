@@ -46,6 +46,11 @@ private:
     BookmarksMenuBarMenu *m_menu;
 };
 
+BookmarksToolBarContainer::~BookmarksToolBarContainer()
+{
+    qDeleteAll(toolBars);
+}
+
 QToolBar *BookmarksToolBarContainer::createToolBar() const
 {
     PluginManager *manager = PluginManager::instance();
@@ -68,7 +73,14 @@ QToolBar *BookmarksToolBarContainer::createToolBar() const
     connect(a, SIGNAL(triggered()), SIGNAL(showBookmarksTriggered()));
     actions.append(a);
     toolBar->setInitialActions(actions);
+    connect(toolBar, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
+    const_cast<BookmarksToolBarContainer*>(this)->toolBars.append(toolBar);
     return toolBar;
+}
+
+void BookmarksToolBarContainer::onDestroy(QObject *o)
+{
+    toolBars.removeAll(o);
 }
 
 BookmarksPluginImpl::BookmarksPluginImpl() :
