@@ -64,6 +64,7 @@ QToolBar *BookmarksToolBarContainer::createToolBar() const
 
     QList<QAction*> actions;
     QAction *a = new QAction(QIcon(":/icons/bookmarks.png"), QString(), toolBar);
+    a->setToolTip(tr("Show bookmarks"));
     connect(a, SIGNAL(triggered()), SIGNAL(showBookmarksTriggered()));
     actions.append(a);
     toolBar->setInitialActions(actions);
