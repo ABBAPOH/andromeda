@@ -121,8 +121,8 @@ void InsertItemCommand::redo()
 
 void InsertItemCommand::undo()
 {
-    model->beginRemoveRows(model->d_func()->index(item->parent()), item->row(), item->row());
-    item->parent()->remove(item);
+    model->beginRemoveRows(model->d_func()->index(parentItem), row, row);
+    parentItem->remove(item);
     model->endRemoveRows();
     done = false;
 }
@@ -284,7 +284,8 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
 
 bool BookmarksModel::hasChildren(const QModelIndex &parent) const
 {
-    return d_func()->item(parent)->childCount() > 0;
+    TreeItem::Type type = d_func()->item(parent)->type();
+    return type == TreeItem::Folder || type == TreeItem::Root;
 }
 
 QVariant BookmarksModel::headerData(int section, Qt::Orientation orientation, int role) const
