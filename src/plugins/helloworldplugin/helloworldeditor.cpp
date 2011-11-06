@@ -21,7 +21,7 @@ bool HelloWorldEditor::open(const QUrl &url)
 
 QUrl HelloWorldEditor::currentUrl() const
 {
-    return QUrl(QLatin1String("about:helloworld"));
+    return QUrl(QLatin1String("andromeda://helloworld"));
 }
 
 QIcon HelloWorldEditor::icon() const
