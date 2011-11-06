@@ -105,9 +105,12 @@ void ModelToolBar::build()
 
         QString title = index.data(Qt::DisplayRole).toString();
         QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
+        QString toolTip = index.data(Qt::ToolTipRole).toString();
         bool hasChildren = d->model->hasChildren(index);
 
         QAction *action = addAction(icon, title);
+        if (!toolTip.isEmpty())
+            action->setToolTip(toolTip);
         action->setData(variant);
 
         QWidget *actionWidget = widgetForAction(action);
