@@ -52,6 +52,7 @@ public:
     explicit BookmarksToolBarContainer(const QByteArray &id, QObject *parent = 0) :
         CommandContainer(id, parent)
     {}
+    ~BookmarksToolBarContainer();
 
     QToolBar *createToolBar() const;
 
@@ -62,6 +63,12 @@ signals:
     void showBookmarksTriggered();
     void addBookmarkTriggered();
     void addFolderTriggered();
+
+private slots:
+    void onDestroy(QObject *);
+
+private:
+    QList<QObject *> toolBars;
 };
 
 #endif // HELLOWORLPLUGIN_H
