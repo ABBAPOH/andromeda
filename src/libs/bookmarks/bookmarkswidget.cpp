@@ -255,7 +255,6 @@ void BookmarksWidget::remove()
         d->model->remove(index);
 }
 
-#include <QDebug>
 void BookmarksWidget::setupUi()
 {
     d->toolBar = new QToolBar();
