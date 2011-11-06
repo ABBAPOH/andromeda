@@ -255,6 +255,7 @@ void BookmarksWidget::remove()
         d->model->remove(index);
 }
 
+#include <QDebug>
 void BookmarksWidget::setupUi()
 {
     d->toolBar = new QToolBar();
@@ -268,6 +269,7 @@ void BookmarksWidget::setupUi()
     d->lineEdit->setPlaceholderText(tr("Filter"));
     d->lineEdit->setStyleSheet("QLineEdit { border-radius : 8px; }");
     d->lineEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    d->lineEdit->setMinimumWidth(200);
 
     d->toolBar->addAction(d->createFolderAction);
     d->toolBar->addWidget(d->spacer);
