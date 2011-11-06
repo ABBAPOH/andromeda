@@ -60,7 +60,6 @@ void BookmarksWidget::setModel(BookmarksModel *model)
     index = d->folderProxy->mapFromSource(index);
     d->treeView->selectionModel()->select(index, QItemSelectionModel::Select);
     onClicked(index);
-
 }
 
 void BookmarksWidget::restoreState(const QByteArray &state)
@@ -80,7 +79,7 @@ QSize BookmarksWidget::minimumSizeHint() const
 
 QSize BookmarksWidget::sizeHint() const
 {
-    return QSize(640, 480);
+    return QSize(800, 600);
 }
 
 void BookmarksWidget::onClicked(const QModelIndex &index)
