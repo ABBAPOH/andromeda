@@ -281,6 +281,9 @@ void BookmarksWidget::setupUi()
     d->treeView->setExpandsOnDoubleClick(true);
     d->treeView->setEditTriggers(QAbstractItemView::SelectedClicked);
     d->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    d->treeView->setDragDropMode(QAbstractItemView::DragDrop);
+    d->treeView->setAcceptDrops(true);
+    d->treeView->setDefaultDropAction(Qt::MoveAction);
 
     d->tableView = new QTreeView(d->splitter);
     d->tableView->setItemsExpandable(false);
