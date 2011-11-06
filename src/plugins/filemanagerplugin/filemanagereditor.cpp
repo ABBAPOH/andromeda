@@ -7,9 +7,11 @@
 #include "navigationmodel.h"
 #include "navigationpanel.h"
 
+#include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <QtCore/QUrl>
+#include <QtGui/QFileDialog>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QMenu>
 #include <QtGui/QFileIconProvider>
@@ -205,9 +207,14 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
         sortByMenu->addSeparator();
         sortByMenu->addAction(sortByDescendingOrderAction);
     } else {
+        QMenu *openWithMenu = new QMenu(tr("Open with"), menu);
+        openWithMenu->addSeparator();
+        openWithMenu->addAction(selectProgramAction);
+
         menu->addAction(openAction);
         menu->addAction(openNewTabAction);
         menu->addAction(openNewWindowAction);
+        menu->addMenu(openWithMenu);
         menu->addSeparator();
         menu->addAction(showFileInfoAction);
         menu->addSeparator();
@@ -424,6 +431,41 @@ void FileManagerEditor::openNewWindow()
     window->show();
 }
 
+void FileManagerEditor::selectProgram()
+{
+    QString programsFolder;
+    QVariant value = m_settings->value(QLatin1String("filemanager/programsFolder"));
+    if (value.isValid()) {
+        programsFolder = value.toString();
+    } else {
+#if defined(Q_OS_MAC)
+        programsFolder = QLatin1String("/Applications");
+#elif defined(Q_OS_WIN)
+        programsFolder = QDriveInfo::rootDrive().rootPath() + QLatin1String("/Program Files");
+#elif defined(Q_OS_UNIX)
+        programsFolder = QLatin1String("/usr/bin");
+#endif
+    }
+    QString programPath = QFileDialog::getOpenFileName(this, tr("Select program"), programsFolder);
+    if (programPath.isEmpty())
+        return;
+
+    m_settings->setValue(QLatin1String("filemanager/programsFolder"), QFileInfo(programPath).absolutePath());
+
+    foreach (const QString path, m_widget->activeWidget()->selectedPaths()) {
+        QString program;
+        QStringList arguments;
+#if defined(Q_OS_MAC)
+        program = QLatin1String("open");
+        arguments << QLatin1String("-a") << programPath << path;
+#else
+        program = programPath;
+        arguments << path;
+#endif
+        QProcess::startDetached(program, arguments);
+    }
+}
+
 /*!
  \internal
 
@@ -569,6 +611,9 @@ void FileManagerEditor::createActions()
     openNewWindowAction = new QAction(tr("Open in new window"), this);
     connect(openNewWindowAction, SIGNAL(triggered()), SLOT(openNewWindow()));
 
+    selectProgramAction = new QAction(tr("Select program..."), this);
+    connect(selectProgramAction, SIGNAL(triggered()), SLOT(selectProgram()));
+
     showFileInfoAction = new QAction(tr("File info"), this);
     connect(showFileInfoAction, SIGNAL(triggered()), this, SLOT(showFileInfo()));
     m_widget->addAction(showFileInfoAction);
@@ -710,4 +755,3 @@ AbstractEditor * FileManagerEditorFactory::createEditor(QWidget *parent)
 {
     return new FileManagerEditor(parent);
 }
-

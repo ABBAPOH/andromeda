@@ -63,6 +63,7 @@ private slots:
     void onPathsDropped(const QString &, const QStringList &, Qt::DropAction);
     void openNewTab();
     void openNewWindow();
+    void selectProgram();
 
 private:
     void setupUi();
@@ -86,6 +87,7 @@ private:
     QAction *openAction;
     QAction *openNewTabAction;
     QAction *openNewWindowAction;
+    QAction *selectProgramAction;
     QAction *newFolderAction;
     QAction *renameAction;
     QAction *removeAction;
