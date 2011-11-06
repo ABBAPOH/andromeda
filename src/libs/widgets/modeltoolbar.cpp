@@ -215,7 +215,7 @@ void ModelToolBar::dropEvent(QDropEvent *event)
         return;
     }
 
-    int row;
+    int row = -1;
     QAction *action = actionAt(mapFromGlobal(QCursor::pos()));
     QModelIndex index;
     QModelIndex parentIndex = d->rootIndex;
@@ -223,11 +223,13 @@ void ModelToolBar::dropEvent(QDropEvent *event)
         row = d->model->rowCount(d->rootIndex);
     } else {
         index = this->index(action);
-        Q_ASSERT(index.isValid());
-        row = index.row();
+        if (!index.isValid())
+            index = d->rootIndex;
 
         if (d->model->hasChildren(index))
             parentIndex = index;
+        else
+            row = index.row();
     }
 
     event->acceptProposedAction();
