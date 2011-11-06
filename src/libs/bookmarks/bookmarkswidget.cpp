@@ -294,7 +294,7 @@ void BookmarksWidget::setupUi()
     d->tableView->setAcceptDrops(true);
     d->tableView->setDefaultDropAction(Qt::MoveAction);
 
-    d->splitter->setSizes(QList<int>() << 200 << 500);
+    d->splitter->setSizes(QList<int>() << 300 << 900); // 1200; 1/4
 
     d->mainLayout = new QVBoxLayout(this);
     d->mainLayout->setContentsMargins(0, 0, 0, 0);
