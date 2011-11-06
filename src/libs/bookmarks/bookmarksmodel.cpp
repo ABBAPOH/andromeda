@@ -248,6 +248,11 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
             else
                 return QFileIconProvider().icon(QFileIconProvider::Folder);
         }
+    } else if (role == Qt::ToolTipRole) {
+        if (item->type() == TreeItem::Item)
+            return QString("%1\n%2").arg(item->bookmark.title()).arg(item->bookmark.url().toString());
+        else
+            return item->name;
     } else if (role == DescriptionRole) {
         if (item->type() == TreeItem::Item)
             return item->bookmark.description();
