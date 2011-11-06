@@ -180,7 +180,10 @@ void ModelMenu::createMenu(const QModelIndex &parent, int max, QMenu *parentMenu
 QAction *ModelMenu::makeAction(const QModelIndex &index)
 {
     QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
+    QString toolTip = index.data(Qt::ToolTipRole).toString();
     QAction *action = makeAction(icon, index.data().toString(), this);
+    if (!toolTip.isEmpty())
+        action->setToolTip(toolTip);
     action->setStatusTip(index.data(d->statusBarTextRole).toString());
 
     QVariant v;
