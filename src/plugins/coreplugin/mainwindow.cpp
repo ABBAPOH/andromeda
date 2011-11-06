@@ -237,8 +237,16 @@ void MainWindowPrivate::updateUi(Tab *tab)
 #endif
 
     if (tab == q->currentTab()) {
-        q->setWindowTitle(QString(tr("%1 - Andromeda").arg(tab->windowTitle())));
-        q->setWindowIcon(tab->icon());
+        QString windowTitle = tab->windowTitle();
+        windowTitle = windowTitle.isEmpty() ? tab->title() : windowTitle;
+        if (windowTitle.isEmpty())
+            q->setWindowTitle(QString(tr("Andromeda")));
+        else
+            q->setWindowTitle(QString(tr("%1 - Andromeda").arg(windowTitle)));
+
+        QIcon windowIcon = tab->icon();
+        windowIcon = windowIcon.isNull() ? QIcon(":/images/icons/andromeda.png") : windowIcon;
+        q->setWindowIcon(windowIcon);
     }
 }
 
