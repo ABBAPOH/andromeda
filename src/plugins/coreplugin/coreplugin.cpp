@@ -250,9 +250,11 @@ void CorePluginImpl::createEditMenu()
     container->addGroup(group = Constants::MenuGroups::EditRedo);
 
     cmd = new Command(Constants::Actions::Undo, QKeySequence::Undo, tr("Undo"), this);
+    cmd->setAttributes(Command::AttributeUpdateText);
     container->addCommand(cmd, group);
 
     cmd = new Command(Constants::Actions::Redo, QKeySequence::Redo, tr("Redo"), this);
+    cmd->setAttributes(Command::AttributeUpdateText);
     container->addCommand(cmd, group);
 
     // ================ Edit Menu (CopyPaste) ================
