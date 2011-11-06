@@ -55,6 +55,7 @@ void BookmarksWidget::setModel(BookmarksModel *model)
     d->proxyModel->setSourceModel(model);
     d->treeView->expandAll();
     d->tableView->setColumnWidth(0, 200);
+    d->tableView->setColumnWidth(1, 200);
     d->treeView->selectionModel()->clearSelection();
     QModelIndex index = model->index(0,0, QModelIndex());
     index = d->folderProxy->mapFromSource(index);
