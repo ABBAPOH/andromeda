@@ -1,4 +1,4 @@
-find_package( Git )
+#find_package( Git )
 
 macro( get_git_revision VAR)
 if( GIT_EXECUTABLE )
