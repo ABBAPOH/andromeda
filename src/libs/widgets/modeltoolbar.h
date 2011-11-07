@@ -1,6 +1,8 @@
 #ifndef MODELTOOLBAR_H
 #define MODELTOOLBAR_H
 
+#include "widgets_global.h"
+
 #include <QtGui/QToolBar>
 
 class ModelMenu;
@@ -9,7 +11,7 @@ class QEvent;
 class QModelIndex;
 
 class ModelToolBarPrivate;
-class ModelToolBar : public QToolBar
+class WIDGETS_EXPORT ModelToolBar : public QToolBar
 {
     Q_OBJECT
     Q_DISABLE_COPY(ModelToolBar)
