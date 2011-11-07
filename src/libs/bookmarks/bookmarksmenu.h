@@ -42,7 +42,7 @@ private:
 };
 
 // Menu that is dynamically populated from the bookmarks
-class BookmarksMenuBarMenu : public BookmarksMenu
+class BOOKMARKS_EXPORT BookmarksMenuBarMenu : public BookmarksMenu
 {
     Q_OBJECT
     Q_DISABLE_COPY(BookmarksMenuBarMenu)
