@@ -1,6 +1,8 @@
 #ifndef MODELMENU_H
 #define MODELMENU_H
 
+#include "widgets_global.h"
+
 #include <QtGui/QMenu>
 
 class QAbstractItemModel;
@@ -8,7 +10,7 @@ class QModelIndex;
 
 // A QMenu that is dynamically populated from a QAbstractItemModel
 class ModelMenuPrivate;
-class ModelMenu : public QMenu
+class WIDGETS_EXPORT ModelMenu : public QMenu
 {
     Q_OBJECT
     Q_DISABLE_COPY(ModelMenu)
