@@ -13,7 +13,11 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 #endif()
 
 if( WIN32 )
-    set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+   if( ${CMAKE_SYSTEM_VERSION} LESS "6.0" )
+        set(GUI_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/andromeda.rc)
+    else()
+        message("Resources are disabled for windows 7")
+   endif()
 endif()
 
 if( APPLE )
