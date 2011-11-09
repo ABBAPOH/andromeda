@@ -20,6 +20,7 @@ set( HEADERS
     qfilecopier.h
     qfilecopier_p.h
     qsystemerror_p.h
+    directory_details.h
    )
 set( SOURCES
     fileimageprovider.cpp
@@ -27,6 +28,7 @@ set( SOURCES
     qdriveinfo.cpp
     qfilecopier.cpp
     qsystemerror.cpp
+    directory_details.cpp
    )
 set( FORMS
    )
