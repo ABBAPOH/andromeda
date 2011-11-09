@@ -1,6 +1,8 @@
 set( HEADERS
     widgets_global.h
     coverflow.h
+    fancylineedit.h
+    fancylineedit_p.h
     minisplitter.h
     modelmenu.h
     modeltoolbar.h
@@ -10,6 +12,7 @@ set( HEADERS
    )
 set( SOURCES
     coverflow.cpp
+    fancylineedit.cpp
     minisplitter.cpp
     modelmenu.cpp
     modeltoolbar.cpp
