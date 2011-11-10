@@ -48,6 +48,10 @@ signals:
     void currentUrlChanged(const QUrl &url);
     void changed();
 
+    void loadFinished(bool ok);
+    void loadProgress(int progress);
+    void loadStarted();
+
 private slots:
     void onIndexChanged(int index);
     void onUrlChanged(const QUrl &url);
