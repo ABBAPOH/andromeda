@@ -7,7 +7,6 @@ set( HEADERS
     minisplitter.h
     modelmenu.h
     modeltoolbar.h
-    enteredlineedit.h
     qxtflowview.h
     qxtflowview_p.h
    )
@@ -18,7 +17,6 @@ set( SOURCES
     minisplitter.cpp
     modelmenu.cpp
     modeltoolbar.cpp
-    enteredlineedit.cpp
     qxtflowview.cpp
     qxtflowview_p.cpp
    )
