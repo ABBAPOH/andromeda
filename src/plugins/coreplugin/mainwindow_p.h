@@ -12,7 +12,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
-#include <enteredlineedit.h>
+#include <addressbar.h>
 #include <CorePlugin>
 
 class MyTabWidget : public QTabWidget
@@ -103,7 +103,7 @@ class MainWindowPrivate : public QObject
 public:
     MainWindowPrivate(MainWindow *qq) : q_ptr(qq) {}
 
-    EnteredLineEdit *lineEdit;
+    AddressBar *lineEdit;
     QToolBar *toolBar;
     QTabWidget *tabWidget;
     TabBarButton *newTabButton;
@@ -135,7 +135,6 @@ public:
     void updateUi(Tab *tab);
 
 public slots:
-    void onUserInput(const QString &);
     void onUrlChanged(const QUrl &);
     void onCurrentChanged(int);
     void onChanged();
