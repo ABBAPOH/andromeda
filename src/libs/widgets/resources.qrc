@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/cancelLoading.png</file>
+        <file>icons/refresh.png</file>
+    </qresource>
+</RCC>
