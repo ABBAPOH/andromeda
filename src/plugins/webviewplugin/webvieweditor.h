@@ -30,6 +30,9 @@ public:
 
     QUrl currentUrl() const;
 
+    void refresh();
+    void cancel();
+
     QWidget *widget() const { return m_webView; }
     QToolBar *toolBar() const { return 0; }
 

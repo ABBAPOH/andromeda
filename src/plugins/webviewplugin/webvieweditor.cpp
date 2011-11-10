@@ -14,6 +14,10 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
 
     connect(m_webView, SIGNAL(titleChanged(QString)), SIGNAL(titleChanged(QString)));
     connect(m_webView, SIGNAL(iconChanged()), SLOT(onIconChanged()));
+
+    connect(m_webView, SIGNAL(loadStarted()), SIGNAL(loadStarted()));
+    connect(m_webView, SIGNAL(loadProgress(int)), SIGNAL(loadProgress(int)));
+    connect(m_webView, SIGNAL(loadFinished(bool)), SIGNAL(loadFinished(bool)));
 }
 
 WebViewEditor::~WebViewEditor()
@@ -31,6 +35,16 @@ bool WebViewEditor::open(const QUrl &url)
 QUrl WebViewPlugin::WebViewEditor::currentUrl() const
 {
     return m_webView->url();
+}
+
+void WebViewEditor::refresh()
+{
+    m_webView->reload();
+}
+
+void WebViewEditor::cancel()
+{
+    m_webView->stop();
 }
 
 void WebViewEditor::resizeEvent(QResizeEvent *e)
