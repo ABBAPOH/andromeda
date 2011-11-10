@@ -29,6 +29,9 @@ public:
 
     virtual QUrl currentUrl() const = 0;
 
+    virtual void refresh() {}
+    virtual void cancel() {}
+
     virtual int currentIndex() const { return -1; }
     virtual void setCurrentIndex(int index) { Q_UNUSED(index); }
 
@@ -52,6 +55,10 @@ signals:
     void iconChanged(const QIcon &icon);
     void titleChanged(const QString &title);
     void windowTitleChanged(const QString &title);
+
+    void loadFinished(bool ok);
+    void loadProgress(int progress);
+    void loadStarted();
 
 private:
     void setFactory(AbstractEditorFactory *factory);
