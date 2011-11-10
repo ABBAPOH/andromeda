@@ -206,10 +206,12 @@ void MainWindowPrivate::setupUi()
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), q, SLOT(closeTab(int)));
     connect(tabWidget, SIGNAL(tabBarDoubleClicked()), q, SLOT(newTab()));
 
-    lineEdit = new EnteredLineEdit(q);
+    lineEdit = new AddressBar(q);
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
-    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
-    connect(lineEdit, SIGNAL(textEntered(QString)), this, SLOT(onUserInput(QString)));
+//    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
+    connect(lineEdit, SIGNAL(open(QUrl)), q, SLOT(open(QUrl)));
+    connect(lineEdit, SIGNAL(refresh()), q, SLOT(refresh()));
+    connect(lineEdit, SIGNAL(canceled()), q, SLOT(cancel()));
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.
@@ -250,27 +252,12 @@ void MainWindowPrivate::updateUi(Tab *tab)
     }
 }
 
-void MainWindowPrivate::onUserInput(const QString &userInput)
-{
-    q_func()->open(QUrl::fromUserInput(userInput));
-}
-
-static inline QString urlToUserOputput(const QUrl &url)
-{
-    if (url.scheme() == QLatin1String("file"))
-        return url.toLocalFile();
-    else if (url.scheme() == qApp->applicationName())
-        return QString();
-    else
-        return url.toString();
-}
-
 void MainWindowPrivate::onUrlChanged(const QUrl &url)
 {
     Q_Q(MainWindow);
 
     if (sender() == q->currentTab())
-        lineEdit->setText(urlToUserOputput(url));
+        lineEdit->setUrl(url);
 }
 
 void MainWindowPrivate::onCurrentChanged(int index)
@@ -279,7 +266,13 @@ void MainWindowPrivate::onCurrentChanged(int index)
     if (!tab)
         return;
 
-    lineEdit->setText(urlToUserOputput(tab->currentUrl()));
+    lineEdit->setLoading(false);
+    disconnect(tab, 0, lineEdit, 0);
+    connect(tab, SIGNAL(loadStarted()), lineEdit,  SLOT(startLoad()));
+    connect(tab, SIGNAL(loadProgress(int)), lineEdit,  SLOT(setLoadProgress(int)));
+    connect(tab, SIGNAL(loadFinished(bool)), lineEdit,  SLOT(finishLoad()));
+
+    lineEdit->setUrl(tab->currentUrl());
 
     updateUi(tab);
 }
@@ -492,6 +485,20 @@ void MainWindow::closeTab(int index)
     QWidget *widget = d->tabWidget->widget(index);
     d->tabWidget->removeTab(index);
     widget->deleteLater();
+}
+
+void MainWindow::refresh()
+{
+    AbstractEditor *e = currentEditor();
+    if (e)
+        e->refresh();
+}
+
+void MainWindow::cancel()
+{
+    AbstractEditor *e = currentEditor();
+    if (e)
+        e->cancel();
 }
 
 void MainWindow::nextTab()
