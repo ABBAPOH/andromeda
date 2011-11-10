@@ -71,6 +71,10 @@ void TabPrivate::setEditor(AbstractEditor *e)
     QObject::connect(editor, SIGNAL(titleChanged(QString)), q, SIGNAL(changed()));
     QObject::connect(editor, SIGNAL(windowTitleChanged(QString)), q, SIGNAL(changed()));
     QObject::connect(editor, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
+
+    QObject::connect(editor, SIGNAL(loadStarted()), q, SIGNAL(loadStarted()));
+    QObject::connect(editor, SIGNAL(loadProgress(int)), q, SIGNAL(loadProgress(int)));
+    QObject::connect(editor, SIGNAL(loadFinished(bool)), q, SIGNAL(loadFinished(bool)));
 }
 
 void TabPrivate::addItem(AbstractEditor *e, const QString &path)
