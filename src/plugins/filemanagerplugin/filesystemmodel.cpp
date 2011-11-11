@@ -2,7 +2,7 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
-#include <fileimageprovider.h>
+#include <io/fileimageprovider.h>
 
 #include "filesystemmanager.h"
 

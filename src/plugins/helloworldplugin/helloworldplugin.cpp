@@ -2,8 +2,8 @@
 #include "helloworldeditor.h"
 
 #include <QtCore/QtPlugin>
-#include <core.h>
-#include <editormanager.h>
+#include <coreplugin/core.h>
+#include <coreplugin/editormanager.h>
 
 HelloWorlPluginImpl::HelloWorlPluginImpl() :
     ExtensionSystem::IPlugin()

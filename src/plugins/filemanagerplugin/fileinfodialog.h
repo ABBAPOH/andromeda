@@ -3,7 +3,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QWidget>
-#include <QDriveInfo>
+#include <io/QDriveInfo>
 
 class DirectoryDetails;
 

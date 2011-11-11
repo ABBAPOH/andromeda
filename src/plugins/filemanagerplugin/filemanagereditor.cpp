@@ -17,13 +17,14 @@
 #include <QtGui/QMenu>
 #include <QtGui/QFileIconProvider>
 
-#include <actionmanager.h>
-#include <constants.h>
-#include <core.h>
-#include <mainwindow.h>
-#include <minisplitter.h>
-#include <pluginmanager.h>
-#include <settings.h>
+#include <extensionsystem/pluginmanager.h>
+#include <guisystem/actionmanager.h>
+#include <widgets/minisplitter.h>
+
+#include <coreplugin/constants.h>
+#include <coreplugin/core.h>
+#include <coreplugin/mainwindow.h>
+#include <coreplugin/settings.h>
 
 using namespace CorePlugin;
 using namespace FileManagerPlugin;

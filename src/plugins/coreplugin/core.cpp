@@ -1,8 +1,6 @@
 #include "core.h"
 #include "core_p.h"
 
-#include <pluginmanager.h>
-
 #include "editormanager.h"
 #include "settings.h"
 

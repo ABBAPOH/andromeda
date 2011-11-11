@@ -7,14 +7,15 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QUndoStack>
 
-#include <actionmanager.h>
-#include <bookmarksmodel.h>
-#include <bookmarkswidget.h>
-#include <constants.h>
-#include <core.h>
-#include <mainwindow.h>
-#include <pluginmanager.h>
-#include <settings.h>
+#include <bookmarks/bookmarksmodel.h>
+#include <bookmarks/bookmarkswidget.h>
+#include <extensionsystem/pluginmanager.h>
+#include <guisystem/actionmanager.h>
+
+#include <coreplugin/constants.h>
+#include <coreplugin/core.h>
+#include <coreplugin/mainwindow.h>
+#include <coreplugin/settings.h>
 
 using namespace Bookmarks;
 using namespace BookmarksPlugin;

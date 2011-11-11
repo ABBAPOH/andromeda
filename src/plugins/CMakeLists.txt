@@ -1,9 +1,7 @@
 set( LIBRARY_OUTPUT_PATH ${APP_PLUGIN_PATH} )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
-include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
+include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
+include_directories( ${PROJECT_SOURCE_DIR}/src/plugins)
 
 add_definitions( -DQT_PLUGIN )
 add_definitions( -DQT_SHARED )

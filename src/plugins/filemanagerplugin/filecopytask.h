@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QMap>
 
-#include "QFileCopier"
+#include <io/QFileCopier>
 
 class QTimeEvent;
 

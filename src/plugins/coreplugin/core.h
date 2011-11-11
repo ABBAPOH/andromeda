@@ -3,7 +3,7 @@
 
 #include "coreplugin_global.h"
 
-#include <ExtensionSystem>
+#include <extensionsystem/pluginmanager.h>
 
 namespace CorePlugin {
 

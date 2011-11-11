@@ -10,15 +10,15 @@
 
 #include "constants.h"
 #include "core.h"
+#include "editormanager.h"
 #include "settings.h"
 #include "settingspagemanager.h"
 #include "settingsdialog.h"
 
-#include <actionmanager.h>
-#include <command.h>
-#include <commandcontainer.h>
-#include <editormanager.h>
-#include <pluginview.h>
+#include <extensionsystem/pluginview.h>
+#include <guisystem/actionmanager.h>
+#include <guisystem/command.h>
+#include <guisystem/commandcontainer.h>
 
 using namespace CorePlugin;
 using namespace GuiSystem;

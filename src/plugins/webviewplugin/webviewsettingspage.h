@@ -1,7 +1,7 @@
 #ifndef WEBVIEWSETTINGSPAGE_H
 #define WEBVIEWSETTINGSPAGE_H
 
-#include <isettingspage.h>
+#include <coreplugin/isettingspage.h>
 
 class WebViewSettingsPage : public CorePlugin::ISettingsPage
 {

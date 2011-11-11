@@ -62,11 +62,8 @@ qt4_automoc(
     filecopytask.cpp
 )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtfilecopier )
-include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/mainwindowplugin )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/widgets )
+#include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
 
 add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )
 

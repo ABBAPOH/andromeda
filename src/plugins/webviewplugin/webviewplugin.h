@@ -1,7 +1,7 @@
 #ifndef WEBVIEWPLUGINIMPL_H
 #define WEBVIEWPLUGINIMPL_H
 
-#include <iplugin.h>
+#include <extensionsystem/iplugin.h>
 
 class WebViewPluginImpl : public ExtensionSystem::IPlugin
 {

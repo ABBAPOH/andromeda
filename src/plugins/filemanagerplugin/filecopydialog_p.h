@@ -2,7 +2,7 @@
 #define FILECOPYDIALOG_P_H
 
 #include <QtCore/QSet>
-#include <QFileCopier>
+#include <io/QFileCopier>
 
 #include "filecopydialog.h"
 

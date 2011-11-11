@@ -4,18 +4,17 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
+
 #include <QtGui/QAction>
-#include <QtGui/QDesktopServices>
-
-//#include <QtGui/QFileSystemModel>
-#include <QtGui/QDirModel>
 #include <QtGui/QCompleter>
+#include <QtGui/QDesktopServices>
+#include <QtGui/QDirModel>
 
-#include <CorePlugin>
+#include <guisystem/actionmanager.h>
+#include <guisystem/command.h>
+#include <guisystem/commandcontainer.h>
 
-#include <actionmanager.h>
-#include <command.h>
-#include <commandcontainer.h>
+#include <coreplugin/CorePlugin>
 
 using namespace CorePlugin;
 using namespace GuiSystem;

@@ -1,7 +1,7 @@
 #ifndef IOPTIONSPAGE_H
 #define IOPTIONSPAGE_H
 
-#include <coreplugin_global.h>
+#include <coreplugin/coreplugin_global.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

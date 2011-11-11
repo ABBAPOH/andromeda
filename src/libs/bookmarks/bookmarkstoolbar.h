@@ -4,7 +4,7 @@
 #include "bookmarks_global.h"
 
 #include <QtCore/QUrl>
-#include <modeltoolbar.h>
+#include <widgets/modeltoolbar.h>
 
 class QAbstractItemModel;
 

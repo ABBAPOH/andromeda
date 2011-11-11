@@ -1,7 +1,7 @@
 #ifndef FILEMANAGERSETTINGSPAGE_H
 #define FILEMANAGERSETTINGSPAGE_H
 
-#include <isettingspage.h>
+#include <coreplugin/isettingspage.h>
 #include <QtCore/QString>
 #include <QtGui/QIcon>
 #include <QtGui/QWidget>
