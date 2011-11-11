@@ -5,7 +5,7 @@
 
 #include <QtGui/QWidget>
 #include <QtCore/QDir>
-#include <history.h>
+#include <coreplugin/history.h>
 
 class QFileSystemModel;
 class QAbstractItemView;

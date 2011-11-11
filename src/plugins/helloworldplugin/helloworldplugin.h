@@ -1,7 +1,7 @@
 #ifndef HELLOWORLPLUGIN_H
 #define HELLOWORLPLUGIN_H
 
-#include <iplugin.h>
+#include <extensionsystem/iplugin.h>
 
 class HelloWorlPluginImpl : public ExtensionSystem::IPlugin
 {

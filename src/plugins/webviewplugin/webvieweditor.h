@@ -6,9 +6,9 @@
 #include <QtCore/QPointer>
 #include <QtGui/QToolBar>
 #include <QtWebKit/QWebView>
-#include <abstracteditor.h>
-#include <abstracteditorfactory.h>
-#include <historyitem.h>
+#include <coreplugin/abstracteditor.h>
+#include <coreplugin/abstracteditorfactory.h>
+#include <coreplugin/historyitem.h>
 
 class QWebView;
 

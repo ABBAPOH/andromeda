@@ -4,8 +4,7 @@
 #include <QtCore/QBuffer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QAction>
-//#include <QDebug>
-#include <coverflow.h>
+#include <widgets/coverflow.h>
 
 using namespace FileManagerPlugin;
 

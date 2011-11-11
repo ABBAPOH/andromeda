@@ -7,21 +7,21 @@
 #include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
 
-#include <pluginmanager.h>
+#include <extensionsystem/pluginmanager.h>
 
-#include <actionmanager.h>
-#include <command.h>
+#include <guisystem/actionmanager.h>
+#include <guisystem/command.h>
 
-#include <core.h>
-#include <constants.h>
-#include <editormanager.h>
-#include <mainwindow.h>
+#include <bookmarks/bookmarkdialog.h>
+#include <bookmarks/bookmarksmenu.h>
+#include <bookmarks/bookmarksmodel.h>
+#include <bookmarks/bookmarkstoolbar.h>
+#include <bookmarks/bookmarkswidget.h>
 
-#include <bookmarkdialog.h>
-#include <bookmarksmenu.h>
-#include <bookmarksmodel.h>
-#include <bookmarkstoolbar.h>
-#include <bookmarkswidget.h>
+#include <coreplugin/core.h>
+#include <coreplugin/constants.h>
+#include <coreplugin/editormanager.h>
+#include <coreplugin/mainwindow.h>
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;

@@ -2,8 +2,8 @@
 #include "ui_filemanagersettingswidget.h"
 
 #include <QtCore/QSignalMapper>
-#include <core.h>
-#include <settings.h>
+#include <coreplugin/core.h>
+#include <coreplugin/settings.h>
 
 #include "navigationmodel.h"
 

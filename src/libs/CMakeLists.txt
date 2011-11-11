@@ -1,5 +1,7 @@
 set( LIBRARY_OUTPUT_PATH ${APP_LIBRARY_PATH} )
 
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/ )
+
 add_subdirectory( bookmarks )
 add_subdirectory( extensionsystem )
 add_subdirectory( guisystem )

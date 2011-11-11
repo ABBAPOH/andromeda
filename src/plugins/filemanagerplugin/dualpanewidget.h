@@ -5,7 +5,7 @@
 #include "filemanagerwidget.h"
 
 #include <QtGui/QWidget>
-#include <history.h>
+#include <coreplugin/history.h>
 
 namespace FileManagerPlugin {
 

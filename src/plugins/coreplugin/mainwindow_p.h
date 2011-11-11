@@ -10,10 +10,10 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
+#include <QtGui/QStyleOptionTabBarBaseV2>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
-#include <addressbar.h>
-#include <CorePlugin>
+#include <widgets/addressbar.h>
 
 class MyTabWidget : public QTabWidget
 {

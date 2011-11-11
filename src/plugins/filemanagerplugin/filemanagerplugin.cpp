@@ -3,6 +3,7 @@
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>
 #include <QtCore/QSignalMapper>
+#include <QtCore/QUrl>
 #include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
 #ifdef Q_CC_MSVC
@@ -10,11 +11,16 @@
 #include <QtGui/QClipboard>
 #endif
 
-#include <actionmanager.h>
-#include <command.h>
-#include <commandcontainer.h>
-#include <constants.h>
-#include <CorePlugin>
+#include <guisystem/actionmanager.h>
+#include <guisystem/command.h>
+#include <guisystem/commandcontainer.h>
+
+#include <coreplugin/constants.h>
+#include <coreplugin/core.h>
+#include <coreplugin/editormanager.h>
+#include <coreplugin/mainwindow.h>
+#include <coreplugin/settings.h>
+#include <coreplugin/settingspagemanager.h>
 
 #include "filecopydialog.h"
 #include "filemanagereditor.h"

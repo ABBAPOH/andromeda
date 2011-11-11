@@ -22,8 +22,6 @@ qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/bookmarks )
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/widgets )
 
 add_definitions( -DBOOKMARKSPLUGIN_LIBRARY )
 

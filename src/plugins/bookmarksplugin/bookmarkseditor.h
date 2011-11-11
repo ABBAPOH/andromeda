@@ -1,8 +1,8 @@
 #ifndef HELLOWORLDEDITOR_H
 #define HELLOWORLDEDITOR_H
 
-#include <abstracteditor.h>
-#include <abstracteditorfactory.h>
+#include <coreplugin/abstracteditor.h>
+#include <coreplugin/abstracteditorfactory.h>
 
 namespace Bookmarks {
 class BookmarksModel;

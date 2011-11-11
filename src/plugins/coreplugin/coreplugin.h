@@ -1,7 +1,7 @@
 #ifndef COREPLUGIN_H
 #define COREPLUGIN_H
 
-#include <iplugin.h>
+#include <extensionsystem/iplugin.h>
 #include "mainwindow.h"
 
 using namespace ExtensionSystem;

@@ -15,8 +15,7 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
-include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/coreplugin )
-include_directories( ${PROJECT_SOURCE_DIR}/src/plugins/filemanagerplugin )
+include_directories( ${PROJECT_SOURCE_DIR}/src/plugins )
 
 add_executable( filesystemmanager_test ${HEADERS} ${UI_HEADERS} ${SOURCES} ${MOC_SOURCES} )
 target_link_libraries( filesystemmanager_test ${QT_LIBRARIES} extensionsystem filemanagerplugin )

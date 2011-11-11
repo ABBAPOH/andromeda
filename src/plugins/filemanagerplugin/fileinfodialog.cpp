@@ -1,7 +1,7 @@
 #include "fileinfodialog.h"
 #include "ui_fileinfodialog.h"
 
-#include "directorydetails.h"
+#include <io/directorydetails.h>
 
 #include <QtCore/QDateTime>
 #include <QtGui/QFileIconProvider>

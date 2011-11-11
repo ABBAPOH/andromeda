@@ -3,9 +3,9 @@
 #include <QtCore/QtPlugin>
 #include <QtGui/QFileIconProvider>
 
-#include <core.h>
-#include <editormanager.h>
-#include <settingspagemanager.h>
+#include <coreplugin/core.h>
+#include <coreplugin/editormanager.h>
+#include <coreplugin/settingspagemanager.h>
 
 #include "webvieweditor.h"
 #include "webviewsettingspage.h"

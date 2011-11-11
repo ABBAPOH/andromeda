@@ -1,14 +1,16 @@
 #include "navigationmodel.h"
 #include "navigationmodel_p.h"
 
-#include <QDriveInfo>
-#include <QDriveController>
-#include <QDesktopServices>
-#include <QFileIconProvider>
-#include <QFileInfo>
-#include <QMimeData>
-#include <QUrl>
-#include <QSettings>
+#include <QtCore/QFileInfo>
+#include <QtCore/QMimeData>
+#include <QtCore/QSettings>
+#include <QtCore/QUrl>
+
+#include <QtGui/QDesktopServices>
+#include <QtGui/QFileIconProvider>
+
+#include <io/QDriveController>
+#include <io/QDriveInfo>
 
 class QDriveInfo;
 

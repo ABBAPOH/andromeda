@@ -1,8 +1,8 @@
 #ifndef FILEMANAGEREDITOR_H
 #define FILEMANAGEREDITOR_H
 
-#include "abstracteditor.h"
-#include "abstracteditorfactory.h"
+#include <coreplugin/abstracteditor.h>
+#include <coreplugin/abstracteditorfactory.h>
 
 class MiniSplitter;
 class QActionGroup;

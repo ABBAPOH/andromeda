@@ -1,6 +1,6 @@
 #include "isettingspage.h"
 
-#include <pluginmanager.h>
+#include <extensionsystem/pluginmanager.h>
 
 using namespace CorePlugin;
 
