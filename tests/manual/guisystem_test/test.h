@@ -10,7 +10,6 @@ public:
     explicit Test(QObject *parent = 0);
 
 public slots:
-    void testDeletion();
 };
 
 #endif // TEST_H

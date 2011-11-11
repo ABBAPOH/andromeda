@@ -1,37 +1,15 @@
 set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     actionmanager.h
-    centralwidget.h
     command.h
     commandcontainer.h
-    guicontroller.h
-    iview.h
-    iviewfactory.h
-    iiohandler.h
-#    mainwindow.h
-    perspective.h
-    perspectiveinstance.h
-#    perspectiveswitcher.h
-    perspectivewidget.h
     proxyaction.h
-#    state.h
    )
 set( SOURCES
     actionmanager.cpp
-    centralwidget.cpp
     command.cpp
     commandcontainer.cpp
-    guicontroller.cpp
-    iview.cpp
-    iviewfactory.cpp
-    iiohandler.cpp
-#    mainwindow.cpp
-    perspective.cpp
-    perspectiveinstance.cpp
-#    perspectiveswitcher.cpp
-    perspectivewidget.cpp
     proxyaction.cpp
-#    state.cpp
    )
 set( FORMS
    )

@@ -16,8 +16,6 @@
 #include <actionmanager.h>
 #include <command.h>
 #include <commandcontainer.h>
-#include <iview.h>
-#include <perspectivewidget.h>
 
 using namespace CorePlugin;
 using namespace GuiSystem;

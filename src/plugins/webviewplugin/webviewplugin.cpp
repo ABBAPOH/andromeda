@@ -5,13 +5,11 @@
 
 #include <core.h>
 #include <editormanager.h>
-#include <perspective.h>
 #include <settingspagemanager.h>
 
 #include "webvieweditor.h"
 #include "webviewsettingspage.h"
 
-using namespace GuiSystem;
 using namespace CorePlugin;
 using namespace WebViewPlugin;
 
