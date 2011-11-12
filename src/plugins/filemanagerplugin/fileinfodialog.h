@@ -1,6 +1,8 @@
 #ifndef FILEINFODIALOG_H
 #define FILEINFODIALOG_H
 
+#include "directory_details.h"
+
 #include <QtCore/QFileInfo>
 #include <QtGui/QWidget>
 #include <QDriveInfo>
@@ -27,11 +29,13 @@ private slots:
     void onActivatedUser(int);
     void onActivatedGroup(int);
     void onActivatedOther(int);
+    void updateSize();
 
 private:
     Ui::FileInfoDialog *ui;
     QFileInfo m_fileInfo;
     QDriveInfo m_driveInfo;
+    DirectoryDetails *m_directoryDetails;
 };
 
 #endif // FILEINFODIALOG_H
