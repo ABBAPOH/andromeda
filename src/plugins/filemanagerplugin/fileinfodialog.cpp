@@ -9,6 +9,7 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setAttribute(Qt::WA_DeleteOnClose, true);
     setWindowFlags(Qt::Window);
 
     connect(ui->userPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedUser(int)));
