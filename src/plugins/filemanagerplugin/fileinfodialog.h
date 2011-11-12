@@ -1,11 +1,11 @@
 #ifndef FILEINFODIALOG_H
 #define FILEINFODIALOG_H
 
-#include "directory_details.h"
-
 #include <QtCore/QFileInfo>
 #include <QtGui/QWidget>
 #include <QDriveInfo>
+
+class DirectoryDetails;
 
 namespace Ui {
     class FileInfoDialog;

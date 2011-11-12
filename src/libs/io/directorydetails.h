@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (c) 2010, 2011 Carlos Pais <freemind@lavabit.com>
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -14,36 +14,39 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #ifndef DIRECTORY_DETAILS_H
 #define DIRECTORY_DETAILS_H
 
-#include <QtCore/QThread>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include "io_global.h"
+
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
-
-#include "io_global.h"
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QThread>
 
 class IO_EXPORT DirectoryDetails : public QThread
 {
-    QString m_dirPath;
-    qint64 m_totalSize;
-    int m_totalFiles;
-    int m_totalFolders;
-    volatile bool m_run;
-    
-    public:
-        explicit DirectoryDetails(const QString&, QObject *parent=0);
-        DirectoryDetails(QObject *parent=0);
-        void init();
-        void run();
-        int totalFiles() const { return m_totalFiles; }
-        int totalFolders() const { return m_totalFolders; }
-        qint64 totalSize() const { return m_totalSize; }
-        void stopProcessing() { m_run = false; }
+public:
+    explicit DirectoryDetails(const QString &, QObject *parent = 0);
+    explicit DirectoryDetails(QObject *parent = 0);
 
+    int totalFolders() const { return m_totalFolders; }
+    int totalFiles() const { return m_totalFiles; }
+    qint64 totalSize() const { return m_totalSize; }
+
+    void stopProcessing() { m_stopRequest = true; }
+
+protected:
+    void run();
+
+private:
+    QString m_dirPath;
+    int m_totalFolders;
+    int m_totalFiles;
+    qint64 m_totalSize;
+    volatile bool m_stopRequest;
 };
 
 #endif

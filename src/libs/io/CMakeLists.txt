@@ -12,6 +12,7 @@ set( GLOBAL_HEADERS
    )
 set( HEADERS
     io_global.h
+    directorydetails.h
     fileimageprovider.h
     qdrivecontroller.h
     qdrivecontroller_p.h
@@ -20,15 +21,14 @@ set( HEADERS
     qfilecopier.h
     qfilecopier_p.h
     qsystemerror_p.h
-    directory_details.h
    )
 set( SOURCES
+    directorydetails.cpp
     fileimageprovider.cpp
     qdrivecontroller.cpp
     qdriveinfo.cpp
     qfilecopier.cpp
     qsystemerror.cpp
-    directory_details.cpp
    )
 set( FORMS
    )
