@@ -15,50 +15,47 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "directory_details.h"
+#include "directorydetails.h"
 #include <QtCore/QtDebug>
 #include <QtCore/QThread>
 
-DirectoryDetails::DirectoryDetails(const QString& dirPath, QObject *parent):
-    QThread(parent)
+DirectoryDetails::DirectoryDetails(const QString &dirPath, QObject *parent):
+    QThread(parent),
+    m_totalFolders(0),
+    m_totalFiles(0),
+    m_totalSize(0),
+    m_stopRequest(false)
 {
-    init();
     m_dirPath = dirPath;
 }
 
 DirectoryDetails::DirectoryDetails(QObject *parent):
-    QThread(parent)
+    QThread(parent),
+    m_totalFolders(0),
+    m_totalFiles(0),
+    m_totalSize(0),
+    m_stopRequest(false)
 {
-    init();
     m_dirPath = QDir::currentPath();
 }
 
-
-void DirectoryDetails::init()
-{
-    m_totalFiles = 0;
-    m_totalSize = 0;
-    m_totalFolders = 0;
-    m_run = true;
-}
-
-
 void DirectoryDetails::run()
 {
-    
-    if ( m_dirPath.isEmpty() || (! QFile::exists(m_dirPath)) )
+    m_stopRequest = false;
+
+    if (m_dirPath.isEmpty() || !QFile::exists(m_dirPath))
         return;
-        
+
     QDirIterator it(m_dirPath, QDir::AllEntries | QDir::NoDotAndDotDot |
-                                     QDir::Hidden, QDirIterator::Subdirectories);
-                                     
-    while (it.hasNext()) 
+                    QDir::Hidden, QDirIterator::Subdirectories);
+
+    while (it.hasNext())
     {
-        if ( ! m_run )
+        if (m_stopRequest)
             return;
-        
+
         QFileInfo info(it.next());
-        if ( info.isDir() )
+        if (info.isDir())
             m_totalFolders++;
         else
             m_totalFiles++;
@@ -66,6 +63,4 @@ void DirectoryDetails::run()
         m_totalSize += info.size();
     }
 }
-
-
 

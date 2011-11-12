@@ -1,17 +1,20 @@
 #include "fileinfodialog.h"
 #include "ui_fileinfodialog.h"
 
+#include "directorydetails.h"
+
 #include <QtCore/QDateTime>
+#include <QtGui/QFileIconProvider>
 
 FileInfoDialog::FileInfoDialog(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileInfoDialog)
+    ui(new Ui::FileInfoDialog),
+    m_directoryDetails(0)
 {
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     setWindowFlags(Qt::Window);
-    m_directoryDetails = 0;
 
     connect(ui->userPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedUser(int)));
     connect(ui->groupPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedGroup(int)));
@@ -20,11 +23,13 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
 
 FileInfoDialog::~FileInfoDialog()
 {
-    if ( m_directoryDetails && m_directoryDetails->isRunning() )
-        m_directoryDetails->stopProcessing();
-        
-    m_directoryDetails->wait();
-    
+    if (m_directoryDetails) {
+        if (m_directoryDetails->isRunning())
+            m_directoryDetails->stopProcessing();
+
+        m_directoryDetails->wait();
+    }
+
     delete ui;
 }
 
@@ -37,10 +42,12 @@ void FileInfoDialog::setFileInfo(const QFileInfo &info)
 {
     m_fileInfo = info;
     m_driveInfo = QDriveInfo(m_fileInfo.absoluteFilePath());
-    updateUi();
+    if (m_directoryDetails)
+        delete m_directoryDetails;
     m_directoryDetails = new DirectoryDetails(info.absoluteFilePath(), this);
     connect(m_directoryDetails, SIGNAL(finished()), this, SLOT(updateSize()));
     m_directoryDetails->start();
+    updateUi();
 }
 
 static QString sizeToString(qint64 size)
@@ -56,7 +63,6 @@ static QString sizeToString(qint64 size)
     return QObject::tr("%1 b").arg(size);
 }
 
-#include <QFileIconProvider>
 void FileInfoDialog::updateUi()
 {
     ui->iconLabel->setPixmap(QFileIconProvider().icon(m_fileInfo).pixmap(32));
@@ -105,11 +111,8 @@ void FileInfoDialog::updateSize()
 {
     int objCount = m_directoryDetails->totalFiles() + m_directoryDetails->totalFolders();
     qint64 totalSize = m_directoryDetails->totalSize();
-    QString sizeLabel = tr("%1 %2 (%3) %4 %5 %6").arg(totalSize)
-                                            .arg(tr("Bytes"))
+    QString sizeLabel = tr("%1 bytes (%2) for %3 objects").arg(totalSize)
                                             .arg(sizeToString(totalSize))
-                                            .arg(tr("for"))
-                                            .arg(objCount)
-                                            .arg(tr("Objects"));
+                                            .arg(objCount);
     ui->sizeLabel->setText(sizeLabel);
 }
