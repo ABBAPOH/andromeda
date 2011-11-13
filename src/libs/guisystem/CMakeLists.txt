@@ -1,12 +1,16 @@
 set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     actionmanager.h
+    abstractview.h
+    abstractviewfactory.h
     command.h
     commandcontainer.h
     proxyaction.h
    )
 set( SOURCES
     actionmanager.cpp
+    abstractview.cpp
+    abstractviewfactory.cpp
     command.cpp
     commandcontainer.cpp
     proxyaction.cpp
