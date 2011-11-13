@@ -15,7 +15,8 @@ using namespace GuiSystem;
   \brief Creates an AbstractView with the given \a parent.
 */
 AbstractView::AbstractView(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    m_factory(0)
 {
 }
 
@@ -99,7 +100,7 @@ QString AbstractView::title() const
 
   Default implementation does nothing.
 */
-void AbstractView::restoreState(QByteArray &state)
+void AbstractView::restoreState(const QByteArray &state)
 {
     Q_UNUSED(state);
 }
