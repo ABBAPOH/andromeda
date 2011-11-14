@@ -7,6 +7,7 @@ set( HEADERS
     abstractviewfactory.h
     command.h
     commandcontainer.h
+    editormanager.h
     proxyaction.h
    )
 set( SOURCES
@@ -17,6 +18,7 @@ set( SOURCES
     abstractviewfactory.cpp
     command.cpp
     commandcontainer.cpp
+    editormanager.cpp
     proxyaction.cpp
    )
 set( FORMS
