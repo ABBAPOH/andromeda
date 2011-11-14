@@ -55,7 +55,7 @@ public:
 
     FileSystemManager *fileSystemManager;
 
-    CorePlugin::History * history;
+    GuiSystem::History * history;
 
     bool blockEvents;
     QSize gridSize;

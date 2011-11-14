@@ -1,3 +1,5 @@
 #include "actionmanager.h"
 #include "command.h"
 #include "commandcontainer.h"
+#include "history.h"
+#include "historyitem.h"

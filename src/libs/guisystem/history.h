@@ -1,16 +1,16 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
-#include "coreplugin_global.h"
+#include "guisystem_global.h"
 
 #include <QtCore/QObject>
 
 #include "historyitem.h"
 
-namespace CorePlugin {
+namespace GuiSystem {
 
 class HistoryPrivate;
-class COREPLUGIN_EXPORT History: public QObject
+class GUISYSTEM_EXPORT History: public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(History)
@@ -61,6 +61,6 @@ protected:
     HistoryPrivate *d_ptr;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
 #endif // HISTORY_H

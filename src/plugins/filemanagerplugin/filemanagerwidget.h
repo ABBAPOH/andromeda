@@ -5,7 +5,7 @@
 
 #include <QtGui/QWidget>
 #include <QtCore/QDir>
-#include <coreplugin/history.h>
+#include <guisystem/history.h>
 
 class QFileSystemModel;
 class QAbstractItemView;
@@ -76,7 +76,7 @@ public:
     FileSystemManager *fileSystemManager() const;
     void setFileSystemManager(FileSystemManager *manager);
 
-    CorePlugin::History *history() const;
+    GuiSystem::History *history() const;
 
     FileSystemModel *model() const;
 

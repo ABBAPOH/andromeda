@@ -5,7 +5,7 @@
 #include "filemanagerwidget.h"
 
 #include <QtGui/QWidget>
-#include <coreplugin/history.h>
+#include <guisystem/history.h>
 
 namespace FileManagerPlugin {
 
@@ -25,7 +25,7 @@ public:
     explicit DualPaneWidget(QWidget *parent = 0);
     ~DualPaneWidget();
 
-    CorePlugin::History *history() const;
+    GuiSystem::History *history() const;
     Pane activePane() const;
     FileManagerWidget *activeWidget() const;
 

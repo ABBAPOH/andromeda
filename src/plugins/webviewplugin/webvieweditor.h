@@ -8,7 +8,6 @@
 #include <QtWebKit/QWebView>
 #include <coreplugin/abstracteditor.h>
 #include <coreplugin/abstracteditorfactory.h>
-#include <coreplugin/historyitem.h>
 
 class QWebView;
 
