@@ -3,6 +3,7 @@ set( HEADERS
     actionmanager.h
     abstracteditor.h
     abstracteditorfactory.h
+    abstracthistory.h
     abstractview.h
     abstractviewfactory.h
     command.h
@@ -16,6 +17,7 @@ set( SOURCES
     actionmanager.cpp
     abstracteditor.cpp
     abstracteditorfactory.cpp
+    abstracthistory.cpp
     abstractview.cpp
     abstractviewfactory.cpp
     command.cpp

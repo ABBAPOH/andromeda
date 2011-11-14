@@ -5,10 +5,9 @@
 
 #include <QtCore/QUrl>
 
-class QSettings;
-
 namespace GuiSystem {
 
+class AbstractHistory;
 class AbstractEditorFactory;
 
 class GUISYSTEM_EXPORT AbstractEditor : public AbstractView
@@ -37,8 +36,7 @@ public:
     virtual QImage preview() const;
     virtual QString windowTitle() const;
 
-    virtual int currentIndex() const;
-    virtual void setCurrentIndex(int index);
+    virtual AbstractHistory *history() const;
 
     virtual void restoreDefaults() {}
     void restoreState(const QByteArray &state);

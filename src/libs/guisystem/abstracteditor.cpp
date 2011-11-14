@@ -236,23 +236,14 @@ QString AbstractEditor::windowTitle() const
 */
 
 /*!
-  \brief Reimplement to return current index in local history.
+  \brief Reimplement to return history that corresponds to this editor.
 
-  Default imlementation returns -1.
+  Note that AbstractEditor::capabilities should return AbstractEditor::HasHistory among other flags.
+  Default imlementation returns 0.
 */
-int AbstractEditor::currentIndex() const
+AbstractHistory * AbstractEditor::history() const
 {
-    return -1;
-}
-
-/*!
-  \brief Reimplement to change current index in local history.
-
-  This funtion is called when user navigates in global history (i.e. with back/forward buttons on toolbar).
-*/
-void AbstractEditor::setCurrentIndex(int index)
-{
-    Q_UNUSED(index);
+    return 0;
 }
 
 /*!
