@@ -21,6 +21,7 @@ public:
 
 }
 
+using namespace GuiSystem;
 using namespace FileManagerPlugin;
 
 void swapPalettes(QWidget *active, QWidget *inactive)
@@ -65,7 +66,7 @@ DualPaneWidget::~DualPaneWidget()
     delete d_ptr;
 }
 
-CorePlugin::History * DualPaneWidget::history() const
+History * DualPaneWidget::history() const
 {
     return activeWidget()->history();
 }

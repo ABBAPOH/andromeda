@@ -2,7 +2,7 @@
 
 #include "historyitem.h"
 
-namespace CorePlugin {
+namespace GuiSystem {
 
 class HistoryPrivate
 {
@@ -12,9 +12,9 @@ public:
     int currentItemIndex;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
-using namespace CorePlugin;
+using namespace GuiSystem;
 
 History::History(QObject *parent) :
         QObject(parent),

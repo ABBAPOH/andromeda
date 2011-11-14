@@ -1,7 +1,7 @@
 #ifndef HISTORYITEM_H
 #define HISTORYITEM_H
 
-#include "coreplugin_global.h"
+#include "guisystem_global.h"
 
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QDateTime>
@@ -9,10 +9,10 @@
 #include <QtGui/QIcon>
 #include <QHash>
 
-namespace CorePlugin {
+namespace GuiSystem {
 
 class HistoryItemData;
-class COREPLUGIN_EXPORT HistoryItem
+class GUISYSTEM_EXPORT HistoryItem
 {
 public:
     HistoryItem(const QString &path = QString());
@@ -44,6 +44,6 @@ private:
     QSharedDataPointer<HistoryItemData> data;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
 #endif // HISTORYITEM_H

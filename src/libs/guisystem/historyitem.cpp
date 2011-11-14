@@ -3,7 +3,7 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QVariant>
 
-namespace CorePlugin {
+namespace GuiSystem {
 
 class HistoryItemData : public QSharedData {
 public:
@@ -15,9 +15,9 @@ public:
     QVariantHash userData;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
-using namespace CorePlugin;
+using namespace GuiSystem;
 
 HistoryItem::HistoryItem(const QString &path) :
     data(new HistoryItemData)

@@ -8,6 +8,8 @@ set( HEADERS
     command.h
     commandcontainer.h
     editormanager.h
+    history.h
+    historyitem.h
     proxyaction.h
    )
 set( SOURCES
@@ -19,6 +21,8 @@ set( SOURCES
     command.cpp
     commandcontainer.cpp
     editormanager.cpp
+    history.cpp
+    historyitem.cpp
     proxyaction.cpp
    )
 set( FORMS

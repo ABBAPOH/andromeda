@@ -26,7 +26,7 @@ public:
     QUrl currentUrl;
     AbstractEditor *editor;
     QHash<QString, AbstractEditor *> editorHash;
-    History *history;
+    GuiSystem::History *history;
     bool ignoreSignals;
 
 public:
@@ -40,6 +40,7 @@ protected:
 } // namespace CorePlugin
 
 using namespace CorePlugin;
+using namespace GuiSystem;
 
 QString getMimeType(const QUrl &url)
 {

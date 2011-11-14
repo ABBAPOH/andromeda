@@ -6,6 +6,7 @@
 #include <QtGui/QAction>
 #include <widgets/coverflow.h>
 
+using namespace GuiSystem;
 using namespace FileManagerPlugin;
 
 void FileManagerWidgetPrivate::setupUi()
@@ -231,7 +232,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->sortingColumn = (FileManagerWidget::Column)-1;
     d->sortingOrder = (Qt::SortOrder)-1;
 
-    d->history = new CorePlugin::History(this);
+    d->history = new History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
     FileSystemModel *model = new FileSystemModel(this);
@@ -282,7 +283,7 @@ void FileManagerWidget::setCurrentPath(const QString &path)
             d->currentView->selectionModel()->clear(); // to prevent bug with selecting dir we enter in
             d->currentView->setRootIndex(index);
 
-            CorePlugin::HistoryItem item;
+            HistoryItem item;
             item.setPath(path);
             item.setTitle(QFileInfo(path).fileName());
             item.setLastVisited(QDateTime::currentDateTime());
@@ -468,7 +469,7 @@ void FileManagerWidget::setFileSystemManager(FileSystemManager *manager)
     }
 }
 
-CorePlugin::History * FileManagerWidget::history() const
+History * FileManagerWidget::history() const
 {
     Q_D(const FileManagerWidget);
 

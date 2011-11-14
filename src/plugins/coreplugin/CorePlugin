@@ -3,8 +3,6 @@
 #include "constants.h"
 #include "core.h"
 #include "editormanager.h"
-#include "history.h"
-#include "historyitem.h"
 #include "isettingspage.h"
 #include "mainwindow.h"
 #include "settings.h"

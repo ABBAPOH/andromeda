@@ -6,7 +6,7 @@
 #include <QtCore/QUrl>
 #include <QtGui/QWidget>
 
-#include "history.h"
+#include <guisystem/history.h>
 
 class QSettings;
 
@@ -33,7 +33,7 @@ public:
     QString windowTitle() const;
 
     AbstractEditor *currentEditor() const;
-    History *history() const;
+    GuiSystem::History *history() const;
 
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);

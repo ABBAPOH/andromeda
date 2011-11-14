@@ -8,8 +8,6 @@ set( HEADERS
     core_p.h
     coreplugin.h
     editormanager.h
-    history.h
-    historyitem.h
     isettingspage.h
     mainwindow.h
     mainwindow_p.h
@@ -25,8 +23,6 @@ set( SOURCES
     core.cpp
     coreplugin.cpp
     editormanager.cpp
-    history.cpp
-    historyitem.cpp
     isettingspage.cpp
     mainwindow.cpp
     settings.cpp
