@@ -14,6 +14,7 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <widgets/addressbar.h>
+#include <guisystem/stackededitor.h>
 
 class MyTabWidget : public QTabWidget
 {
@@ -126,13 +127,13 @@ public:
     QAction *pasteAction;
     QAction *selectAllAction;
 
-    Tab *addTab(int *index = 0);
+    GuiSystem::StackedEditor *addTab(int *index = 0);
     void createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot);
     void setupActions();
     void setupToolBar();
     void setupAlternateToolBar();
     void setupUi();
-    void updateUi(Tab *tab);
+    void updateUi(GuiSystem::StackedEditor *tab);
 
 public slots:
     void onUrlChanged(const QUrl &);

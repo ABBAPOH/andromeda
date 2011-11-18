@@ -1,11 +1,11 @@
 #ifndef HELLOWORLDEDITOR_H
 #define HELLOWORLDEDITOR_H
 
-#include <coreplugin/abstracteditor.h>
-#include <coreplugin/abstracteditorfactory.h>
+#include <guisystem/abstracteditor.h>
+#include <guisystem/abstracteditorfactory.h>
 
 class QLabel;
-class HelloWorldEditor : public CorePlugin::AbstractEditor
+class HelloWorldEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(HelloWorldEditor)
@@ -13,8 +13,8 @@ class HelloWorldEditor : public CorePlugin::AbstractEditor
 public:
     explicit HelloWorldEditor(QWidget *parent = 0);
 
-    bool open(const QUrl &url);
-    QUrl currentUrl() const;
+    void open(const QUrl &url);
+    QUrl url() const;
 
     QIcon icon() const;
     QString title() const;
@@ -27,7 +27,7 @@ private:
     QLabel *m_label;
 };
 
-class HelloWorldEditorFactory : public CorePlugin::AbstractEditorFactory
+class HelloWorldEditorFactory : public GuiSystem::AbstractEditorFactory
 {
 public:
     explicit HelloWorldEditorFactory(QObject *parent = 0);
@@ -36,7 +36,7 @@ public:
     QByteArray id() const;
 
 protected:
-    CorePlugin::AbstractEditor *createEditor(QWidget *parent);
+    GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
 #endif // HELLOWORLDEDITOR_H

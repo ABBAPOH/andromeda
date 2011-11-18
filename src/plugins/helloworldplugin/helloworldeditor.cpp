@@ -4,7 +4,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QResizeEvent>
 
-using namespace CorePlugin;
+using namespace GuiSystem;
 
 HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     AbstractEditor(parent),
@@ -13,13 +13,12 @@ HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     m_label->setAlignment(Qt::AlignCenter);
 }
 
-bool HelloWorldEditor::open(const QUrl &url)
+void HelloWorldEditor::open(const QUrl &url)
 {
-    emit currentUrlChanged(url);
-    return true;
+    emit urlChanged(url);
 }
 
-QUrl HelloWorldEditor::currentUrl() const
+QUrl HelloWorldEditor::url() const
 {
     return QUrl(QLatin1String("andromeda://helloworld"));
 }

@@ -2,8 +2,9 @@
 #include "helloworldeditor.h"
 
 #include <QtCore/QtPlugin>
-#include <coreplugin/core.h>
-#include <coreplugin/editormanager.h>
+#include <guisystem/editormanager.h>
+
+using namespace GuiSystem;
 
 HelloWorlPluginImpl::HelloWorlPluginImpl() :
     ExtensionSystem::IPlugin()
@@ -13,7 +14,7 @@ HelloWorlPluginImpl::HelloWorlPluginImpl() :
 bool HelloWorlPluginImpl::initialize(const QVariantMap &)
 {
     HelloWorldEditorFactory *f = new HelloWorldEditorFactory(this);
-    CorePlugin::Core::instance()->editorManager()->addFactory(f);
+    EditorManager::instance()->addFactory(f);
 
     return true;
 }

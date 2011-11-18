@@ -10,7 +10,6 @@
 
 #include "constants.h"
 #include "core.h"
-#include "editormanager.h"
 #include "settings.h"
 #include "settingspagemanager.h"
 #include "settingsdialog.h"
@@ -40,10 +39,6 @@ bool CorePluginImpl::initialize(const QVariantMap &options)
     Settings *settings = new Settings;
     settings->setObjectName("settings");
     addObject(settings);
-
-    EditorManager *editorManager = new EditorManager;
-    editorManager->setObjectName("editorManager");
-    addObject(editorManager);
 
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));

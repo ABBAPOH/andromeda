@@ -1,7 +1,7 @@
 #include "core.h"
 #include "core_p.h"
 
-#include "editormanager.h"
+#include <guisystem/editormanager.h>
 #include "settings.h"
 
 /*!
@@ -45,6 +45,7 @@
     \brief Returns a RegistrationManager object.
 */
 
+using namespace GuiSystem;
 using namespace CorePlugin;
 
 Core::Core(QObject *parent) :
@@ -69,7 +70,7 @@ QObject *Core::getObject(const QString &name)
 
 EditorManager * Core::editorManager() const
 {
-    return d_func()->pool->object<EditorManager>("editorManager");
+    return EditorManager::instance();
 }
 
 Settings * Core::settings() const

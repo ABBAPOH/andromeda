@@ -17,7 +17,7 @@
 
 #include <coreplugin/constants.h>
 #include <coreplugin/core.h>
-#include <coreplugin/editormanager.h>
+#include <guisystem/editormanager.h>
 #include <coreplugin/mainwindow.h>
 #include <coreplugin/settings.h>
 #include <coreplugin/settingspagemanager.h>
@@ -42,7 +42,8 @@ FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :
 bool FileManagerPluginImpl::initialize(const QVariantMap &options)
 {
     FileManagerEditorFactory *f = new FileManagerEditorFactory(this);
-    Core::instance()->editorManager()->addFactory(f);
+//    Core::instance()->editorManager()->addFactory(f);
+    EditorManager::instance()->addFactory(f);
 
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");

@@ -1,8 +1,8 @@
 #ifndef HELLOWORLDEDITOR_H
 #define HELLOWORLDEDITOR_H
 
-#include <coreplugin/abstracteditor.h>
-#include <coreplugin/abstracteditorfactory.h>
+#include <guisystem/abstracteditor.h>
+#include <guisystem/abstracteditorfactory.h>
 
 namespace Bookmarks {
 class BookmarksModel;
@@ -15,7 +15,7 @@ class Settings;
 
 namespace BookmarksPlugin {
 
-class BookmarksEditor : public CorePlugin::AbstractEditor
+class BookmarksEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(BookmarksEditor)
@@ -23,15 +23,15 @@ class BookmarksEditor : public CorePlugin::AbstractEditor
 public:
     explicit BookmarksEditor(QWidget *parent = 0);
 
-    bool open(const QUrl &url);
-    QUrl currentUrl() const;
+    void open(const QUrl &url);
+    QUrl url() const;
 
     QIcon icon() const;
     QString title() const;
     QString windowTitle() const;
 
-    void restoreSession(QSettings &s);
-    void saveSession(QSettings &s);
+    QByteArray saveState() const;
+    void restoreState(const QByteArray &state);
 
 private slots:
     void openTriggered(const QUrl &url);
@@ -52,7 +52,7 @@ private:
     QAction *undoAction;
 };
 
-class BookmarksEditorFactory : public CorePlugin::AbstractEditorFactory
+class BookmarksEditorFactory : public GuiSystem::AbstractEditorFactory
 {
 public:
     explicit BookmarksEditorFactory(QObject *parent = 0);
@@ -61,7 +61,7 @@ public:
     QByteArray id() const;
 
 protected:
-    CorePlugin::AbstractEditor *createEditor(QWidget *parent);
+    GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
 } // namespace BookmarksPlugin

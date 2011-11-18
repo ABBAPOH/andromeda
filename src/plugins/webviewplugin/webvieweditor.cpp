@@ -1,15 +1,56 @@
 #include "webvieweditor.h"
+#include "webvieweditor_p.h"
 
 #include <QtGui/QResizeEvent>
+#include <QtWebKit/QWebHistory>
 
+using namespace GuiSystem;
 using namespace WebViewPlugin;
-using namespace CorePlugin;
+
+WebViewHistory::WebViewHistory(QObject *parent) :
+    AbstractHistory(parent)
+{
+}
+
+void WebViewHistory::clear()
+{
+    m_history->clear();
+}
+
+int WebViewHistory::count() const
+{
+    return m_history->count();
+}
+
+int WebViewHistory::currentItemIndex() const
+{
+    return m_history->currentItemIndex();
+}
+
+void WebViewHistory::setCurrentItemIndex(int index)
+{
+    m_history->goToItem(m_history->itemAt(index));
+}
+
+HistoryItem WebViewHistory::itemAt(int index) const
+{
+    QWebHistoryItem item = m_history->itemAt(index);
+    HistoryItem result;
+    result.setPath(item.url().toString());
+    result.setIcon(item.icon());
+    result.setLastVisited(item.lastVisited());
+    result.setTitle(item.title());
+    return result;
+}
 
 WebViewEditor::WebViewEditor(QWidget *parent) :
     AbstractEditor(parent)
 {
     m_webView = new QWebView(this);
+    m_history = new WebViewHistory(this);
+    m_history->setHistory(m_webView->history());
     m_webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    connect(m_webView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
 
     connect(m_webView, SIGNAL(titleChanged(QString)), SIGNAL(titleChanged(QString)));
@@ -25,16 +66,24 @@ WebViewEditor::~WebViewEditor()
     delete m_webView;
 }
 
-bool WebViewEditor::open(const QUrl &url)
+AbstractEditor::Capabilities WebViewEditor::capabilities() const
 {
-    m_webView->load(url);
-    emit currentUrlChanged(url);
-    return true;
+    return AbstractEditor::HasHistory;
 }
 
-QUrl WebViewPlugin::WebViewEditor::currentUrl() const
+void WebViewEditor::open(const QUrl &url)
+{
+    m_webView->load(url);
+}
+
+QUrl WebViewEditor::url() const
 {
     return m_webView->url();
+}
+
+AbstractHistory *WebViewEditor::history() const
+{
+    return m_history;
 }
 
 void WebViewEditor::refresh()
@@ -55,7 +104,7 @@ void WebViewEditor::resizeEvent(QResizeEvent *e)
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     m_webView->load(url);
-    emit currentUrlChanged(url);
+//    emit urlChanged(url);
 }
 
 void WebViewEditor::onIconChanged()
@@ -63,7 +112,7 @@ void WebViewEditor::onIconChanged()
     emit iconChanged(m_webView->icon());
 }
 
-CorePlugin::AbstractEditor * WebViewPlugin::WebViewEditorFactory::createEditor(QWidget *parent)
+AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)
 {
     return new WebViewEditor(parent);
 }
