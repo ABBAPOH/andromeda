@@ -12,6 +12,8 @@ set( HEADERS
     history.h
     historyitem.h
     proxyaction.h
+    stackededitor.h
+    stackededitor_p.h
    )
 set( SOURCES
     actionmanager.cpp
@@ -26,6 +28,7 @@ set( SOURCES
     history.cpp
     historyitem.cpp
     proxyaction.cpp
+    stackededitor.cpp
    )
 set( FORMS
    )
