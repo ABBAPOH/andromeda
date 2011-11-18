@@ -1,34 +1,26 @@
 set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
-    abstracteditor.h
-    abstracteditorfactory.h
     constants.h
     coreplugin_global.h
     core.h
     core_p.h
     coreplugin.h
-    editormanager.h
     isettingspage.h
     mainwindow.h
     mainwindow_p.h
     settings.h
     settingsdialog.h
     settingspagemanager.h
-    tab.h
     tabbar.h
    )
 set( SOURCES
-    abstracteditor.cpp
-    abstracteditorfactory.cpp
     core.cpp
     coreplugin.cpp
-    editormanager.cpp
     isettingspage.cpp
     mainwindow.cpp
     settings.cpp
     settingsdialog.cpp
     settingspagemanager.cpp
-    tab.cpp
     tabbar.cpp
    )
 set( FORMS

@@ -4,6 +4,7 @@ include( ${QT_USE_FILE} )
 set( HEADERS
     webviewplugin_global.h
     webvieweditor.h
+    webvieweditor_p.h
     webviewplugin.h
     webviewsettingspage.h
 )

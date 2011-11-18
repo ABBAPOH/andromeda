@@ -8,10 +8,12 @@
 class QSettings;
 class QUrl;
 
-namespace CorePlugin {
-
+namespace GuiSystem {
 class AbstractEditor;
-class Tab;
+class StackedEditor;
+}
+
+namespace CorePlugin {
 
 class MainWindowPrivate;
 class COREPLUGIN_EXPORT MainWindow : public QMainWindow
@@ -24,13 +26,13 @@ public:
     ~MainWindow();
 
     int currentIndex() const;
-    Tab *currentTab() const;
+    GuiSystem::StackedEditor *currentTab() const;
     int count() const;
 
     void restoreSession(QSettings &s);
     void saveSession(QSettings &s);
 
-    AbstractEditor *currentEditor() const;
+    GuiSystem::AbstractEditor *currentEditor() const;
 
     static MainWindow *currentWindow();
     static QList<MainWindow*> windows();
@@ -44,7 +46,9 @@ public slots:
     void open(const QUrl &url);
     void openEditor(const QString &id);
     void openNewTab(const QUrl &url);
+    void openNewTab(const QList<QUrl> &urls);
     static void openNewWindow(const QUrl &url);
+    static void openNewWindow(const QList<QUrl> &urls);
 
     void newTab();
     static void newWindow();

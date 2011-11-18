@@ -3,13 +3,14 @@
 #include <QtCore/QtPlugin>
 #include <QtGui/QFileIconProvider>
 
+#include <guisystem/editormanager.h>
 #include <coreplugin/core.h>
-#include <coreplugin/editormanager.h>
 #include <coreplugin/settingspagemanager.h>
 
 #include "webvieweditor.h"
 #include "webviewsettingspage.h"
 
+using namespace GuiSystem;
 using namespace CorePlugin;
 using namespace WebViewPlugin;
 
@@ -23,7 +24,7 @@ bool WebViewPluginImpl::initialize(const QVariantMap &)
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new WebViewSettingsPage);
 
-    Core::instance()->editorManager()->addFactory(new WebViewEditorFactory(this));
+    EditorManager::instance()->addFactory(new WebViewEditorFactory(this));
 
     return true;
 }

@@ -1,4 +1,5 @@
 #include "filemanagereditor.h"
+#include "filemanagereditor_p.h"
 
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
@@ -27,39 +28,27 @@
 #include <coreplugin/settings.h>
 
 using namespace CorePlugin;
+using namespace GuiSystem;
 using namespace FileManagerPlugin;
 
-FileManagerEditor::FileManagerEditor(QWidget *parent) :
-    AbstractEditor(parent),
-    ignoreSignals(false)
+FileManagerHistory::FileManagerHistory(QObject *parent) :
+    AbstractHistory(parent),
+    m_widget(0)
 {
-    setupUi();
-    setupConnections();
-    createActions();
-    setupSettings();
 }
 
-/*!
-  \reimp
-*/
-bool FileManagerEditor::open(const QUrl &url)
+void FileManagerHistory::clear()
 {
-    m_widget->setCurrentPath(url.toLocalFile());
-    return true;
+    // TODO: implement
 }
 
-/*!
-  \reimp
-*/
-QUrl FileManagerEditor::currentUrl() const
+int FileManagerHistory::count() const
 {
-    return QUrl::fromLocalFile(m_widget->currentPath());
+    // TODO: implement
+    return -1;
 }
 
-/*!
-  \reimp
-*/
-int FileManagerEditor::currentIndex() const
+int FileManagerHistory::currentItemIndex() const
 {
     if (m_widget->activePane() == DualPaneWidget::LeftPane)
         return m_widget->leftWidget()->history()->currentItemIndex(); // 0, 1, 2
@@ -67,10 +56,7 @@ int FileManagerEditor::currentIndex() const
         return -m_widget->rightWidget()->history()->currentItemIndex() - 2; // -2, -3, -4
 }
 
-/*!
-  \reimp
-*/
-void FileManagerEditor::setCurrentIndex(int index)
+void FileManagerHistory::setCurrentItemIndex(int index)
 {
     DualPaneWidget::Pane pane;
     if (index < -1) {
@@ -81,6 +67,62 @@ void FileManagerEditor::setCurrentIndex(int index)
     }
     m_widget->setActivePane(pane);
     m_widget->activeWidget()->history()->setCurrentItemIndex(index);
+}
+
+HistoryItem FileManagerHistory::itemAt(int index) const
+{
+    // TODO: implement
+    return HistoryItem();
+}
+
+/*!
+  \class FileManagerEditor
+*/
+FileManagerEditor::FileManagerEditor(QWidget *parent) :
+    AbstractEditor(parent),
+    ignoreSignals(false)
+{
+    setupUi();
+    setupConnections();
+    createActions();
+    setupSettings();
+
+    m_history = new FileManagerHistory(this);
+    m_history->setDualPaneWidget(m_widget);
+}
+
+/*!
+  \reimp
+*/
+AbstractEditor::Capabilities FileManagerEditor::capabilities() const
+{
+    return HasHistory;
+}
+
+/*!
+  \reimp
+*/
+QUrl FileManagerEditor::url() const
+{
+    return QUrl::fromLocalFile(m_widget->currentPath());
+}
+
+/*!
+  \reimp
+*/
+void FileManagerEditor::open(const QUrl &url)
+{
+    emit loadStarted();
+    m_widget->setCurrentPath(url.toLocalFile());
+    emit loadFinished(true);
+}
+
+/*!
+  \reimp
+*/
+AbstractHistory * FileManagerEditor::history() const
+{
+    return m_history;
 }
 
 /*!
@@ -114,25 +156,27 @@ QString FileManagerEditor::windowTitle() const
     return title();
 }
 
+#include <QtCore/QBuffer>
 /*!
   \reimp
 */
-
-void FileManagerEditor::restoreSession(QSettings &s)
+void FileManagerEditor::restoreState(const QByteArray &arr)
 {
-    AbstractEditor::restoreSession(s);
-    QVariant value;
+    QByteArray state = arr;
+    QBuffer buffer(&state);
+    buffer.open(QBuffer::ReadOnly);
+    QDataStream s(&buffer);
 
-    value = s.value(QLatin1String("panelVisible"));
-    if (value.isValid())
-        m_panel->setVisible(value.toBool());
+    bool visible; QByteArray splitterState, widgetState, baseState;
+    s >> baseState;
+    s >> visible;
+    s >> splitterState;
+    s >> widgetState;
 
-    value = s.value(QLatin1String("splitterState"));
-    if (value.isValid()) {
-        splitter->restoreState(value.toByteArray());
-    }
-
-    m_widget->restoreState(s.value(QLatin1String("state")).toByteArray());
+    AbstractEditor::restoreState(baseState);
+    m_panel->setVisible(visible);
+    splitter->restoreState(splitterState);
+    m_widget->restoreState(widgetState);
 
     dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
 }
@@ -140,14 +184,53 @@ void FileManagerEditor::restoreSession(QSettings &s)
 /*!
   \reimp
 */
-void FileManagerEditor::saveSession(QSettings &s)
+QByteArray FileManagerEditor::saveState() const
 {
-    AbstractEditor::saveSession(s);
+    QBuffer buffer;
+    buffer.open(QBuffer::WriteOnly);
+    QDataStream s(&buffer);
 
-    s.setValue(QLatin1String("panelVisible"), !m_panel->isHidden());
-    s.setValue(QLatin1String("splitterState"), splitter->saveState());
-    s.setValue(QLatin1String("state"), m_widget->saveState());
+    s << AbstractEditor::saveState();
+    s << !m_panel->isHidden();
+    s << splitter->saveState();
+    s << m_widget->saveState();
+
+    return buffer.data();
 }
+
+///*!
+//  \reimp
+//*/
+//void FileManagerEditor::restoreSession(QSettings &s)
+//{
+//    AbstractEditor::restoreSession(s);
+//    QVariant value;
+
+//    value = s.value(QLatin1String("panelVisible"));
+//    if (value.isValid())
+//        m_panel->setVisible(value.toBool());
+
+//    value = s.value(QLatin1String("splitterState"));
+//    if (value.isValid()) {
+//        splitter->restoreState(value.toByteArray());
+//    }
+
+//    m_widget->restoreState(s.value(QLatin1String("state")).toByteArray());
+
+//    dualPaneModeAction->setChecked(m_widget->dualPaneModeEnabled());
+//}
+
+///*!
+//  \reimp
+//*/
+//void FileManagerEditor::saveSession(QSettings &s)
+//{
+//    AbstractEditor::saveSession(s);
+
+//    s.setValue(QLatin1String("panelVisible"), !m_panel->isHidden());
+//    s.setValue(QLatin1String("splitterState"), splitter->saveState());
+//    s.setValue(QLatin1String("state"), m_widget->saveState());
+//}
 
 /*!
   \reimp
@@ -164,7 +247,10 @@ void FileManagerEditor::resizeEvent(QResizeEvent *e)
 */
 void FileManagerEditor::onCurrentPathChanged(const QString &path)
 {
-    emit currentUrlChanged(QUrl::fromLocalFile(path));
+    emit urlChanged(QUrl::fromLocalFile(path));
+    emit iconChanged(icon());
+    emit titleChanged(title());
+    emit windowTitleChanged(windowTitle());
 }
 
 /*!
@@ -174,7 +260,8 @@ void FileManagerEditor::onCurrentPathChanged(const QString &path)
 */
 void FileManagerEditor::onOpenRequested(const QString &path)
 {
-    mainWindow()->open(QUrl::fromLocalFile(path));
+//    mainWindow()->open(QUrl::fromLocalFile(path));
+    emit openTriggered(QUrl::fromLocalFile(path));
 }
 
 /*!
@@ -411,10 +498,16 @@ void FileManagerEditor::onPathsDropped(const QString &destination, const QString
 void FileManagerEditor::openNewTab()
 {
     QStringList paths = m_widget->activeWidget()->selectedPaths();
-    MainWindow *window = mainWindow();
+    QList<QUrl> urls;
     foreach (const QString &path, paths) {
-        window->openNewTab(QUrl::fromLocalFile(path));
+        urls.append(QUrl::fromLocalFile(path));
     }
+    emit openNewEditorTriggered(urls);
+    //    QStringList paths = m_widget->activeWidget()->selectedPaths();
+//    MainWindow *window = mainWindow();
+//    foreach (const QString &path, paths) {
+//        window->openNewTab(QUrl::fromLocalFile(path));
+//    }
 }
 
 /*!
@@ -554,7 +647,7 @@ void FileManagerEditor::setupSettings()
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, const char *slot,
                                           bool checkable)
 {
-    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+     ActionManager *actionManager = ActionManager::instance();
 
      QAction *action = new QAction(this);
      action->setText(text);
@@ -575,7 +668,7 @@ QAction * FileManagerEditor::createAction(const QString &text, const QByteArray 
 */
 QAction * FileManagerEditor::createViewAction(const QString &text, const QByteArray &id, int mode)
 {
-    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+    ActionManager *actionManager = ActionManager::instance();
 
     QAction *action = new QAction(this);
     action->setText(text);
@@ -596,7 +689,7 @@ QAction * FileManagerEditor::createViewAction(const QString &text, const QByteAr
 */
 QAction * FileManagerEditor::createSortByAction(const QString &text, const QByteArray &id, int mode)
 {
-    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+    ActionManager *actionManager = ActionManager::instance();
 
     QAction *action = new QAction(this);
     action->setText(text);
@@ -619,7 +712,7 @@ QAction * FileManagerEditor::createSortByAction(const QString &text, const QByte
 */
 void FileManagerEditor::createActions()
 {
-    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+    ActionManager *actionManager = ActionManager::instance();
 
     openAction = createAction(tr("Open"), Constants::Actions::Open, SLOT(open()));
     newFolderAction = createAction(tr("New Folder"), Constants::Actions::NewFolder, SLOT(newFolder()));
@@ -658,10 +751,12 @@ void FileManagerEditor::createActions()
                                          SLOT(showHiddenFiles(bool)), true);
 
     showLeftPanelAction = new QAction(tr("Show left panel"), this);
-    showLeftPanelAction->setCheckable(true);
-    this->addAction(showLeftPanelAction);
+//    showLeftPanelAction->setCheckable(true);
+
+//    this->addAction(showLeftPanelAction);
     connect(showLeftPanelAction, SIGNAL(toggled(bool)), this, SLOT(showLeftPanel(bool)));
-    actionManager->registerAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
+//    actionManager->registerAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
+    addAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
 
     openAction->setEnabled(false);
     renameAction->setEnabled(false);
@@ -709,7 +804,7 @@ void FileManagerPlugin::FileManagerEditor::createSortByActions()
 
     sortByNameAction->setChecked(true);
 
-    GuiSystem::ActionManager *actionManager = GuiSystem::ActionManager::instance();
+    ActionManager *actionManager = ActionManager::instance();
     sortByDescendingOrderAction = new QAction(tr("Descending order"), this);
     sortByDescendingOrderAction->setCheckable(true);
     connect(sortByDescendingOrderAction, SIGNAL(triggered(bool)), this, SLOT(setSortOrder(bool)));
@@ -776,3 +871,4 @@ AbstractEditor * FileManagerEditorFactory::createEditor(QWidget *parent)
 {
     return new FileManagerEditor(parent);
 }
+

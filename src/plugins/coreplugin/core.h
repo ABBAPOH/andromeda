@@ -5,9 +5,12 @@
 
 #include <extensionsystem/pluginmanager.h>
 
+namespace GuiSystem {
+class EditorManager;
+}
+
 namespace CorePlugin {
 
-class EditorManager;
 class PerspectiveManager;
 class Settings;
 
@@ -27,7 +30,7 @@ public:
         return ExtensionSystem::PluginManager::instance()->object<Core>("core");
     }
 
-    EditorManager *editorManager() const;
+    GuiSystem::EditorManager *editorManager() const;
 
     Settings *settings() const;
 

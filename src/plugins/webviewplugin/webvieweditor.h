@@ -6,14 +6,16 @@
 #include <QtCore/QPointer>
 #include <QtGui/QToolBar>
 #include <QtWebKit/QWebView>
-#include <coreplugin/abstracteditor.h>
-#include <coreplugin/abstracteditorfactory.h>
+#include <guisystem/abstracteditor.h>
+#include <guisystem/abstracteditorfactory.h>
 
 class QWebView;
 
 namespace WebViewPlugin {
 
-class WEBVIEWPLUGIN_EXPORT WebViewEditor : public CorePlugin::AbstractEditor
+class WebViewHistory;
+
+class WEBVIEWPLUGIN_EXPORT WebViewEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebViewEditor)
@@ -22,15 +24,13 @@ public:
     explicit WebViewEditor(QWidget *parent = 0);
     ~WebViewEditor();
 
-    bool create() { return false; }
+    Capabilities capabilities() const;
+
     void close() {}
 
-    bool open(const QUrl &url);
+    QUrl url() const;
 
-    QUrl currentUrl() const;
-
-    void refresh();
-    void cancel();
+    GuiSystem::AbstractHistory *history() const;
 
     QWidget *widget() const { return m_webView; }
     QToolBar *toolBar() const { return 0; }
@@ -38,6 +38,12 @@ public:
     QIcon icon() const { return m_webView->icon(); }
     QString title() const { return m_webView->title(); }
     QString windowTitle() const { return m_webView->windowTitle(); }
+
+public slots:
+    void open(const QUrl &url);
+
+    void refresh();
+    void cancel();
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -48,22 +54,23 @@ private slots:
 
 private:
     QWebView *m_webView;
+    WebViewHistory *m_history;
 };
 
-class WebViewEditorFactory : public CorePlugin::AbstractEditorFactory
+class WebViewEditorFactory : public GuiSystem::AbstractEditorFactory
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebViewEditorFactory)
 
 public:
-    explicit WebViewEditorFactory(QObject * parent = 0) : CorePlugin::AbstractEditorFactory(parent) {}
+    explicit WebViewEditorFactory(QObject * parent = 0) : AbstractEditorFactory(parent) {}
     ~WebViewEditorFactory() {}
 
     QByteArray id() const { return "WebView"; }
     QStringList mimeTypes() { return QStringList() << "text/html"; }
 
 protected:
-    CorePlugin::AbstractEditor *createEditor(QWidget *parent);
+    GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
 } // namespace WebViewPlugin

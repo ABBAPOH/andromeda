@@ -1,8 +1,8 @@
 #ifndef FILEMANAGEREDITOR_H
 #define FILEMANAGEREDITOR_H
 
-#include <coreplugin/abstracteditor.h>
-#include <coreplugin/abstracteditorfactory.h>
+#include <guisystem/abstracteditor.h>
+#include <guisystem/abstracteditorfactory.h>
 
 class MiniSplitter;
 class QActionGroup;
@@ -16,8 +16,9 @@ namespace FileManagerPlugin {
 
 class DualPaneWidget;
 class NavigationPanel;
+class FileManagerHistory;
 
-class FileManagerEditor : public CorePlugin::AbstractEditor
+class FileManagerEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
 public:
@@ -27,10 +28,13 @@ public:
 
     explicit FileManagerEditor(QWidget *parent = 0);
 
-    // from AbstractEditor
-    bool open(const QUrl &url);
+    Capabilities capabilities() const;
 
-    QUrl currentUrl() const;
+    // from AbstractEditor
+    QUrl url() const;
+    void open(const QUrl &url);
+
+    GuiSystem::AbstractHistory *history() const;
 
     int currentIndex() const;
     void setCurrentIndex(int index);
@@ -40,8 +44,10 @@ public:
     QString windowTitle() const;
 
     void restoreDefaults();
-    void restoreSession(QSettings &s);
-    void saveSession(QSettings &s);
+    void restoreState(const QByteArray &state);
+    QByteArray saveState() const;
+//    void restoreSession(QSettings &s);
+//    void saveSession(QSettings &s);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -81,6 +87,7 @@ private:
     MiniSplitter *splitter;
     DualPaneWidget *m_widget;
     NavigationPanel *m_panel;
+    FileManagerHistory *m_history;
 
     CorePlugin::Settings *m_settings;
 
@@ -124,7 +131,7 @@ private:
     bool ignoreSignals;
 };
 
-class FileManagerEditorFactory : public CorePlugin::AbstractEditorFactory
+class FileManagerEditorFactory : public GuiSystem::AbstractEditorFactory
 {
 public:
     explicit FileManagerEditorFactory(QObject *parent = 0);
@@ -133,7 +140,7 @@ public:
     QByteArray id() const;
 
 protected:
-    CorePlugin::AbstractEditor *createEditor(QWidget *parent);
+    GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
 } // namespace FileManagerPlugin

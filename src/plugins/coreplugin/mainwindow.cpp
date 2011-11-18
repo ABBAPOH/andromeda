@@ -9,21 +9,31 @@
 #include <QtGui/QCompleter>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QDirModel>
+#include <QtGui/QHBoxLayout>
 
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
-
-#include <coreplugin/CorePlugin>
+#include <guisystem/abstracthistory.h>
+//#include <coreplugin/CorePlugin>
+#include <coreplugin/constants.h>
+#include <coreplugin/core.h>
+#include <coreplugin/settings.h>
 
 using namespace CorePlugin;
 using namespace GuiSystem;
 
-Tab * MainWindowPrivate::addTab(int *index)
+StackedEditor * MainWindowPrivate::addTab(int *index)
 {
-    Tab *tab = new Tab(tabWidget);
-    connect(tab, SIGNAL(currentUrlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
-    connect(tab, SIGNAL(changed()), SLOT(onChanged()));
+    Q_Q(MainWindow);
+
+    StackedEditor *tab = new StackedEditor(tabWidget);
+    connect(tab, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
+    connect(tab, SIGNAL(openNewEditorTriggered(QList<QUrl>)), q, SLOT(openNewTab(QList<QUrl>)));
+    connect(tab, SIGNAL(openNewWindowTriggered(QList<QUrl>)), q, SLOT(openNewWindow(QList<QUrl>)));
+    connect(tab, SIGNAL(iconChanged(QIcon)), SLOT(onChanged()));
+    connect(tab, SIGNAL(titleChanged(QString)), SLOT(onChanged()));
+    connect(tab, SIGNAL(windowTitleChanged(QString)), SLOT(onChanged()));
     int i = tabWidget->addTab(tab, "tab");
     if (index)
         *index = i;
@@ -225,7 +235,7 @@ void MainWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
-void MainWindowPrivate::updateUi(Tab *tab)
+void MainWindowPrivate::updateUi(StackedEditor *tab)
 {
     Q_Q(MainWindow);
 
@@ -259,7 +269,7 @@ void MainWindowPrivate::onUrlChanged(const QUrl &url)
 
 void MainWindowPrivate::onCurrentChanged(int index)
 {
-    Tab *tab = qobject_cast<Tab *>(tabWidget->widget(index));
+    StackedEditor *tab = qobject_cast<StackedEditor *>(tabWidget->widget(index));
     if (!tab)
         return;
 
@@ -269,14 +279,14 @@ void MainWindowPrivate::onCurrentChanged(int index)
     connect(tab, SIGNAL(loadProgress(int)), lineEdit,  SLOT(setLoadProgress(int)));
     connect(tab, SIGNAL(loadFinished(bool)), lineEdit,  SLOT(finishLoad()));
 
-    lineEdit->setUrl(tab->currentUrl());
+    lineEdit->setUrl(tab->url());
 
     updateUi(tab);
 }
 
 void MainWindowPrivate::onChanged()
 {
-    Tab *tab = qobject_cast<Tab *>(sender());
+    StackedEditor *tab = qobject_cast<StackedEditor *>(sender());
     if (!tab)
         return;
 
@@ -312,9 +322,9 @@ int MainWindow::currentIndex() const
     return d_func()->tabWidget->currentIndex();
 }
 
-Tab * MainWindow::currentTab() const
+StackedEditor * MainWindow::currentTab() const
 {
-    return qobject_cast<Tab *>(d_func()->tabWidget->currentWidget());
+    return qobject_cast<StackedEditor *>(d_func()->tabWidget->currentWidget());
 }
 
 int MainWindow::count() const
@@ -339,8 +349,8 @@ void MainWindow::restoreSession(QSettings &s)
     for (int i = 0; i < tabCount; i++) {
         s.setArrayIndex(i);
 
-        Tab *tab = d->addTab();
-        tab->restoreSession(s);
+        StackedEditor *tab = d->addTab();
+        tab->restoreState(s.value(QLatin1String("tab")).toByteArray());
     }
     s.endArray();
 
@@ -358,16 +368,16 @@ void MainWindow::saveSession(QSettings &s)
     int tabCount = d->tabWidget->count();
     s.beginWriteArray(QLatin1String("tabs"), tabCount);
     for (int i = 0; i < tabCount; i++) {
-        Tab *tab = static_cast<Tab*>(d->tabWidget->widget(i));
+        StackedEditor *tab = static_cast<StackedEditor*>(d->tabWidget->widget(i));
         s.setArrayIndex(i);
-        tab->saveSession(s);
+        s.setValue(QLatin1String("tab"), tab->saveState());
     }
     s.endArray();
 }
 
 AbstractEditor * MainWindow::currentEditor() const
 {
-    return currentTab()->currentEditor();
+    return currentTab();
 }
 
 MainWindow * MainWindow::currentWindow()
@@ -403,7 +413,17 @@ void MainWindow::forward()
 
 void MainWindow::up()
 {
-    currentTab()->up();
+    QUrl url = currentTab()->url();
+    QString path = url.path();
+    // we can't use QDir::cleanPath because it breaks urls
+    // remove / at end of path
+    if (path != QLatin1String("/"))
+        if (path.endsWith(QLatin1Char('/')))
+            path = path.left(path.length() - 1);
+
+    QFileInfo info(path);
+    url.setPath(info.path());
+    open(url);
 }
 
 void MainWindow::open(const QUrl &url)
@@ -420,16 +440,19 @@ void MainWindow::openEditor(const QString &id)
 {
     Q_D(MainWindow);
 
+    QUrl url;
+    url.setScheme(qApp->applicationName());
+    url.setHost(id);
     if (d->tabWidget->count() == 0) {
         int index = -1;
-        Tab *tab = d->addTab(&index);
-        tab->openEditor(id);
+        StackedEditor *tab = d->addTab(&index);
+        tab->open(url);
         d->tabWidget->setCurrentIndex(index);
 
-        if (!tab->currentEditor())
-            closeTab(index); // close tab or window if no editor found
+//        if (!tab->currentEditor())
+//            closeTab(index); // close tab or window if no editor found
     } else {
-        currentTab()->openEditor(id);
+        currentTab()->open(url);
     }
 }
 
@@ -438,18 +461,34 @@ void MainWindow::openNewTab(const QUrl &url)
     Q_D(MainWindow);
 
     int index = -1;
-    Tab *tab = d->addTab(&index);
+    StackedEditor *tab = d->addTab(&index);
     tab->open(url);
     d->tabWidget->setCurrentIndex(index);
 
-    if (!tab->currentEditor())
-        closeTab(index); // close tab or window if no editor found
+//    if (!tab->currentEditor())
+//        closeTab(index); // close tab or window if no editor found
+}
+
+void MainWindow::openNewTab(const QList<QUrl> &urls)
+{
+    foreach (const QUrl & url, urls) {
+        openNewTab(url);
+    }
 }
 
 void MainWindow::openNewWindow(const QUrl &path)
 {
     MainWindow *window = createWindow();
     window->open(path);
+    window->show();
+}
+
+void MainWindow::openNewWindow(const QList<QUrl> &urls)
+{
+    MainWindow *window = createWindow();
+    foreach (const QUrl & url, urls) {
+        window->openNewTab(url);
+    }
     window->show();
 }
 

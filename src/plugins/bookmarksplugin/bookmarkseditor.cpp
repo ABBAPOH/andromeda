@@ -51,14 +51,13 @@ BookmarksEditor::BookmarksEditor(QWidget *parent) :
     actionManager->registerAction(undoAction, Constants::Actions::Undo);
 }
 
-bool BookmarksEditor::open(const QUrl &)
+void BookmarksEditor::open(const QUrl &)
 {
-    emit currentUrlChanged(currentUrl());
+    emit urlChanged(url());
     emit titleChanged(title());
-    return true;
 }
 
-QUrl BookmarksEditor::currentUrl() const
+QUrl BookmarksEditor::url() const
 {
     return QUrl(QLatin1String("andromeda://bookmarks"));
 }
@@ -78,34 +77,34 @@ QString BookmarksEditor::windowTitle() const
     return tr("Bookmarks");
 }
 
-void BookmarksEditor::restoreSession(QSettings &s)
+QByteArray BookmarksEditor::saveState() const
 {
-    m_widget->restoreState(s.value(QLatin1String("state")).toByteArray());
-    AbstractEditor::restoreSession(s);
+    return m_widget->saveState();
 }
 
-void BookmarksEditor::saveSession(QSettings &s)
+void BookmarksEditor::restoreState(const QByteArray &state)
 {
-    s.setValue(QLatin1String("state"), m_widget->saveState());
+    m_widget->restoreState(state);
+    open(url());
 }
 
 void BookmarksEditor::openTriggered(const QUrl &url)
 {
-    MainWindow *window = mainWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window)
         window->open(url);
 }
 
 void BookmarksEditor::openInTabTriggered(const QUrl &url)
 {
-    MainWindow *window = mainWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window)
         window->openNewTab(url);
 }
 
 void BookmarksEditor::openInWindowTriggered(const QUrl &url)
 {
-    MainWindow *window = mainWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window)
         window->openNewWindow(url);
 }

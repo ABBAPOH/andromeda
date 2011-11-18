@@ -11,6 +11,7 @@
 
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
+#include <guisystem/editormanager.h>
 
 #include <bookmarks/bookmarkdialog.h>
 #include <bookmarks/bookmarksmenu.h>
@@ -20,7 +21,6 @@
 
 #include <coreplugin/core.h>
 #include <coreplugin/constants.h>
-#include <coreplugin/editormanager.h>
 #include <coreplugin/mainwindow.h>
 
 using namespace ExtensionSystem;
@@ -29,7 +29,7 @@ using namespace Bookmarks;
 using namespace CorePlugin;
 using namespace BookmarksPlugin;
 
-class BookmarksMenuContainer : public GuiSystem::CommandContainer
+class BookmarksMenuContainer : public CommandContainer
 {
 public:
     explicit BookmarksMenuContainer(const QByteArray &id, QObject *parent = 0) :
@@ -91,7 +91,7 @@ BookmarksPluginImpl::BookmarksPluginImpl() :
 bool BookmarksPluginImpl::initialize(const QVariantMap &)
 {
     BookmarksEditorFactory *f = new BookmarksEditorFactory(this);
-    Core::instance()->editorManager()->addFactory(f);
+    EditorManager::instance()->addFactory(f);
 
     model = new BookmarksModel(this);
     addObject(model, QLatin1String(Constants::Objects::BookmarksModel));
@@ -220,7 +220,7 @@ void BookmarksPluginImpl::showBookmarkDialog(const QModelIndex &index, bool isFo
     dialog.setCurrentIndex(index);
     if (!isFolder) {
         dialog.setTitle(editor->title());
-        dialog.setUrl(editor->currentUrl().toString());
+        dialog.setUrl(editor->url().toString());
         dialog.setIcon(editor->icon());
         dialog.setPreview(editor->preview());
     } else {
