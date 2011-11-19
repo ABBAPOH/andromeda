@@ -19,7 +19,6 @@
 #include <QtGui/QFileIconProvider>
 
 #include <extensionsystem/pluginmanager.h>
-#include <guisystem/actionmanager.h>
 #include <widgets/minisplitter.h>
 
 #include <coreplugin/constants.h>
@@ -647,18 +646,16 @@ void FileManagerEditor::setupSettings()
 QAction * FileManagerEditor::createAction(const QString &text, const QByteArray &id, const char *slot,
                                           bool checkable)
 {
-     ActionManager *actionManager = ActionManager::instance();
-
-     QAction *action = new QAction(this);
-     action->setText(text);
-     action->setCheckable(checkable);
-     if (!checkable)
-         connect(action, SIGNAL(triggered()), m_widget, slot);
-     else
-         connect(action, SIGNAL(toggled(bool)), m_widget, slot);
-     m_widget->addAction(action);
-     actionManager->registerAction(action, id);
-     return action;
+    QAction *action = new QAction(this);
+    action->setText(text);
+    action->setCheckable(checkable);
+    if (!checkable)
+        connect(action, SIGNAL(triggered()), m_widget, slot);
+    else
+        connect(action, SIGNAL(toggled(bool)), m_widget, slot);
+    m_widget->addAction(action);
+    registerAction(action, id);
+    return action;
 }
 
 /*!
@@ -668,8 +665,6 @@ QAction * FileManagerEditor::createAction(const QString &text, const QByteArray 
 */
 QAction * FileManagerEditor::createViewAction(const QString &text, const QByteArray &id, int mode)
 {
-    ActionManager *actionManager = ActionManager::instance();
-
     QAction *action = new QAction(this);
     action->setText(text);
     action->setCheckable(true);
@@ -679,7 +674,7 @@ QAction * FileManagerEditor::createViewAction(const QString &text, const QByteAr
     connect(action, SIGNAL(toggled(bool)), viewModeMapper, SLOT(map()));
 
     m_widget->addAction(action);
-    actionManager->registerAction(action, id);
+    registerAction(action, id);
 
     return action;
 }
@@ -689,8 +684,6 @@ QAction * FileManagerEditor::createViewAction(const QString &text, const QByteAr
 */
 QAction * FileManagerEditor::createSortByAction(const QString &text, const QByteArray &id, int mode)
 {
-    ActionManager *actionManager = ActionManager::instance();
-
     QAction *action = new QAction(this);
     action->setText(text);
     action->setCheckable(true);
@@ -700,7 +693,7 @@ QAction * FileManagerEditor::createSortByAction(const QString &text, const QByte
     connect(action, SIGNAL(toggled(bool)), sortByMapper, SLOT(map()));
 
     m_widget->addAction(action);
-    actionManager->registerAction(action, id);
+    registerAction(action, id);
 
     return action;
 }
@@ -712,8 +705,6 @@ QAction * FileManagerEditor::createSortByAction(const QString &text, const QByte
 */
 void FileManagerEditor::createActions()
 {
-    ActionManager *actionManager = ActionManager::instance();
-
     openAction = createAction(tr("Open"), Constants::Actions::Open, SLOT(open()));
     newFolderAction = createAction(tr("New Folder"), Constants::Actions::NewFolder, SLOT(newFolder()));
     renameAction = createAction(tr("Rename"), Constants::Actions::Rename, SLOT(rename()));
@@ -731,7 +722,7 @@ void FileManagerEditor::createActions()
     showFileInfoAction = new QAction(tr("File info"), this);
     connect(showFileInfoAction, SIGNAL(triggered()), this, SLOT(showFileInfo()));
     m_widget->addAction(showFileInfoAction);
-    actionManager->registerAction(showFileInfoAction, Constants::Actions::FileInfo);
+    registerAction(showFileInfoAction, Constants::Actions::FileInfo);
 
     redoAction = createAction(tr("Redo"), Constants::Actions::Redo, SLOT(redo()));
     undoAction = createAction(tr("Undo"), Constants::Actions::Undo, SLOT(undo()));
@@ -755,7 +746,7 @@ void FileManagerEditor::createActions()
 
 //    this->addAction(showLeftPanelAction);
     connect(showLeftPanelAction, SIGNAL(toggled(bool)), this, SLOT(showLeftPanel(bool)));
-//    actionManager->registerAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
+//    registerAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
     addAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
 
     openAction->setEnabled(false);
@@ -804,12 +795,11 @@ void FileManagerPlugin::FileManagerEditor::createSortByActions()
 
     sortByNameAction->setChecked(true);
 
-    ActionManager *actionManager = ActionManager::instance();
     sortByDescendingOrderAction = new QAction(tr("Descending order"), this);
     sortByDescendingOrderAction->setCheckable(true);
     connect(sortByDescendingOrderAction, SIGNAL(triggered(bool)), this, SLOT(setSortOrder(bool)));
     m_widget->addAction(sortByDescendingOrderAction);
-    actionManager->registerAction(sortByDescendingOrderAction, Constants::Actions::SortByDescendingOrder);
+    registerAction(sortByDescendingOrderAction, Constants::Actions::SortByDescendingOrder);
 
     connect(sortByMapper, SIGNAL(mapped(int)), SLOT(setSortColumn(int)));
 }
