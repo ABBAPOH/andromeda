@@ -1,33 +1,33 @@
 #include "settings.h"
+#include "settings_p.h"
 
 #include <QtCore/QSettings>
 #include <QtCore/QStringList>
 
-namespace CorePlugin {
-
-class SettingsPrivate
-{
-public:
-    QSettings *settings;
-    QMultiHash< QString, QObject * > hash;
-
-    QString longKey(const QString &key) const;
-};
-
-} // namespace CorePlugin
-
 using namespace CorePlugin;
-
-QString SettingsPrivate::longKey(const QString &key) const
-{
-    QString group = settings->group();
-    return group.isEmpty() ? key : (group + QLatin1Char('/') + key);
-}
 
 static QByteArray keyToProperty(const QString &key)
 {
     int index = key.lastIndexOf(QLatin1Char('/'));
     return key.mid(index + 1).toLatin1();
+}
+
+PropertyMonitor::PropertyMonitor(QObject *parent) :
+    QObject(parent)
+{
+}
+
+void PropertyMonitor::onPropertyChanged()
+{
+    QObject *o = sender();
+    QVariant value = o->property(keyToProperty(key()).constData());
+    emit updateValue(key(), value);
+}
+
+QString SettingsPrivate::longKey(const QString &key) const
+{
+    QString group = settings->group();
+    return group.isEmpty() ? key : (group + QLatin1Char('/') + key);
 }
 
 Settings::Settings(QObject *parent) :
@@ -164,6 +164,7 @@ bool Settings::contains(const QString &key) const
     return d->settings->contains(key);
 }
 
+#include <QMetaProperty>
 void Settings::addObject(QObject *o, const QString &key)
 {
     Q_D(Settings);
@@ -180,6 +181,22 @@ void Settings::addObject(QObject *o, const QString &key)
 
     d->hash.insert(d->longKey(key), o);
     connect(o, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
+
+    QByteArray propertyName = keyToProperty(key);
+    PropertyMonitor *monitor = d->monitors.value(d->longKey(key));
+    if (!monitor) {
+        monitor = new PropertyMonitor(this);
+        monitor->setKey(d->longKey(key));
+        d->monitors.insert(d->longKey(key), monitor);
+        connect(monitor, SIGNAL(updateValue(QString,QVariant)),
+                SLOT(updateProperty(QString,QVariant)));
+    }
+
+    const QMetaObject *mo = o->metaObject();
+    QMetaProperty property = mo->property(mo->indexOfProperty(propertyName));
+    QMetaMethod signal = property.notifySignal();
+    if (signal.methodIndex() != -1)
+        connect(o, QByteArray("2") + signal.signature(), monitor, SLOT(onPropertyChanged()));
 }
 
 void Settings::removeObject(QObject *o, const QString &key)
@@ -197,6 +214,13 @@ void Settings::removeObject(QObject *o)
     foreach (const QString key, keys) {
         d->hash.remove(key, o);
     }
+}
+
+void Settings::updateProperty(const QString &key, const QVariant &value)
+{
+    Q_D(Settings);
+
+    d->settings->setValue(key, value);
 }
 
 void Settings::onDestroy(QObject *o)

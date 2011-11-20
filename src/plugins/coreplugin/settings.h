@@ -49,6 +49,7 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 
 private slots:
+    void updateProperty(const QString &key, const QVariant &value);
     void onDestroy(QObject *o);
 
 protected:
