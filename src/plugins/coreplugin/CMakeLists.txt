@@ -9,6 +9,7 @@ set( HEADERS
     mainwindow.h
     mainwindow_p.h
     settings.h
+    settings_p.h
     settingsdialog.h
     settingspagemanager.h
     tabbar.h
