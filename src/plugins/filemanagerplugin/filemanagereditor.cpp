@@ -315,6 +315,17 @@ void FileManagerEditor::onCustomContextMenuRequested(const QPoint &pos)
     delete menu;
 }
 
+
+/*!
+  \internal
+*/
+int FileManagerEditor::viewMode() const
+{
+    if (m_widget->dualPaneModeEnabled())
+        return DualPane;
+    return m_widget->viewMode();
+}
+
 /*!
   \internal
 
@@ -328,6 +339,7 @@ void FileManagerEditor::setViewMode(int mode)
         m_widget->setDualPaneModeEnabled(false);
         m_widget->setViewMode((FileManagerWidget::ViewMode)mode);
     }
+    emit viewModeChanged(mode);
 }
 
 void FileManagerEditor::onViewModeChanged()
@@ -811,19 +823,14 @@ void FileManagerPlugin::FileManagerEditor::createSortByActions()
 */
 void FileManagerEditor::restoreDefaults()
 {
-    int mode = 1;
     bool showLeftPanel = true;
-    QVariantList lst;
-
-    if (m_settings->contains(QLatin1String("fileManager/viewMode")))
-        mode = m_settings->value(QLatin1String("fileManager/viewMode")).toInt();
 
     if (m_settings->contains(QLatin1String("fileManager/showLeftPanel")))
         showLeftPanel = m_settings->value(QLatin1String("fileManager/showLeftPanel")).toBool();
 
     QVariant value = m_settings->value(QLatin1String("fileManager/splitterState"));
 
-    setViewMode(mode);
+    m_settings->addObject(this, QLatin1String("fileManager/viewMode"));
 
     m_panel->setVisible(showLeftPanel);
 
