@@ -145,7 +145,7 @@ void MainWindowPrivate::setupAlternateToolBar()
     if (!c)
         return;
 
-    QToolBar *toolBar = c->toolBar();
+    QToolBar *toolBar = c->toolBar(q);
 
     if (!toolBar)
         return;

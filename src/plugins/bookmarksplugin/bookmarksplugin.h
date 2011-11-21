@@ -54,7 +54,7 @@ public:
     {}
     ~BookmarksToolBarContainer();
 
-    QToolBar *createToolBar() const;
+    QToolBar *createToolBar(QWidget *parent) const;
 
 signals:
     void open(const QUrl &url);

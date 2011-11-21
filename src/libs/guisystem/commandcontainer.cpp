@@ -197,11 +197,11 @@ QByteArray CommandContainer::id() const
 
     You are responsible for deleting menu.
 */
-QMenu * CommandContainer::menu() const
+QMenu * CommandContainer::menu(QWidget *parent) const
 {
     Q_D(const CommandContainer);
 
-    QMenu *menu = createMenu();
+    QMenu *menu = createMenu(parent);
     menu->setTitle(title());
     for (int i = 0; i < d->groups.size(); i++) {
         if (i != 0) {
@@ -254,11 +254,11 @@ QMenuBar * CommandContainer::menuBar() const
 
     You are responsible for deleting tool bar.
 */
-QToolBar * CommandContainer::toolBar() const
+QToolBar * CommandContainer::toolBar(QWidget *parent) const
 {
     Q_D(const CommandContainer);
 
-    QToolBar *toolBar = createToolBar();
+    QToolBar *toolBar = createToolBar(parent);
     for (int i = 0; i < d->groups.size(); i++) {
         Group * g = d->groups[i];
         foreach (QObject *o, g->objects) {
@@ -285,12 +285,12 @@ void CommandContainer::setTitle(const QString &title)
     d_func()->title = title;
 }
 
-QMenu * CommandContainer::createMenu() const
+QMenu * CommandContainer::createMenu(QWidget *parent) const
 {
-    return new QMenu;
+    return new QMenu(parent);
 }
 
-QToolBar * CommandContainer::createToolBar() const
+QToolBar * CommandContainer::createToolBar(QWidget *parent) const
 {
-    return new QToolBar;
+    return new QToolBar(parent);
 }
