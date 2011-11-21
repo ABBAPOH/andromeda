@@ -336,13 +336,8 @@ void MainWindow::restoreSession(QSettings &s)
 {
     Q_D(MainWindow);
 
-#ifdef Q_OS_MAC // QTBUG-3116
-    QRect geometry = s.value(QLatin1String("geometry")).toRect();
-    geometry.setHeight(geometry.height() + 38); // 38 is toolbar height. i hope:(
-    setGeometry(geometry);
-#else
     setGeometry(s.value(QLatin1String("geometry")).toRect());
-#endif
+
     restoreState(s.value(QLatin1String("state")).toByteArray());
 
     int tabCount = s.beginReadArray(QLatin1String("tabs"));
