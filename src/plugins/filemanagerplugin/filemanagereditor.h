@@ -21,6 +21,9 @@ class FileManagerHistory;
 class FileManagerEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
+
+    Q_PROPERTY(int viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
+
 public:
     enum ViewMode {
         IconView = 0, ColumnView, TableView, TreeView, CoverFlow, DualPane
@@ -48,6 +51,11 @@ public:
     QByteArray saveState() const;
 //    void restoreSession(QSettings &s);
 //    void saveSession(QSettings &s);
+
+    int viewMode() const;
+
+signals:
+    void viewModeChanged(int);
 
 protected:
     void resizeEvent(QResizeEvent *);
