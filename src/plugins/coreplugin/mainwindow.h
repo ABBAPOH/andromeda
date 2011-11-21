@@ -61,6 +61,7 @@ public slots:
     void prevTab();
 
 protected:
+    void moveEvent(QMoveEvent *);
     void resizeEvent(QResizeEvent *);
 
 protected:

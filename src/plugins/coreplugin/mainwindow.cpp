@@ -308,8 +308,10 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
 
     QVariant value = Core::instance()->settings()->value(QLatin1String("mainWindow/geometry"));
-//    if (value.isValid())
-//        restoreGeometry(value.toByteArray());
+    if (value.isValid()) {
+        restoreGeometry(value.toByteArray());
+        move(pos() + QPoint(20, 20));
+    }
 }
 
 MainWindow::~MainWindow()
@@ -546,6 +548,11 @@ void MainWindow::prevTab()
 
     int index = d->tabWidget->currentIndex();
     d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
+}
+
+void MainWindow::moveEvent(QMoveEvent *)
+{
+    Core::instance()->settings()->setValue(QLatin1String("mainWindow/geometry"), saveGeometry());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *)
