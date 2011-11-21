@@ -22,6 +22,7 @@
 #include <coreplugin/core.h>
 #include <coreplugin/constants.h>
 #include <coreplugin/mainwindow.h>
+#include <coreplugin/settings.h>
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -53,6 +54,8 @@ BookmarksToolBarContainer::~BookmarksToolBarContainer()
 
 QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
 {
+    ActionManager *am = ActionManager::instance();
+
     PluginManager *manager = PluginManager::instance();
     BookmarksModel *model = manager->object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
 
@@ -60,7 +63,16 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
     toolBar->setObjectName(QLatin1String("bookmarksToolbar"));
     toolBar->setModel(model);
     toolBar->setRootIndex(model->toolBar());
-    toolBar->show();
+
+    if (parent) {
+        QAction *act = new QAction(tr("Show bookmarks toolbar"), parent);
+        parent->addAction(act);
+        act->setCheckable(true);
+        act->setChecked(true);
+        connect(act, SIGNAL(toggled(bool)), toolBar, SLOT(setVisible(bool)));
+        Core::instance()->settings()->addObject(act, "bookmarks/checked");
+        am->registerAction(act, "ShowBookamrks");
+    }
 
     connect(toolBar, SIGNAL(open(QUrl)), SIGNAL(open(QUrl)));
     connect(toolBar, SIGNAL(openInTabs(QList<QUrl>)), SIGNAL(openInTabs(QList<QUrl>)));
@@ -182,6 +194,12 @@ void BookmarksPluginImpl::createActions()
     actions.append(addBookmarkAction);
     actions.append(addFolderAction);
     actions.append(showBookmarksAction);
+
+    // ================ View Menu ================
+    CommandContainer *viewMenu = actionManager->container(Constants::Menus::View);
+    Command *c = new Command("ShowBookamrks", QKeySequence(), "Show Bookmarks toolbar", this);
+    c->setContext(Command::WindowCommand);
+    viewMenu->addCommand(c);
 
     // ================ Bookmarks Menu ================
     BookmarksMenuContainer *menu = new BookmarksMenuContainer(Constants::Menus::Bookmarks, this);
