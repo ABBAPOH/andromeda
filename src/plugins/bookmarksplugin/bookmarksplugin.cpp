@@ -51,12 +51,12 @@ BookmarksToolBarContainer::~BookmarksToolBarContainer()
     qDeleteAll(toolBars);
 }
 
-QToolBar *BookmarksToolBarContainer::createToolBar() const
+QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
 {
     PluginManager *manager = PluginManager::instance();
     BookmarksModel *model = manager->object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
 
-    BookmarksToolBar *toolBar = new BookmarksToolBar();
+    BookmarksToolBar *toolBar = new BookmarksToolBar(parent);
     toolBar->setObjectName(QLatin1String("bookmarksToolbar"));
     toolBar->setModel(model);
     toolBar->setRootIndex(model->toolBar());

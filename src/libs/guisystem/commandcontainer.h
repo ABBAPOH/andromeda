@@ -35,16 +35,16 @@ public:
 
     QByteArray id() const;
 
-    QMenu *menu() const;
+    QMenu *menu(QWidget *parent = 0) const;
     QMenuBar *menuBar() const;
-    QToolBar *toolBar() const;
+    QToolBar *toolBar(QWidget *parent = 0) const;
 
     QString title() const;
     void setTitle(const QString &title);
 
 protected:
-    virtual QMenu *createMenu() const;
-    virtual QToolBar *createToolBar() const;
+    virtual QMenu *createMenu(QWidget *parent) const;
+    virtual QToolBar *createToolBar(QWidget *parent) const;
 
 protected:
     CommandContainerPrivate *d_ptr;
