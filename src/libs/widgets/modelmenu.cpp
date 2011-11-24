@@ -27,7 +27,6 @@ public:
     QAbstractItemModel *model;
     QPersistentModelIndex root;
     QPoint dragStartPos;
-
 };
 
 Q_DECLARE_METATYPE(QModelIndex)
@@ -186,6 +185,9 @@ QAction *ModelMenu::makeAction(const QModelIndex &index)
         action->setToolTip(toolTip);
     action->setStatusTip(index.data(d->statusBarTextRole).toString());
 
+    action->setCheckable(index.flags() & Qt::ItemIsUserCheckable);
+    action->setChecked(index.data(Qt::CheckStateRole).toBool());
+
     QVariant v;
     v.setValue(index);
     action->setData(v);
@@ -204,6 +206,10 @@ QAction *ModelMenu::makeAction(const QIcon &icon, const QString &text, QObject *
 void ModelMenu::actionTriggered(QAction *action)
 {
     QModelIndex idx = index(action);
+
+    if (d->model && action->isCheckable())
+        d->model->setData(idx, action->isChecked() ? 2 : 0, Qt::CheckStateRole);
+
     if (idx.isValid())
         emit activated(idx);
 }
