@@ -103,7 +103,13 @@ QDataStream & Bookmarks::operator>>(QDataStream &s, Bookmark &b)
     s >> b.d->title;
     s >> b.d->url;
     s >> b.d->description;
+#ifdef Q_OS_LINUX
+    QPixmap pix;
+    s >> pix;
+    b.d->icon = pix;
+#else
     s >> b.d->icon;
+#endif
     s >> b.d->preview;
     return s;
 }
@@ -113,7 +119,11 @@ QDataStream & Bookmarks::operator<<(QDataStream &s, const Bookmark &b)
     s << b.d->title;
     s << b.d->url;
     s << b.d->description;
+#ifdef Q_OS_LINUX
+    s << b.d->icon.pixmap(32);
+#else
     s << b.d->icon;
+#endif
     s << b.d->preview;
     return s;
 }
