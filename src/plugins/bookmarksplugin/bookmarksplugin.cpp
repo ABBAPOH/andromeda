@@ -40,7 +40,7 @@ public:
 
     ~BookmarksMenuContainer() { delete m_menu; }
 
-    QMenu *createMenu() const { return m_menu; }
+    QMenu *createMenu(QWidget * = 0) const { return m_menu; }
     inline BookmarksMenuBarMenu *bookmarksMenu() const { return m_menu; }
 
 private:
