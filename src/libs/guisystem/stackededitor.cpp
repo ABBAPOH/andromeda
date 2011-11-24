@@ -42,9 +42,19 @@ void StackedEditorPrivate::addItem(AbstractEditor *e)
         return;
 
     // prevent recursion when navigating through history
-    if (e->capabilities() & AbstractEditor::HasHistory)
-        if (e->history()->currentItemIndex() == history->currentItemIndex())
-            return;
+    if (e->capabilities() & AbstractEditor::HasHistory) {
+        int index = history->currentItemIndex();
+        if (index != -1) {
+            HistoryItem item = history->itemAt(index);
+            if (item.userData(QLatin1String("editor")) == e->id()) {
+                QVariant value = item.userData(QLatin1String("index"));
+                if (value.isValid()) {
+                    if (e->history()->currentItemIndex() == value.toInt())
+                        return;
+                }
+            }
+        }
+    }
 
     HistoryItem item;
     item.setPath(e->url().toString());
@@ -54,6 +64,7 @@ void StackedEditorPrivate::addItem(AbstractEditor *e)
     if (e->capabilities() & AbstractEditor::HasHistory)
         item.setUserData(QLatin1String("index"), e->history()->currentItemIndex());
     item.setUserData(QLatin1String("layoutIndex"), layout->indexOf(e));
+    item.setUserData(QLatin1String("editor"), e->id());
 
     history->history()->appendItem(item);
 }
