@@ -42,8 +42,9 @@ void StackedEditorPrivate::addItem(AbstractEditor *e)
         return;
 
     // prevent recursion when navigating through history
-    if (e->history()->currentItemIndex() == history->currentItemIndex())
-        return;
+    if (e->capabilities() & AbstractEditor::HasHistory)
+        if (e->history()->currentItemIndex() == history->currentItemIndex())
+            return;
 
     HistoryItem item;
     item.setPath(e->url().toString());
