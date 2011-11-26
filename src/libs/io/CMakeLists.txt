@@ -71,6 +71,9 @@ set( SOURCES
 
 qt4_wrap_single_cpp( qdrivecontroller_linux.cpp )
 
+set( QT_USE_QTDBUS TRUE )
+include( ${QT_USE_FILE} )
+
 endif()
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )

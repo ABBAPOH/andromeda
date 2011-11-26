@@ -1,13 +1,8 @@
 #include "qdrivecontroller.h"
 #include "qdrivecontroller_p.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QProcess>
 #include <QtCore/QSet>
-#include <QtCore/QSocketNotifier>
-#include <QtCore/QTimer>
 
 #if !defined(QT_NO_UDISKS)
 #include <QtDBus/QDBusConnection>
@@ -15,11 +10,7 @@
 #include <QtDBus/QDBusReply>
 #endif // QT_NO_UDISKS
 
-#include <sys/inotify.h>
-#include <sys/mount.h>
 #include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <mntent.h>
@@ -37,6 +28,7 @@ static const QString UDISKS_PATH(QString::fromAscii("/org/freedesktop/UDisks"));
 static const QString UDISKS_INTERFACE(QString::fromAscii("org.freedesktop.UDisks"));
 static const QString UDISKS_DEVICE_INTERFACE(QString::fromAscii("org.freedesktop.UDisks.Device"));
 
+static const QString UDISKS_DEVICE_JOB_CHANGED(QString::fromAscii("DeviceJobChanged"));
 static const QString UDISKS_FIND_DEVICE(QString::fromAscii("FindDeviceByDeviceFile"));
 static const QString UDISKS_MOUNT(QString::fromAscii("FilesystemMount"));
 static const QString UDISKS_UNMOUNT(QString::fromAscii("FilesystemUnmount"));
@@ -50,20 +42,25 @@ public:
     explicit QDriveWatcherEngine(QObject *parent);
     ~QDriveWatcherEngine();
 
-    inline bool isValid() const { return mtabWatchA > 0; }
+    inline bool isValid() const { return valid; }
 
 Q_SIGNALS:
     void driveAdded(const QString &path);
     void driveRemoved(const QString &path);
 
 private Q_SLOTS:
-    void deviceChanged();
-    void inotifyActivated();
+    void deviceJobChanged(QDBusObjectPath device,
+                          bool inProgress,
+                          QString id,
+                          quint32 numTasks,
+                          bool,
+                          double);
+private:
+    void updateDevices();
 
 private:
     QSet<QString> drives;
-    int inotifyFD;
-    int mtabWatchA;
+    bool valid;
 };
 
 static QSet<QString> getDrives()
@@ -86,25 +83,25 @@ static QSet<QString> getDrives()
 }
 
 QDriveWatcherEngine::QDriveWatcherEngine(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    valid(false)
 {
     drives = getDrives();
-    inotifyFD = ::inotify_init();
-    if (inotifyFD != -1) {
-        mtabWatchA = ::inotify_add_watch(inotifyFD, _PATH_MOUNTED, IN_MODIFY);
-        if (mtabWatchA > 0) {
-            QSocketNotifier *notifier = new QSocketNotifier(inotifyFD, QSocketNotifier::Read/*, this*/);
-            connect(notifier, SIGNAL(activated(int)), this, SLOT(inotifyActivated()));
-        }
-    }
+
+    QDBusConnection con = QDBusConnection::systemBus();
+    valid = con.connect(UDISKS_SERVICE,
+                        UDISKS_PATH,
+                        UDISKS_INTERFACE,
+                        UDISKS_DEVICE_JOB_CHANGED,
+                        this,
+                        SLOT(deviceJobChanged(QDBusObjectPath,bool,QString,quint32,bool,double)));
 }
 
 QDriveWatcherEngine::~QDriveWatcherEngine()
 {
-    ::close(inotifyFD);
 }
 
-void QDriveWatcherEngine::deviceChanged()
+void QDriveWatcherEngine::updateDevices()
 {
     QSet<QString> allNewDrives = getDrives();
 
@@ -121,21 +118,21 @@ void QDriveWatcherEngine::deviceChanged()
     drives = allNewDrives;
 }
 
-void QDriveWatcherEngine::inotifyActivated()
+void QDriveWatcherEngine::deviceJobChanged(QDBusObjectPath device,
+                                           bool,
+                                           QString id,
+                                           quint32,
+                                           bool,
+                                           double)
 {
-    char buffer[1024];
-    struct inotify_event *event;
-    int len = ::read(inotifyFD, (void *)buffer, sizeof(buffer));
-    if (len > 0) {
-        event = (struct inotify_event *)buffer;
-        if (event->wd == mtabWatchA /*&& (event->mask & IN_IGNORED) == 0*/) {
-            ::inotify_rm_watch(inotifyFD, mtabWatchA);
-
-            QTimer::singleShot(1000, this, SLOT(deviceChanged())); //give this time to finish write
-
-            mtabWatchA = ::inotify_add_watch(inotifyFD, _PATH_MOUNTED, IN_MODIFY);
-        }
-    }
+    // TODO: find better way to update devices
+    QDBusInterface face(UDISKS_SERVICE,
+                        device.path(),
+                        UDISKS_DEVICE_INTERFACE,
+                        QDBusConnection::systemBus());
+    if (id == QLatin1String("FilesystemUnmount") ||
+            !face.property("DeviceMountPaths").toStringList().isEmpty())
+        updateDevices();
 }
 
 bool QDriveWatcher::start_sys()
@@ -159,15 +156,20 @@ static bool mountUdisks(const QString &device,
                          QDriveControllerPrivate::Error &error)
 {
 #if !defined(QT_NO_UDISKS)
-    QDBusMessage findDevice =
-            QDBusMessage::createMethodCall(UDISKS_SERVICE, UDISKS_PATH, UDISKS_INTERFACE, UDISKS_FIND_DEVICE);
+    QDBusMessage findDevice = QDBusMessage::createMethodCall(UDISKS_SERVICE,
+                                                             UDISKS_PATH,
+                                                             UDISKS_INTERFACE,
+                                                             UDISKS_FIND_DEVICE);
     findDevice.setArguments(QVariantList() << device);
 
     QDBusReply<QDBusObjectPath> reply = QDBusConnection::systemBus().call(findDevice);
     if (reply.isValid()) {
 
         QDBusObjectPath devicePath = reply.value();
-        QDBusInterface device(UDISKS_SERVICE, devicePath.path(), UDISKS_DEVICE_INTERFACE, QDBusConnection::systemBus());
+        QDBusInterface device(UDISKS_SERVICE,
+                              devicePath.path(),
+                              UDISKS_DEVICE_INTERFACE,
+                              QDBusConnection::systemBus());
         if (device.isValid()) {
             QDBusReply<QString> reply = device.call(UDISKS_MOUNT, fs, options);
             if (reply.isValid()) {
