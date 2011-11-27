@@ -9,6 +9,7 @@ namespace GuiSystem {
 
 class AbstractHistory;
 class AbstractEditorFactory;
+class IFind;
 
 class GUISYSTEM_EXPORT AbstractEditor : public AbstractView
 {
@@ -21,7 +22,7 @@ class GUISYSTEM_EXPORT AbstractEditor : public AbstractView
     Q_PROPERTY(QString windowTitle READ windowTitle NOTIFY windowTitleChanged)
 
 public:
-    enum Capabilities { NoCapabilities = 0, CanSave = 0x1, HasHistory = 0x2 };
+    enum Capabilities { NoCapabilities = 0, CanSave = 0x1, HasHistory = 0x2, HasFind = 0x4 };
 
     explicit AbstractEditor(QWidget *parent = 0);
     ~AbstractEditor();
@@ -36,6 +37,7 @@ public:
     virtual QImage preview() const;
     virtual QString windowTitle() const;
 
+    virtual IFind *find() const;
     virtual AbstractHistory *history() const;
 
     virtual void restoreDefaults() {}
