@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/cancelfind.png</file>
+        <file>icons/casesensitively.png</file>
+        <file>icons/regexp.png</file>
+        <file>icons/wholewords.png</file>
+        <file>icons/magnifier.png</file>
+    </qresource>
+</RCC>

@@ -9,6 +9,7 @@ set( HEADERS
     command.h
     commandcontainer.h
     editormanager.h
+    findtoolbar.h
     history.h
     historyitem.h
     ifind.h
@@ -26,6 +27,7 @@ set( SOURCES
     command.cpp
     commandcontainer.cpp
     editormanager.cpp
+    findtoolbar.cpp
     history.cpp
     historyitem.cpp
     ifind.cpp
@@ -34,15 +36,17 @@ set( SOURCES
    )
 set( FORMS
    )
+set( RESOURCES resources.qrc )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DGUISYSTEM_LIBRARY )
 
-add_library( guisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( guisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
 target_link_libraries( guisystem ${QT_LIBRARIES} widgets )
 
 install_lib( guisystem )
