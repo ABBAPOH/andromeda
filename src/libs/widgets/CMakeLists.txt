@@ -4,6 +4,7 @@ set( HEADERS
     coverflow.h
     fancylineedit.h
     fancylineedit_p.h
+    filterlineedit.h
     minisplitter.h
     modelmenu.h
     modeltoolbar.h
@@ -14,6 +15,7 @@ set( SOURCES
     addressbar.cpp
     coverflow.cpp
     fancylineedit.cpp
+    filterlineedit.cpp
     minisplitter.cpp
     modelmenu.cpp
     modeltoolbar.cpp
