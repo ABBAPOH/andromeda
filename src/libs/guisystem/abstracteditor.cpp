@@ -230,6 +230,18 @@ QString AbstractEditor::windowTitle() const
 }
 
 /*!
+  \brief Reimplement to return find interface that corresponds to this editor.
+
+  Note that AbstractEditor::capabilities should return AbstractEditor::HasFind among other flags.
+
+  Default imlementation returns 0.
+*/
+IFind *AbstractEditor::find() const
+{
+    return 0;
+}
+
+/*!
   \fn void AbstractEditor::windowTitleChanged(const QString &title)
 
   This signal should be emited when window title changes.

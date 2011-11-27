@@ -11,6 +11,7 @@ set( HEADERS
     editormanager.h
     history.h
     historyitem.h
+    ifind.h
     proxyaction.h
     stackededitor.h
     stackededitor_p.h
@@ -27,6 +28,7 @@ set( SOURCES
     editormanager.cpp
     history.cpp
     historyitem.cpp
+    ifind.cpp
     proxyaction.cpp
     stackededitor.cpp
    )
