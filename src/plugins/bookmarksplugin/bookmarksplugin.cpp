@@ -71,7 +71,7 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
         act->setChecked(true);
         connect(act, SIGNAL(toggled(bool)), toolBar, SLOT(setVisible(bool)));
         Core::instance()->settings()->addObject(act, "bookmarks/checked");
-        am->registerAction(act, "ShowBookamrks");
+        am->registerAction(act, Constants::Actions::ShowBookmarks);
     }
 
     connect(toolBar, SIGNAL(open(QUrl)), SIGNAL(open(QUrl)));
@@ -197,7 +197,7 @@ void BookmarksPluginImpl::createActions()
 
     // ================ View Menu ================
     CommandContainer *viewMenu = actionManager->container(Constants::Menus::View);
-    Command *c = new Command("ShowBookamrks", QKeySequence(), "Show Bookmarks toolbar", this);
+    Command *c = new Command(Constants::Actions::ShowBookmarks, QKeySequence(), "Show Bookmarks toolbar", this);
     c->setContext(Command::WindowCommand);
     viewMenu->addCommand(c);
 
