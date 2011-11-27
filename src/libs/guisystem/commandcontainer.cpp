@@ -111,6 +111,7 @@ void CommandContainer::addCommand(Command *c, const QByteArray &group)
     }
     QObjectList::iterator i = qLowerBound(g->objects.begin(), g->objects.end(), c, commandLessThen);
     g->objects.insert(i, c);
+    connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
 }
 
 /*!
@@ -127,6 +128,7 @@ void CommandContainer::addContainer(CommandContainer *c, const QByteArray &group
     }
     QObjectList::iterator i = qLowerBound(g->objects.begin(), g->objects.end(), c, commandLessThen);
     g->objects.insert(i, c);
+    connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
 }
 
 bool groupLessThen(Group *g1, Group *g2)
@@ -283,6 +285,15 @@ QString CommandContainer::title() const
 void CommandContainer::setTitle(const QString &title)
 {
     d_func()->title = title;
+}
+
+void CommandContainer::onDestroy(QObject *o)
+{
+    Q_D(CommandContainer);
+
+    foreach (Group *g, d->groups) {
+        g->objects.removeAll(o);
+    }
 }
 
 QMenu * CommandContainer::createMenu(QWidget *parent) const

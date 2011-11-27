@@ -42,6 +42,9 @@ public:
     QString title() const;
     void setTitle(const QString &title);
 
+private slots:
+    void onDestroy(QObject *);
+
 protected:
     virtual QMenu *createMenu(QWidget *parent) const;
     virtual QToolBar *createToolBar(QWidget *parent) const;
