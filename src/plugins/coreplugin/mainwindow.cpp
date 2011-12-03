@@ -265,6 +265,8 @@ void MainWindowPrivate::onUrlChanged(const QUrl &url)
 
     if (sender() == q->currentTab())
         lineEdit->setUrl(url);
+
+    upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
 void MainWindowPrivate::onCurrentChanged(int index)
@@ -433,6 +435,8 @@ void MainWindow::open(const QUrl &url)
         currentTab()->open(url);
 
     d->updateUi(currentTab());
+
+    d->upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
 void MainWindow::openEditor(const QString &id)
