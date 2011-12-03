@@ -32,6 +32,7 @@ const char * const FileQuit = "MenuGroups:4.File.Quit";
 
 const char * const EditRedo = "MenuGroups:1.Edit.Redo";
 const char * const EditCopyPaste = "MenuGroups:2.Edit.CopyPate";
+const char * const EditFind = "MenuGroups:3.Edit.Find";
 
 const char * const ViewViewMode = "MenuGroups:1.View.ViewMode";
 const char * const ViewSortBy = "MenuGroups:2.View.SortBy";
@@ -61,6 +62,10 @@ const char * const Cut = "Actions.Cut";
 const char * const Copy = "Actions.Copy";
 const char * const Paste = "Actions.Paste";
 const char * const SelectAll = "Actions.SelectAll";
+
+const char * const Find = "Actions.Find";
+const char * const FindNext = "Actions.FindNext";
+const char * const FindPrevious = "Actions.FindPrevious";
 
 const char * const IconMode = "Actions.1.IconMode";
 const char * const ColumnMode = "Actions.2.ColumnMode";

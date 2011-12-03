@@ -268,6 +268,19 @@ void CorePluginImpl::createEditMenu()
 
     cmd = new Command(Constants::Actions::SelectAll, QKeySequence::SelectAll, tr("Select All"), this);
     container->addCommand(cmd, group);
+
+    // ================ Edit Menu (Find) ================
+
+    container->addGroup(group = Constants::MenuGroups::EditFind);
+
+    cmd = new Command(Constants::Actions::Find, QKeySequence::Find, tr("Find"), this);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::FindNext, QKeySequence::FindNext, tr("Find next"), this);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::FindPrevious, QKeySequence::FindPrevious, tr("Find previous"), this);
+    container->addCommand(cmd, group);
 }
 
 void CorePluginImpl::createViewMenu()
