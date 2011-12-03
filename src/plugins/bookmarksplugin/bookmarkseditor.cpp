@@ -53,8 +53,6 @@ BookmarksEditor::BookmarksEditor(QWidget *parent) :
 
 void BookmarksEditor::open(const QUrl &)
 {
-    emit urlChanged(url());
-    emit titleChanged(title());
 }
 
 QUrl BookmarksEditor::url() const
