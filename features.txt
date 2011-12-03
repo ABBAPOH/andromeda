@@ -1,6 +1,0 @@
-FEATURE-1 Do not show CopyDialog for small operations.
-FEATURE-2 Refresh for model
-FEATURE-3 Reverse&Clear selection in FileManagerWidget
-FEATURE-4 Action to hide navigation widget
-FEATURE-5 Actions for dual pane mode (copy, move, etc)
-FEATURE-6 Switch tabs by hotkey
