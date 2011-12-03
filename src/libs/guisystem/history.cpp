@@ -7,10 +7,32 @@ namespace GuiSystem {
 class HistoryPrivate
 {
 public:
+    HistoryPrivate(History *qq) : q(qq) {}
+
     QList<HistoryItem> items;
     int maximumItemCount;
     int currentItemIndex;
+
+    History *q;
+
+    void setCurrentItemIndex(int index);
 };
+
+void HistoryPrivate::setCurrentItemIndex(int index)
+{
+    int oldIndex = currentItemIndex;
+    currentItemIndex = index;
+    emit q->currentItemIndexChanged(index);
+
+    if (index == 0)
+        emit q->canGoBackChanged(false);
+    else if (oldIndex == 0)
+        emit q->canGoBackChanged(true);
+    if (index == q->count() - 1)
+        emit q->canGoForwardChanged(false);
+    else if (oldIndex == q->count() - 1)
+        emit q->canGoForwardChanged(true);
+}
 
 } // namespace GuiSystem
 
@@ -18,7 +40,7 @@ using namespace GuiSystem;
 
 History::History(QObject *parent) :
         QObject(parent),
-        d_ptr(new HistoryPrivate)
+    d_ptr(new HistoryPrivate(this))
 {
     Q_D(History);
 
@@ -43,12 +65,13 @@ void History::appendItem(const HistoryItem &item)
 
     d->items.erase(d->items.begin() + d->currentItemIndex + 1, d->items.end());
     d->items.append(item);
-    d->currentItemIndex++;
 
     if (d->maximumItemCount != -1 && d->currentItemIndex == d->maximumItemCount) {
         d->currentItemIndex--;
         d->items.takeFirst();
     }
+
+    d->setCurrentItemIndex(d->currentItemIndex + 1);
 }
 
 bool History::canGoBack() const
@@ -63,8 +86,7 @@ void History::back()
     Q_D(History);
 
     if (canGoBack()) {
-        d->currentItemIndex--;
-        emit currentItemIndexChanged(d->currentItemIndex);
+        d->setCurrentItemIndex(d->currentItemIndex - 1);
     }
 }
 
@@ -80,8 +102,7 @@ void History::forward()
     Q_D(History);
 
     if (canGoForward()) {
-        d->currentItemIndex++;
-        emit currentItemIndexChanged(d->currentItemIndex);
+        d->setCurrentItemIndex(d->currentItemIndex + 1);
     }
 }
 
@@ -148,10 +169,8 @@ void History::setCurrentItemIndex(int index)
         return;
     }
 
-    if (d->currentItemIndex != index) {
-        d->currentItemIndex = index;
-        emit currentItemIndexChanged(index);
-    }
+    if (d->currentItemIndex != index)
+        d->setCurrentItemIndex(index);
 }
 
 HistoryItem History::forwardItem() const
