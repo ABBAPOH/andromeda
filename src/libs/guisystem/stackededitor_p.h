@@ -23,6 +23,9 @@ public:
     {
         connect(m_history, SIGNAL(currentItemIndexChanged(int)),
                 SIGNAL(currentItemIndexChanged(int)));
+
+        connect(m_history, SIGNAL(canGoBackChanged(bool)), SIGNAL(canGoBackChanged(bool)));
+        connect(m_history, SIGNAL(canGoForwardChanged(bool)), SIGNAL(canGoForwardChanged(bool)));
     }
 
     History *history() const { return m_history; }
