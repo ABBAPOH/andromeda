@@ -9,11 +9,18 @@
 #include <guisystem/abstracteditor.h>
 #include <guisystem/abstracteditorfactory.h>
 
+class QVBoxLayout;
 class QWebView;
+//class IFind;
+
+namespace GuiSystem {
+class FindToolBar;
+} // namespace GuiSystem
 
 namespace WebViewPlugin {
 
 class WebViewHistory;
+class WebViewFind;
 
 class WEBVIEWPLUGIN_EXPORT WebViewEditor : public GuiSystem::AbstractEditor
 {
@@ -30,10 +37,12 @@ public:
 
     QUrl url() const;
 
+    GuiSystem::IFind *find() const;
     GuiSystem::AbstractHistory *history() const;
 
     QWidget *widget() const { return m_webView; }
-    QToolBar *toolBar() const { return 0; }
+
+    QWebView *webView() const { return m_webView; }
 
     QIcon icon() const { return m_webView->icon(); }
     QString title() const { return m_webView->title(); }
@@ -45,16 +54,16 @@ public slots:
     void refresh();
     void cancel();
 
-protected:
-    void resizeEvent(QResizeEvent *);
-
 private slots:
     void onUrlClicked(const QUrl &url);
     void onIconChanged();
 
 private:
+    QVBoxLayout *m_layout;
     QWebView *m_webView;
     WebViewHistory *m_history;
+    WebViewFind *m_find;
+    GuiSystem::FindToolBar *m_findToolBar;
 };
 
 class WebViewEditorFactory : public GuiSystem::AbstractEditorFactory

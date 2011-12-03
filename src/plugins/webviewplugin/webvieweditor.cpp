@@ -1,11 +1,83 @@
 #include "webvieweditor.h"
 #include "webvieweditor_p.h"
 
-#include <QtGui/QResizeEvent>
+#include <QtGui/QAction>
+#include <QtGui/QVBoxLayout>
+
 #include <QtWebKit/QWebHistory>
+
+#include <guisystem/findtoolbar.h>
 
 using namespace GuiSystem;
 using namespace WebViewPlugin;
+
+WebViewFind::WebViewFind(WebViewEditor *editor) :
+    IFind(editor),
+    m_editor(editor)
+{
+}
+
+IFind::FindFlags WebViewFind::supportedFindFlags() const
+{
+    return IFind::FindFlags(IFind::FindBackward | IFind::FindCaseSensitively);
+}
+
+void WebViewFind::resetIncrementalSearch()
+{
+    m_currentFindString.clear();
+    m_editor->webView()->findText(QString(), QWebPage::HighlightAllOccurrences);
+}
+
+void WebViewFind::clearResults()
+{
+    resetIncrementalSearch();
+}
+
+QString WebViewFind::currentFindString() const
+{
+    return m_currentFindString;
+}
+
+QString WebViewFind::completedFindString() const
+{
+    return m_currentFindString;
+}
+
+void WebViewFind::highlightAll(const QString &txt, IFind::FindFlags findFlags)
+{
+    QWebPage::FindFlags flags = QWebPage::HighlightAllOccurrences;
+
+    if (findFlags & IFind::FindCaseSensitively)
+        flags |= QWebPage::FindCaseSensitively;
+
+    m_editor->webView()->findText(QString(), flags);
+    m_editor->webView()->findText(txt, flags);
+}
+
+void WebViewFind::findIncremental(const QString &txt, IFind::FindFlags findFlags)
+{
+    QWebPage::FindFlags flags;
+
+    if (findFlags & IFind::FindCaseSensitively)
+        flags |= QWebPage::FindCaseSensitively;
+
+    m_currentFindString = txt;
+    m_editor->webView()->findText(txt, flags);
+}
+
+void WebViewFind::findStep(const QString &txt, IFind::FindFlags findFlags)
+{
+    QWebPage::FindFlags flags = QWebPage::FindWrapsAroundDocument;
+
+    if (findFlags & IFind::FindBackward)
+        flags |= QWebPage::FindBackward;
+
+    if (findFlags & IFind::FindCaseSensitively)
+        flags |= QWebPage::FindCaseSensitively;
+
+    m_currentFindString = txt;
+    m_editor->webView()->findText(txt, flags);
+}
 
 WebViewHistory::WebViewHistory(QObject *parent) :
     AbstractHistory(parent)
@@ -46,9 +118,23 @@ HistoryItem WebViewHistory::itemAt(int index) const
 WebViewEditor::WebViewEditor(QWidget *parent) :
     AbstractEditor(parent)
 {
+    m_layout = new QVBoxLayout(this);
+    m_layout->setContentsMargins(0, 0, 0, 0);
+    m_layout->setSpacing(0);
+
+    m_find = new WebViewFind(this);
+
+    m_findToolBar = new FindToolBar(this);
+    m_findToolBar->setFind(m_find);
+    m_findToolBar->hide();
+    m_layout->addWidget(m_findToolBar);
+
     m_webView = new QWebView(this);
+    m_layout->addWidget(m_webView);
+
     m_history = new WebViewHistory(this);
     m_history->setHistory(m_webView->history());
+
     m_webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(m_webView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
@@ -59,6 +145,10 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     connect(m_webView, SIGNAL(loadStarted()), SIGNAL(loadStarted()));
     connect(m_webView, SIGNAL(loadProgress(int)), SIGNAL(loadProgress(int)));
     connect(m_webView, SIGNAL(loadFinished(bool)), SIGNAL(loadFinished(bool)));
+
+    QAction *findAction = new QAction(tr("Find"), this);
+    connect(findAction, SIGNAL(triggered()), m_findToolBar, SLOT(show()));
+    addAction(findAction, "Actions.Find");
 }
 
 WebViewEditor::~WebViewEditor()
@@ -68,7 +158,7 @@ WebViewEditor::~WebViewEditor()
 
 AbstractEditor::Capabilities WebViewEditor::capabilities() const
 {
-    return AbstractEditor::HasHistory;
+    return AbstractEditor::Capabilities(AbstractEditor::HasHistory | AbstractEditor::HasFind);
 }
 
 void WebViewEditor::open(const QUrl &url)
@@ -79,6 +169,11 @@ void WebViewEditor::open(const QUrl &url)
 QUrl WebViewEditor::url() const
 {
     return m_webView->url();
+}
+
+IFind *WebViewEditor::find() const
+{
+    return m_find;
 }
 
 AbstractHistory *WebViewEditor::history() const
@@ -94,11 +189,6 @@ void WebViewEditor::refresh()
 void WebViewEditor::cancel()
 {
     m_webView->stop();
-}
-
-void WebViewEditor::resizeEvent(QResizeEvent *e)
-{
-    m_webView->resize(e->size());
 }
 
 void WebViewEditor::onUrlClicked(const QUrl &url)

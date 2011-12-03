@@ -4,8 +4,31 @@
 #include "webvieweditor.h"
 
 #include <guisystem/abstracthistory.h>
+#include <guisystem/ifind.h>
 
 namespace WebViewPlugin {
+
+class WebViewFind : public GuiSystem::IFind
+{
+public:
+    explicit WebViewFind(WebViewEditor *editor);
+
+    FindFlags supportedFindFlags() const;
+    void resetIncrementalSearch();
+    void clearResults();
+
+    QString currentFindString() const;
+    QString completedFindString() const;
+
+    void highlightAll(const QString &txt, FindFlags findFlags);
+    void findIncremental(const QString &txt, FindFlags findFlags);
+    void findStep(const QString &txt, FindFlags findFlags);
+
+private:
+    WebViewEditor *m_editor;
+
+    QString m_currentFindString;
+};
 
 class WebViewHistory : public GuiSystem::AbstractHistory
 {
