@@ -23,7 +23,7 @@ class BookmarksEditor : public GuiSystem::AbstractEditor
 public:
     explicit BookmarksEditor(QWidget *parent = 0);
 
-    void open(const QUrl &url);
+    void open(const QUrl &);
     QUrl url() const;
 
     QIcon icon() const;

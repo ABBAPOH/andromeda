@@ -13,9 +13,8 @@ HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     m_label->setAlignment(Qt::AlignCenter);
 }
 
-void HelloWorldEditor::open(const QUrl &url)
+void HelloWorldEditor::open(const QUrl &)
 {
-    emit urlChanged(url);
 }
 
 QUrl HelloWorldEditor::url() const

@@ -431,6 +431,8 @@ void MainWindow::open(const QUrl &url)
         openNewTab(url);
     else
         currentTab()->open(url);
+
+    d->updateUi(currentTab());
 }
 
 void MainWindow::openEditor(const QString &id)
@@ -451,6 +453,8 @@ void MainWindow::openEditor(const QString &id)
     } else {
         currentTab()->open(url);
     }
+
+    d->updateUi(currentTab());
 }
 
 void MainWindow::openNewTab(const QUrl &url)
