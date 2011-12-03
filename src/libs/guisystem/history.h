@@ -55,6 +55,9 @@ public slots:
     void clear();
 
 signals:
+    void canGoBackChanged(bool);
+    void canGoForwardChanged(bool);
+
     void currentItemIndexChanged(int index);
 
 protected:
