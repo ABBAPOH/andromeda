@@ -281,6 +281,11 @@ void MainWindowPrivate::onCurrentChanged(int index)
     connect(tab, SIGNAL(loadProgress(int)), lineEdit,  SLOT(setLoadProgress(int)));
     connect(tab, SIGNAL(loadFinished(bool)), lineEdit,  SLOT(finishLoad()));
 
+    disconnect(tab->history(), 0, backAction, 0);
+    disconnect(tab->history(), 0, forwardAction, 0);
+    connect(tab->history(), SIGNAL(canGoBackChanged(bool)), backAction, SLOT(setEnabled(bool)));
+    connect(tab->history(), SIGNAL(canGoForwardChanged(bool)), forwardAction, SLOT(setEnabled(bool)));
+
     lineEdit->setUrl(tab->url());
 
     updateUi(tab);
