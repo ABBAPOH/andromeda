@@ -94,6 +94,18 @@ void AbstractHistory::forward()
 */
 
 /*!
+  \fn void AbstractHistory::canGoBackChanged(bool)
+
+  \brief Emit this signal whenever history can go back or not.
+*/
+
+/*!
+  \fn void AbstractHistory::canGoForwardChanged(bool)
+
+  \brief Emit this signal whenever history can go forward or not.
+*/
+
+/*!
   \fn void AbstractHistory::currentItemIndexChanged(int index)
 
   \brief Emit this signal whenever current index becomes changed.

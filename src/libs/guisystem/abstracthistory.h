@@ -38,6 +38,9 @@ public slots:
     virtual void clear() = 0;
 
 signals:
+    void canGoBackChanged(bool);
+    void canGoForwardChanged(bool);
+
     void currentItemIndexChanged(int index);
 };
 
