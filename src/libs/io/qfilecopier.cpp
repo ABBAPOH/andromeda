@@ -493,7 +493,8 @@ int QFileCopierThread::addRequestToQueue(Request request)
             Request r;
             r.type = request.type;
             r.source = source;
-            r.dest = request.dest + "/" + QFileInfo(source).fileName();
+            if (!request.dest.isEmpty())
+                r.dest = request.dest + "/" + QFileInfo(source).fileName();
             r.copyFlags = request.copyFlags;
 
             int index = addRequestToQueue(r);
