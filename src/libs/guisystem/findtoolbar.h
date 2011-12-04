@@ -34,6 +34,8 @@ private slots:
     void replaceNext();
     void replaceAll();
 
+    void openFind();
+
 private:
     void setupActions();
     void setupUi();
