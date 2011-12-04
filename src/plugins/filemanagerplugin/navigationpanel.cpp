@@ -1,31 +1,15 @@
 #include "navigationpanel.h"
+#include "navigationpanel_p.h"
 
 #include "navigationmodel.h"
+
+#include <io/QDriveController>
 
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
 #include <QtGui/QTreeView>
 #include <QtGui/QResizeEvent>
-
-#define bublic public
-
-namespace FileManagerPlugin {
-
-class NavigationPanelPrivate
-{
-bublic:
-    QTreeView *treeView;
-    NavigationModel *model;
-    QString currentPath;
-
-    QAction *openAction;
-    QAction *removeAction;
-    QMenu *contextMenu;
-
-    QModelIndex selectedRow() const;
-};
-
-} // namespace FileManagerPlugin
+#include <QtGui/QHeaderView>
 
 using namespace FileManagerPlugin;
 
@@ -36,6 +20,59 @@ QModelIndex NavigationPanelPrivate::selectedRow() const
         return QModelIndex();
 
     return indexes.first();
+}
+
+NavigationPanelDelegate::NavigationPanelDelegate(QObject* parent):
+    QStyledItemDelegate(parent)
+{
+    m_ejectIcon = QIcon(":/icons/eject.png");
+}
+
+bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *me = static_cast<QMouseEvent *>(event);
+        QRect rect = option.rect;
+        rect.setX(rect.x() + rect.width() - (rect.height()+BORDER)); // draw icon (size is rect's height*height)
+        rect.setRight(rect.right()-BORDER);
+        if ( rect.contains(me->x(), me->y()) ) {
+            QDriveController drive;
+            const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
+            if (model) {
+                drive.eject(model->path(index));
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QStyleOptionViewItemV4 optionLeft = option;
+    // decrease text width so icon won't overlap text
+    optionLeft.rect.setWidth(optionLeft.rect.width() - (optionLeft.rect.height() + BORDER));
+    optionLeft.viewItemPosition = QStyleOptionViewItemV4::Beginning;
+    QStyledItemDelegate::paint(painter, optionLeft, index);
+
+    QStyleOptionViewItemV4 optionRight = option;
+    optionRight.viewItemPosition = QStyleOptionViewItemV4::End;
+    optionRight.rect.setX(optionRight.rect.x() + optionRight.rect.width() - (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
+    QStyle *style = QApplication::style();
+    style->drawControl(QStyle::CE_ItemViewItem, &optionRight, painter);
+
+    const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
+    if (model) {
+        QDriveInfo drive(model->path(index));
+
+        if ( drive.isValid() && ( drive.type() == QDriveInfo::RemoteDrive || drive.type() == QDriveInfo::RemovableDrive ) ){
+            QRect rect = optionRight.rect;
+            rect.setRight(rect.right()-BORDER);
+            m_ejectIcon.paint(painter, rect);
+        }
+
+    }
 }
 
 NavigationPanel::NavigationPanel(QWidget *parent) :
@@ -69,6 +106,11 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
 
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
     setContextMenuPolicy(Qt::CustomContextMenu);
+
+    QAbstractItemDelegate *delegate = d->treeView->itemDelegate();
+    if (delegate)
+        delegate->deleteLater();
+    d->treeView->setItemDelegate(new NavigationPanelDelegate());
 
     setMinimumSize(100, 200);
 }
@@ -129,6 +171,7 @@ void NavigationPanel::onClick(const QModelIndex &index)
     Q_D(NavigationPanel);
 
     QString path = d->model->path(index);
+
     if (!path.isEmpty()) {
         d->currentPath  = path;
         emit currentPathChanged(path);
@@ -164,3 +207,6 @@ void NavigationPanel::onRemoveTriggered()
 
     d->model->removeFolder(d->model->path(d->selectedRow()));
 }
+
+
+
