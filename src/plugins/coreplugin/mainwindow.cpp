@@ -9,6 +9,7 @@
 #include <QtGui/QCompleter>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QDirModel>
+#include <QtGui/QFileDialog>
 #include <QtGui/QHBoxLayout>
 
 #include <guisystem/actionmanager.h>
@@ -67,6 +68,18 @@ void MainWindowPrivate::setupActions()
     connect(closeTabAction, SIGNAL(triggered()), q, SLOT(closeTab()));
     q->addAction(closeTabAction);
     actionManager->registerAction(closeTabAction, Constants::Actions::CloseTab);
+
+    saveAction = new QAction(this);
+    saveAction->setEnabled(false);
+    connect(saveAction, SIGNAL(triggered()), q, SLOT(save()));
+    q->addAction(saveAction);
+    actionManager->registerAction(saveAction, Constants::Actions::Save);
+
+    saveAsAction = new QAction(this);
+    saveAsAction->setEnabled(false);
+    connect(saveAsAction, SIGNAL(triggered()), q, SLOT(saveAs()));
+    q->addAction(saveAsAction);
+    actionManager->registerAction(saveAsAction, Constants::Actions::SaveAs);
 
     // LineEdit
     createAction(undoAction, tr("Undo"), Constants::Actions::Undo, lineEdit, SLOT(undo()));
@@ -286,9 +299,17 @@ void MainWindowPrivate::onCurrentChanged(int index)
     connect(tab->history(), SIGNAL(canGoBackChanged(bool)), backAction, SLOT(setEnabled(bool)));
     connect(tab->history(), SIGNAL(canGoForwardChanged(bool)), forwardAction, SLOT(setEnabled(bool)));
 
+    disconnect(tab, 0, saveAction, 0);
+    connect(tab, SIGNAL(modificationChanged(bool)), saveAction, SLOT(setEnabled(bool)));
+
     lineEdit->setUrl(tab->url());
 
     updateUi(tab);
+
+    bool saveAsEnabled = tab->capabilities() & AbstractEditor::CanSave;
+    bool saveEnabled = saveAsEnabled && tab->isModified() && !tab->isReadOnly();
+    saveAsAction->setEnabled(saveAsEnabled);
+    saveAction->setEnabled(saveEnabled);
 }
 
 void MainWindowPrivate::onChanged()
@@ -298,6 +319,16 @@ void MainWindowPrivate::onChanged()
         return;
 
     updateUi(tab);
+}
+
+void MainWindowPrivate::onCapabilitiesChanged(AbstractEditor::Capabilities capabilities)
+{
+    bool saveAsEnabled = capabilities & AbstractEditor::CanSave;
+
+    saveAsAction->setEnabled(saveAsEnabled);
+
+    if (!saveAsEnabled)
+        saveAction->setEnabled(false);
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -531,6 +562,28 @@ void MainWindow::closeTab(int index)
     QWidget *widget = d->tabWidget->widget(index);
     d->tabWidget->removeTab(index);
     widget->deleteLater();
+}
+
+void MainWindow::save()
+{
+    if (!(currentEditor()->capabilities() & AbstractEditor::CanSave))
+        return;
+
+    currentEditor()->save();
+}
+
+void MainWindow::saveAs()
+{
+    // TODO: remember previous dir and set filename using title + extension from mimetype
+    QString path = QFileDialog::getSaveFileName(this, tr("Save as"));
+
+    if (path.isEmpty())
+        return;
+
+    if (!(currentEditor()->capabilities() & AbstractEditor::CanSave))
+        return;
+
+    currentEditor()->save(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::refresh()

@@ -54,6 +54,9 @@ public slots:
     static void newWindow();
     void closeTab(int index = -1);
 
+    void save();
+    void saveAs();
+
     void refresh();
     void cancel();
 

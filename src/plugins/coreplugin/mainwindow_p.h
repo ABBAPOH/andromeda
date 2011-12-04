@@ -119,6 +119,9 @@ public:
     QAction *newTabAction;
     QAction *closeTabAction;
 
+    QAction *saveAction;
+    QAction *saveAsAction;
+
     QAction *undoAction;
     QAction *redoAction;
 
@@ -139,6 +142,8 @@ public slots:
     void onUrlChanged(const QUrl &);
     void onCurrentChanged(int);
     void onChanged();
+
+    void onCapabilitiesChanged(GuiSystem::AbstractEditor::Capabilities capabilities);
 };
 
 } // namespace CorePlugin
