@@ -17,6 +17,9 @@ public:
 
     Capabilities capabilities() const;
 
+    bool isModified() const;
+    bool isReadOnly() const;
+
     QUrl url() const;
 
     QIcon icon() const;
@@ -35,6 +38,8 @@ public slots:
     void cancel();
     void refresh();
 
+    void save(const QUrl &url = QUrl());
+
 private slots:
     void onUrlChanged(const QUrl &url);
     void onIndexChanged(int index);
@@ -42,6 +47,8 @@ private slots:
 
 private:
     StackedEditorPrivate *d;
+
+    friend class StackedEditorPrivate;
 };
 
 } // namespace GuiSystem
