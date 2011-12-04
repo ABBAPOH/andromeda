@@ -9,6 +9,7 @@
 #include <QtWebKit/QWebHistory>
 
 #include <guisystem/findtoolbar.h>
+#include <coreplugin/constants.h>
 
 using namespace GuiSystem;
 using namespace WebViewPlugin;
@@ -151,6 +152,14 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     QAction *findAction = new QAction(tr("Find"), this);
     connect(findAction, SIGNAL(triggered()), m_findToolBar, SLOT(openFind()));
     addAction(findAction, "Actions.Find");
+
+    addAction(m_webView->pageAction(QWebPage::Redo), Constants::Actions::Redo);
+    addAction(m_webView->pageAction(QWebPage::Undo), Constants::Actions::Undo);
+
+    addAction(m_webView->pageAction(QWebPage::Cut), Constants::Actions::Cut);
+    addAction(m_webView->pageAction(QWebPage::Copy), Constants::Actions::Copy);
+    addAction(m_webView->pageAction(QWebPage::Paste), Constants::Actions::Paste);
+    addAction(m_webView->pageAction(QWebPage::SelectAll), Constants::Actions::SelectAll);
 }
 
 WebViewEditor::~WebViewEditor()
