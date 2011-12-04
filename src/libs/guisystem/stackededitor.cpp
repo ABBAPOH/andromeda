@@ -34,6 +34,11 @@ void StackedEditorPrivate::setEditor(AbstractEditor *e)
     QObject::connect(editor, SIGNAL(loadStarted()), q, SIGNAL(loadStarted()));
     QObject::connect(editor, SIGNAL(loadProgress(int)), q, SIGNAL(loadProgress(int)));
     QObject::connect(editor, SIGNAL(loadFinished(bool)), q, SIGNAL(loadFinished(bool)));
+
+    QObject::connect(editor, SIGNAL(capabilitiesChanged(Capabilities)),
+                     q, SIGNAL(capabilitiesChanged(Capabilities)));
+
+    emit q->capabilitiesChanged(e->capabilities());
 }
 
 void StackedEditorPrivate::addItem(AbstractEditor *e)
@@ -106,7 +111,26 @@ StackedEditor::~StackedEditor()
 */
 AbstractEditor::Capabilities StackedEditor::capabilities() const
 {
+    if (d->editor)
+        return d->editor->capabilities() | HasHistory;
+
     return HasHistory;
+}
+
+bool StackedEditor::isModified() const
+{
+    if (d->editor)
+        return d->editor->isModified();
+
+    return AbstractEditor::isModified();
+}
+
+bool StackedEditor::isReadOnly() const
+{
+    if (d->editor)
+        return d->editor->isReadOnly();
+
+    return AbstractEditor::isReadOnly();
 }
 
 /*!
@@ -179,6 +203,14 @@ void StackedEditor::refresh()
 {
     if (d->editor)
         d->editor->refresh();
+}
+
+void StackedEditor::save(const QUrl &url)
+{
+    if (d->editor) {
+        if (d->editor->capabilities() & CanSave)
+            d->editor->save(url);
+    }
 }
 
 /*!
