@@ -1,9 +1,11 @@
 #include "webvieweditor.h"
 #include "webvieweditor_p.h"
 
+#include <QtCore/QFile>
 #include <QtGui/QAction>
 #include <QtGui/QVBoxLayout>
 
+#include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebHistory>
 
 #include <guisystem/findtoolbar.h>
@@ -158,7 +160,9 @@ WebViewEditor::~WebViewEditor()
 
 AbstractEditor::Capabilities WebViewEditor::capabilities() const
 {
-    return AbstractEditor::Capabilities(AbstractEditor::HasHistory | AbstractEditor::HasFind);
+    return AbstractEditor::Capabilities(AbstractEditor::HasHistory |
+                                        AbstractEditor::HasFind |
+                                        AbstractEditor::CanSave);
 }
 
 void WebViewEditor::open(const QUrl &url)
@@ -189,6 +193,18 @@ void WebViewEditor::refresh()
 void WebViewEditor::cancel()
 {
     m_webView->stop();
+}
+
+void WebViewEditor::save(const QUrl &url)
+{
+    QString html = m_webView->page()->mainFrame()->toHtml();
+    if (url.scheme() == QLatin1String("file")) {
+        QFile file(url.path());
+        if (!file.open(QFile::WriteOnly | QFile::Text))
+            return;
+
+        file.write(html.toUtf8());
+    }
 }
 
 void WebViewEditor::onUrlClicked(const QUrl &url)
