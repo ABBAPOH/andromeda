@@ -3,6 +3,7 @@ include( ${QT_USE_FILE} )
 
 set( HEADERS
     appearancesettings.h
+    cookiejar.h
     proxysettings.h
     webviewplugin_global.h
     webvieweditor.h
@@ -12,6 +13,7 @@ set( HEADERS
 )
 set( SOURCES
     appearancesettings.cpp
+    cookiejar.cpp
     proxysettings.cpp
     webvieweditor.cpp
     webviewplugin.cpp
