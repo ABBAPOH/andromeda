@@ -26,8 +26,9 @@ const char * const SortBy = "Menus.SortBy";
 namespace MenuGroups {
 
 const char * const FileNew = "MenuGroups:1.File.New";
-const char * const FileInfo = "MenuGroups:2.File.Info";
-const char * const FileChange = "MenuGroups:3.File.Change";
+const char * const FileSave = "MenuGroups:2.File.Save";
+const char * const FileInfo = "MenuGroups:3.File.Info";
+const char * const FileChange = "MenuGroups:4.File.Change";
 const char * const FileQuit = "MenuGroups:4.File.Quit";
 
 const char * const EditRedo = "MenuGroups:1.Edit.Redo";
@@ -55,6 +56,9 @@ const char * const CloseTab = "Actions:6.CloseTab";
 const char * const Rename = "Actions:7.Rename";
 const char * const Remove = "Actions:8.Remove";
 const char * const Exit = "Actions:9.Exit";
+
+const char * const Save = "Actions.Save";
+const char * const SaveAs = "Actions.SaveAs";
 
 const char * const Undo = "Actions.Undo";
 const char * const Redo = "Actions.Redo";

@@ -215,6 +215,17 @@ void CorePluginImpl::createFileMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
+    // ================ File Menu (Save) ================
+    container->addGroup(group = Constants::MenuGroups::FileSave);
+
+    cmd = new Command(Constants::Actions::Save, QKeySequence::Save, tr("Save"), this);
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::SaveAs, QKeySequence::SaveAs, tr("Save as..."), this);
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, group);
+
 //#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
     container->addGroup(group = Constants::MenuGroups::FileQuit);
