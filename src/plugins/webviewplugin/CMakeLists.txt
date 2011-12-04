@@ -4,6 +4,7 @@ include( ${QT_USE_FILE} )
 set( HEADERS
     appearancesettings.h
     cookiejar.h
+    cookiedialog.h
     cookiemodel.h
     cookieexceptionsmodel.h
     proxysettings.h
@@ -16,6 +17,7 @@ set( HEADERS
 set( SOURCES
     appearancesettings.cpp
     cookiejar.cpp
+    cookiedialog.cpp
     cookiemodel.cpp
     cookieexceptionsmodel.cpp
     proxysettings.cpp
@@ -25,6 +27,7 @@ set( SOURCES
    )
 set( FORMS
     appearancesettings.ui
+    cookiedialog.ui
     proxysettings.ui
    )
 
