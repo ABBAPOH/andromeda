@@ -146,6 +146,15 @@ void FindToolBar::replaceAll()
         d->find->replaceAll(findString(), replaceString(), currentFlags());
 }
 
+/*!
+  \brief Opens find toolbar - toolbar becomes visible and find lineedit gets focus.
+*/
+void FindToolBar::openFind()
+{
+    setVisible(true);
+    d->findLineEdit->setFocus();
+}
+
 #include "actionmanager.h"
 void FindToolBar::setupActions()
 {
