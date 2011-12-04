@@ -6,6 +6,7 @@ set( HEADERS
     cookiejar.h
     cookiedialog.h
     cookiemodel.h
+    cookieexceptionsdialog.h
     cookieexceptionsmodel.h
     proxysettings.h
     webviewplugin_global.h
@@ -19,6 +20,7 @@ set( SOURCES
     cookiejar.cpp
     cookiedialog.cpp
     cookiemodel.cpp
+    cookieexceptionsdialog.cpp
     cookieexceptionsmodel.cpp
     proxysettings.cpp
     webvieweditor.cpp
@@ -28,6 +30,7 @@ set( SOURCES
 set( FORMS
     appearancesettings.ui
     cookiedialog.ui
+    cookieexceptionsdialog.ui
     proxysettings.ui
    )
 

@@ -42,6 +42,8 @@ private:
     QStringList m_allowedCookies;
     QStringList m_blockedCookies;
     QStringList m_sessionCookies;
+
+    friend class CookieExceptionsDialog;
 };
 
 #endif // COOKIEEXCEPTIONSMODEL_H
