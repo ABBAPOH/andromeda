@@ -23,6 +23,7 @@ set( HEADERS
     navigationmodel.h
     navigationmodel_p.h
     navigationpanel.h
+    navigationpanel_p.h
    )
 set( SOURCES
     dualpanewidget.cpp
