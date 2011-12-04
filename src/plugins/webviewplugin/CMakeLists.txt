@@ -5,6 +5,7 @@ set( HEADERS
     appearancesettings.h
     cookiejar.h
     cookiemodel.h
+    cookieexceptionsmodel.h
     proxysettings.h
     webviewplugin_global.h
     webvieweditor.h
@@ -16,6 +17,7 @@ set( SOURCES
     appearancesettings.cpp
     cookiejar.cpp
     cookiemodel.cpp
+    cookieexceptionsmodel.cpp
     proxysettings.cpp
     webvieweditor.cpp
     webviewplugin.cpp
