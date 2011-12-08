@@ -1,12 +1,14 @@
 #ifndef STACKEDEDITOR_H
 #define STACKEDEDITOR_H
 
+#include "guisystem_global.h"
+
 #include "abstracteditor.h"
 
 namespace GuiSystem {
 
 class StackedEditorPrivate;
-class StackedEditor : public AbstractEditor
+class GUISYSTEM_EXPORT StackedEditor : public AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(StackedEditor)
