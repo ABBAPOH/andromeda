@@ -1,13 +1,15 @@
 #ifndef FINDTOOLBAR_H
 #define FINDTOOLBAR_H
 
+#include "guisystem_global.h"
+
 #include <QtGui/QToolBar>
 #include "ifind.h"
 
 namespace GuiSystem {
 
 class FindToolBarPrivate;
-class FindToolBar : public QWidget
+class GUISYSTEM_EXPORT FindToolBar : public QWidget
 {
     Q_OBJECT
     Q_DISABLE_COPY(FindToolBar)
