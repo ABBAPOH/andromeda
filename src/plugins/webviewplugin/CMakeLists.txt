@@ -2,6 +2,7 @@ set( QT_USE_QTWEBKIT TRUE )
 include( ${QT_USE_FILE} )
 
 set( HEADERS
+    appearancesettings.h
     webviewplugin_global.h
     webvieweditor.h
     webvieweditor_p.h
@@ -9,11 +10,13 @@ set( HEADERS
     webviewsettingspage.h
 )
 set( SOURCES
+    appearancesettings.cpp
     webvieweditor.cpp
     webviewplugin.cpp
     webviewsettingspage.cpp
    )
 set( FORMS
+    appearancesettings.ui
    )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
