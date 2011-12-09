@@ -8,6 +8,7 @@ set( HEADERS
     cookiemodel.h
     cookieexceptionsdialog.h
     cookieexceptionsmodel.h
+    privacysettings.h
     proxysettings.h
     webviewplugin_global.h
     webvieweditor.h
@@ -22,6 +23,7 @@ set( SOURCES
     cookiemodel.cpp
     cookieexceptionsdialog.cpp
     cookieexceptionsmodel.cpp
+    privacysettings.cpp
     proxysettings.cpp
     webvieweditor.cpp
     webviewplugin.cpp
@@ -31,6 +33,7 @@ set( FORMS
     appearancesettings.ui
     cookiedialog.ui
     cookieexceptionsdialog.ui
+    privacysettings.ui
     proxysettings.ui
    )
 
