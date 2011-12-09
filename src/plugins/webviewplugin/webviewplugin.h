@@ -11,6 +11,9 @@ class WebViewPluginImpl : public ExtensionSystem::IPlugin
     Q_OBJECT
 public:
     WebViewPluginImpl();
+    ~WebViewPluginImpl();
+
+    static WebViewPluginImpl *instance();
 
     bool initialize(const QVariantMap &);
     void shutdown();
@@ -18,10 +21,13 @@ public:
 private:
     void loadSettings();
     void loadAppearanceSettings();
+    void loadProxySettings();
 
 private:
     QWebSettings *m_webSettings;
     QSettings *m_settings;
+
+    friend class ProxySettingsWidget;
 };
 
 #endif // WEBVIEWPLUGINIMPL_H
