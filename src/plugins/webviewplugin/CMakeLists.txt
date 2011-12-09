@@ -3,6 +3,7 @@ include( ${QT_USE_FILE} )
 
 set( HEADERS
     appearancesettings.h
+    proxysettings.h
     webviewplugin_global.h
     webvieweditor.h
     webvieweditor_p.h
@@ -11,12 +12,14 @@ set( HEADERS
 )
 set( SOURCES
     appearancesettings.cpp
+    proxysettings.cpp
     webvieweditor.cpp
     webviewplugin.cpp
     webviewsettingspage.cpp
    )
 set( FORMS
     appearancesettings.ui
+    proxysettings.ui
    )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
