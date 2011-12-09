@@ -8,6 +8,7 @@
 #include <coreplugin/settingspagemanager.h>
 
 #include "appearancesettings.h"
+#include "cookiejar.h"
 #include "proxysettings.h"
 #include "webvieweditor.h"
 #include "webviewsettingspage.h"
@@ -43,11 +44,14 @@ WebViewPluginImpl * WebViewPluginImpl::instance()
 bool WebViewPluginImpl::initialize(const QVariantMap &)
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
+
     pageManager->addPage(new WebViewSettingsPage(this));
     pageManager->addPage(new AppearanceSettingsPage(this));
     pageManager->addPage(new ProxySettingsPage(this));
 
     EditorManager::instance()->addFactory(new WebViewEditorFactory(this));
+
+    m_cookieJar = new CookieJar(this);
 
     loadSettings();
 
