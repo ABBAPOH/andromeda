@@ -11,6 +11,9 @@
 #include <guisystem/findtoolbar.h>
 #include <coreplugin/constants.h>
 
+#include "cookiejar.h"
+#include "webviewplugin.h"
+
 using namespace GuiSystem;
 using namespace WebViewPlugin;
 
@@ -132,7 +135,11 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_findToolBar->hide();
     m_layout->addWidget(m_findToolBar);
 
+    CookieJar *jar = WebViewPluginImpl::instance()->cookieJar();
+
     m_webView = new QWebView(this);
+    m_webView->page()->networkAccessManager()->setCookieJar(jar);
+    jar->setParent(WebViewPluginImpl::instance());
     m_layout->addWidget(m_webView);
 
     m_history = new WebViewHistory(this);
