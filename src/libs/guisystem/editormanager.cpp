@@ -239,7 +239,8 @@ QString EditorManager::getMimeType(const QUrl &url) const
         QFileInfo info(url.toLocalFile());
         if (info.isDir() && !info.isBundle())
             return QLatin1String("inode/directory");
-    } else if(url.scheme() == QLatin1String("http")) {
+    } else if(url.scheme() == QLatin1String("http") ||
+              url.scheme() == QLatin1String("https")) {
         return QLatin1String("text/html");
     }
     return QString();
