@@ -11,6 +11,9 @@
 
 using namespace Bookmarks;
 
+static const qint32 bookmarksMagic = 0x62303773; // "b07s"
+static const qint8 bookmarksVersion = 1;
+
 QModelIndex BookmarksModelPrivate::index(TreeItem *item) const
 {
     return q_func()->createIndex(item->row(), 0, item);
@@ -620,6 +623,18 @@ bool BookmarksModel::loadBookmarks(const QString &file)
 bool BookmarksModel::loadBookmarks(QIODevice *device)
 {
     QDataStream s(device);
+
+    qint32 magic;
+    qint8 version;
+
+    s >> magic;
+    if (magic != bookmarksMagic)
+        return false;
+
+    s >> version;
+    if (version != bookmarksVersion)
+        return false;
+
     d_func()->readItems(s);
     reset();
     return true;
@@ -648,6 +663,9 @@ bool BookmarksModel::saveBookmarks(const QString &file) const
 bool BookmarksModel::saveBookmarks(QIODevice *device) const
 {
     QDataStream s(device);
+
+    s << bookmarksMagic;
+    s << bookmarksVersion;
     d_func()->writeItems(s);
 
     return true;
