@@ -95,17 +95,17 @@ void MainWindowPrivate::setupActions()
     createAction(selectAllAction, tr("Select All"), Constants::Actions::SelectAll, lineEdit, SLOT(selectAll()));
 
     // ToolBar
-    backAction = new QAction(QIcon(":/images/icons/back.png"), tr("Back"), this);
+    backAction = new QAction(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")), tr("Back"), this);
     connect(backAction, SIGNAL(triggered()), q, SLOT(back()));
     q->addAction(backAction);
     actionManager->registerAction(backAction, Constants::Actions::Back);
 
-    forwardAction = new QAction(QIcon(":/images/icons/forward.png"), tr("Forward"), this);
+    forwardAction = new QAction(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")), tr("Forward"), this);
     connect(forwardAction, SIGNAL(triggered()), q, SLOT(forward()));
     q->addAction(forwardAction);
     actionManager->registerAction(forwardAction, Constants::Actions::Forward);
 
-    upAction = new QAction(QIcon(":/images/icons/up.png"), tr("Up one level"), this);
+    upAction = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), this);
     connect(upAction, SIGNAL(triggered()), q, SLOT(up()));
     q->addAction(upAction);
     actionManager->registerAction(upAction, Constants::Actions::Up);
