@@ -28,6 +28,9 @@ struct Node
     {
         if (parent)
             parent->children.removeAll(this);
+
+        // Copy list to prevent modifying it while deleting children
+        QList<Node *> children = this->children;
         qDeleteAll(children);
     }
 
