@@ -599,7 +599,6 @@ void FileManagerEditor::selectProgram()
 void FileManagerEditor::setupUi()
 {
     ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
-    FileSystemManager *manager = pm->object<FileSystemManager>("fileSystemManager");
     NavigationModel *model = pm->object<NavigationModel>("navigationModel");
     connect(model, SIGNAL(pathsDropped(QString,QStringList,Qt::DropAction)),
             SLOT(onPathsDropped(QString,QStringList,Qt::DropAction)));
@@ -607,7 +606,6 @@ void FileManagerEditor::setupUi()
     splitter = new MiniSplitter(this);
 
     m_widget = new DualPaneWidget(splitter);
-    m_widget->setFileSystemManager(manager);
     m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
     m_widget->setFocus();
 

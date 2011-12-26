@@ -21,7 +21,6 @@ class FileCopyDialog : public QDialog
     Q_DECLARE_PRIVATE(FileCopyDialog)
 public:
     explicit FileCopyDialog(QWidget *parent = 0);
-    explicit FileCopyDialog(FileSystemManager *manager, QWidget *parent = 0);
     ~FileCopyDialog();
 
     FileSystemManager *fileSystemManager() const;

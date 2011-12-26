@@ -86,6 +86,8 @@ public:
     explicit FileSystemManager(QObject *parent = 0);
     ~FileSystemManager();
 
+    static FileSystemManager *instance();
+
     int copy(const QStringList &files, const QString &destination);
     int move(const QStringList &files, const QString &destination);
     int link(const QStringList &files, const QString &destination);

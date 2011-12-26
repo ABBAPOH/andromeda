@@ -37,8 +37,6 @@ public:
     bool dualPaneModeEnabled() const;
     FileManagerWidget::ViewMode viewMode() const;
 
-    void setFileSystemManager(FileSystemManager *manager);
-
     FileManagerWidget::Column sortingColumn() const;
     void setSortingColumn(FileManagerWidget::Column column);
 

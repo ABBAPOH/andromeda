@@ -240,6 +240,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     model->setFilter(mBaseFilters);
     model->setReadOnly(false);
     d->setModel(model);
+    d->setFileSystemManager(FileSystemManager::instance());
 
 //    ((QTreeView*)d->views[FileManagerWidget::TableView])->setColumnWidth(0, 250);
     ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
@@ -457,16 +458,6 @@ FileSystemManager * FileManagerWidget::fileSystemManager() const
     }
 
     return d->fileSystemManager;
-}
-
-void FileManagerWidget::setFileSystemManager(FileSystemManager *manager)
-{
-    Q_D(FileManagerWidget);
-
-    if (!d->fileSystemManager) {
-        d->model->setFileSystemManager(manager);
-        d->setFileSystemManager(manager);
-    }
 }
 
 History * FileManagerWidget::history() const

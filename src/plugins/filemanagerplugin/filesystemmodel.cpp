@@ -12,17 +12,13 @@ Q_GLOBAL_STATIC(FileImageProvider, imageProvider)
 
 FileSystemModel::FileSystemModel(QObject *parent) :
     QFileSystemModel(parent),
-    m_manager(0)
+    m_manager(FileSystemManager::instance())
 {
     setObjectName("FileSystemModel");
 }
 
 FileSystemManager * FileSystemModel::fileSystemManager() const
 {
-    if (!m_manager) {
-        FileSystemModel *self = const_cast<FileSystemModel*>(this);
-        self->m_manager = new FileSystemManager(self);
-    }
     return m_manager;
 }
 

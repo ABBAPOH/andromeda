@@ -140,19 +140,8 @@ FileCopyDialog::FileCopyDialog(QWidget *parent) :
     d->ui = new Ui::FileCopyDialog;
     d->ui->setupUi(this);
     d->manager = 0;
-}
 
-FileCopyDialog::FileCopyDialog(FileSystemManager *manager, QWidget *parent) :
-    QDialog(parent),
-    d_ptr(new FileCopyDialogPrivate(this))
-{
-    Q_D(FileCopyDialog);
-
-    d->ui = new Ui::FileCopyDialog;
-    d->ui->setupUi(this);
-    d->manager = 0;
-
-    setFileSystemManager(manager);
+    setFileSystemManager(FileSystemManager::instance());
 }
 
 FileCopyDialog::~FileCopyDialog()
