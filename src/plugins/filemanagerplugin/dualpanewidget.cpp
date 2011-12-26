@@ -152,15 +152,6 @@ FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
     return d_func()->viewMode;
 }
 
-void DualPaneWidget::setFileSystemManager(FileSystemManager *manager)
-{
-    Q_D(DualPaneWidget);
-
-    d->panes[LeftPane]->setFileSystemManager(manager);
-    if (d->panes[RightPane])
-        d->panes[RightPane]->setFileSystemManager(manager);
-}
-
 FileManagerWidget::Column DualPaneWidget::sortingColumn() const
 {
     return activeWidget()->sortingColumn();
@@ -397,7 +388,6 @@ void DualPaneWidget::createRightPane()
 
     d->panes[RightPane]->hide();
     d->panes[RightPane]->setViewMode(FileManagerWidget::TableView);
-    d->panes[RightPane]->setFileSystemManager(d->panes[LeftPane]->fileSystemManager());
     d->layout->addWidget(d->panes[RightPane]);
 
     swapPalettes(d->panes[LeftPane], d->panes[RightPane]);

@@ -74,7 +74,6 @@ public:
     void setViewMode(ViewMode mode);
 
     FileSystemManager *fileSystemManager() const;
-    void setFileSystemManager(FileSystemManager *manager);
 
     GuiSystem::History *history() const;
 

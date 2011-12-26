@@ -197,6 +197,12 @@ FileSystemManager::~FileSystemManager()
     delete d_ptr;
 }
 
+Q_GLOBAL_STATIC(FileSystemManager, staticManager)
+FileSystemManager *FileSystemManager::instance()
+{
+    return staticManager();
+}
+
 int FileSystemManager::copy(const QStringList &files, const QString &destination)
 {
     Q_D(FileSystemManager);
