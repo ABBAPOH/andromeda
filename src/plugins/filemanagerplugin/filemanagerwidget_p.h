@@ -5,6 +5,7 @@
 
 #include <QtCore/QMimeData>
 #include <QtCore/QUrl>
+#include <QtGui/QActionGroup>
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QColumnView>
@@ -25,12 +26,13 @@ class FileManagerWidgetPrivate : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PUBLIC(FileManagerWidget)
-    FileManagerWidget *q_ptr;
 
 public:
     FileManagerWidgetPrivate(FileManagerWidget *qq) : QObject(), q_ptr(qq) {}
 
     void setupUi();
+    void createActions();
+    void retranslateUi();
     void initViews();
 
     void setFileSystemManager(FileSystemManager *manager);
@@ -40,10 +42,19 @@ public:
     QModelIndexList selectedIndexes() const;
     void updateSorting();
 
+    void registerAction(QAction *action, const QByteArray &id);
+
 public slots:
     void onDoubleClick(const QModelIndex &index);
     void onCurrentItemIndexChanged(int index);
     void onSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
+
+    void openNewTab();
+    void openNewWindow();
+    void toggleViewMode(bool);
+    void toggleSortColumn(bool);
+    void toggleSortOrder(bool descending);
+    void onSelectionChanged();
 
 public:
     FileManagerWidget::ViewMode viewMode;
@@ -64,6 +75,14 @@ public:
 
     FileManagerWidget::Column sortingColumn;
     Qt::SortOrder sortingOrder;
+
+    QAction *actions[FileManagerWidget::ActionCount];
+
+    QActionGroup *viewModeGroup;
+    QActionGroup *sortByGroup;
+
+private:
+    FileManagerWidget *q_ptr;
 };
 
 } // namespace FileManagerPlugin

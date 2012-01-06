@@ -4,9 +4,9 @@
 #include <guisystem/abstracteditor.h>
 #include <guisystem/abstracteditorfactory.h>
 
+#include "filemanagerwidget.h"
+
 class MiniSplitter;
-class QActionGroup;
-class QSignalMapper;
 
 namespace CorePlugin {
 class Settings;
@@ -14,6 +14,7 @@ class Settings;
 
 namespace FileManagerPlugin {
 
+class FileManagerWidget;
 class DualPaneWidget;
 class NavigationPanel;
 class FileManagerHistory;
@@ -21,8 +22,6 @@ class FileManagerHistory;
 class FileManagerEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
-
-    Q_PROPERTY(int viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
     enum ViewMode {
@@ -49,13 +48,6 @@ public:
     void restoreDefaults();
     void restoreState(const QByteArray &state);
     QByteArray saveState() const;
-//    void restoreSession(QSettings &s);
-//    void saveSession(QSettings &s);
-
-    int viewMode() const;
-
-signals:
-    void viewModeChanged(int);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -63,33 +55,19 @@ protected:
 private slots:
     void onCurrentPathChanged(const QString &path);
     void onOpenRequested(const QString &path);
-    void onCustomContextMenuRequested(const QPoint &pos);
-    void setViewMode(int);
-    void onViewModeChanged();
-    void setAndSaveViewMode(int);
-    void setSortColumn(int);
-    void setSortOrder(bool);
+    void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
     void showLeftPanel(bool);
-    void showFileInfo();
-    void onSelectedPathsChanged();
     void onSplitterMoved(int,int);
     void onPathsDropped(const QString &, const QStringList &, Qt::DropAction);
-    void openNewTab();
-    void openNewWindow();
-    void selectProgram();
+    void openNewTab(const QStringList &paths);
+    void openNewWindow(const QStringList &paths);
 
 private:
     void setupUi();
     void setupConnections();
     void setupSettings();
-    QAction * createAction(const QString &text, const QByteArray &id,
-                           const char *slot, bool checkable = false);
-    QAction * createViewAction(const QString &text, const QByteArray &id, int mode);
-    QAction * createSortByAction(const QString &text, const QByteArray &id, int mode);
     void createActions();
-    void createViewActions();
-    void createSortByActions();
 
 private:
     MiniSplitter *splitter;
@@ -99,43 +77,8 @@ private:
 
     CorePlugin::Settings *m_settings;
 
-    QAction *openAction;
-    QAction *openNewTabAction;
-    QAction *openNewWindowAction;
-    QAction *selectProgramAction;
-    QAction *newFolderAction;
-    QAction *renameAction;
-    QAction *removeAction;
-    QAction *showFileInfoAction;
-
-    QAction *undoAction;
-    QAction *redoAction;
-    QAction *cutAction;
-    QAction *copyAction;
-    QAction *pasteAction;
-    QAction *selectAllAction;
-
-    QAction *showHiddenFilesAction;
     QAction *showLeftPanelAction;
 
-    QSignalMapper *viewModeMapper;
-
-    QActionGroup *viewModeGroup;
-    QAction *iconModeAction;
-    QAction *columnModeAction;
-    QAction *treeModeAction;
-    QAction *coverFlowModeAction;
-    QAction *dualPaneModeAction;
-
-    QSignalMapper *sortByMapper;
-
-    QActionGroup *sortByGroup;
-    QAction *sortByNameAction;
-    QAction *sortBySizeAction;
-    QAction *sortByTypeAction;
-    QAction *sortByDateAction;
-
-    QAction *sortByDescendingOrderAction;
     bool ignoreSignals;
 };
 

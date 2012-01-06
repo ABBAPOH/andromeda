@@ -3,6 +3,7 @@ set( GLOBAL_HEADER FilemanagerPlugin )
 set( HEADERS
     filemanagerplugin_global.h
     dualpanewidget.h
+    dualpanewidget_p.h
     filecopyerrordialog.h
     filecopyreplacedialog.h
 #    filecopytask.h

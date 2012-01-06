@@ -2,9 +2,20 @@
 #include "filemanagerwidget_p.h"
 
 #include <QtCore/QBuffer>
-#include <QtGui/QKeyEvent>
+#include <QtCore/QProcess>
+#include <QtCore/QSettings>
 #include <QtGui/QAction>
+#include <QtGui/QHeaderView>
+#include <QtGui/QFileDialog>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QMenu>
+#include <QtGui/QMessageBox>
+
+#include <guisystem/actionmanager.h>
 #include <widgets/coverflow.h>
+#include <coreplugin/constants.h>
+
+#include "fileinfodialog.h"
 
 using namespace GuiSystem;
 using namespace FileManagerPlugin;
@@ -21,6 +32,167 @@ void FileManagerWidgetPrivate::setupUi()
     q->setLayout(layout);
     q->setFocusPolicy(Qt::StrongFocus);
     q->setMinimumSize(200, 200);
+
+    createActions();
+    retranslateUi();
+}
+
+void FileManagerWidgetPrivate::createActions()
+{
+    Q_Q(FileManagerWidget);
+
+    actions[FileManagerWidget::Open] = new QAction(this);
+    actions[FileManagerWidget::Open]->setEnabled(false);
+    connect(actions[FileManagerWidget::Open], SIGNAL(triggered()), q, SLOT(open()));
+
+    actions[FileManagerWidget::OpenInTab] = new QAction(this);
+    actions[FileManagerWidget::OpenInTab]->setEnabled(false);
+    connect(actions[FileManagerWidget::OpenInTab], SIGNAL(triggered()), this, SLOT(openNewTab()));
+
+    actions[FileManagerWidget::OpenInWindow] = new QAction(this);
+    actions[FileManagerWidget::OpenInWindow]->setEnabled(false);
+    connect(actions[FileManagerWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
+
+    actions[FileManagerWidget::SelectProgram] = new QAction(this);
+    connect(actions[FileManagerWidget::SelectProgram], SIGNAL(triggered()), q, SLOT(selectProgram()));
+
+    actions[FileManagerWidget::NewFolder] = new QAction(this);
+    connect(actions[FileManagerWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
+
+    actions[FileManagerWidget::Rename] = new QAction(this);
+    actions[FileManagerWidget::Rename]->setEnabled(false);
+    connect(actions[FileManagerWidget::Rename], SIGNAL(triggered()), q, SLOT(rename()));
+
+    actions[FileManagerWidget::Remove] = new QAction(this);
+    actions[FileManagerWidget::Remove]->setEnabled(false);
+    connect(actions[FileManagerWidget::Remove], SIGNAL(triggered()), q, SLOT(remove()));
+
+    actions[FileManagerWidget::ShowFileInfo] = new QAction(this);
+    connect(actions[FileManagerWidget::ShowFileInfo], SIGNAL(triggered()), q, SLOT(showFileInfo()));
+
+    actions[FileManagerWidget::Redo] = new QAction(this);
+    actions[FileManagerWidget::Redo]->setEnabled(false);
+    connect(actions[FileManagerWidget::Redo], SIGNAL(triggered()), q, SLOT(redo()));
+    connect(q, SIGNAL(canRedoChanged(bool)), actions[FileManagerWidget::Redo], SLOT(setEnabled(bool)));
+
+    actions[FileManagerWidget::Undo] = new QAction(this);
+    actions[FileManagerWidget::Undo]->setEnabled(false);
+    connect(actions[FileManagerWidget::Undo], SIGNAL(triggered()), q, SLOT(undo()));
+    connect(q, SIGNAL(canUndoChanged(bool)), actions[FileManagerWidget::Undo], SLOT(setEnabled(bool)));
+
+    actions[FileManagerWidget::Cut] = new QAction(this);
+    actions[FileManagerWidget::Cut]->setEnabled(false);
+//    connect(actions[FileManagerWidget::Cut], SIGNAL(triggered()), q, SLOT(cut()));
+
+    actions[FileManagerWidget::Copy] = new QAction(this);
+    connect(actions[FileManagerWidget::Copy], SIGNAL(triggered()), q, SLOT(copy()));
+
+    actions[FileManagerWidget::Paste] = new QAction(this);
+    connect(actions[FileManagerWidget::Paste], SIGNAL(triggered()), q, SLOT(paste()));
+
+    actions[FileManagerWidget::SelectAll] = new QAction(this);
+    connect(actions[FileManagerWidget::SelectAll], SIGNAL(triggered()), q, SLOT(selectAll()));
+
+    actions[FileManagerWidget::ShowHiddenFiles] = new QAction(this);
+    actions[FileManagerWidget::ShowHiddenFiles]->setCheckable(true);
+    connect(actions[FileManagerWidget::ShowHiddenFiles], SIGNAL(triggered(bool)), q, SLOT(showHiddenFiles(bool)));
+
+    viewModeGroup = new QActionGroup(this);
+
+    actions[FileManagerWidget::IconMode] = new QAction(this);
+    actions[FileManagerWidget::ColumnMode] = new QAction(this);
+    actions[FileManagerWidget::TreeMode] = new QAction(this);
+    actions[FileManagerWidget::CoverFlowMode] = new QAction(this);
+
+    actions[FileManagerWidget::IconMode]->setCheckable(true);
+    actions[FileManagerWidget::IconMode]->setChecked(true);
+    actions[FileManagerWidget::ColumnMode]->setCheckable(true);
+    actions[FileManagerWidget::TreeMode]->setCheckable(true);
+    actions[FileManagerWidget::CoverFlowMode]->setCheckable(true);
+
+    viewModeGroup->addAction(actions[FileManagerWidget::IconMode]);
+    viewModeGroup->addAction(actions[FileManagerWidget::ColumnMode]);
+    viewModeGroup->addAction(actions[FileManagerWidget::TreeMode]);
+    viewModeGroup->addAction(actions[FileManagerWidget::CoverFlowMode]);
+
+    actions[FileManagerWidget::IconMode]->setData(FileManagerWidget::IconView);
+    actions[FileManagerWidget::ColumnMode]->setData(FileManagerWidget::ColumnView);
+    actions[FileManagerWidget::TreeMode]->setData(FileManagerWidget::TreeView);
+    actions[FileManagerWidget::CoverFlowMode]->setData(FileManagerWidget::CoverFlow);
+
+    connect(actions[FileManagerWidget::IconMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::ColumnMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::TreeMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::CoverFlowMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
+
+    sortByGroup = new QActionGroup(this);
+
+    actions[FileManagerWidget::SortByName] = new QAction(this);
+    actions[FileManagerWidget::SortBySize] = new QAction(this);
+    actions[FileManagerWidget::SortByType] = new QAction(this);
+    actions[FileManagerWidget::SortByDate] = new QAction(this);
+    actions[FileManagerWidget::SortDescendingOrder] = new QAction(this);
+
+    actions[FileManagerWidget::SortByName]->setCheckable(true);
+    actions[FileManagerWidget::SortBySize]->setCheckable(true);
+    actions[FileManagerWidget::SortByType]->setCheckable(true);
+    actions[FileManagerWidget::SortByDate]->setCheckable(true);
+    actions[FileManagerWidget::SortDescendingOrder]->setCheckable(true);
+
+    actions[FileManagerWidget::SortByName]->setChecked(true);
+
+    sortByGroup->addAction(actions[FileManagerWidget::SortByName]);
+    sortByGroup->addAction(actions[FileManagerWidget::SortBySize]);
+    sortByGroup->addAction(actions[FileManagerWidget::SortByType]);
+    sortByGroup->addAction(actions[FileManagerWidget::SortByDate]);
+
+    actions[FileManagerWidget::SortByName]->setData(FileManagerWidget::NameColumn);
+    actions[FileManagerWidget::SortBySize]->setData(FileManagerWidget::SizeColumn);
+    actions[FileManagerWidget::SortByType]->setData(FileManagerWidget::TypeColumn);
+    actions[FileManagerWidget::SortByDate]->setData(FileManagerWidget::DateColumn);
+
+    connect(actions[FileManagerWidget::SortByName], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortBySize], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortByType], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortByDate], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortDescendingOrder], SIGNAL(toggled(bool)), SLOT(toggleSortOrder(bool)));
+
+    for (int i = 0; i < FileManagerWidget::ActionCount; i++) {
+        q->addAction(actions[i]);
+    }
+}
+
+void FileManagerWidgetPrivate::retranslateUi()
+{
+    actions[FileManagerWidget::Open]->setText(tr("Open"));
+    actions[FileManagerWidget::OpenInTab]->setText(tr("Open in new tab"));
+    actions[FileManagerWidget::OpenInWindow]->setText(tr("Open in new window"));
+
+    actions[FileManagerWidget::SelectProgram]->setText(tr("Select program..."));
+    actions[FileManagerWidget::NewFolder]->setText(tr("New Folder"));
+    actions[FileManagerWidget::Rename]->setText(tr("Rename"));
+    actions[FileManagerWidget::Remove]->setText(tr("Remove"));
+    actions[FileManagerWidget::ShowFileInfo]->setText(tr("File info"));
+
+    actions[FileManagerWidget::Redo]->setText(tr("Redo"));
+    actions[FileManagerWidget::Undo]->setText(tr("Undo"));
+    actions[FileManagerWidget::Cut]->setText(tr("Cut"));
+    actions[FileManagerWidget::Copy]->setText(tr("Copy"));
+    actions[FileManagerWidget::Paste]->setText(tr("Paste"));
+    actions[FileManagerWidget::SelectAll]->setText(tr("Select all"));
+
+    actions[FileManagerWidget::ShowHiddenFiles]->setText(tr("Show hidden files"));
+
+    actions[FileManagerWidget::IconMode]->setText(tr("Icon view"));
+    actions[FileManagerWidget::ColumnMode]->setText(tr("Column view"));
+    actions[FileManagerWidget::TreeMode]->setText(tr("Tree view"));
+    actions[FileManagerWidget::CoverFlowMode]->setText(tr("Cover flow"));
+
+    actions[FileManagerWidget::SortByName]->setText(tr("Sort by name"));
+    actions[FileManagerWidget::SortBySize]->setText(tr("Sort by size"));
+    actions[FileManagerWidget::SortByType]->setText(tr("Sort by type"));
+    actions[FileManagerWidget::SortByDate]->setText(tr("Sort by date"));
+    actions[FileManagerWidget::SortDescendingOrder]->setText(tr("Descending order"));
 }
 
 class ListView : public QListView
@@ -35,7 +207,6 @@ public:
     }
 };
 
-#include <QHeaderView>
 void FileManagerWidgetPrivate::initViews()
 {
     Q_Q(FileManagerWidget);
@@ -151,6 +322,7 @@ void FileManagerWidgetPrivate::setModel(FileSystemModel *m)
         connect(views[i]->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SIGNAL(selectedPathsChanged()));
     }
+    connect(q, SIGNAL(selectedPathsChanged()), SLOT(onSelectionChanged()));
 }
 
 QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
@@ -172,6 +344,11 @@ void FileManagerWidgetPrivate::updateSorting()
     view->sortByColumn(sortingColumn, sortingOrder);
 
     model->sort(sortingColumn, sortingOrder);
+}
+
+void FileManagerWidgetPrivate::registerAction(QAction *action, const QByteArray &id)
+{
+    GuiSystem::ActionManager::instance()->registerAction(action, id);
 }
 
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
@@ -223,6 +400,8 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 {
     Q_D(FileManagerWidget);
 
+    qRegisterMetaType<ViewMode>("ViewMode");
+
     d->setupUi();
 
     d->model = 0;
@@ -254,6 +433,16 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 FileManagerWidget::~FileManagerWidget()
 {
     delete d_ptr;
+}
+
+QAction * FileManagerWidget::action(Action action) const
+{
+    Q_D(const FileManagerWidget);
+
+    if (action <= NoAction || action >= ActionCount)
+        return 0;
+
+    return d->actions[action];
 }
 
 bool FileManagerWidget::canRedo() const
@@ -389,6 +578,11 @@ void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
 
     d->sortingColumn = column;
     d->updateSorting();
+
+    for (int i = NameColumn; i < ColumnCount; i++) {
+        d->actions[SortByName + i]->setChecked(column == NameColumn + i);
+    }
+
     emit sortingChanged();
 }
 
@@ -406,6 +600,9 @@ void FileManagerWidget::setSortingOrder(Qt::SortOrder order)
 
     d->sortingOrder = order;
     d->updateSorting();
+
+    d->actions[SortDescendingOrder]->setChecked(order == Qt::DescendingOrder);
+
     emit sortingChanged();
 }
 
@@ -429,7 +626,7 @@ FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
     return d->viewMode;
 }
 
-void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
+void FileManagerWidget::setViewMode(ViewMode mode)
 {
     Q_D(FileManagerWidget);
 
@@ -444,6 +641,11 @@ void FileManagerWidget::setViewMode(FileManagerWidget::ViewMode mode)
 
         QModelIndex index = d->model->index(d->currentPath);
         d->currentView->setRootIndex(index);
+
+        d->actions[IconMode]->setChecked(mode == IconView);
+        d->actions[ColumnMode]->setChecked(mode == ColumnView);
+        d->actions[TreeMode]->setChecked(mode == TreeView);
+        d->actions[CoverFlowMode]->setChecked(mode == CoverFlow);
 
         emit viewModeChanged(d->viewMode);
     }
@@ -545,6 +747,159 @@ void FileManagerWidget::open()
     }
 }
 
+void FileManagerWidget::selectProgram()
+{
+//    emit selectProgramRequested();
+    QSettings settings;
+    QString programsFolder;
+    QVariant value = settings.value(QLatin1String("filemanager/programsFolder"));
+    if (value.isValid()) {
+        programsFolder = value.toString();
+    } else {
+#if defined(Q_OS_MAC)
+        programsFolder = QLatin1String("/Applications");
+#elif defined(Q_OS_WIN)
+        programsFolder = QDriveInfo::rootDrive().rootPath() + QLatin1String("/Program Files");
+#elif defined(Q_OS_UNIX)
+        programsFolder = QLatin1String("/usr/bin");
+#endif
+    }
+
+#ifdef Q_OS_WIN
+    QString filter = tr("Programs (*.exe *.cmd *.com *.bat);;All files (*)");
+#else
+    QString filter;
+#endif;
+
+    QString programPath = QFileDialog::getOpenFileName(this, tr("Select program"), programsFolder, filter);
+    if (programPath.isEmpty())
+        return;
+
+    settings.setValue(QLatin1String("filemanager/programsFolder"), QFileInfo(programPath).absolutePath());
+
+    bool result = true;
+    QStringList failedPaths;
+    foreach (const QString path, selectedPaths()) {
+        QString program;
+        QStringList arguments;
+#if defined(Q_OS_MAC)
+        program = QLatin1String("open");
+        arguments << QLatin1String("-a") << programPath << path;
+#else
+        program = programPath;
+        arguments << path;
+#endif
+        bool r = QProcess::startDetached(program, arguments);
+        if (!r)
+            failedPaths.append(path);
+        result &= r;
+    }
+
+    if (!result) {
+        QMessageBox::warning(this,
+                             tr("Can't open files"),
+                             tr("Andromeda failed to open some files :%1").
+                             arg(failedPaths.join(QLatin1String("\n"))));
+    }
+}
+
+void FileManagerWidget::showFileInfo()
+{
+    QStringList paths = selectedPaths();
+    if (paths.isEmpty())
+        paths.append(currentPath());
+
+    foreach (const QString &path, paths) {
+        FileInfoDialog *dialog = new FileInfoDialog(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->setFileInfo(QFileInfo(path));
+        dialog->show();
+    }
+}
+
+void FileManagerWidgetPrivate::openNewTab()
+{
+    Q_Q(FileManagerWidget);
+
+    QStringList paths = q->selectedPaths();
+
+    if (!paths.isEmpty())
+        emit q->openNewTabRequested(paths);
+}
+
+void FileManagerWidgetPrivate::openNewWindow()
+{
+    Q_Q(FileManagerWidget);
+
+    QStringList paths = q->selectedPaths();
+
+    if (!paths.isEmpty())
+        emit q->openNewWindowRequested(paths);
+}
+
+void FileManagerWidgetPrivate::toggleViewMode(bool toggled)
+{
+    Q_Q(FileManagerWidget);
+
+    if (toggled) {
+        QAction *action = qobject_cast<QAction*>(sender());
+        if (action)
+            q->setViewMode((FileManagerWidget::ViewMode)action->data().toInt());
+    }
+}
+
+void FileManagerWidgetPrivate::toggleSortColumn(bool toggled)
+{
+    Q_Q(FileManagerWidget);
+
+    if (toggled) {
+        QAction *action = qobject_cast<QAction*>(sender());
+        if (action)
+            q->setSortingColumn((FileManagerWidget::Column)action->data().toInt());
+    }
+}
+
+void FileManagerWidgetPrivate::toggleSortOrder(bool descending)
+{
+    Q_Q(FileManagerWidget);
+
+    q->setSortingOrder(descending ? Qt::DescendingOrder : Qt::AscendingOrder);
+}
+
+/*!
+  \internal
+
+  Updates FileManager actions that depends on selection.
+*/
+void FileManagerWidgetPrivate::onSelectionChanged()
+{
+    Q_Q(FileManagerWidget);
+
+    QStringList paths = q->selectedPaths();
+    bool enabled = !paths.empty();
+
+    actions[FileManagerWidget::Open]->setEnabled(enabled);
+    actions[FileManagerWidget::OpenInTab]->setEnabled(enabled);
+    actions[FileManagerWidget::OpenInWindow]->setEnabled(enabled);
+    actions[FileManagerWidget::Rename]->setEnabled(enabled);
+    actions[FileManagerWidget::Remove]->setEnabled(enabled);
+//    actions[FileManagerWidget::Cut]->setEnabled(enabled);
+    actions[FileManagerWidget::Copy]->setEnabled(enabled);
+
+    if (!paths.isEmpty()) {
+        if (paths.size() == 1) {
+            actions[FileManagerWidget::Cut]->setText(tr("Cut \"%1\"").arg(QFileInfo(paths[0]).fileName()));
+            actions[FileManagerWidget::Copy]->setText(tr("Copy \"%1\"").arg(QFileInfo(paths[0]).fileName()));
+        } else {
+            actions[FileManagerWidget::Cut]->setText(tr("Cut %1 items").arg(paths.size()));
+            actions[FileManagerWidget::Copy]->setText(tr("Copy %1 items").arg(paths.size()));
+        }
+    } else {
+        actions[FileManagerWidget::Cut]->setText(tr("Cut"));
+        actions[FileManagerWidget::Copy]->setText(tr("Copy"));
+    }
+}
+
 void FileManagerWidget::remove()
 {
     fileSystemManager()->remove(selectedPaths());
@@ -634,6 +989,61 @@ void FileManagerWidget::showHiddenFiles(bool show)
         d->model->setFilter(mBaseFilters | QDir::Hidden);
     else
         d->model->setFilter(mBaseFilters);
+}
+
+/*!
+  \brief Shows FileManagerWidget's context menu.
+*/
+void FileManagerWidget::showContextMenu(QPoint pos)
+{
+    Q_D(FileManagerWidget);
+    QStringList paths = selectedPaths();
+
+    QMenu *menu = new QMenu;
+    if (paths.isEmpty()) {
+        menu->addAction(d->actions[NewFolder]);
+        menu->addSeparator();
+        menu->addAction(d->actions[ShowFileInfo]);
+        menu->addSeparator();
+        menu->addAction(d->actions[Paste]);
+        menu->addAction(d->actions[SelectAll]);
+        menu->addSeparator();
+        QMenu * viewModeMenu = menu->addMenu(tr("View Mode"));
+        viewModeMenu->addAction(d->actions[IconMode]);
+        viewModeMenu->addAction(d->actions[ColumnMode]);
+        viewModeMenu->addAction(d->actions[TreeMode]);
+        viewModeMenu->addAction(d->actions[CoverFlowMode]);
+        QMenu * sortByMenu = menu->addMenu(tr("Sort by"));
+        sortByMenu->addAction(d->actions[SortByName]);
+        sortByMenu->addAction(d->actions[SortByType]);
+        sortByMenu->addAction(d->actions[SortBySize]);
+        sortByMenu->addAction(d->actions[SortByDate]);
+        sortByMenu->addSeparator();
+        sortByMenu->addAction(d->actions[SortDescendingOrder]);
+    } else {
+        QMenu *openWithMenu = new QMenu(tr("Open with"), menu);
+        openWithMenu->addSeparator();
+        openWithMenu->addAction(d->actions[SelectProgram]);
+
+        menu->addAction(d->actions[Open]);
+        menu->addAction(d->actions[OpenInTab]);
+        menu->addAction(d->actions[OpenInWindow]);
+        menu->addMenu(openWithMenu);
+        menu->addSeparator();
+        menu->addAction(d->actions[ShowFileInfo]);
+        menu->addSeparator();
+        menu->addAction(d->actions[Rename]);
+        menu->addAction(d->actions[Remove]);
+        menu->addSeparator();
+        menu->addAction(d->actions[Copy]);
+    }
+    menu->exec(mapToGlobal(pos));
+    delete menu;
+}
+
+void FileManagerWidget::contextMenuEvent(QContextMenuEvent *e)
+{
+    showContextMenu(e->pos());
 }
 
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)
