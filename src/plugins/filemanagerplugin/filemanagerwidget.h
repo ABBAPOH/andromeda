@@ -3,8 +3,8 @@
 
 #include "filemanagerplugin_global.h"
 
-#include <QtGui/QWidget>
 #include <QtCore/QDir>
+#include <QtGui/QWidget>
 #include <guisystem/history.h>
 
 class QFileSystemModel;
@@ -37,14 +37,48 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
 public:
     enum ViewMode { IconView = 0, ColumnView, TableView, TreeView, CoverFlow, MaxViews };
     enum Flow { LeftToRight = 0, TopToBottom = 1 };
-    enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateColumn };
+    enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateColumn, ColumnCount };
+    enum Action { NoAction = -1,
+                  Open,
+                  OpenInTab,
+                  OpenInWindow,
+                  SelectProgram,
+                  NewFolder,
+                  Rename,
+                  Remove,
+                  ShowFileInfo,
+
+                  Redo,
+                  Undo,
+                  Cut,
+                  Copy,
+                  Paste,
+                  SelectAll,
+                  ShowHiddenFiles,
+
+                  IconMode,
+                  ColumnMode,
+                  TreeMode,
+                  CoverFlowMode,
+
+                  SortByName,
+                  SortBySize,
+                  SortByType,
+                  SortByDate,
+                  SortDescendingOrder,
+
+                  ActionCount
+                };
 
     Q_ENUMS(Flow)
     Q_ENUMS(ViewMode)
     Q_ENUMS(Column)
+    Q_ENUMS(Action)
 
     explicit FileManagerWidget(QWidget *parent = 0);
     ~FileManagerWidget();
+
+    QAction *action(Action action) const;
 
     bool canRedo() const;
     bool canUndo() const;
@@ -91,12 +125,16 @@ signals:
     void viewModeChanged(FileManagerWidget::ViewMode mode);
 
     void openRequested(const QString &path);
+    void openNewTabRequested(const QStringList &paths);
+    void openNewWindowRequested(const QStringList &paths);
 
 public slots:
     void setCurrentPath(const QString &path);
 
     void newFolder();
     void open();
+    void selectProgram();
+    void showFileInfo();
     void remove();
     void rename();
 
@@ -111,8 +149,10 @@ public slots:
     void up();
 
     void showHiddenFiles(bool show);
+    void showContextMenu(QPoint pos);
 
 protected:
+    void contextMenuEvent(QContextMenuEvent *);
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 

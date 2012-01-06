@@ -16,14 +16,50 @@ class FILEMANAGERPLUGIN_EXPORT DualPaneWidget : public QWidget
     Q_DECLARE_PRIVATE(DualPaneWidget)
     Q_PROPERTY(Pane activePane READ activePane WRITE setActivePane NOTIFY activePaneChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+    Q_PROPERTY(bool dualPaneModeEnabled READ dualPaneModeEnabled WRITE setDualPaneModeEnabled)
     Q_PROPERTY(FileManagerPlugin::FileManagerWidget::ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
     enum Pane { LeftPane = 0, RightPane = 1 };
+    enum Action { NoAction = -1,
+                  Open,
+                  OpenInTab,
+                  OpenInWindow,
+                  SelectProgram,
+                  NewFolder,
+                  Rename,
+                  Remove,
+                  ShowFileInfo,
+
+                  Redo,
+                  Undo,
+                  Cut,
+                  Copy,
+                  Paste,
+                  SelectAll,
+                  ShowHiddenFiles,
+
+                  IconMode,
+                  ColumnMode,
+                  TreeMode,
+                  CoverFlowMode,
+                  EnableDualPane,
+
+                  SortByName,
+                  SortBySize,
+                  SortByType,
+                  SortByDate,
+                  SortDescendingOrder,
+
+                  ActionCount
+                };
     Q_ENUMS(Pane)
+    Q_ENUMS(Action)
 
     explicit DualPaneWidget(QWidget *parent = 0);
     ~DualPaneWidget();
+
+    QAction *action(Action action) const;
 
     GuiSystem::History *history() const;
     Pane activePane() const;
@@ -37,6 +73,8 @@ public:
     bool dualPaneModeEnabled() const;
     FileManagerWidget::ViewMode viewMode() const;
 
+    QStringList selectedPaths() const;
+
     FileManagerWidget::Column sortingColumn() const;
     void setSortingColumn(FileManagerWidget::Column column);
 
@@ -49,7 +87,11 @@ public:
 signals:
     void activePaneChanged(Pane pane);
     void currentPathChanged(const QString &path);
+
     void openRequested(const QString &path);
+    void openNewTabRequested(const QStringList &paths);
+    void openNewWindowRequested(const QStringList &paths);
+
     void canUndoChanged(bool);
     void canRedoChanged(bool);
     void selectedPathsChanged();
@@ -65,6 +107,8 @@ public slots:
 
     void newFolder();
     void open();
+    void selectProgram();
+    void showFileInfo();
     void remove();
     void rename();
     void copyFiles();
@@ -84,12 +128,6 @@ public slots:
     void showHiddenFiles(bool show);
 
 protected:
-    FileManagerWidget *createPane();
-    void createLeftPane();
-    void createRightPane();
-    void ensureRightPaneCreated();
-    void updateState();
-
     bool eventFilter(QObject *, QEvent *);
 
 protected:
