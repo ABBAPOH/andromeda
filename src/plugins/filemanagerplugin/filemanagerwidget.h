@@ -23,6 +23,7 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_DECLARE_PRIVATE(FileManagerWidget)
     Q_DISABLE_COPY(FileManagerWidget)
 
+    Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
     Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
     Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
@@ -78,6 +79,9 @@ public:
     ~FileManagerWidget();
 
     QAction *action(Action action) const;
+
+    bool alternatingRowColors() const;
+    void setAlternatingRowColors(bool);
 
     bool canRedo() const;
     bool canUndo() const;
