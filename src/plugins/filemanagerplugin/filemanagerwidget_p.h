@@ -73,6 +73,8 @@ public:
     QSize gridSize;
     FileManagerWidget::Flow flow;
 
+    bool itemsExpandable;
+
     FileManagerWidget::Column sortingColumn;
     Qt::SortOrder sortingOrder;
 

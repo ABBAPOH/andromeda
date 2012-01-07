@@ -315,27 +315,42 @@ void FileManagerPluginImpl::loadSettings()
     m_fileManagerSettings = FileManagerSettings::globalSettings();
 
     QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
+    QSize columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView);
+    QSize treeIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::TreeView);
     QSize gridSize = m_fileManagerSettings->gridSize();
     int flow = m_fileManagerSettings->flow();
+    bool itemsExpandable = m_fileManagerSettings->itemsExpandable();
 
     iconSize = m_settings->value(QLatin1String("iconMode"), iconSize).toSize();
+    columnIconSize = m_settings->value(QLatin1String("columnIconSize"), columnIconSize).toSize();
+    treeIconSize = m_settings->value(QLatin1String("treeIconSize"), treeIconSize).toSize();
     gridSize = m_settings->value(QLatin1String("gridSize"), gridSize).toSize();
     flow = m_settings->value(QLatin1String("flow"), flow).toInt();
+    itemsExpandable = m_settings->value(QLatin1String("itemsExpandable"), itemsExpandable).toBool();
 
     m_fileManagerSettings->setIconSize(FileManagerSettings::IconView, iconSize);
+    m_fileManagerSettings->setIconSize(FileManagerSettings::ColumnView, columnIconSize);
+    m_fileManagerSettings->setIconSize(FileManagerSettings::TreeView, treeIconSize);
     m_fileManagerSettings->setGridSize(gridSize);
     m_fileManagerSettings->setFlow((FileManagerSettings::Flow)flow);
+    m_fileManagerSettings->setItemsExpandable(itemsExpandable);
 }
 
 void FileManagerPluginImpl::saveSettings()
 {
     QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
+    QSize columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView);
+    QSize treeIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::TreeView);
     QSize gridSize = m_fileManagerSettings->gridSize();
     FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
+    bool itemsExpandable = m_fileManagerSettings->itemsExpandable();
 
     m_settings->setValue(QLatin1String("iconMode"), iconSize);
+    m_settings->setValue(QLatin1String("columnIconSize"), columnIconSize);
+    m_settings->setValue(QLatin1String("treeIconSize"), treeIconSize);
     m_settings->setValue(QLatin1String("gridSize"), gridSize);
     m_settings->setValue(QLatin1String("flow"), flow);
+    m_settings->setValue(QLatin1String("itemsExpandable"), itemsExpandable);
 }
 
 Q_EXPORT_PLUGIN(FileManagerPluginImpl)

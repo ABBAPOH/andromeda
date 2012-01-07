@@ -413,6 +413,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->fileSystemManager = 0;
     d->sortingColumn = (FileManagerWidget::Column)-1;
     d->sortingOrder = (Qt::SortOrder)-1;
+    d->itemsExpandable = true;
 
     d->history = new History(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -432,7 +433,10 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     setViewMode(IconView);
     setFlow((Flow)settings->flow());
     setIconSize(IconView, settings->iconSize(FileManagerSettings::IconView));
+    setIconSize(ColumnView, settings->iconSize(FileManagerSettings::ColumnView));
+    setIconSize(TreeView, settings->iconSize(FileManagerSettings::TreeView));
     setGridSize(settings->gridSize());
+    setItemsExpandable(settings->itemsExpandable());
     setSorting(NameColumn, Qt::AscendingOrder);
 
     FileManagerSettings::globalSettings()->d_func()->addWidget(this);
@@ -564,6 +568,33 @@ void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size
         return;
 
     d->views[mode]->setIconSize(size);
+}
+
+bool FileManagerWidget::itemsExpandable() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->itemsExpandable;
+}
+
+void FileManagerWidget::setItemsExpandable(bool expandable)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->itemsExpandable == expandable)
+        return;
+
+    d->itemsExpandable = expandable;
+
+    QTreeView *view = static_cast<QTreeView *>(d->views[TreeView]);
+    if (!expandable) {
+        view->collapseAll();
+        view->setRootIsDecorated(false);
+        view->setItemsExpandable(false);
+    } else {
+        view->setRootIsDecorated(true);
+        view->setItemsExpandable(true);
+    }
 }
 
 QStringList FileManagerWidget::selectedPaths() const

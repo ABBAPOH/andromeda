@@ -26,12 +26,16 @@ private slots:
     void onIconSizeChanged(int);
     void onGridSizeChanged(int);
     void onFlowChanged(int);
+    void onColumnIconSizeChanged(int);
+    void onTreeIconSizeChanged(int);
+    void onItemsExpandableChecked(bool);
 
 private:
     void setupLeftPanel();
     void setupIconSize();
     void setupGridSize();
     void setupFlow();
+    void setupTreeView();
 
 private:
     Ui::FileManagerSettingsWidget *ui;

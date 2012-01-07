@@ -25,6 +25,9 @@ public:
     QSize iconSize(ViewMode mode) const;
     void setIconSize(ViewMode mode, QSize size);
 
+    bool itemsExpandable() const;
+    void setItemsExpandable(bool expandable);
+
 protected:
     FileManagerSettings();
 
