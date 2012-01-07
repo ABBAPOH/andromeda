@@ -482,6 +482,8 @@ void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
         setDualPaneModeEnabled(false);
     }
     d->panes[LeftPane]->setViewMode(mode);
+
+    d->updateViewModeActions();
 }
 
 QStringList DualPaneWidget::selectedPaths() const
@@ -539,6 +541,7 @@ bool DualPaneWidget::restoreState(const QByteArray &state)
         d->ensureRightPaneCreated();
         rightWidget()->restoreState(subState);
     }
+    d->updateViewModeActions();
 
     return true;
 }
