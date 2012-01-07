@@ -9,6 +9,11 @@
 #include "navigationmodel.h"
 
 class QSignalMapper;
+class QSettings;
+
+namespace FileManagerPlugin {
+    class FileManagerSettings;
+} // namespace FileManagerPlugin
 
 class FileManagerPluginImpl : public ExtensionSystem::IPlugin
 {
@@ -35,8 +40,14 @@ private:
     void createGoToActions();
     void createSortByActons();
 
+    void loadSettings();
+    void saveSettings();
+
 private:
     QSignalMapper *gotoMapper;
+
+    QSettings *m_settings;
+    FileManagerPlugin::FileManagerSettings *m_fileManagerSettings;
 };
 
 #endif // FILEMANAGERPLUGIN_H

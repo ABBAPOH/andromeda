@@ -3,6 +3,12 @@
 
 #include <QtGui/QWidget>
 
+class QSettings;
+
+namespace FileManagerPlugin {
+    class FileManagerSettings;
+} // namespace FileManagerPlugin
+
 namespace Ui {
     class FileManagerSettingsWidget;
 }
@@ -29,6 +35,9 @@ private:
 
 private:
     Ui::FileManagerSettingsWidget *ui;
+
+    QSettings *m_settings;
+    FileManagerPlugin::FileManagerSettings *m_fileManagerSettings;
 };
 
 #endif // FILEMANAGERSETTINGSWIDGET_H

@@ -28,7 +28,6 @@ class FILEMANAGERPLUGIN_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
     Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
-    Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
     Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY currentPathChanged)
     Q_PROPERTY(Column sortingColumn READ sortingColumn WRITE setSortingColumn NOTIFY sortingChanged)
     Q_PROPERTY(Qt::SortOrder sortingOrder READ sortingOrder WRITE setSortingOrder NOTIFY sortingChanged)
@@ -91,8 +90,8 @@ public:
     QSize gridSize() const;
     void setGridSize(QSize s);
 
-    QSize iconSize() const;
-    void setIconSize(QSize s);
+    QSize iconSize(FileManagerWidget::ViewMode mode) const;
+    void setIconSize(FileManagerWidget::ViewMode mode, QSize size);
 
     QStringList selectedPaths() const;
 

@@ -1,13 +1,18 @@
 #include "filemanagersettingswidget.h"
 #include "ui_filemanagersettingswidget.h"
 
+#include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <coreplugin/core.h>
 #include <coreplugin/settings.h>
 
+#include "filemanagersettings.h"
 #include "navigationmodel.h"
 
+#include <QDebug>
+
 using namespace CorePlugin;
+using namespace FileManagerPlugin;
 
 static int readFlags()
 {
@@ -30,9 +35,13 @@ static int readFlags()
 
 FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileManagerSettingsWidget)
+    ui(new Ui::FileManagerSettingsWidget),
+    m_settings(new QSettings(this)),
+    m_fileManagerSettings(FileManagerSettings::globalSettings())
 {
     ui->setupUi(this);
+
+    m_settings->beginGroup(QLatin1String("fileManager"));
 
     setupLeftPanel();
     setupIconSize();
@@ -62,29 +71,30 @@ void FileManagerSettingsWidget::onChecked(bool checked)
 
 void FileManagerSettingsWidget::onIconSizeChanged(int value)
 {
-//    int gridValue = ui->gridSizeSlider->value();
-//    if (value > gridValue)
-//        ui->gridSizeSlider->setValue(value);
-
     value *= 4;
     QSize size(value, value);
     ui->iconSizeLabel->setText(tr("Icon size: %1x%2").arg(value).arg(value));
 
-    Settings *s = Core::instance()->settings();
-    s->setValue(QLatin1String("fileManager/iconSize"), size);
+    m_settings->setValue(QLatin1String("iconSize"), size);
+    m_fileManagerSettings->setIconSize(FileManagerSettings::IconView, size);
 
     onGridSizeChanged(ui->gridSizeSlider->value());
 }
 
 static int calcGridSize(int iconSize, int factor, bool iconMode)
 {
-    const int minIconSize = 32;
-    const int minListSize = 2;
+    static const int minIconSize = 32;
+    static const int minListSize = 2;
 
-    int gridSize = iconSize;
-    gridSize = gridSize + (iconMode ? minIconSize : minListSize);
-    gridSize *= 1 + 1.0*factor/100.0;
-    return gridSize;
+    return (iconSize + (iconMode ? minIconSize : minListSize))*(1.0 + factor/100.0) + 0.5;
+}
+
+static int calcGridFactor(int iconSize, int gridSize, bool iconMode)
+{
+    static const int minIconSize = 32;
+    static const int minListSize = 2;
+
+    return (100.0*gridSize)/(iconSize + (iconMode ? minIconSize : minListSize)) - 100 + 0.5;
 }
 
 void FileManagerSettingsWidget::onGridSizeChanged(int value)
@@ -94,15 +104,15 @@ void FileManagerSettingsWidget::onGridSizeChanged(int value)
     int gridSize = calcGridSize(iconSize, value, iconMode);
 
     QSize size(gridSize, gridSize);
-    Settings *s = Core::instance()->settings();
-    s->setValue(QLatin1String("fileManager/gridSize"), size);
-    s->setValue(QLatin1String("fileManager/gridSizeFactor"), value);
+
+    m_settings->setValue(QLatin1String("gridSize"), size);
+    m_fileManagerSettings->setGridSize(size);
 }
 
 void FileManagerSettingsWidget::onFlowChanged(int value)
 {
-    Settings *s = Core::instance()->settings();
-    s->setValue(QLatin1String("fileManager/flow"), value);
+    m_settings->setValue(QLatin1String("flow"), value);
+    m_fileManagerSettings->setFlow((FileManagerSettings::Flow)value);
 
     onGridSizeChanged(ui->gridSizeSlider->value());
 }
@@ -141,16 +151,7 @@ void FileManagerSettingsWidget::setupLeftPanel()
 
 void FileManagerSettingsWidget::setupIconSize()
 {
-    Settings *s = Core::instance()->settings();
-
-    int iconSize = s->value(QLatin1String("fileManager/iconSize")).toSize().height();
-    if (iconSize == -1) {
-#ifdef Q_OS_MAC
-        iconSize = 64;
-#else
-        iconSize = 32;
-#endif
-    }
+    int iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView).height();
     ui->iconSizeSlider->setValue(iconSize/4);
     ui->iconSizeLabel->setText(tr("Icon size: %1x%2").arg(iconSize).arg(iconSize));
 
@@ -159,13 +160,11 @@ void FileManagerSettingsWidget::setupIconSize()
 
 void FileManagerSettingsWidget::setupGridSize()
 {
-    Settings *s = Core::instance()->settings();
+    int iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView).height();
+    int gridSize = m_fileManagerSettings->gridSize().height();
+    FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
 
-    int factor = 10;
-    QVariant value = s->value(QLatin1String("fileManager/gridSizeFactor"));
-    if (value.isValid())
-        factor = value.toInt();
-
+    int factor = calcGridFactor(iconSize, gridSize, flow == FileManagerSettings::LeftToRight);
     ui->gridSizeSlider->setValue(factor);
 
     connect(ui->gridSizeSlider, SIGNAL(valueChanged(int)), SLOT(onGridSizeChanged(int)));
@@ -173,8 +172,7 @@ void FileManagerSettingsWidget::setupGridSize()
 
 void FileManagerSettingsWidget::setupFlow()
 {
-    Settings *s = Core::instance()->settings();
-
-    ui->flowComboBox->setCurrentIndex(s->value(QLatin1String("fileManager/flow")).toInt());
+    FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
+    ui->flowComboBox->setCurrentIndex(flow);
     connect(ui->flowComboBox, SIGNAL(currentIndexChanged(int)), SLOT(onFlowChanged(int)));
 }
