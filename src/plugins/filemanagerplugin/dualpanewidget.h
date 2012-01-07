@@ -27,6 +27,8 @@ public:
                   OpenInWindow,
                   SelectProgram,
                   NewFolder,
+                  CopyFiles,
+                  MoveFiles,
                   Rename,
                   Remove,
                   ShowFileInfo,

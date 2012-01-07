@@ -122,6 +122,16 @@ void FileManagerPluginImpl::createFileMenu()
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+N")));
     container->addCommand(cmd, group);
 
+    cmd = new Command(Constants::Actions::CopyFiles, this);
+    cmd->setDefaultText(tr("Copy files"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("F5")));
+    container->addCommand(cmd, group);
+
+    cmd = new Command(Constants::Actions::MoveFiles, this);
+    cmd->setDefaultText(tr("Move files"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("F6")));
+    container->addCommand(cmd, group);
+
     cmd = new Command(Constants::Actions::Rename, this);
     cmd->setDefaultText(tr("Rename"));
 #ifdef Q_OS_MAC
