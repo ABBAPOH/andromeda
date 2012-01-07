@@ -41,6 +41,16 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::NewFolder] = new QAction(this);
     connect(actions[DualPaneWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
 
+    actions[DualPaneWidget::CopyFiles] = new QAction(this);
+    actions[DualPaneWidget::CopyFiles]->setShortcut(QKeySequence("F5"));
+    actions[DualPaneWidget::CopyFiles]->setEnabled(false);
+    connect(actions[DualPaneWidget::CopyFiles], SIGNAL(triggered()), q, SLOT(copyFiles()));
+
+    actions[DualPaneWidget::MoveFiles] = new QAction(this);
+    actions[DualPaneWidget::MoveFiles]->setShortcut(QKeySequence("F6"));
+    actions[DualPaneWidget::MoveFiles]->setEnabled(false);
+    connect(actions[DualPaneWidget::MoveFiles], SIGNAL(triggered()), q, SLOT(moveFiles()));
+
     actions[DualPaneWidget::Rename] = new QAction(this);
     connect(actions[DualPaneWidget::Rename], SIGNAL(triggered()), q, SLOT(rename()));
 
@@ -155,6 +165,8 @@ void DualPaneWidgetPrivate::retranslateUi()
 
     actions[DualPaneWidget::SelectProgram]->setText(tr("Select program..."));
     actions[DualPaneWidget::NewFolder]->setText(tr("New Folder"));
+    actions[DualPaneWidget::CopyFiles]->setText(tr("Copy files"));
+    actions[DualPaneWidget::MoveFiles]->setText(tr("Move files"));
     actions[DualPaneWidget::Rename]->setText(tr("Rename"));
     actions[DualPaneWidget::Remove]->setText(tr("Remove"));
     actions[DualPaneWidget::ShowFileInfo]->setText(tr("File info"));
@@ -455,6 +467,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
             d->panes[RightPane]->setCurrentPath(d->panes[LeftPane]->currentPath());
 
         d->panes[LeftPane]->setAlternatingRowColors(false);
+
     } else {
         if (d->panes[RightPane])
             d->panes[RightPane]->hide();
@@ -464,6 +477,8 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     }
 
     d->actions[EnableDualPane]->setChecked(on);
+    d->actions[CopyFiles]->setEnabled(on);
+    d->actions[MoveFiles]->setEnabled(on);
 }
 
 FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
