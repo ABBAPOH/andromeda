@@ -216,7 +216,8 @@ void DualPaneWidgetPrivate::createRightPane()
     panes[DualPaneWidget::RightPane] = createPane();
 
     panes[DualPaneWidget::RightPane]->hide();
-    panes[DualPaneWidget::RightPane]->setViewMode(FileManagerWidget::TableView);
+    panes[DualPaneWidget::RightPane]->setViewMode(FileManagerWidget::TreeView);
+    panes[DualPaneWidget::RightPane]->setAlternatingRowColors(false);
     layout->addWidget(panes[DualPaneWidget::RightPane]);
 
     swapPalettes(panes[DualPaneWidget::LeftPane], panes[DualPaneWidget::RightPane]);
@@ -451,14 +452,17 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
         d->ensureRightPaneCreated();
 
         d->panes[RightPane]->show();
-        d->panes[LeftPane]->setViewMode(FileManagerWidget::TableView);
+        d->panes[LeftPane]->setViewMode(FileManagerWidget::TreeView);
         if (d->panes[RightPane]->currentPath().isEmpty())
             d->panes[RightPane]->setCurrentPath(d->panes[LeftPane]->currentPath());
+
+        d->panes[LeftPane]->setAlternatingRowColors(false);
     } else {
         if (d->panes[RightPane])
             d->panes[RightPane]->hide();
         d->panes[LeftPane]->setViewMode(d->viewMode);
         setActivePane(LeftPane);
+        d->panes[LeftPane]->setAlternatingRowColors(true);
     }
 
     d->actions[EnableDualPane]->setChecked(on);
