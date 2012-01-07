@@ -16,6 +16,8 @@
 #include <coreplugin/constants.h>
 
 #include "fileinfodialog.h"
+#include "filemanagersettings.h"
+#include "filemanagersettings_p.h"
 
 using namespace GuiSystem;
 using namespace FileManagerPlugin;
@@ -394,6 +396,7 @@ void FileManagerWidgetPrivate::onSortIndicatorChanged(int logicalIndex, Qt::Sort
 
 static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
 
+#include "filemanagersettings.h"
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new FileManagerWidgetPrivate(this))
@@ -424,14 +427,21 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 //    ((QTreeView*)d->views[FileManagerWidget::TableView])->setColumnWidth(0, 250);
     ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
 
+    FileManagerSettings *settings = FileManagerSettings::globalSettings();
+
     setViewMode(IconView);
-    setFlow(LeftToRight);
-    setGridSize(QSize(128, 128));
+    setFlow((Flow)settings->flow());
+    setIconSize(IconView, settings->iconSize(FileManagerSettings::IconView));
+    setGridSize(settings->gridSize());
     setSorting(NameColumn, Qt::AscendingOrder);
+
+    FileManagerSettings::globalSettings()->d_func()->addWidget(this);
 }
 
 FileManagerWidget::~FileManagerWidget()
 {
+    FileManagerSettings::globalSettings()->d_func()->removeWidget(this);
+
     delete d_ptr;
 }
 
@@ -539,18 +549,21 @@ void FileManagerWidget::setGridSize(QSize s)
     view->setGridSize(s);
 }
 
-QSize FileManagerWidget::iconSize() const
+QSize FileManagerWidget::iconSize(FileManagerWidget::ViewMode mode) const
 {
     Q_D(const FileManagerWidget);
 
-    return d->views[IconView]->iconSize();
+    return d->views[mode]->iconSize();
 }
 
-void FileManagerWidget::setIconSize(QSize s)
+void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size)
 {
     Q_D(FileManagerWidget);
 
-    d->views[IconView]->setIconSize(s);
+    if (mode < 0 && mode >= FileManagerWidget::MaxViews)
+        return;
+
+    d->views[mode]->setIconSize(size);
 }
 
 QStringList FileManagerWidget::selectedPaths() const
@@ -693,7 +706,7 @@ bool FileManagerWidget::restoreState(const QByteArray &state)
     s >> size;
     setGridSize(size);
     s >> size;
-    setIconSize(size);
+    setIconSize(IconView, size);
     s >> tmp;
     setViewMode((FileManagerWidget::ViewMode)tmp);
     s >> tmp;
@@ -711,7 +724,7 @@ QByteArray FileManagerWidget::saveState()
     QDataStream s(&buffer);
     s << (quint8)flow();
     s << gridSize();
-    s << iconSize();
+    s << iconSize(IconView);
     s << (quint8)viewMode();
     s << (quint8)sortingColumn();
     s << (quint8)sortingOrder();

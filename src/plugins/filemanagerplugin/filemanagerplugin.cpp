@@ -2,6 +2,7 @@
 
 #include <QtCore/QtPlugin>
 #include <QtCore/QDir>
+#include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 #include <QtCore/QUrl>
 #include <QtGui/QAction>
@@ -24,6 +25,7 @@
 
 #include "filecopydialog.h"
 #include "filemanagereditor.h"
+#include "filemanagersettings.h"
 #include "filemanagersettingspage.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
@@ -62,6 +64,8 @@ bool FileManagerPluginImpl::initialize(const QVariantMap &options)
 
     createActions();
 
+    loadSettings();
+
     return true;
 }
 
@@ -70,6 +74,7 @@ void FileManagerPluginImpl::shutdown()
 #ifdef Q_CC_MSVC
     qApp->clipboard()->clear();
 #endif
+    saveSettings();
 }
 
 void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::StandardLocations loc)
@@ -303,5 +308,34 @@ void FileManagerPluginImpl::createSortByActons()
 {
 }
 
-Q_EXPORT_PLUGIN(FileManagerPluginImpl)
+void FileManagerPluginImpl::loadSettings()
+{
+    m_settings = new QSettings(this);
+    m_settings->beginGroup(QLatin1String("fileManager"));
+    m_fileManagerSettings = FileManagerSettings::globalSettings();
 
+    QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
+    QSize gridSize = m_fileManagerSettings->gridSize();
+    int flow = m_fileManagerSettings->flow();
+
+    iconSize = m_settings->value(QLatin1String("iconMode"), iconSize).toSize();
+    gridSize = m_settings->value(QLatin1String("gridSize"), gridSize).toSize();
+    flow = m_settings->value(QLatin1String("flow"), flow).toInt();
+
+    m_fileManagerSettings->setIconSize(FileManagerSettings::IconView, iconSize);
+    m_fileManagerSettings->setGridSize(gridSize);
+    m_fileManagerSettings->setFlow((FileManagerSettings::Flow)flow);
+}
+
+void FileManagerPluginImpl::saveSettings()
+{
+    QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
+    QSize gridSize = m_fileManagerSettings->gridSize();
+    FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
+
+    m_settings->setValue(QLatin1String("iconMode"), iconSize);
+    m_settings->setValue(QLatin1String("gridSize"), gridSize);
+    m_settings->setValue(QLatin1String("flow"), flow);
+}
+
+Q_EXPORT_PLUGIN(FileManagerPluginImpl)
