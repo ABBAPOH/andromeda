@@ -47,6 +47,7 @@ FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
     setupIconSize();
     setupGridSize();
     setupFlow();
+    setupTreeView();
 }
 
 FileManagerSettingsWidget::~FileManagerSettingsWidget()
@@ -117,6 +118,30 @@ void FileManagerSettingsWidget::onFlowChanged(int value)
     onGridSizeChanged(ui->gridSizeSlider->value());
 }
 
+void FileManagerSettingsWidget::onColumnIconSizeChanged(int value)
+{
+    value *= 4;
+    QSize size(value, value);
+
+    ui->columnIconSizeLabel->setText(tr("Icon size: %1x%2").arg(value).arg(value));
+    m_fileManagerSettings->setIconSize(FileManagerSettings::ColumnView, size);
+}
+
+void FileManagerSettingsWidget::onTreeIconSizeChanged(int value)
+{
+    value *= 4;
+    QSize size(value, value);
+
+    ui->treeIconSizeLabel->setText(tr("Icon size: %1x%2").arg(value).arg(value));
+    m_fileManagerSettings->setIconSize(FileManagerSettings::TreeView, size);
+}
+
+void FileManagerSettingsWidget::onItemsExpandableChecked(bool checked)
+{
+    m_settings->setValue(QLatin1String("itemsExpandable"), checked);
+    m_fileManagerSettings->setItemsExpandable(checked);
+}
+
 void FileManagerSettingsWidget::setupLeftPanel()
 {
     int flags = readFlags();
@@ -152,10 +177,21 @@ void FileManagerSettingsWidget::setupLeftPanel()
 void FileManagerSettingsWidget::setupIconSize()
 {
     int iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView).height();
+    int columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView).height();
+    int treeIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::TreeView).height();
+
     ui->iconSizeSlider->setValue(iconSize/4);
     ui->iconSizeLabel->setText(tr("Icon size: %1x%2").arg(iconSize).arg(iconSize));
 
+    ui->columnIconSize->setValue(columnIconSize/4);
+    ui->columnIconSizeLabel->setText(tr("Icon size: %1x%2").arg(columnIconSize).arg(columnIconSize));
+
+    ui->treeIconSize->setValue(treeIconSize/4);
+    ui->treeIconSizeLabel->setText(tr("Icon size: %1x%2").arg(treeIconSize).arg(treeIconSize));
+
     connect(ui->iconSizeSlider, SIGNAL(valueChanged(int)), SLOT(onIconSizeChanged(int)));
+    connect(ui->columnIconSize, SIGNAL(valueChanged(int)), SLOT(onColumnIconSizeChanged(int)));
+    connect(ui->treeIconSize, SIGNAL(valueChanged(int)), SLOT(onTreeIconSizeChanged(int)));
 }
 
 void FileManagerSettingsWidget::setupGridSize()
@@ -175,4 +211,11 @@ void FileManagerSettingsWidget::setupFlow()
     FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
     ui->flowComboBox->setCurrentIndex(flow);
     connect(ui->flowComboBox, SIGNAL(currentIndexChanged(int)), SLOT(onFlowChanged(int)));
+}
+
+void FileManagerSettingsWidget::setupTreeView()
+{
+    bool checked = m_settings->value(QLatin1String("itemsExpandable"), true).toBool();
+    ui->itemsExpandable->setChecked(checked);
+    connect(ui->itemsExpandable, SIGNAL(toggled(bool)), SLOT(onItemsExpandableChecked(bool)));
 }

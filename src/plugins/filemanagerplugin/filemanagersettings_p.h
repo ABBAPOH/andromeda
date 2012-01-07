@@ -20,6 +20,7 @@ public:
     QSize gridSize;
     FileManagerSettings::Flow flow;
     QSize iconSizes[FileManagerSettings::ViewCount];
+    bool itemsExpandable;
 };
 
 } // namespace FileManagerPlugin

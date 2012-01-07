@@ -93,6 +93,9 @@ public:
     QSize iconSize(FileManagerWidget::ViewMode mode) const;
     void setIconSize(FileManagerWidget::ViewMode mode, QSize size);
 
+    bool itemsExpandable() const;
+    void setItemsExpandable(bool expandable);
+
     QStringList selectedPaths() const;
 
     Column sortingColumn() const;

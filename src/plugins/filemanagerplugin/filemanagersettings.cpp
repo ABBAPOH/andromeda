@@ -31,6 +31,7 @@ FileManagerSettings::FileManagerSettings() :
 #endif
     d->iconSizes[ColumnView] = QSize(16, 16);
     d->iconSizes[TreeView] = QSize(16, 16);
+    d->itemsExpandable = true;
 }
 
 FileManagerSettings *FileManagerSettings::globalSettings()
@@ -105,5 +106,25 @@ void FileManagerSettings::setIconSize(FileManagerSettings::ViewMode mode, QSize 
 
     foreach (FileManagerWidget *widget, d->widgets) {
         widget->setIconSize((FileManagerWidget::ViewMode)mode, size);
+    }
+}
+
+bool FileManagerSettings::itemsExpandable() const
+{
+    Q_D(const FileManagerSettings);
+
+    return d->itemsExpandable;
+}
+
+void FileManagerSettings::setItemsExpandable(bool expandable)
+{
+    Q_D(FileManagerSettings);
+
+    if (d->itemsExpandable == expandable)
+        return;
+
+    d->itemsExpandable = expandable;
+    foreach (FileManagerWidget *widget, d->widgets) {
+        widget->setItemsExpandable(expandable);
     }
 }
