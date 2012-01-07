@@ -39,7 +39,6 @@ public:
     bool dualPaneModeEnabled;
     FileManagerWidget *panes[2];
     QHBoxLayout *layout;
-    FileManagerWidget::ViewMode viewMode;
     QAction *actions[DualPaneWidget::ActionCount];
 
     QActionGroup *viewModeGroup;

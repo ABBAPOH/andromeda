@@ -96,7 +96,6 @@ void DualPaneWidgetPrivate::createActions()
     viewModeGroup->addAction(actions[DualPaneWidget::ColumnMode]);
     viewModeGroup->addAction(actions[DualPaneWidget::TreeMode]);
     viewModeGroup->addAction(actions[DualPaneWidget::CoverFlowMode]);
-    viewModeGroup->addAction(actions[DualPaneWidget::EnableDualPane]);
 
     actions[DualPaneWidget::IconMode]->setData(FileManagerWidget::IconView);
     actions[DualPaneWidget::ColumnMode]->setData(FileManagerWidget::ColumnView);
@@ -349,7 +348,6 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     d->dualPaneModeEnabled = false;
     d->panes[LeftPane] = 0;
     d->panes[RightPane] = 0;
-    d->viewMode = FileManagerWidget::IconView;
 
     d->layout = new QHBoxLayout();
     d->layout->setMargin(0);
@@ -452,7 +450,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
         d->ensureRightPaneCreated();
 
         d->panes[RightPane]->show();
-        d->panes[LeftPane]->setViewMode(FileManagerWidget::TreeView);
+
         if (d->panes[RightPane]->currentPath().isEmpty())
             d->panes[RightPane]->setCurrentPath(d->panes[LeftPane]->currentPath());
 
@@ -460,7 +458,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     } else {
         if (d->panes[RightPane])
             d->panes[RightPane]->hide();
-        d->panes[LeftPane]->setViewMode(d->viewMode);
+
         setActivePane(LeftPane);
         d->panes[LeftPane]->setAlternatingRowColors(true);
     }
@@ -470,18 +468,14 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
 
 FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
 {
-    return d_func()->viewMode;
+    return activeWidget()->viewMode();
 }
 
 void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
 {
     Q_D(DualPaneWidget);
 
-    d->viewMode = mode;
-    if (d->dualPaneModeEnabled) {
-        setDualPaneModeEnabled(false);
-    }
-    d->panes[LeftPane]->setViewMode(mode);
+    activeWidget()->setViewMode(mode);
 
     d->updateViewModeActions();
 }
@@ -704,6 +698,8 @@ bool DualPaneWidget::eventFilter(QObject *o, QEvent *e)
         } else if (o == d->panes[RightPane]) {
             setActivePane(RightPane);
         }
+        d->updateViewModeActions();
+        d->updateSortActions();
     }
 
     return false;
