@@ -215,8 +215,6 @@ void FileManagerWidgetPrivate::initViews()
 
     QListView *iconView = new ListView(q);
     QColumnView *columnView = new QColumnView(q);
-//    QTableView *tableView = new QTableView(q);
-    QTreeView *tableView = new QTreeView(q);
     QTreeView *treeView = new QTreeView(q);
     CoverFlow *coverFlow = new CoverFlow(q);
 
@@ -238,12 +236,6 @@ void FileManagerWidgetPrivate::initViews()
     iconView->viewport()->setAcceptDrops(true);
     iconView->setMouseTracking(true);
 
-    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    tableView->setRootIsDecorated(false);
-    tableView->setItemsExpandable(false);
-    connect(tableView->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
-            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
-
     treeView->setAlternatingRowColors(true);
     treeView->setExpandsOnDoubleClick(false);
     treeView->setSortingEnabled(true);
@@ -255,7 +247,6 @@ void FileManagerWidgetPrivate::initViews()
 
     views[FileManagerWidget::IconView] = iconView;
     views[FileManagerWidget::ColumnView] = columnView;
-    views[FileManagerWidget::TableView] = tableView;
     views[FileManagerWidget::TreeView] = treeView;
     views[FileManagerWidget::CoverFlow] = coverFlow->treeView();
     blockEvents = false;
@@ -278,7 +269,6 @@ void FileManagerWidgetPrivate::initViews()
 
     layout->addWidget(iconView);
     layout->addWidget(columnView);
-    layout->addWidget(tableView);
     layout->addWidget(treeView);
     layout->addWidget(coverFlow);
 }
@@ -340,9 +330,6 @@ void FileManagerWidgetPrivate::updateSorting()
     QTreeView *view = 0;
 
     view = static_cast<QTreeView*>(views[FileManagerWidget::TreeView]);
-    view->sortByColumn(sortingColumn, sortingOrder);
-
-    view = static_cast<QTreeView*>(views[FileManagerWidget::TableView]);
     view->sortByColumn(sortingColumn, sortingOrder);
 
     model->sort(sortingColumn, sortingOrder);
