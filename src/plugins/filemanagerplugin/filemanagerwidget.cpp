@@ -459,6 +459,20 @@ QAction * FileManagerWidget::action(Action action) const
     return d->actions[action];
 }
 
+bool FileManagerWidget::alternatingRowColors() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->views[TreeView]->alternatingRowColors();
+}
+
+void FileManagerWidget::setAlternatingRowColors(bool enable)
+{
+    Q_D(FileManagerWidget);
+
+    d->views[TreeView]->setAlternatingRowColors(enable);
+}
+
 bool FileManagerWidget::canRedo() const
 {
     return fileSystemManager()->canRedo();
