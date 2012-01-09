@@ -17,8 +17,6 @@ include_directories( ${QT_INCLUDES} )
 add_subdirectory( src )
 add_subdirectory( tests )
 
-include( "cmake/AppleBundle.cmake" )
-
 # make uninstall
 configure_file(
     "${CMAKE_SOURCE_DIR}/cmake/Uninstall.cmake.in"
