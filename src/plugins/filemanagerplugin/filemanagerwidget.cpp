@@ -1066,14 +1066,14 @@ void FileManagerWidget::showContextMenu(QPoint pos)
         sortByMenu->addSeparator();
         sortByMenu->addAction(d->actions[SortDescendingOrder]);
     } else {
-        QMenu *openWithMenu = new QMenu(tr("Open with"), menu);
-        openWithMenu->addSeparator();
-        openWithMenu->addAction(d->actions[SelectProgram]);
-
         menu->addAction(d->actions[Open]);
         menu->addAction(d->actions[OpenInTab]);
         menu->addAction(d->actions[OpenInWindow]);
-        menu->addMenu(openWithMenu);
+
+        QMenu *openWithMenu = menu->addMenu(tr("Open with"));
+        openWithMenu->addSeparator();
+        openWithMenu->addAction(d->actions[SelectProgram]);
+
         menu->addSeparator();
         menu->addAction(d->actions[ShowFileInfo]);
         menu->addSeparator();
