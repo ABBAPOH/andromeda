@@ -27,6 +27,11 @@ CookieDialog::CookieDialog(QWidget *parent) :
     adjustColumns();
 }
 
+CookieDialog::~CookieDialog()
+{
+    delete ui;
+}
+
 CookieJar * CookieDialog::cookieJar() const
 {
     return m_cookieJar;

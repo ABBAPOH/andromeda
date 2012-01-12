@@ -18,6 +18,7 @@ class CookieExceptionsDialog : public QDialog
 
 public:
     explicit CookieExceptionsDialog(QWidget *parent = 0);
+    ~CookieExceptionsDialog();
 
     CookieJar *cookieJar() const;
     void setCookieJar(CookieJar *cookieJar);

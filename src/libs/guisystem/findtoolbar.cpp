@@ -27,7 +27,7 @@ public:
     QToolButton *replaceAllButton;
 
     QSpacerItem *findSpacer;
-    QSpacerItem *replaceSpacer;
+//    QSpacerItem *replaceSpacer;
 
     QAction *caseSensitiveAction;
     QAction *wholeWordAction;
@@ -267,7 +267,7 @@ void FindToolBar::setupUi()
     d->replaceAllButton->setObjectName(QLatin1String("replaceAllButton"));
     d->replaceAllButton->setFocusPolicy(Qt::NoFocus);
 
-    d->replaceSpacer = new QSpacerItem(100, 10, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+//    d->replaceSpacer = new QSpacerItem(100, 10, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
     d->layout->addWidget(d->findLineEdit, 0, 0);
     d->layout->addLayout(findButtonLayout, 0, 1);
