@@ -18,6 +18,7 @@ class CookieDialog : public QDialog
 
 public:
     explicit CookieDialog(QWidget *parent = 0);
+    ~CookieDialog();
 
     CookieJar *cookieJar() const;
     void setCookieJar(CookieJar *cookieJar);

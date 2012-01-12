@@ -35,6 +35,11 @@ CookieExceptionsDialog::CookieExceptionsDialog(QWidget *parent) :
     adjustColumns();
 }
 
+CookieExceptionsDialog::~CookieExceptionsDialog()
+{
+    delete ui;
+}
+
 CookieJar * CookieExceptionsDialog::cookieJar() const
 {
     return m_cookieJar;
