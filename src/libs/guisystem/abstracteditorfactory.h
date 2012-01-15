@@ -13,7 +13,7 @@ namespace GuiSystem {
 
 class AbstractEditor;
 
-class GUISYSTEM_EXPORT AbstractEditorFactory : public AbstractViewFactory
+class GUISYSTEM_EXPORT AbstractEditorFactory : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractEditorFactory)
@@ -24,11 +24,13 @@ public:
 
     AbstractEditor *editor(QWidget *parent);
 
+    virtual QByteArray id() const = 0;
     virtual QStringList mimeTypes() = 0;
 
 protected:
     virtual AbstractEditor *createEditor(QWidget *parent) = 0;
-    AbstractView * createView(QWidget *parent);
+
+    QList<AbstractEditor *> m_editors;
 
     friend class AbstractEditor;
 };

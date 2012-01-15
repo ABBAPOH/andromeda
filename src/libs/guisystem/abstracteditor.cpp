@@ -1,6 +1,8 @@
 #include "abstracteditor.h"
 #include "abstracteditorfactory.h"
 
+#include "actionmanager.h"
+
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 
@@ -26,7 +28,8 @@ using namespace GuiSystem;
   \brief Creates a AbstractEditor with the given \a parent.
 */
 AbstractEditor::AbstractEditor(QWidget *parent) :
-    AbstractView(parent)
+    QWidget(parent),
+    m_factory(0)
 {
 }
 
@@ -35,6 +38,22 @@ AbstractEditor::AbstractEditor(QWidget *parent) :
 */
 AbstractEditor::~AbstractEditor()
 {
+    if (m_factory)
+        m_factory->m_editors.removeAll(this);
+}
+
+/*!
+  \property AbstractEditor::id
+
+  \brief This property contains id of a factory that created this view, or
+  empty byte array, if view was created using public constructor.
+*/
+QByteArray AbstractEditor::id() const
+{
+    if (m_factory)
+        return m_factory->id();
+
+    return QByteArray();
 }
 
 /*!
@@ -200,6 +219,26 @@ void AbstractEditor::save(const QUrl &url)
 }
 
 /*!
+  \property AbstractEditor::icon
+
+  \brief Icon that can be shown on toolbars, menus and so on.
+*/
+
+/*!
+  \brief Reimplement to return current view's icon.
+*/
+QIcon AbstractEditor::icon() const
+{
+    return QIcon();
+}
+
+/*!
+  \fn void iconChanged(const QIcon &icon)
+
+  \brief Emit this signal when view's icon is changed.
+*/
+
+/*!
   \brief Reimplement to return current preview image for this editor.
 
   This image can be used in bookmarks or persistent history.
@@ -211,6 +250,21 @@ QImage AbstractEditor::preview() const
     return QImage();
 }
 
+/*!
+  \property AbstractEditor::title
+
+  \brief Title that can be show to user.
+*/
+
+/*!
+  \brief Reimplement to return current view's title.
+
+  Value returned by this function usually used as tab title.
+*/
+QString AbstractEditor::title() const
+{
+    return QString();
+}
 /*!
   \property AbstractEditor::windowTitle() const
 
@@ -302,5 +356,36 @@ QByteArray AbstractEditor::saveState() const
 */
 AbstractEditorFactory * AbstractEditor::factory() const
 {
-    return qobject_cast<AbstractEditorFactory*>(AbstractView::factory());
+    return m_factory;
+}
+
+void AbstractEditor::setFactory(AbstractEditorFactory *factory)
+{
+    m_factory = factory;
+}
+
+/*!
+  \brief Returns action manager instance.
+*/
+ActionManager * AbstractEditor::actionManager() const
+{
+    return ActionManager::instance();
+}
+
+/*!
+  \brief Adds \a action to this widget and registers it in ActionManager
+  using an \a id.
+*/
+void AbstractEditor::addAction(QAction *action, const QByteArray &id)
+{
+    QWidget::addAction(action);
+    registerAction(action, id);
+}
+
+/*!
+  \brief Registers action in ActionManager.
+*/
+void AbstractEditor::registerAction(QAction *action, const QByteArray &id)
+{
+    actionManager()->registerAction(action, id);
 }
