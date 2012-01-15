@@ -7,7 +7,7 @@ using namespace GuiSystem;
     \brief Creates a AbstractEditorFactory with the given \a parent.
 */
 AbstractEditorFactory::AbstractEditorFactory(QObject *parent) :
-    AbstractViewFactory(parent)
+    QObject(parent)
 {
 }
 
@@ -16,6 +16,8 @@ AbstractEditorFactory::AbstractEditorFactory(QObject *parent) :
 */
 AbstractEditorFactory::~AbstractEditorFactory()
 {
+    QList<AbstractEditor *> editors = m_editors;
+    qDeleteAll(editors);
 }
 
 /*!
@@ -25,11 +27,6 @@ AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
 {
     AbstractEditor *editor = createEditor(parent);
     editor->setFactory(this);
-    m_views.append(editor);
+    m_editors.append(editor);
     return editor;
-}
-
-AbstractView * AbstractEditorFactory::createView(QWidget *parent)
-{
-    return createEditor(parent);
 }

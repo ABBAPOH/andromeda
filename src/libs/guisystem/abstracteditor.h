@@ -11,14 +11,17 @@ class AbstractHistory;
 class AbstractEditorFactory;
 class IFind;
 
-class GUISYSTEM_EXPORT AbstractEditor : public AbstractView
+class GUISYSTEM_EXPORT AbstractEditor : public QWidget
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractEditor)
 
+    Q_PROPERTY(QByteArray id READ id)
     Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modificationChanged)
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly NOTIFY readOnlyChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString windowTitle READ windowTitle NOTIFY windowTitleChanged)
 
 public:
@@ -29,6 +32,8 @@ public:
     explicit AbstractEditor(QWidget *parent = 0);
     ~AbstractEditor();
 
+    QByteArray id() const;
+
     virtual Capabilities capabilities() const;
 
     virtual bool isModified() const;
@@ -36,15 +41,17 @@ public:
 
     virtual QUrl url() const = 0;
 
+    virtual QIcon icon() const;
     virtual QImage preview() const;
+    virtual QString title() const;
     virtual QString windowTitle() const;
 
     virtual IFind *find() const;
     virtual AbstractHistory *history() const;
 
     virtual void restoreDefaults() {}
-    void restoreState(const QByteArray &state);
-    QByteArray saveState() const;
+    virtual void restoreState(const QByteArray &state);
+    virtual QByteArray saveState() const;
 
 public slots:
     virtual void setModified(bool modified = true);
@@ -70,6 +77,8 @@ signals:
     void openNewEditorTriggered(const QList<QUrl> &urls);
     void openNewWindowTriggered(const QList<QUrl> &urls);
 
+    void iconChanged(const QIcon &icon);
+    void titleChanged(const QString &title);
     void windowTitleChanged(const QString &title);
 
     void loadStarted();
@@ -78,6 +87,14 @@ signals:
 
 protected:
     AbstractEditorFactory *factory() const;
+    void setFactory(AbstractEditorFactory *factory);
+
+    ActionManager *actionManager() const;
+    void addAction(QAction *action, const QByteArray &id);
+    void registerAction(QAction *action, const QByteArray &id);
+
+private:
+    AbstractEditorFactory *m_factory;
 
     friend class AbstractEditorFactory;
 };
