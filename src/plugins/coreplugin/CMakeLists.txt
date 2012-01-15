@@ -11,6 +11,9 @@ set( HEADERS
     settings.h
     settings_p.h
     settingsdialog.h
+    settingsmodel.h
+    settingsmodel_p.h
+    settingswidget.h
     settingspagemanager.h
     tabbar.h
    )
@@ -21,10 +24,13 @@ set( SOURCES
     mainwindow.cpp
     settings.cpp
     settingsdialog.cpp
+    settingsmodel.cpp
+    settingswidget.cpp
     settingspagemanager.cpp
     tabbar.cpp
    )
 set( FORMS
+    settingswidget.ui
    )
 
 set( RESOURCES resources.qrc )
@@ -37,6 +43,8 @@ qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 add_definitions( -DCOREPLUGIN_LIBRARY )
+
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES})
 target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem widgets)

@@ -13,11 +13,14 @@
 #include "settings.h"
 #include "settingspagemanager.h"
 #include "settingsdialog.h"
+#include "settingsmodel.h"
 
 #include <extensionsystem/pluginview.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+
+#include "settingswidget.h"
 
 using namespace CorePlugin;
 using namespace GuiSystem;
@@ -67,6 +70,19 @@ void CorePluginImpl::showPluginView()
 {
     PluginView *view = object<PluginView>(QLatin1String("pluginView"));
     view->exec();
+}
+
+void CorePluginImpl::showSettings()
+{
+    SettingsWidget *widget = new SettingsWidget;
+    widget->setAttribute(Qt::WA_DeleteOnClose);
+
+    SettingsModel *settingsModel = new SettingsModel(widget);
+    QSettings *settings = new QSettings(settingsModel);
+    settingsModel->setSettings(settings);
+    widget->setModel(settingsModel);
+
+    widget->show();
 }
 
 void CorePluginImpl::prefenrences()
@@ -349,6 +365,12 @@ void CorePluginImpl::createToolsMenu()
     pluginsCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(pluginsCommand);
     connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
+
+    Command *settingsCommand = new Command(Constants::Actions::Settings, this);
+    settingsCommand->setDefaultText(tr("View all settings..."));
+    settingsCommand->setContext(Command::ApplicationCommand);
+    toolsContainer->addCommand(settingsCommand);
+    connect(settingsCommand->commandAction(), SIGNAL(triggered()), SLOT(showSettings()));
 
     // ================ Tools Menu (Preferences) ================
     toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
