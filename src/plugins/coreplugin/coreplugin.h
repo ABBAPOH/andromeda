@@ -19,6 +19,7 @@ public:
 public slots:
     void newWindow();
     void showPluginView();
+    void showSettings();
     void prefenrences();
 
     void handleMessage(const QString &);

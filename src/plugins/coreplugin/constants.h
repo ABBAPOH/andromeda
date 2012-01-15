@@ -98,6 +98,7 @@ const char * const About = "Actions.About";
 const char * const AboutQt = "Actions.AboutQt";
 const char * const Preferences = "Actions.Preferences";
 const char * const Plugins = "Actions.Plugins";
+const char * const Settings = "Actions.Settings";
 
 } // namespace Actions
 
