@@ -1,6 +1,7 @@
 set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     actionmanager.h
+    abstractcontainer.h
     abstracteditor.h
     abstracteditorfactory.h
     abstracthistory.h
@@ -19,6 +20,7 @@ set( HEADERS
    )
 set( SOURCES
     actionmanager.cpp
+    abstractcontainer.cpp
     abstracteditor.cpp
     abstracteditorfactory.cpp
     abstracthistory.cpp
