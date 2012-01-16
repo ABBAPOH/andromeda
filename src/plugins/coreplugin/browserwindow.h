@@ -1,5 +1,5 @@
-#ifndef MAINWINDOWPLUGIN_MAINWINDOW_H
-#define MAINWINDOWPLUGIN_MAINWINDOW_H
+#ifndef BROWSERWINDOW_H
+#define BROWSERWINDOW_H
 
 #include "coreplugin_global.h"
 
@@ -15,15 +15,15 @@ class StackedEditor;
 
 namespace CorePlugin {
 
-class MainWindowPrivate;
-class COREPLUGIN_EXPORT MainWindow : public QMainWindow
+class BrowserWindowPrivate;
+class COREPLUGIN_EXPORT BrowserWindow : public QMainWindow
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(MainWindow)
+    Q_DECLARE_PRIVATE(BrowserWindow)
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit BrowserWindow(QWidget *parent = 0);
+    ~BrowserWindow();
 
     int currentIndex() const;
     GuiSystem::StackedEditor *currentTab() const;
@@ -34,9 +34,9 @@ public:
 
     GuiSystem::AbstractEditor *currentEditor() const;
 
-    static MainWindow *currentWindow();
-    static QList<MainWindow*> windows();
-    static MainWindow *createWindow();
+    static BrowserWindow *currentWindow();
+    static QList<BrowserWindow*> windows();
+    static BrowserWindow *createWindow();
 
 public slots:
     void back();
@@ -68,9 +68,9 @@ protected:
     void resizeEvent(QResizeEvent *);
 
 protected:
-    MainWindowPrivate * d_ptr;
+    BrowserWindowPrivate * d_ptr;
 };
 
 } // namespace CorePlugin
 
-#endif // MAINWINDOWPLUGIN_MAINWINDOW_H
+#endif // BROWSERWINDOW_H

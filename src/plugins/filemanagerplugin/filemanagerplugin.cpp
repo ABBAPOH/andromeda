@@ -18,7 +18,7 @@
 
 #include <coreplugin/constants.h>
 #include <guisystem/editormanager.h>
-#include <coreplugin/mainwindow.h>
+#include <coreplugin/browserwindow.h>
 #include <coreplugin/settingspagemanager.h>
 
 #include "filecopydialog.h"
@@ -75,7 +75,7 @@ void FileManagerPluginImpl::shutdown()
 
 void FileManagerPluginImpl::goTo(const QString &s)
 {
-    MainWindow *window = MainWindow::currentWindow();
+    BrowserWindow *window = BrowserWindow::currentWindow();
     if (window) {
         window->open(QUrl::fromLocalFile(s));
     }

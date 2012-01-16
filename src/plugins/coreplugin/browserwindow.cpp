@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "mainwindow_p.h"
+#include "browserwindow.h"
+#include "browserwindow_p.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
@@ -22,9 +22,9 @@
 using namespace CorePlugin;
 using namespace GuiSystem;
 
-StackedEditor * MainWindowPrivate::addTab(int *index)
+StackedEditor * BrowserWindowPrivate::addTab(int *index)
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     StackedEditor *tab = new StackedEditor(tabWidget);
     connect(tab, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
@@ -40,7 +40,7 @@ StackedEditor * MainWindowPrivate::addTab(int *index)
     return tab;
 }
 
-void MainWindowPrivate::createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot)
+void BrowserWindowPrivate::createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot)
 {
     ActionManager *actionManager = ActionManager::instance();
 
@@ -51,9 +51,9 @@ void MainWindowPrivate::createAction(QAction *&action, const QString &text, cons
     actionManager->registerAction(action, id);
 }
 
-void MainWindowPrivate::setupActions()
+void BrowserWindowPrivate::setupActions()
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     ActionManager *actionManager = ActionManager::instance();
 
@@ -129,9 +129,9 @@ void MainWindowPrivate::setupActions()
     q->addAction(prevTabAction);
 }
 
-void MainWindowPrivate::setupToolBar()
+void BrowserWindowPrivate::setupToolBar()
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     toolBar = new QToolBar(q);
     toolBar->setFloatable(false);
@@ -148,9 +148,9 @@ void MainWindowPrivate::setupToolBar()
     q->setUnifiedTitleAndToolBarOnMac(true);
 }
 
-void MainWindowPrivate::setupAlternateToolBar()
+void BrowserWindowPrivate::setupAlternateToolBar()
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     CommandContainer *c = ActionManager::instance()->container(Constants::Objects::AlternateToolbar);
     if (!c)
@@ -203,9 +203,9 @@ void MainWindowPrivate::setupAlternateToolBar()
 #endif
 }
 
-void MainWindowPrivate::setupUi()
+void BrowserWindowPrivate::setupUi()
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     newTabButton = new TabBarButton();
     newTabButton->setIcon(QIcon(":/images/icons/addtab.png"));
@@ -246,9 +246,9 @@ void MainWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
-void MainWindowPrivate::updateUi(StackedEditor *tab)
+void BrowserWindowPrivate::updateUi(StackedEditor *tab)
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     int index = tabWidget->indexOf(tab);
     tabWidget->setTabText(index, tab->title());
@@ -270,9 +270,9 @@ void MainWindowPrivate::updateUi(StackedEditor *tab)
     }
 }
 
-void MainWindowPrivate::onUrlChanged(const QUrl &url)
+void BrowserWindowPrivate::onUrlChanged(const QUrl &url)
 {
-    Q_Q(MainWindow);
+    Q_Q(BrowserWindow);
 
     if (sender() == q->currentTab())
         lineEdit->setUrl(url);
@@ -280,7 +280,7 @@ void MainWindowPrivate::onUrlChanged(const QUrl &url)
     upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
-void MainWindowPrivate::onCurrentChanged(int index)
+void BrowserWindowPrivate::onCurrentChanged(int index)
 {
     StackedEditor *tab = qobject_cast<StackedEditor *>(tabWidget->widget(index));
     if (!tab)
@@ -310,7 +310,7 @@ void MainWindowPrivate::onCurrentChanged(int index)
     saveAction->setEnabled(saveEnabled);
 }
 
-void MainWindowPrivate::onChanged()
+void BrowserWindowPrivate::onChanged()
 {
     StackedEditor *tab = qobject_cast<StackedEditor *>(sender());
     if (!tab)
@@ -319,7 +319,7 @@ void MainWindowPrivate::onChanged()
     updateUi(tab);
 }
 
-void MainWindowPrivate::onCapabilitiesChanged(AbstractEditor::Capabilities capabilities)
+void BrowserWindowPrivate::onCapabilitiesChanged(AbstractEditor::Capabilities capabilities)
 {
     bool saveAsEnabled = capabilities & AbstractEditor::CanSave;
 
@@ -329,11 +329,11 @@ void MainWindowPrivate::onCapabilitiesChanged(AbstractEditor::Capabilities capab
         saveAction->setEnabled(false);
 }
 
-MainWindow::MainWindow(QWidget *parent) :
+BrowserWindow::BrowserWindow(QWidget *parent) :
     QMainWindow(parent),
-    d_ptr(new MainWindowPrivate(this))
+    d_ptr(new BrowserWindowPrivate(this))
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     d->setupUi();
     d->setupActions();
@@ -352,29 +352,29 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 }
 
-MainWindow::~MainWindow()
+BrowserWindow::~BrowserWindow()
 {
     delete d_ptr;
 }
 
-int MainWindow::currentIndex() const
+int BrowserWindow::currentIndex() const
 {
     return d_func()->tabWidget->currentIndex();
 }
 
-StackedEditor * MainWindow::currentTab() const
+StackedEditor * BrowserWindow::currentTab() const
 {
     return qobject_cast<StackedEditor *>(d_func()->tabWidget->currentWidget());
 }
 
-int MainWindow::count() const
+int BrowserWindow::count() const
 {
     return d_func()->tabWidget->count();
 }
 
-void MainWindow::restoreSession(QSettings &s)
+void BrowserWindow::restoreSession(QSettings &s)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     setGeometry(s.value(QLatin1String("geometry")).toRect());
 
@@ -392,9 +392,9 @@ void MainWindow::restoreSession(QSettings &s)
     d->tabWidget->setCurrentIndex(s.value(QLatin1String("currentTab")).toInt());
 }
 
-void MainWindow::saveSession(QSettings &s)
+void BrowserWindow::saveSession(QSettings &s)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     s.setValue(QLatin1String("geometry"), geometry());
     s.setValue(QLatin1String("state"), saveState());
@@ -410,43 +410,43 @@ void MainWindow::saveSession(QSettings &s)
     s.endArray();
 }
 
-AbstractEditor * MainWindow::currentEditor() const
+AbstractEditor * BrowserWindow::currentEditor() const
 {
     return currentTab();
 }
 
-MainWindow * MainWindow::currentWindow()
+BrowserWindow * BrowserWindow::currentWindow()
 {
-    return qobject_cast<MainWindow *>(qApp->activeWindow());
+    return qobject_cast<BrowserWindow *>(qApp->activeWindow());
 }
 
-QList<MainWindow *> MainWindow::windows()
+QList<BrowserWindow *> BrowserWindow::windows()
 {
-    QList<MainWindow*> result;
+    QList<BrowserWindow*> result;
     foreach (QWidget *widget, qApp->topLevelWidgets()) {
-        MainWindow* window = qobject_cast<MainWindow*>(widget);
+        BrowserWindow* window = qobject_cast<BrowserWindow*>(widget);
         if (window)
             result.append(window);
     }
     return result;
 }
 
-MainWindow * MainWindow::createWindow()
+BrowserWindow * BrowserWindow::createWindow()
 {
-    return new MainWindow();
+    return new BrowserWindow();
 }
 
-void MainWindow::back()
+void BrowserWindow::back()
 {
     currentTab()->history()->back();
 }
 
-void MainWindow::forward()
+void BrowserWindow::forward()
 {
     currentTab()->history()->forward();
 }
 
-void MainWindow::up()
+void BrowserWindow::up()
 {
     QUrl url = currentTab()->url();
     QString path = url.path();
@@ -461,9 +461,9 @@ void MainWindow::up()
     open(url);
 }
 
-void MainWindow::open(const QUrl &url)
+void BrowserWindow::open(const QUrl &url)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     if (d->tabWidget->count() == 0)
         openNewTab(url);
@@ -475,9 +475,9 @@ void MainWindow::open(const QUrl &url)
     d->upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
-void MainWindow::openEditor(const QString &id)
+void BrowserWindow::openEditor(const QString &id)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     QUrl url;
     url.setScheme(qApp->applicationName());
@@ -497,9 +497,9 @@ void MainWindow::openEditor(const QString &id)
     d->updateUi(currentTab());
 }
 
-void MainWindow::openNewTab(const QUrl &url)
+void BrowserWindow::openNewTab(const QUrl &url)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     int index = -1;
     StackedEditor *tab = d->addTab(&index);
@@ -510,42 +510,42 @@ void MainWindow::openNewTab(const QUrl &url)
 //        closeTab(index); // close tab or window if no editor found
 }
 
-void MainWindow::openNewTab(const QList<QUrl> &urls)
+void BrowserWindow::openNewTab(const QList<QUrl> &urls)
 {
     foreach (const QUrl & url, urls) {
         openNewTab(url);
     }
 }
 
-void MainWindow::openNewWindow(const QUrl &path)
+void BrowserWindow::openNewWindow(const QUrl &path)
 {
-    MainWindow *window = createWindow();
+    BrowserWindow *window = createWindow();
     window->open(path);
     window->show();
 }
 
-void MainWindow::openNewWindow(const QList<QUrl> &urls)
+void BrowserWindow::openNewWindow(const QList<QUrl> &urls)
 {
-    MainWindow *window = createWindow();
+    BrowserWindow *window = createWindow();
     foreach (const QUrl & url, urls) {
         window->openNewTab(url);
     }
     window->show();
 }
 
-void MainWindow::newTab()
+void BrowserWindow::newTab()
 {
     openNewTab(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
 }
 
-void MainWindow::newWindow()
+void BrowserWindow::newWindow()
 {
     openNewWindow(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
 }
 
-void MainWindow::closeTab(int index)
+void BrowserWindow::closeTab(int index)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     if (d->tabWidget->count() <= 1) {
         close();
@@ -564,7 +564,7 @@ void MainWindow::closeTab(int index)
     widget->deleteLater();
 }
 
-void MainWindow::save()
+void BrowserWindow::save()
 {
     if (!(currentEditor()->capabilities() & AbstractEditor::CanSave))
         return;
@@ -572,7 +572,7 @@ void MainWindow::save()
     currentEditor()->save();
 }
 
-void MainWindow::saveAs()
+void BrowserWindow::saveAs()
 {
     // TODO: remember previous dir and set filename using title + extension from mimetype
     QString path = QFileDialog::getSaveFileName(this, tr("Save as"));
@@ -586,46 +586,46 @@ void MainWindow::saveAs()
     currentEditor()->save(QUrl::fromLocalFile(path));
 }
 
-void MainWindow::refresh()
+void BrowserWindow::refresh()
 {
     AbstractEditor *e = currentEditor();
     if (e)
         e->refresh();
 }
 
-void MainWindow::cancel()
+void BrowserWindow::cancel()
 {
     AbstractEditor *e = currentEditor();
     if (e)
         e->cancel();
 }
 
-void MainWindow::nextTab()
+void BrowserWindow::nextTab()
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     int index = d->tabWidget->currentIndex();
     d->tabWidget->setCurrentIndex(index == d->tabWidget->count() - 1 ? 0 : index + 1);
 }
 
-void MainWindow::prevTab()
+void BrowserWindow::prevTab()
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     int index = d->tabWidget->currentIndex();
     d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
 }
 
-void MainWindow::moveEvent(QMoveEvent *)
+void BrowserWindow::moveEvent(QMoveEvent *)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     d->settings->setValue(QLatin1String("geometry"), saveGeometry());
 }
 
-void MainWindow::resizeEvent(QResizeEvent *)
+void BrowserWindow::resizeEvent(QResizeEvent *)
 {
-    Q_D(MainWindow);
+    Q_D(BrowserWindow);
 
     d->settings->setValue(QLatin1String("geometry"), saveGeometry());
 }

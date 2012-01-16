@@ -1,11 +1,11 @@
 set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
+    browserwindow.h
+    browserwindow_p.h
     constants.h
     coreplugin_global.h
     coreplugin.h
     isettingspage.h
-    mainwindow.h
-    mainwindow_p.h
     settingsdialog.h
     settingsmodel.h
     settingsmodel_p.h
@@ -14,9 +14,9 @@ set( HEADERS
     tabbar.h
    )
 set( SOURCES
+    browserwindow.cpp
     coreplugin.cpp
     isettingspage.cpp
-    mainwindow.cpp
     settingsdialog.cpp
     settingsmodel.cpp
     settingswidget.cpp

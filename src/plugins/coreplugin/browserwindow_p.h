@@ -1,7 +1,7 @@
-#ifndef MAINWINDOW_P_H
-#define MAINWINDOW_P_H
+#ifndef BROWSERWINDOW_P_H
+#define BROWSERWINDOW_P_H
 
-#include "mainwindow.h"
+#include "browserwindow.h"
 
 #include "tabbar.h"
 
@@ -96,13 +96,13 @@ private:
 
 namespace CorePlugin {
 
-class MainWindowPrivate : public QObject
+class BrowserWindowPrivate : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PUBLIC(MainWindow)
-    MainWindow *q_ptr;
+    Q_DECLARE_PUBLIC(BrowserWindow)
+    BrowserWindow *q_ptr;
 public:
-    MainWindowPrivate(MainWindow *qq) : q_ptr(qq) {}
+    BrowserWindowPrivate(BrowserWindow *qq) : q_ptr(qq) {}
 
     AddressBar *lineEdit;
     QToolBar *toolBar;
@@ -150,4 +150,4 @@ public slots:
 
 } // namespace CorePlugin
 
-#endif // MAINWINDOW_P_H
+#endif // BROWSERWINDOW_P_H
