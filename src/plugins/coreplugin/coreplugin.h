@@ -2,7 +2,7 @@
 #define COREPLUGIN_H
 
 #include <extensionsystem/iplugin.h>
-#include "mainwindow.h"
+#include "browserwindow.h"
 
 using namespace ExtensionSystem;
 

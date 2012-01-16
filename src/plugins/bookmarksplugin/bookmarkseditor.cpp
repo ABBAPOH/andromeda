@@ -13,7 +13,7 @@
 #include <guisystem/actionmanager.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/mainwindow.h>
+#include <coreplugin/browserwindow.h>
 
 using namespace Bookmarks;
 using namespace BookmarksPlugin;
@@ -86,21 +86,21 @@ void BookmarksEditor::restoreState(const QByteArray &state)
 
 void BookmarksEditor::openTriggered(const QUrl &url)
 {
-    MainWindow *window = MainWindow::currentWindow();
+    BrowserWindow *window = BrowserWindow::currentWindow();
     if (window)
         window->open(url);
 }
 
 void BookmarksEditor::openInTabTriggered(const QUrl &url)
 {
-    MainWindow *window = MainWindow::currentWindow();
+    BrowserWindow *window = BrowserWindow::currentWindow();
     if (window)
         window->openNewTab(url);
 }
 
 void BookmarksEditor::openInWindowTriggered(const QUrl &url)
 {
-    MainWindow *window = MainWindow::currentWindow();
+    BrowserWindow *window = BrowserWindow::currentWindow();
     if (window)
         window->openNewWindow(url);
 }

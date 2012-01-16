@@ -23,7 +23,7 @@
 #include <bookmarks/bookmarkswidget.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/mainwindow.h>
+#include <coreplugin/browserwindow.h>
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -136,7 +136,7 @@ void BookmarksPluginImpl::shutdown()
 
 void BookmarksPluginImpl::open(const QUrl &url)
 {
-    MainWindow * window = MainWindow::currentWindow();
+    BrowserWindow * window = BrowserWindow::currentWindow();
     if (!window)
         return;
 
@@ -145,7 +145,7 @@ void BookmarksPluginImpl::open(const QUrl &url)
 
 void BookmarksPluginImpl::openInTabs(const QList<QUrl> &urls)
 {
-    MainWindow * window = MainWindow::currentWindow();
+    BrowserWindow * window = BrowserWindow::currentWindow();
     if (!window)
         return;
 
@@ -156,7 +156,7 @@ void BookmarksPluginImpl::openInTabs(const QList<QUrl> &urls)
 
 void BookmarksPluginImpl::openInWindow(const QList<QUrl> &urls)
 {
-    MainWindow * window = MainWindow::createWindow();
+    BrowserWindow * window = BrowserWindow::createWindow();
 
     for (int i = 0; i < urls.size(); i++) {
         window->openNewTab(urls.at(i));
@@ -166,7 +166,7 @@ void BookmarksPluginImpl::openInWindow(const QList<QUrl> &urls)
 
 void BookmarksPluginImpl::showBookmarks()
 {
-    MainWindow * window = MainWindow::currentWindow();
+    BrowserWindow * window = BrowserWindow::currentWindow();
     if (!window)
         return;
 
@@ -235,7 +235,7 @@ void BookmarksPluginImpl::createActions()
 
 void BookmarksPluginImpl::showBookmarkDialog(const QModelIndex &index, bool isFolder)
 {
-    MainWindow * window = MainWindow::currentWindow();
+    BrowserWindow * window = BrowserWindow::currentWindow();
     if (!window)
         return;
 

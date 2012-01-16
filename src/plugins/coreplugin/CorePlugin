@@ -3,6 +3,6 @@
 #include "constants.h"
 #include "editormanager.h"
 #include "isettingspage.h"
-#include "mainwindow.h"
+#include "browserwindow.h"
 #include "settingsdialog.h"
 #include "settingspagemanager.h"

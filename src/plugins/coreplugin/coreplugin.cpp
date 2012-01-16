@@ -52,12 +52,12 @@ bool CorePluginImpl::initialize(const QVariantMap &options)
 
 void CorePluginImpl::shutdown()
 {
-    qDeleteAll(MainWindow::windows());
+    qDeleteAll(BrowserWindow::windows());
 }
 
 void CorePluginImpl::newWindow()
 {
-    MainWindow::newWindow();
+    BrowserWindow::newWindow();
 }
 
 void CorePluginImpl::showPluginView()
@@ -97,7 +97,7 @@ void CorePluginImpl::handleMessage(const QString &message)
 void CorePluginImpl::restoreSession()
 {
     if (!urls.isEmpty()) {
-        MainWindow *window = new MainWindow();
+        BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
             window->openNewTab(QUrl::fromUserInput(url));
         window->show();
@@ -113,7 +113,7 @@ void CorePluginImpl::restoreSession()
     for (int i = 0; i < windowCount; i++) {
         s.setArrayIndex(i);
 
-        MainWindow *window = new MainWindow();
+        BrowserWindow *window = new BrowserWindow();
         window->restoreSession(s);
         window->show();
     }
@@ -124,7 +124,7 @@ void CorePluginImpl::saveSession()
 {
     QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
     s.clear();
-    QList<MainWindow*> windows = MainWindow::windows();
+    QList<BrowserWindow*> windows = BrowserWindow::windows();
     int windowCount = windows.count();
 
     s.beginWriteArray(QLatin1String("windows"), windowCount);
