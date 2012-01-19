@@ -14,6 +14,8 @@ set( HEADERS
     history.h
     historyitem.h
     ifind.h
+    mainwindow.h
+    mainwindow_p.h
     proxyaction.h
     stackedcontainer.h
     stackedcontainer_p.h
@@ -33,6 +35,7 @@ set( SOURCES
     history.cpp
     historyitem.cpp
     ifind.cpp
+    mainwindow.cpp
     proxyaction.cpp
     stackedcontainer.cpp
    )
