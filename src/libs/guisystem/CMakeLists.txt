@@ -17,6 +17,7 @@ set( HEADERS
     mainwindow.h
     mainwindow_p.h
     proxyaction.h
+    proxyhistory.h
     stackedcontainer.h
     stackedcontainer_p.h
    )
@@ -37,6 +38,7 @@ set( SOURCES
     ifind.cpp
     mainwindow.cpp
     proxyaction.cpp
+    proxyhistory.cpp
     stackedcontainer.cpp
    )
 set( FORMS
