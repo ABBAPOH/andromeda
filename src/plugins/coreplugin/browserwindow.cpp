@@ -6,6 +6,7 @@
 #include <QtCore/QSignalMapper>
 
 #include <QtGui/QAction>
+#include <QtGui/QApplication>
 #include <QtGui/QCompleter>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QDirModel>
