@@ -12,6 +12,7 @@ set( HEADERS
     settingswidget.h
     settingspagemanager.h
     tabbar.h
+    tabcontainer.h
     tabwidget.h
    )
 set( SOURCES
@@ -23,6 +24,7 @@ set( SOURCES
     settingswidget.cpp
     settingspagemanager.cpp
     tabbar.cpp
+    tabcontainer.cpp
     tabwidget.cpp
    )
 set( FORMS
