@@ -3,11 +3,11 @@
 
 #include "browserwindow.h"
 
+#include "addressbar.h"
 #include "tabbar.h"
 
 #include <QtCore/QEvent>
 #include <QtGui/QToolBar>
-#include <widgets/addressbar.h>
 #include <guisystem/stackedcontainer.h>
 
 #include "tabwidget.h"
@@ -22,7 +22,7 @@ class BrowserWindowPrivate : public QObject
 public:
     BrowserWindowPrivate(BrowserWindow *qq) : q_ptr(qq) {}
 
-    AddressBar *lineEdit;
+    MyAddressBar *lineEdit;
     QToolBar *toolBar;
     QTabWidget *tabWidget;
     TabBarButton *newTabButton;
@@ -40,19 +40,9 @@ public:
     QAction *saveAction;
     QAction *saveAsAction;
 
-    QAction *undoAction;
-    QAction *redoAction;
-
-    QAction *cutAction;
-    QAction *copyAction;
-    QAction *pasteAction;
-    QAction *selectAllAction;
-
     QSettings *settings;
 
     GuiSystem::StackedContainer *addTab(int *index = 0);
-
-    void createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot);
     void setupActions();
     void setupToolBar();
     void setupAlternateToolBar();

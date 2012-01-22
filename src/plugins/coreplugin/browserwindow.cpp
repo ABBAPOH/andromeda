@@ -41,17 +41,6 @@ StackedContainer * BrowserWindowPrivate::addTab(int *index)
     return tab;
 }
 
-void BrowserWindowPrivate::createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot)
-{
-    ActionManager *actionManager = ActionManager::instance();
-
-    action = new QAction(this);
-    action->setText(text);
-    connect(action, SIGNAL(triggered()), w, slot);
-    w->addAction(action);
-    actionManager->registerAction(action, id);
-}
-
 void BrowserWindowPrivate::setupActions()
 {
     Q_Q(BrowserWindow);
@@ -79,19 +68,6 @@ void BrowserWindowPrivate::setupActions()
     connect(saveAsAction, SIGNAL(triggered()), q, SLOT(saveAs()));
     q->addAction(saveAsAction);
     actionManager->registerAction(saveAsAction, Constants::Actions::SaveAs);
-
-    // LineEdit
-    createAction(undoAction, tr("Undo"), Constants::Actions::Undo, lineEdit, SLOT(undo()));
-    createAction(redoAction, tr("Redo"), Constants::Actions::Redo, lineEdit, SLOT(redo()));
-
-    QAction *a = new QAction(this);
-    a->setSeparator(true);
-    lineEdit->addAction(a);
-
-    createAction(cutAction, tr("Cut"), Constants::Actions::Cut, lineEdit, SLOT(cut()));
-    createAction(copyAction, tr("Copy"), Constants::Actions::Copy, lineEdit, SLOT(copy()));
-    createAction(pasteAction, tr("Paste"), Constants::Actions::Paste, lineEdit, SLOT(paste()));
-    createAction(selectAllAction, tr("Select All"), Constants::Actions::SelectAll, lineEdit, SLOT(selectAll()));
 
     // ToolBar
     backAction = new QAction(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")), tr("Back"), this);
@@ -225,7 +201,7 @@ void BrowserWindowPrivate::setupUi()
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), q, SLOT(closeTab(int)));
     connect(tabWidget, SIGNAL(tabBarDoubleClicked()), q, SLOT(newTab()));
 
-    lineEdit = new AddressBar(q);
+    lineEdit = new MyAddressBar(q);
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
 //    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
     connect(lineEdit, SIGNAL(open(QUrl)), q, SLOT(open(QUrl)));
