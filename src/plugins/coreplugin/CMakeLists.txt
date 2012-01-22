@@ -1,5 +1,6 @@
 set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
+    addressbar.h
     browserwindow.h
     browserwindow_p.h
     constants.h
@@ -16,6 +17,7 @@ set( HEADERS
     tabwidget.h
    )
 set( SOURCES
+    addressbar.cpp
     browserwindow.cpp
     coreplugin.cpp
     isettingspage.cpp
