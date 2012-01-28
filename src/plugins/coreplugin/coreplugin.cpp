@@ -99,7 +99,7 @@ void CorePluginImpl::restoreSession()
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
-            window->openNewTab(QUrl::fromUserInput(url));
+            window->openNewEditor(QUrl::fromUserInput(url));
         window->show();
         return;
     }

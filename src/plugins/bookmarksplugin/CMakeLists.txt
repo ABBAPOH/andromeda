@@ -26,5 +26,5 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DBOOKMARKSPLUGIN_LIBRARY )
 
 add_library( bookmarksplugin SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-target_link_libraries( bookmarksplugin ${QT_LIBRARIES} extensionsystem guisystem bookmarks coreplugin )
+target_link_libraries( bookmarksplugin ${QT_LIBRARIES} extensionsystem guisystem bookmarks )
 install_plugin( bookmarksplugin )
