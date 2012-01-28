@@ -10,7 +10,7 @@ class QUrl;
 
 namespace GuiSystem {
 class AbstractEditor;
-class StackedEditor;
+class StackedContainer;
 }
 
 namespace CorePlugin {
@@ -26,7 +26,7 @@ public:
     ~BrowserWindow();
 
     int currentIndex() const;
-    GuiSystem::StackedEditor *currentTab() const;
+    GuiSystem::StackedContainer *currentTab() const;
     int count() const;
 
     void restoreSession(QSettings &s);

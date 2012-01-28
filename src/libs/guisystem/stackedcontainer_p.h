@@ -1,7 +1,7 @@
-#ifndef STACKEDEDITOR_P_H
-#define STACKEDEDITOR_P_H
+#ifndef STACKEDCONTAINER_P_H
+#define STACKEDCONTAINER_P_H
 
-#include "stackededitor.h"
+#include "stackedcontainer.h"
 
 #include "abstracteditorfactory.h"
 #include "abstracthistory.h"
@@ -42,11 +42,11 @@ private:
     History *m_history;
 };
 
-class StackedEditorPrivate
+class StackedContainerPrivate
 {
-    Q_DECLARE_PUBLIC(StackedEditor)
+    Q_DECLARE_PUBLIC(StackedContainer)
 public:
-    StackedEditorPrivate(StackedEditor *qq) : q_ptr(qq) {}
+    StackedContainerPrivate(StackedContainer *qq) : q_ptr(qq) {}
 
     QStackedLayout *layout;
     QUrl currentUrl;
@@ -60,9 +60,9 @@ public:
     void addItem(AbstractEditor *e);
 
 protected:
-    StackedEditor *q_ptr;
+    StackedContainer *q_ptr;
 };
 
 } // namespace GuiSystem
 
-#endif // STACKEDEDITOR_P_H
+#endif // STACKEDCONTAINER_P_H

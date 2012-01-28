@@ -1,5 +1,5 @@
-#include "stackededitor.h"
-#include "stackededitor_p.h"
+#include "stackedcontainer.h"
+#include "stackedcontainer_p.h"
 
 #include <QtCore/QBuffer>
 #include <QtGui/QDesktopServices>
@@ -7,9 +7,9 @@
 
 using namespace GuiSystem;
 
-void StackedEditorPrivate::setEditor(AbstractEditor *e)
+void StackedContainerPrivate::setEditor(AbstractEditor *e)
 {
-    Q_Q(StackedEditor);
+    Q_Q(StackedContainer);
 
     if (editor == e)
         return;
@@ -41,7 +41,7 @@ void StackedEditorPrivate::setEditor(AbstractEditor *e)
     emit q->capabilitiesChanged(e->capabilities());
 }
 
-void StackedEditorPrivate::addItem(AbstractEditor *e)
+void StackedContainerPrivate::addItem(AbstractEditor *e)
 {
     if (!e)
         return;
@@ -86,22 +86,23 @@ void StackedEditorPrivate::addItem(AbstractEditor *e)
 /*!
   \brief Creates a StackedEditor with the given \a parent.
 */
-StackedEditor::StackedEditor(QWidget *parent) :
-    AbstractEditor(parent),
-    d(new StackedEditorPrivate(this))
+StackedContainer::StackedContainer(QWidget *parent) :
+    AbstractContainer(parent),
+    d(new StackedContainerPrivate(this))
 {
     d->editor = 0;
     d->layout = new QStackedLayout(this);
     d->history = new StackedEditorHistory(this);
     d->ignoreSignals = false;
 
+    connect(d->layout, SIGNAL(currentChanged(int)), SIGNAL(currentChanged(int)));
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), SLOT(onIndexChanged(int)));
 }
 
 /*!
   \brief Destroys StackedEditor.
 */
-StackedEditor::~StackedEditor()
+StackedContainer::~StackedContainer()
 {
     delete d;
 }
@@ -109,7 +110,7 @@ StackedEditor::~StackedEditor()
 /*!
   \reimp
 */
-AbstractEditor::Capabilities StackedEditor::capabilities() const
+AbstractEditor::Capabilities StackedContainer::capabilities() const
 {
     if (d->editor)
         return d->editor->capabilities() | HasHistory;
@@ -117,7 +118,31 @@ AbstractEditor::Capabilities StackedEditor::capabilities() const
     return HasHistory;
 }
 
-bool StackedEditor::isModified() const
+/*!
+  \reimp
+*/
+int StackedContainer::count() const
+{
+    return d->layout->count();
+}
+
+/*!
+  \reimp
+*/
+int StackedContainer::currentIndex() const
+{
+    return d->layout->currentIndex();
+}
+
+/*!
+  \reimp
+*/
+AbstractEditor * StackedContainer::editor(int index) const
+{
+    return qobject_cast<AbstractEditor *>(d->layout->widget(index));
+}
+
+bool StackedContainer::isModified() const
 {
     if (d->editor)
         return d->editor->isModified();
@@ -125,7 +150,7 @@ bool StackedEditor::isModified() const
     return AbstractEditor::isModified();
 }
 
-bool StackedEditor::isReadOnly() const
+bool StackedContainer::isReadOnly() const
 {
     if (d->editor)
         return d->editor->isReadOnly();
@@ -136,7 +161,7 @@ bool StackedEditor::isReadOnly() const
 /*!
   \reimp
 */
-QUrl StackedEditor::url() const
+QUrl StackedContainer::url() const
 {
     return d->currentUrl;
 }
@@ -144,7 +169,7 @@ QUrl StackedEditor::url() const
 /*!
   \reimp
 */
-void StackedEditor::open(const QUrl &url)
+void StackedContainer::open(const QUrl &url)
 {
     if (url.isEmpty())
         return;
@@ -181,75 +206,23 @@ void StackedEditor::open(const QUrl &url)
 /*!
   \reimp
 */
-void StackedEditor::close()
+void StackedContainer::openNewEditor(const QUrl &url)
 {
-    if (d->editor)
-        d->editor->close();
+    open(url);
 }
 
 /*!
   \reimp
 */
-void StackedEditor::cancel()
+void StackedContainer::setCurrentIndex(int index)
 {
-    if (d->editor)
-        d->editor->cancel();
+    d->layout->setCurrentIndex(index);
 }
 
 /*!
   \reimp
 */
-void StackedEditor::refresh()
-{
-    if (d->editor)
-        d->editor->refresh();
-}
-
-void StackedEditor::save(const QUrl &url)
-{
-    if (d->editor) {
-        if (d->editor->capabilities() & CanSave)
-            d->editor->save(url);
-    }
-}
-
-/*!
-  \reimp
-*/
-QIcon StackedEditor::icon() const
-{
-    if (d->editor)
-        return d->editor->icon();
-
-    return QIcon();
-}
-
-/*!
-  \reimp
-*/
-QString StackedEditor::title() const
-{
-    if (d->editor)
-        return d->editor->title();
-
-    return QString();
-}
-
-/*!
-  \reimp
-*/
-QString StackedEditor::windowTitle() const
-{
-    if (d->editor)
-        return d->editor->windowTitle();
-
-    return QString();
-}
-
-/*!
-  \reimp
-*/
-AbstractHistory * StackedEditor::history() const
+AbstractHistory * StackedContainer::history() const
 {
     return d->history;
 }
@@ -257,7 +230,7 @@ AbstractHistory * StackedEditor::history() const
 /*!
   \reimp
 */
-void StackedEditor::restoreState(const QByteArray &arr)
+void StackedContainer::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
     QBuffer bufer(&state);
@@ -279,7 +252,7 @@ void StackedEditor::restoreState(const QByteArray &arr)
 /*!
   \reimp
 */
-QByteArray StackedEditor::saveState() const
+QByteArray StackedContainer::saveState() const
 {
     if (!d->editor)
         return  QByteArray();
@@ -295,7 +268,7 @@ QByteArray StackedEditor::saveState() const
 /*!
   \internal
 */
-void StackedEditor::onUrlChanged(const QUrl &url)
+void StackedContainer::onUrlChanged(const QUrl &url)
 {
     if (d->ignoreSignals)
         return;
@@ -308,7 +281,7 @@ void StackedEditor::onUrlChanged(const QUrl &url)
 /*!
   \internal
 */
-void StackedEditor::onIndexChanged(int index)
+void StackedContainer::onIndexChanged(int index)
 {
     HistoryItem item = d->history->itemAt(index);
 
@@ -339,9 +312,9 @@ void StackedEditor::onIndexChanged(int index)
 /*!
   \internal
 */
-void StackedEditor::onDestroy(QObject *o)
+void StackedContainer::onDestroy(QObject *o)
 {
-    AbstractEditor *editor = static_cast<AbstractEditor *>(o);
+     AbstractEditor *editor = static_cast<AbstractEditor *>(o);
 
     if (d->editor == editor) {
         d->editor = 0;
