@@ -27,11 +27,14 @@ AddressBar::AddressBar(QWidget *parent) :
 
 void AddressBar::setLoading(bool yes)
 {
+    static QIcon iconCancel = QIcon(":/icons/cancelLoading.png");
+    static QIcon iconRefresh = QIcon(":/icons/refresh.png");
+
     m_loading = yes;
     if (yes)
-        setButtonPixmap(Right, QIcon(":/icons/cancelLoading.png").pixmap(16));
+        setButtonPixmap(Right, iconCancel.pixmap(16));
     else
-        setButtonPixmap(Right, QIcon(":/icons/refresh.png").pixmap(16));
+        setButtonPixmap(Right, iconRefresh.pixmap(16));
 }
 
 void AddressBar::setUrl(const QUrl &url)
