@@ -15,8 +15,8 @@ set( HEADERS
     historyitem.h
     ifind.h
     proxyaction.h
-    stackededitor.h
-    stackededitor_p.h
+    stackedcontainer.h
+    stackedcontainer_p.h
    )
 set( SOURCES
     actionmanager.cpp
@@ -34,7 +34,7 @@ set( SOURCES
     historyitem.cpp
     ifind.cpp
     proxyaction.cpp
-    stackededitor.cpp
+    stackedcontainer.cpp
    )
 set( FORMS
    )

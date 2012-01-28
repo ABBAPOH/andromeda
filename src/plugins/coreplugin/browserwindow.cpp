@@ -22,11 +22,11 @@
 using namespace CorePlugin;
 using namespace GuiSystem;
 
-StackedEditor * BrowserWindowPrivate::addTab(int *index)
+StackedContainer * BrowserWindowPrivate::addTab(int *index)
 {
     Q_Q(BrowserWindow);
 
-    StackedEditor *tab = new StackedEditor(tabWidget);
+    StackedContainer *tab = new StackedContainer(tabWidget);
     connect(tab, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
     connect(tab, SIGNAL(openNewEditorTriggered(QList<QUrl>)), q, SLOT(openNewTab(QList<QUrl>)));
     connect(tab, SIGNAL(openNewWindowTriggered(QList<QUrl>)), q, SLOT(openNewWindow(QList<QUrl>)));
@@ -246,7 +246,7 @@ void BrowserWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
-void BrowserWindowPrivate::updateUi(StackedEditor *tab)
+void BrowserWindowPrivate::updateUi(StackedContainer *tab)
 {
     Q_Q(BrowserWindow);
 
@@ -282,7 +282,7 @@ void BrowserWindowPrivate::onUrlChanged(const QUrl &url)
 
 void BrowserWindowPrivate::onCurrentChanged(int index)
 {
-    StackedEditor *tab = qobject_cast<StackedEditor *>(tabWidget->widget(index));
+    StackedContainer *tab = qobject_cast<StackedContainer *>(tabWidget->widget(index));
     if (!tab)
         return;
 
@@ -312,7 +312,7 @@ void BrowserWindowPrivate::onCurrentChanged(int index)
 
 void BrowserWindowPrivate::onChanged()
 {
-    StackedEditor *tab = qobject_cast<StackedEditor *>(sender());
+    StackedContainer *tab = qobject_cast<StackedContainer *>(sender());
     if (!tab)
         return;
 
@@ -362,9 +362,9 @@ int BrowserWindow::currentIndex() const
     return d_func()->tabWidget->currentIndex();
 }
 
-StackedEditor * BrowserWindow::currentTab() const
+StackedContainer * BrowserWindow::currentTab() const
 {
-    return qobject_cast<StackedEditor *>(d_func()->tabWidget->currentWidget());
+    return qobject_cast<StackedContainer *>(d_func()->tabWidget->currentWidget());
 }
 
 int BrowserWindow::count() const
@@ -384,7 +384,7 @@ void BrowserWindow::restoreSession(QSettings &s)
     for (int i = 0; i < tabCount; i++) {
         s.setArrayIndex(i);
 
-        StackedEditor *tab = d->addTab();
+        StackedContainer *tab = d->addTab();
         tab->restoreState(s.value(QLatin1String("tab")).toByteArray());
     }
     s.endArray();
@@ -403,7 +403,7 @@ void BrowserWindow::saveSession(QSettings &s)
     int tabCount = d->tabWidget->count();
     s.beginWriteArray(QLatin1String("tabs"), tabCount);
     for (int i = 0; i < tabCount; i++) {
-        StackedEditor *tab = static_cast<StackedEditor*>(d->tabWidget->widget(i));
+        StackedContainer *tab = static_cast<StackedContainer*>(d->tabWidget->widget(i));
         s.setArrayIndex(i);
         s.setValue(QLatin1String("tab"), tab->saveState());
     }
@@ -484,7 +484,7 @@ void BrowserWindow::openEditor(const QString &id)
     url.setHost(id);
     if (d->tabWidget->count() == 0) {
         int index = -1;
-        StackedEditor *tab = d->addTab(&index);
+        StackedContainer *tab = d->addTab(&index);
         tab->open(url);
         d->tabWidget->setCurrentIndex(index);
 
@@ -502,7 +502,7 @@ void BrowserWindow::openNewTab(const QUrl &url)
     Q_D(BrowserWindow);
 
     int index = -1;
-    StackedEditor *tab = d->addTab(&index);
+    StackedContainer *tab = d->addTab(&index);
     tab->open(url);
     d->tabWidget->setCurrentIndex(index);
 
