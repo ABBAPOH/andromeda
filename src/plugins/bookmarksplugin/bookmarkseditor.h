@@ -4,13 +4,11 @@
 #include <guisystem/abstracteditor.h>
 #include <guisystem/abstracteditorfactory.h>
 
+class QSettings;
+
 namespace Bookmarks {
 class BookmarksModel;
 class BookmarksWidget;
-}
-
-namespace CorePlugin {
-class Settings;
 }
 
 namespace BookmarksPlugin {
@@ -46,7 +44,7 @@ protected:
 private:
     Bookmarks::BookmarksWidget *m_widget;
     Bookmarks::BookmarksModel *m_model;
-    CorePlugin::Settings *m_settings;
+    QSettings *m_settings;
 
     QAction *redoAction;
     QAction *undoAction;
