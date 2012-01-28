@@ -65,6 +65,7 @@ signals:
     void addFolderTriggered();
 
 private slots:
+    void storeVisibility(bool visible);
     void onDestroy(QObject *);
 
 private:

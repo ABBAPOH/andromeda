@@ -4,6 +4,7 @@
 #include "bookmarksconstants.h"
 
 #include <QtCore/QtPlugin>
+#include <QtCore/QSettings>
 #include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
 
@@ -64,13 +65,18 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
     toolBar->setModel(model);
     toolBar->setRootIndex(model->toolBar());
 
+    QSettings settings;
+    settings.beginGroup(QLatin1String("bookmarks"));
+    bool visible = settings.value(QLatin1String("toolbarVisible"), true).toBool();
+    toolBar->setVisible(visible);
+
     if (parent) {
         QAction *act = new QAction(tr("Show bookmarks toolbar"), parent);
         parent->addAction(act);
         act->setCheckable(true);
-        act->setChecked(true);
+        act->setChecked(visible);
         connect(act, SIGNAL(toggled(bool)), toolBar, SLOT(setVisible(bool)));
-        Core::instance()->settings()->addObject(act, "bookmarks/checked");
+        connect(act, SIGNAL(toggled(bool)), this, SLOT(storeVisibility(bool)));
         am->registerAction(act, Constants::Actions::ShowBookmarks);
     }
 
@@ -263,6 +269,13 @@ void BookmarksPluginImpl::addDefaultBookmarks()
     model->addBookmark(bookmark("Google", QUrl("http://google.com")), toolBar);
     model->addBookmark(bookmark("YouTube", QUrl("http://www.youtube.com/")), toolBar);
     model->addBookmark(bookmark("Wikipedia", QUrl("http://www.wikipedia.org/")), toolBar);
+}
+
+void BookmarksToolBarContainer::storeVisibility(bool visible)
+{
+    QSettings settings;
+    settings.beginGroup(QLatin1String("bookmarks"));
+    settings.setValue(QLatin1String("toolbarVisible"), visible);
 }
 
 Q_EXPORT_PLUGIN(BookmarksPluginImpl)
