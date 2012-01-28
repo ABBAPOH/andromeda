@@ -23,87 +23,25 @@
 using namespace CorePlugin;
 using namespace GuiSystem;
 
-StackedContainer * BrowserWindowPrivate::addTab(int *index)
-{
-    Q_Q(BrowserWindow);
-
-    StackedContainer *tab = new StackedContainer(tabWidget);
-    connect(tab, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
-    connect(tab, SIGNAL(openNewEditorTriggered(QList<QUrl>)), q, SLOT(openNewTab(QList<QUrl>)));
-    connect(tab, SIGNAL(openNewWindowTriggered(QList<QUrl>)), q, SLOT(openNewWindow(QList<QUrl>)));
-    connect(tab, SIGNAL(iconChanged(QIcon)), SLOT(onChanged()));
-    connect(tab, SIGNAL(titleChanged(QString)), SLOT(onChanged()));
-    connect(tab, SIGNAL(windowTitleChanged(QString)), SLOT(onChanged()));
-    int i = tabWidget->addTab(tab, "tab");
-    if (index)
-        *index = i;
-
-    return tab;
-}
-
 void BrowserWindowPrivate::setupActions()
 {
     Q_Q(BrowserWindow);
 
     ActionManager *actionManager = ActionManager::instance();
 
-    newTabAction = new QAction(this);
+    newTabAction = new QAction(q);
     connect(newTabAction, SIGNAL(triggered()), q, SLOT(newTab()));
     q->addAction(newTabAction);
     actionManager->registerAction(newTabAction, Constants::Actions::NewTab);
 
-    closeTabAction = new QAction(this);
-    connect(closeTabAction, SIGNAL(triggered()), q, SLOT(closeTab()));
-    q->addAction(closeTabAction);
-    actionManager->registerAction(closeTabAction, Constants::Actions::CloseTab);
-
-    saveAction = new QAction(this);
-    saveAction->setEnabled(false);
-    connect(saveAction, SIGNAL(triggered()), q, SLOT(save()));
-    q->addAction(saveAction);
-    actionManager->registerAction(saveAction, Constants::Actions::Save);
-
-    saveAsAction = new QAction(this);
-    saveAsAction->setEnabled(false);
-    connect(saveAsAction, SIGNAL(triggered()), q, SLOT(saveAs()));
-    q->addAction(saveAsAction);
-    actionManager->registerAction(saveAsAction, Constants::Actions::SaveAs);
-
     // ToolBar
-    backAction = new QAction(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")), tr("Back"), this);
-    connect(backAction, SIGNAL(triggered()), q, SLOT(back()));
-    q->addAction(backAction);
-    actionManager->registerAction(backAction, Constants::Actions::Back);
+    q->action(MainWindow::Back)->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")));
+    q->action(MainWindow::Forward)->setIcon(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")));
 
-    forwardAction = new QAction(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")), tr("Forward"), this);
-    connect(forwardAction, SIGNAL(triggered()), q, SLOT(forward()));
-    q->addAction(forwardAction);
-    actionManager->registerAction(forwardAction, Constants::Actions::Forward);
-
-    upAction = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), this);
+    upAction = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), q);
     connect(upAction, SIGNAL(triggered()), q, SLOT(up()));
     q->addAction(upAction);
     actionManager->registerAction(upAction, Constants::Actions::Up);
-
-    nextTabAction = new QAction(this);
-#ifdef Q_OS_MAC
-    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Right")));
-#else
-    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
-#endif
-    nextTabAction->setShortcutContext(Qt::WindowShortcut);
-    connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextTab()));
-    q->addAction(nextTabAction);
-
-    prevTabAction = new QAction(q);
-#ifdef Q_OS_MAC
-    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Left")));
-#else
-    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
-#endif
-    prevTabAction->setShortcutContext(Qt::WindowShortcut);
-    connect(prevTabAction, SIGNAL(triggered()), q, SLOT(prevTab()));
-    q->addAction(prevTabAction);
 }
 
 void BrowserWindowPrivate::setupToolBar()
@@ -114,8 +52,8 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar->setFloatable(false);
     toolBar->setMovable(false);
 
-    toolBar->addAction(backAction);
-    toolBar->addAction(forwardAction);
+    toolBar->addAction(q->action(MainWindow::Back));
+    toolBar->addAction(q->action(MainWindow::Forward));
     toolBar->addAction(upAction);
 
     toolBar->addSeparator();
@@ -170,7 +108,8 @@ void BrowserWindowPrivate::setupAlternateToolBar()
 
     layout->addWidget(frame);
     layout->addWidget(toolBar);
-    layout->addWidget(tabWidget);
+    layout->addWidget(container);
+//    layout->addWidget(tabWidget);
     q->setCentralWidget(centralWidget);
 #else
     toolBar->setMovable(false);
@@ -184,29 +123,21 @@ void BrowserWindowPrivate::setupUi()
 {
     Q_Q(BrowserWindow);
 
-    newTabButton = new TabBarButton();
-    newTabButton->setIcon(QIcon(":/images/icons/addtab.png"));
-    newTabButton->setIconSize(QSize(32,32));
-    connect(newTabButton, SIGNAL(clicked()), q, SLOT(newTab()));
-
-    tabWidget = new MyTabWidget;
-    tabWidget->setDocumentMode(true);
-    tabWidget->setMovable(true);
-    tabWidget->setTabsClosable(true);
-    tabWidget->setUsesScrollButtons(true);
-    tabWidget->setCornerWidget(newTabButton);
-
-    q->setCentralWidget(tabWidget);
-    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onCurrentChanged(int)));
-    connect(tabWidget, SIGNAL(tabCloseRequested(int)), q, SLOT(closeTab(int)));
-    connect(tabWidget, SIGNAL(tabBarDoubleClicked()), q, SLOT(newTab()));
-
     lineEdit = new MyAddressBar(q);
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
 //    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
     connect(lineEdit, SIGNAL(open(QUrl)), q, SLOT(open(QUrl)));
     connect(lineEdit, SIGNAL(refresh()), q, SLOT(refresh()));
     connect(lineEdit, SIGNAL(canceled()), q, SLOT(cancel()));
+
+    container = new TabContainer(/*q*/);
+    q->setContanier(container);
+
+    connect(container, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
+    connect(container, SIGNAL(urlChanged(QUrl)), lineEdit, SLOT(setUrl(QUrl)));
+    connect(container, SIGNAL(loadStarted()), lineEdit, SLOT(startLoad()));
+    connect(container, SIGNAL(loadProgress(int)), lineEdit, SLOT(setLoadProgress(int)));
+    connect(container, SIGNAL(loadFinished(bool)), lineEdit, SLOT(finishLoad()));
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.
@@ -223,93 +154,17 @@ void BrowserWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
-void BrowserWindowPrivate::updateUi(StackedContainer *tab)
-{
-    Q_Q(BrowserWindow);
-
-    int index = tabWidget->indexOf(tab);
-    tabWidget->setTabText(index, tab->title());
-#ifndef Q_OS_MAC
-    tabWidget->setTabIcon(index, tab->icon());
-#endif
-
-    if (tab == q->currentTab()) {
-        QString windowTitle = tab->windowTitle();
-        windowTitle = windowTitle.isEmpty() ? tab->title() : windowTitle;
-        if (windowTitle.isEmpty())
-            q->setWindowTitle(QString(tr("Andromeda")));
-        else
-            q->setWindowTitle(QString(tr("%1 - Andromeda").arg(windowTitle)));
-
-        QIcon windowIcon = tab->icon();
-        windowIcon = windowIcon.isNull() ? QIcon(":/images/icons/andromeda.png") : windowIcon;
-        q->setWindowIcon(windowIcon);
-    }
-}
-
 void BrowserWindowPrivate::onUrlChanged(const QUrl &url)
 {
-    Q_Q(BrowserWindow);
-
-    if (sender() == q->currentTab())
-        lineEdit->setUrl(url);
-
     upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
-void BrowserWindowPrivate::onCurrentChanged(int index)
-{
-    StackedContainer *tab = qobject_cast<StackedContainer *>(tabWidget->widget(index));
-    if (!tab)
-        return;
-
-    lineEdit->setLoading(false);
-    disconnect(tab, 0, lineEdit, 0);
-    connect(tab, SIGNAL(loadStarted()), lineEdit,  SLOT(startLoad()));
-    connect(tab, SIGNAL(loadProgress(int)), lineEdit,  SLOT(setLoadProgress(int)));
-    connect(tab, SIGNAL(loadFinished(bool)), lineEdit,  SLOT(finishLoad()));
-
-    disconnect(tab->history(), 0, backAction, 0);
-    disconnect(tab->history(), 0, forwardAction, 0);
-    connect(tab->history(), SIGNAL(canGoBackChanged(bool)), backAction, SLOT(setEnabled(bool)));
-    connect(tab->history(), SIGNAL(canGoForwardChanged(bool)), forwardAction, SLOT(setEnabled(bool)));
-
-    disconnect(tab, 0, saveAction, 0);
-    connect(tab, SIGNAL(modificationChanged(bool)), saveAction, SLOT(setEnabled(bool)));
-
-    lineEdit->setUrl(tab->url());
-
-    updateUi(tab);
-
-    bool saveAsEnabled = tab->capabilities() & AbstractEditor::CanSave;
-    bool saveEnabled = saveAsEnabled && tab->isModified() && !tab->isReadOnly();
-    saveAsAction->setEnabled(saveAsEnabled);
-    saveAction->setEnabled(saveEnabled);
-}
-
-void BrowserWindowPrivate::onChanged()
-{
-    StackedContainer *tab = qobject_cast<StackedContainer *>(sender());
-    if (!tab)
-        return;
-
-    updateUi(tab);
-}
-
-void BrowserWindowPrivate::onCapabilitiesChanged(AbstractEditor::Capabilities capabilities)
-{
-    bool saveAsEnabled = capabilities & AbstractEditor::CanSave;
-
-    saveAsAction->setEnabled(saveAsEnabled);
-
-    if (!saveAsEnabled)
-        saveAction->setEnabled(false);
-}
-
 BrowserWindow::BrowserWindow(QWidget *parent) :
-    QMainWindow(parent),
+    MainWindow(parent),
     d_ptr(new BrowserWindowPrivate(this))
 {
+    createWindowFunc = (CreateWindowFunc)createWindow;
+
     Q_D(BrowserWindow);
 
     d->setupUi();
@@ -334,67 +189,19 @@ BrowserWindow::~BrowserWindow()
     delete d_ptr;
 }
 
-int BrowserWindow::currentIndex() const
-{
-    return d_func()->tabWidget->currentIndex();
-}
-
-StackedContainer * BrowserWindow::currentTab() const
-{
-    return qobject_cast<StackedContainer *>(d_func()->tabWidget->currentWidget());
-}
-
-int BrowserWindow::count() const
-{
-    return d_func()->tabWidget->count();
-}
-
 void BrowserWindow::restoreSession(QSettings &s)
 {
-    Q_D(BrowserWindow);
-
-    setGeometry(s.value(QLatin1String("geometry")).toRect());
-
-    restoreState(s.value(QLatin1String("state")).toByteArray());
-
-    int tabCount = s.beginReadArray(QLatin1String("tabs"));
-    for (int i = 0; i < tabCount; i++) {
-        s.setArrayIndex(i);
-
-        StackedContainer *tab = d->addTab();
-        tab->restoreState(s.value(QLatin1String("tab")).toByteArray());
-    }
-    s.endArray();
-
-    d->tabWidget->setCurrentIndex(s.value(QLatin1String("currentTab")).toInt());
+    MainWindow::restoreState(s.value(QLatin1String("state")).toByteArray());
 }
 
 void BrowserWindow::saveSession(QSettings &s)
 {
-    Q_D(BrowserWindow);
-
-    s.setValue(QLatin1String("geometry"), geometry());
-    s.setValue(QLatin1String("state"), saveState());
-    s.setValue(QLatin1String("currentTab"), d->tabWidget->currentIndex());
-
-    int tabCount = d->tabWidget->count();
-    s.beginWriteArray(QLatin1String("tabs"), tabCount);
-    for (int i = 0; i < tabCount; i++) {
-        StackedContainer *tab = static_cast<StackedContainer*>(d->tabWidget->widget(i));
-        s.setArrayIndex(i);
-        s.setValue(QLatin1String("tab"), tab->saveState());
-    }
-    s.endArray();
-}
-
-AbstractEditor * BrowserWindow::currentEditor() const
-{
-    return currentTab();
+    s.setValue(QLatin1String("state"), MainWindow::saveState());
 }
 
 BrowserWindow * BrowserWindow::currentWindow()
 {
-    return qobject_cast<BrowserWindow *>(qApp->activeWindow());
+    return qobject_cast<BrowserWindow*>(qApp->activeWindow());
 }
 
 QList<BrowserWindow *> BrowserWindow::windows()
@@ -413,19 +220,11 @@ BrowserWindow * BrowserWindow::createWindow()
     return new BrowserWindow();
 }
 
-void BrowserWindow::back()
-{
-    currentTab()->history()->back();
-}
-
-void BrowserWindow::forward()
-{
-    currentTab()->history()->forward();
-}
-
 void BrowserWindow::up()
 {
-    QUrl url = currentTab()->url();
+    Q_D(BrowserWindow);
+
+    QUrl url = d->container->url();
     QString path = url.path();
     // we can't use QDir::cleanPath because it breaks urls
     // remove / at end of path
@@ -438,159 +237,33 @@ void BrowserWindow::up()
     open(url);
 }
 
-void BrowserWindow::open(const QUrl &url)
+void BrowserWindow::openNewWindow(const QUrl &url)
 {
-    Q_D(BrowserWindow);
-
-    if (d->tabWidget->count() == 0)
-        openNewTab(url);
-    else
-        currentTab()->open(url);
-
-    d->updateUi(currentTab());
-
-    d->upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
-}
-
-void BrowserWindow::openEditor(const QString &id)
-{
-    Q_D(BrowserWindow);
-
-    QUrl url;
-    url.setScheme(qApp->applicationName());
-    url.setHost(id);
-    if (d->tabWidget->count() == 0) {
-        int index = -1;
-        StackedContainer *tab = d->addTab(&index);
-        tab->open(url);
-        d->tabWidget->setCurrentIndex(index);
-
-//        if (!tab->currentEditor())
-//            closeTab(index); // close tab or window if no editor found
-    } else {
-        currentTab()->open(url);
-    }
-
-    d->updateUi(currentTab());
-}
-
-void BrowserWindow::openNewTab(const QUrl &url)
-{
-    Q_D(BrowserWindow);
-
-    int index = -1;
-    StackedContainer *tab = d->addTab(&index);
-    tab->open(url);
-    d->tabWidget->setCurrentIndex(index);
-
-//    if (!tab->currentEditor())
-//        closeTab(index); // close tab or window if no editor found
-}
-
-void BrowserWindow::openNewTab(const QList<QUrl> &urls)
-{
-    foreach (const QUrl & url, urls) {
-        openNewTab(url);
-    }
-}
-
-void BrowserWindow::openNewWindow(const QUrl &path)
-{
-    BrowserWindow *window = createWindow();
-    window->open(path);
-    window->show();
+    MainWindow::openNewWindow(url);
 }
 
 void BrowserWindow::openNewWindow(const QList<QUrl> &urls)
 {
     BrowserWindow *window = createWindow();
     foreach (const QUrl & url, urls) {
-        window->openNewTab(url);
+        window->openNewEditor(url);
     }
     window->show();
 }
 
 void BrowserWindow::newTab()
 {
-    openNewTab(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
+    Q_D(BrowserWindow);
+
+    d->container->newTab();
 }
 
 void BrowserWindow::newWindow()
 {
-    openNewWindow(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
-}
-
-void BrowserWindow::closeTab(int index)
-{
-    Q_D(BrowserWindow);
-
-    if (d->tabWidget->count() <= 1) {
-        close();
-        return;
-    }
-
-    if (index == -1) {
-        index = d->tabWidget->currentIndex();
-    }
-
-    if (index == d->tabWidget->currentIndex())
-        d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1); // switch to other tab before closing to prevent losing focus
-
-    QWidget *widget = d->tabWidget->widget(index);
-    d->tabWidget->removeTab(index);
-    widget->deleteLater();
-}
-
-void BrowserWindow::save()
-{
-    if (!(currentEditor()->capabilities() & AbstractEditor::CanSave))
-        return;
-
-    currentEditor()->save();
-}
-
-void BrowserWindow::saveAs()
-{
-    // TODO: remember previous dir and set filename using title + extension from mimetype
-    QString path = QFileDialog::getSaveFileName(this, tr("Save as"));
-
-    if (path.isEmpty())
-        return;
-
-    if (!(currentEditor()->capabilities() & AbstractEditor::CanSave))
-        return;
-
-    currentEditor()->save(QUrl::fromLocalFile(path));
-}
-
-void BrowserWindow::refresh()
-{
-    AbstractEditor *e = currentEditor();
-    if (e)
-        e->refresh();
-}
-
-void BrowserWindow::cancel()
-{
-    AbstractEditor *e = currentEditor();
-    if (e)
-        e->cancel();
-}
-
-void BrowserWindow::nextTab()
-{
-    Q_D(BrowserWindow);
-
-    int index = d->tabWidget->currentIndex();
-    d->tabWidget->setCurrentIndex(index == d->tabWidget->count() - 1 ? 0 : index + 1);
-}
-
-void BrowserWindow::prevTab()
-{
-    Q_D(BrowserWindow);
-
-    int index = d->tabWidget->currentIndex();
-    d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
+    QUrl url = QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
+    BrowserWindow *window = createWindow();
+    window->openNewEditor(url);
+    window->show();
 }
 
 void BrowserWindow::moveEvent(QMoveEvent *)

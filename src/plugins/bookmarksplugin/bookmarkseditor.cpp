@@ -11,14 +11,13 @@
 #include <bookmarks/bookmarkswidget.h>
 #include <extensionsystem/pluginmanager.h>
 #include <guisystem/actionmanager.h>
+#include <guisystem/mainwindow.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/browserwindow.h>
 
 using namespace Bookmarks;
 using namespace BookmarksPlugin;
 using namespace GuiSystem;
-using namespace CorePlugin;
 using namespace ExtensionSystem;
 
 BookmarksEditor::BookmarksEditor(QWidget *parent) :
@@ -86,21 +85,21 @@ void BookmarksEditor::restoreState(const QByteArray &state)
 
 void BookmarksEditor::openTriggered(const QUrl &url)
 {
-    BrowserWindow *window = BrowserWindow::currentWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window)
         window->open(url);
 }
 
 void BookmarksEditor::openInTabTriggered(const QUrl &url)
 {
-    BrowserWindow *window = BrowserWindow::currentWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window)
-        window->openNewTab(url);
+        window->openNewEditor(url);
 }
 
 void BookmarksEditor::openInWindowTriggered(const QUrl &url)
 {
-    BrowserWindow *window = BrowserWindow::currentWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window)
         window->openNewWindow(url);
 }

@@ -15,10 +15,10 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+#include <guisystem/mainwindow.h>
 
 #include <coreplugin/constants.h>
 #include <guisystem/editormanager.h>
-#include <coreplugin/browserwindow.h>
 #include <coreplugin/settingspagemanager.h>
 
 #include "filecopydialog.h"
@@ -75,7 +75,7 @@ void FileManagerPluginImpl::shutdown()
 
 void FileManagerPluginImpl::goTo(const QString &s)
 {
-    BrowserWindow *window = BrowserWindow::currentWindow();
+    MainWindow *window = MainWindow::currentWindow();
     if (window) {
         window->open(QUrl::fromLocalFile(s));
     }

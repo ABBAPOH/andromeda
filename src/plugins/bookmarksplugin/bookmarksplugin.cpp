@@ -12,7 +12,9 @@
 
 #include <extensionsystem/pluginmanager.h>
 
+#include <guisystem/abstractcontainer.h>
 #include <guisystem/actionmanager.h>
+#include <guisystem/mainwindow.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
 
@@ -23,12 +25,10 @@
 #include <bookmarks/bookmarkswidget.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/browserwindow.h>
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
 using namespace Bookmarks;
-using namespace CorePlugin;
 using namespace BookmarksPlugin;
 
 class BookmarksMenuContainer : public CommandContainer
@@ -50,6 +50,7 @@ private:
 
 BookmarksToolBarContainer::~BookmarksToolBarContainer()
 {
+    QList<QObject *> toolBars = this->toolBars;
     qDeleteAll(toolBars);
 }
 
@@ -136,7 +137,7 @@ void BookmarksPluginImpl::shutdown()
 
 void BookmarksPluginImpl::open(const QUrl &url)
 {
-    BrowserWindow * window = BrowserWindow::currentWindow();
+    MainWindow * window = MainWindow::currentWindow();
     if (!window)
         return;
 
@@ -145,28 +146,28 @@ void BookmarksPluginImpl::open(const QUrl &url)
 
 void BookmarksPluginImpl::openInTabs(const QList<QUrl> &urls)
 {
-    BrowserWindow * window = BrowserWindow::currentWindow();
+    MainWindow * window = MainWindow::currentWindow();
     if (!window)
         return;
 
     for (int i = 0; i < urls.size(); i++) {
-        window->openNewTab(urls.at(i));
+        window->openNewEditor(urls.at(i));
     }
 }
 
 void BookmarksPluginImpl::openInWindow(const QList<QUrl> &urls)
 {
-    BrowserWindow * window = BrowserWindow::createWindow();
+    MainWindow * window = MainWindow::createWindow();
 
     for (int i = 0; i < urls.size(); i++) {
-        window->openNewTab(urls.at(i));
+        window->openNewEditor(urls.at(i));
     }
     window->show();
 }
 
 void BookmarksPluginImpl::showBookmarks()
 {
-    BrowserWindow * window = BrowserWindow::currentWindow();
+    MainWindow * window = MainWindow::currentWindow();
     if (!window)
         return;
 
@@ -235,11 +236,11 @@ void BookmarksPluginImpl::createActions()
 
 void BookmarksPluginImpl::showBookmarkDialog(const QModelIndex &index, bool isFolder)
 {
-    BrowserWindow * window = BrowserWindow::currentWindow();
+    MainWindow * window = MainWindow::currentWindow();
     if (!window)
         return;
 
-    AbstractEditor *editor = window->currentEditor();
+    AbstractEditor *editor = window->contanier();
     if (!editor) // paranoia
         return;
 

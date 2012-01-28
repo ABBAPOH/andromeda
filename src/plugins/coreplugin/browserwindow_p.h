@@ -10,7 +10,7 @@
 #include <QtGui/QToolBar>
 #include <guisystem/stackedcontainer.h>
 
-#include "tabwidget.h"
+#include "tabcontainer.h"
 
 namespace CorePlugin {
 
@@ -21,40 +21,25 @@ class BrowserWindowPrivate : public QObject
     BrowserWindow *q_ptr;
 public:
     BrowserWindowPrivate(BrowserWindow *qq) : q_ptr(qq) {}
+    ~BrowserWindowPrivate() {}
 
     MyAddressBar *lineEdit;
     QToolBar *toolBar;
-    QTabWidget *tabWidget;
-    TabBarButton *newTabButton;
+    TabContainer *container;
 
-    QAction *backAction;
-    QAction *forwardAction;
     QAction *upAction;
-
-    QAction *nextTabAction;
-    QAction *prevTabAction;
-
     QAction *newTabAction;
-    QAction *closeTabAction;
-
-    QAction *saveAction;
-    QAction *saveAsAction;
 
     QSettings *settings;
 
-    GuiSystem::StackedContainer *addTab(int *index = 0);
     void setupActions();
     void setupToolBar();
     void setupAlternateToolBar();
     void setupUi();
-    void updateUi(GuiSystem::StackedContainer *tab);
 
 public slots:
     void onUrlChanged(const QUrl &);
-    void onCurrentChanged(int);
-    void onChanged();
 
-    void onCapabilitiesChanged(GuiSystem::AbstractEditor::Capabilities capabilities);
 };
 
 } // namespace CorePlugin
