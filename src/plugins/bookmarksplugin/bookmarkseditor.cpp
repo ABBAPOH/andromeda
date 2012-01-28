@@ -15,7 +15,6 @@
 #include <coreplugin/constants.h>
 #include <coreplugin/core.h>
 #include <coreplugin/mainwindow.h>
-#include <coreplugin/settings.h>
 
 using namespace Bookmarks;
 using namespace BookmarksPlugin;
@@ -31,7 +30,7 @@ BookmarksEditor::BookmarksEditor(QWidget *parent) :
     m_model = pluginManager->object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
     m_widget->setModel(m_model);
 
-    m_settings = Core::instance()->settings();
+    m_settings = new QSettings(this);
     QVariant value = m_settings->value(QLatin1String("bookmarksEditor/lastState"));
     if (value.isValid())
         m_widget->restoreState(value.toByteArray());
