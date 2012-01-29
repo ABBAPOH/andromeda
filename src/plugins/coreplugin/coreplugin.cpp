@@ -9,12 +9,12 @@
 #include <QtGui/QMessageBox>
 
 #include "constants.h"
-#include "core.h"
 #include "settings.h"
 #include "settingspagemanager.h"
 #include "settingsdialog.h"
 #include "settingsmodel.h"
 
+#include <extensionsystem/pluginmanager.h>
 #include <extensionsystem/pluginview.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
@@ -37,7 +37,6 @@ CorePluginImpl::~CorePluginImpl()
 bool CorePluginImpl::initialize(const QVariantMap &options)
 {
     urls = options.value("files").toStringList();
-    addObject(new Core);
 
     Settings *settings = new Settings;
     settings->setObjectName("settings");

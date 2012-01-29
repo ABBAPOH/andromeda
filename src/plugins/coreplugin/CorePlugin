@@ -1,7 +1,6 @@
 #include "abstracteditor.h"
 #include "abstracteditorfactory.h"
 #include "constants.h"
-#include "core.h"
 #include "editormanager.h"
 #include "isettingspage.h"
 #include "mainwindow.h"
