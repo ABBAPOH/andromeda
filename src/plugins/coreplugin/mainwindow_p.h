@@ -130,6 +130,8 @@ public:
     QAction *pasteAction;
     QAction *selectAllAction;
 
+    QSettings *settings;
+
     GuiSystem::StackedEditor *addTab(int *index = 0);
     void createAction(QAction *&action, const QString &text, const QByteArray &id, QWidget *w, const char *slot);
     void setupActions();
