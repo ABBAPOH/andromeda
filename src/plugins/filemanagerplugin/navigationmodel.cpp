@@ -12,6 +12,8 @@
 #include <io/QDriveController>
 #include <io/QDriveInfo>
 
+#include "navigationpanelsettings.h"
+
 using namespace FileManagerPlugin;
 
 // todo: refactor model
@@ -157,21 +159,24 @@ NavigationModel::NavigationModel(QObject *parent) :
         }
     }
 
+    NavigationPanelSettings *panelSettings = NavigationPanelSettings::globalSettings();
+    panelSettings->globalSettings()->addModel(this);
     QSettings settings("NavigationModel");
     if (settings.contains("folders")) {
         QStringList folders = settings.value("folders").toStringList();
         foreach (const QString &folder, folders)
             addFolder(folder);
     } else {
-        StandardLocations locations(DesktopLocation | DocumentsLocation |
-                                    HomeLocation | ApplicationsLocation);
-        setStandardLocations(locations);
+        setStandardLocations(panelSettings->standardLocations());
     }
 }
 
 NavigationModel::~NavigationModel()
 {
     Q_D(NavigationModel);
+
+    NavigationPanelSettings *panelSettings = NavigationPanelSettings::globalSettings();
+    panelSettings->globalSettings()->removeModel(this);
 
     QSettings settings("NavigationModel");
     QStringList folders;

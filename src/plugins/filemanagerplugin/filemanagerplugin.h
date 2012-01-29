@@ -13,6 +13,7 @@ class QSettings;
 
 namespace FileManagerPlugin {
     class FileManagerSettings;
+    class NavigationPanelSettings;
 } // namespace FileManagerPlugin
 
 class FileManagerPluginImpl : public ExtensionSystem::IPlugin
@@ -26,7 +27,6 @@ public:
     void shutdown();
 
 private slots:
-    void onStandardLocationsChanged(FileManagerPlugin::NavigationModel::StandardLocations);
     void goTo(const QString &s);
 
 private:
@@ -48,6 +48,7 @@ private:
 
     QSettings *m_settings;
     FileManagerPlugin::FileManagerSettings *m_fileManagerSettings;
+    FileManagerPlugin::NavigationPanelSettings *m_panelSettings;
 };
 
 #endif // FILEMANAGERPLUGIN_H
