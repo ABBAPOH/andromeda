@@ -18,8 +18,6 @@
 #include <guisystem/abstracthistory.h>
 //#include <coreplugin/CorePlugin>
 #include <coreplugin/constants.h>
-#include <coreplugin/core.h>
-#include <coreplugin/settings.h>
 
 using namespace CorePlugin;
 using namespace GuiSystem;
@@ -345,7 +343,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setMenuBar(ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar());
     setAttribute(Qt::WA_DeleteOnClose);
 
-    QVariant value = Core::instance()->settings()->value(QLatin1String("mainWindow/geometry"));
+    d->settings = new QSettings(this);
+    d->settings->beginGroup(QLatin1String("mainWindow"));
+    QVariant value = d->settings->value(QLatin1String("geometry"));
     if (value.isValid()) {
         restoreGeometry(value.toByteArray());
         move(pos() + QPoint(20, 20));
@@ -618,10 +618,14 @@ void MainWindow::prevTab()
 
 void MainWindow::moveEvent(QMoveEvent *)
 {
-    Core::instance()->settings()->setValue(QLatin1String("mainWindow/geometry"), saveGeometry());
+    Q_D(MainWindow);
+
+    d->settings->setValue(QLatin1String("geometry"), saveGeometry());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *)
 {
-    Core::instance()->settings()->setValue(QLatin1String("mainWindow/geometry"), saveGeometry());
+    Q_D(MainWindow);
+
+    d->settings->setValue(QLatin1String("geometry"), saveGeometry());
 }
