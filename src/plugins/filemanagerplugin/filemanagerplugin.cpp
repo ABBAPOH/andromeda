@@ -17,10 +17,8 @@
 #include <guisystem/commandcontainer.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/core.h>
 #include <guisystem/editormanager.h>
 #include <coreplugin/mainwindow.h>
-#include <coreplugin/settings.h>
 #include <coreplugin/settingspagemanager.h>
 
 #include "filecopydialog.h"

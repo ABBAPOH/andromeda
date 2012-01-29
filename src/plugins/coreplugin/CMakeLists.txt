@@ -2,8 +2,6 @@ set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
     constants.h
     coreplugin_global.h
-    core.h
-    core_p.h
     coreplugin.h
     isettingspage.h
     mainwindow.h
@@ -18,7 +16,6 @@ set( HEADERS
     tabbar.h
    )
 set( SOURCES
-    core.cpp
     coreplugin.cpp
     isettingspage.cpp
     mainwindow.cpp

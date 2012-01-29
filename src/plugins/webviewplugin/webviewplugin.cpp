@@ -4,7 +4,6 @@
 #include <QtGui/QFileIconProvider>
 
 #include <guisystem/editormanager.h>
-#include <coreplugin/core.h>
 #include <coreplugin/settingspagemanager.h>
 
 #include "appearancesettings.h"

@@ -13,13 +13,12 @@
 #include <guisystem/actionmanager.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/core.h>
 #include <coreplugin/mainwindow.h>
 
 using namespace Bookmarks;
 using namespace BookmarksPlugin;
-using namespace CorePlugin;
 using namespace GuiSystem;
+using namespace CorePlugin;
 using namespace ExtensionSystem;
 
 BookmarksEditor::BookmarksEditor(QWidget *parent) :

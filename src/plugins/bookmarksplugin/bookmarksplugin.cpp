@@ -20,10 +20,8 @@
 #include <bookmarks/bookmarkstoolbar.h>
 #include <bookmarks/bookmarkswidget.h>
 
-#include <coreplugin/core.h>
 #include <coreplugin/constants.h>
 #include <coreplugin/mainwindow.h>
-#include <coreplugin/settings.h>
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
