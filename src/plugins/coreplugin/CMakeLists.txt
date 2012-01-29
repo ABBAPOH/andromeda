@@ -6,8 +6,6 @@ set( HEADERS
     isettingspage.h
     mainwindow.h
     mainwindow_p.h
-    settings.h
-    settings_p.h
     settingsdialog.h
     settingsmodel.h
     settingsmodel_p.h
@@ -19,7 +17,6 @@ set( SOURCES
     coreplugin.cpp
     isettingspage.cpp
     mainwindow.cpp
-    settings.cpp
     settingsdialog.cpp
     settingsmodel.cpp
     settingswidget.cpp
