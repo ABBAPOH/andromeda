@@ -6,4 +6,3 @@
 #include "mainwindow.h"
 #include "settingsdialog.h"
 #include "settingspagemanager.h"
-#include "tab.h"
