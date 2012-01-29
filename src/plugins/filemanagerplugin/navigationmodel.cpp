@@ -12,7 +12,7 @@
 #include <io/QDriveController>
 #include <io/QDriveInfo>
 
-class QDriveInfo;
+using namespace FileManagerPlugin;
 
 // todo: refactor model
 NavigationModelPrivate::NavigationModelPrivate(NavigationModel *qq) :

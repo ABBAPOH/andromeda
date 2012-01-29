@@ -6,6 +6,10 @@
 #include <QIcon>
 #include <QFileIconProvider>
 
+class QDriveController;
+
+namespace FileManagerPlugin {
+
 struct TreeItem
 {
     TreeItem *m_parent;
@@ -87,8 +91,6 @@ struct TreeItem
     }
 };
 
-class QFileIconProvider;
-class QDriveController;
 class NavigationModelPrivate : public QObject
 {
     Q_OBJECT
@@ -118,5 +120,7 @@ public slots:
     void onDriveAdded(const QString &);
     void onDriveRemoved(const QString &);
 };
+
+} // namespace FileManagerPlugin
 
 #endif // NAVIGATIONMODEL_P_H

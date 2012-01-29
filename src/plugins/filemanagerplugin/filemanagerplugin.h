@@ -26,7 +26,7 @@ public:
     void shutdown();
 
 private slots:
-    void onStandardLocationsChanged(NavigationModel::StandardLocations);
+    void onStandardLocationsChanged(FileManagerPlugin::NavigationModel::StandardLocations);
     void goTo(const QString &s);
 
 private:
