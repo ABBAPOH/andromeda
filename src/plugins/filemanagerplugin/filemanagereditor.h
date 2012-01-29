@@ -7,10 +7,7 @@
 #include "filemanagerwidget.h"
 
 class MiniSplitter;
-
-namespace CorePlugin {
-class Settings;
-}
+class QSettings;
 
 namespace FileManagerPlugin {
 
@@ -66,7 +63,6 @@ private slots:
 private:
     void setupUi();
     void setupConnections();
-    void setupSettings();
     void createActions();
 
 private:
@@ -75,7 +71,7 @@ private:
     NavigationPanel *m_panel;
     FileManagerHistory *m_history;
 
-    CorePlugin::Settings *m_settings;
+    QSettings *m_settings;
 
     QAction *showLeftPanelAction;
 
