@@ -20,11 +20,7 @@
 #include <widgets/minisplitter.h>
 
 #include <coreplugin/constants.h>
-#include <coreplugin/core.h>
-#include <coreplugin/mainwindow.h>
-#include <coreplugin/settings.h>
 
-using namespace CorePlugin;
 using namespace GuiSystem;
 using namespace FileManagerPlugin;
 
@@ -77,12 +73,12 @@ HistoryItem FileManagerHistory::itemAt(int index) const
 */
 FileManagerEditor::FileManagerEditor(QWidget *parent) :
     AbstractEditor(parent),
+    m_settings(new QSettings(this)),
     ignoreSignals(false)
 {
     setupUi();
     setupConnections();
     createActions();
-    setupSettings();
 
     m_history = new FileManagerHistory(this);
     m_history->setDualPaneWidget(m_widget);
@@ -295,7 +291,7 @@ void FileManagerEditor::showLeftPanel(bool show)
 */
 void FileManagerEditor::onSplitterMoved(int, int)
 {
-    Core::instance()->settings()->setValue("fileManager/splitterState", splitter->saveState());
+    m_settings->setValue("fileManager/splitterState", splitter->saveState());
 }
 
 /*!
@@ -378,14 +374,6 @@ void FileManagerEditor::setupConnections()
     connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
 
     connect(splitter, SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
-}
-
-/*!
-  \internal
-*/
-void FileManagerEditor::setupSettings()
-{
-    m_settings = Core::instance()->settings();
 }
 
 /*!
