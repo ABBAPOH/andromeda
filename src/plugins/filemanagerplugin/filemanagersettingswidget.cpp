@@ -3,41 +3,19 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
-#include <coreplugin/core.h>
-#include <coreplugin/settings.h>
 
 #include "filemanagersettings.h"
 #include "navigationmodel.h"
+#include "navigationpanelsettings.h"
 
-#include <QDebug>
-
-using namespace CorePlugin;
 using namespace FileManagerPlugin;
-
-static int readFlags()
-{
-    int flags = 0;
-
-    Settings *s = Core::instance()->settings();
-    s->beginGroup(QLatin1String("fileManager"));
-    if (s->contains(QLatin1String("standardLocations"))) {
-        flags = s->value(QLatin1String("standardLocations")).toInt();
-    } else {
-        flags = NavigationModel::DesktopLocation |
-                NavigationModel::DocumentsLocation |
-                NavigationModel::HomeLocation |
-                NavigationModel::ApplicationsLocation;
-    }
-    s->endGroup();
-
-    return flags;
-}
 
 FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileManagerSettingsWidget),
     m_settings(new QSettings(this)),
-    m_fileManagerSettings(FileManagerSettings::globalSettings())
+    m_fileManagerSettings(FileManagerSettings::globalSettings()),
+    m_panelSettings(NavigationPanelSettings::globalSettings())
 {
     ui->setupUi(this);
 
@@ -57,17 +35,14 @@ FileManagerSettingsWidget::~FileManagerSettingsWidget()
 
 void FileManagerSettingsWidget::onChecked(bool checked)
 {
-    int flags = readFlags();
+    int flags = m_panelSettings->standardLocations();
 
     if (checked)
         flags = flags | sender()->property("flag").toInt();
     else
         flags = flags & ~sender()->property("flag").toInt();
 
-    Settings *s = Core::instance()->settings();
-    s->beginGroup(QLatin1String("fileManager"));
-    s->setValue(QLatin1String("standardLocations"), flags);
-    s->endGroup();
+    m_panelSettings->setStandardLocations(NavigationModel::StandardLocations(flags));
 }
 
 void FileManagerSettingsWidget::onIconSizeChanged(int value)
@@ -144,7 +119,7 @@ void FileManagerSettingsWidget::onItemsExpandableChecked(bool checked)
 
 void FileManagerSettingsWidget::setupLeftPanel()
 {
-    int flags = readFlags();
+    int flags = m_panelSettings->standardLocations();
 
     ui->applicationsCheckBox->setChecked(flags & NavigationModel::ApplicationsLocation);
     ui->desktopCheckBox->setChecked(flags & NavigationModel::DesktopLocation);

@@ -30,6 +30,7 @@
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 #include "navigationmodel.h"
+#include "navigationpanelsettings.h"
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -49,10 +50,7 @@ bool FileManagerPluginImpl::initialize(const QVariantMap &options)
 
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");
-    connect(navigationModel, SIGNAL(standardLocationsChanged(NavigationModel::StandardLocations)),
-            SLOT(onStandardLocationsChanged(NavigationModel::StandardLocations)));
     addObject(navigationModel);
-    CorePlugin::Core::instance()->settings()->addObject(navigationModel, "fileManager/standardLocations");
 
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new FileManagerSettingsPage);
@@ -75,11 +73,6 @@ void FileManagerPluginImpl::shutdown()
     qApp->clipboard()->clear();
 #endif
     saveSettings();
-}
-
-void FileManagerPluginImpl::onStandardLocationsChanged(NavigationModel::StandardLocations loc)
-{
-    CorePlugin::Core::instance()->settings()->setValue("fileManager/standardLocations", (int)loc);
 }
 
 void FileManagerPluginImpl::goTo(const QString &s)
@@ -323,6 +316,7 @@ void FileManagerPluginImpl::loadSettings()
     m_settings = new QSettings(this);
     m_settings->beginGroup(QLatin1String("fileManager"));
     m_fileManagerSettings = FileManagerSettings::globalSettings();
+    m_panelSettings = NavigationPanelSettings::globalSettings();
 
     QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
     QSize columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView);
@@ -344,6 +338,13 @@ void FileManagerPluginImpl::loadSettings()
     m_fileManagerSettings->setGridSize(gridSize);
     m_fileManagerSettings->setFlow((FileManagerSettings::Flow)flow);
     m_fileManagerSettings->setItemsExpandable(itemsExpandable);
+
+    NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
+
+    locations = NavigationModel::StandardLocations(m_settings->value(QLatin1String("standardLocations"),
+                                                                     (int)locations).toInt());
+
+    m_panelSettings->setStandardLocations(locations);
 }
 
 void FileManagerPluginImpl::saveSettings()
@@ -361,6 +362,10 @@ void FileManagerPluginImpl::saveSettings()
     m_settings->setValue(QLatin1String("gridSize"), gridSize);
     m_settings->setValue(QLatin1String("flow"), flow);
     m_settings->setValue(QLatin1String("itemsExpandable"), itemsExpandable);
+
+    NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
+
+    m_settings->setValue(QLatin1String("standardLocations"), (int)locations);
 }
 
 Q_EXPORT_PLUGIN(FileManagerPluginImpl)

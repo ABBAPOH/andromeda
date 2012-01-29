@@ -27,6 +27,7 @@ set( HEADERS
     navigationmodel_p.h
     navigationpanel.h
     navigationpanel_p.h
+    navigationpanelsettings.h
    )
 set( SOURCES
     dualpanewidget.cpp
@@ -45,6 +46,7 @@ set( SOURCES
     filemanagersettingswidget.cpp
     navigationmodel.cpp
     navigationpanel.cpp
+    navigationpanelsettings.cpp
    )
 set( FORMS
     filecopyerrordialog.ui
