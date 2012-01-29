@@ -5,6 +5,8 @@
 
 #include <QtCore/QAbstractItemModel>
 
+namespace FileManagerPlugin {
+
 class NavigationModelPrivate;
 class FILEMANAGERPLUGIN_EXPORT NavigationModel : public QAbstractItemModel
 {
@@ -67,5 +69,7 @@ signals:
 protected:
     NavigationModelPrivate *d_ptr;
 };
+
+} // namespace FileManagerPlugin
 
 #endif // NAVIGATIONMODEL_H

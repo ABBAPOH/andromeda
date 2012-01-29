@@ -6,13 +6,14 @@
 #include <QtCore/QHash>
 #include <QtGui/QWidget>
 
-class NavigationModel;
 class QModelIndex;
 class QTreeView;
 class QTreeWidget;
 class QTreeWidgetItem;
 
 namespace FileManagerPlugin {
+
+class NavigationModel;
 
 class NavigationPanelPrivate;
 class FILEMANAGERPLUGIN_EXPORT NavigationPanel : public QWidget
