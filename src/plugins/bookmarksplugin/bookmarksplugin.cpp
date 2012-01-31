@@ -84,10 +84,11 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
     connect(toolBar, SIGNAL(addFolderTriggered()), SIGNAL(addFolderTriggered()));
 
     QList<QAction*> actions;
-    QAction *a = new QAction(QIcon(":/icons/bookmarks.png"), QString(), toolBar);
-    a->setToolTip(tr("Show bookmarks"));
-    connect(a, SIGNAL(triggered()), SIGNAL(showBookmarksTriggered()));
-    actions.append(a);
+    QAction *showBookmarksAction = new QAction(toolBar);
+    showBookmarksAction->setIcon(QIcon(":/icons/bookmarks.png"));
+    showBookmarksAction->setToolTip(tr("Show bookmarks"));
+    connect(showBookmarksAction, SIGNAL(triggered()), SIGNAL(showBookmarksTriggered()));
+    actions.append(showBookmarksAction);
     toolBar->setInitialActions(actions);
     connect(toolBar, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
     const_cast<BookmarksToolBarContainer*>(this)->toolBars.append(toolBar);
