@@ -107,6 +107,9 @@ int WebViewHistory::currentItemIndex() const
 
 void WebViewHistory::setCurrentItemIndex(int index)
 {
+    if (m_history->count() == 0)
+        return;
+
     m_history->goToItem(m_history->itemAt(index));
 }
 
