@@ -32,7 +32,8 @@ IPlugin::~IPlugin()
 {
     Q_D(IPlugin);
 
-    foreach (QObject *object, d->addedObjects) {
+    for (int i = d->addedObjects.count() - 1; i >= 0; i--) {
+        QObject *object = d->addedObjects[i];
         PluginManager::instance()->removeObject(object);
         delete object;
     }
