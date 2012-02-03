@@ -131,6 +131,8 @@ void CorePluginImpl::saveSession()
     for (int i = 0; i < windowCount; i++) {
         s.setArrayIndex(i);
         windows[i]->saveSession(s);
+        // hide window to prevent strange crash when bookmarks editor is opened
+        windows[i]->hide();
     }
     s.endArray();
 }
