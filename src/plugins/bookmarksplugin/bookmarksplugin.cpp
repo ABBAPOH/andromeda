@@ -113,15 +113,16 @@ BookmarksPluginImpl::BookmarksPluginImpl() :
 
 bool BookmarksPluginImpl::initialize(const QVariantMap &)
 {
-    BookmarksEditorFactory *f = new BookmarksEditorFactory(this);
-    EditorManager::instance()->addFactory(f);
-
     model = new BookmarksModel(this);
     addObject(model, QLatin1String(Constants::Objects::BookmarksModel));
 
     if (!model->loadBookmarks()) {
         addDefaultBookmarks();
     }
+
+    BookmarksEditorFactory *f = new BookmarksEditorFactory(this);
+    addObject(f);
+    EditorManager::instance()->addFactory(f);
 
     createActions();
 
@@ -221,6 +222,7 @@ void BookmarksPluginImpl::createActions()
     connect(menu->bookmarksMenu(), SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
     connect(menu->bookmarksMenu(), SIGNAL(openInWindow(QList<QUrl>)), SLOT(openInWindow(QList<QUrl>)));
     menuBarContainer->addContainer(menu);
+    addObject(menu);
 
     BookmarksToolBarContainer *toolBar = new BookmarksToolBarContainer(Constants::Objects::AlternateToolbar, this);
     connect(toolBar, SIGNAL(open(QUrl)), SLOT(open(QUrl)));
@@ -228,6 +230,7 @@ void BookmarksPluginImpl::createActions()
     connect(toolBar, SIGNAL(showBookmarksTriggered()), SLOT(showBookmarks()));
     connect(toolBar, SIGNAL(addBookmarkTriggered()), SLOT(addBookmark()));
     connect(toolBar, SIGNAL(addFolderTriggered()), SLOT(addFolder()));
+    addObject(toolBar);
 }
 
 void BookmarksPluginImpl::showBookmarkDialog(const QModelIndex &index, bool isFolder)
