@@ -7,6 +7,8 @@
 #include <QtCore/QSettings>
 #include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
+#include <QtGui/QToolButton>
+#include <QtGui/QWidgetAction>
 
 #include <extensionsystem/pluginmanager.h>
 
@@ -83,12 +85,16 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
     connect(toolBar, SIGNAL(addBookmarkTriggered()), SIGNAL(addBookmarkTriggered()));
     connect(toolBar, SIGNAL(addFolderTriggered()), SIGNAL(addFolderTriggered()));
 
+    QToolButton *button = new QToolButton(toolBar);
+    button->setIcon(QIcon(":/icons/bookmarks.png"));
+    button->setToolTip(tr("Show bookmarks"));
+    connect(button, SIGNAL(clicked()), SIGNAL(showBookmarksTriggered()));
+
+    QWidgetAction *action = new QWidgetAction(toolBar);
+    action->setDefaultWidget(button);
+
     QList<QAction*> actions;
-    QAction *showBookmarksAction = new QAction(toolBar);
-    showBookmarksAction->setIcon(QIcon(":/icons/bookmarks.png"));
-    showBookmarksAction->setToolTip(tr("Show bookmarks"));
-    connect(showBookmarksAction, SIGNAL(triggered()), SIGNAL(showBookmarksTriggered()));
-    actions.append(showBookmarksAction);
+    actions.append(action);
     toolBar->setInitialActions(actions);
     connect(toolBar, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
     const_cast<BookmarksToolBarContainer*>(this)->toolBars.append(toolBar);

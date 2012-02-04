@@ -16,15 +16,10 @@ class WIDGETS_EXPORT ModelToolBar : public QToolBar
     Q_OBJECT
     Q_DISABLE_COPY(ModelToolBar)
 
-    Q_PROPERTY(bool showIcons READ showIcons WRITE setShowIcons)
-
 public:
     explicit ModelToolBar(QWidget *parent = 0);
     explicit ModelToolBar(const QString &title, QWidget *parent = 0);
     ~ModelToolBar();
-
-    bool showIcons() const;
-    void setShowIcons(bool show);
 
     virtual void setModel(QAbstractItemModel *model);
     QAbstractItemModel *model() const;
