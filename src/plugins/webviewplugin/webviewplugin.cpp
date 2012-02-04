@@ -4,7 +4,7 @@
 #include <QtGui/QFileIconProvider>
 
 #include <guisystem/editormanager.h>
-#include <coreplugin/settingspagemanager.h>
+#include <guisystem/settingspagemanager.h>
 
 #include "appearancesettings.h"
 #include "cookiejar.h"
@@ -19,7 +19,6 @@
 #include <QtWebKit/QWebSettings>
 
 using namespace GuiSystem;
-using namespace CorePlugin;
 using namespace WebViewPlugin;
 
 WebViewPluginImpl *m_instance = 0;

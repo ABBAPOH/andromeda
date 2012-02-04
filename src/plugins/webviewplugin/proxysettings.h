@@ -31,9 +31,9 @@ private:
     QSettings *m_settings;
 };
 
-#include <coreplugin/isettingspage.h>
+#include <guisystem/settingspage.h>
 
-class ProxySettingsPage : public CorePlugin::ISettingsPage
+class ProxySettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
 

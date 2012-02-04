@@ -78,7 +78,7 @@ void ProxySettingsWidget::saveSettings()
 }
 
 ProxySettingsPage::ProxySettingsPage(QObject *parent) :
-    ISettingsPage(QLatin1String("Proxy"), QLatin1String("WebView"), parent)
+    SettingsPage(QLatin1String("Proxy"), QLatin1String("WebView"), parent)
 {
 }
 

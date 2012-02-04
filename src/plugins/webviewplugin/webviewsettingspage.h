@@ -1,9 +1,9 @@
 #ifndef WEBVIEWSETTINGSPAGE_H
 #define WEBVIEWSETTINGSPAGE_H
 
-#include <coreplugin/isettingspage.h>
+#include <guisystem/settingspage.h>
 
-class WebViewSettingsPage : public CorePlugin::ISettingsPage
+class WebViewSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
 public:

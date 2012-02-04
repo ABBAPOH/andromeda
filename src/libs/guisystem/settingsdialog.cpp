@@ -1,6 +1,6 @@
 #include "settingsdialog.h"
 
-#include "isettingspage.h"
+#include "settingspage.h"
 #include "settingspagemanager.h"
 
 #include <QtGui/QAction>
@@ -47,7 +47,7 @@ public:
     }
 };
 
-namespace CorePlugin {
+namespace GuiSystem {
 
 class SettingsDialogPrivate
 {
@@ -64,15 +64,15 @@ public:
 
     QList<QString> categories;
     QList<QTabWidget *> tabWidgets;
-    QMap<ISettingsPage *, QWidget *> widgets;
+    QMap<SettingsPage *, QWidget *> widgets;
 
     SettingsPageManager *manager;
     QStandardItemModel *model;
     QAction *closeAction;
 
     void addCategory(const QString &id);
-    void addPage(ISettingsPage *page);
-    void removePage(ISettingsPage *page);
+    void addPage(SettingsPage *page);
+    void removePage(SettingsPage *page);
 
     void setupUi();
 
@@ -80,9 +80,9 @@ private:
     SettingsDialog *q_ptr;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
-using namespace CorePlugin;
+using namespace GuiSystem;
 
 const int categoryIconSize = 24;
 
@@ -91,7 +91,7 @@ void SettingsDialogPrivate::addCategory(const QString &id)
     if (categories.contains(id))
         return;
 
-    ISettingsPage *page = manager->pages(id).first();
+    SettingsPage *page = manager->pages(id).first();
 
     QStandardItem *item = new QStandardItem;
     item->setIcon(page->categoryIcon());
@@ -106,7 +106,7 @@ void SettingsDialogPrivate::addCategory(const QString &id)
     tabWidgets.append(widget);
 }
 
-void SettingsDialogPrivate::addPage(ISettingsPage *page)
+void SettingsDialogPrivate::addPage(SettingsPage *page)
 {
     int index = categories.indexOf(page->category());
 
@@ -116,7 +116,7 @@ void SettingsDialogPrivate::addPage(ISettingsPage *page)
     tabWidget->addTab(widget, page->name());
 }
 
-void SettingsDialogPrivate::removePage(ISettingsPage *page)
+void SettingsDialogPrivate::removePage(SettingsPage *page)
 {
     QWidget *widget = widgets.take(page);
     if (widget) {
@@ -232,12 +232,12 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
 
     foreach (const QString &category, manager->categories()) {
         d->addCategory(category);
-        foreach (ISettingsPage *page, d->manager->pages(category)) {
+        foreach (SettingsPage *page, d->manager->pages(category)) {
             d->addPage(page);
         }
     }
-    connect(d->manager, SIGNAL(pageAdded(ISettingsPage*)), SLOT(onPageAdded(ISettingsPage*)));
-    connect(d->manager, SIGNAL(pageRemoved(ISettingsPage*)), SLOT(onPageRemoved(ISettingsPage*)));
+    connect(d->manager, SIGNAL(pageAdded(SettingsPage*)), SLOT(onPageAdded(SettingsPage*)));
+    connect(d->manager, SIGNAL(pageRemoved(SettingsPage*)), SLOT(onPageRemoved(SettingsPage*)));
 }
 
 /*!
@@ -256,7 +256,7 @@ void SettingsDialog::currentChanged(const QModelIndex &current)
 /*!
     \internal
 */
-void SettingsDialog::onPageAdded(ISettingsPage *page)
+void SettingsDialog::onPageAdded(SettingsPage *page)
 {
     Q_D(SettingsDialog);
 
@@ -268,7 +268,7 @@ void SettingsDialog::onPageAdded(ISettingsPage *page)
 /*!
     \internal
 */
-void SettingsDialog::onPageRemoved(ISettingsPage *page)
+void SettingsDialog::onPageRemoved(SettingsPage *page)
 {
     d_func()->removePage(page);
 }

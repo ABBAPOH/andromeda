@@ -1,17 +1,17 @@
 #ifndef SETTINGSPAGEMANAGER_H
 #define SETTINGSPAGEMANAGER_H
 
-#include "coreplugin_global.h"
+#include "guisystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QIcon>
 
-namespace CorePlugin {
+namespace GuiSystem {
 
-class ISettingsPage;
+class SettingsPage;
 
 class SettingsPageManagerPrivate;
-class COREPLUGIN_EXPORT SettingsPageManager : public QObject
+class GUISYSTEM_EXPORT SettingsPageManager : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SettingsPageManager)
@@ -21,18 +21,18 @@ public:
     explicit SettingsPageManager(QObject *parent = 0);
     ~SettingsPageManager();
 
-    ISettingsPage *page(const QString &id) const;
-    void addPage(ISettingsPage* page);
-    void removePage(ISettingsPage* page);
+    SettingsPage *page(const QString &id) const;
+    void addPage(SettingsPage* page);
+    void removePage(SettingsPage* page);
 
     QStringList categories() const;
 
-    QList<ISettingsPage *> pages() const;
-    QList<ISettingsPage *> pages(const QString &category) const;
+    QList<SettingsPage *> pages() const;
+    QList<SettingsPage *> pages(const QString &category) const;
 
 signals:
-    void pageAdded(ISettingsPage *);
-    void pageRemoved(ISettingsPage *);
+    void pageAdded(SettingsPage *);
+    void pageRemoved(SettingsPage *);
 
 private slots:
     void onDestroyed(QObject *o);
@@ -41,6 +41,6 @@ protected:
     SettingsPageManagerPrivate *d_ptr;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
 #endif // SETTINGSPAGEMANAGER_H

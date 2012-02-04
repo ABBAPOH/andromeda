@@ -147,7 +147,7 @@ void AppearanceSettingsWidget::loadSettings()
 }
 
 AppearanceSettingsPage::AppearanceSettingsPage(QObject *parent) :
-    ISettingsPage(QLatin1String("Appearance"), QLatin1String("WebView"), parent)
+    SettingsPage(QLatin1String("Appearance"), QLatin1String("WebView"), parent)
 {
 }
 

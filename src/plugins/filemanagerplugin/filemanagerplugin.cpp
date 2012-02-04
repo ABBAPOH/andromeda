@@ -19,7 +19,7 @@
 
 #include <coreplugin/constants.h>
 #include <guisystem/editormanager.h>
-#include <coreplugin/settingspagemanager.h>
+#include <guisystem/settingspagemanager.h>
 
 #include "filecopydialog.h"
 #include "filemanagereditor.h"
@@ -32,7 +32,6 @@
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
-using namespace CorePlugin;
 using namespace FileManagerPlugin;
 
 FileManagerPluginImpl::FileManagerPluginImpl(QObject *parent) :

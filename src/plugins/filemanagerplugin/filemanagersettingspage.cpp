@@ -8,7 +8,7 @@
 using namespace FileManagerPlugin;
 
 FileManagerSettingsPage::FileManagerSettingsPage(QObject *parent) :
-    ISettingsPage("File Manager", "FileManager", parent)
+    SettingsPage("File Manager", "FileManager", parent)
 {
 }
 

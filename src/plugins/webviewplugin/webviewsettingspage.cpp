@@ -4,7 +4,7 @@
 #include <QtGui/QLabel>
 
 WebViewSettingsPage::WebViewSettingsPage(QObject *parent) :
-    CorePlugin::ISettingsPage(QLatin1String("WebView"), QLatin1String("WebView"), parent)
+    SettingsPage(QLatin1String("WebView"), QLatin1String("WebView"), parent)
 {
 }
 

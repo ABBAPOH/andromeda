@@ -1,7 +1,7 @@
 #ifndef IOPTIONSPAGE_H
 #define IOPTIONSPAGE_H
 
-#include <coreplugin/coreplugin_global.h>
+#include "guisystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -9,15 +9,15 @@
 
 class QIcon;
 
-namespace CorePlugin {
+namespace GuiSystem {
 
-class COREPLUGIN_EXPORT ISettingsPage : public QObject
+class GUISYSTEM_EXPORT SettingsPage : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ISettingsPage)
+    Q_DISABLE_COPY(SettingsPage)
 
 public:
-    ISettingsPage(const QString &id, const QString &category, QObject *parent = 0);
+    SettingsPage(const QString &id, const QString &category, QObject *parent = 0);
 
     inline QString id() const { return m_id; }
     inline QString category() const { return m_category; }
@@ -35,6 +35,6 @@ private:
     QString m_category;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
 #endif // IOPTIONSPAGE_H
