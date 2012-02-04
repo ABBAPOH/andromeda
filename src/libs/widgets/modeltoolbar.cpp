@@ -19,7 +19,6 @@ public:
     QAbstractItemModel *model;
     QPersistentModelIndex rootIndex;
     QPoint dragStartPos;
-    bool showIcons;
 };
 
 Q_DECLARE_METATYPE(QModelIndex)
@@ -38,7 +37,6 @@ ModelToolBar::ModelToolBar(const QString &title, QWidget *parent) :
     QToolBar(title, parent),
     d(new ModelToolBarPrivate)
 {
-    d->showIcons = true;
     d->model = 0;
 
     if (isVisible())
@@ -50,19 +48,6 @@ ModelToolBar::ModelToolBar(const QString &title, QWidget *parent) :
 ModelToolBar::~ModelToolBar()
 {
     delete d;
-}
-
-bool ModelToolBar::showIcons() const
-{
-    return d->showIcons;
-}
-
-void ModelToolBar::setShowIcons(bool show)
-{
-    d->showIcons = show;
-
-    if (d->model)
-        build();
 }
 
 void ModelToolBar::setModel(QAbstractItemModel *model)
@@ -125,9 +110,7 @@ void ModelToolBar::build()
         QString toolTip = index.data(Qt::ToolTipRole).toString();
         bool hasChildren = d->model->hasChildren(index);
 
-        QAction *action = addAction(title);
-        if (d->showIcons)
-            action->setIcon(icon);
+        QAction *action = addAction(icon, title);
         if (!toolTip.isEmpty())
             action->setToolTip(toolTip);
         action->setData(variant);

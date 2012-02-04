@@ -11,8 +11,7 @@ BookmarksToolBar::BookmarksToolBar(QWidget *parent) :
     ModelToolBar(parent),
     m_bookmarksModel(0)
 {
-    setShowIcons(false);
-    setToolButtonStyle(Qt::ToolButtonFollowStyle);
+    setToolButtonStyle(Qt::ToolButtonTextOnly);
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(contextMenuRequested(const QPoint &)));
