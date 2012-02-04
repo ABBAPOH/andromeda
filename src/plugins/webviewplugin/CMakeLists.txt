@@ -45,6 +45,6 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DWEBVIEWPLUGIN_LIBRARY )
 
 add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
-target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem coreplugin )
+target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem guisystem )
 add_dependencies( webviewplugin plugineditor)
 install_plugin( webviewplugin )
