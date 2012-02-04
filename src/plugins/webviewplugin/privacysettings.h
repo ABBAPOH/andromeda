@@ -48,16 +48,16 @@ private:
     CookieJar *m_cookieJar;
 };
 
-#include <coreplugin/isettingspage.h>
+#include <guisystem/settingspage.h>
 #include "webviewplugin.h"
 
-class PrivacySettingsPage : public CorePlugin::ISettingsPage
+class PrivacySettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
 
 public:
     explicit PrivacySettingsPage(QObject *parent = 0) :
-        ISettingsPage(QLatin1String("Privacy"), QLatin1String("WebView"), parent)
+        SettingsPage(QLatin1String("Privacy"), QLatin1String("WebView"), parent)
     {}
 
     QString name() const { return tr("Privacy"); }

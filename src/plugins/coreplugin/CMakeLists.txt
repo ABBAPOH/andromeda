@@ -6,12 +6,9 @@ set( HEADERS
     constants.h
     coreplugin_global.h
     coreplugin.h
-    isettingspage.h
-    settingsdialog.h
     settingsmodel.h
     settingsmodel_p.h
     settingswidget.h
-    settingspagemanager.h
     tabbar.h
     tabcontainer.h
     tabwidget.h
@@ -20,11 +17,8 @@ set( SOURCES
     addressbar.cpp
     browserwindow.cpp
     coreplugin.cpp
-    isettingspage.cpp
-    settingsdialog.cpp
     settingsmodel.cpp
     settingswidget.cpp
-    settingspagemanager.cpp
     tabbar.cpp
     tabcontainer.cpp
     tabwidget.cpp

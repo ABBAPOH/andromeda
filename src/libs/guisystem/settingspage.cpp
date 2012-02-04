@@ -1,8 +1,6 @@
-#include "isettingspage.h"
+#include "settingspage.h"
 
-#include <extensionsystem/pluginmanager.h>
-
-using namespace CorePlugin;
+using namespace GuiSystem;
 
 /*!
     \class ISettingsPage
@@ -16,7 +14,7 @@ using namespace CorePlugin;
     Pages are separated by categories in the SettingsDialog. The first page added to a category represents
     icon and name of the category.
 */
-ISettingsPage::ISettingsPage(const QString &id, const QString &category, QObject *parent) :
+SettingsPage::SettingsPage(const QString &id, const QString &category, QObject *parent) :
     QObject(parent),
     m_id(id),
     m_category(category)

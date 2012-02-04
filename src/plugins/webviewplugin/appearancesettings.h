@@ -43,9 +43,9 @@ private:
     QList<QByteArray> m_codecNames;
 };
 
-#include <coreplugin/isettingspage.h>
+#include <guisystem/settingspage.h>
 
-class AppearanceSettingsPage : public CorePlugin::ISettingsPage
+class AppearanceSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
 

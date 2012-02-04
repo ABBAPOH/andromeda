@@ -9,8 +9,6 @@
 #include <QtGui/QMessageBox>
 
 #include "constants.h"
-#include "settingspagemanager.h"
-#include "settingsdialog.h"
 #include "settingsmodel.h"
 
 #include <extensionsystem/pluginmanager.h>
@@ -18,6 +16,8 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+#include <guisystem/settingsdialog.h>
+#include <guisystem/settingspagemanager.h>
 
 #include "settingswidget.h"
 

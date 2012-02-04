@@ -18,6 +18,9 @@ set( HEADERS
     mainwindow_p.h
     proxyaction.h
     proxyhistory.h
+    settingsdialog.h
+    settingspage.h
+    settingspagemanager.h
     stackedcontainer.h
     stackedcontainer_p.h
    )
@@ -39,6 +42,9 @@ set( SOURCES
     mainwindow.cpp
     proxyaction.cpp
     proxyhistory.cpp
+    settingsdialog.cpp
+    settingspage.cpp
+    settingspagemanager.cpp
     stackedcontainer.cpp
    )
 set( FORMS

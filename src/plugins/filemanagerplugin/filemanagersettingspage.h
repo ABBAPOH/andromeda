@@ -1,14 +1,14 @@
 #ifndef FILEMANAGERSETTINGSPAGE_H
 #define FILEMANAGERSETTINGSPAGE_H
 
-#include <coreplugin/isettingspage.h>
+#include <guisystem/settingspage.h>
 #include <QtCore/QString>
 #include <QtGui/QIcon>
 #include <QtGui/QWidget>
 
 namespace FileManagerPlugin {
 
-class FileManagerSettingsPage : public CorePlugin::ISettingsPage
+class FileManagerSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
 

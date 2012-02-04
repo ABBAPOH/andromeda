@@ -2,26 +2,26 @@
 
 #include <QtCore/QMap>
 
-#include "isettingspage.h"
+#include "settingspage.h"
 
-namespace CorePlugin {
+namespace GuiSystem {
 
 struct Category
 {
     QString id;
-    QList<ISettingsPage *> pages;
+    QList<SettingsPage *> pages;
 };
 
 class SettingsPageManagerPrivate
 {
 public:
     QMap<QString, Category *> categories;
-    QMap<QString, ISettingsPage *> pages;
+    QMap<QString, SettingsPage *> pages;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
-using namespace CorePlugin;
+using namespace GuiSystem;
 
 /*!
     \class SettingsPageManager
@@ -54,7 +54,7 @@ SettingsPageManager::~SettingsPageManager()
 /*!
     \brief Returns previously added page with \a id.
 */
-ISettingsPage * SettingsPageManager::page(const QString &id) const
+SettingsPage * SettingsPageManager::page(const QString &id) const
 {
     return d_func()->pages.value(id);
 }
@@ -62,7 +62,7 @@ ISettingsPage * SettingsPageManager::page(const QString &id) const
 /*!
     \brief Adds new page to this manager.
 */
-void SettingsPageManager::addPage(ISettingsPage *page)
+void SettingsPageManager::addPage(SettingsPage *page)
 {
     Q_D(SettingsPageManager);
 
@@ -90,7 +90,7 @@ void SettingsPageManager::addPage(ISettingsPage *page)
 /*!
     \brief Removes page from this manager.
 */
-void SettingsPageManager::removePage(ISettingsPage *page)
+void SettingsPageManager::removePage(SettingsPage *page)
 {
     Q_D(SettingsPageManager);
 
@@ -124,9 +124,9 @@ QStringList SettingsPageManager::categories() const
 /*!
     \brief Returns list of all pages added to this manager.
 */
-QList<ISettingsPage *> SettingsPageManager::pages() const
+QList<SettingsPage *> SettingsPageManager::pages() const
 {
-    QList<ISettingsPage *> result;
+    QList<SettingsPage *> result;
 
     foreach (const QString &category, categories()) {
         result.append(pages(category));
@@ -138,13 +138,13 @@ QList<ISettingsPage *> SettingsPageManager::pages() const
 /*!
     \brief Returns list of all pages with category \a category.
 */
-QList<ISettingsPage *> SettingsPageManager::pages(const QString &category) const
+QList<SettingsPage *> SettingsPageManager::pages(const QString &category) const
 {
     Category *c = d_func()->categories.value(category);
     if (c)
         return c->pages;
 
-    return QList<ISettingsPage*>();
+    return QList<SettingsPage*>();
 }
 
 /*!
@@ -152,6 +152,6 @@ QList<ISettingsPage *> SettingsPageManager::pages(const QString &category) const
 */
 void SettingsPageManager::onDestroyed(QObject *o)
 {
-    ISettingsPage *page = static_cast<ISettingsPage*>(o);
+    SettingsPage *page = static_cast<SettingsPage*>(o);
     removePage(page);
 }

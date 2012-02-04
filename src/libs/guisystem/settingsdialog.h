@@ -1,23 +1,23 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include "coreplugin_global.h"
+#include "guisystem_global.h"
 
 #include <QtGui/QDialog>
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
 #include <QtGui/QStackedLayout>
 
-namespace CorePlugin {
+namespace GuiSystem {
 
-class ISettingsPage;
+class SettingsPage;
 class SettingsPageManager;
 
 class Category;
 class CategoryModel;
 
 class SettingsDialogPrivate;
-class COREPLUGIN_EXPORT SettingsDialog : public QDialog
+class GUISYSTEM_EXPORT SettingsDialog : public QDialog
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SettingsDialog)
@@ -32,13 +32,13 @@ public:
 
 private slots:
     void currentChanged(const QModelIndex &current);
-    void onPageAdded(ISettingsPage *page);
-    void onPageRemoved(ISettingsPage *page);
+    void onPageAdded(SettingsPage *page);
+    void onPageRemoved(SettingsPage *page);
 
 protected:
     SettingsDialogPrivate *d_ptr;
 };
 
-} // namespace CorePlugin
+} // namespace GuiSystem
 
 #endif // SETTINGSDIALOG_H
