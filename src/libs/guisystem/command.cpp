@@ -22,6 +22,7 @@ public:
     QKeySequence defaultShortcut;
     QIcon defaultIcon;
     QString defaultText;
+    QKeySequence shortcut;
 
     QByteArray id;
 
@@ -288,6 +289,41 @@ void Command::setDefaultText(const QString &text)
 }
 
 /*!
+    \property Command::shortcut
+
+    \brief Overrided Command's shortcut
+
+    Use this property to override Command's shortcut, for example from user preferences.
+    Note, if shortcut is not equal to default shortcut, Command::AttributeUpdateShortcut is ignored
+    and command always uses this shortcut.
+*/
+QKeySequence Command::shortcut() const
+{
+    return d_func()->shortcut;
+}
+
+void Command::setShortcut(const QKeySequence &key)
+{
+    Q_D(Command);
+
+    if (d->shortcut == key)
+        return;
+
+    d->shortcut = key;
+
+    if (d->shortcut != d->defaultShortcut) {
+        d->action->setShortcut(key);
+        d->action->setAttributes(ProxyAction::Attributes((int)(d->attributes & ~AttributeUpdateShortcut)));
+    } else {
+        if (d->attributes & AttributeUpdateShortcut && d->realAction)
+            d->action->setShortcut(d->realAction->shortcut());
+        else
+            d->action->setShortcut(d->defaultShortcut);
+        d->action->setAttributes(ProxyAction::Attributes((int)(d->attributes)));
+    }
+}
+
+/*!
     \property Command::data
 
     \brief Inner Command's data
@@ -326,6 +362,8 @@ void Command::setRealAction(QAction *action)
     if (d->realAction != action) {
         d->realAction = action;
         d->action->setAction(action);
+        if (shortcut() != defaultShortcut())
+            d->action->setShortcut(shortcut());
         d->update();
     }
 }

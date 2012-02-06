@@ -26,6 +26,7 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_PROPERTY(QKeySequence defaultShortcut READ defaultShortcut WRITE setDefaultShortcut)
     Q_PROPERTY(QIcon defaultIcon READ defaultIcon WRITE setDefaultIcon)
     Q_PROPERTY(QString defaultText READ defaultText WRITE setDefaultText)
+    Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut)
     Q_PROPERTY(QVariant data READ data WRITE setData)
     Q_PROPERTY(QByteArray id READ id)
 
@@ -77,6 +78,9 @@ public:
 
     QString defaultText() const;
     void setDefaultText(const QString &text);
+
+    QKeySequence shortcut() const;
+    void setShortcut(const QKeySequence &key);
 
     QByteArray id() const;
 
