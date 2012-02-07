@@ -171,6 +171,11 @@ Command::Attributes Command::attributes() const
     return d_func()->attributes;
 }
 
+bool Command::hasAttribute(Command::Attribute attr) const
+{
+    return d_func()->attributes & attr;
+}
+
 void Command::setAttributes(Attributes attrs)
 {
     Q_D(Command);
@@ -230,6 +235,9 @@ void Command::setDefaultShortcut(const QKeySequence &key)
     Q_D(Command);
 
     if (d->defaultShortcut != key) {
+        if (d->shortcut == d->defaultShortcut)
+            d->shortcut = key;
+
         d->defaultShortcut = key;
         if (!d->realAction || !(d->attributes & AttributeUpdateShortcut))
             d->action->setShortcut(key);
