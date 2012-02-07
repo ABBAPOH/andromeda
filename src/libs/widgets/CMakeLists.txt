@@ -10,6 +10,7 @@ set( HEADERS
     modeltoolbar.h
     qxtflowview.h
     qxtflowview_p.h
+    shortcutlineedit.h
    )
 set( SOURCES
     addressbar.cpp
@@ -21,6 +22,7 @@ set( SOURCES
     modeltoolbar.cpp
     qxtflowview.cpp
     qxtflowview_p.cpp
+    shortcutlineedit.cpp
    )
 set( FORMS
    )
