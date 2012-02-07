@@ -12,6 +12,7 @@ set( HEADERS
     commandcontainer.h
     commandsmodel.h
     commandsmodel_p.h
+    commandssettingswidget.h
     editormanager.h
     findtoolbar.h
     history.h
@@ -39,6 +40,7 @@ set( SOURCES
     command.cpp
     commandcontainer.cpp
     commandsmodel.cpp
+    commandssettingswidget.cpp
     editormanager.cpp
     findtoolbar.cpp
     history.cpp
@@ -53,6 +55,7 @@ set( SOURCES
     stackedcontainer.cpp
    )
 set( FORMS
+    commandssettingswidget.ui
    )
 set( RESOURCES resources.qrc )
 
