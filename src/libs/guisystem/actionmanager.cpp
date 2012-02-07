@@ -58,11 +58,44 @@ Command * ActionManager::command(const QString &id)
 }
 
 /*!
+    \brief Returns list of all Commands registered in ActionManager.
+*/
+QList<Command *> ActionManager::commands() const
+{
+    Q_D(const ActionManager);
+
+    QList<Command *> result;
+    foreach (QObject *object, d->objects) {
+        Command *c = qobject_cast<Command *>(object);
+        if (c)
+            result.append(c);
+    }
+    return result;
+}
+
+/*!
     Returns pointer to CommandContainer previously created with \id
 */
 CommandContainer * ActionManager::container(const QString &id)
 {
     return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
+}
+
+/*!
+    \brief Returns list of all Containers registered in ActionManager.
+*/
+QList<CommandContainer *> ActionManager::containers() const
+{
+    Q_D(const ActionManager);
+
+    QList<CommandContainer *> result;
+    foreach (QObject *object, d->objects) {
+        CommandContainer *c = qobject_cast<CommandContainer *>(object);
+        if (c)
+            result.append(c);
+    }
+    return result;
+
 }
 
 Q_GLOBAL_STATIC(ActionManager, get_instance)

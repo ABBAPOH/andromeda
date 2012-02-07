@@ -27,7 +27,9 @@ public:
     ~ActionManager();
 
     Command *command(const QString &id);
+    QList<Command *> commands() const;
     CommandContainer *container(const QString &id);
+    QList<CommandContainer *> containers() const;
 
     static ActionManager *instance();
 
