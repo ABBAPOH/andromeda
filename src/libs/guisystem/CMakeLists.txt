@@ -10,6 +10,8 @@ set( HEADERS
     abstractviewfactory.h
     command.h
     commandcontainer.h
+    commandsmodel.h
+    commandsmodel_p.h
     editormanager.h
     findtoolbar.h
     history.h
@@ -36,6 +38,7 @@ set( SOURCES
     abstractviewfactory.cpp
     command.cpp
     commandcontainer.cpp
+    commandsmodel.cpp
     editormanager.cpp
     findtoolbar.cpp
     history.cpp
