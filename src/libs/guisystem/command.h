@@ -65,6 +65,7 @@ public:
     QAction *commandAction() const;
 
     Attributes attributes() const;
+    bool hasAttribute(Attribute attr) const;
     void setAttributes(Attributes attr);
 
     CommandContext context() const;
