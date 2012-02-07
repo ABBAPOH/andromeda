@@ -3,6 +3,7 @@ set( HEADERS
     addressbar.h
     browserwindow.h
     browserwindow_p.h
+    commandssettingspage.h
     constants.h
     coreplugin_global.h
     coreplugin.h
@@ -16,6 +17,7 @@ set( HEADERS
 set( SOURCES
     addressbar.cpp
     browserwindow.cpp
+    commandssettingspage.cpp
     coreplugin.cpp
     settingsmodel.cpp
     settingswidget.cpp

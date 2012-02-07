@@ -8,6 +8,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
 
+#include "commandssettingspage.h"
 #include "constants.h"
 #include "settingsmodel.h"
 
@@ -41,6 +42,8 @@ bool CorePluginImpl::initialize(const QVariantMap &options)
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));
     addObject(pageManager);
+
+    pageManager->addPage(new CommandsSettingsPage(this));
 
     createActions();
     connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
