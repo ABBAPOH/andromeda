@@ -78,6 +78,11 @@ ActionManager *ActionManager::instance()
 void ActionManager::registerAction(QAction *action, const QByteArray &id)
 {
     action->setObjectName(QString(id));
+
+    Command *c = command(id);
+    if (c && c->context() == Command::ApplicationCommand) {
+        c->setRealAction(action);
+    }
 }
 
 /*!
