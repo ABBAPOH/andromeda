@@ -1,6 +1,7 @@
 #include "filemanagereditor.h"
 #include "filemanagereditor_p.h"
 
+#include "filemanagerconstants.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 #include "fileinfodialog.h"

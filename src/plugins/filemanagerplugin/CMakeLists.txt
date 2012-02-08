@@ -11,6 +11,7 @@ set( HEADERS
     filecopydialog.h
     filecopydialog_p.h
     fileinfodialog.h
+    filemanagerconstants.h
     filemanagereditor.h
     filemanagereditor_p.h
     filemanagerplugin.h

@@ -218,15 +218,6 @@ void CorePluginImpl::createFileMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::Open, tr("Open"), this);
-#ifdef Q_OS_MAC
-    cmd->setDefaultShortcut(QKeySequence::Open);
-#else
-//    openCommand->setDefaultShortcut(tr("Return"));
-#endif
-    cmd->setContext(Command::WidgetCommand);
-    container->addCommand(cmd, group);
-
     cmd = new Command(Constants::Actions::CloseTab, QKeySequence::Close, tr("Close"), this);
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
