@@ -203,7 +203,7 @@ void CorePluginImpl::createFileMenu()
     menuBarContainer->addContainer(container);
 
     // ================ File Menu (New) ================
-    container->addGroup(group = Constants::MenuGroups::FileNew);
+    group = Constants::MenuGroups::FileNew;
 
     cmd = new Command(Constants::Actions::NewWindow, QKeySequence::New, tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
@@ -228,7 +228,7 @@ void CorePluginImpl::createFileMenu()
     container->addCommand(cmd, group);
 
     // ================ File Menu (Save) ================
-    container->addGroup(group = Constants::MenuGroups::FileSave);
+    group = Constants::MenuGroups::FileSave;
 
     cmd = new Command(Constants::Actions::Save, QKeySequence::Save, tr("Save"), this);
     cmd->setContext(Command::WindowCommand);
@@ -240,7 +240,7 @@ void CorePluginImpl::createFileMenu()
 
 //#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
-    container->addGroup(group = Constants::MenuGroups::FileQuit);
+    group = Constants::MenuGroups::FileQuit;
 
     cmd = new Command(Constants::Actions::Exit, QKeySequence::Quit, tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
@@ -265,7 +265,7 @@ void CorePluginImpl::createEditMenu()
     menuBarContainer->addContainer(container);
 
     // ================ Edit Menu (Redo) ================
-    container->addGroup(group = Constants::MenuGroups::EditRedo);
+    group = Constants::MenuGroups::EditRedo;
 
     cmd = new Command(Constants::Actions::Undo, QKeySequence::Undo, tr("Undo"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
@@ -276,7 +276,7 @@ void CorePluginImpl::createEditMenu()
     container->addCommand(cmd, group);
 
     // ================ Edit Menu (CopyPaste) ================
-    container->addGroup(group = Constants::MenuGroups::EditCopyPaste);
+    group = Constants::MenuGroups::EditCopyPaste;
 
     cmd = new Command(Constants::Actions::Cut, QKeySequence::Cut, tr("Cut"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
@@ -294,7 +294,7 @@ void CorePluginImpl::createEditMenu()
 
     // ================ Edit Menu (Find) ================
 
-    container->addGroup(group = Constants::MenuGroups::EditFind);
+    group = Constants::MenuGroups::EditFind;
 
     cmd = new Command(Constants::Actions::Find, QKeySequence::Find, tr("Find"), this);
     container->addCommand(cmd, group);
@@ -369,7 +369,7 @@ void CorePluginImpl::createToolsMenu()
     connect(settingsCommand->commandAction(), SIGNAL(triggered()), SLOT(showSettings()));
 
     // ================ Tools Menu (Preferences) ================
-    toolsContainer->addGroup(group = Constants::MenuGroups::ToolsPreferences);
+    group = Constants::MenuGroups::ToolsPreferences;
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));

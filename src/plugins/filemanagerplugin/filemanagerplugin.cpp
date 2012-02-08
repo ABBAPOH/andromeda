@@ -97,7 +97,7 @@ void FileManagerPluginImpl::createFileMenu()
     container = ActionManager::instance()->container(Constants::Menus::File);
 
     // ================ File Menu (Info) ================
-    container->addGroup(group = Constants::MenuGroups::FileInfo);
+    group = Constants::MenuGroups::FileInfo;
 
     cmd = new Command(Constants::Actions::FileInfo, this);
     cmd->setDefaultText(tr("File info"));
@@ -105,7 +105,7 @@ void FileManagerPluginImpl::createFileMenu()
     container->addCommand(cmd, group);
 
     // ================ File Menu (Change) ================
-    container->addGroup(group = Constants::MenuGroups::FileChange);
+    group = Constants::MenuGroups::FileChange;
 
     cmd = new Command(Constants::Actions::NewFolder, this);
     cmd->setDefaultText(tr("New folder"));
@@ -150,7 +150,7 @@ void FileManagerPluginImpl::createViewMenu()
     container = ActionManager::instance()->container(Constants::Menus::View);
 
     // ================ View Menu (View Mode) ================
-    container->addGroup(group = Constants::MenuGroups::ViewViewMode);
+    group = Constants::MenuGroups::ViewViewMode;
 
     cmd = new Command(Constants::Actions::IconMode, this);
     cmd->setDefaultText(tr("Icon View"));
@@ -195,7 +195,8 @@ void FileManagerPluginImpl::createViewMenu()
     container->addCommand(cmd);
 
     // ================ View Menu (View Mode) ================
-    container->addGroup(group = Constants::MenuGroups::ViewSortBy);
+    group = Constants::MenuGroups::ViewSortBy;
+
     CommandContainer *sortByMenu = new CommandContainer(Constants::Menus::SortBy, this);
     sortByMenu->setTitle(tr("Sort by"));
     container->addContainer(sortByMenu, group);
@@ -221,7 +222,7 @@ void FileManagerPluginImpl::createViewMenu()
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
     container->addCommand(cmd);
 
-    container->addGroup(group = Constants::MenuGroups::ViewSortByOrder);
+    group = Constants::MenuGroups::ViewSortByOrder;
 
     cmd = new Command(Constants::Actions::SortByDescendingOrder, this);
     cmd->setDefaultText(tr("Descending Order"));
@@ -231,10 +232,7 @@ void FileManagerPluginImpl::createViewMenu()
 
 void FileManagerPluginImpl::createGoToMenu()
 {
-    CommandContainer *container = ActionManager::instance()->container(Constants::Menus::GoTo);
-
     // ================ GoTo Menu (Locations) ================
-    container->addGroup(Constants::MenuGroups::Locations);
 
     createGoToDirCommand(QDesktopServices::DesktopLocation,
                          QIcon(":/images/icons/desktopFolder.png"),

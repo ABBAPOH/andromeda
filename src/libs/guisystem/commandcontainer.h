@@ -25,9 +25,8 @@ public:
     explicit CommandContainer(const QByteArray &id, QObject *parent = 0);
     ~CommandContainer();
 
-    void addCommand(Command *command, const QByteArray &group = QByteArray());
-    void addContainer(CommandContainer *container, const QByteArray &group = QByteArray());
-    void addGroup(const QByteArray &id);
+    void addCommand(Command *command, const QByteArray &group = QByteArray(), const QByteArray &weight = QByteArray());
+    void addContainer(CommandContainer *container, const QByteArray &group = QByteArray(), const QByteArray &weight = QByteArray());
 
     void clear();
 
