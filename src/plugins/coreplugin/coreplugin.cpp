@@ -13,6 +13,7 @@
 
 #include <extensionsystem/pluginmanager.h>
 #include <extensionsystem/pluginview.h>
+#include <guisystem/action.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
@@ -186,6 +187,7 @@ void CorePluginImpl::createActions()
     createGoToMenu();
     createToolsMenu();
     createHelpMenu();
+    registerAtions();
 }
 
 void CorePluginImpl::createFileMenu()
@@ -208,7 +210,6 @@ void CorePluginImpl::createFileMenu()
     cmd = new Command(Constants::Actions::NewWindow, QKeySequence::New, tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
     container->addCommand(cmd, group);
-    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(newWindow()));
 
     cmd = new Command(Constants::Actions::NewTab, QKeySequence::AddTab, tr("New tab"), this);
     cmd->setContext(Command::WindowCommand);
@@ -246,7 +247,6 @@ void CorePluginImpl::createFileMenu()
     cmd->setContext(Command::ApplicationCommand);
     cmd->commandAction()->setMenuRole(QAction::QuitRole);
     container->addCommand(cmd, group);
-    connect(cmd->commandAction(), SIGNAL(triggered()), this, SLOT(quit()));
 //#endif
 }
 
@@ -360,13 +360,11 @@ void CorePluginImpl::createToolsMenu()
     pluginsCommand->setDefaultText(tr("Plugins..."));
     pluginsCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(pluginsCommand);
-    connect(pluginsCommand->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
 
     Command *settingsCommand = new Command(Constants::Actions::Settings, this);
     settingsCommand->setDefaultText(tr("View all settings..."));
     settingsCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(settingsCommand);
-    connect(settingsCommand->commandAction(), SIGNAL(triggered()), SLOT(showSettings()));
 
     // ================ Tools Menu (Preferences) ================
     group = Constants::MenuGroups::ToolsPreferences;
@@ -377,8 +375,6 @@ void CorePluginImpl::createToolsMenu()
     preferencesCommand->setContext(Command::ApplicationCommand);
     preferencesCommand->commandAction()->setMenuRole(QAction::PreferencesRole);
     toolsContainer->addCommand(preferencesCommand, group);
-    connect(preferencesCommand->commandAction(), SIGNAL(triggered()), SLOT(prefenrences()));
-
 }
 
 void CorePluginImpl::createHelpMenu()
@@ -399,13 +395,30 @@ void CorePluginImpl::createHelpMenu()
     cmd->setContext(Command::ApplicationCommand);
     cmd->commandAction()->setMenuRole(QAction::AboutRole);
     container->addCommand(cmd);
-    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(about()));
+//    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(about()));
 
     cmd = new Command(Constants::Actions::AboutQt, tr("About Qt..."), this);
     cmd->setContext(Command::ApplicationCommand);
     cmd->commandAction()->setMenuRole(QAction::AboutQtRole);
     container->addCommand(cmd);
-    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
+//    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
+}
+
+void CorePluginImpl::registerAtions()
+{
+    createAction(Constants::Actions::NewWindow, SLOT(newWindow()));
+    createAction(Constants::Actions::Exit, SLOT(quit()));
+    createAction(Constants::Actions::Plugins, SLOT(showPluginView()));
+    createAction(Constants::Actions::Settings, SLOT(showSettings()));
+    createAction(Constants::Actions::Preferences, SLOT(prefenrences()));
+    createAction(Constants::Actions::About, SLOT(about()));
+    createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
+}
+
+void CorePluginImpl::createAction(const QByteArray &id, const char *slot)
+{
+    Action *action = new Action(id, this);
+    connect(action, SIGNAL(triggered()), slot);
 }
 
 Q_EXPORT_PLUGIN(CorePluginImpl)
