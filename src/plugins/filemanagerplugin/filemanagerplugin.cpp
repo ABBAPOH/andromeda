@@ -22,6 +22,7 @@
 #include <guisystem/editormanager.h>
 #include <guisystem/settingspagemanager.h>
 
+#include "filemanagerconstants.h"
 #include "filecopydialog.h"
 #include "filemanagereditor.h"
 #include "filemanagersettings.h"
@@ -96,6 +97,15 @@ void FileManagerPluginImpl::createFileMenu()
     const char *group = 0;
 
     container = ActionManager::instance()->container(Constants::Menus::File);
+
+    cmd = new Command(Constants::Actions::Open, tr("Open"), this);
+#ifdef Q_OS_MAC
+    cmd->setDefaultShortcut(QKeySequence::Open);
+#else
+//    openCommand->setDefaultShortcut(tr("Return"));
+#endif
+    cmd->setContext(Command::WidgetCommand);
+    container->addCommand(cmd, Constants::MenuGroups::FileNew);
 
     // ================ File Menu (Info) ================
     group = Constants::MenuGroups::FileInfo;

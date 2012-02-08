@@ -19,7 +19,6 @@ const char * const View = "Menus:3.View";
 const char * const GoTo = "Menus:4.GoTo";
 const char * const Tools = "Menus:5.Tools";
 const char * const Help = "Menus:6.Help";
-const char * const SortBy = "Menus.SortBy";
 
 } // namespace Menus
 
@@ -27,19 +26,11 @@ namespace MenuGroups {
 
 const char * const FileNew = "MenuGroups:1.File.New";
 const char * const FileSave = "MenuGroups:2.File.Save";
-const char * const FileInfo = "MenuGroups:3.File.Info";
-const char * const FileChange = "MenuGroups:4.File.Change";
 const char * const FileQuit = "MenuGroups:4.File.Quit";
 
 const char * const EditRedo = "MenuGroups:1.Edit.Redo";
 const char * const EditCopyPaste = "MenuGroups:2.Edit.CopyPate";
 const char * const EditFind = "MenuGroups:3.Edit.Find";
-
-const char * const ViewViewMode = "MenuGroups:1.View.ViewMode";
-const char * const ViewSortBy = "MenuGroups:2.View.SortBy";
-const char * const ViewSortByOrder = "MenuGroups.View.ViewSortByOrder";
-
-const char * const Locations = "MenuGroups:1.Goto.Locations";
 
 const char * const ToolsPreferences = "MenuGroups:1.Tools.Preferences";
 
@@ -49,14 +40,7 @@ namespace Actions {
 
 const char * const NewWindow = "Actions:1.NewWindow";
 const char * const NewTab = "Actions:2.NewTab";
-const char * const FileInfo = "Actions:3.FileInfo";
-const char * const Open = "Actions:5.Open";
 const char * const CloseTab = "Actions:6.CloseTab";
-const char * const NewFolder = "Actions:1.NewFolder";
-const char * const CopyFiles = "Actions:2.CopyFiles";
-const char * const MoveFiles = "Actions:3.MoveFiles";
-const char * const Rename = "Actions:4.Rename";
-const char * const Remove = "Actions:5.Remove";
 const char * const Exit = "Actions.Exit";
 
 const char * const Save = "Actions.Save";
@@ -73,26 +57,11 @@ const char * const Find = "Actions.Find";
 const char * const FindNext = "Actions.FindNext";
 const char * const FindPrevious = "Actions.FindPrevious";
 
-const char * const IconMode = "Actions.1.IconMode";
-const char * const ColumnMode = "Actions.2.ColumnMode";
-const char * const TreeMode = "Actions.3.TreeViewMode";
-const char * const CoverFlowMode = "Actions.4.CoverFlowMode";
-const char * const DualPane = "Actions.5.DualPane";
-
-const char * const SortByName = "Actions.1.SortByName";
-const char * const SortBySize = "Actions.2.SortBySize";
-const char * const SortByType = "Actions.3.SortByType";
-const char * const SortByDate = "Actions.4.SortByDate";
-const char * const SortByDescendingOrder = "Actions.4.SortByDescendingOrder";
-
 const char * const ShowLeftPanel = "Actions.ShowLeftPanel";
-const char * const ShowHiddenFiles = "Actions.ShowHiddenFiles";
 
 const char * const Back = "Actions.Back";
 const char * const Forward = "Actions.Forward";
 const char * const Up = "Actions.Up";
-
-const char * const Goto = "Actions.Goto %1";
 
 const char * const About = "Actions.About";
 const char * const AboutQt = "Actions.AboutQt";
