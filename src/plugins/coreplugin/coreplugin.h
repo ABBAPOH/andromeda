@@ -40,6 +40,9 @@ private:
     void createGoToMenu();
     void createToolsMenu();
     void createHelpMenu();
+    void registerAtions();
+
+    void createAction(const QByteArray &id, const char *slot);
 
 private:
     QStringList urls;

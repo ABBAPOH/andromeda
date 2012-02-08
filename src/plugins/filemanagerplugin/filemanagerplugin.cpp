@@ -12,6 +12,7 @@
 #include <QtGui/QClipboard>
 #endif
 
+#include <guisystem/action.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
@@ -292,14 +293,13 @@ void FileManagerPluginImpl::createGoToActions()
     CommandContainer *gotoMenu = actionManager->container(Constants::Menus::GoTo);
     gotoMapper = new QSignalMapper(this);
     foreach (Command *cmd, gotoMenu->commands(Constants::MenuGroups::Locations)) {
-        QAction *action = cmd->commandAction();
+        QAction *action = new Action(cmd->id(), this);
         gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
         action->setParent(this);
         actionManager->registerAction(action, cmd->id());
     }
     connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(goTo(QString)));
-
 }
 
 void FileManagerPluginImpl::createSortByActons()
