@@ -1,11 +1,13 @@
 #ifndef ACTION_H
 #define ACTION_H
 
+#include "guisystem_global.h"
+
 #include <QtGui/QAction>
 
 namespace GuiSystem {
 
-class Action : public QAction
+class GUISYSTEM_EXPORT Action : public QAction
 {
     Q_OBJECT
 

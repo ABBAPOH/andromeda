@@ -428,7 +428,7 @@ void MainWindowPrivate::initGeometry()
 {
     Q_Q(MainWindow);
 
-    static const float percent = 0.58;
+    static const float percent = 0.58f;
     QDesktopWidget desktop;
     QRect desktopRect = desktop.availableGeometry(q);
     QSize desktopSize = QSize(desktopRect.width(), desktopRect.height());
