@@ -1,4 +1,3 @@
-set( GLOBAL_HEADER CorePlugin )
 set( HEADERS
     addressbar.h
     browserwindow.h
@@ -42,7 +41,7 @@ add_definitions( -DCOREPLUGIN_LIBRARY )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
-add_library( coreplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES})
+add_library( coreplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES})
 target_link_libraries( coreplugin ${QT_LIBRARIES} extensionsystem guisystem widgets)
 add_dependencies( coreplugin plugineditor)
 install_plugin( coreplugin )

@@ -1,8 +1,0 @@
-#include "abstracteditor.h"
-#include "abstracteditorfactory.h"
-#include "constants.h"
-#include "editormanager.h"
-#include "isettingspage.h"
-#include "browserwindow.h"
-#include "settingsdialog.h"
-#include "settingspagemanager.h"
