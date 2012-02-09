@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     d->retranslateUi();
     d->registerActions();
 
-    setMenuBar(ActionManager::instance()->container("Menus.MenuBar")->menuBar());
+    setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
 
     d->initGeometry();
 }

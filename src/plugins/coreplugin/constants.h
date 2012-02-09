@@ -11,63 +11,63 @@ const char * const AlternateToolbar = "AlternateToolbar";
 
 namespace Menus {
 
-const char * const MenuBar = "Menus.MenuBar";
+const char * const MenuBar = "MenuBar";
 
-const char * const File = "Menus:1.File";
-const char * const Edit = "Menus:2.Edit";
-const char * const View = "Menus:3.View";
-const char * const GoTo = "Menus:4.GoTo";
-const char * const Tools = "Menus:5.Tools";
-const char * const Help = "Menus:6.Help";
+const char * const File = "FileMenu";
+const char * const Edit = "EditMenu";
+const char * const View = "ViewMenu";
+const char * const GoTo = "GoToMenu";
+const char * const Tools = "ToolsMenu";
+const char * const Help = "HelpMenu";
 
 } // namespace Menus
 
 namespace MenuGroups {
 
-const char * const FileNew = "MenuGroups:1.File.New";
-const char * const FileSave = "MenuGroups:2.File.Save";
-const char * const FileQuit = "MenuGroups:4.File.Quit";
+const char * const FileNew = "FileMenu 1";
+const char * const FileSave = "FileMenu 2";
+const char * const FileQuit = "FileMenu 5";
 
-const char * const EditRedo = "MenuGroups:1.Edit.Redo";
-const char * const EditCopyPaste = "MenuGroups:2.Edit.CopyPate";
-const char * const EditFind = "MenuGroups:3.Edit.Find";
+const char * const EditRedo = "EditMenu 1";
+const char * const EditCopyPaste = "Groups.EditMenu 2";
+const char * const EditFind = "Edit 3";
 
-const char * const ToolsPreferences = "MenuGroups:1.Tools.Preferences";
+const char * const ToolsPreferences = "ToolsMenu 1";
 
 } // namespace Groups
 
 namespace Actions {
 
-const char * const NewWindow = "Actions:1.NewWindow";
-const char * const NewTab = "Actions:2.NewTab";
-const char * const CloseTab = "Actions:6.CloseTab";
-const char * const Exit = "Actions.Exit";
+const char * const NewWindow = "NewWindow";
+const char * const NewTab = "NewTab";
+const char * const CloseTab = "CloseTab";
+const char * const Exit = "Exit";
 
-const char * const Save = "Actions.Save";
-const char * const SaveAs = "Actions.SaveAs";
+const char * const Save = "Save";
+const char * const SaveAs = "SaveAs";
 
-const char * const Undo = "Actions.Undo";
-const char * const Redo = "Actions.Redo";
-const char * const Cut = "Actions.Cut";
-const char * const Copy = "Actions.Copy";
-const char * const Paste = "Actions.Paste";
-const char * const SelectAll = "Actions.SelectAll";
+const char * const Undo = "Undo";
+const char * const Redo = "Redo";
+const char * const Cut = "Cut";
+const char * const Copy = "Copy";
+const char * const Paste = "Paste";
+const char * const SelectAll = "SelectAll";
 
-const char * const Find = "Actions.Find";
-const char * const FindNext = "Actions.FindNext";
-const char * const FindPrevious = "Actions.FindPrevious";
+const char * const Find = "Find";
+const char * const FindNext = "FindNext";
+const char * const FindPrevious = "FindPrevious";
 
-const char * const ShowLeftPanel = "Actions.ShowLeftPanel";
+const char * const ShowLeftPanel = "ShowLeftPanel";
 
-const char * const Back = "Actions.Back";
-const char * const Forward = "Actions.Forward";
-const char * const Up = "Actions.Up";
+const char * const Back = "Back";
+const char * const Forward = "Forward";
+const char * const Up = "Up";
 
-const char * const About = "Actions.About";
-const char * const AboutQt = "Actions.AboutQt";
-const char * const Preferences = "Actions.Preferences";
-const char * const Plugins = "Actions.Plugins";
-const char * const Settings = "Actions.Settings";
+const char * const About = "About";
+const char * const AboutQt = "AboutQt";
+const char * const Preferences = "Preferences";
+const char * const Plugins = "Plugins";
+const char * const Settings = "Settings";
 
 } // namespace Actions
 
