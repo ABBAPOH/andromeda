@@ -30,6 +30,7 @@ public:
 
     void clear();
 
+    QList<Command*> commands() const;
     QList<Command*> commands(const QByteArray &id) const;
 
     QByteArray id() const;

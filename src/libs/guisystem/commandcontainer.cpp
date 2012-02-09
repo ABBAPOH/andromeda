@@ -154,6 +154,24 @@ void CommandContainer::clear()
 }
 
 /*!
+    \brief Returns list all Commands in this container.
+*/
+QList<Command *> CommandContainer::commands() const
+{
+    Q_D(const CommandContainer);
+
+    QList<Command *> result;
+    foreach (Group *g, d->groups) {
+        foreach (QObject *o, g->objects) {
+            Command *cmd = qobject_cast<Command *>(o);
+            if (cmd)
+                result.append(cmd);
+        }
+    }
+    return result;
+}
+
+/*!
     \brief Returns list of Commands in group specified by \a id.
 */
 QList<Command *> CommandContainer::commands(const QByteArray &id) const
