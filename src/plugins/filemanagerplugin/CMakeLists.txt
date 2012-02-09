@@ -1,5 +1,3 @@
-set( GLOBAL_HEADER FilemanagerPlugin )
-
 set( HEADERS
     filemanagerplugin_global.h
     dualpanewidget.h
@@ -76,7 +74,7 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DFILEMANAGERPLUGIN_LIBRARY )
 
-add_library( filemanagerplugin SHARED ${GLOBAL_HEADER} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
+add_library( filemanagerplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
 target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io widgets )
 add_dependencies( filemanagerplugin plugineditor)
 install_plugin( filemanagerplugin )

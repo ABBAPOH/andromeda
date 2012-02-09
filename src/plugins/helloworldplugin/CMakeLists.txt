@@ -1,6 +1,5 @@
-set( GLOBAL_HEADERS helloworldplugin_global.h )
-
 set( HEADERS
+    helloworldplugin_global.h
     helloworldeditor.h
     helloworldplugin.h
    )
@@ -24,6 +23,6 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DHELLOWORLDPLUGIN_LIBRARY )
 
-add_library( helloworldplugin SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
+add_library( helloworldplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
 target_link_libraries( helloworldplugin ${QT_LIBRARIES} extensionsystem guisystem )
 install_plugin( helloworldplugin )
