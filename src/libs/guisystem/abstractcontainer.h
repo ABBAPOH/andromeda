@@ -1,11 +1,13 @@
 #ifndef ABSTRACTEDITORCONTAINER_H
 #define ABSTRACTEDITORCONTAINER_H
 
+#include "guisystem_global.h"
+
 #include "abstracteditor.h"
 
 namespace GuiSystem {
 
-class AbstractContainer : public AbstractEditor
+class GUISYSTEM_EXPORT AbstractContainer : public AbstractEditor
 {
     Q_OBJECT
 

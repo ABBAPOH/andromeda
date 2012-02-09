@@ -89,7 +89,7 @@ void PrivacySettingsWidget::setPluginsEnabled(bool yes)
 
 void PrivacySettingsWidget::setAcceptPolicy(int policy)
 {
-    CookieJar::AcceptPolicy acceptPolicy;
+    CookieJar::AcceptPolicy acceptPolicy = CookieJar::AcceptAlways;
     switch (policy) {
     case 0:
         acceptPolicy = CookieJar::AcceptAlways;
@@ -109,7 +109,7 @@ void PrivacySettingsWidget::setAcceptPolicy(int policy)
 
 void PrivacySettingsWidget::setKeepPolicy(int policy)
 {
-    CookieJar::KeepPolicy keepPolicy;
+    CookieJar::KeepPolicy keepPolicy = CookieJar::KeepUntilExpire;
     switch (policy) {
     case 0:
         keepPolicy = CookieJar::KeepUntilExpire;

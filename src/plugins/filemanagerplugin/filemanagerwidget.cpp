@@ -814,7 +814,7 @@ void FileManagerWidget::selectProgram()
     QString filter = tr("Programs (*.exe *.cmd *.com *.bat);;All files (*)");
 #else
     QString filter;
-#endif;
+#endif
 
     QString programPath = QFileDialog::getOpenFileName(this, tr("Select program"), programsFolder, filter);
     if (programPath.isEmpty())
