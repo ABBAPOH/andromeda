@@ -3,6 +3,7 @@
 #include "command.h"
 #include "commandcontainer.h"
 
+#include <QtCore/QDateTime>
 #include <QtCore/QHash>
 #include <QtCore/QSettings>
 #include <QtCore/QXmlStreamWriter>
@@ -123,6 +124,88 @@ void ActionManager::registerAction(QAction *action, const QByteArray &id)
     if (c && c->context() == Command::ApplicationCommand) {
         c->setRealAction(action);
     }
+}
+
+bool ActionManager::exportShortcuts(QIODevice *device) const
+{
+    if (device->openMode() != QIODevice::WriteOnly)
+        return false;
+
+    QXmlStreamWriter w(device);
+    w.setAutoFormatting(true);
+    w.setAutoFormattingIndent(1); // Historical, used to be QDom.
+    w.writeStartDocument();
+    w.writeDTD(QLatin1String("<!DOCTYPE KeyboardMappingScheme>"));
+    w.writeComment(QString::fromAscii(" Written by Andromeda at %1. ").
+                   arg(QDateTime::currentDateTime().toString(Qt::ISODate)));
+    w.writeStartElement(QLatin1String("mapping"));
+    foreach (Command *c, commands()) {
+        const QByteArray id = c->id();
+        QKeySequence shortcut = c->shortcut();
+        if (shortcut.isEmpty()) {
+            w.writeEmptyElement(QLatin1String("shortcut"));
+            w.writeAttribute(QLatin1String("id"), id);
+        } else {
+            w.writeStartElement(QLatin1String("shortcut"));
+            w.writeAttribute(QLatin1String("id"), id);
+            w.writeEmptyElement(QLatin1String("key"));
+            w.writeAttribute(QLatin1String("value"), shortcut.toString());
+            w.writeEndElement(); // Shortcut
+        }
+    }
+    w.writeEndElement();
+    w.writeEndDocument();
+
+    return true;
+}
+
+bool ActionManager::importShortcuts(QIODevice *device)
+{
+    Q_D(ActionManager);
+
+    if (device->openMode() != QIODevice::ReadOnly)
+        return false;
+
+    QXmlStreamReader r(device);
+
+    QString currentId;
+
+    while (!r.atEnd()) {
+        switch (r.readNext()) {
+        case QXmlStreamReader::StartElement: {
+            const QStringRef name = r.name();
+            if (name == QLatin1String("shortcut")) {
+                currentId = r.attributes().value(QLatin1String("id")).toString();
+            } else if (name == QLatin1String("key")) {
+                if (currentId.isEmpty())
+                    return false;
+
+                const QXmlStreamAttributes attributes = r.attributes();
+                Command *c = command(currentId);
+                if (attributes.hasAttribute(QLatin1String("value"))) {
+                    const QString keyString = attributes.value(QLatin1String("value")).toString();
+                    if (c) {
+                        c->setShortcut(QKeySequence(keyString));
+                        d->settings->setValue(c->id(), c->shortcut().toString(QKeySequence::NativeText));
+                    }
+                } else {
+                    if (c) {
+                        c->setShortcut(QKeySequence());
+                        d->settings->setValue(c->id(), QString());
+                    }
+                }
+                currentId.clear();
+            } // if key element
+        } // case QXmlStreamReader::StartElement
+        default:
+            break;
+        } // switch
+    } // while !atEnd
+
+    if (r.hasError())
+        return false;
+
+    return true;
 }
 
 /*!

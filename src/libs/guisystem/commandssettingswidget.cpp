@@ -5,7 +5,9 @@
 #include "commandsmodel.h"
 
 #include <QtCore/QEvent>
+#include <QtGui/QFileDialog>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QMessageBox>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QStyledItemDelegate>
 
@@ -113,6 +115,9 @@ CommandsSettingsWidget::CommandsSettingsWidget(QWidget *parent) :
 
     connect(ui->resetButton, SIGNAL(clicked()), SLOT(reset()));
     connect(ui->resetAllButton, SIGNAL(clicked()), SLOT(resetAll()));
+
+    connect(ui->importButton, SIGNAL(clicked()), SLOT(importShortcuts()));
+    connect(ui->exportButton, SIGNAL(clicked()), SLOT(exportShortcuts()));
 }
 
 CommandsSettingsWidget::~CommandsSettingsWidget()
@@ -162,3 +167,50 @@ void CommandsSettingsWidget::resetAll()
     }
 }
 
+void CommandsSettingsWidget::exportShortcuts()
+{
+    QString filePath = QFileDialog::getSaveFileName(this,
+                                                    tr("Export shortcuts"),
+                                                    QString(),
+                                                    tr("Keyboard mappings scheme (*.kms)"));
+    if (filePath.isEmpty())
+        return;
+
+    QFile file(filePath);
+    if (!file.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this,
+                             tr("Warning"),
+                             tr("Unable to open file %1 for writing.").arg(QFileInfo(filePath).fileName()),
+                             QMessageBox::Close);
+        return;
+    }
+    m_model->exportShortcuts(&file);
+}
+
+void CommandsSettingsWidget::importShortcuts()
+{
+    QString filePath = QFileDialog::getOpenFileName(this,
+                                                    tr("Import shortcuts"),
+                                                    QString(),
+                                                    tr("Keyboard mappings scheme (*.kms)"));
+    if (filePath.isEmpty())
+        return;
+
+    QFile file(filePath);
+    if (!file.open(QFile::ReadOnly)) {
+        QMessageBox::warning(this,
+                             tr("Warning"),
+                             tr("Unable to open file %1 for reading.").arg(QFileInfo(filePath).fileName()),
+                             QMessageBox::Close);
+        return;
+    }
+
+    if (!m_model->importShortcuts(&file)) {
+        QMessageBox::warning(this,
+                             tr("Warning"),
+                             tr("Unable to import shortcuts from file %1.").arg(QFileInfo(filePath).fileName()),
+                             QMessageBox::Close);
+        return;
+    }
+    ui->view->expandAll();
+}

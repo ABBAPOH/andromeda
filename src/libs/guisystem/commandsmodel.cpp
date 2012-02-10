@@ -257,3 +257,15 @@ void CommandsModel::resetShortcut(const QModelIndex &index)
         }
     }
 }
+
+bool CommandsModel::exportShortcuts(QIODevice *device) const
+{
+    return ActionManager::instance()->exportShortcuts(device);
+}
+
+bool CommandsModel::importShortcuts(QIODevice *device)
+{
+    bool ok = ActionManager::instance()->importShortcuts(device);
+    d_func()->build();
+    return ok;
+}

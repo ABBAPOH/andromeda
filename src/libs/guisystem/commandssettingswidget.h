@@ -31,6 +31,9 @@ private slots:
     void reset();
     void resetAll();
 
+    void exportShortcuts();
+    void importShortcuts();
+
 private:
     Ui::CommandsSettingsWidget *ui;
     CommandsModel *m_model;
