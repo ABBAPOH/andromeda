@@ -34,6 +34,9 @@ public:
 
     void resetShortcut(const QModelIndex &index);
 
+    bool exportShortcuts(QIODevice *device) const;
+    bool importShortcuts(QIODevice *device);
+
 protected:
     CommandsModelPrivate *d_ptr;
 };

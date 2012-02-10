@@ -35,6 +35,9 @@ public:
 
     void registerAction(QAction *action, const QByteArray &id);
 
+    bool exportShortcuts(QIODevice *device) const;
+    bool importShortcuts(QIODevice *device);
+
 protected:
     void registerCommand(Command *cmd);
     void registerContainer(CommandContainer *c);
