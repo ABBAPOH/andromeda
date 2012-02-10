@@ -4,6 +4,8 @@
 #include "commandcontainer.h"
 
 #include <QtCore/QHash>
+#include <QtCore/QSettings>
+#include <QtCore/QXmlStreamWriter>
 #include <QtGui/QApplication>
 #include <QtGui/QAction>
 
@@ -13,6 +15,7 @@ class ActionManagerPrivate
 {
 public:
     QHash<QString, QObject *> objects;
+    QSettings *settings;
 };
 
 } // namespace GuiSystem
@@ -37,6 +40,10 @@ ActionManager::ActionManager(QObject *parent) :
     QObject(parent),
     d_ptr(new ActionManagerPrivate)
 {
+    Q_D(ActionManager);
+    d->settings = new QSettings(this);
+    d->settings->beginGroup(QLatin1String("ActionManager/Shortcuts"));
+
     qApp->installEventFilter(this);
     connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), SLOT(onFocusChanged(QWidget*,QWidget*)));
 }
@@ -128,6 +135,8 @@ void ActionManager::registerCommand(Command *cmd)
     d->objects.insert(cmd->id(), cmd);
     if (!cmd->parent())
         cmd->setParent(this);
+
+    cmd->setShortcut(d->settings->value(cmd->id(), cmd->defaultShortcut().toString(QKeySequence::NativeText)).toString());
 }
 
 /*!
