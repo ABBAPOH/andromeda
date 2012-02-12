@@ -7,7 +7,9 @@ endfunction( install_spec )
 if( NOT APPLE )
 
     function( install_lib TARGET )
-        install( TARGETS ${TARGET} RUNTIME DESTINATION ${INSTALL_LIBRARY_PATH} )
+        install( TARGETS ${TARGET}
+                 RUNTIME DESTINATION ${INSTALL_LIBRARY_PATH}
+                 LIBRARY DESTINATION ${INSTALL_LIBRARY_PATH} )
     endfunction( install_lib )
 
     function( install_bin TARGET )
@@ -15,7 +17,9 @@ if( NOT APPLE )
     endfunction( install_bin )
 
     function( install_plugin TARGET )
-        install( TARGETS ${TARGET} RUNTIME DESTINATION ${INSTALL_PLUGIN_PATH} )
+        install( TARGETS ${TARGET}
+                 RUNTIME DESTINATION ${INSTALL_PLUGIN_PATH}
+                 LIBRARY DESTINATION ${INSTALL_PLUGIN_PATH} )
         install( FILES ${TARGET}.spec DESTINATION ${INSTALL_PLUGIN_PATH} )
         install_spec(${TARGET}.spec)
     endfunction( install_plugin )
