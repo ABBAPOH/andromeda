@@ -9,7 +9,7 @@
 #include "navigationmodel.h"
 #include "navigationpanel.h"
 
-#include <QtCore/QBuffer>
+#include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 #include <QtGui/QAction>
@@ -190,9 +190,7 @@ void FileManagerEditor::restoreDefaults()
 void FileManagerEditor::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
-    QBuffer buffer(&state);
-    buffer.open(QBuffer::ReadOnly);
-    QDataStream s(&buffer);
+    QDataStream s(&state, QIODevice::ReadOnly);
 
     bool visible; QByteArray splitterState, widgetState, baseState;
     s >> baseState;
@@ -213,16 +211,15 @@ void FileManagerEditor::restoreState(const QByteArray &arr)
 */
 QByteArray FileManagerEditor::saveState() const
 {
-    QBuffer buffer;
-    buffer.open(QBuffer::WriteOnly);
-    QDataStream s(&buffer);
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
 
     s << AbstractEditor::saveState();
     s << !m_panel->isHidden();
     s << splitter->saveState();
     s << m_widget->saveState();
 
-    return buffer.data();
+    return state;
 }
 
 /*!

@@ -1,7 +1,7 @@
 #include "stackedcontainer.h"
 #include "stackedcontainer_p.h"
 
-#include <QtCore/QBuffer>
+#include <QtCore/QDataStream>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QStackedLayout>
 
@@ -233,9 +233,7 @@ AbstractHistory * StackedContainer::history() const
 void StackedContainer::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
-    QBuffer bufer(&state);
-    bufer.open(QBuffer::ReadOnly);
-    QDataStream s(&bufer);
+    QDataStream s(&state, QIODevice::ReadOnly);
 
     QByteArray id, editorState;
     s >> id;
@@ -257,12 +255,11 @@ QByteArray StackedContainer::saveState() const
     if (!d->editor)
         return  QByteArray();
 
-    QBuffer bufer;
-    bufer.open(QBuffer::WriteOnly);
-    QDataStream s(&bufer);
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
     s << d->editor->id();
     s << d->editor->saveState();
-    return bufer.data();
+    return state;
 }
 
 /*!

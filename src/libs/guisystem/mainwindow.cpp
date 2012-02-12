@@ -7,7 +7,6 @@
 #include "commandcontainer.h"
 #include "stackedcontainer.h"
 
-#include <QtCore/QBuffer>
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
 #include <QtGui/QAction>
@@ -154,9 +153,7 @@ void MainWindow::restoreState(const QByteArray &arr)
 
     QByteArray state = arr;
 
-    QBuffer buffer(&state);
-    buffer.open(QBuffer::ReadOnly);
-    QDataStream s(&buffer);
+    QDataStream s(&state, QIODevice::ReadOnly);
 
     qint32 magic;
     qint8 version;
@@ -186,9 +183,8 @@ QByteArray MainWindow::saveState() const
 {
     Q_D(const MainWindow);
 
-    QBuffer buffer;
-    buffer.open(QBuffer::WriteOnly);
-    QDataStream s(&buffer);
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
 
     s << mainWindowMagic;
     s << mainWindowVersion;
@@ -197,7 +193,7 @@ QByteArray MainWindow::saveState() const
     if (d->contanier)
         s << d->contanier->saveState();
 
-    return buffer.data();
+    return state;
 }
 
 void MainWindow::back()

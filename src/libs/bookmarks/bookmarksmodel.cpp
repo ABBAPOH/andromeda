@@ -1,9 +1,9 @@
 #include "bookmarksmodel.h"
 #include "bookmarksmodel_p.h"
 
-#include <QtCore/QBuffer>
-#include <QtCore/QFileInfo>
+#include <QtCore/QDataStream>
 #include <QtCore/QDir>
+#include <QtCore/QFileInfo>
 #include <QtCore/QMimeData>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QFileIconProvider>
