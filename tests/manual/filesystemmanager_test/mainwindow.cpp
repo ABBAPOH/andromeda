@@ -5,7 +5,9 @@
 #include <QFileSystemModel>
 #include <QDesktopServices>
 #include <QMenuBar>
-#include <filemanagerplugin/FilemanagerPlugin>
+
+#include <filemanagerplugin/navigationpanel.h>
+#include <filemanagerplugin/dualpanewidget.h>
 
 using namespace FileManagerPlugin;
 
