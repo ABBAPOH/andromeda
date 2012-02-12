@@ -1,10 +1,12 @@
 #include "coreplugin.h"
 
+#include <QtCore/QFile>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
 #include <QtCore/QUrl>
 #include <QtGui/QApplication>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
 
@@ -25,6 +27,9 @@
 
 using namespace CorePlugin;
 using namespace GuiSystem;
+
+static const qint32 corePluginMagic = 0x6330386e; // "c08n"
+static const qint8 corePluginVersion = 1;
 
 CorePluginImpl::CorePluginImpl() :
     IPlugin()
@@ -57,6 +62,59 @@ bool CorePluginImpl::initialize(const QVariantMap &options)
 void CorePluginImpl::shutdown()
 {
     qDeleteAll(BrowserWindow::windows());
+}
+
+bool CorePluginImpl::restoreState(const QByteArray &arr)
+{
+    QByteArray state = arr;
+    QDataStream s(&state, QIODevice::ReadOnly);
+
+    qint32 magic;
+    qint8 version;
+    quint32 windowCount;
+    QByteArray windowState;
+
+    s >> magic;
+    if (magic != corePluginMagic)
+        return false;
+
+    s >> version;
+    if (version != corePluginVersion)
+        return false;
+
+    s >> windowCount;
+
+    for (quint32 i = 0; i < windowCount; i++) {
+        s >> windowState;
+
+        BrowserWindow *window = new BrowserWindow();
+        window->restoreState(windowState);
+        window->show();
+    }
+
+    return true;
+}
+
+QByteArray CorePluginImpl::saveState() const
+{
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
+
+    s << corePluginMagic;
+    s << corePluginVersion;
+
+    QList<BrowserWindow*> windows = BrowserWindow::windows();
+    quint32 windowCount = windows.count();
+
+    s << windowCount;
+
+    for (quint32 i = 0; i < windowCount; i++) {
+        s << windows[i]->saveState();
+        // hide window to prevent strange crash when bookmarks editor is opened
+        windows[i]->hide();
+    }
+
+    return state;
 }
 
 void CorePluginImpl::newWindow()
@@ -108,37 +166,34 @@ void CorePluginImpl::restoreSession()
         return;
     }
 
-    QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
-    int windowCount = s.beginReadArray(QLatin1String("windows"));
+    bool ok = true;
+    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
+    if (ok)
+        ok = f.open(QFile::ReadOnly);
 
-    if (!windowCount)
-        newWindow();
+    if (ok) {
+        QByteArray state = f.readAll();
+        ok = restoreState(state);
+    }
 
-    for (int i = 0; i < windowCount; i++) {
-        s.setArrayIndex(i);
-
+    // We couldn't load session, fallback to creating window and opening default path
+    if (!ok) {
         BrowserWindow *window = new BrowserWindow();
-        window->restoreSession(s);
+        window->open(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
         window->show();
     }
-    s.endArray();
 }
 
 void CorePluginImpl::saveSession()
 {
-    QSettings s(qApp->organizationName(), qApp->applicationName() + ".session");
-    s.clear();
-    QList<BrowserWindow*> windows = BrowserWindow::windows();
-    int windowCount = windows.count();
+    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
 
-    s.beginWriteArray(QLatin1String("windows"), windowCount);
-    for (int i = 0; i < windowCount; i++) {
-        s.setArrayIndex(i);
-        windows[i]->saveSession(s);
-        // hide window to prevent strange crash when bookmarks editor is opened
-        windows[i]->hide();
-    }
-    s.endArray();
+    if (!f.open(QFile::WriteOnly))
+        return;
+
+    f.write(saveState());
 }
 
 void CorePluginImpl::quit()

@@ -189,16 +189,6 @@ BrowserWindow::~BrowserWindow()
     delete d_ptr;
 }
 
-void BrowserWindow::restoreSession(QSettings &s)
-{
-    MainWindow::restoreState(s.value(QLatin1String("state")).toByteArray());
-}
-
-void BrowserWindow::saveSession(QSettings &s)
-{
-    s.setValue(QLatin1String("state"), MainWindow::saveState());
-}
-
 BrowserWindow * BrowserWindow::currentWindow()
 {
     return qobject_cast<BrowserWindow*>(qApp->activeWindow());

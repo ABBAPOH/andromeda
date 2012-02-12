@@ -25,9 +25,6 @@ public:
     explicit BrowserWindow(QWidget *parent = 0);
     ~BrowserWindow();
 
-    void restoreSession(QSettings &s);
-    void saveSession(QSettings &s);
-
     static BrowserWindow *currentWindow();
     static QList<BrowserWindow*> windows();
     static BrowserWindow *createWindow();

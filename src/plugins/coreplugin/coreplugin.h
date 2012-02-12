@@ -16,6 +16,9 @@ public:
     bool initialize(const QVariantMap &);
     void shutdown();
 
+    bool restoreState(const QByteArray &state);
+    QByteArray saveState() const;
+
 public slots:
     void newWindow();
     void showPluginView();
