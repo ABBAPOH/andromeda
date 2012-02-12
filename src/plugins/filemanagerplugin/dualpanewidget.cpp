@@ -1,7 +1,7 @@
 #include "dualpanewidget.h"
 #include "dualpanewidget_p.h"
 
-#include <QtCore/QBuffer>
+#include <QtCore/QDataStream>
 #include <QtCore/QEvent>
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
@@ -527,18 +527,16 @@ void DualPaneWidget::setSortingOrder(Qt::SortOrder order)
     d->updateSortActions();
 }
 
-bool DualPaneWidget::restoreState(const QByteArray &state)
+bool DualPaneWidget::restoreState(const QByteArray &arr)
 {
     Q_D(DualPaneWidget);
 
-    if (state.isEmpty())
+    if (arr.isEmpty())
         return false;
 
-    QByteArray data = state;
-    QBuffer buffer(&data);
-    buffer.open(QIODevice::ReadOnly);
+    QByteArray state = arr;
+    QDataStream s(&state, QIODevice::ReadOnly);
 
-    QDataStream s(&buffer);
     bool b;
     QByteArray subState;
     s >> b;
@@ -557,16 +555,15 @@ bool DualPaneWidget::restoreState(const QByteArray &state)
 
 QByteArray DualPaneWidget::saveState()
 {
-    QBuffer buffer;
-    buffer.open(QIODevice::WriteOnly);
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
 
-    QDataStream s(&buffer);
     s << dualPaneModeEnabled();
     s << leftWidget()->saveState();
     if (d_func()->panes[RightPane])
         s << rightWidget()->saveState();
 
-    return buffer.data();
+    return state;
 }
 
 void DualPaneWidget::sync()

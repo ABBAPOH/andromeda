@@ -2,7 +2,6 @@
 
 #include "tabwidget.h"
 
-#include <QtCore/QBuffer>
 #include <QtCore/QDataStream>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QResizeEvent>
@@ -131,9 +130,7 @@ MyTabWidget * TabContainer::tabWidget() const
 void TabContainer::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
-    QBuffer buffer(&state);
-    buffer.open(QBuffer::ReadOnly);
-    QDataStream s(&buffer);
+    QDataStream s(&state, QIODevice::ReadOnly);
 
     int currentIndex = 0;
     int tabCount = 0;
@@ -159,9 +156,8 @@ void TabContainer::restoreState(const QByteArray &arr)
 */
 QByteArray TabContainer::saveState() const
 {
-    QBuffer buffer;
-    buffer.open(QBuffer::WriteOnly);
-    QDataStream s(&buffer);
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
 
     int currentIndex = m_tabWidget->currentIndex();
     int tabCount = m_tabWidget->count();
@@ -173,7 +169,7 @@ QByteArray TabContainer::saveState() const
         s << e->saveState();
     }
 
-    return buffer.data();
+    return state;
 }
 
 /*!

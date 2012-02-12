@@ -1,7 +1,5 @@
 #include "abstractcontainer.h"
 
-#include <QtCore/QBuffer>
-
 using namespace GuiSystem;
 
 AbstractContainer::AbstractContainer(QWidget *parent) :

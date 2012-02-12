@@ -1,7 +1,7 @@
 #include "filemanagerwidget.h"
 #include "filemanagerwidget_p.h"
 
-#include <QtCore/QBuffer>
+#include <QtCore/QDataStream>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtGui/QAction>
@@ -721,16 +721,14 @@ FileSystemModel * FileManagerWidget::model() const
     return d->model;
 }
 
-bool FileManagerWidget::restoreState(const QByteArray &state)
+bool FileManagerWidget::restoreState(const QByteArray &arr)
 {
-    if (state.isEmpty())
+    if (arr.isEmpty())
         return false;
 
-    QByteArray data = state;
-    QBuffer buffer(&data);
-    buffer.open(QIODevice::ReadOnly);
+    QByteArray state = arr;
+    QDataStream s(&state, QIODevice::ReadOnly);
 
-    QDataStream s(&buffer);
     quint8 tmp;
     QSize size;
     s >> tmp;
@@ -750,10 +748,9 @@ bool FileManagerWidget::restoreState(const QByteArray &state)
 
 QByteArray FileManagerWidget::saveState()
 {
-    QBuffer buffer;
-    buffer.open(QIODevice::WriteOnly);
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
 
-    QDataStream s(&buffer);
     s << (quint8)flow();
     s << gridSize();
     s << iconSize(IconView);
@@ -761,7 +758,7 @@ QByteArray FileManagerWidget::saveState()
     s << (quint8)sortingColumn();
     s << (quint8)sortingOrder();
 
-    return buffer.data();
+    return state;
 }
 
 void FileManagerWidget::newFolder()
