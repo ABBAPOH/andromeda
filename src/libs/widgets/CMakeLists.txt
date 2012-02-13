@@ -8,6 +8,8 @@ set( HEADERS
     minisplitter.h
     modelmenu.h
     modeltoolbar.h
+    outlinewidget.h
+    outlinewidget_p.h
     qxtflowview.h
     qxtflowview_p.h
     shortcutlineedit.h
@@ -20,6 +22,7 @@ set( SOURCES
     minisplitter.cpp
     modelmenu.cpp
     modeltoolbar.cpp
+    outlinewidget.cpp
     qxtflowview.cpp
     qxtflowview_p.cpp
     shortcutlineedit.cpp
