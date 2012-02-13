@@ -70,11 +70,13 @@ public:
     QStandardItemModel *model;
     QAction *closeAction;
 
+public:
     void addCategory(const QString &id);
     void addPage(SettingsPage *page);
     void removePage(SettingsPage *page);
 
     void setupUi();
+    void retranslateUi();
 
 private:
     SettingsDialog *q_ptr;
@@ -171,6 +173,15 @@ void SettingsDialogPrivate::setupUi()
     closeAction->setShortcut(QKeySequence::Close);
     q->addAction(closeAction);
     QObject::connect(closeAction, SIGNAL(triggered()), q, SLOT(reject()));
+
+    retranslateUi();
+}
+
+void SettingsDialogPrivate::retranslateUi()
+{
+    Q_Q(SettingsDialog);
+
+    q->setWindowTitle(QObject::tr("Preferences"));
 }
 
 /*!
