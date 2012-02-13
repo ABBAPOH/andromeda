@@ -51,6 +51,7 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar = new QToolBar(q);
     toolBar->setFloatable(false);
     toolBar->setMovable(false);
+    toolBar->setObjectName("toolBar");
 
     toolBar->addAction(q->action(MainWindow::Back));
     toolBar->addAction(q->action(MainWindow::Forward));
