@@ -145,9 +145,16 @@ void CorePluginImpl::prefenrences()
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
-    SettingsDialog settingsDialog;
-    settingsDialog.setSettingsPageManager(pageManager);
-    settingsDialog.exec();
+    // TODO: test unloading pages while dialog is running
+    if (!settingsDialog) {
+        settingsDialog = new SettingsDialog();
+        settingsDialog->setAttribute(Qt::WA_DeleteOnClose);
+        settingsDialog->setSettingsPageManager(pageManager);
+        settingsDialog->show();
+    } else {
+        settingsDialog->raise();
+        settingsDialog->activateWindow();
+    }
 }
 
 void CorePluginImpl::handleMessage(const QString &message)

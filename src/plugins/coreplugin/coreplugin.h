@@ -4,7 +4,13 @@
 #include <extensionsystem/iplugin.h>
 #include "browserwindow.h"
 
+#include <QtCore/QPointer>
+
 using namespace ExtensionSystem;
+
+namespace GuiSystem {
+class SettingsDialog;
+}
 
 class CorePluginImpl : public IPlugin
 {
@@ -49,6 +55,7 @@ private:
 
 private:
     QStringList urls;
+    QPointer<GuiSystem::SettingsDialog> settingsDialog;
 };
 
 #endif // COREPLUGIN_H
