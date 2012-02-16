@@ -322,7 +322,8 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose, true);
     setWindowFlags(Qt::Window);
 
-    setMinimumSize(300, 400);
+    setMinimumSize(200, 400);
+    setMaximumWidth(400);
 
     connect(d->userPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedUser(int)));
     connect(d->groupPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedGroup(int)));
