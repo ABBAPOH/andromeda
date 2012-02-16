@@ -3,14 +3,17 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QWidget>
-#include <io/QDriveInfo>
 
 class DirectoryDetails;
+class OutlineWidget;
+class QFormLayout;
+class QLabel;
+class QVBoxLayout;
+class QComboBox;
 
-namespace Ui {
-    class FileInfoDialog;
-}
+namespace FileManagerPlugin {
 
+class FileInfoDialogPrivate;
 class FileInfoDialog : public QWidget
 {
     Q_OBJECT
@@ -22,8 +25,10 @@ public:
     QFileInfo fileInfo() const;
     void setFileInfo(const QFileInfo &info);
 
+    QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+
 private:
-    void updateUi();
 
 private slots:
     void onActivatedUser(int);
@@ -32,10 +37,9 @@ private slots:
     void updateSize();
 
 private:
-    Ui::FileInfoDialog *ui;
-    QFileInfo m_fileInfo;
-    QDriveInfo m_driveInfo;
-    DirectoryDetails *m_directoryDetails;
+    FileInfoDialogPrivate *d;
 };
+
+} // namespace FileManagerPlugin
 
 #endif // FILEINFODIALOG_H
