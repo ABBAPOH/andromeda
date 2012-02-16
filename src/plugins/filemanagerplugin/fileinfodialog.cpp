@@ -6,9 +6,16 @@
 
 #include <QtCore/QDateTime>
 #include <QtGui/QFileIconProvider>
+#include <QtGui/QLineEdit>
 #include <io/QDriveInfo>
 
 namespace FileManagerPlugin {
+
+class LabelLineEdit : public QLineEdit
+{
+public:
+    explicit LabelLineEdit(QWidget *parent = 0);
+};
 
 class FileInfoDialogPrivate
 {
@@ -36,7 +43,7 @@ public:
     QLabel *sizeLabel;
     QLabel *size;
     QLabel *locationLabel;
-    QLabel *location;
+    QLineEdit *location;
     QLabel *createdLabel;
     QLabel *created;
     QLabel *modifiedLabel;
@@ -51,7 +58,7 @@ public:
     QLabel *availableSizeLabel;
     QLabel *availableSize;
     QLabel *mountPointLabel;
-    QLabel *mountPoint;
+    QLineEdit *mountPoint;
     QLabel *fileSystemLabel;
     QLabel *fileSystem;
 
@@ -79,6 +86,17 @@ static QString sizeToString(qint64 size)
     if (size > 1024)
         return QObject::tr("%1 kB").arg(size/1024);
     return QObject::tr("%1 b").arg(size);
+}
+
+LabelLineEdit::LabelLineEdit(QWidget *parent) :
+    QLineEdit(parent)
+{
+    QPalette p = palette();
+    p.setColor(QPalette::Base, p.color(QPalette::Window));
+    setPalette(p);
+
+    setFrame(false);
+    setReadOnly(true);
 }
 
 void FileInfoDialogPrivate::updateUi()
@@ -162,11 +180,8 @@ void FileInfoDialogPrivate::setupUi()
     locationLabel = new QLabel(widget_1);
     locationLabel->setObjectName(QLatin1String("locationLabel"));
 
-    location = new QLabel(widget_1);
-    locationLabel->setObjectName(QLatin1String("location"));
-    location->setWordWrap(true);
-    location->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    location->setTextFormat(Qt::RichText);
+    location = new LabelLineEdit(widget_1);
+    location->setObjectName(QLatin1String("location"));
     layout_1->addRow(locationLabel, location);
 
     createdLabel = new QLabel(widget_1);
@@ -212,9 +227,8 @@ void FileInfoDialogPrivate::setupUi()
     mountPointLabel = new QLabel(widget_2);
     mountPointLabel->setObjectName(QLatin1String("mountPointLabel"));
 
-    mountPoint = new QLabel(widget_2);
+    mountPoint = new LabelLineEdit(widget_2);
     mountPoint->setObjectName(QLatin1String("mountPoint"));
-    mountPoint->setTextInteractionFlags(Qt::TextBrowserInteraction);
     layout_2->addRow(mountPointLabel, mountPoint);
 
     fileSystemLabel = new QLabel(widget_2);
