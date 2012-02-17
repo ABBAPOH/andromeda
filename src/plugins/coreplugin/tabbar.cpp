@@ -11,6 +11,7 @@ TabBar::TabBar(QWidget *parent) :
     m_switchTabsOnDrag = false;
     m_switchOnHover = false;
     m_switchTimeout = 500;
+    setElideMode(Qt::ElideRight);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(changeTab()));
 }
 
