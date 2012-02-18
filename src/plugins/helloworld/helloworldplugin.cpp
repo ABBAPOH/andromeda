@@ -5,6 +5,7 @@
 #include <guisystem/editormanager.h>
 
 using namespace GuiSystem;
+using namespace HelloWorld;
 
 HelloWorldPlugin::HelloWorldPlugin() :
     ExtensionSystem::IPlugin()

@@ -7,6 +7,9 @@
 #include <guisystem/abstracteditorfactory.h>
 
 class QLabel;
+
+namespace HelloWorld {
+
 class HELLOWORLD_EXPORT HelloWorldEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
@@ -40,5 +43,7 @@ public:
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
+
+} // namespace HelloWorld
 
 #endif // HELLOWORLDEDITOR_H
