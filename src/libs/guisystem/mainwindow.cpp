@@ -416,10 +416,10 @@ void MainWindowPrivate::retranslateUi()
 void MainWindowPrivate::registerActions()
 {
     ActionManager *manager = ActionManager::instance();
-    manager->registerAction(actions[MainWindow::Close], "Actions:6.CloseTab");
+    manager->registerAction(actions[MainWindow::Close], "CloseTab");
 
-    manager->registerAction(actions[MainWindow::Back], "Actions.Back");
-    manager->registerAction(actions[MainWindow::Forward], "Actions.Forward");
+    manager->registerAction(actions[MainWindow::Back], "Back");
+    manager->registerAction(actions[MainWindow::Forward], "Forward");
 }
 
 void MainWindowPrivate::initGeometry()
