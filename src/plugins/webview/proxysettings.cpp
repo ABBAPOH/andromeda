@@ -74,7 +74,7 @@ void ProxySettingsWidget::saveSettings()
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     ui->buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);
 
-    WebViewPluginImpl::instance()->loadProxySettings();
+    WebViewPlugin::instance()->loadProxySettings();
 }
 
 ProxySettingsPage::ProxySettingsPage(QObject *parent) :

@@ -19,28 +19,28 @@
 #include <QtWebKit/QWebSettings>
 
 using namespace GuiSystem;
-using namespace WebViewPlugin;
+using namespace WebView;
 
-WebViewPluginImpl *m_instance = 0;
+WebViewPlugin *m_instance = 0;
 
-WebViewPluginImpl::WebViewPluginImpl() :
+WebViewPlugin::WebViewPlugin() :
     ExtensionSystem::IPlugin()
 {
     m_instance = this;
 }
 
-WebViewPluginImpl::~WebViewPluginImpl()
+WebViewPlugin::~WebViewPlugin()
 {
     m_instance = 0;
 }
 
-WebViewPluginImpl * WebViewPluginImpl::instance()
+WebViewPlugin * WebViewPlugin::instance()
 {
     Q_ASSERT_X(m_instance, "WebViewPluginImpl::instance", "Web view plugin is not loaded");
     return m_instance;
 }
 
-bool WebViewPluginImpl::initialize(const QVariantMap &)
+bool WebViewPlugin::initialize(const QVariantMap &)
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
@@ -58,11 +58,11 @@ bool WebViewPluginImpl::initialize(const QVariantMap &)
     return true;
 }
 
-void WebViewPluginImpl::shutdown()
+void WebViewPlugin::shutdown()
 {
 }
 
-void WebViewPluginImpl::loadSettings()
+void WebViewPlugin::loadSettings()
 {
     m_settings = new QSettings(this);
     m_webSettings = QWebSettings::globalSettings();
@@ -73,7 +73,7 @@ void WebViewPluginImpl::loadSettings()
     loadProxySettings();
 }
 
-void WebViewPluginImpl::loadAppearanceSettings()
+void WebViewPlugin::loadAppearanceSettings()
 {
     m_settings->beginGroup(QLatin1String("appearance"));
 
@@ -108,7 +108,7 @@ void WebViewPluginImpl::loadAppearanceSettings()
     m_settings->endGroup();
 }
 
-void WebViewPluginImpl::loadProxySettings()
+void WebViewPlugin::loadProxySettings()
 {
     m_settings->beginGroup(QLatin1String("proxy"));
 
@@ -133,4 +133,4 @@ void WebViewPluginImpl::loadProxySettings()
     m_settings->endGroup();
 }
 
-Q_EXPORT_PLUGIN(WebViewPluginImpl)
+Q_EXPORT_PLUGIN(WebViewPlugin)

@@ -10,7 +10,7 @@ set( HEADERS
     cookieexceptionsmodel.h
     privacysettings.h
     proxysettings.h
-    webviewplugin_global.h
+    webview_global.h
     webvieweditor.h
     webvieweditor_p.h
     webviewplugin.h
@@ -42,7 +42,7 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
-add_definitions( -DWEBVIEWPLUGIN_LIBRARY )
+add_definitions( -DWEBVIEW_LIBRARY )
 
 add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
 target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem guisystem )

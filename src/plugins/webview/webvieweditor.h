@@ -1,7 +1,7 @@
 #ifndef WEBVIEWEDITOR_H
 #define WEBVIEWEDITOR_H
 
-#include "webviewplugin_global.h"
+#include "webview_global.h"
 
 #include <QtCore/QPointer>
 #include <QtGui/QToolBar>
@@ -17,12 +17,12 @@ namespace GuiSystem {
 class FindToolBar;
 } // namespace GuiSystem
 
-namespace WebViewPlugin {
+namespace WebView {
 
 class WebViewHistory;
 class WebViewFind;
 
-class WEBVIEWPLUGIN_EXPORT WebViewEditor : public GuiSystem::AbstractEditor
+class WEBVIEW_EXPORT WebViewEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebViewEditor)
@@ -84,6 +84,6 @@ protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
-} // namespace WebViewPlugin
+} // namespace WebView
 
 #endif // WEBVIEWEDITOR_H

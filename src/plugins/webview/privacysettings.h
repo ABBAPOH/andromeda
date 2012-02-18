@@ -69,7 +69,7 @@ public:
     QWidget *createPage(QWidget *parent)
     {
         PrivacySettingsWidget *widget = new PrivacySettingsWidget(parent);
-        widget->setCookieJar(WebViewPluginImpl::instance()->cookieJar());
+        widget->setCookieJar(WebViewPlugin::instance()->cookieJar());
         return widget;
     }
 };

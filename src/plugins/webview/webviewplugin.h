@@ -7,15 +7,15 @@ class CookieJar;
 class QSettings;
 class QWebSettings;
 
-class WebViewPluginImpl : public ExtensionSystem::IPlugin
+class WebViewPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 
 public:
-    WebViewPluginImpl();
-    ~WebViewPluginImpl();
+    WebViewPlugin();
+    ~WebViewPlugin();
 
-    static WebViewPluginImpl *instance();
+    static WebViewPlugin *instance();
 
     inline CookieJar *cookieJar() const { return m_cookieJar; }
 
