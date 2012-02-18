@@ -20,7 +20,7 @@
 #include <extensionsystem/pluginmanager.h>
 #include <widgets/minisplitter.h>
 
-#include <coreplugin/constants.h>
+#include <core/constants.h>
 
 using namespace GuiSystem;
 using namespace FileManager;

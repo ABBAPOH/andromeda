@@ -1,7 +1,7 @@
 #ifndef BROWSERWINDOW_H
 #define BROWSERWINDOW_H
 
-#include "coreplugin_global.h"
+#include "core_global.h"
 
 #include <guisystem/mainwindow.h>
 
@@ -13,10 +13,10 @@ class AbstractEditor;
 class StackedContainer;
 }
 
-namespace CorePlugin {
+namespace Core {
 
 class BrowserWindowPrivate;
-class COREPLUGIN_EXPORT BrowserWindow : public GuiSystem::MainWindow
+class CORE_EXPORT BrowserWindow : public GuiSystem::MainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(BrowserWindow)
@@ -46,6 +46,6 @@ protected:
     BrowserWindowPrivate * d_ptr;
 };
 
-} // namespace CorePlugin
+} // namespace Core
 
 #endif // BROWSERWINDOW_H

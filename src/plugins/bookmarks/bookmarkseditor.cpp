@@ -10,7 +10,7 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/mainwindow.h>
 
-#include <coreplugin/constants.h>
+#include <core/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarksmodel.h"

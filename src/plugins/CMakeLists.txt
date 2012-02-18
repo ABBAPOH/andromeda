@@ -10,7 +10,7 @@ if( CMAKE_BUILD_TYPE STREQUAL "Release" )
 endif()
 
 add_subdirectory( bookmarks )
-add_subdirectory( coreplugin )
+add_subdirectory( core )
 add_subdirectory( filemanager )
 add_subdirectory( helloworld )
 add_subdirectory( webview )

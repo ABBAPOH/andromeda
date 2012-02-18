@@ -17,10 +17,10 @@
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
 #include <guisystem/abstracthistory.h>
-//#include <coreplugin/CorePlugin>
-#include <coreplugin/constants.h>
 
-using namespace CorePlugin;
+#include "constants.h"
+
+using namespace Core;
 using namespace GuiSystem;
 
 void BrowserWindowPrivate::setupActions()

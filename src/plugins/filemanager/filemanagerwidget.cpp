@@ -13,7 +13,8 @@
 
 #include <guisystem/actionmanager.h>
 #include <widgets/coverflow.h>
-#include <coreplugin/constants.h>
+
+#include <core/constants.h>
 
 #include "fileinfodialog.h"
 #include "filemanagersettings.h"

@@ -12,12 +12,12 @@ namespace GuiSystem {
 class SettingsDialog;
 }
 
-class CorePluginImpl : public IPlugin
+class CorePlugin : public IPlugin
 {
     Q_OBJECT
 public:
-    CorePluginImpl();
-    ~CorePluginImpl();
+    CorePlugin();
+    ~CorePlugin();
 
     bool initialize(const QVariantMap &);
     void shutdown();

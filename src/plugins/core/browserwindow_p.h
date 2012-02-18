@@ -12,7 +12,7 @@
 
 #include "tabcontainer.h"
 
-namespace CorePlugin {
+namespace Core {
 
 class BrowserWindowPrivate : public QObject
 {
@@ -42,6 +42,6 @@ public slots:
 
 };
 
-} // namespace CorePlugin
+} // namespace Core
 
 #endif // BROWSERWINDOW_P_H

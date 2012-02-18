@@ -16,7 +16,7 @@ public:
     QHash<QString, AbstractViewFactory *> viewFactories;
 };
 
-} // namespace CorePlugin
+} // namespace Core
 
 using namespace GuiSystem;
 
