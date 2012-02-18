@@ -106,12 +106,12 @@ void BookmarksToolBarContainer::onDestroy(QObject *o)
     toolBars.removeAll(o);
 }
 
-BookmarksPluginImpl::BookmarksPluginImpl() :
+BookmarksPlugin::BookmarksPlugin() :
     ExtensionSystem::IPlugin()
 {
 }
 
-bool BookmarksPluginImpl::initialize(const QVariantMap &)
+bool BookmarksPlugin::initialize(const QVariantMap &)
 {
     model = new BookmarksModel(this);
     addObject(model, QLatin1String(Constants::Objects::BookmarksModel));
@@ -129,12 +129,12 @@ bool BookmarksPluginImpl::initialize(const QVariantMap &)
     return true;
 }
 
-void BookmarksPluginImpl::shutdown()
+void BookmarksPlugin::shutdown()
 {
     model->saveBookmarks();
 }
 
-void BookmarksPluginImpl::open(const QUrl &url)
+void BookmarksPlugin::open(const QUrl &url)
 {
     MainWindow * window = MainWindow::currentWindow();
     if (!window)
@@ -143,7 +143,7 @@ void BookmarksPluginImpl::open(const QUrl &url)
     window->open(url);
 }
 
-void BookmarksPluginImpl::openInTabs(const QList<QUrl> &urls)
+void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
 {
     MainWindow * window = MainWindow::currentWindow();
     if (!window)
@@ -154,7 +154,7 @@ void BookmarksPluginImpl::openInTabs(const QList<QUrl> &urls)
     }
 }
 
-void BookmarksPluginImpl::openInWindow(const QList<QUrl> &urls)
+void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
 {
     MainWindow * window = MainWindow::createWindow();
 
@@ -164,7 +164,7 @@ void BookmarksPluginImpl::openInWindow(const QList<QUrl> &urls)
     window->show();
 }
 
-void BookmarksPluginImpl::showBookmarks()
+void BookmarksPlugin::showBookmarks()
 {
     MainWindow * window = MainWindow::currentWindow();
     if (!window)
@@ -173,17 +173,17 @@ void BookmarksPluginImpl::showBookmarks()
     window->openEditor(QLatin1String(Constants::Editors::Bookmarks));
 }
 
-void BookmarksPluginImpl::addBookmark()
+void BookmarksPlugin::addBookmark()
 {
     showBookmarkDialog(QModelIndex(), false);
 }
 
-void BookmarksPluginImpl::addFolder()
+void BookmarksPlugin::addFolder()
 {
     showBookmarkDialog(QModelIndex(), true);
 }
 
-void BookmarksPluginImpl::createActions()
+void BookmarksPlugin::createActions()
 {
     BookmarksModel *model = object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
 
@@ -233,7 +233,7 @@ void BookmarksPluginImpl::createActions()
     addObject(toolBar);
 }
 
-void BookmarksPluginImpl::showBookmarkDialog(const QModelIndex &index, bool isFolder)
+void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder)
 {
     MainWindow * window = MainWindow::currentWindow();
     if (!window)
@@ -270,7 +270,7 @@ static Bookmark bookmark(const QString &title, const QUrl &url)
     return b;
 }
 
-void BookmarksPluginImpl::addDefaultBookmarks()
+void BookmarksPlugin::addDefaultBookmarks()
 {
     QModelIndex toolBar = model->toolBar();
     model->addBookmark(bookmark("Andromeda", QUrl("http://gitorious.org/andromeda/pages/Home")), toolBar);
@@ -286,4 +286,4 @@ void BookmarksToolBarContainer::storeVisibility(bool visible)
     settings.setValue(QLatin1String("toolbarVisible"), visible);
 }
 
-Q_EXPORT_PLUGIN(BookmarksPluginImpl)
+Q_EXPORT_PLUGIN(BookmarksPlugin)

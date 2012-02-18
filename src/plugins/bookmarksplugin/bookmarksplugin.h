@@ -12,12 +12,12 @@ namespace Bookmarks {
 class BookmarksModel;
 }
 
-class BookmarksPluginImpl : public ExtensionSystem::IPlugin
+class BookmarksPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 
 public:
-    explicit BookmarksPluginImpl();
+    explicit BookmarksPlugin();
 
     bool initialize(const QVariantMap &options);
     void shutdown();
