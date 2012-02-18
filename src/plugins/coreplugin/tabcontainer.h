@@ -30,7 +30,7 @@ public:
 
     MyTabWidget *tabWidget() const;
 
-    void restoreState(const QByteArray &state);
+    bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
 
 public slots:

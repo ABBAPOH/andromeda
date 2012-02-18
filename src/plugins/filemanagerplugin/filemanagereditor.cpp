@@ -187,12 +187,15 @@ void FileManagerEditor::restoreDefaults()
 /*!
   \reimp
 */
-void FileManagerEditor::restoreState(const QByteArray &arr)
+bool FileManagerEditor::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
     QDataStream s(&state, QIODevice::ReadOnly);
 
-    bool visible; QByteArray splitterState, widgetState, baseState;
+    bool ok = true;
+    bool visible;
+    QByteArray splitterState, widgetState, baseState;
+
     s >> baseState;
     s >> visible;
     s >> splitterState;
@@ -200,10 +203,12 @@ void FileManagerEditor::restoreState(const QByteArray &arr)
 
     AbstractEditor::restoreState(baseState);
     m_panel->setVisible(visible);
-    splitter->restoreState(splitterState);
+    ok |= splitter->restoreState(splitterState);
     m_widget->blockSignals(true);
-    m_widget->restoreState(widgetState);
+    ok |= m_widget->restoreState(widgetState);
     m_widget->blockSignals(false);
+
+    return ok;
 }
 
 /*!

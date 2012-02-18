@@ -50,7 +50,7 @@ public:
     virtual AbstractHistory *history() const;
 
     virtual void restoreDefaults() {}
-    virtual void restoreState(const QByteArray &state);
+    virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
 public slots:

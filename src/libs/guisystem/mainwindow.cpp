@@ -147,7 +147,7 @@ MainWindow * MainWindow::createWindow()
     return 0;
 }
 
-void MainWindow::restoreState(const QByteArray &arr)
+bool MainWindow::restoreState(const QByteArray &arr)
 {
     Q_D(MainWindow);
 
@@ -163,11 +163,11 @@ void MainWindow::restoreState(const QByteArray &arr)
 
     s >> magic;
     if (magic != mainWindowMagic)
-        return;
+        return false;
 
     s >> version;
     if (version != mainWindowVersion)
-        return;
+        return false;
 
     s >> geometry;
     s >> mainWindowState;
@@ -176,7 +176,9 @@ void MainWindow::restoreState(const QByteArray &arr)
     QMainWindow::restoreState(mainWindowState);
 
     if (d->contanier)
-        d->contanier->restoreState(containerState);
+        return d->contanier->restoreState(containerState);
+
+    return true;
 }
 
 QByteArray MainWindow::saveState() const

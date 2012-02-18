@@ -81,10 +81,11 @@ QByteArray BookmarksEditor::saveState() const
     return m_widget->saveState();
 }
 
-void BookmarksEditor::restoreState(const QByteArray &state)
+bool BookmarksEditor::restoreState(const QByteArray &state)
 {
     m_widget->restoreState(state);
     open(url());
+    return true;
 }
 
 void BookmarksEditor::openTriggered(const QUrl &url)

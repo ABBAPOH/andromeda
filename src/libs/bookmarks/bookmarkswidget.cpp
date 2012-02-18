@@ -63,9 +63,9 @@ void BookmarksWidget::setModel(BookmarksModel *model)
     onClicked(index);
 }
 
-void BookmarksWidget::restoreState(const QByteArray &state)
+bool BookmarksWidget::restoreState(const QByteArray &state)
 {
-    d->splitter->restoreState(state);
+    return d->splitter->restoreState(state);
 }
 
 QByteArray BookmarksWidget::saveState() const

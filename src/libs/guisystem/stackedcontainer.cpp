@@ -230,7 +230,7 @@ AbstractHistory * StackedContainer::history() const
 /*!
   \reimp
 */
-void StackedContainer::restoreState(const QByteArray &arr)
+bool StackedContainer::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
     QDataStream s(&state, QIODevice::ReadOnly);
@@ -243,8 +243,10 @@ void StackedContainer::restoreState(const QByteArray &arr)
         d->setEditor(e);
         d->layout->addWidget(e);
         d->editorHash.insert(id, e);
-        e->restoreState(editorState);
+        return e->restoreState(editorState);
     }
+
+    return true;
 }
 
 /*!

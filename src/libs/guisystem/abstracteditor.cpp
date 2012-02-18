@@ -317,9 +317,10 @@ AbstractHistory * AbstractEditor::history() const
 
   Restored url from byte array and calls AbstractEditor::open.
 */
-void AbstractEditor::restoreState(const QByteArray &state)
+bool AbstractEditor::restoreState(const QByteArray &state)
 {
     open(QUrl::fromEncoded(state));
+    return true;
 }
 
 /*!
