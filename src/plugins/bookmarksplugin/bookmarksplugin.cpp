@@ -1,10 +1,9 @@
 #include "bookmarksplugin.h"
 #include "bookmarkseditor.h"
 
-#include "bookmarksconstants.h"
-
 #include <QtCore/QtPlugin>
 #include <QtCore/QSettings>
+
 #include <QtGui/QAction>
 #include <QtGui/QFileIconProvider>
 #include <QtGui/QToolButton>
@@ -18,18 +17,18 @@
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
 
-#include <bookmarks/bookmarkdialog.h>
-#include <bookmarks/bookmarksmenu.h>
-#include <bookmarks/bookmarksmodel.h>
-#include <bookmarks/bookmarkstoolbar.h>
-#include <bookmarks/bookmarkswidget.h>
-
 #include <coreplugin/constants.h>
+
+#include "bookmarksconstants.h"
+#include "bookmarkdialog.h"
+#include "bookmarksmenu.h"
+#include "bookmarksmodel.h"
+#include "bookmarkstoolbar.h"
+#include "bookmarkswidget.h"
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
 using namespace Bookmarks;
-using namespace BookmarksPlugin;
 
 class BookmarksMenuContainer : public CommandContainer
 {

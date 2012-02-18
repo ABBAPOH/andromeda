@@ -1,22 +1,22 @@
 #include "bookmarkseditor.h"
 
-#include "bookmarksconstants.h"
-
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
+
 #include <QtGui/QResizeEvent>
 #include <QtGui/QUndoStack>
 
-#include <bookmarks/bookmarksmodel.h>
-#include <bookmarks/bookmarkswidget.h>
 #include <extensionsystem/pluginmanager.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/mainwindow.h>
 
 #include <coreplugin/constants.h>
 
+#include "bookmarksconstants.h"
+#include "bookmarksmodel.h"
+#include "bookmarkswidget.h"
+
 using namespace Bookmarks;
-using namespace BookmarksPlugin;
 using namespace GuiSystem;
 using namespace ExtensionSystem;
 

@@ -1,13 +1,26 @@
-set( GLOBAL_HEADERS bookmarksplugin_global.h )
-
+set( GLOBAL_HEADERS bookmarks_global.h )
 set( HEADERS
+    bookmark.h
+    bookmarkdialog.h
     bookmarksconstants.h
     bookmarkseditor.h
+    bookmarksmenu.h
+    bookmarksmodel.h
+    bookmarksmodel_p.h
+    bookmarkstoolbar.h
     bookmarksplugin.h
+    bookmarkswidget.h
+    bookmarkswidget_p.h
    )
 set( SOURCES
+    bookmark.cpp
+    bookmarkdialog.cpp
     bookmarkseditor.cpp
+    bookmarksmenu.cpp
+    bookmarkstoolbar.cpp
+    bookmarksmodel.cpp
     bookmarksplugin.cpp
+    bookmarkswidget.cpp
    )
 set( FORMS
    )
@@ -23,8 +36,8 @@ qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
-add_definitions( -DBOOKMARKSPLUGIN_LIBRARY )
+add_definitions( -DBOOKMARKS_LIBRARY )
 
 add_library( bookmarksplugin SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-target_link_libraries( bookmarksplugin ${QT_LIBRARIES} extensionsystem guisystem bookmarks )
+target_link_libraries( bookmarksplugin ${QT_LIBRARIES} extensionsystem guisystem )
 install_plugin( bookmarksplugin )
