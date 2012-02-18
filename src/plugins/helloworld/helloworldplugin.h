@@ -3,12 +3,12 @@
 
 #include <extensionsystem/iplugin.h>
 
-class HelloWorlPluginImpl : public ExtensionSystem::IPlugin
+class HelloWorldPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 
 public:
-    explicit HelloWorlPluginImpl();
+    explicit HelloWorldPlugin();
 
     bool initialize(const QVariantMap &options);
 };

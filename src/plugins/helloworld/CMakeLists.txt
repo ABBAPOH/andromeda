@@ -1,5 +1,5 @@
 set( HEADERS
-    helloworldplugin_global.h
+    helloworld_global.h
     helloworldeditor.h
     helloworldplugin.h
    )
@@ -21,7 +21,7 @@ qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
-add_definitions( -DHELLOWORLDPLUGIN_LIBRARY )
+add_definitions( -DHELLOWORLD_LIBRARY )
 
 add_library( helloworldplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
 target_link_libraries( helloworldplugin ${QT_LIBRARIES} extensionsystem guisystem )

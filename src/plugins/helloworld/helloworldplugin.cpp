@@ -6,12 +6,12 @@
 
 using namespace GuiSystem;
 
-HelloWorlPluginImpl::HelloWorlPluginImpl() :
+HelloWorldPlugin::HelloWorldPlugin() :
     ExtensionSystem::IPlugin()
 {
 }
 
-bool HelloWorlPluginImpl::initialize(const QVariantMap &)
+bool HelloWorldPlugin::initialize(const QVariantMap &)
 {
     HelloWorldEditorFactory *f = new HelloWorldEditorFactory(this);
     EditorManager::instance()->addFactory(f);
@@ -19,4 +19,4 @@ bool HelloWorlPluginImpl::initialize(const QVariantMap &)
     return true;
 }
 
-Q_EXPORT_PLUGIN(HelloWorlPluginImpl)
+Q_EXPORT_PLUGIN(HelloWorldPlugin)
