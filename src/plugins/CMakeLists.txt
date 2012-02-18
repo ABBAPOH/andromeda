@@ -11,6 +11,6 @@ endif()
 
 add_subdirectory( bookmarks )
 add_subdirectory( coreplugin )
-add_subdirectory( filemanagerplugin )
+add_subdirectory( filemanager )
 add_subdirectory( helloworld )
 add_subdirectory( webview )
