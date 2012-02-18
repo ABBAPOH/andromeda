@@ -46,7 +46,7 @@ public:
 
     QIcon icon() const { return m_webView->icon(); }
     QString title() const { return m_webView->title(); }
-    QString windowTitle() const { return m_webView->windowTitle(); }
+    QString windowTitle() const { return m_webView->title(); }
 
 public slots:
     void open(const QUrl &url);
