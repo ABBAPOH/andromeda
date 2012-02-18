@@ -1,7 +1,5 @@
 #include "bookmarkdialog.h"
 
-#include "bookmarkswidget_p.h"
-
 #include <QtGui/QComboBox>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QHeaderView>
@@ -10,6 +8,8 @@
 #include <QtGui/QSpacerItem>
 #include <QtGui/QTreeView>
 #include <QtGui/QVBoxLayout>
+
+#include "bookmarkswidget_p.h"
 
 namespace Bookmarks {
 

@@ -1,6 +1,8 @@
 #ifndef HELLOWORLDEDITOR_H
 #define HELLOWORLDEDITOR_H
 
+#include "bookmarks_global.h"
+
 #include <guisystem/abstracteditor.h>
 #include <guisystem/abstracteditorfactory.h>
 
@@ -11,9 +13,9 @@ class BookmarksModel;
 class BookmarksWidget;
 }
 
-namespace BookmarksPlugin {
+namespace Bookmarks {
 
-class BookmarksEditor : public GuiSystem::AbstractEditor
+class BOOKMARKS_EXPORT BookmarksEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(BookmarksEditor)
