@@ -43,7 +43,7 @@ public:
     QString windowTitle() const;
 
     void restoreDefaults();
-    void restoreState(const QByteArray &state);
+    bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
 
 protected:

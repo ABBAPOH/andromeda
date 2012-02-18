@@ -127,7 +127,7 @@ MyTabWidget * TabContainer::tabWidget() const
 /*!
   \reimp
 */
-void TabContainer::restoreState(const QByteArray &arr)
+bool TabContainer::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
     QDataStream s(&state, QIODevice::ReadOnly);
@@ -141,7 +141,9 @@ void TabContainer::restoreState(const QByteArray &arr)
         QByteArray childState;
         s >> childState;
         AbstractEditor *container = createEditor();
-        container->restoreState(childState);
+        bool ok = container->restoreState(childState);
+        if (!ok)
+            return false;
         QString title = container->title();
         m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
     }
@@ -149,6 +151,8 @@ void TabContainer::restoreState(const QByteArray &arr)
     m_tabWidget->setCurrentIndex(currentIndex);
     StackedContainer *container = qobject_cast<StackedContainer *>(m_tabWidget->currentWidget());
     setEditor(container);
+
+    return true;
 }
 
 /*!

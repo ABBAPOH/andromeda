@@ -100,9 +100,10 @@ QString AbstractView::title() const
 
   Default implementation does nothing.
 */
-void AbstractView::restoreState(const QByteArray &state)
+bool AbstractView::restoreState(const QByteArray &state)
 {
     Q_UNUSED(state);
+    return true;
 }
 
 /*!

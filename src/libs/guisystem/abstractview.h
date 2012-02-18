@@ -33,7 +33,7 @@ public:
     virtual QIcon icon() const;
     virtual QString title() const;
 
-    virtual void restoreState(const QByteArray &state);
+    virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
 signals:

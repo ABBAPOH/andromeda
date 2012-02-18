@@ -1,5 +1,6 @@
 #include "coreplugin.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
@@ -88,7 +89,10 @@ bool CorePluginImpl::restoreState(const QByteArray &arr)
         s >> windowState;
 
         BrowserWindow *window = new BrowserWindow();
-        window->restoreState(windowState);
+        bool ok = window->restoreState(windowState);
+        if (!ok)
+            return false;
+
         window->show();
     }
 
@@ -175,13 +179,16 @@ void CorePluginImpl::restoreSession()
 
     bool ok = true;
     QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
+    QString filePath = dataPath + QLatin1Char('/') + QLatin1String("session");
+    QFile f(filePath);
     if (ok)
         ok = f.open(QFile::ReadOnly);
 
     if (ok) {
         QByteArray state = f.readAll();
         ok = restoreState(state);
+        if (!ok)
+            qWarning() << tr("Couldn't restore session (located at %1").arg(filePath);
     }
 
     // We couldn't load session, fallback to creating window and opening default path

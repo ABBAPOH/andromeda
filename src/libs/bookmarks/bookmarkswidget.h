@@ -25,7 +25,7 @@ public:
     BookmarksModel *model() const;
     void setModel(BookmarksModel *model);
 
-    void restoreState(const QByteArray &state);
+    bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
 
     QSize minimumSizeHint() const;

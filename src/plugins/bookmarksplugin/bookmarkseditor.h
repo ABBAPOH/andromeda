@@ -29,7 +29,7 @@ public:
     QString windowTitle() const;
 
     QByteArray saveState() const;
-    void restoreState(const QByteArray &state);
+    bool restoreState(const QByteArray &state);
 
 private slots:
     void openTriggered(const QUrl &url);

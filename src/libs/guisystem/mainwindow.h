@@ -50,7 +50,7 @@ public:
     static QList<MainWindow*> windows();
     static MainWindow *createWindow();
 
-    virtual void restoreState(const QByteArray &state);
+    virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
     static CreateWindowFunc createWindowFunc;
