@@ -9,7 +9,8 @@
 #include <QtWebKit/QWebHistory>
 
 #include <guisystem/findtoolbar.h>
-#include <coreplugin/constants.h>
+
+#include <core/constants.h>
 
 #include "cookiejar.h"
 #include "webviewplugin.h"

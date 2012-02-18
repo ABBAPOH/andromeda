@@ -17,7 +17,7 @@
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
 
-#include <coreplugin/constants.h>
+#include <core/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarkdialog.h"

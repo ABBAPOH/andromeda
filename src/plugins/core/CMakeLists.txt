@@ -4,7 +4,7 @@ set( HEADERS
     browserwindow_p.h
     commandssettingspage.h
     constants.h
-    coreplugin_global.h
+    core_global.h
     coreplugin.h
     settingsmodel.h
     settingsmodel_p.h
@@ -37,7 +37,7 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
-add_definitions( -DCOREPLUGIN_LIBRARY )
+add_definitions( -DCORE_LIBRARY )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 

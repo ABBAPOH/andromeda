@@ -9,7 +9,7 @@
 
 #include <guisystem/stackedcontainer.h>
 
-using namespace CorePlugin;
+using namespace Core;
 using namespace GuiSystem;
 
 /*!
@@ -216,7 +216,7 @@ void TabContainer::closeEditor(int index)
 /*!
   \reimp
 */
-void CorePlugin::TabContainer::resizeEvent(QResizeEvent *e)
+void Core::TabContainer::resizeEvent(QResizeEvent *e)
 {
     m_tabWidget->resize(e->size());
 }

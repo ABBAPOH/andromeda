@@ -3,7 +3,7 @@
 
 #include <widgets/addressbar.h>
 
-namespace CorePlugin {
+namespace Core {
 
 class MyAddressBar : public AddressBar
 {
@@ -31,6 +31,6 @@ private:
     QAction *actions[ActionCount];
 };
 
-} // namespace CorePlugin
+} // namespace Core
 
 #endif // MYADDRESSBAR_H

@@ -9,7 +9,7 @@
 class MyTabWidget;
 class TabBarButton;
 
-namespace CorePlugin {
+namespace Core {
 
 class TabContainer : public GuiSystem::AbstractContainer
 {
@@ -66,6 +66,6 @@ private:
     QUrl m_defaultUrl;
 };
 
-} // namespace CorePlugin
+} // namespace Core
 
 #endif // TABCONTAINER_H

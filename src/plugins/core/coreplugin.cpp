@@ -26,22 +26,22 @@
 
 #include "settingswidget.h"
 
-using namespace CorePlugin;
+using namespace Core;
 using namespace GuiSystem;
 
 static const qint32 corePluginMagic = 0x6330386e; // "c08n"
 static const qint8 corePluginVersion = 1;
 
-CorePluginImpl::CorePluginImpl() :
+CorePlugin::CorePlugin() :
     IPlugin()
 {
 }
 
-CorePluginImpl::~CorePluginImpl()
+CorePlugin::~CorePlugin()
 {
 }
 
-bool CorePluginImpl::initialize(const QVariantMap &options)
+bool CorePlugin::initialize(const QVariantMap &options)
 {
     urls = options.value("files").toStringList();
 
@@ -60,12 +60,12 @@ bool CorePluginImpl::initialize(const QVariantMap &options)
     return true;
 }
 
-void CorePluginImpl::shutdown()
+void CorePlugin::shutdown()
 {
     qDeleteAll(BrowserWindow::windows());
 }
 
-bool CorePluginImpl::restoreState(const QByteArray &arr)
+bool CorePlugin::restoreState(const QByteArray &arr)
 {
     QByteArray state = arr;
     QDataStream s(&state, QIODevice::ReadOnly);
@@ -99,7 +99,7 @@ bool CorePluginImpl::restoreState(const QByteArray &arr)
     return true;
 }
 
-QByteArray CorePluginImpl::saveState() const
+QByteArray CorePlugin::saveState() const
 {
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
@@ -121,18 +121,18 @@ QByteArray CorePluginImpl::saveState() const
     return state;
 }
 
-void CorePluginImpl::newWindow()
+void CorePlugin::newWindow()
 {
     BrowserWindow::newWindow();
 }
 
-void CorePluginImpl::showPluginView()
+void CorePlugin::showPluginView()
 {
     PluginView *view = object<PluginView>(QLatin1String("pluginView"));
     view->exec();
 }
 
-void CorePluginImpl::showSettings()
+void CorePlugin::showSettings()
 {
     SettingsWidget *widget = new SettingsWidget;
     widget->setAttribute(Qt::WA_DeleteOnClose);
@@ -145,7 +145,7 @@ void CorePluginImpl::showSettings()
     widget->show();
 }
 
-void CorePluginImpl::prefenrences()
+void CorePlugin::prefenrences()
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
@@ -161,13 +161,13 @@ void CorePluginImpl::prefenrences()
     }
 }
 
-void CorePluginImpl::handleMessage(const QString &message)
+void CorePlugin::handleMessage(const QString &message)
 {
     if (message == QLatin1String("activate"))
         newWindow();
 }
 
-void CorePluginImpl::restoreSession()
+void CorePlugin::restoreSession()
 {
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
@@ -199,7 +199,7 @@ void CorePluginImpl::restoreSession()
     }
 }
 
-void CorePluginImpl::saveSession()
+void CorePlugin::saveSession()
 {
     QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
@@ -210,7 +210,7 @@ void CorePluginImpl::saveSession()
     f.write(saveState());
 }
 
-void CorePluginImpl::quit()
+void CorePlugin::quit()
 {
     saveSession();
 
@@ -218,7 +218,7 @@ void CorePluginImpl::quit()
     QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
 }
 
-void CorePluginImpl::about()
+void CorePlugin::about()
 {
     QString text = tr("<h3>Andromeda %1</h3><br/>"
                       "Revision %2<br/>"
@@ -244,12 +244,12 @@ void CorePluginImpl::about()
     msgBox.exec();
 }
 
-void CorePluginImpl::aboutQt()
+void CorePlugin::aboutQt()
 {
     QMessageBox::aboutQt(0);
 }
 
-void CorePluginImpl::createActions()
+void CorePlugin::createActions()
 {
     new CommandContainer(Constants::Menus::MenuBar, this);
 
@@ -262,7 +262,7 @@ void CorePluginImpl::createActions()
     registerAtions();
 }
 
-void CorePluginImpl::createFileMenu()
+void CorePlugin::createFileMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
@@ -313,7 +313,7 @@ void CorePluginImpl::createFileMenu()
 //#endif
 }
 
-void CorePluginImpl::createEditMenu()
+void CorePlugin::createEditMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
@@ -369,7 +369,7 @@ void CorePluginImpl::createEditMenu()
     container->addCommand(cmd, group);
 }
 
-void CorePluginImpl::createViewMenu()
+void CorePlugin::createViewMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
@@ -381,7 +381,7 @@ void CorePluginImpl::createViewMenu()
     menuBarContainer->addContainer(container);
 }
 
-void CorePluginImpl::createGoToMenu()
+void CorePlugin::createGoToMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
@@ -408,7 +408,7 @@ void CorePluginImpl::createGoToMenu()
     container->addCommand(cmd);
 }
 
-void CorePluginImpl::createToolsMenu()
+void CorePlugin::createToolsMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
@@ -440,7 +440,7 @@ void CorePluginImpl::createToolsMenu()
     toolsContainer->addCommand(preferencesCommand, group);
 }
 
-void CorePluginImpl::createHelpMenu()
+void CorePlugin::createHelpMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
@@ -467,7 +467,7 @@ void CorePluginImpl::createHelpMenu()
 //    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
 }
 
-void CorePluginImpl::registerAtions()
+void CorePlugin::registerAtions()
 {
     createAction(Constants::Actions::NewWindow, SLOT(newWindow()));
     createAction(Constants::Actions::Exit, SLOT(quit()));
@@ -478,10 +478,10 @@ void CorePluginImpl::registerAtions()
     createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
 }
 
-void CorePluginImpl::createAction(const QByteArray &id, const char *slot)
+void CorePlugin::createAction(const QByteArray &id, const char *slot)
 {
     Action *action = new Action(id, this);
     connect(action, SIGNAL(triggered()), slot);
 }
 
-Q_EXPORT_PLUGIN(CorePluginImpl)
+Q_EXPORT_PLUGIN(CorePlugin)
