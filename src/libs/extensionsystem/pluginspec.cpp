@@ -59,7 +59,7 @@ bool Version::operator==(const Version &other) const
 PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
     q_ptr(qq),
     plugin(0),
-    loader(new QPluginLoader(q_ptr)),
+    loader(0),
     loaded(false),
     loadOnStartup(true),
     isDefault(false),
@@ -116,8 +116,15 @@ bool PluginSpecPrivate::load()
 
 bool PluginSpecPrivate::loadLibrary()
 {
+    Q_Q(PluginSpec);
+
     if (plugin)
         return true;
+
+    if (!loader) {
+        loader = new QPluginLoader(q);
+        loader->setFileName(libraryPath);
+    }
 
     QObject * object = loader->instance();
     if (!object) {
@@ -179,6 +186,8 @@ bool PluginSpecPrivate::unloadLibrary()
         setError(QObject::tr("Can't unload plugin library: %1").arg(loader->errorString()));
         return false;
     }
+    delete loader;
+    loader = 0;
     plugin = 0;
     return true;
 }
@@ -618,7 +627,6 @@ bool PluginSpec::read(const QString &path)
     }
 
     d->libraryPath = d->getLibraryPath(path);
-    d->loader->setFileName(d->libraryPath);
 
     QSettings s;
     s.beginGroup(name());
