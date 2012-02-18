@@ -1,11 +1,13 @@
 #ifndef HELLOWORLDEDITOR_H
 #define HELLOWORLDEDITOR_H
 
+#include "helloworld_global.h"
+
 #include <guisystem/abstracteditor.h>
 #include <guisystem/abstracteditorfactory.h>
 
 class QLabel;
-class HelloWorldEditor : public GuiSystem::AbstractEditor
+class HELLOWORLD_EXPORT HelloWorldEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(HelloWorldEditor)
