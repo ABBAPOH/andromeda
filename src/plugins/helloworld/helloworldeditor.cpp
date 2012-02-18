@@ -5,6 +5,7 @@
 #include <QtGui/QResizeEvent>
 
 using namespace GuiSystem;
+using namespace HelloWorld;
 
 HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     AbstractEditor(parent),
