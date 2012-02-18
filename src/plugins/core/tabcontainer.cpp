@@ -145,7 +145,7 @@ bool TabContainer::restoreState(const QByteArray &arr)
         if (!ok)
             return false;
         QString title = container->title();
-        m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
+        m_tabWidget->addTab(container, container->icon(), title.isEmpty() ? tr("New tab") : title);
     }
 
     m_tabWidget->setCurrentIndex(currentIndex);
