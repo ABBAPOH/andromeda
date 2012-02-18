@@ -15,7 +15,7 @@
 #include "webviewplugin.h"
 
 using namespace GuiSystem;
-using namespace WebViewPlugin;
+using namespace WebView;
 
 WebViewFind::WebViewFind(WebViewEditor *editor) :
     IFind(editor),
@@ -138,11 +138,11 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_findToolBar->hide();
     m_layout->addWidget(m_findToolBar);
 
-    CookieJar *jar = WebViewPluginImpl::instance()->cookieJar();
+    CookieJar *jar = WebViewPlugin::instance()->cookieJar();
 
     m_webView = new QWebView(this);
     m_webView->page()->networkAccessManager()->setCookieJar(jar);
-    jar->setParent(WebViewPluginImpl::instance());
+    jar->setParent(WebViewPlugin::instance());
     m_layout->addWidget(m_webView);
 
     m_history = new WebViewHistory(this);

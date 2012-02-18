@@ -6,7 +6,7 @@
 #include <guisystem/abstracthistory.h>
 #include <guisystem/ifind.h>
 
-namespace WebViewPlugin {
+namespace WebView {
 
 class WebViewFind : public GuiSystem::IFind
 {
@@ -52,6 +52,6 @@ private:
     QWebHistory *m_history;
 };
 
-} //namespace WebViewPlugin
+} //namespace WebView
 
 #endif // WEBVIEWEDITOR_P_H
