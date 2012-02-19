@@ -6,10 +6,10 @@
 #include <QDesktopServices>
 #include <QMenuBar>
 
-#include <filemanagerplugin/navigationpanel.h>
-#include <filemanagerplugin/dualpanewidget.h>
+#include <filemanager/navigationpanel.h>
+#include <filemanager/dualpanewidget.h>
 
-using namespace FileManagerPlugin;
+using namespace FileManager;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
