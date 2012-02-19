@@ -82,7 +82,7 @@ public:
     QSplitter *splitter;
 
     // tool bar
-    QAction *createFolderAction;
+    QAction *addFolderAction;
     QWidget *spacer;
     QLineEdit *lineEdit;
 
