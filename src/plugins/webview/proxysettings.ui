@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Proxy settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -77,7 +77,7 @@
         <item>
          <widget class="QLabel" name="label_11">
           <property name="text">
-           <string>:</string>
+           <string notr="true">:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -131,7 +131,7 @@
       <item row="2" column="1" colspan="2">
        <widget class="QGroupBox" name="requiresPassword">
         <property name="title">
-         <string>Server requires password:</string>
+         <string>Server requires password</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
