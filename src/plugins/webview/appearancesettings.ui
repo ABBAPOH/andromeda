@@ -137,7 +137,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Courier 13</string>
+      <string notr="true">Courier 13</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -150,7 +150,7 @@
    <item row="1" column="2">
     <widget class="QLineEdit" name="standardFont">
      <property name="text">
-      <string>Times 16</string>
+      <string notr="true">Times 16</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
