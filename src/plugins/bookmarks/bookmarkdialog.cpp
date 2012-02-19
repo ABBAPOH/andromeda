@@ -110,11 +110,11 @@ void BookmarkDialogPrivate::setupUi(BookmarkDialog *bookmarkDialog)
 
 void BookmarkDialogPrivate::retranslateUi(BookmarkDialog *bookmarkDialog)
 {
-    bookmarkDialog->setWindowTitle(QObject::tr("Add Bookmark", "AddBookmarkDialog"));
-    label->setText(QObject::tr("Type a name for the bookmark, and choose where to keep it.", "AddBookmarkDialog"));
-    title->setPlaceholderText(QObject::tr("Title", "AddBookmarkDialog"));
-    url->setPlaceholderText(QObject::tr("Url", "AddBookmarkDialog"));
-    description->setPlaceholderText(QObject::tr("Description", "AddBookmarkDialog"));
+    bookmarkDialog->setWindowTitle(BookmarkDialog::tr("Add Bookmark"));
+    label->setText(BookmarkDialog::tr("Type a name for the bookmark, and choose where to keep it."));
+    title->setPlaceholderText(BookmarkDialog::tr("Title"));
+    url->setPlaceholderText(BookmarkDialog::tr("Url"));
+    description->setPlaceholderText(BookmarkDialog::tr("Description"));
 } // retranslateUi
 
 BookmarkDialog::BookmarkDialog(QWidget *parent) :
