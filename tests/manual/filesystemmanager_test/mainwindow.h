@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-namespace FileManagerPlugin {
+namespace FileManager {
 class FileManagerWidget;
 class DualPaneWidget;
 }
@@ -24,8 +24,8 @@ private slots:
 
 private:
     QFileSystemModel *model;
-    FileManagerPlugin::FileManagerWidget *view;
-    FileManagerPlugin::DualPaneWidget *dualPane;
+    FileManager::FileManagerWidget *view;
+    FileManager::DualPaneWidget *dualPane;
 };
 
 #endif // MAINWINDOW_H
