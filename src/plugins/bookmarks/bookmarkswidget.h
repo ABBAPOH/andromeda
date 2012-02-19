@@ -43,7 +43,7 @@ private slots:
     void onClicked(const QModelIndex &);
     void onDoubleClicked(const QModelIndex &);
     void onTextEdited(const QString &);
-    void createFolder();
+    void addFolder();
     void showTreeViewMenu(QPoint);
     void showTableViewMenu(QPoint);
     void openTriggered();

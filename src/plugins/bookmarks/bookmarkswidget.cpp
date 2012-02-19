@@ -23,7 +23,7 @@ BookmarksWidget::BookmarksWidget(QWidget *parent) :
     connect(d->treeView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTreeViewMenu(QPoint)));
     connect(d->lineEdit, SIGNAL(textEdited(QString)), SLOT(onTextEdited(QString)));
 
-    connect(d->createFolderAction, SIGNAL(triggered()), SLOT(createFolder()));
+    connect(d->addFolderAction, SIGNAL(triggered()), SLOT(addFolder()));
     connect(d->openAction, SIGNAL(triggered()), SLOT(openTriggered()));
     connect(d->openInTabAction, SIGNAL(triggered()), SLOT(openInTabTriggered()));
     connect(d->openInWindowAction, SIGNAL(triggered()), SLOT(openInWindowTriggered()));
@@ -110,7 +110,7 @@ void BookmarksWidget::onTextEdited(const QString &text)
     d->proxyModel->setFilterFixedString(text);
 }
 
-void BookmarksWidget::createFolder()
+void BookmarksWidget::addFolder()
 {
     QWidget *w = focusWidget();
     if (w == d->treeView) {
@@ -259,7 +259,7 @@ void BookmarksWidget::setupUi()
 {
     d->toolBar = new QToolBar();
 
-    d->createFolderAction = new QAction(tr("Create folder"), d->toolBar);
+    d->addFolderAction = new QAction(tr("Add folder"), d->toolBar);
 
     d->spacer = new QWidget(d->toolBar);
     d->spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -270,7 +270,7 @@ void BookmarksWidget::setupUi()
     d->lineEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     d->lineEdit->setMinimumWidth(200);
 
-    d->toolBar->addAction(d->createFolderAction);
+    d->toolBar->addAction(d->addFolderAction);
     d->toolBar->addWidget(d->spacer);
     d->toolBar->addWidget(d->lineEdit);
 
