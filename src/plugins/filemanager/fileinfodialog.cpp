@@ -67,8 +67,11 @@ public:
     QLabel *fileSystemLabel;
     QLabel *fileSystem;
 
+    QLabel *userPermissionsLabel;
     QComboBox *userPermissionsComboBox;
+    QLabel *groupPermissionsLabel;
     QComboBox *groupPermissionsComboBox;
+    QLabel *otherPermissionsLabel;
     QComboBox *otherPermissionsComboBox;
 
     QFileInfo fileInfo;
@@ -83,14 +86,14 @@ using namespace FileManager;
 static QString sizeToString(qint64 size)
 {
     if (size > (qint64)1024*1024*1024*1024)
-        return QObject::tr("%1 TB").arg(size/((qint64)1024*1024*1024*1024));
+        return FileInfoDialog::tr("%1 TB").arg(size/((qint64)1024*1024*1024*1024));
     if (size > 1024*1024*1024)
-        return QObject::tr("%1 GB").arg(size/(1024*1024*1024));
+        return FileInfoDialog::tr("%1 GB").arg(size/(1024*1024*1024));
     if (size > 1024*1024)
-        return QObject::tr("%1 MB").arg(size/(1024*1024));
+        return FileInfoDialog::tr("%1 MB").arg(size/(1024*1024));
     if (size > 1024)
-        return QObject::tr("%1 kB").arg(size/1024);
-    return QObject::tr("%1 b").arg(size);
+        return FileInfoDialog::tr("%1 kB").arg(size/1024);
+    return FileInfoDialog::tr("%1 b").arg(size);
 }
 
 LabelLineEdit::LabelLineEdit(QWidget *parent) :
@@ -108,11 +111,11 @@ void FileInfoDialogPrivate::updateUi()
 {
     QIcon icon = QFileIconProvider().icon(fileInfo);
     q->setWindowIcon(icon);
-    q->setWindowTitle(QObject::tr("\"%1\" info").arg(fileInfo.fileName()));
+    q->setWindowTitle(FileInfoDialog::tr("\"%1\" info").arg(fileInfo.fileName()));
 
     iconLabel->setPixmap(icon.pixmap(32));
     if (fileInfo.isDir())
-        sizeLabel->setText(QObject::tr("Calculating..."));
+        sizeLabel->setText(FileInfoDialog::tr("Calculating..."));
     else
         nameLabel->setText(fileInfo.fileName());
 
@@ -135,7 +138,7 @@ void FileInfoDialogPrivate::updateUi()
 
 void FileInfoDialogPrivate::setupUi()
 {
-    q->setWindowTitle("File info");
+    q->setWindowTitle(FileInfoDialog::tr("File info"));
 
     layout = new QVBoxLayout(q);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -168,7 +171,7 @@ void FileInfoDialogPrivate::setupUi()
 
     widget_1 = new QWidget;
     widget_1->setObjectName(QLatin1String("widget_1"));
-    widget->addWidget(widget_1, q->tr("File Info"));
+    widget->addWidget(widget_1, FileInfoDialog::tr("File Info"));
 
     layout_1 = new QFormLayout(widget_1);
     layout_1->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
@@ -215,7 +218,7 @@ void FileInfoDialogPrivate::setupUi()
 
     widget_2 = new QWidget;
     widget_2->setObjectName(QLatin1String("widget_2"));
-    widget->addWidget(widget_2, QObject::tr("Drive Info"));
+    widget->addWidget(widget_2, FileInfoDialog::tr("Drive Info"));
 
     layout_2 = new QFormLayout(widget_2);
     layout_2->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
@@ -261,51 +264,63 @@ void FileInfoDialogPrivate::setupUi()
     layout_2->addRow(availableSizeLabel, availableSize);
 
     widget_3 = new QWidget;
-    widget->addWidget(widget_3, QObject::tr("Permissions"));
+    widget->addWidget(widget_3, FileInfoDialog::tr("Permissions"));
 
     layout_3 = new QFormLayout(widget_3);
     layout_3->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layout_3->setSizeConstraint(QLayout::SetMinimumSize);
 
+    userPermissionsLabel = new QLabel(widget_3);
+    userPermissionsLabel->setObjectName(QLatin1String("userPermissionsLabel"));
+
     userPermissionsComboBox = new QComboBox(widget_3);
     userPermissionsComboBox->setObjectName(QLatin1String("userPermissionsComboBox"));
     userPermissionsComboBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout_3->addRow("User:", userPermissionsComboBox);
+    layout_3->addRow(userPermissionsLabel, userPermissionsComboBox);
+
+    groupPermissionsLabel = new QLabel(widget_3);
+    groupPermissionsLabel->setObjectName(QLatin1String("userPermissionsLabel"));
 
     groupPermissionsComboBox = new QComboBox(widget_3);
     groupPermissionsComboBox->setObjectName(QLatin1String("groupPermissionsComboBox"));
     groupPermissionsComboBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout_3->addRow("Group:", groupPermissionsComboBox);
+    layout_3->addRow(groupPermissionsLabel, groupPermissionsComboBox);
+
+    otherPermissionsLabel = new QLabel(widget_3);
+    otherPermissionsLabel->setObjectName(QLatin1String("userPermissionsLabel"));
 
     otherPermissionsComboBox = new QComboBox(widget_3);
     otherPermissionsComboBox->setObjectName(QLatin1String("otherPermissionsComboBox"));
     otherPermissionsComboBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout_3->addRow("Other:", otherPermissionsComboBox);
-    layout_3->addRow(new QLabel, new QLabel);
+    layout_3->addRow(otherPermissionsLabel, otherPermissionsComboBox);
 
     retranslateUi();
 }
 
 void FileInfoDialogPrivate::retranslateUi()
 {
-    sizeLabel->setText(QObject::tr("Size:"));
-    locationLabel->setText(QObject::tr("Location:"));
-    createdLabel->setText(QObject::tr("Created:"));
-    modifiedLabel->setText(QObject::tr("Modified:"));
-    acceccedLabel->setText(QObject::tr("Accessed:"));
+    sizeLabel->setText(FileInfoDialog::tr("Size:"));
+    locationLabel->setText(FileInfoDialog::tr("Location:"));
+    createdLabel->setText(FileInfoDialog::tr("Created:"));
+    modifiedLabel->setText(FileInfoDialog::tr("Modified:"));
+    acceccedLabel->setText(FileInfoDialog::tr("Accessed:"));
 
-    driveLabel->setText(QObject::tr("Drive:"));
-    totalSizeLabel->setText(QObject::tr("Total size:"));
-    availableSizeLabel->setText(QObject::tr("Available size:"));
-    mountPointLabel->setText(QObject::tr("Mount point:"));
-    fileSystemLabel->setText(QObject::tr("File system:"));
+    driveLabel->setText(FileInfoDialog::tr("Drive:"));
+    totalSizeLabel->setText(FileInfoDialog::tr("Total size:"));
+    availableSizeLabel->setText(FileInfoDialog::tr("Available size:"));
+    mountPointLabel->setText(FileInfoDialog::tr("Mount point:"));
+    fileSystemLabel->setText(FileInfoDialog::tr("File system:"));
 
-    widget->setText(0, QObject::tr("File Info"));
-    widget->setText(1, QObject::tr("Drive Info"));
-    widget->setText(2, QObject::tr("Permissions"));
+    widget->setText(0, FileInfoDialog::tr("File Info"));
+    widget->setText(1, FileInfoDialog::tr("Drive Info"));
+    widget->setText(2, FileInfoDialog::tr("Permissions"));
+
+    userPermissionsLabel->setText(FileInfoDialog::tr("User:"));
+    groupPermissionsLabel->setText(FileInfoDialog::tr("Group:"));
+    otherPermissionsLabel->setText(FileInfoDialog::tr("Other:"));
 
     QStringList permissions;
-    permissions << QObject::tr("Read only") << QObject::tr("Read write");
+    permissions << FileInfoDialog::tr("Read only") << FileInfoDialog::tr("Read write");
 
     userPermissionsComboBox->clear();
     userPermissionsComboBox->addItems(permissions);
