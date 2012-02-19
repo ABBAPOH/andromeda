@@ -2,6 +2,7 @@
 #define APPEARANCESETTINGS_H
 
 #include <QtGui/QWidget>
+#include <QtGui/QFileIconProvider>
 
 class QSettings;
 class QWebSettings;
@@ -56,7 +57,7 @@ public:
     QIcon icon() const { return QIcon(); }
 
     QString categoryName() const { return tr("Web view"); }
-    QIcon categoryIcon() const { return QIcon(); }
+    QIcon categoryIcon() const { return QFileIconProvider().icon(QFileIconProvider::Network); }
 
     QWidget *createPage(QWidget *parent);
 

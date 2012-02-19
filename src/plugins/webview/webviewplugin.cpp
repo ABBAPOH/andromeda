@@ -11,7 +11,6 @@
 #include "privacysettings.h"
 #include "proxysettings.h"
 #include "webvieweditor.h"
-#include "webviewsettingspage.h"
 
 #include <QtCore/QSettings>
 #include <QtCore/QVariant>
@@ -44,7 +43,6 @@ bool WebViewPlugin::initialize(const QVariantMap &)
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
-    pageManager->addPage(new WebViewSettingsPage(this));
     pageManager->addPage(new AppearanceSettingsPage(this));
     pageManager->addPage(new PrivacySettingsPage);
     pageManager->addPage(new ProxySettingsPage(this));

@@ -14,7 +14,6 @@ set( HEADERS
     webvieweditor.h
     webvieweditor_p.h
     webviewplugin.h
-    webviewsettingspage.h
 )
 set( SOURCES
     appearancesettings.cpp
@@ -27,7 +26,6 @@ set( SOURCES
     proxysettings.cpp
     webvieweditor.cpp
     webviewplugin.cpp
-    webviewsettingspage.cpp
    )
 set( FORMS
     appearancesettings.ui
