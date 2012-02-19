@@ -33,6 +33,8 @@ private:
 
 #include <guisystem/settingspage.h>
 
+#include <QtGui/QFileIconProvider>
+
 class ProxySettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
@@ -44,7 +46,7 @@ public:
     QIcon icon() const { return QIcon(); }
 
     QString categoryName() const { return tr("Web view"); }
-    QIcon categoryIcon() const { return QIcon(); }
+    QIcon categoryIcon() const { return QFileIconProvider().icon(QFileIconProvider::Network); }
 
     QWidget *createPage(QWidget *parent);
 };

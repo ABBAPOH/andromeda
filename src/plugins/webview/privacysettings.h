@@ -49,6 +49,9 @@ private:
 };
 
 #include <guisystem/settingspage.h>
+
+#include <QtGui/QFileIconProvider>
+
 #include "webviewplugin.h"
 
 class PrivacySettingsPage : public GuiSystem::SettingsPage
@@ -64,7 +67,7 @@ public:
     QIcon icon() const { return QIcon(); }
 
     QString categoryName() const { return tr("Web View"); }
-    QIcon categoryIcon() const { return icon(); }
+    QIcon categoryIcon() const { return QFileIconProvider().icon(QFileIconProvider::Network); }
 
     QWidget *createPage(QWidget *parent)
     {
