@@ -24,7 +24,7 @@
        <item>
         <widget class="QLabel" name="nameLabel">
          <property name="text">
-          <string>&lt;name here&gt;</string>
+          <string notr="true">File.txt</string>
          </property>
         </widget>
        </item>
@@ -42,9 +42,6 @@
          </item>
          <item>
           <widget class="QToolButton" name="detailsButton">
-           <property name="text">
-            <string>...</string>
-           </property>
            <property name="icon">
             <iconset resource="resources.qrc">
              <normaloff>:/icons/copyDetails.png</normaloff>:/icons/copyDetails.png</iconset>
@@ -74,9 +71,6 @@
          </item>
          <item>
           <widget class="QToolButton" name="cancelButton">
-           <property name="text">
-            <string>...</string>
-           </property>
            <property name="icon">
             <iconset resource="resources.qrc">
              <normaloff>:/icons/cancelCopy.png</normaloff>:/icons/cancelCopy.png</iconset>
@@ -117,7 +111,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="sizeLabel">
         <property name="text">
-         <string>&lt;copied&gt; / &lt;total&gt;</string>
+         <string notr="true">10MB / 100GB</string>
         </property>
        </widget>
       </item>
@@ -134,7 +128,7 @@
       <item row="1" column="1">
        <widget class="QLabel" name="speedLabel">
         <property name="text">
-         <string>&lt;speed&gt;</string>
+         <string notr="true">10kB</string>
         </property>
        </widget>
       </item>
@@ -151,7 +145,7 @@
       <item row="2" column="1">
        <widget class="QLabel" name="remaingObjectLabel">
         <property name="text">
-         <string>&lt;copied&gt; / &lt;total&gt;</string>
+         <string notr="true">20 / 30</string>
         </property>
        </widget>
       </item>
@@ -168,7 +162,7 @@
       <item row="3" column="1">
        <widget class="QLabel" name="timeLeftLabel">
         <property name="text">
-         <string>&lt;remains&gt;</string>
+         <string notr="true">0:10:45</string>
         </property>
        </widget>
       </item>
