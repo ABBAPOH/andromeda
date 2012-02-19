@@ -59,7 +59,7 @@ void BookmarksToolBar::contextMenuRequested(const QPoint &position)
             menuAction = menu.addAction(tr("Open"), this, SLOT(openBookmarkInCurrentTab()));
             menuAction->setData(variant);
 
-            menuAction = menu.addAction(tr("Open in New &Tab"), this, SLOT(openBookmarkInNewTab()));
+            menuAction = menu.addAction(tr("Open in New Tab"), this, SLOT(openBookmarkInNewTab()));
             menuAction->setData(variant);
 
             menu.addSeparator();
