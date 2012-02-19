@@ -46,8 +46,8 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../coreplugin/resources.qrc">
-             <normaloff>:/images/icons/FCProgressReveal.png</normaloff>:/images/icons/FCProgressReveal.png</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/copyDetails.png</normaloff>:/icons/copyDetails.png</iconset>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -78,8 +78,8 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../coreplugin/resources.qrc">
-             <normaloff>:/images/icons/FCProgressStop.png</normaloff>:/images/icons/FCProgressStop.png</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/icons/cancelCopy.png</normaloff>:/icons/cancelCopy.png</iconset>
            </property>
           </widget>
          </item>
@@ -178,7 +178,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../coreplugin/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections>
   <connection>

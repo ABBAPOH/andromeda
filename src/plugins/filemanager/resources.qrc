@@ -1,3 +1,7 @@
-<RCC><qresource prefix="/">
-<file>./icons/eject.png</file>
-</qresource></RCC>
+<RCC>
+    <qresource prefix="/">
+        <file>icons/eject.png</file>
+        <file>icons/cancelCopy.png</file>
+        <file>icons/copyDetails.png</file>
+    </qresource>
+</RCC>
