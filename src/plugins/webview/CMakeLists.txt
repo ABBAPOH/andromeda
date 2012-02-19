@@ -34,15 +34,17 @@ set( FORMS
     privacysettings.ui
     proxysettings.ui
    )
+set( TS_FILES translations/webviewplugin_ru.ts )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DWEBVIEW_LIBRARY )
 
-add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QM_FILES} )
 target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem guisystem )
 add_dependencies( webviewplugin plugineditor)
 install_plugin( webviewplugin )
