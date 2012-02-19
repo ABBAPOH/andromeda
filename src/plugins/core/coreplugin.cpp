@@ -188,7 +188,7 @@ void CorePlugin::restoreSession()
         QByteArray state = f.readAll();
         ok = restoreState(state);
         if (!ok)
-            qWarning() << tr("Couldn't restore session (located at %1").arg(filePath);
+            qWarning() << tr("Couldn't restore session (located at %1)").arg(filePath);
     }
 
     // We couldn't load session, fallback to creating window and opening default path
