@@ -51,7 +51,6 @@ set( FORMS
     filecopyerrordialog.ui
     filecopyreplacedialog.ui
     filecopywidget.ui
-    fileinfodialog.ui
     filemanagersettingswidget.ui
    )
 
