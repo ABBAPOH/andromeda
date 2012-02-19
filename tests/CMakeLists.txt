@@ -1,4 +1,4 @@
-if( ENABLE_TESTS )
+if( NOT DISABLE_TESTS )
     enable_testing()
 
     set( CTEST_ARGUMENTS --output-on-failure )
