@@ -1,12 +1,17 @@
 #include "fileinfodialog.h"
-#include "ui_fileinfodialog.h"
 
 #include <io/directorydetails.h>
 #include <widgets/outlinewidget.h>
 
 #include <QtCore/QDateTime>
+
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
 #include <QtGui/QFileIconProvider>
+#include <QtGui/QFormLayout>
+#include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
+
 #include <io/QDriveInfo>
 
 namespace FileManager {
