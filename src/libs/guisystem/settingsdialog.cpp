@@ -249,6 +249,8 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
     }
     connect(d->manager, SIGNAL(pageAdded(SettingsPage*)), SLOT(onPageAdded(SettingsPage*)));
     connect(d->manager, SIGNAL(pageRemoved(SettingsPage*)), SLOT(onPageRemoved(SettingsPage*)));
+
+    d->categoryList->selectionModel()->select(d->model->index(0, 0), QItemSelectionModel::Select);
 }
 
 /*!
