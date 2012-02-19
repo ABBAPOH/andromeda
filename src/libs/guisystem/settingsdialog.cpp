@@ -86,6 +86,9 @@ private:
 
 using namespace GuiSystem;
 
+static const qint32 settingsDialogMagic = 0x73313267; // "s12g"
+static const qint32 settingsDialogVersion = 1;
+
 const int categoryIconSize = 24;
 
 void SettingsDialogPrivate::addCategory(const QString &id)
@@ -204,8 +207,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     d->setupUi();
 
     d->categoryList->setModel(d->model);
-    connect(d->categoryList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-            this, SLOT(currentChanged(QModelIndex)), Qt::UniqueConnection);
+    connect(d->categoryList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(onSelectionChanged(QItemSelection)), Qt::UniqueConnection);
 
     setObjectName(QLatin1String("SettingsDialog"));
 }
@@ -253,16 +256,74 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
     d->categoryList->selectionModel()->select(d->model->index(0, 0), QItemSelectionModel::Select);
 }
 
-/*!
-    \internal
-*/
-void SettingsDialog::currentChanged(const QModelIndex &current)
+QByteArray SettingsDialog::saveState() const
+{
+    Q_D(const SettingsDialog);
+
+    qint32 currentPage = d->stackedLayout->currentIndex();
+    qint32 currentTab = d->tabWidgets[currentPage]->currentIndex();
+
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
+
+    s << settingsDialogMagic;
+    s << settingsDialogVersion;
+    s << currentPage;
+    s << currentTab;
+    s << saveGeometry();
+
+    return state;
+}
+
+bool SettingsDialog::restoreState(const QByteArray &arr)
 {
     Q_D(SettingsDialog);
 
-    if (current.isValid()) {
-        d->stackedLayout->setCurrentIndex(current.data(Qt::UserRole + 1).toInt());
-        d->headerLabel->setText(current.data(Qt::DisplayRole).toString());
+    QByteArray state = arr;
+
+    QDataStream s(&state, QIODevice::ReadOnly);
+
+    qint32 magic, version, currentPage, currentTab;
+    QByteArray geometry;
+
+    s >> magic;
+    if (magic != settingsDialogMagic)
+        return false;
+
+    s >> version;
+    if (version != settingsDialogVersion)
+        return false;
+
+    s >> currentPage;
+    if (0 <= currentPage && currentPage < d->stackedLayout->count()) {
+        d->categoryList->selectionModel()->select(d->model->index(currentPage, 0),
+                                                  QItemSelectionModel::Select | QItemSelectionModel::Clear);
+    } else {
+        return false;
+    }
+
+    s >> currentTab;
+    if (0 <= currentTab && currentTab < d->tabWidgets[currentPage]->count())
+        d->tabWidgets[currentPage]->setCurrentIndex(currentTab);
+    else
+        return false;
+
+    s >> geometry;
+
+    return restoreGeometry(geometry);
+}
+
+/*!
+    \internal
+*/
+void SettingsDialog::onSelectionChanged(const QItemSelection &newSelection)
+{
+    Q_D(SettingsDialog);
+
+    if (!newSelection.isEmpty()) {
+        QModelIndex index = newSelection.indexes().first();
+        d->stackedLayout->setCurrentIndex(index.data(Qt::UserRole + 1).toInt());
+        d->headerLabel->setText(index.data(Qt::DisplayRole).toString());
     }
 }
 

@@ -96,6 +96,8 @@ bool CorePlugin::restoreState(const QByteArray &arr)
         window->show();
     }
 
+    s >> settingsDialogState;
+
     return true;
 }
 
@@ -117,6 +119,8 @@ QByteArray CorePlugin::saveState() const
         // hide window to prevent strange crash when bookmarks editor is opened
         windows[i]->hide();
     }
+
+    s << settingsDialogState;
 
     return state;
 }
@@ -154,6 +158,8 @@ void CorePlugin::prefenrences()
         settingsDialog = new SettingsDialog();
         settingsDialog->setAttribute(Qt::WA_DeleteOnClose);
         settingsDialog->setSettingsPageManager(pageManager);
+        settingsDialog->restoreState(settingsDialogState);
+        settingsDialog->installEventFilter(this);
         settingsDialog->show();
     } else {
         settingsDialog->raise();
@@ -247,6 +253,16 @@ void CorePlugin::about()
 void CorePlugin::aboutQt()
 {
     QMessageBox::aboutQt(0);
+}
+
+bool CorePlugin::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == settingsDialog) {
+        if (e->type() == QEvent::Close) {
+            settingsDialogState = settingsDialog->saveState();
+        }
+    }
+    return false;
 }
 
 void CorePlugin::createActions()

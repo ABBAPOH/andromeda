@@ -30,8 +30,11 @@ public:
     SettingsPageManager *settingsPageManager() const;
     void setSettingsPageManager(SettingsPageManager *manager);
 
+    QByteArray saveState() const;
+    bool restoreState(const QByteArray &state);
+
 private slots:
-    void currentChanged(const QModelIndex &current);
+    void onSelectionChanged(const QItemSelection &current);
     void onPageAdded(SettingsPage *page);
     void onPageRemoved(SettingsPage *page);
 

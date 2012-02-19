@@ -41,6 +41,9 @@ public slots:
     void about();
     void aboutQt();
 
+protected:
+    bool eventFilter(QObject *o, QEvent *e);
+
 private:
     void createActions();
     void createFileMenu();
@@ -56,6 +59,7 @@ private:
 private:
     QStringList urls;
     QPointer<GuiSystem::SettingsDialog> settingsDialog;
+    QByteArray settingsDialogState;
 };
 
 #endif // COREPLUGIN_H
