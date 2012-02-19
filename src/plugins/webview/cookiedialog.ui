@@ -60,14 +60,14 @@
      <item>
       <widget class="QPushButton" name="removeButton">
        <property name="text">
-        <string>&amp;Remove</string>
+        <string>Remove</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="removeAllButton">
        <property name="text">
-        <string>Remove &amp;All Cookies</string>
+        <string>Remove all Cookies</string>
        </property>
       </widget>
      </item>
