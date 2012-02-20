@@ -5,8 +5,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtGui/QAction>
-#include <QtGui/QVBoxLayout>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QVBoxLayout>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebHistory>
@@ -20,6 +20,19 @@
 
 using namespace GuiSystem;
 using namespace WebView;
+
+static inline QString getCacheDirectory()
+{
+    QString directory = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    if (directory.isEmpty()) {
+        directory = QString(QLatin1String("%1/.%2/caches")).
+                arg(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)).
+                arg(QCoreApplication::applicationName());
+    }
+
+    return directory;
+}
+
 
 WebViewFind::WebViewFind(WebViewEditor *editor) :
     IFind(editor),
@@ -247,18 +260,4 @@ void WebViewEditor::onIconChanged()
 AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)
 {
     return new WebViewEditor(parent);
-}
-
-QString WebView::getCacheDirectory()
-{
-    QDesktopServices::StandardLocation location;
-    location = QDesktopServices::CacheLocation;
-    QString directory = QDesktopServices::storageLocation(location);
-    if (directory.isEmpty())
-        directory = QDesktopServices::storageLocation(QDesktopServices::HomeLocation) + QLatin1String("/.") + QCoreApplication::applicationName() + QString("/caches");
-
-    if ( ! QFile::exists(directory) )
-        QDir().mkpath(directory);
-
-    return directory;
 }
