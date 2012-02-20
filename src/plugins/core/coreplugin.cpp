@@ -330,6 +330,7 @@ void CorePlugin::createFileMenu()
 
     cmd = new Command(Constants::Actions::Exit, QKeySequence::Quit, tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
+    cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::QuitRole);
     container->addCommand(cmd, group);
 //#endif
@@ -458,6 +459,7 @@ void CorePlugin::createToolsMenu()
     preferencesCommand->setDefaultText(tr("Preferences"));
     preferencesCommand->setDefaultShortcut(QKeySequence::Preferences);
     preferencesCommand->setContext(Command::ApplicationCommand);
+    preferencesCommand->setAttributes(Command::AttributeNonConfigurable);
     preferencesCommand->commandAction()->setMenuRole(QAction::PreferencesRole);
     toolsContainer->addCommand(preferencesCommand, group);
 }
@@ -478,12 +480,14 @@ void CorePlugin::createHelpMenu()
 
     cmd = new Command(Constants::Actions::About, tr("About Andromeda..."), this);
     cmd->setContext(Command::ApplicationCommand);
+    cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::AboutRole);
     container->addCommand(cmd);
 //    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(about()));
 
     cmd = new Command(Constants::Actions::AboutQt, tr("About Qt..."), this);
     cmd->setContext(Command::ApplicationCommand);
+    cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::AboutQtRole);
     container->addCommand(cmd);
 //    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
