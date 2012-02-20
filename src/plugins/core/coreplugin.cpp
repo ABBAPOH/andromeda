@@ -90,6 +90,9 @@ bool CorePlugin::restoreState(const QByteArray &arr)
 
     s >> windowCount;
 
+    if (windowCount == 0)
+        newWindow();
+
     for (quint32 i = 0; i < windowCount; i++) {
         s >> windowState;
 
@@ -203,11 +206,8 @@ void CorePlugin::restoreSession()
     }
 
     // We couldn't load session, fallback to creating window and opening default path
-    if (!ok) {
-        BrowserWindow *window = new BrowserWindow();
-        window->open(QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)));
-        window->show();
-    }
+    if (!ok)
+        newWindow();
 }
 
 void CorePlugin::saveSession()
