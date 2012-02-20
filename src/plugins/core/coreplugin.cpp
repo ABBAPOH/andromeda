@@ -9,6 +9,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QMenu>
+#include <QtGui/QMenuBar>
 #include <QtGui/QMessageBox>
 #include <QtGui/QSystemTrayIcon>
 
@@ -64,6 +65,9 @@ void CorePlugin::shutdown()
     qDeleteAll(BrowserWindow::windows());
 
     delete dockMenu;
+#ifdef Q_OS_MAC
+    delete menuBar;
+#endif
 }
 
 bool CorePlugin::restoreState(const QByteArray &arr)
@@ -523,6 +527,11 @@ void CorePlugin::registerAtions()
     createAction(Constants::Actions::Preferences, SLOT(prefenrences()));
     createAction(Constants::Actions::About, SLOT(about()));
     createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
+
+#ifdef Q_OS_MAC
+    // Create menu bar now
+    menuBar = ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar();
+#endif
 }
 
 void CorePlugin::createAction(const QByteArray &id, const char *slot)

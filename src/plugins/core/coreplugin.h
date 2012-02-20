@@ -62,6 +62,9 @@ private:
     QPointer<GuiSystem::SettingsDialog> settingsDialog;
     QByteArray settingsDialogState;
     QMenu *dockMenu;
+#ifdef Q_OS_MAC
+    QMenuBar *menuBar;
+#endif
 };
 
 #endif // COREPLUGIN_H
