@@ -41,7 +41,6 @@ public slots:
     void setCurrentIndex(int index);
 
     void newTab();
-    void closeTab(int index);
 
 protected:
     void resizeEvent(QResizeEvent *);
