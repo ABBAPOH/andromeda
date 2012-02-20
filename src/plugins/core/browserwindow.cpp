@@ -173,7 +173,9 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
     d->setupToolBar();
     d->setupAlternateToolBar();
 
+#ifndef Q_OS_MAC
     setMenuBar(ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar());
+#endif
     setAttribute(Qt::WA_DeleteOnClose);
 
     d->settings = new QSettings(this);
