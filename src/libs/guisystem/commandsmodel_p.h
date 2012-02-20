@@ -74,6 +74,7 @@ public:
     TreeItem *rootItem;
     QSettings *settings;
     QMultiMap<QKeySequence, TreeItem *> mapToItem;
+    QMultiMap<QKeySequence, Command *> mapToCommand;
 };
 
 } // namespace GuiSystem

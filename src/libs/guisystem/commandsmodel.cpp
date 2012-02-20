@@ -31,6 +31,7 @@ void CommandsModelPrivate::build()
 
     qDeleteAll(rootItem->children());
     mapToItem.clear();
+    mapToCommand.clear();
 
     ActionManager *am = ActionManager::instance();
 
@@ -43,11 +44,11 @@ void CommandsModelPrivate::build()
         categoryItem->name = container->title();
 
         foreach (Command *c, commands) {
-            if (c->hasAttribute(Command::AttributeNonConfigurable))
-                continue;
 
             TreeItem *item = new TreeItem(TreeItem::Leaf, categoryItem);
             item->cmd = c;
+            if (!mapToCommand.values(c->shortcut()).contains(c))
+                mapToCommand.insert(c->shortcut(), c);
             mapToItem.insert(c->shortcut(), item);
         }
     }
@@ -114,7 +115,7 @@ QVariant CommandsModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == Qt::TextColorRole) {
         if (item->type() == TreeItem::Leaf) {
-            if (column == 1 && d_func()->mapToItem.values(item->cmd->shortcut()).count() > 1) {
+            if (column == 1 && d_func()->mapToCommand.values(item->cmd->shortcut()).count() > 1) {
                 return Qt::red;
             }
         }
@@ -127,8 +128,14 @@ Qt::ItemFlags CommandsModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    if (index.column() == 1)
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+    if (index.parent().isValid()) {
+        TreeItem *item = d_func()->item(index);
+        if (item->cmd->hasAttribute(Command::AttributeNonConfigurable))
+            return Qt::NoItemFlags;
+
+        if (index.column() == 1)
+            return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+    }
 
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
@@ -199,8 +206,10 @@ bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int
         if (item->type() == TreeItem::Leaf) {
             QKeySequence oldShortcut = item->cmd->shortcut();
             QString shortcut = value.toString();
+            d->mapToCommand.remove(oldShortcut, item->cmd);
             d->mapToItem.remove(oldShortcut, item);
             item->cmd->setShortcut(shortcut);
+            d->mapToCommand.insert(item->cmd->shortcut(), item->cmd);
             d->mapToItem.insert(item->cmd->shortcut(), item);
             d->settings->setValue(item->cmd->id(), shortcut);
 
@@ -241,8 +250,10 @@ void CommandsModel::resetShortcut(const QModelIndex &index)
         if (c->shortcut() != c->defaultShortcut()) {
             QKeySequence oldShortcut = item->cmd->shortcut();
 
+            d->mapToCommand.remove(oldShortcut, item->cmd);
             d->mapToItem.remove(oldShortcut, item);
             c->setShortcut(c->defaultShortcut());
+            d->mapToCommand.insert(item->cmd->shortcut(), item->cmd);
             d->mapToItem.insert(item->cmd->shortcut(), item);
 
             foreach (TreeItem *item, d->mapToItem.values(oldShortcut)) {
