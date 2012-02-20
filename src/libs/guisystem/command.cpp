@@ -74,7 +74,6 @@ Command::Command(const QByteArray &id,
     QObject(parent),
     d_ptr(new CommandPrivate(id, this))
 {
-    setAttributes(AttributeNonConfigurable);
     setDefaultIcon(icon);
     setDefaultShortcut(key);
     setDefaultText(text);
@@ -89,7 +88,6 @@ Command::Command(const QByteArray &id,
     QObject(parent),
     d_ptr(new CommandPrivate(id, this))
 {
-    setAttributes(AttributeNonConfigurable);
     setDefaultShortcut(key);
     setDefaultText(text);
 
@@ -102,7 +100,6 @@ Command::Command(const QByteArray &id,
     QObject(parent),
     d_ptr(new CommandPrivate(id, this))
 {
-    setAttributes(AttributeNonConfigurable);
     setDefaultText(text);
 
     ActionManager::instance()->registerCommand(this);
@@ -115,8 +112,6 @@ Command::Command(const QByteArray &id, QObject *parent) :
     QObject(parent),
     d_ptr(new CommandPrivate(id, this))
 {
-    setAttributes(AttributeNonConfigurable);
-
     ActionManager::instance()->registerCommand(this);
 }
 
