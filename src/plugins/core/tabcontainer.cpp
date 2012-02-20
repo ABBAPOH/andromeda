@@ -33,7 +33,6 @@ TabContainer::TabContainer(QWidget *parent) :
 
     m_tabWidget->setDocumentMode(true);
     m_tabWidget->setMovable(true);
-    m_tabWidget->setTabsClosable(true);
     m_tabWidget->setUsesScrollButtons(true);
     m_tabWidget->setCornerWidget(m_newTabButton, Qt::TopRightCorner);
 
@@ -41,7 +40,7 @@ TabContainer::TabContainer(QWidget *parent) :
 
     connect(m_tabWidget, SIGNAL(currentChanged(int)), SLOT(onCurrentChanged(int)));
     connect(m_tabWidget, SIGNAL(tabBarDoubleClicked()), SLOT(newTab()));
-    connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
+    connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeEditor(int)));
     connect(m_newTabButton, SIGNAL(clicked()), SLOT(newTab()));
 }
 
@@ -75,19 +74,6 @@ void TabContainer::setCurrentIndex(int index)
 void TabContainer::newTab()
 {
     openNewEditor(m_defaultUrl);
-}
-
-/*!
-  \brief Closes tab at \a index.
-*/
-void TabContainer::closeTab(int index)
-{
-    if (m_tabWidget->count() == 1)
-        return;
-
-    QWidget *container = m_tabWidget->widget(index);
-    m_tabWidget->removeTab(index);
-    delete container;
 }
 
 /*!
@@ -203,6 +189,9 @@ void TabContainer::openNewEditor(const QUrl &url)
         m_tabWidget->setCurrentIndex(index);
     else
         setEditor(container);
+
+    if (m_tabWidget->count() > 1)
+        m_tabWidget->setTabsClosable(true);
 }
 
 /*!
@@ -224,6 +213,9 @@ void TabContainer::closeEditor(int index)
     QWidget *widget = m_tabWidget->widget(index);
     m_tabWidget->removeTab(index);
     widget->deleteLater();
+
+    if (m_tabWidget->count() == 1)
+        m_tabWidget->setTabsClosable(false);
 }
 
 /*!
