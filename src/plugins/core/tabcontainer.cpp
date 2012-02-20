@@ -82,6 +82,9 @@ void TabContainer::newTab()
 */
 void TabContainer::closeTab(int index)
 {
+    if (m_tabWidget->count() == 1)
+        return;
+
     QWidget *container = m_tabWidget->widget(index);
     m_tabWidget->removeTab(index);
     delete container;
