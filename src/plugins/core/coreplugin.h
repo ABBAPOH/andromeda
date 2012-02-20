@@ -52,6 +52,7 @@ private:
     void createGoToMenu();
     void createToolsMenu();
     void createHelpMenu();
+    void createDockMenu();
     void registerAtions();
 
     void createAction(const QByteArray &id, const char *slot);
@@ -60,6 +61,7 @@ private:
     QStringList urls;
     QPointer<GuiSystem::SettingsDialog> settingsDialog;
     QByteArray settingsDialogState;
+    QMenu *dockMenu;
 };
 
 #endif // COREPLUGIN_H
