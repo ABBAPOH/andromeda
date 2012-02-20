@@ -2,8 +2,11 @@
 #include "webvieweditor_p.h"
 
 #include <QtCore/QFile>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtGui/QAction>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QDesktopServices>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebHistory>
@@ -149,6 +152,8 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_history = new WebViewHistory(this);
     m_history->setHistory(m_webView->history());
 
+    QWebSettings::setIconDatabasePath(getCacheDirectory());
+
     m_webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(m_webView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
@@ -242,4 +247,18 @@ void WebViewEditor::onIconChanged()
 AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)
 {
     return new WebViewEditor(parent);
+}
+
+QString WebView::getCacheDirectory()
+{
+    QDesktopServices::StandardLocation location;
+    location = QDesktopServices::CacheLocation;
+    QString directory = QDesktopServices::storageLocation(location);
+    if (directory.isEmpty())
+        directory = QDesktopServices::storageLocation(QDesktopServices::HomeLocation) + QLatin1String("/.") + QCoreApplication::applicationName() + QString("/caches");
+
+    if ( ! QFile::exists(directory) )
+        QDir().mkpath(directory);
+
+    return directory;
 }
