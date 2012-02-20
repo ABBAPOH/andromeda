@@ -32,11 +32,11 @@ class GUISYSTEM_EXPORT Command : public QObject
 
 public:
     enum Attribute {
-        AttributeNonConfigurable = 0,
-        AttributeHide = 1,
-        AttributeUpdateText = 2,
-        AttributeUpdateIcon = 4,
-        AttributeUpdateShortcut = 8
+        AttributeNonConfigurable = 0x1,
+        AttributeHide = 0x2,
+        AttributeUpdateText = 0x4,
+        AttributeUpdateIcon = 0x8,
+        AttributeUpdateShortcut = 0x10
     };
     Q_DECLARE_FLAGS(Attributes, Attribute)
 
