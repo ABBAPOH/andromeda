@@ -499,6 +499,11 @@ void CorePlugin::createDockMenu()
 
     Command *cmd = 0;
     CommandContainer *container = new CommandContainer(Constants::Menus::Dock, this);
+#ifdef Q_OS_MAC
+    container->setTitle(tr("Dock menu"));
+#else
+    container->setTitle(tr("Tray menu"));
+#endif
 
     cmd = actionManager->command(Constants::Actions::Exit);
     container->addCommand(actionManager->command(Constants::Actions::NewWindow));
