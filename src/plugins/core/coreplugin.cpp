@@ -10,6 +10,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
+#include <QtGui/QSystemTrayIcon>
 
 #include "commandssettingspage.h"
 #include "constants.h"
@@ -63,6 +64,8 @@ bool CorePlugin::initialize(const QVariantMap &options)
 void CorePlugin::shutdown()
 {
     qDeleteAll(BrowserWindow::windows());
+
+    delete dockMenu;
 }
 
 bool CorePlugin::restoreState(const QByteArray &arr)
@@ -275,6 +278,7 @@ void CorePlugin::createActions()
     createGoToMenu();
     createToolsMenu();
     createHelpMenu();
+    createDockMenu();
     registerAtions();
 }
 
@@ -481,6 +485,35 @@ void CorePlugin::createHelpMenu()
     cmd->commandAction()->setMenuRole(QAction::AboutQtRole);
     container->addCommand(cmd);
 //    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
+}
+
+#ifdef Q_OS_MAC
+void qt_mac_set_dock_menu(QMenu *menu);
+#endif
+
+void CorePlugin::createDockMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+
+    Command *cmd = 0;
+    CommandContainer *container = new CommandContainer(Constants::Menus::Dock, this);
+
+    cmd = actionManager->command(Constants::Actions::Exit);
+    container->addCommand(actionManager->command(Constants::Actions::NewWindow));
+#ifndef Q_OS_MAC
+    container->addCommand(actionManager->command(Constants::Actions::Exit), "quit");
+#endif
+
+    dockMenu = container->menu();
+
+#ifdef Q_OS_MAC
+    qt_mac_set_dock_menu(dockMenu);
+#else
+    QSystemTrayIcon *tray = new QSystemTrayIcon(this);
+    tray->setIcon(QIcon(":/images/icons/andromeda.png"));
+    tray->setContextMenu(dockMenu);
+    tray->show();
+#endif
 }
 
 void CorePlugin::registerAtions()

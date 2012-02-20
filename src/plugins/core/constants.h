@@ -19,6 +19,7 @@ const char * const View = "ViewMenu";
 const char * const GoTo = "GoToMenu";
 const char * const Tools = "ToolsMenu";
 const char * const Help = "HelpMenu";
+const char * const Dock = "DockMenu";
 
 } // namespace Menus
 
