@@ -56,8 +56,6 @@ bool CorePlugin::initialize(const QVariantMap &options)
     connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
     connect(PluginManager::instance(), SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
 
-    connect(qApp, SIGNAL(lastWindowClosed()), SLOT(quit()), Qt::QueuedConnection);
-
     return true;
 }
 
