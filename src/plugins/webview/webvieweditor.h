@@ -84,6 +84,7 @@ protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
+QString getCacheDirectory();
 } // namespace WebView
 
 #endif // WEBVIEWEDITOR_H
