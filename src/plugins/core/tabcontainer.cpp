@@ -188,7 +188,13 @@ void TabContainer::openNewEditor(const QUrl &url)
     AbstractEditor *container = createEditor();
     container->open(url);
     QString title = container->title();
-    int index = m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
+
+    int index;
+#ifdef Q_OS_MAC
+    index = m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
+#else
+    index = m_tabWidget->addTab(container, container->icon(), title.isEmpty() ? tr("New tab") : title);
+#endif
 
     if (index != m_tabWidget->currentIndex())
         m_tabWidget->setCurrentIndex(index);
