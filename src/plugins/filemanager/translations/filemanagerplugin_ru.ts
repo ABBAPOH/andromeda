@@ -288,16 +288,16 @@
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="174"/>
-        <location filename="../fileinfodialog.cpp" line="314"/>
-        <source>File Info</source>
-        <translation>Информация о файле</translation>
-    </message>
-    <message>
         <location filename="../fileinfodialog.cpp" line="221"/>
         <location filename="../fileinfodialog.cpp" line="315"/>
         <source>Drive Info</source>
         <translation>Информация о диске</translation>
+    </message>
+    <message>
+        <location filename="../fileinfodialog.cpp" line="174"/>
+        <location filename="../fileinfodialog.cpp" line="314"/>
+        <source>General Info</source>
+        <translation>Общая информация</translation>
     </message>
     <message>
         <location filename="../fileinfodialog.cpp" line="267"/>

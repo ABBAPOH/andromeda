@@ -171,7 +171,7 @@ void FileInfoDialogPrivate::setupUi()
 
     widget_1 = new QWidget;
     widget_1->setObjectName(QLatin1String("widget_1"));
-    widget->addWidget(widget_1, FileInfoDialog::tr("File Info"));
+    widget->addWidget(widget_1, FileInfoDialog::tr("General Info"));
 
     layout_1 = new QFormLayout(widget_1);
     layout_1->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
@@ -311,7 +311,7 @@ void FileInfoDialogPrivate::retranslateUi()
     mountPointLabel->setText(FileInfoDialog::tr("Mount point:"));
     fileSystemLabel->setText(FileInfoDialog::tr("File system:"));
 
-    widget->setText(0, FileInfoDialog::tr("File Info"));
+    widget->setText(0, FileInfoDialog::tr("General Info"));
     widget->setText(1, FileInfoDialog::tr("Drive Info"));
     widget->setText(2, FileInfoDialog::tr("Permissions"));
 
