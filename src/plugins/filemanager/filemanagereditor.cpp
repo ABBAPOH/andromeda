@@ -107,7 +107,12 @@ QUrl FileManagerEditor::url() const
 void FileManagerEditor::open(const QUrl &url)
 {
     emit loadStarted();
-    m_widget->setCurrentPath(url.toLocalFile());
+    QString path = url.toLocalFile();
+#ifdef Q_OS_WIN
+    if (path == QLatin1String("/"))
+        path.clear();
+#endif
+    m_widget->setCurrentPath(path);
     emit loadFinished(true);
 }
 
