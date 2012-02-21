@@ -29,6 +29,8 @@ static inline QString getCacheDirectory()
                 arg(QDesktopServices::storageLocation(QDesktopServices::HomeLocation)).
                 arg(QCoreApplication::applicationName());
     }
+    if (!QFile::exists(directory))
+        QDir().mkpath(directory);
 
     return directory;
 }
