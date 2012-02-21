@@ -324,7 +324,6 @@ void CorePlugin::createFileMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
-//#ifndef Q_OS_MAC
     // ================ File Menu (Quit) ================
     group = Constants::MenuGroups::FileQuit;
 
@@ -333,7 +332,6 @@ void CorePlugin::createFileMenu()
     cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::QuitRole);
     container->addCommand(cmd, group);
-//#endif
 }
 
 void CorePlugin::createEditMenu()
