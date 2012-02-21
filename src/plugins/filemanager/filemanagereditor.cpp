@@ -136,9 +136,16 @@ QString FileManagerEditor::title() const
     if (path.endsWith(QLatin1Char('/')))
         path = path.left(path.length() - 1);
 
+    if (path.isEmpty())
+        return QLatin1String("/");
+
     QFileInfo fi(path);
-    if (fi.exists())
-        return fi.fileName();
+    if (fi.exists()) {
+        QString result = fi.fileName();
+        if (result.isEmpty())
+            result = fi.filePath();
+        return result;
+    }
     return QString();
 }
 
