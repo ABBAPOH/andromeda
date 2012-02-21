@@ -301,15 +301,15 @@ void CorePlugin::createFileMenu()
     // ================ File Menu (New) ================
     group = Constants::MenuGroups::FileNew;
 
-    cmd = new Command(Constants::Actions::NewWindow, QKeySequence::New, tr("New window"), this);
+    cmd = new Command(Constants::Actions::NewWindow, QKeySequence("Ctrl+T"), tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::NewTab, QKeySequence::AddTab, tr("New tab"), this);
+    cmd = new Command(Constants::Actions::NewTab, QKeySequence("Ctrl+T"), tr("New tab"), this);
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
-    cmd = new Command(Constants::Actions::CloseTab, QKeySequence::Close, tr("Close"), this);
+    cmd = new Command(Constants::Actions::CloseTab, QKeySequence("Ctrl+W"), tr("Close"), this);
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, group);
 
