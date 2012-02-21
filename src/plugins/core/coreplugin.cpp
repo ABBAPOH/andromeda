@@ -327,7 +327,7 @@ void CorePlugin::createFileMenu()
     // ================ File Menu (Quit) ================
     group = Constants::MenuGroups::FileQuit;
 
-    cmd = new Command(Constants::Actions::Exit, QKeySequence("Ctrl+Q"), tr("Quit Andromeda"), this);
+    cmd = new Command(Constants::Actions::Quit, QKeySequence("Ctrl+Q"), tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
     cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::QuitRole);
@@ -507,10 +507,10 @@ void CorePlugin::createDockMenu()
     container->setTitle(tr("Tray menu"));
 #endif
 
-    cmd = actionManager->command(Constants::Actions::Exit);
+    cmd = actionManager->command(Constants::Actions::Quit);
     container->addCommand(actionManager->command(Constants::Actions::NewWindow));
 #ifndef Q_OS_MAC
-    container->addCommand(actionManager->command(Constants::Actions::Exit), "quit");
+    container->addCommand(actionManager->command(Constants::Actions::Quit), "quit");
 #endif
 
     dockMenu = container->menu();
@@ -528,7 +528,7 @@ void CorePlugin::createDockMenu()
 void CorePlugin::registerAtions()
 {
     createAction(Constants::Actions::NewWindow, SLOT(newWindow()));
-    createAction(Constants::Actions::Exit, SLOT(quit()));
+    createAction(Constants::Actions::Quit, SLOT(quit()));
     createAction(Constants::Actions::Plugins, SLOT(showPluginView()));
     createAction(Constants::Actions::Settings, SLOT(showSettings()));
     createAction(Constants::Actions::Preferences, SLOT(prefenrences()));
