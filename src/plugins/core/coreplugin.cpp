@@ -301,7 +301,7 @@ void CorePlugin::createFileMenu()
     // ================ File Menu (New) ================
     group = Constants::MenuGroups::FileNew;
 
-    cmd = new Command(Constants::Actions::NewWindow, QKeySequence("Ctrl+T"), tr("New window"), this);
+    cmd = new Command(Constants::Actions::NewWindow, QKeySequence("Ctrl+N"), tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
     container->addCommand(cmd, group);
 
