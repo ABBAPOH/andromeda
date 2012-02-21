@@ -12,6 +12,7 @@
 #include <QtGui/QMessageBox>
 
 #include <guisystem/actionmanager.h>
+#include <io/QDriveInfo>
 #include <widgets/coverflow.h>
 
 #include <core/constants.h>
