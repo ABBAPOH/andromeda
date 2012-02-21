@@ -328,7 +328,7 @@ void CorePlugin::createFileMenu()
     // ================ File Menu (Quit) ================
     group = Constants::MenuGroups::FileQuit;
 
-    cmd = new Command(Constants::Actions::Exit, QKeySequence::Quit, tr("Quit Andromeda"), this);
+    cmd = new Command(Constants::Actions::Exit, QKeySequence("Ctrl+Q"), tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
     cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::QuitRole);
