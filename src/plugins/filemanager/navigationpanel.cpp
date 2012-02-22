@@ -38,10 +38,9 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
         if ( rect.contains(me->x(), me->y()) ) {
             QDriveController drive;
             const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
-            if (model) {
+            if (model)
                 drive.eject(model->path(index));
-                return true;
-            }
+            return true;
         }
     }
 
@@ -50,17 +49,22 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 
 void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+
+    QStyleOptionViewItemV4 optionRight = option;
+    optionRight.viewItemPosition = QStyleOptionViewItemV4::End;
+    optionRight.rect.setX(optionRight.rect.x() + optionRight.rect.width() - (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
+
+#ifdef Q_OS_WIN
+    QStyledItemDelegate::paint(painter, option, index);
+#else
     QStyleOptionViewItemV4 optionLeft = option;
     // decrease text width so icon won't overlap text
     optionLeft.rect.setWidth(optionLeft.rect.width() - (optionLeft.rect.height() + BORDER));
     optionLeft.viewItemPosition = QStyleOptionViewItemV4::Beginning;
     QStyledItemDelegate::paint(painter, optionLeft, index);
-
-    QStyleOptionViewItemV4 optionRight = option;
-    optionRight.viewItemPosition = QStyleOptionViewItemV4::End;
-    optionRight.rect.setX(optionRight.rect.x() + optionRight.rect.width() - (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
     QStyle *style = QApplication::style();
     style->drawControl(QStyle::CE_ItemViewItem, &optionRight, painter);
+#endif
 
     const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
     if (model) {
