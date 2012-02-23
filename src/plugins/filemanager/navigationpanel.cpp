@@ -49,21 +49,11 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 
 void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    bool paint = true;
 
-    QStyleOptionViewItemV4 optionRight = option;
-    optionRight.viewItemPosition = QStyleOptionViewItemV4::End;
-    optionRight.rect.setX(optionRight.rect.x() + optionRight.rect.width() - (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
-
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
+    paint = false;
     QStyledItemDelegate::paint(painter, option, index);
-#else
-    QStyleOptionViewItemV4 optionLeft = option;
-    // decrease text width so icon won't overlap text
-    optionLeft.rect.setWidth(optionLeft.rect.width() - (optionLeft.rect.height() + BORDER));
-    optionLeft.viewItemPosition = QStyleOptionViewItemV4::Beginning;
-    QStyledItemDelegate::paint(painter, optionLeft, index);
-    QStyle *style = QApplication::style();
-    style->drawControl(QStyle::CE_ItemViewItem, &optionRight, painter);
 #endif
 
     const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
@@ -71,12 +61,30 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         QDriveInfo drive(model->path(index));
 
         if ( drive.isValid() && ( drive.type() == QDriveInfo::RemoteDrive || drive.type() == QDriveInfo::RemovableDrive ) ){
+            QStyleOptionViewItemV4 optionRight = option;
+            optionRight.viewItemPosition = QStyleOptionViewItemV4::End;
+            optionRight.rect.setX(optionRight.rect.x() + optionRight.rect.width() - (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
+
+#if !defined(Q_OS_WIN)
+            QStyleOptionViewItemV4 optionLeft = option;
+            // decrease text width so icon won't overlap text
+            optionLeft.rect.setWidth(optionLeft.rect.width() - (optionLeft.rect.height() + BORDER));
+            optionLeft.viewItemPosition = QStyleOptionViewItemV4::Beginning;
+            QStyledItemDelegate::paint(painter, optionLeft, index);
+
+            QStyle *style = QApplication::style();
+            style->drawControl(QStyle::CE_ItemViewItem, &optionRight, painter);
+#endif
             QRect rect = optionRight.rect;
             rect.setRight(rect.right()-BORDER);
             m_ejectIcon.paint(painter, rect);
-        }
 
+            return;
+        }
     }
+
+    if( paint )
+        QStyledItemDelegate::paint(painter, option, index);
 }
 
 NavigationPanel::NavigationPanel(QWidget *parent) :
