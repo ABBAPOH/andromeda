@@ -36,10 +36,13 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
         rect.setX(rect.x() + rect.width() - (rect.height()+BORDER)); // draw icon (size is rect's height*height)
         rect.setRight(rect.right()-BORDER);
         if ( rect.contains(me->x(), me->y()) ) {
-            QDriveController drive;
             const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
-            if (model)
-                drive.eject(model->path(index));
+            if (model) {
+                QDriveInfo driveInfo(model->path(index));
+                if ( driveInfo.isValid() && ( driveInfo.type() == QDriveInfo::RemoteDrive || driveInfo.type() == QDriveInfo::RemovableDrive ))
+                    QDriveController().eject(model->path(index));
+            }
+
             return true;
         }
     }
