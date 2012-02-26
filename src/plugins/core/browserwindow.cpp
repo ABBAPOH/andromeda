@@ -23,6 +23,8 @@
 using namespace Core;
 using namespace GuiSystem;
 
+static QByteArray m_windowGeometry;
+
 void BrowserWindowPrivate::setupActions()
 {
     Q_Q(BrowserWindow);
@@ -178,11 +180,8 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
 #endif
     setAttribute(Qt::WA_DeleteOnClose);
 
-    d->settings = new QSettings(this);
-    d->settings->beginGroup(QLatin1String("mainWindow"));
-    QVariant value = d->settings->value(QLatin1String("geometry"));
-    if (value.isValid()) {
-        restoreGeometry(value.toByteArray());
+    if ( !(m_windowGeometry.isNull() || m_windowGeometry.isEmpty()) ) {
+        restoreGeometry(m_windowGeometry);
         move(pos() + QPoint(20, 20));
     }
 }
@@ -259,16 +258,24 @@ void BrowserWindow::newWindow()
     window->show();
 }
 
-void BrowserWindow::moveEvent(QMoveEvent *)
+void BrowserWindow::moveEvent(QMoveEvent*)
 {
     Q_D(BrowserWindow);
 
-    d->settings->setValue(QLatin1String("geometry"), saveGeometry());
+    setWindowGeometry(saveGeometry());
 }
 
-void BrowserWindow::resizeEvent(QResizeEvent *)
+void BrowserWindow::resizeEvent(QResizeEvent*)
 {
     Q_D(BrowserWindow);
 
-    d->settings->setValue(QLatin1String("geometry"), saveGeometry());
+    setWindowGeometry(saveGeometry());
+}
+
+const QByteArray& BrowserWindow::getWindowGeometry() {
+    return m_windowGeometry;
+}
+
+void BrowserWindow::setWindowGeometry(const QByteArray& geometry) {
+    m_windowGeometry = geometry;
 }

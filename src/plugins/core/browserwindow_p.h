@@ -30,8 +30,6 @@ public:
     QAction *upAction;
     QAction *newTabAction;
 
-    QSettings *settings;
-
     void setupActions();
     void setupToolBar();
     void setupAlternateToolBar();

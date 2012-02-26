@@ -24,6 +24,8 @@ public:
 
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
+    void loadSettings();
+    void saveSettings();
 
 public slots:
     void newWindow();
@@ -62,6 +64,7 @@ private:
     QPointer<GuiSystem::SettingsDialog> settingsDialog;
     QByteArray settingsDialogState;
     QMenu *dockMenu;
+    QSettings *m_settings;
 #ifdef Q_OS_MAC
     QMenuBar *menuBar;
 #endif

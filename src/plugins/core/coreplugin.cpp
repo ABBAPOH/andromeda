@@ -183,6 +183,8 @@ void CorePlugin::handleMessage(const QString &message)
 
 void CorePlugin::restoreSession()
 {
+    loadSettings();
+
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
@@ -215,10 +217,25 @@ void CorePlugin::saveSession()
     QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
 
+    saveSettings();
+
     if (!f.open(QFile::WriteOnly))
         return;
 
     f.write(saveState());
+}
+
+void CorePlugin::loadSettings() {
+    m_settings = new QSettings(this);
+    m_settings->beginGroup(QLatin1String("mainWindow"));
+    QVariant value = m_settings->value(QLatin1String("geometry"));
+
+    if (value.isValid() && value.canConvert(QVariant::ByteArray))
+        BrowserWindow::setWindowGeometry(value.toByteArray());
+}
+
+void CorePlugin::saveSettings() {
+    m_settings->setValue(QLatin1String("geometry"), BrowserWindow::getWindowGeometry());
 }
 
 void CorePlugin::quit()
