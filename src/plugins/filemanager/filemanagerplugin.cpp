@@ -95,7 +95,6 @@ void FileManagerPlugin::createFileMenu()
 {
     Command *cmd = 0;
     CommandContainer *container = 0;
-    const char *group = 0;
 
     container = ActionManager::instance()->container(Constants::Menus::File);
 
@@ -106,33 +105,33 @@ void FileManagerPlugin::createFileMenu()
 //    openCommand->setDefaultShortcut(tr("Return"));
 #endif
     cmd->setContext(Command::WidgetCommand);
-    container->addCommand(cmd, Constants::MenuGroups::FileNew);
+    container->addCommand(cmd, "015");
 
     // ================ File Menu (Info) ================
-    group = Constants::MenuGroups::FileInfo;
+    container->addSeparator(Constants::Actions::FileMenuFileInfoSeparator, "55");
 
     cmd = new Command(Constants::Actions::FileInfo, this);
     cmd->setDefaultText(tr("File info"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+I")));
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "575");
 
     // ================ File Menu (Change) ================
-    group = Constants::MenuGroups::FileChange;
+    container->addSeparator(Constants::Actions::FileMenuFileChangeSeparator, "60");
 
     cmd = new Command(Constants::Actions::NewFolder, this);
     cmd->setDefaultText(tr("New folder"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+N")));
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "61");
 
     cmd = new Command(Constants::Actions::CopyFiles, this);
     cmd->setDefaultText(tr("Copy files"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("F5")));
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "62");
 
     cmd = new Command(Constants::Actions::MoveFiles, this);
     cmd->setDefaultText(tr("Move files"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("F6")));
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "63");
 
     cmd = new Command(Constants::Actions::Rename, this);
     cmd->setDefaultText(tr("Rename"));
@@ -141,7 +140,7 @@ void FileManagerPlugin::createFileMenu()
 #else
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("F2")));
 #endif
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "64");
 
     cmd = new Command(Constants::Actions::Remove, this);
     cmd->setDefaultText(tr("Remove"));
@@ -150,50 +149,17 @@ void FileManagerPlugin::createFileMenu()
 #else
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Shift+Del")));
 #endif
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "65");
 }
 
 void FileManagerPlugin::createViewMenu()
 {
     Command *cmd = 0;
     CommandContainer *container = 0;
-    const char *group = 0;
 
     container = ActionManager::instance()->container(Constants::Menus::View);
 
     // ================ View Menu (View Mode) ================
-    group = Constants::MenuGroups::ViewViewMode;
-
-    cmd = new Command(Constants::Actions::IconMode, this);
-    cmd->setDefaultText(tr("Icon View"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+1")));
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
-
-    cmd = new Command(Constants::Actions::ColumnMode, this);
-    cmd->setDefaultText(tr("Column View"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+2")));
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
-
-    cmd = new Command(Constants::Actions::TreeMode, this);
-    cmd->setDefaultText(tr("Tree View"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+3")));
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
-
-    cmd = new Command(Constants::Actions::CoverFlowMode, this);
-    cmd->setDefaultText(tr("Cover flow"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+4")));
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
-
-    cmd = new Command(Constants::Actions::DualPane, this);
-    cmd->setDefaultText(tr("Dual Pane"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+5")));
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
-
     cmd = new Command(Constants::Actions::ShowHiddenFiles, this);
     cmd->setDefaultText(tr("Show Hidden Files"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+.")));
@@ -206,12 +172,44 @@ void FileManagerPlugin::createViewMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
+    container->addSeparator(Constants::Actions::ViewModeSeparator);
+
+    cmd = new Command(Constants::Actions::IconMode, this);
+    cmd->setDefaultText(tr("Icon View"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+1")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::ColumnMode, this);
+    cmd->setDefaultText(tr("Column View"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+2")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::TreeMode, this);
+    cmd->setDefaultText(tr("Tree View"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+3")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::CoverFlowMode, this);
+    cmd->setDefaultText(tr("Cover flow"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+4")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
+    cmd = new Command(Constants::Actions::DualPane, this);
+    cmd->setDefaultText(tr("Dual Pane"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+5")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
     // ================ View Menu (View Mode) ================
-    group = Constants::MenuGroups::ViewSortBy;
+    container->addSeparator(Constants::Actions::SortBySeparator);
 
     CommandContainer *sortByMenu = new CommandContainer(Constants::Menus::SortBy, this);
     sortByMenu->setTitle(tr("Sort by"));
-    container->addContainer(sortByMenu, group);
+    container->addContainer(sortByMenu, QByteArray());
     container = sortByMenu;
 
     cmd = new Command(Constants::Actions::SortByName, this);
@@ -234,17 +232,19 @@ void FileManagerPlugin::createViewMenu()
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
     container->addCommand(cmd);
 
-    group = Constants::MenuGroups::ViewSortByOrder;
+    container->addSeparator(Constants::Actions::SortOrderSeparator);
 
     cmd = new Command(Constants::Actions::SortByDescendingOrder, this);
     cmd->setDefaultText(tr("Descending Order"));
 //    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 }
 
 void FileManagerPlugin::createGoToMenu()
 {
     // ================ GoTo Menu (Locations) ================
+    GuiSystem::CommandContainer *container = ActionManager::instance()->container(Constants::Menus::GoTo);
+    container->addSeparator(Constants::Actions::GotoSeparator);
 
     createGoToDirCommand(QDesktopServices::DesktopLocation,
                          QIcon(":/images/icons/desktopFolder.png"),
@@ -295,7 +295,7 @@ void FileManagerPlugin::createGoToDirCommand(QDesktopServices::StandardLocation 
     cmd->setData(dir.absolutePath());
     cmd->setContext(Command::ApplicationCommand);
 
-    container->addCommand(cmd, Constants::MenuGroups::Locations);
+    container->addCommand(cmd);
 }
 
 void FileManagerPlugin::createGoToActions()

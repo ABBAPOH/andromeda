@@ -23,20 +23,6 @@ const char * const Dock = "DockMenu";
 
 } // namespace Menus
 
-namespace MenuGroups {
-
-const char * const FileNew = "FileMenu 1";
-const char * const FileSave = "FileMenu 2";
-const char * const FileQuit = "FileMenu 5";
-
-const char * const EditRedo = "EditMenu 1";
-const char * const EditCopyPaste = "Groups.EditMenu 2";
-const char * const EditFind = "Edit 3";
-
-const char * const ToolsPreferences = "ToolsMenu 1";
-
-} // namespace Groups
-
 namespace Actions {
 
 const char * const NewWindow = "NewWindow";
@@ -44,15 +30,20 @@ const char * const NewTab = "NewTab";
 const char * const CloseTab = "CloseTab";
 const char * const Quit = "Quit";
 
+const char * const SaveSeparator = "SaveSeparator";
+const char * const QuitSeparator = "QuitSeparator";
+
 const char * const Save = "Save";
 const char * const SaveAs = "SaveAs";
 
 const char * const Undo = "Undo";
 const char * const Redo = "Redo";
+const char * const CopyPasteSeparator = "CopyPasteSeparator";
 const char * const Cut = "Cut";
 const char * const Copy = "Copy";
 const char * const Paste = "Paste";
 const char * const SelectAll = "SelectAll";
+const char * const FindSeparator = "FindSeparator";
 
 const char * const Find = "Find";
 const char * const FindNext = "FindNext";
@@ -66,9 +57,11 @@ const char * const Up = "Up";
 
 const char * const About = "About";
 const char * const AboutQt = "AboutQt";
-const char * const Preferences = "Preferences";
 const char * const Plugins = "Plugins";
 const char * const Settings = "Settings";
+
+const char * const PreferencesSeparator = "PreferencesSeparator";
+const char * const Preferences = "Preferences";
 
 } // namespace Actions
 

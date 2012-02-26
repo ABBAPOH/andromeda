@@ -9,57 +9,18 @@
 
 namespace GuiSystem {
 
-struct Group
-{
-    explicit Group(const QByteArray &arr) : id(arr) {}
-    ~Group() {}
-
-    QByteArray id;
-    QObjectList objects;
-};
-
 class CommandContainerPrivate
 {
 public:
     QByteArray id;
     QString title;
-    QList<Group*> groups;
+    QObjectList objects;
 
-    Group *findGroup(const QByteArray &id) const;
-    Group *addGroup(const QByteArray &id);
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
-
-bool groupLessThen(Group *g1, Group *g2)
-{
-    return (g1->id < g2->id);
-}
-
-Group * CommandContainerPrivate::findGroup(const QByteArray &id) const
-{
-    foreach (Group *g, groups) {
-        if (g->id == id)
-            return g;
-    }
-
-    return 0;
-}
-
-Group * CommandContainerPrivate::addGroup(const QByteArray &id)
-{
-    foreach (Group *g, groups) {
-        if (g->id == id)
-            return g;
-    }
-
-    Group *g = new Group(id);
-    QList<Group*>::iterator i = qLowerBound(groups.begin(), groups.end(), g, groupLessThen);
-    groups.insert(i, g);
-    return g;
-}
 
 /*!
     \class CommandContainer
@@ -81,7 +42,6 @@ CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
     Q_D(CommandContainer);
 
     d->id = id;
-    d->addGroup(QByteArray()); // default group
 
     ActionManager::instance()->registerContainer(this);
 }
@@ -93,7 +53,6 @@ CommandContainer::~CommandContainer()
 {
     ActionManager::instance()->unregisterContainer(this);
 
-    qDeleteAll(d_func()->groups);
     delete d_ptr;
 }
 
@@ -109,37 +68,43 @@ bool commandLessThen(QObject *o1, QObject *o2)
 /*!
     \brief Adds \a command to a \a group.
 */
-void CommandContainer::addCommand(Command *c, const QByteArray &group, const QByteArray &weight)
+void CommandContainer::addCommand(Command *c, const QByteArray &weight)
 {
     Q_D(CommandContainer);
 
-    Group *g = d->addGroup(group);
     QByteArray w = weight;
     if (w.isEmpty())
-        w = QString::number(g->objects.count()).toLatin1();
+        w = QString("%1").arg(d->objects.count(), 2, 10, QLatin1Char('0')).toLatin1();
     c->setProperty("CommandContainer::weight", w);
 
-    QObjectList::iterator i = qLowerBound(g->objects.begin(), g->objects.end(), c, commandLessThen);
-    g->objects.insert(i, c);
+    QObjectList::iterator i = qLowerBound(d->objects.begin(), d->objects.end(), c, commandLessThen);
+    d->objects.insert(i, c);
     connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
 }
 
 /*!
     \brief Adds \a container to a \a group.
 */
-void CommandContainer::addContainer(CommandContainer *c, const QByteArray &group, const QByteArray &weight)
+void CommandContainer::addContainer(CommandContainer *c, const QByteArray &weight)
 {
     Q_D(CommandContainer);
 
-    Group *g = d->addGroup(group);
     QByteArray w = weight;
     if (w.isEmpty())
-        w = QString::number(g->objects.count()).toLatin1();
+        w = QString("%1").arg(d->objects.count(), 2, 10, QLatin1Char('0')).toLatin1();
     c->setProperty("CommandContainer::weight", w);
 
-    QObjectList::iterator i = qLowerBound(g->objects.begin(), g->objects.end(), c, commandLessThen);
-    g->objects.insert(i, c);
+    QObjectList::iterator i = qLowerBound(d->objects.begin(), d->objects.end(), c, commandLessThen);
+    d->objects.insert(i, c);
     connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
+}
+
+void CommandContainer::addSeparator(const QByteArray &id, const QByteArray &weight)
+{
+    Command *c = new Command(id, this);
+    c->setAttributes(Command::AttributeNonConfigurable);
+    c->setSeparator(true);
+    addCommand(c, weight);
 }
 
 /*!
@@ -149,8 +114,7 @@ void CommandContainer::clear()
 {
     Q_D(CommandContainer);
 
-    qDeleteAll(d->groups);
-    d->groups.clear();
+    d->objects.clear();
 }
 
 /*!
@@ -161,12 +125,10 @@ QList<Command *> CommandContainer::commands() const
     Q_D(const CommandContainer);
 
     QList<Command *> result;
-    foreach (Group *g, d->groups) {
-        foreach (QObject *o, g->objects) {
-            Command *cmd = qobject_cast<Command *>(o);
-            if (cmd)
-                result.append(cmd);
-        }
+    foreach (QObject *o, d->objects) {
+        Command *cmd = qobject_cast<Command *>(o);
+        if (cmd)
+            result.append(cmd);
     }
     return result;
 }
@@ -179,12 +141,9 @@ QList<Command *> CommandContainer::commands(const QByteArray &id) const
     Q_D(const CommandContainer);
 
     QList<Command *> result;
-    Group *g = d->findGroup(id);
-    if (g) {
-        foreach (QObject *o, g->objects) {
-            if (Command *cmd = qobject_cast<Command *>(o)) {
-                result.append(cmd);
-            }
+    foreach (QObject *o, d->objects) {
+        if (Command *cmd = qobject_cast<Command *>(o)) {
+            result.append(cmd);
         }
     }
     return result;
@@ -214,17 +173,11 @@ QMenu * CommandContainer::menu(QWidget *parent) const
 
     QMenu *menu = createMenu(parent);
     menu->setTitle(title());
-    for (int i = 0; i < d->groups.size(); i++) {
-        if (i != 0) {
-            menu->addSeparator();
-        }
-        Group * g = d->groups[i];
-        foreach (QObject *o, g->objects) {
-            if (Command *cmd = qobject_cast<Command *>(o)) {
-                menu->addAction(cmd->commandAction());
-            } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
-                menu->addMenu(container->menu());
-            }
+    foreach (QObject *o, d->objects) {
+        if (Command *cmd = qobject_cast<Command *>(o)) {
+            menu->addAction(cmd->commandAction());
+        } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
+            menu->addMenu(container->menu());
         }
     }
 
@@ -244,14 +197,11 @@ QMenuBar * CommandContainer::menuBar() const
     Q_D(const CommandContainer);
 
     QMenuBar *menuBar = new QMenuBar;
-    for (int i = 0; i < d->groups.size(); i++) {
-        Group * g = d->groups[i];
-        foreach (QObject *o, g->objects) {
-            if (Command *cmd = qobject_cast<Command *>(o)) {
-                menuBar->addAction(cmd->commandAction());
-            } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
-                menuBar->addMenu(container->menu());
-            }
+    foreach (QObject *o, d->objects) {
+        if (Command *cmd = qobject_cast<Command *>(o)) {
+            menuBar->addAction(cmd->commandAction());
+        } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
+            menuBar->addMenu(container->menu());
         }
     }
     return menuBar;
@@ -270,12 +220,9 @@ QToolBar * CommandContainer::toolBar(QWidget *parent) const
     Q_D(const CommandContainer);
 
     QToolBar *toolBar = createToolBar(parent);
-    for (int i = 0; i < d->groups.size(); i++) {
-        Group * g = d->groups[i];
-        foreach (QObject *o, g->objects) {
-            if (Command *cmd = qobject_cast<Command *>(o)) {
-                toolBar->addAction(cmd->commandAction());
-            }
+    foreach (QObject *o, d->objects) {
+        if (Command *cmd = qobject_cast<Command *>(o)) {
+            toolBar->addAction(cmd->commandAction());
         }
     }
     return toolBar;
@@ -300,9 +247,7 @@ void CommandContainer::onDestroy(QObject *o)
 {
     Q_D(CommandContainer);
 
-    foreach (Group *g, d->groups) {
-        g->objects.removeAll(o);
-    }
+    d->objects.removeAll(o);
 }
 
 QMenu * CommandContainer::createMenu(QWidget *parent) const

@@ -25,8 +25,9 @@ public:
     explicit CommandContainer(const QByteArray &id, QObject *parent = 0);
     ~CommandContainer();
 
-    void addCommand(Command *command, const QByteArray &group = QByteArray(), const QByteArray &weight = QByteArray());
-    void addContainer(CommandContainer *container, const QByteArray &group = QByteArray(), const QByteArray &weight = QByteArray());
+    void addCommand(Command *command, const QByteArray &weight = QByteArray());
+    void addContainer(CommandContainer *container, const QByteArray &weight = QByteArray());
+    void addSeparator(const QByteArray &id, const QByteArray &weight = QByteArray());
 
     void clear();
 
