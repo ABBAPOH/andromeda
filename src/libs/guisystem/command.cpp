@@ -22,6 +22,7 @@ public:
     QKeySequence defaultShortcut;
     QIcon defaultIcon;
     QString defaultText;
+    bool isSeparator;
     QKeySequence shortcut;
 
     QByteArray id;
@@ -39,6 +40,7 @@ CommandPrivate::CommandPrivate(const QByteArray &id, Command *qq)
     action = new ProxyAction(qq);
     action->setEnabled(false);
     realAction = 0;
+    isSeparator = false;
     context = Command::WidgetCommand;
 }
 
@@ -291,6 +293,26 @@ void Command::setDefaultText(const QString &text)
     }
 }
 
+bool Command::isSeparator() const
+{
+    Q_D(const Command);
+
+    return d->isSeparator;
+}
+
+void Command::setSeparator(bool b)
+{
+    Q_D(Command);
+
+    if (d->isSeparator == b)
+        return;
+
+    d->isSeparator = b;
+    if (b)
+        setRealAction(0);
+    d->action->setSeparator(b);
+}
+
 /*!
     \property Command::shortcut
 
@@ -362,7 +384,7 @@ void Command::setRealAction(QAction *action)
 {
     Q_D(Command);
 
-    if (d->realAction != action) {
+    if (d->realAction != action && !d->isSeparator) {
         d->realAction = action;
         d->action->setAction(action);
         if (shortcut() != defaultShortcut())

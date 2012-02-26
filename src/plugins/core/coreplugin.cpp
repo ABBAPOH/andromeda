@@ -225,7 +225,7 @@ void CorePlugin::saveSession()
     f.write(saveState());
 }
 
-void CorePlugin::loadSettings() 
+void CorePlugin::loadSettings()
 {
     m_settings = new QSettings(this);
     m_settings->beginGroup(QLatin1String("mainWindow"));
@@ -235,7 +235,7 @@ void CorePlugin::loadSettings()
         BrowserWindow::setWindowGeometry(geometry);
 }
 
-void CorePlugin::saveSettings() 
+void CorePlugin::saveSettings()
 {
     m_settings->setValue(QLatin1String("geometry"), BrowserWindow::windowGeometry());
 }
@@ -310,7 +310,6 @@ void CorePlugin::createFileMenu()
 
     Command *cmd = 0;
     CommandContainer *container = 0;
-    const char *group = 0;
 
     // ================ File Menu ================
     container = new CommandContainer(Constants::Menus::File, this);
@@ -318,39 +317,37 @@ void CorePlugin::createFileMenu()
     menuBarContainer->addContainer(container);
 
     // ================ File Menu (New) ================
-    group = Constants::MenuGroups::FileNew;
-
     cmd = new Command(Constants::Actions::NewWindow, QKeySequence("Ctrl+N"), tr("New window"), this);
     cmd->setContext(Command::ApplicationCommand);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::NewTab, QKeySequence("Ctrl+T"), tr("New tab"), this);
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::CloseTab, QKeySequence("Ctrl+W"), tr("Close"), this);
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     // ================ File Menu (Save) ================
-    group = Constants::MenuGroups::FileSave;
+    container->addSeparator(Constants::Actions::SaveSeparator);
 
     cmd = new Command(Constants::Actions::Save, QKeySequence::Save, tr("Save"), this);
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::SaveAs, QKeySequence::SaveAs, tr("Save as..."), this);
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     // ================ File Menu (Quit) ================
-    group = Constants::MenuGroups::FileQuit;
+    container->addSeparator(Constants::Actions::QuitSeparator, "98");
 
     cmd = new Command(Constants::Actions::Quit, QKeySequence("Ctrl+Q"), tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
     cmd->setAttributes(Command::AttributeNonConfigurable);
     cmd->commandAction()->setMenuRole(QAction::QuitRole);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd, "99");
 }
 
 void CorePlugin::createEditMenu()
@@ -360,7 +357,6 @@ void CorePlugin::createEditMenu()
 
     Command *cmd = 0;
     CommandContainer *container = 0;
-    const char *group = 0;
 
     // ================ Edit Menu ================
     container = new CommandContainer(Constants::Menus::Edit, this);
@@ -368,52 +364,48 @@ void CorePlugin::createEditMenu()
     menuBarContainer->addContainer(container);
 
     // ================ Edit Menu (Redo) ================
-    group = Constants::MenuGroups::EditRedo;
-
     cmd = new Command(Constants::Actions::Undo, QKeySequence::Undo, tr("Undo"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::Redo, QKeySequence::Redo, tr("Redo"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     // ================ Edit Menu (CopyPaste) ================
-    group = Constants::MenuGroups::EditCopyPaste;
+    container->addSeparator(Constants::Actions::CopyPasteSeparator);
 
     cmd = new Command(Constants::Actions::Cut, QKeySequence::Cut, tr("Cut"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::Copy, QKeySequence::Copy, tr("Copy"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::Paste, QKeySequence::Paste, tr("Paste"), this);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::SelectAll, QKeySequence::SelectAll, tr("Select All"), this);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     // ================ Edit Menu (Find) ================
-
-    group = Constants::MenuGroups::EditFind;
+    container->addSeparator(Constants::Actions::FindSeparator);
 
     cmd = new Command(Constants::Actions::Find, QKeySequence::Find, tr("Find"), this);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::FindNext, QKeySequence::FindNext, tr("Find next"), this);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::FindPrevious, QKeySequence::FindPrevious, tr("Find previous"), this);
-    container->addCommand(cmd, group);
+    container->addCommand(cmd);
 }
 
 void CorePlugin::createViewMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
-//    const char *group = 0;
 
     // ================ View Menu ================
     CommandContainer *container = new CommandContainer(Constants::Menus::View, this);
@@ -428,7 +420,6 @@ void CorePlugin::createGoToMenu()
 
     Command *cmd = 0;
     CommandContainer *container = 0;
-//    const char *group = 0;
 
     // ================ GoTo Menu ================
     container = new CommandContainer(Constants::Menus::GoTo, this);
@@ -452,7 +443,6 @@ void CorePlugin::createToolsMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
     CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
-    const char *group = 0;
 
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Menus::Tools, this);
@@ -470,7 +460,7 @@ void CorePlugin::createToolsMenu()
     toolsContainer->addCommand(settingsCommand);
 
     // ================ Tools Menu (Preferences) ================
-    group = Constants::MenuGroups::ToolsPreferences;
+    toolsContainer->addSeparator(Constants::Actions::PreferencesSeparator);
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));
@@ -478,7 +468,7 @@ void CorePlugin::createToolsMenu()
     preferencesCommand->setContext(Command::ApplicationCommand);
     preferencesCommand->setAttributes(Command::AttributeNonConfigurable);
     preferencesCommand->commandAction()->setMenuRole(QAction::PreferencesRole);
-    toolsContainer->addCommand(preferencesCommand, group);
+    toolsContainer->addCommand(preferencesCommand);
 }
 
 void CorePlugin::createHelpMenu()
@@ -488,7 +478,6 @@ void CorePlugin::createHelpMenu()
 
     Command *cmd = 0;
     CommandContainer *container = 0;
-//    const char *group = 0;
 
     // ================ Help Menu ================
     container = new CommandContainer(Constants::Menus::Help, this);
@@ -529,7 +518,8 @@ void CorePlugin::createDockMenu()
     cmd = actionManager->command(Constants::Actions::Quit);
     container->addCommand(actionManager->command(Constants::Actions::NewWindow));
 #ifndef Q_OS_MAC
-    container->addCommand(actionManager->command(Constants::Actions::Quit), "quit");
+    container->addSeparator("separator100500");
+    container->addCommand(actionManager->command(Constants::Actions::Quit));
 #endif
 
     dockMenu = container->menu();
