@@ -180,7 +180,7 @@ void Command::setAttributes(Attributes attrs)
 
 //        if (attrs & AttributeHide && !d->realAction)
 //            d->action->setVisible(false);
-        d->action->setAttributes(ProxyAction::Attributes((int)attrs));
+        d->action->setAttributes(ProxyAction::Attributes((int)attrs >> 1));
 
         emit changed();
     }
