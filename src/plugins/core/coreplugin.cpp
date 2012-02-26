@@ -225,17 +225,19 @@ void CorePlugin::saveSession()
     f.write(saveState());
 }
 
-void CorePlugin::loadSettings() {
+void CorePlugin::loadSettings() 
+{
     m_settings = new QSettings(this);
     m_settings->beginGroup(QLatin1String("mainWindow"));
-    QVariant value = m_settings->value(QLatin1String("geometry"));
+    QByteArray geometry = m_settings->value(QLatin1String("geometry")).toByteArray();
 
-    if (value.isValid() && value.canConvert(QVariant::ByteArray))
-        BrowserWindow::setWindowGeometry(value.toByteArray());
+    if (!geometry.isEmpty())
+        BrowserWindow::setWindowGeometry(geometry);
 }
 
-void CorePlugin::saveSettings() {
-    m_settings->setValue(QLatin1String("geometry"), BrowserWindow::getWindowGeometry());
+void CorePlugin::saveSettings() 
+{
+    m_settings->setValue(QLatin1String("geometry"), BrowserWindow::windowGeometry());
 }
 
 void CorePlugin::quit()

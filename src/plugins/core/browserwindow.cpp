@@ -260,22 +260,20 @@ void BrowserWindow::newWindow()
 
 void BrowserWindow::moveEvent(QMoveEvent*)
 {
-    Q_D(BrowserWindow);
-
-    setWindowGeometry(saveGeometry());
+    m_windowGeometry = saveGeometry();
 }
 
 void BrowserWindow::resizeEvent(QResizeEvent*)
 {
-    Q_D(BrowserWindow);
-
-    setWindowGeometry(saveGeometry());
+    m_windowGeometry = saveGeometry();
 }
 
-const QByteArray& BrowserWindow::getWindowGeometry() {
+QByteArray BrowserWindow::windowGeometry()
+{
     return m_windowGeometry;
 }
 
-void BrowserWindow::setWindowGeometry(const QByteArray& geometry) {
+void BrowserWindow::setWindowGeometry(const QByteArray &geometry) 
+{
     m_windowGeometry = geometry;
 }
