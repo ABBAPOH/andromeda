@@ -28,8 +28,9 @@ public:
     static BrowserWindow *currentWindow();
     static QList<BrowserWindow*> windows();
     static BrowserWindow *createWindow();
-    static const QByteArray& getWindowGeometry();
-    static void setWindowGeometry(const QByteArray&);
+
+    static QByteArray windowGeometry();
+    static void setWindowGeometry(const QByteArray &geometry);
 
 public slots:
     void up();
