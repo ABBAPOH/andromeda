@@ -392,3 +392,24 @@ void Command::setRealAction(QAction *action)
         d->update();
     }
 }
+
+/*!
+    \class Separator
+
+    \brief Helper class to add separators to CommandContainers.
+
+    Due to plugin architecture, it is not possible to add separators that have containter as a parent,
+    so we need this class to correctly remove separators when plugins are unloaded.
+*/
+
+/*!
+    \brief Constructs Separator with the givena \a parent and registers it in ActionManager.
+
+    Separator has auto-generated id that is calculated as a string representation of an object pointer.
+*/
+Separator::Separator(QObject *parent) :
+    Command(QString::number(quintptr(this), 16).toLatin1(), parent)
+{
+    setAttributes(Command::AttributeNonConfigurable);
+    setSeparator(true);
+}

@@ -330,7 +330,7 @@ void CorePlugin::createFileMenu()
     container->addCommand(cmd);
 
     // ================ File Menu (Save) ================
-    container->addSeparator(Constants::Actions::SaveSeparator);
+    container->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::Save, QKeySequence::Save, tr("Save"), this);
     cmd->setContext(Command::WindowCommand);
@@ -341,7 +341,7 @@ void CorePlugin::createFileMenu()
     container->addCommand(cmd);
 
     // ================ File Menu (Quit) ================
-    container->addSeparator(Constants::Actions::QuitSeparator, "98");
+    container->addCommand(new Separator(this), "98");
 
     cmd = new Command(Constants::Actions::Quit, QKeySequence("Ctrl+Q"), tr("Quit Andromeda"), this);
     cmd->setContext(Command::ApplicationCommand);
@@ -373,7 +373,7 @@ void CorePlugin::createEditMenu()
     container->addCommand(cmd);
 
     // ================ Edit Menu (CopyPaste) ================
-    container->addSeparator(Constants::Actions::CopyPasteSeparator);
+    container->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::Cut, QKeySequence::Cut, tr("Cut"), this);
     cmd->setAttributes(Command::AttributeUpdateText);
@@ -390,7 +390,7 @@ void CorePlugin::createEditMenu()
     container->addCommand(cmd);
 
     // ================ Edit Menu (Find) ================
-    container->addSeparator(Constants::Actions::FindSeparator);
+    container->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::Find, QKeySequence::Find, tr("Find"), this);
     container->addCommand(cmd);
@@ -460,7 +460,7 @@ void CorePlugin::createToolsMenu()
     toolsContainer->addCommand(settingsCommand);
 
     // ================ Tools Menu (Preferences) ================
-    toolsContainer->addSeparator(Constants::Actions::PreferencesSeparator);
+    toolsContainer->addCommand(new Separator(this));
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));

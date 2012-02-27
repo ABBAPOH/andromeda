@@ -108,7 +108,7 @@ void FileManagerPlugin::createFileMenu()
     container->addCommand(cmd, "015");
 
     // ================ File Menu (Info) ================
-    container->addSeparator(Constants::Actions::FileMenuFileInfoSeparator, "55");
+    container->addCommand(new Separator(this), "55");
 
     cmd = new Command(Constants::Actions::FileInfo, this);
     cmd->setDefaultText(tr("File info"));
@@ -116,7 +116,7 @@ void FileManagerPlugin::createFileMenu()
     container->addCommand(cmd, "575");
 
     // ================ File Menu (Change) ================
-    container->addSeparator(Constants::Actions::FileMenuFileChangeSeparator, "60");
+    container->addCommand(new Separator(this), "60");
 
     cmd = new Command(Constants::Actions::NewFolder, this);
     cmd->setDefaultText(tr("New folder"));
@@ -172,7 +172,7 @@ void FileManagerPlugin::createViewMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
-    container->addSeparator(Constants::Actions::ViewModeSeparator);
+    container->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::IconMode, this);
     cmd->setDefaultText(tr("Icon View"));
@@ -205,7 +205,7 @@ void FileManagerPlugin::createViewMenu()
     container->addCommand(cmd);
 
     // ================ View Menu (View Mode) ================
-    container->addSeparator(Constants::Actions::SortBySeparator);
+    container->addCommand(new Separator(this));
 
     CommandContainer *sortByMenu = new CommandContainer(Constants::Menus::SortBy, this);
     sortByMenu->setTitle(tr("Sort by"));
@@ -232,7 +232,7 @@ void FileManagerPlugin::createViewMenu()
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
     container->addCommand(cmd);
 
-    container->addSeparator(Constants::Actions::SortOrderSeparator);
+    container->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::SortByDescendingOrder, this);
     cmd->setDefaultText(tr("Descending Order"));
@@ -244,7 +244,7 @@ void FileManagerPlugin::createGoToMenu()
 {
     // ================ GoTo Menu (Locations) ================
     GuiSystem::CommandContainer *container = ActionManager::instance()->container(Constants::Menus::GoTo);
-    container->addSeparator(Constants::Actions::GotoSeparator);
+    container->addCommand(new Separator(this));
 
     createGoToDirCommand(QDesktopServices::DesktopLocation,
                          QIcon(":/images/icons/desktopFolder.png"),

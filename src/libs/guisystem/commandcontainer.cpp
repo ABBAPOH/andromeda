@@ -99,14 +99,6 @@ void CommandContainer::addContainer(CommandContainer *c, const QByteArray &weigh
     connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
 }
 
-void CommandContainer::addSeparator(const QByteArray &id, const QByteArray &weight)
-{
-    Command *c = new Command(id, this);
-    c->setAttributes(Command::AttributeNonConfigurable);
-    c->setSeparator(true);
-    addCommand(c, weight);
-}
-
 /*!
     \brief Destroys all gorups and remove added Commands.
 */
