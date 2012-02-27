@@ -44,6 +44,8 @@ void CommandsModelPrivate::build()
         categoryItem->name = container->title();
 
         foreach (Command *c, commands) {
+            if (c->isSeparator())
+                continue;
 
             TreeItem *item = new TreeItem(TreeItem::Leaf, categoryItem);
             item->cmd = c;
