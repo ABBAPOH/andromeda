@@ -105,6 +105,15 @@ protected:
     friend class CommandContainer;
 };
 
+class GUISYSTEM_EXPORT Separator : public Command
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(Separator)
+
+public:
+    explicit Separator(QObject *parent = 0);
+};
+
 } // namespace GuiSystem
 
 #endif // COMMAND_H

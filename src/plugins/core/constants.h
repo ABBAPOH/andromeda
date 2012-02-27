@@ -30,20 +30,15 @@ const char * const NewTab = "NewTab";
 const char * const CloseTab = "CloseTab";
 const char * const Quit = "Quit";
 
-const char * const SaveSeparator = "SaveSeparator";
-const char * const QuitSeparator = "QuitSeparator";
-
 const char * const Save = "Save";
 const char * const SaveAs = "SaveAs";
 
 const char * const Undo = "Undo";
 const char * const Redo = "Redo";
-const char * const CopyPasteSeparator = "CopyPasteSeparator";
 const char * const Cut = "Cut";
 const char * const Copy = "Copy";
 const char * const Paste = "Paste";
 const char * const SelectAll = "SelectAll";
-const char * const FindSeparator = "FindSeparator";
 
 const char * const Find = "Find";
 const char * const FindNext = "FindNext";
@@ -60,7 +55,6 @@ const char * const AboutQt = "AboutQt";
 const char * const Plugins = "Plugins";
 const char * const Settings = "Settings";
 
-const char * const PreferencesSeparator = "PreferencesSeparator";
 const char * const Preferences = "Preferences";
 
 } // namespace Actions

@@ -27,7 +27,6 @@ public:
 
     void addCommand(Command *command, const QByteArray &weight = QByteArray());
     void addContainer(CommandContainer *container, const QByteArray &weight = QByteArray());
-    void addSeparator(const QByteArray &id, const QByteArray &weight = QByteArray());
 
     void clear();
 
