@@ -518,7 +518,7 @@ void CorePlugin::createDockMenu()
     cmd = actionManager->command(Constants::Actions::Quit);
     container->addCommand(actionManager->command(Constants::Actions::NewWindow));
 #ifndef Q_OS_MAC
-    container->addSeparator("separator100500");
+    container->addCommand(new Separator(this));
     container->addCommand(actionManager->command(Constants::Actions::Quit));
 #endif
 
