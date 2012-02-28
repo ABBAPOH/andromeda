@@ -290,13 +290,13 @@ bool PluginManagerPrivate::load()
     QList<PluginSpec *> newSpecs = loadSpecs(specFiles);
 
     if (pluginSpecs.isEmpty()) {
-        addErrorString(QObject::tr("No plugins found in (%1)").
+        addErrorString(PluginManager::tr("No plugins found in (%1)").
                        arg(folders.join(QLatin1String(", "))));
         return false;
     }
 
     if (!opts.parse(arguments)) {
-        addErrorString(QObject::tr("Error parsing options : '%1'").arg(opts.errorString()));
+        addErrorString(PluginManager::tr("Error parsing options : '%1'").arg(opts.errorString()));
         return false;
     }
 
@@ -330,7 +330,7 @@ QList<PluginSpec*> PluginManagerPrivate::loadSpecs(QStringList specFiles)
 
             PluginSpec *spec = new PluginSpec();
             if (!spec->read(specFile)) {
-                addErrorString(QObject::tr("Failed to read spec file %1 : '%2'").
+                addErrorString(PluginManager::tr("Failed to read spec file %1 : '%2'").
                                arg(specFile).
                                arg(spec->errorString()));
                 delete spec;

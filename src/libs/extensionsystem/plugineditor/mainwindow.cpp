@@ -83,11 +83,11 @@ void MainWindow::setupUi()
 
     fileMenu = new QMenu(tr("File"));
 
-    openAction = fileMenu->addAction(tr("Open..."), this, SLOT(open()), tr("Ctrl+O"));
-    saveAction = fileMenu->addAction(tr("Save..."), this, SLOT(save()), tr("Ctrl+S"));
-    saveAsAction = fileMenu->addAction(tr("Save As"), this, SLOT(saveAs()), tr("Ctrl+Shift+S"));
+    openAction = fileMenu->addAction(tr("Open..."), this, SLOT(open()), QKeySequence("Ctrl+O"));
+    saveAction = fileMenu->addAction(tr("Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
+    saveAsAction = fileMenu->addAction(tr("Save As..."), this, SLOT(saveAs()), QKeySequence("Ctrl+Shift+S"));
     fileMenu->addSeparator();
-    quitAction = fileMenu->addAction(tr("Quit PluginEditor"), this, SLOT(close()), tr("Ctrl+Q"));
+    quitAction = fileMenu->addAction(tr("Quit PluginEditor"), this, SLOT(close()), QKeySequence("Ctrl+Q"));
 
     menuBar()->addMenu(fileMenu);
 
