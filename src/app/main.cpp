@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     manager.setPluginsFolder(QLatin1String("andromeda"));
     manager.setDefaultPlugins(QStringList() << QLatin1String("Core Plugin"));
     manager.setArguments(app.arguments());
-    manager.setTranslations(QStringList() << QLatin1String("extensionsystem"));
+    manager.setTranslations(QStringList() << QLatin1String("extensionsystem") << QLatin1String("guisystem"));
     manager.loadPlugins();
 
     if (manager.hasErrors()) {
