@@ -10,6 +10,8 @@
 #include <QtCore/QVector>
 
 class QFileSystemWatcher;
+class QTranslator;
+
 namespace ExtensionSystem {
 
 class PluginSpec;
@@ -30,7 +32,11 @@ public:
 
     void fileChanged(const QString &libraryPath);
 
-    void loadTranslations(const QStringList &specFiles);
+    void loadLibsTranslations();
+    void loadPluginsTranslations(const QStringList &specFiles);
+    void loadTranslations(const QStringList &translations);
+    void unloadTranslations();
+
     void enableSpecs(QList<PluginSpec *> specs);
 
     QList<PluginSpecFormatHandler*> handlers() const { return formatHandlers.toList(); }
@@ -48,6 +54,8 @@ public:
 
     QString pluginsFolder;
     QString translationsDir;
+    QStringList translations;
+    QList<QTranslator *> translators;
 
     bool hasErrors;
     QStringList errors;

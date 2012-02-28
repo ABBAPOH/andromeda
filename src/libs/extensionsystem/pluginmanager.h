@@ -46,6 +46,9 @@ public:
     QString translationsDir() const;
     void setTranslationsDir(const QString &dir);
 
+    QStringList translations() const;
+    void setTranslations(const QStringList &translations);
+
     QList<PluginSpec *> plugins() const;
     PluginSpec *plugin(const QString &name) const;
 
