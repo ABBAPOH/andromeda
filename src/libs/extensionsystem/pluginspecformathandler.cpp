@@ -146,7 +146,7 @@ bool PluginSpecXmlHandler::read(QIODevice *device, PluginSpecPrivate *d)
     readXmlPluginSpec(d, reader);
 
     if (reader.hasError()) {
-        setErrorString(QObject::tr("Error parsing xml stream: %1, at line %4, column %3")
+        setErrorString(QObject::tr("Error parsing xml stream: %1, at line %2, column %3")
                        .arg(reader.errorString())
                        .arg(reader.lineNumber())
                        .arg(reader.columnNumber()));

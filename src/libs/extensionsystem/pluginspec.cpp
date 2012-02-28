@@ -104,7 +104,7 @@ bool PluginSpecPrivate::load()
 #endif
     QVariantMap options = PluginManager::instance()->d_func()->options(name);
     if (!plugin->initialize(options)) {
-        setError(QObject::tr("Failed to initialize plugin %1").arg(name));
+        setError(PluginSpec::tr("Failed to initialize plugin %1").arg(name));
         return false;
     }
 #ifdef DEBUG_OUTPUT
@@ -128,13 +128,13 @@ bool PluginSpecPrivate::loadLibrary()
 
     QObject * object = loader->instance();
     if (!object) {
-        setError(QObject::tr("Can't load plugin: ", "PluginSpec") + loader->errorString());
+        setError(PluginSpec::tr("Can't load plugin: ") + loader->errorString());
         return false;
     }
 
     plugin = qobject_cast<IPlugin *>(object);
     if (!plugin) {
-        setError(QObject::tr("Can't load plugin: not a valid plugin", "PluginSpec"));
+        setError(PluginSpec::tr("Can't load plugin: not a valid plugin"));
         return false;
     }
 
@@ -154,7 +154,7 @@ bool PluginSpecPrivate::unload()
         spec->unload();
         if (spec->loaded()) {
             ok = false;
-            errorMessage += QObject::tr("Can't unload plugin: %1 is not unloaded").arg(spec->name());
+            errorMessage += PluginSpec::tr("Can't unload plugin: %1 is not loaded").arg(spec->name());
         }
     }
 
@@ -183,7 +183,7 @@ bool PluginSpecPrivate::unload()
 bool PluginSpecPrivate::unloadLibrary()
 {
     if (!loader->unload()) {
-        setError(QObject::tr("Can't unload plugin library: %1").arg(loader->errorString()));
+        setError(PluginSpec::tr("Can't unload plugin library: %1").arg(loader->errorString()));
         return false;
     }
     delete loader;
@@ -214,7 +214,7 @@ bool PluginSpecPrivate::resolveDependencies()
         }
         if (dependencySpec == 0) {
             ok = false;
-            errorMessage.append(QObject::tr("PluginSpec", "Can't resolve dependency '%1(%2)'")
+            errorMessage.append(PluginSpec::tr("Can't resolve dependency '%1(%2)'")
                                 .arg(dep.name()).arg(dep.version().toString()));
         } else {
             resolvedSpecs.append(dependencySpec);
