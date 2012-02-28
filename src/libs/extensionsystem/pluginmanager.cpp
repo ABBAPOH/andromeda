@@ -5,6 +5,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QLocale>
+#include <QtCore/QTranslator>
 #include <QDebug>
 
 using namespace ExtensionSystem;
@@ -155,6 +157,8 @@ void PluginManager::unloadPlugins()
     qDeleteAll(d->pluginSpecs);
     d->pluginSpecs.clear();
 
+    d->unloadTranslations();
+
     d->loaded = false;
     emit pluginsUnloaded();
 }
@@ -197,6 +201,16 @@ QString PluginManager::translationsDir() const
 void PluginManager::setTranslationsDir(const QString &dir)
 {
     d_func()->translationsDir = dir;
+}
+
+QStringList PluginManager::translations() const
+{
+    return d_func()->translations;
+}
+
+void PluginManager::setTranslations(const QStringList &translations)
+{
+    d_func()->translations = translations;
 }
 
 bool PluginManager::loaded()
@@ -286,7 +300,8 @@ bool PluginManagerPrivate::load()
         return false;
     }
 
-    loadTranslations(specFiles);
+    loadLibsTranslations();
+    loadPluginsTranslations(specFiles);
 
     // TODO: error about not initialized specs
     // enables new plugins
@@ -347,20 +362,39 @@ void PluginManagerPrivate::fileChanged(const QString &specPath)
     }
 }
 
-#include <QLocale>
-#include <QTranslator>
-void PluginManagerPrivate::loadTranslations(const QStringList &specFiles)
+void PluginManagerPrivate::loadLibsTranslations()
 {
-    foreach (const QString &specFile, specFiles) {
-        QFileInfo info(specFile);
-        QString locale = QLocale::system().name();
-        QString name = info.baseName();
+    QStringList translations = this->translations;
+    translations.prepend(QLatin1String("qt"));
 
-        QTranslator *translator = new QTranslator(q_func());
+    loadTranslations(translations);
+}
 
-        translator->load(name + QLatin1Char('_') + locale, translationsDir);
+void PluginManagerPrivate::loadPluginsTranslations(const QStringList &specFiles)
+{
+    QStringList translations;
+    foreach (const QString &specFile, specFiles)
+        translations.append(QFileInfo(specFile).baseName());
+
+    loadTranslations(translations);
+}
+
+void PluginManagerPrivate::loadTranslations(const QStringList &translations)
+{
+    QString locale = QLocale::system().name();
+    foreach (const QString &translation, translations) {
+        QTranslator *translator = new QTranslator();
+        translators.append(translator);
+
+        translator->load(QString(QLatin1String("%1_%2")).arg(translation).arg(locale), translationsDir);
         qApp->installTranslator(translator);
     }
+}
+
+void PluginManagerPrivate::unloadTranslations()
+{
+    qDeleteAll(translators);
+    translators.clear();
 }
 
 void PluginManagerPrivate::enableSpecs(QList<PluginSpec *> specsToBeEnabled)
