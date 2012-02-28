@@ -38,15 +38,17 @@ set( FORMS
     fullpluginview.ui
     plugineditor.ui
    )
+set( TS_FILES translations/extensionsystem_ru.ts )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 
-add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QM_FILES} )
 target_link_libraries( extensionsystem ${QT_LIBRARIES} )
 
 install_lib( extensionsystem )
