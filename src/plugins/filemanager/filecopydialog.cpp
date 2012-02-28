@@ -95,7 +95,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog(q_func());
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setIcon(QFileIconProvider().icon(destInfo));
-        dialog->setMessage(tr("%1 \"%2\" is already exists. Would you like to replace it?").
+        dialog->setMessage(tr("%1 \"%2\" already exists. Would you like to replace it?").
                            arg(copier->isDir(id) ? tr("Folder") : tr("File")).
                            arg(destInfo.fileName()));
 
@@ -117,7 +117,7 @@ void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool s
         FileCopyErrorDialog *dialog = new FileCopyErrorDialog(q_func());
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setIcon(QFileIconProvider().icon(destInfo));
-        dialog->setMessage(tr("Error occured for %1 \"%2\": %3").
+        dialog->setMessage(tr("Error occurred for %1 \"%2\": %3").
                            arg(copier->isDir(id) ? tr("Folder") : tr("File")).
                            arg(destInfo.fileName()).
                            arg(metaEnum.valueToKey(error)));
