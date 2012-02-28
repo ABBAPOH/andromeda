@@ -402,15 +402,15 @@ void MainWindowPrivate::createActions()
 
 void MainWindowPrivate::retranslateUi()
 {
-    actions[MainWindow::Save]->setText(QObject::tr("Save..."));
-    actions[MainWindow::SaveAs]->setText(QObject::tr("Save as..."));
-    actions[MainWindow::Refresh]->setText(QObject::tr("Refresh"));
-    actions[MainWindow::Cancel]->setText(QObject::tr("Cancel"));
-    actions[MainWindow::Back]->setText(QObject::tr("Back"));
-    actions[MainWindow::Forward]->setText(QObject::tr("Forward"));
+    actions[MainWindow::Save]->setText(MainWindow::tr("Save"));
+    actions[MainWindow::SaveAs]->setText(MainWindow::tr("Save as..."));
+    actions[MainWindow::Refresh]->setText(MainWindow::tr("Refresh"));
+    actions[MainWindow::Cancel]->setText(MainWindow::tr("Cancel"));
+    actions[MainWindow::Back]->setText(MainWindow::tr("Back"));
+    actions[MainWindow::Forward]->setText(MainWindow::tr("Forward"));
 
-    actions[MainWindow::NextEditor]->setText(QObject::tr("Next editor"));
-    actions[MainWindow::PreviousEditor]->setText(QObject::tr("Previous editor"));
+    actions[MainWindow::NextEditor]->setText(MainWindow::tr("Next editor"));
+    actions[MainWindow::PreviousEditor]->setText(MainWindow::tr("Previous editor"));
 }
 
 void MainWindowPrivate::registerActions()

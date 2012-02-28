@@ -184,7 +184,7 @@ void SettingsDialogPrivate::retranslateUi()
 {
     Q_Q(SettingsDialog);
 
-    q->setWindowTitle(QObject::tr("Preferences"));
+    q->setWindowTitle(SettingsDialog::tr("Preferences"));
 }
 
 /*!
