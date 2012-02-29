@@ -30,7 +30,7 @@ set( FORMS
 
 set( RESOURCES resources.qrc )
 
-set( TS_FILES translations/coreplugin_ru.ts )
+set( TS_FILES translations/coreplugin_ru.ts translations/coreplugin_pt.ts )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
