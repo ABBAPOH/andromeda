@@ -43,7 +43,6 @@ private:
 
 private:
     Ui::PrivacySettingsWidget *ui;
-    QSettings *m_settings;
     QWebSettings *m_webSettings;
     CookieJar *m_cookieJar;
 };
