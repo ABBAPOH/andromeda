@@ -28,7 +28,6 @@ private:
 
 private:
     Ui::ProxySettingsWidget *ui;
-    QSettings *m_settings;
 };
 
 #include <guisystem/settingspage.h>

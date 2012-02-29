@@ -22,10 +22,17 @@ public:
     bool initialize(const QVariantMap &);
     void shutdown();
 
+    QWebSettings* webSettings();
+
 private:
     void loadSettings();
     void loadAppearanceSettings();
     void loadProxySettings();
+    void loadPrivacySettings();
+    void saveSettings();
+    void saveAppearanceSettings();
+    void saveProxySettings();
+    void savePrivacySettings();
 
 private:
     CookieJar *m_cookieJar;

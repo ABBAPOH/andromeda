@@ -3,17 +3,17 @@
 
 #include <QtCore/QSettings>
 #include <QtGui/QPushButton>
+#include <QNetworkProxy>
+
+#include <QDebug>
 
 #include "webviewplugin.h"
 
 ProxySettingsWidget::ProxySettingsWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ProxySettingsWidget),
-    m_settings(new QSettings(this))
+    ui(new Ui::ProxySettingsWidget)
 {
     ui->setupUi(this);
-
-    m_settings->beginGroup(QLatin1String("webview/proxy"));
 
     loadSettings();
 
@@ -50,12 +50,29 @@ void ProxySettingsWidget::makeDirty()
 
 void ProxySettingsWidget::loadSettings()
 {
-    ui->proxySupport->setChecked(m_settings->value(QLatin1String("enabled"), false).toBool());
-    ui->proxyType->setCurrentIndex(m_settings->value(QLatin1String("type"), 0).toInt());
-    ui->proxyHostName->setText(m_settings->value(QLatin1String("hostName")).toString());
-    ui->proxyPort->setValue(m_settings->value(QLatin1String("port"), 1080).toInt());
-    ui->proxyUserName->setText(m_settings->value(QLatin1String("userName")).toString());
-    ui->proxyPassword->setText(m_settings->value(QLatin1String("password")).toString());
+    QNetworkProxy proxy = QNetworkProxy::applicationProxy();
+
+    if ( proxy.type() == QNetworkProxy::NoProxy )
+        ui->proxySupport->setChecked(false);
+    else
+        ui->proxySupport->setChecked(true);
+
+    int type = proxy.type();
+    switch(type) {
+    case 1:
+        ui->proxyType->setCurrentIndex(0);
+        break;
+    case 3:
+        ui->proxyType->setCurrentIndex(2);
+        break;
+    case 4:
+        ui->proxyType->setCurrentIndex(1);
+    }
+
+    ui->proxyHostName->setText(proxy.hostName());
+    ui->proxyPort->setValue(proxy.port());
+    ui->proxyUserName->setText(proxy.user());
+    ui->proxyPassword->setText(proxy.password());
 
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     ui->buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);
@@ -63,18 +80,40 @@ void ProxySettingsWidget::loadSettings()
 
 void ProxySettingsWidget::saveSettings()
 {
-    m_settings->setValue(QLatin1String("enabled"), ui->proxySupport->isChecked());
-    m_settings->setValue(QLatin1String("type"), ui->proxyType->currentIndex());
-    m_settings->setValue(QLatin1String("hostName"), ui->proxyHostName->text());
-    m_settings->setValue(QLatin1String("port"), ui->proxyPort->text());
-    m_settings->setValue(QLatin1String("userName"), ui->proxyUserName->text());
-    m_settings->setValue(QLatin1String("password"), ui->proxyPassword->text());
-    m_settings->sync();
+    QNetworkProxy proxy;
+    bool ok;
+
+    qDebug() << ui->proxyType->currentIndex();
+    if (ui->proxySupport->isChecked()) {
+        switch(ui->proxyType->currentIndex()) {
+        case 0:
+            proxy.setType(QNetworkProxy::Socks5Proxy);
+            break;
+        case 1:
+            proxy.setType(QNetworkProxy::HttpCachingProxy);
+            break;
+        case 2:
+            proxy.setType(QNetworkProxy::HttpProxy);
+            break;
+        default:
+            proxy.setType(QNetworkProxy::DefaultProxy);
+        }
+    }
+    else
+        proxy.setType(QNetworkProxy::NoProxy);
+
+    proxy.setHostName(ui->proxyHostName->text());
+    int port = ui->proxyPort->text().toInt(&ok);
+    if (ok)
+        proxy.setPort(port);
+
+    proxy.setUser(ui->proxyUserName->text());
+    proxy.setPassword(ui->proxyPassword->text());
+
+    QNetworkProxy::setApplicationProxy(proxy);
 
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     ui->buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);
-
-    WebViewPlugin::instance()->loadProxySettings();
 }
 
 ProxySettingsPage::ProxySettingsPage(QObject *parent) :

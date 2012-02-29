@@ -37,7 +37,6 @@ private:
 
 private:
     Ui::AppearanceSettingsWidget *ui;
-    QSettings *m_settings;
     QWebSettings *m_webSettings;
     QFont m_standardFont;
     QFont m_fixedFont;

@@ -58,6 +58,88 @@ bool WebViewPlugin::initialize(const QVariantMap &)
 
 void WebViewPlugin::shutdown()
 {
+    saveSettings();
+}
+
+void WebViewPlugin::saveSettings()
+{
+    saveAppearanceSettings();
+    saveProxySettings();
+    savePrivacySettings();
+}
+
+void WebViewPlugin::saveAppearanceSettings()
+{
+    m_settings->beginGroup(QLatin1String("appearance"));
+
+    QString fixedFontFamily = m_webSettings->fontFamily(QWebSettings::FixedFont);
+    int fixedFontSize = m_webSettings->fontSize(QWebSettings::DefaultFixedFontSize);
+
+    QString standardFontFamily = m_webSettings->fontFamily(QWebSettings::StandardFont);
+    int standardFontSize = m_webSettings->fontSize(QWebSettings::DefaultFontSize);
+
+    QFont fixedFont = QFont(fixedFontFamily, fixedFontSize);
+    QFont standardFont = QFont(standardFontFamily, standardFontSize);
+
+    int minimumFontSize = m_webSettings->fontSize(QWebSettings::MinimumFontSize);
+    QVariant defaultEncoding = m_webSettings->defaultTextEncoding();
+
+    m_settings->setValue(QLatin1String("fixedFont"), fixedFont);
+    m_settings->setValue(QLatin1String("standardFont"), standardFont);
+    m_settings->setValue(QLatin1String("minimumFontSize"), minimumFontSize);
+    m_settings->setValue(QLatin1String("defaultEncoding"), defaultEncoding.toByteArray());
+
+    m_settings->endGroup();
+}
+
+void WebViewPlugin::savePrivacySettings()
+{
+    bool blockPopupWindows = false;
+    bool enableImages = false;
+    bool enableJavascript = false;
+    bool enableLocalStorage = false;
+    bool enablePlugins = false;
+
+    m_settings->beginGroup(QLatin1String("privacy"));
+
+    if (m_webSettings->testAttribute(QWebSettings::JavascriptCanOpenWindows))
+        blockPopupWindows = true;
+    if (m_webSettings->testAttribute(QWebSettings::AutoLoadImages))
+        enableImages = true;
+    if (m_webSettings->testAttribute(QWebSettings::JavascriptEnabled))
+        enableJavascript = true;
+    if (m_webSettings->testAttribute(QWebSettings::LocalStorageEnabled))
+        enableLocalStorage = true;
+    if (m_webSettings->testAttribute(QWebSettings::PluginsEnabled))
+        enablePlugins = true;
+
+    m_settings->setValue(QLatin1String("blockPopupWindows"), blockPopupWindows);
+    m_settings->setValue(QLatin1String("enableImages"), enableImages);
+    m_settings->setValue(QLatin1String("javascriptEnabled"), enableJavascript);
+    m_settings->setValue(QLatin1String("enableLocalStorage"), enableLocalStorage);
+    m_settings->setValue(QLatin1String("enablePlugins"), enablePlugins);
+
+    m_settings->endGroup();
+}
+
+void WebViewPlugin::saveProxySettings()
+{
+    bool enabled = false;
+    QNetworkProxy proxy = QNetworkProxy::applicationProxy();
+
+    if (proxy.type() != QNetworkProxy::NoProxy)
+        enabled = true;
+
+    m_settings->beginGroup(QLatin1String("proxy"));
+
+    m_settings->setValue(QLatin1String("enabled"), enabled);
+    m_settings->setValue(QLatin1String("type"), proxy.type());
+    m_settings->setValue(QLatin1String("hostName"), proxy.hostName());
+    m_settings->setValue(QLatin1String("port"), proxy.port());
+    m_settings->setValue(QLatin1String("userName"), proxy.user());
+    m_settings->setValue(QLatin1String("password"), proxy.password());
+
+    m_settings->endGroup();
 }
 
 void WebViewPlugin::loadSettings()
@@ -69,6 +151,7 @@ void WebViewPlugin::loadSettings()
 
     loadAppearanceSettings();
     loadProxySettings();
+    loadPrivacySettings();
 }
 
 void WebViewPlugin::loadAppearanceSettings()
@@ -129,6 +212,30 @@ void WebViewPlugin::loadProxySettings()
     QNetworkProxy::setApplicationProxy(proxy);
 
     m_settings->endGroup();
+}
+
+void WebViewPlugin::loadPrivacySettings()
+{
+    m_settings->beginGroup(QLatin1String("privacy"));
+
+    bool blockPopupWindows = m_settings->value(QLatin1String("blockPopupWindows"), true).toBool();
+    bool enableImages = m_settings->value(QLatin1String("enableImages"), true).toBool();
+    bool enableJavascript = m_settings->value(QLatin1String("javascriptEnabled"), true).toBool();
+    bool enableLocalStorage = m_settings->value(QLatin1String("enableLocalStorage"), true).toBool();
+    bool enablePlugins = m_settings->value(QLatin1String("enablePlugins"), true).toBool();
+
+    m_webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows, blockPopupWindows);
+    m_webSettings->setAttribute(QWebSettings::AutoLoadImages, enableImages);
+    m_webSettings->setAttribute(QWebSettings::JavascriptEnabled, enableJavascript);
+    m_webSettings->setAttribute(QWebSettings::LocalStorageEnabled, enableLocalStorage);
+    m_webSettings->setAttribute(QWebSettings::PluginsEnabled, enablePlugins);
+
+    m_settings->endGroup();
+}
+
+QWebSettings* WebViewPlugin::webSettings()
+{
+    return m_webSettings;
 }
 
 Q_EXPORT_PLUGIN(WebViewPlugin)

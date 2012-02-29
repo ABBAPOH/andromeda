@@ -12,14 +12,10 @@
 PrivacySettingsWidget::PrivacySettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PrivacySettingsWidget),
-    m_settings(new QSettings(this)),
     m_webSettings(QWebSettings::globalSettings()),
     m_cookieJar(0)
 {
     ui->setupUi(this);
-
-    m_settings->beginGroup("websettings");
-    m_settings->beginGroup("privacy");
 
     connect(ui->blockPopupWindows, SIGNAL(toggled(bool)), SLOT(setBlockPopupWindows(bool)));
     connect(ui->enableJavascript, SIGNAL(toggled(bool)), SLOT(setJavascriptEnabled(bool)));
@@ -59,31 +55,26 @@ void PrivacySettingsWidget::setCookieJar(CookieJar *jar)
 
 void PrivacySettingsWidget::setBlockPopupWindows(bool yes)
 {
-    m_settings->setValue(QLatin1String("blockPopupWindows"), yes);
     m_webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows, yes);
 }
 
 void PrivacySettingsWidget::setJavascriptEnabled(bool yes)
 {
-    m_settings->setValue(QLatin1String("javascriptEnabled"), yes);
     m_webSettings->setAttribute(QWebSettings::JavascriptEnabled, yes);
 }
 
 void PrivacySettingsWidget::setImagesEnabled(bool yes)
 {
-    m_settings->setValue(QLatin1String("enableImages"), yes);
     m_webSettings->setAttribute(QWebSettings::AutoLoadImages, yes);
 }
 
 void PrivacySettingsWidget::setLocalStorageEnabled(bool yes)
 {
-    m_settings->setValue(QLatin1String("enableLocalStorage"), yes);
     m_webSettings->setAttribute(QWebSettings::LocalStorageEnabled, yes);
 }
 
 void PrivacySettingsWidget::setPluginsEnabled(bool yes)
 {
-    m_settings->setValue(QLatin1String("enablePlugins"), yes);
     m_webSettings->setAttribute(QWebSettings::PluginsEnabled, yes);
 }
 
@@ -173,17 +164,23 @@ void PrivacySettingsWidget::showExceptions()
 
 void PrivacySettingsWidget::loadSettings()
 {
-    bool blockPopupWindows = m_settings->value(QLatin1String("blockPopupWindows"), true).toBool();
-    bool enableImages = m_settings->value(QLatin1String("enableImages"), true).toBool();
-    bool enableJavascript = m_settings->value(QLatin1String("javascriptEnabled"), true).toBool();
-    bool enableLocalStorage = m_settings->value(QLatin1String("enableLocalStorage"), true).toBool();
-    bool enablePlugins = m_settings->value(QLatin1String("enablePlugins"), true).toBool();
+    bool blockPopupWindows = false;
+    bool enableImages = false;
+    bool enableJavascript = false;
+    bool enableLocalStorage = false;
+    bool enablePlugins = false;
 
-    m_webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows, blockPopupWindows);
-    m_webSettings->setAttribute(QWebSettings::AutoLoadImages, enableImages);
-    m_webSettings->setAttribute(QWebSettings::JavascriptEnabled, enableJavascript);
-    m_webSettings->setAttribute(QWebSettings::LocalStorageEnabled, enableLocalStorage);
-    m_webSettings->setAttribute(QWebSettings::PluginsEnabled, enablePlugins);
+    if (m_webSettings->testAttribute(QWebSettings::JavascriptCanOpenWindows))
+        blockPopupWindows = true;
+    if (m_webSettings->testAttribute(QWebSettings::AutoLoadImages))
+        enableImages = true;
+    if (m_webSettings->testAttribute(QWebSettings::JavascriptEnabled))
+        enableJavascript = true;
+    if (m_webSettings->testAttribute(QWebSettings::LocalStorageEnabled))
+        enableLocalStorage = true;
+    if (m_webSettings->testAttribute(QWebSettings::PluginsEnabled))
+        enablePlugins = true;
+
 
     ui->blockPopupWindows->setChecked(blockPopupWindows);
     ui->enableImages->setChecked(enableImages);
