@@ -38,7 +38,7 @@ set( FORMS
     fullpluginview.ui
     plugineditor.ui
    )
-set( TS_FILES translations/extensionsystem_ru.ts )
+set( TS_FILES translations/extensionsystem_ru.ts translations/extensionsystem_pt.ts )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
