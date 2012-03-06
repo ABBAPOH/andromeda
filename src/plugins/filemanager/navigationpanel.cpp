@@ -38,7 +38,7 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
         if ( rect.contains(me->x(), me->y()) ) {
             const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
             if (model) {
-                QDriveInfo driveInfo(model->path(index));
+                QDriveInfo driveInfo = model->driveInfo(index);
                 if ( driveInfo.isValid() && ( driveInfo.type() == QDriveInfo::RemoteDrive || driveInfo.type() == QDriveInfo::RemovableDrive ))
                     QDriveController().eject(model->path(index));
             }
@@ -61,7 +61,7 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
     if (model) {
-        QDriveInfo drive(model->path(index));
+        QDriveInfo drive = model->driveInfo(index);
 
         if ( drive.isValid() && ( drive.type() == QDriveInfo::RemoteDrive || drive.type() == QDriveInfo::RemovableDrive ) ){
             QStyleOptionViewItemV4 optionRight = option;

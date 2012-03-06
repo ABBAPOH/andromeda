@@ -10,7 +10,6 @@
 #include <QtGui/QFileIconProvider>
 
 #include <io/QDriveController>
-#include <io/QDriveInfo>
 
 #include "navigationpanelsettings.h"
 
@@ -83,6 +82,10 @@ void NavigationModelPrivate::onDriveAdded(const QString &path)
     else // awful hack for unmounting *.iso
 #endif
         insertItem(drivesItem, name, path);
+
+    TreeItem* item = mapToItem.value(path);
+    if (item)
+        item->driveInfo = info;
 }
 
 void NavigationModelPrivate::onDriveRemoved(const QString &path)
@@ -156,6 +159,7 @@ NavigationModel::NavigationModel(QObject *parent) :
         if (item) {
             item->icon = d->iconProvider.icon(QFileInfo(path));
             d->mapToItem.insert(path, item);
+            item->driveInfo = info;
         }
     }
 
@@ -468,4 +472,13 @@ void NavigationModel::setStandardLocations(StandardLocations locations)
 
     }
     emit standardLocationsChanged(d->locations);
+}
+
+QDriveInfo NavigationModel::driveInfo(const QModelIndex& index) const
+{
+    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    if (item)
+        return item->driveInfo;
+
+    return QDriveInfo();
 }

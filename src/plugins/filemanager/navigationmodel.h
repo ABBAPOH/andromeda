@@ -5,6 +5,8 @@
 
 #include <QtCore/QAbstractItemModel>
 
+#include <io/QDriveInfo>
+
 namespace FileManager {
 
 class NavigationModelPrivate;
@@ -61,6 +63,8 @@ public:
     StandardLocations standardLocations() const;
     void setStandardLocation(StandardLocation loc, bool on);
     void setStandardLocations(StandardLocations locations);
+
+    QDriveInfo driveInfo(const QModelIndex&) const;
 
 signals:
     void standardLocationsChanged(NavigationModel::StandardLocations);
