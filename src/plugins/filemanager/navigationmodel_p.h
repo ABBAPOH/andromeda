@@ -20,6 +20,7 @@ struct TreeItem
     QString name;
     QString path;
     QIcon icon;
+    QDriveInfo driveInfo;
 
     explicit TreeItem(TreeItem *parent = 0)
     {
