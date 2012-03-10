@@ -17,6 +17,7 @@ BookmarksWidget::BookmarksWidget(QWidget *parent) :
     d->treeView->setModel(d->folderProxy);
     d->tableView->setModel(d->proxyModel);
 
+    connect(d->treeView, SIGNAL(clicked(const QModelIndex&)), d->tableView, SLOT(clearSelection()));
     connect(d->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClicked(QModelIndex)));
     connect(d->tableView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTableViewMenu(QPoint)));
     connect(d->treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClicked(QModelIndex)));
@@ -148,11 +149,12 @@ void BookmarksWidget::showTableViewMenu(QPoint p)
         return;
 
     QModelIndex sourceIndex = selectedIndex();
-    if (!sourceIndex.isValid())
-        return;
-
     QMenu menu;
-    if (d->model->isFolder(sourceIndex)) {
+
+    if (! sourceIndex.isValid()) {
+        menu.addAction(d->addFolderAction);
+    }
+    else if (d->model->isFolder(sourceIndex)) {
         menu.addAction(d->openInTabsAction);
         menu.addSeparator();
         menu.addAction(d->renameAction);
