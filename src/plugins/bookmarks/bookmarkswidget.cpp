@@ -100,6 +100,7 @@ void BookmarksWidget::onDoubleClicked(const QModelIndex &index)
         d->proxyModel->setRootIndex(sourceIndex);
         d->treeView->selectionModel()->clear();
         d->treeView->selectionModel()->select(folderIndex, QItemSelectionModel::Select);
+        d->treeView->expand(folderIndex.parent());
         d->tableView->setRootIndex(index);
     } else {
         emit open(d->model->data(sourceIndex, BookmarksModel::UrlRole).toUrl());
