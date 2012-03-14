@@ -75,8 +75,8 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
         parent->addAction(act);
         act->setCheckable(true);
         act->setChecked(visible);
-        connect(act, SIGNAL(toggled(bool)), toolBar, SLOT(setVisible(bool)));
-        connect(act, SIGNAL(toggled(bool)), this, SLOT(storeVisibility(bool)));
+        connect(act, SIGNAL(triggered(bool)), toolBar, SLOT(setVisible(bool)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(storeVisibility(bool)));
         am->registerAction(act, Constants::Actions::ShowBookmarks);
     }
 
