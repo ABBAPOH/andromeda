@@ -112,12 +112,12 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::TreeMode]->setData(FileManagerWidget::TreeView);
     actions[DualPaneWidget::CoverFlowMode]->setData(FileManagerWidget::CoverFlow);
 
-    connect(actions[DualPaneWidget::IconMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[DualPaneWidget::ColumnMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[DualPaneWidget::TreeMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[DualPaneWidget::CoverFlowMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[DualPaneWidget::IconMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[DualPaneWidget::ColumnMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[DualPaneWidget::TreeMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[DualPaneWidget::CoverFlowMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
 
-    connect(actions[DualPaneWidget::EnableDualPane], SIGNAL(toggled(bool)),
+    connect(actions[DualPaneWidget::EnableDualPane], SIGNAL(triggered(bool)),
             q, SLOT(setDualPaneModeEnabled(bool)));
 
     sortByGroup = new QActionGroup(this);
@@ -146,11 +146,11 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::SortByType]->setData(FileManagerWidget::TypeColumn);
     actions[DualPaneWidget::SortByDate]->setData(FileManagerWidget::DateColumn);
 
-    connect(actions[DualPaneWidget::SortByName], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[DualPaneWidget::SortBySize], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[DualPaneWidget::SortByType], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[DualPaneWidget::SortByDate], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[DualPaneWidget::SortDescendingOrder], SIGNAL(toggled(bool)), SLOT(toggleSortOrder(bool)));
+    connect(actions[DualPaneWidget::SortByName], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[DualPaneWidget::SortBySize], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[DualPaneWidget::SortByType], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[DualPaneWidget::SortByDate], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[DualPaneWidget::SortDescendingOrder], SIGNAL(triggered(bool)), SLOT(toggleSortOrder(bool)));
 
     for (int i = 0; i < DualPaneWidget::ActionCount; i++) {
         q->addAction(actions[i]);

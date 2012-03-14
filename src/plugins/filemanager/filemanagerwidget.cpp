@@ -124,10 +124,10 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::TreeMode]->setData(FileManagerWidget::TreeView);
     actions[FileManagerWidget::CoverFlowMode]->setData(FileManagerWidget::CoverFlow);
 
-    connect(actions[FileManagerWidget::IconMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[FileManagerWidget::ColumnMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[FileManagerWidget::TreeMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[FileManagerWidget::CoverFlowMode], SIGNAL(toggled(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::IconMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::ColumnMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::TreeMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
+    connect(actions[FileManagerWidget::CoverFlowMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
 
     sortByGroup = new QActionGroup(this);
 
@@ -155,11 +155,11 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::SortByType]->setData(FileManagerWidget::TypeColumn);
     actions[FileManagerWidget::SortByDate]->setData(FileManagerWidget::DateColumn);
 
-    connect(actions[FileManagerWidget::SortByName], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[FileManagerWidget::SortBySize], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[FileManagerWidget::SortByType], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[FileManagerWidget::SortByDate], SIGNAL(toggled(bool)), SLOT(toggleSortColumn(bool)));
-    connect(actions[FileManagerWidget::SortDescendingOrder], SIGNAL(toggled(bool)), SLOT(toggleSortOrder(bool)));
+    connect(actions[FileManagerWidget::SortByName], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortBySize], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortByType], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortByDate], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
+    connect(actions[FileManagerWidget::SortDescendingOrder], SIGNAL(triggered(bool)), SLOT(toggleSortOrder(bool)));
 
     for (int i = 0; i < FileManagerWidget::ActionCount; i++) {
         q->addAction(actions[i]);

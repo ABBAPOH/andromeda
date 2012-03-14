@@ -401,7 +401,7 @@ void FileManagerEditor::createActions()
     showLeftPanelAction = new QAction(tr("Show left panel"), this);
     showLeftPanelAction->setCheckable(true);
 
-    connect(showLeftPanelAction, SIGNAL(toggled(bool)), this, SLOT(showLeftPanel(bool)));
+    connect(showLeftPanelAction, SIGNAL(triggered(bool)), this, SLOT(showLeftPanel(bool)));
     addAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
 
     registerAction(m_widget->action(DualPaneWidget::Open), Constants::Actions::Open);
