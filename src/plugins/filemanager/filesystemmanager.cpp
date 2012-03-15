@@ -7,6 +7,7 @@
 #include <QtCore/QDir>
 #include <QtGui/QUndoCommand>
 
+#include <io/qtrash.h>
 #include <io/QFileCopier>
 
 using namespace FileManager;
@@ -119,6 +120,15 @@ public:
     void undo();
 };
 
+class MoveToTrashCommand : public FileSystemCommand
+{
+public:
+    explicit MoveToTrashCommand(QUndoCommand *parent = 0) : FileSystemCommand(parent) {}
+
+    void redo();
+    void undo();
+};
+
 void CopyCommand::redo()
 {
     int index = operationIndex();
@@ -175,6 +185,39 @@ void LinkCommand::undo()
 
     QFileCopier *copier = managerPrivate()->copier(op.index());
     copier->remove(op.destinationPaths());
+}
+
+void MoveToTrashCommand::redo()
+{
+    int index = operationIndex();
+    FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
+
+    QTrash t;
+    op.m_destinationPaths.clear();
+    foreach (const QString &source, op.sources()) {
+        QString dest;
+        t.moveToTrash(source, &dest);
+        op.m_destinationPaths.append(dest);
+    }
+
+    op.setState(FileSystemManager::FileOperation::Done);
+    managerPrivate()->canUndo = true;
+    QMetaObject::invokeMethod(manager(), "canUndoChanged", Q_ARG(bool, true));
+}
+
+void MoveToTrashCommand::undo()
+{
+    int index = operationIndex();
+    FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
+
+    QTrash t;
+    foreach (const QString &dest, op.destinationPaths()) {
+        t.restore(dest);
+    }
+
+    op.setState(FileSystemManager::FileOperation::Done);
+    managerPrivate()->canRedo = true;
+    QMetaObject::invokeMethod(manager(), "canRedoChanged", Q_ARG(bool, true));
 }
 
 FileSystemManager::FileSystemManager(QObject *parent) :
@@ -240,6 +283,21 @@ int FileSystemManager::link(const QStringList &files, const QString &destination
     int index = d->newOperation(Link, files, destination);
 
     LinkCommand *cmd = new LinkCommand;
+    cmd->setManager(this);
+    cmd->setManagerPrivate(d);
+    cmd->setOperationIndex(index);
+    d->undoStack->push(cmd);
+
+    return index;
+}
+
+int FileSystemManager::moveToTrash(const QStringList &files)
+{
+    Q_D(FileSystemManager);
+
+    int index = d->newOperation(MoveToTrash, files, QString());
+
+    MoveToTrashCommand *cmd = new MoveToTrashCommand;
     cmd->setManager(this);
     cmd->setManagerPrivate(d);
     cmd->setOperationIndex(index);
