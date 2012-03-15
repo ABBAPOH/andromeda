@@ -24,6 +24,7 @@ public:
         Copy,
         Move,
         Link,
+        MoveToTrash,
         Remove
     };
     Q_ENUMS(FileOperation)
@@ -66,7 +67,7 @@ public:
         inline int index() const { return m_index; }
         inline bool isUndo() const { return m_undo; }
 
-    protected:
+//    protected:
         inline void setState(State state) { m_state = state; }
         inline void setUndo(bool yes) { m_undo = yes; }
 
@@ -75,7 +76,10 @@ public:
         FileOperationType m_type;
         QStringList m_sources;
         QString m_dest;
+        // FIXME : remove hacks for trash commands
+    public:
         QStringList m_destinationPaths;
+    private:
         int m_index;
         bool m_undo;
 
@@ -91,6 +95,7 @@ public:
     int copy(const QStringList &files, const QString &destination);
     int move(const QStringList &files, const QString &destination);
     int link(const QStringList &files, const QString &destination);
+    int moveToTrash(const QStringList &files);
     int remove(const QStringList &files);
 
     QList<FileOperation> operations() const;
