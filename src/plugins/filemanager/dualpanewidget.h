@@ -29,6 +29,7 @@ public:
                   SelectProgram,
                   NewFolder,
                   Rename,
+                  MoveToTrash,
                   Remove,
                   ShowFileInfo,
 
@@ -128,6 +129,7 @@ public slots:
     void showFileInfo();
     void remove();
     void rename();
+    void moveToTrash();
     void copyFiles();
     void moveFiles();
 

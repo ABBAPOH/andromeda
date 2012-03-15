@@ -135,6 +135,15 @@ void FileManagerPlugin::createFileMenu()
 #endif
     container->addCommand(cmd, "64");
 
+    cmd = new Command(Constants::Actions::MoveToTrash, this);
+    cmd->setDefaultText(tr("Move to trash"));
+#ifdef Q_OS_MAC
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Backspace")));
+#else
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Del")));
+#endif
+    container->addCommand(cmd, "65");
+
     cmd = new Command(Constants::Actions::Remove, this);
     cmd->setDefaultText(tr("Remove"));
 #ifdef Q_OS_MAC
@@ -142,7 +151,7 @@ void FileManagerPlugin::createFileMenu()
 #else
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Shift+Del")));
 #endif
-    container->addCommand(cmd, "65");
+    container->addCommand(cmd, "66");
 }
 
 void FileManagerPlugin::createViewMenu()

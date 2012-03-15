@@ -48,6 +48,10 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::Rename]->setEnabled(false);
     connect(actions[DualPaneWidget::Rename], SIGNAL(triggered()), q, SLOT(rename()));
 
+    actions[DualPaneWidget::MoveToTrash] = new QAction(this);
+    actions[DualPaneWidget::MoveToTrash]->setEnabled(false);
+    connect(actions[DualPaneWidget::MoveToTrash], SIGNAL(triggered()), q, SLOT(moveToTrash()));
+
     actions[DualPaneWidget::Remove] = new QAction(this);
     actions[DualPaneWidget::Remove]->setEnabled(false);
     connect(actions[DualPaneWidget::Remove], SIGNAL(triggered()), q, SLOT(remove()));
@@ -177,6 +181,7 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::SelectProgram]->setText(tr("Select program..."));
     actions[DualPaneWidget::NewFolder]->setText(tr("New Folder"));
     actions[DualPaneWidget::Rename]->setText(tr("Rename"));
+    actions[DualPaneWidget::MoveToTrash]->setText(tr("Move to trash"));
     actions[DualPaneWidget::Remove]->setText(tr("Remove"));
     actions[DualPaneWidget::ShowFileInfo]->setText(tr("File info"));
 
@@ -347,6 +352,7 @@ void DualPaneWidgetPrivate::onSelectionChanged()
     actions[DualPaneWidget::OpenInTab]->setEnabled(enabled);
     actions[DualPaneWidget::OpenInWindow]->setEnabled(enabled);
     actions[DualPaneWidget::Rename]->setEnabled(enabled);
+    actions[DualPaneWidget::MoveToTrash]->setEnabled(enabled);
     actions[DualPaneWidget::Remove]->setEnabled(enabled);
 //    actions[DualPaneWidget::Cut]->setEnabled(enabled);
     actions[DualPaneWidget::Copy]->setEnabled(enabled);
@@ -703,6 +709,11 @@ void DualPaneWidget::remove()
 void DualPaneWidget::rename()
 {
     activeWidget()->rename();
+}
+
+void DualPaneWidget::moveToTrash()
+{
+    activeWidget()->moveToTrash();
 }
 
 void DualPaneWidget::copyFiles()

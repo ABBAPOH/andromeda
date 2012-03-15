@@ -543,6 +543,7 @@ void FileManagerEditor::createActions()
 //    registerAction(m_widget->action(DualPaneWidget::SelectProgram), Constants::Actions::Open);
     registerAction(m_widget->action(DualPaneWidget::NewFolder), Constants::Actions::NewFolder);
     registerAction(m_widget->action(DualPaneWidget::Rename), Constants::Actions::Rename);
+    registerAction(m_widget->action(DualPaneWidget::MoveToTrash), Constants::Actions::MoveToTrash);
     registerAction(m_widget->action(DualPaneWidget::Remove), Constants::Actions::Remove);
     registerAction(m_widget->action(DualPaneWidget::ShowFileInfo), Constants::Actions::FileInfo);
 

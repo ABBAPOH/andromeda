@@ -34,6 +34,7 @@ const char * const NewFolder = "NewFolder";
 const char * const CopyFiles = "CopyFiles";
 const char * const MoveFiles = "MoveFiles";
 const char * const Rename = "Rename";
+const char * const MoveToTrash = "MoveToTrash";
 const char * const Remove = "Remove";
 
 const char * const IconMode = "IconMode";
