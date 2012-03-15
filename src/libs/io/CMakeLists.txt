@@ -12,6 +12,7 @@ set( GLOBAL_HEADERS
    )
 set( HEADERS
     io_global.h
+    info2_p.h
     directorydetails.h
     fileimageprovider.h
     qdrivecontroller.h
@@ -21,14 +22,21 @@ set( HEADERS
     qfilecopier.h
     qfilecopier_p.h
     qsystemerror_p.h
+    qtrash.h
+    qtrash_p.h
+    qtrashfileinfo.h
+    qtrashfileinfo_p.h
    )
 set( SOURCES
+    info2.cpp
     directorydetails.cpp
     fileimageprovider.cpp
     qdrivecontroller.cpp
     qdriveinfo.cpp
     qfilecopier.cpp
     qsystemerror.cpp
+    qtrash.cpp
+    qtrashfileinfo.cpp
    )
 set( FORMS
    )
@@ -39,6 +47,7 @@ set( SOURCES
     ${SOURCES}
     qdrivecontroller_win.cpp
     qdriveinfo_win.cpp
+    qtrash_win.cpp
    )
 
 set( LIBS
@@ -53,10 +62,11 @@ set( SOURCES
     ${SOURCES}
     qdrivecontroller_mac.cpp
     qdriveinfo_mac.cpp
+    qtrash_mac.mm
    )
 
 set( LIBS
-    "-framework CoreServices" "-framework DiskArbitration" "-framework IOKit" "-framework QuickLook"
+    "-framework CoreServices" "-framework DiskArbitration" "-framework IOKit" "-framework QuickLook" "-framework AppKit"
    )
 
 qt4_wrap_single_cpp( qdrivecontroller_mac.cpp )
@@ -67,6 +77,7 @@ set( SOURCES
     ${SOURCES}
     qdrivecontroller_linux.cpp
     qdriveinfo_linux.cpp
+    qtrash_linux.cpp
    )
 
 qt4_wrap_single_cpp( qdrivecontroller_linux.cpp )
