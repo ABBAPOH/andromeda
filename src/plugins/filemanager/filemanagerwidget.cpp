@@ -130,6 +130,10 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::Rename]->setEnabled(false);
     connect(actions[FileManagerWidget::Rename], SIGNAL(triggered()), q, SLOT(rename()));
 
+    actions[FileManagerWidget::MoveToTrash] = new QAction(this);
+    actions[FileManagerWidget::MoveToTrash]->setEnabled(false);
+    connect(actions[FileManagerWidget::MoveToTrash], SIGNAL(triggered()), q, SLOT(moveToTrash()));
+
     actions[FileManagerWidget::Remove] = new QAction(this);
     actions[FileManagerWidget::Remove]->setEnabled(false);
     connect(actions[FileManagerWidget::Remove], SIGNAL(triggered()), q, SLOT(remove()));
@@ -228,6 +232,7 @@ void FileManagerWidgetPrivate::retranslateUi()
     actions[FileManagerWidget::SelectProgram]->setText(tr("Select program..."));
     actions[FileManagerWidget::NewFolder]->setText(tr("New Folder"));
     actions[FileManagerWidget::Rename]->setText(tr("Rename"));
+    actions[FileManagerWidget::MoveToTrash]->setText(tr("Move to trash"));
     actions[FileManagerWidget::Remove]->setText(tr("Remove"));
     actions[FileManagerWidget::ShowFileInfo]->setText(tr("File info"));
 
@@ -989,6 +994,7 @@ void FileManagerWidgetPrivate::onSelectionChanged()
     actions[FileManagerWidget::OpenInTab]->setEnabled(enabled);
     actions[FileManagerWidget::OpenInWindow]->setEnabled(enabled);
     actions[FileManagerWidget::Rename]->setEnabled(enabled);
+    actions[FileManagerWidget::MoveToTrash]->setEnabled(enabled);
     actions[FileManagerWidget::Remove]->setEnabled(enabled);
 //    actions[FileManagerWidget::Cut]->setEnabled(enabled);
     actions[FileManagerWidget::Copy]->setEnabled(enabled);
@@ -1034,6 +1040,11 @@ void FileManagerWidget::rename()
     } else {
         d->currentView->edit(indexes.first());
     }
+}
+
+void FileManagerWidget::moveToTrash()
+{
+    fileSystemManager()->moveToTrash(selectedPaths());
 }
 
 void FileManagerWidget::undo()
@@ -1152,6 +1163,7 @@ void FileManagerWidget::showContextMenu(QPoint pos)
         menu->addAction(d->actions[ShowFileInfo]);
         menu->addSeparator();
         menu->addAction(d->actions[Rename]);
+        menu->addAction(d->actions[MoveToTrash]);
         menu->addAction(d->actions[Remove]);
         menu->addSeparator();
         menu->addAction(d->actions[Copy]);
