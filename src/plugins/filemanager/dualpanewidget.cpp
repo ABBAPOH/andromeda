@@ -52,9 +52,11 @@ void DualPaneWidgetPrivate::createActions()
     connect(actions[DualPaneWidget::MoveFiles], SIGNAL(triggered()), q, SLOT(moveFiles()));
 
     actions[DualPaneWidget::Rename] = new QAction(this);
+    actions[DualPaneWidget::Rename]->setEnabled(false);
     connect(actions[DualPaneWidget::Rename], SIGNAL(triggered()), q, SLOT(rename()));
 
     actions[DualPaneWidget::Remove] = new QAction(this);
+    actions[DualPaneWidget::Remove]->setEnabled(false);
     connect(actions[DualPaneWidget::Remove], SIGNAL(triggered()), q, SLOT(remove()));
 
     actions[DualPaneWidget::ShowFileInfo] = new QAction(this);
