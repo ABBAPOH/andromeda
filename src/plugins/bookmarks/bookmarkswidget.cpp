@@ -151,10 +151,9 @@ void BookmarksWidget::showTableViewMenu(QPoint p)
     QModelIndex sourceIndex = selectedIndex();
     QMenu menu;
 
-    if (! sourceIndex.isValid()) {
+    if (!sourceIndex.isValid()) {
         menu.addAction(d->addFolderAction);
-    }
-    else if (d->model->isFolder(sourceIndex)) {
+    } else if (d->model->isFolder(sourceIndex)) {
         menu.addAction(d->openInTabsAction);
         menu.addSeparator();
         menu.addAction(d->renameAction);

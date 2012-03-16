@@ -11,6 +11,8 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QHeaderView>
 
+static const int BORDER = 4;
+
 using namespace FileManager;
 
 QModelIndex NavigationPanelPrivate::selectedRow() const
@@ -28,18 +30,22 @@ NavigationPanelDelegate::NavigationPanelDelegate(QObject* parent):
     m_ejectIcon = QIcon(":/icons/eject.png");
 }
 
-bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+bool NavigationPanelDelegate::editorEvent(QEvent *event,
+                                          QAbstractItemModel */*model*/,
+                                          const QStyleOptionViewItem &option,
+                                          const QModelIndex &index)
 {
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *me = static_cast<QMouseEvent *>(event);
         QRect rect = option.rect;
-        rect.setX(rect.x() + rect.width() - (rect.height()+BORDER)); // draw icon (size is rect's height*height)
-        rect.setRight(rect.right()-BORDER);
-        if ( rect.contains(me->x(), me->y()) ) {
+        rect.setX(rect.x() + rect.width() - (rect.height() + BORDER)); // draw icon (size is rect's height*height)
+        rect.setRight(rect.right() - BORDER);
+        if (rect.contains(me->x(), me->y())) {
             const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
             if (model) {
                 QDriveInfo driveInfo = model->driveInfo(index);
-                if ( driveInfo.isValid() && ( driveInfo.type() == QDriveInfo::RemoteDrive || driveInfo.type() == QDriveInfo::RemovableDrive ))
+                if (driveInfo.isValid() &&
+                        (driveInfo.type() == QDriveInfo::RemoteDrive || driveInfo.type() == QDriveInfo::RemovableDrive))
                     QDriveController().eject(model->path(index));
             }
 
@@ -52,8 +58,6 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 
 void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    static const int BORDER = 4;
-
     bool paint = true;
 
 //#if defined(Q_OS_WIN)
