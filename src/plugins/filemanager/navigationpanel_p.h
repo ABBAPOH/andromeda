@@ -20,8 +20,6 @@
 
 namespace FileManager {
 
-static const int BORDER = 4;
-
 class NavigationPanelPrivate
 {
 bublic:

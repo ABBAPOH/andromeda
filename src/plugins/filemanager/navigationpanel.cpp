@@ -52,6 +52,8 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event, QAbstractItemModel *mod
 
 void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    static const int BORDER = 4;
+
     bool paint = true;
 
 //#if defined(Q_OS_WIN)
@@ -63,10 +65,13 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     if (model) {
         QDriveInfo drive = model->driveInfo(index);
 
-        if ( drive.isValid() && ( drive.type() == QDriveInfo::RemoteDrive || drive.type() == QDriveInfo::RemovableDrive ) ){
+        if (drive.isValid() &&
+                (drive.type() == QDriveInfo::RemoteDrive || drive.type() == QDriveInfo::RemovableDrive )) {
             QStyleOptionViewItemV4 optionRight = option;
             optionRight.viewItemPosition = QStyleOptionViewItemV4::End;
-            optionRight.rect.setX(optionRight.rect.x() + optionRight.rect.width() - (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
+            optionRight.rect.setX(optionRight.rect.x() +
+                                  optionRight.rect.width() -
+                                  (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
 
 //#if !defined(Q_OS_WIN)
             QStyleOptionViewItemV4 optionLeft = option;
@@ -79,14 +84,14 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             style->drawControl(QStyle::CE_ItemViewItem, &optionRight, painter);
 //#endif
             QRect rect = optionRight.rect;
-            rect.setRight(rect.right()-BORDER);
+            rect.setRight(rect.right() - BORDER);
             m_ejectIcon.paint(painter, rect);
 
             return;
         }
     }
 
-    if( paint )
+    if (paint)
         QStyledItemDelegate::paint(painter, option, index);
 }
 
