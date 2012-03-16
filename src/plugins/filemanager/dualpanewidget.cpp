@@ -292,22 +292,30 @@ void DualPaneWidgetPrivate::toggleViewMode(bool toggled)
 {
     Q_Q(DualPaneWidget);
 
-    if (toggled) {
-        QAction *action = qobject_cast<QAction*>(sender());
-        if (action)
-            q->setViewMode((FileManagerWidget::ViewMode)action->data().toInt());
-    }
+    QAction *action = qobject_cast<QAction*>(sender());
+    if (! action)
+        return;
+
+    if (toggled)
+        q->setViewMode((FileManagerWidget::ViewMode)action->data().toInt());
+    else
+        action->setChecked(true);
+
 }
 
 void DualPaneWidgetPrivate::toggleSortColumn(bool toggled)
 {
     Q_Q(DualPaneWidget);
 
-    if (toggled) {
-        QAction *action = qobject_cast<QAction*>(sender());
-        if (action)
-            q->setSortingColumn((FileManagerWidget::Column)action->data().toInt());
-    }
+    QAction *action = qobject_cast<QAction*>(sender());
+    if (! action)
+        return;
+
+    if (toggled)
+        q->setSortingColumn((FileManagerWidget::Column)action->data().toInt());
+    else
+        action->setChecked(true);
+
 }
 
 void DualPaneWidgetPrivate::toggleSortOrder(bool descending)
