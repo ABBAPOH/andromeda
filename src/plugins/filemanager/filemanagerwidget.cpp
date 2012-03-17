@@ -748,7 +748,7 @@ bool FileManagerWidget::restoreState(const QByteArray &arr)
     return true;
 }
 
-QByteArray FileManagerWidget::saveState()
+QByteArray FileManagerWidget::saveState() const
 {
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);

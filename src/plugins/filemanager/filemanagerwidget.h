@@ -120,7 +120,7 @@ public:
     FileSystemModel *model() const;
 
     bool restoreState(const QByteArray &state);
-    QByteArray saveState();
+    QByteArray saveState() const;
 
 signals:
     void canRedoChanged(bool);
