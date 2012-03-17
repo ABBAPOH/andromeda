@@ -84,7 +84,7 @@ public:
     void setSortingOrder(Qt::SortOrder order);
 
     bool restoreState(const QByteArray &state);
-    QByteArray saveState();
+    QByteArray saveState() const;
 
 signals:
     void activePaneChanged(Pane pane);

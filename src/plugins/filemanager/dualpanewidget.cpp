@@ -561,7 +561,7 @@ bool DualPaneWidget::restoreState(const QByteArray &arr)
     return true;
 }
 
-QByteArray DualPaneWidget::saveState()
+QByteArray DualPaneWidget::saveState() const
 {
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
