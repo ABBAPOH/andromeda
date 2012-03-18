@@ -27,6 +27,7 @@ public:
                   OpenInTab,
                   OpenInWindow,
                   SyncPanes,
+                  SwapPanes,
                   SelectProgram,
                   NewFolder,
                   CopyFiles,
@@ -114,6 +115,7 @@ public slots:
     void setDualPaneModeEnabled(bool on);
     void setOrientation(Qt::Orientation orientation);
     void syncPanes();
+    void swapPanes();
 
     void newFolder();
     void open();

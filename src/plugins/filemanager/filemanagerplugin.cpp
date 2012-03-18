@@ -111,6 +111,10 @@ void FileManagerPlugin::createFileMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd, "0175");
 
+    cmd = new Command(Constants::Actions::SwapPanes, tr("Swap panes"), this);
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, "0180");
+
     // ================ File Menu (Info) ================
     container->addCommand(new Separator(this), "55");
 
