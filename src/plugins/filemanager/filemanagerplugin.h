@@ -39,6 +39,7 @@ private:
                               const QKeySequence &key = QKeySequence());
     void createGoToActions();
     void createSortByActons();
+    void createPanesMenu();
 
     void loadSettings();
     void saveSettings();
