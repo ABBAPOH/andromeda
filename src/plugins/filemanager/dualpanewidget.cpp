@@ -5,10 +5,12 @@
 #include <QtCore/QEvent>
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
+#include <QtGui/QScrollBar>
 #include <QtGui/QSplitter>
 #include <QtGui/QVBoxLayout>
 
 #include "filemanagerwidget.h"
+#include "filemanagerwidget_p.h"
 #include "filesystemmanager.h"
 
 using namespace GuiSystem;
@@ -36,6 +38,10 @@ void DualPaneWidgetPrivate::createActions()
 
     actions[DualPaneWidget::OpenInWindow] = new QAction(this);
     connect(actions[DualPaneWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
+
+    actions[DualPaneWidget::SyncPanes] = new QAction(this);
+    actions[DualPaneWidget::SyncPanes]->setEnabled(false);
+    connect(actions[DualPaneWidget::SyncPanes], SIGNAL(triggered()), q, SLOT(syncPanes()));
 
     actions[DualPaneWidget::SelectProgram] = new QAction(this);
     connect(actions[DualPaneWidget::SelectProgram], SIGNAL(triggered()), q, SLOT(selectProgram()));
@@ -172,6 +178,7 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::Open]->setText(tr("Open"));
     actions[DualPaneWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[DualPaneWidget::OpenInWindow]->setText(tr("Open in new window"));
+    actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panels"));
 
     actions[DualPaneWidget::SelectProgram]->setText(tr("Select program..."));
     actions[DualPaneWidget::NewFolder]->setText(tr("New Folder"));
@@ -504,6 +511,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
         d->panes[LeftPane]->setAlternatingRowColors(true);
     }
 
+    d->actions[SyncPanes]->setEnabled(on);
     d->actions[EnableDualPane]->setChecked(on);
     d->actions[CopyFiles]->setEnabled(on);
     d->actions[MoveFiles]->setEnabled(on);
@@ -623,7 +631,7 @@ QByteArray DualPaneWidget::saveState() const
     return state;
 }
 
-void DualPaneWidget::sync()
+void DualPaneWidget::syncPanes()
 {
     Q_D(DualPaneWidget);
 
@@ -631,6 +639,10 @@ void DualPaneWidget::sync()
     FileManagerWidget *target = d->activePane == LeftPane ? d->panes[RightPane] : d->panes[LeftPane];
 
     target->setCurrentPath(source->currentPath());
+
+    // sync scroll bar
+    int scrollBarValue = source->d_func()->currentView->verticalScrollBar()->value();
+    target->d_func()->currentView->verticalScrollBar()->setValue(scrollBarValue);
 }
 
 void DualPaneWidget::newFolder()

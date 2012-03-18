@@ -107,6 +107,10 @@ void FileManagerPlugin::createFileMenu()
     cmd->setContext(Command::WidgetCommand);
     container->addCommand(cmd, "015");
 
+    cmd = new Command(Constants::Actions::SyncPanes, tr("Sync panes"), this);
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd, "0175");
+
     // ================ File Menu (Info) ================
     container->addCommand(new Separator(this), "55");
 

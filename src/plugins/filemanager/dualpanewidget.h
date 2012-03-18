@@ -26,6 +26,7 @@ public:
                   Open,
                   OpenInTab,
                   OpenInWindow,
+                  SyncPanes,
                   SelectProgram,
                   NewFolder,
                   CopyFiles,
@@ -112,7 +113,7 @@ public slots:
     void setViewMode(FileManagerWidget::ViewMode mode);
     void setDualPaneModeEnabled(bool on);
     void setOrientation(Qt::Orientation orientation);
-    void sync();
+    void syncPanes();
 
     void newFolder();
     void open();

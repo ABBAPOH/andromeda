@@ -433,6 +433,7 @@ void FileManagerEditor::createActions()
 //    registerAction(m_widget->action(DualPaneWidget::OpenInTab), Constants::Actions::Open);
 //    registerAction(m_widget->action(DualPaneWidget::OpenInWindow), Constants::Actions::Open);
 //    registerAction(m_widget->action(DualPaneWidget::SelectProgram), Constants::Actions::Open);
+    registerAction(m_widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
     registerAction(m_widget->action(DualPaneWidget::NewFolder), Constants::Actions::NewFolder);
     registerAction(m_widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);
     registerAction(m_widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
