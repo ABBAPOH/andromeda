@@ -196,7 +196,7 @@ void FileManagerEditor::restoreDefaults()
     m_widget->setSortingOrder((Qt::SortOrder)sortOrder);
     m_widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
     m_widget->leftWidget()->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
-    m_widget->rightWidget()->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
+    m_widget->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
     m_widget->setDualPaneModeEnabled(dualPaneModeEnabled);
     m_widget->setOrientation((Qt::Orientation)orientation);
     m_widget->blockSignals(false);
