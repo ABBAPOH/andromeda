@@ -142,7 +142,7 @@ bool TabContainer::restoreState(const QByteArray &arr)
     }
 
     m_tabWidget->setCurrentIndex(currentIndex);
-    m_tabWidget->setTabsClosable(tabCount <= 1);
+    m_tabWidget->setTabsClosable(tabCount > 1);
     StackedContainer *container = qobject_cast<StackedContainer *>(m_tabWidget->currentWidget());
     setEditor(container);
 
