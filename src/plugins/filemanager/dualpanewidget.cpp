@@ -39,29 +39,11 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::OpenInWindow] = new QAction(this);
     connect(actions[DualPaneWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
 
-    actions[DualPaneWidget::SyncPanes] = new QAction(this);
-    actions[DualPaneWidget::SyncPanes]->setEnabled(false);
-    connect(actions[DualPaneWidget::SyncPanes], SIGNAL(triggered()), q, SLOT(syncPanes()));
-
-    actions[DualPaneWidget::SwapPanes] = new QAction(this);
-    actions[DualPaneWidget::SwapPanes]->setEnabled(false);
-    connect(actions[DualPaneWidget::SwapPanes], SIGNAL(triggered()), q, SLOT(swapPanes()));
-
     actions[DualPaneWidget::SelectProgram] = new QAction(this);
     connect(actions[DualPaneWidget::SelectProgram], SIGNAL(triggered()), q, SLOT(selectProgram()));
 
     actions[DualPaneWidget::NewFolder] = new QAction(this);
     connect(actions[DualPaneWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
-
-    actions[DualPaneWidget::CopyFiles] = new QAction(this);
-    actions[DualPaneWidget::CopyFiles]->setShortcut(QKeySequence("F5"));
-    actions[DualPaneWidget::CopyFiles]->setEnabled(false);
-    connect(actions[DualPaneWidget::CopyFiles], SIGNAL(triggered()), q, SLOT(copyFiles()));
-
-    actions[DualPaneWidget::MoveFiles] = new QAction(this);
-    actions[DualPaneWidget::MoveFiles]->setShortcut(QKeySequence("F6"));
-    actions[DualPaneWidget::MoveFiles]->setEnabled(false);
-    connect(actions[DualPaneWidget::MoveFiles], SIGNAL(triggered()), q, SLOT(moveFiles()));
 
     actions[DualPaneWidget::Rename] = new QAction(this);
     actions[DualPaneWidget::Rename]->setEnabled(false);
@@ -107,18 +89,12 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::ColumnMode] = new QAction(this);
     actions[DualPaneWidget::TreeMode] = new QAction(this);
     actions[DualPaneWidget::CoverFlowMode] = new QAction(this);
-    actions[DualPaneWidget::EnableDualPane] = new QAction(q);
-    actions[DualPaneWidget::VerticalPanels] = new QAction(q);
 
     actions[DualPaneWidget::IconMode]->setCheckable(true);
     actions[DualPaneWidget::IconMode]->setChecked(true);
     actions[DualPaneWidget::ColumnMode]->setCheckable(true);
     actions[DualPaneWidget::TreeMode]->setCheckable(true);
     actions[DualPaneWidget::CoverFlowMode]->setCheckable(true);
-    actions[DualPaneWidget::EnableDualPane]->setCheckable(true);
-    actions[DualPaneWidget::VerticalPanels]->setCheckable(true);
-
-    actions[DualPaneWidget::VerticalPanels]->setEnabled(false);
 
     viewModeGroup->addAction(actions[DualPaneWidget::IconMode]);
     viewModeGroup->addAction(actions[DualPaneWidget::ColumnMode]);
@@ -134,11 +110,6 @@ void DualPaneWidgetPrivate::createActions()
     connect(actions[DualPaneWidget::ColumnMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
     connect(actions[DualPaneWidget::TreeMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
     connect(actions[DualPaneWidget::CoverFlowMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
-
-    connect(actions[DualPaneWidget::EnableDualPane], SIGNAL(triggered(bool)),
-            q, SLOT(setDualPaneModeEnabled(bool)));
-    connect(actions[DualPaneWidget::VerticalPanels], SIGNAL(triggered(bool)),
-            this, SLOT(toggleOrientation(bool)));
 
     sortByGroup = new QActionGroup(this);
 
@@ -172,6 +143,33 @@ void DualPaneWidgetPrivate::createActions()
     connect(actions[DualPaneWidget::SortByDate], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
     connect(actions[DualPaneWidget::SortDescendingOrder], SIGNAL(triggered(bool)), SLOT(toggleSortOrder(bool)));
 
+    actions[DualPaneWidget::EnableDualPane] = new QAction(q);
+    actions[DualPaneWidget::EnableDualPane]->setCheckable(true);
+    connect(actions[DualPaneWidget::EnableDualPane], SIGNAL(triggered(bool)), q, SLOT(setDualPaneModeEnabled(bool)));
+
+    actions[DualPaneWidget::VerticalPanels] = new QAction(q);
+    actions[DualPaneWidget::VerticalPanels]->setCheckable(true);
+    actions[DualPaneWidget::VerticalPanels]->setEnabled(false);
+    connect(actions[DualPaneWidget::VerticalPanels], SIGNAL(triggered(bool)), SLOT(toggleOrientation(bool)));
+
+    actions[DualPaneWidget::SyncPanes] = new QAction(this);
+    actions[DualPaneWidget::SyncPanes]->setEnabled(false);
+    connect(actions[DualPaneWidget::SyncPanes], SIGNAL(triggered()), q, SLOT(syncPanes()));
+
+    actions[DualPaneWidget::SwapPanes] = new QAction(this);
+    actions[DualPaneWidget::SwapPanes]->setEnabled(false);
+    connect(actions[DualPaneWidget::SwapPanes], SIGNAL(triggered()), q, SLOT(swapPanes()));
+
+    actions[DualPaneWidget::CopyFiles] = new QAction(this);
+    actions[DualPaneWidget::CopyFiles]->setShortcut(QKeySequence("F5"));
+    actions[DualPaneWidget::CopyFiles]->setEnabled(false);
+    connect(actions[DualPaneWidget::CopyFiles], SIGNAL(triggered()), q, SLOT(copyFiles()));
+
+    actions[DualPaneWidget::MoveFiles] = new QAction(this);
+    actions[DualPaneWidget::MoveFiles]->setShortcut(QKeySequence("F6"));
+    actions[DualPaneWidget::MoveFiles]->setEnabled(false);
+    connect(actions[DualPaneWidget::MoveFiles], SIGNAL(triggered()), q, SLOT(moveFiles()));
+
     for (int i = 0; i < DualPaneWidget::ActionCount; i++) {
         q->addAction(actions[i]);
     }
@@ -182,13 +180,9 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::Open]->setText(tr("Open"));
     actions[DualPaneWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[DualPaneWidget::OpenInWindow]->setText(tr("Open in new window"));
-    actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panels"));
-    actions[DualPaneWidget::SwapPanes]->setText(tr("Swap panels"));
 
     actions[DualPaneWidget::SelectProgram]->setText(tr("Select program..."));
     actions[DualPaneWidget::NewFolder]->setText(tr("New Folder"));
-    actions[DualPaneWidget::CopyFiles]->setText(tr("Copy files"));
-    actions[DualPaneWidget::MoveFiles]->setText(tr("Move files"));
     actions[DualPaneWidget::Rename]->setText(tr("Rename"));
     actions[DualPaneWidget::Remove]->setText(tr("Remove"));
     actions[DualPaneWidget::ShowFileInfo]->setText(tr("File info"));
@@ -206,14 +200,19 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::ColumnMode]->setText(tr("Column view"));
     actions[DualPaneWidget::TreeMode]->setText(tr("Tree view"));
     actions[DualPaneWidget::CoverFlowMode]->setText(tr("Cover flow"));
-    actions[DualPaneWidget::EnableDualPane]->setText(tr("Enable dual pane"));
-    actions[DualPaneWidget::VerticalPanels]->setText(tr("Vertical panels"));
 
     actions[DualPaneWidget::SortByName]->setText(tr("Sort by name"));
     actions[DualPaneWidget::SortBySize]->setText(tr("Sort by size"));
     actions[DualPaneWidget::SortByType]->setText(tr("Sort by type"));
     actions[DualPaneWidget::SortByDate]->setText(tr("Sort by date"));
     actions[DualPaneWidget::SortDescendingOrder]->setText(tr("Descending order"));
+
+    actions[DualPaneWidget::EnableDualPane]->setText(tr("Enable dual pane"));
+    actions[DualPaneWidget::VerticalPanels]->setText(tr("Vertical panels"));
+    actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panels"));
+    actions[DualPaneWidget::SwapPanes]->setText(tr("Swap panels"));
+    actions[DualPaneWidget::CopyFiles]->setText(tr("Copy files"));
+    actions[DualPaneWidget::MoveFiles]->setText(tr("Move files"));
 }
 
 FileManagerWidget * DualPaneWidgetPrivate::createPane()
@@ -516,12 +515,12 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
         d->panes[LeftPane]->setAlternatingRowColors(true);
     }
 
+    d->actions[EnableDualPane]->setChecked(on);
+    d->actions[VerticalPanels]->setEnabled(on);
     d->actions[SyncPanes]->setEnabled(on);
     d->actions[SwapPanes]->setEnabled(on);
-    d->actions[EnableDualPane]->setChecked(on);
     d->actions[CopyFiles]->setEnabled(on);
     d->actions[MoveFiles]->setEnabled(on);
-    d->actions[VerticalPanels]->setEnabled(on);
 
     emit dualPaneModeChanged(on);
 }
