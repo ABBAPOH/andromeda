@@ -133,6 +133,9 @@ void BookmarksWidget::addFolder()
 
 void BookmarksWidget::showTreeViewMenu(QPoint p)
 {
+    if (!d->treeView->indexAt(p).isValid())
+        return;
+
     QMenu menu;
     menu.addAction(d->openInTabsAction);
     menu.addSeparator();
@@ -147,6 +150,9 @@ void BookmarksWidget::showTableViewMenu(QPoint p)
     QWidget *w = focusWidget();
     if (w != d->tableView)
         return;
+
+    if (!d->tableView->indexAt(p).isValid())
+        d->tableView->clearSelection();
 
     QModelIndex sourceIndex = selectedIndex();
     QMenu menu;
