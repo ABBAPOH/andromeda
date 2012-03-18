@@ -17,7 +17,7 @@ BookmarksWidget::BookmarksWidget(QWidget *parent) :
     d->treeView->setModel(d->folderProxy);
     d->tableView->setModel(d->proxyModel);
 
-    connect(d->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClicked(QModelIndex)));
+    connect(d->tableView, SIGNAL(activated(QModelIndex)), SLOT(onActivated(QModelIndex)));
     connect(d->tableView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTableViewMenu(QPoint)));
     connect(d->treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(onClicked(QModelIndex)));
     connect(d->treeView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTreeViewMenu(QPoint)));
@@ -91,7 +91,7 @@ void BookmarksWidget::onClicked(const QModelIndex &index)
     d->tableView->setRootIndex(proxyIndex);
 }
 
-void BookmarksWidget::onDoubleClicked(const QModelIndex &index)
+void BookmarksWidget::onActivated(const QModelIndex &index)
 {
     QModelIndex sourceIndex = d->proxyModel->mapToSource(index);
     QModelIndex folderIndex = d->folderProxy->mapFromSource(sourceIndex);
