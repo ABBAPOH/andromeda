@@ -17,6 +17,7 @@ class FILEMANAGER_EXPORT DualPaneWidget : public QWidget
     Q_PROPERTY(Pane activePane READ activePane WRITE setActivePane NOTIFY activePaneChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
     Q_PROPERTY(bool dualPaneModeEnabled READ dualPaneModeEnabled WRITE setDualPaneModeEnabled)
+    Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
     Q_PROPERTY(FileManager::FileManagerWidget::ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
@@ -46,6 +47,7 @@ public:
                   TreeMode,
                   CoverFlowMode,
                   EnableDualPane,
+                  VerticalPanels,
 
                   SortByName,
                   SortBySize,
@@ -75,6 +77,8 @@ public:
     bool dualPaneModeEnabled() const;
     FileManagerWidget::ViewMode viewMode() const;
 
+    Qt::Orientation orientation() const;
+
     QStringList selectedPaths() const;
 
     FileManagerWidget::Column sortingColumn() const;
@@ -99,12 +103,14 @@ signals:
     void selectedPathsChanged();
     void sortingChanged();
     void viewModeChanged(FileManagerWidget::ViewMode mode);
+    void orientationChanged(Qt::Orientation orientation);
 
 public slots:
     void setActivePane(Pane pane);
     void setCurrentPath(const QString &path);
     void setViewMode(FileManagerWidget::ViewMode mode);
     void setDualPaneModeEnabled(bool on);
+    void setOrientation(Qt::Orientation orientation);
     void sync();
 
     void newFolder();

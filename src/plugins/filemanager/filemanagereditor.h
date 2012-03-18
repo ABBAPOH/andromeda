@@ -54,6 +54,7 @@ private slots:
     void onOpenRequested(const QString &path);
     void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
+    void onOrientationChanged(Qt::Orientation orientation);
     void showLeftPanel(bool);
     void onSplitterMoved(int,int);
     void onPathsDropped(const QString &, const QStringList &, Qt::DropAction);
