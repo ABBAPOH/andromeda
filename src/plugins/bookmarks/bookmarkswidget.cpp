@@ -19,7 +19,7 @@ BookmarksWidget::BookmarksWidget(QWidget *parent) :
 
     connect(d->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClicked(QModelIndex)));
     connect(d->tableView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTableViewMenu(QPoint)));
-    connect(d->treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClicked(QModelIndex)));
+    connect(d->treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(onClicked(QModelIndex)));
     connect(d->treeView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTreeViewMenu(QPoint)));
     connect(d->lineEdit, SIGNAL(textEdited(QString)), SLOT(onTextEdited(QString)));
 
