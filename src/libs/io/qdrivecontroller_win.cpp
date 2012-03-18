@@ -116,6 +116,10 @@ LRESULT CALLBACK dw_internal_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
                             qWarning("Drive %c: Device has been removed.", drive.at(0).toAscii());
 #endif
                         watcher->emitDriveRemoved(drive);
+                        // fix for unmounting virtual drive using Daemon tools
+                        if (QDriveInfo(drive).type() == QDriveInfo::CdromDrive) {
+                            watcher->emitDriveAdded(drive);
+                        }
                     }
                 }
             }
