@@ -4,7 +4,9 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QEvent>
 #include <QtGui/QAction>
-#include <QtGui/QHBoxLayout>
+#include <QtGui/QMenu>
+#include <QtGui/QSplitter>
+#include <QtGui/QVBoxLayout>
 
 #include "filemanagerwidget.h"
 #include "filesystemmanager.h"
@@ -96,6 +98,7 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::TreeMode] = new QAction(this);
     actions[DualPaneWidget::CoverFlowMode] = new QAction(this);
     actions[DualPaneWidget::EnableDualPane] = new QAction(q);
+    actions[DualPaneWidget::VerticalPanels] = new QAction(q);
 
     actions[DualPaneWidget::IconMode]->setCheckable(true);
     actions[DualPaneWidget::IconMode]->setChecked(true);
@@ -103,6 +106,9 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::TreeMode]->setCheckable(true);
     actions[DualPaneWidget::CoverFlowMode]->setCheckable(true);
     actions[DualPaneWidget::EnableDualPane]->setCheckable(true);
+    actions[DualPaneWidget::VerticalPanels]->setCheckable(true);
+
+    actions[DualPaneWidget::VerticalPanels]->setEnabled(false);
 
     viewModeGroup->addAction(actions[DualPaneWidget::IconMode]);
     viewModeGroup->addAction(actions[DualPaneWidget::ColumnMode]);
@@ -121,6 +127,8 @@ void DualPaneWidgetPrivate::createActions()
 
     connect(actions[DualPaneWidget::EnableDualPane], SIGNAL(triggered(bool)),
             q, SLOT(setDualPaneModeEnabled(bool)));
+    connect(actions[DualPaneWidget::VerticalPanels], SIGNAL(triggered(bool)),
+            this, SLOT(toggleOrientation(bool)));
 
     sortByGroup = new QActionGroup(this);
 
@@ -187,6 +195,7 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::TreeMode]->setText(tr("Tree view"));
     actions[DualPaneWidget::CoverFlowMode]->setText(tr("Cover flow"));
     actions[DualPaneWidget::EnableDualPane]->setText(QObject::tr("Enable dual pane"));
+    actions[DualPaneWidget::VerticalPanels]->setText(QObject::tr("Vertical panels"));
 
     actions[DualPaneWidget::SortByName]->setText(tr("Sort by name"));
     actions[DualPaneWidget::SortBySize]->setText(tr("Sort by size"));
@@ -221,7 +230,7 @@ FileManagerWidget * DualPaneWidgetPrivate::createPane()
 void DualPaneWidgetPrivate::createLeftPane()
 {
     panes[DualPaneWidget::LeftPane] = createPane();
-    layout->addWidget(panes[DualPaneWidget::LeftPane]);
+    splitter->addWidget(panes[DualPaneWidget::LeftPane]);
 }
 
 void DualPaneWidgetPrivate::createRightPane()
@@ -231,7 +240,7 @@ void DualPaneWidgetPrivate::createRightPane()
     panes[DualPaneWidget::RightPane]->hide();
     panes[DualPaneWidget::RightPane]->setViewMode(FileManagerWidget::TreeView);
     panes[DualPaneWidget::RightPane]->setAlternatingRowColors(false);
-    layout->addWidget(panes[DualPaneWidget::RightPane]);
+    splitter->addWidget(panes[DualPaneWidget::RightPane]);
 
     swapPalettes(panes[DualPaneWidget::LeftPane], panes[DualPaneWidget::RightPane]);
 }
@@ -302,6 +311,13 @@ void DualPaneWidgetPrivate::toggleViewMode(bool toggled)
         action->setChecked(true);
 }
 
+void DualPaneWidgetPrivate::toggleOrientation(bool toggled)
+{
+    Q_Q(DualPaneWidget);
+
+    q->setOrientation(toggled ? Qt::Vertical : Qt::Horizontal);
+}
+
 void DualPaneWidgetPrivate::toggleSortColumn(bool toggled)
 {
     Q_Q(DualPaneWidget);
@@ -369,10 +385,14 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     d->panes[LeftPane] = 0;
     d->panes[RightPane] = 0;
 
-    d->layout = new QHBoxLayout();
+    d->layout = new QVBoxLayout();
     d->layout->setMargin(0);
-    d->layout->setSpacing(3);
+    d->layout->setSpacing(0);
     setLayout(d->layout);
+
+    d->splitter = new QSplitter(Qt::Horizontal, this);
+    d->splitter->setHandleWidth(5);
+    d->layout->addWidget(d->splitter);
 
     d->createLeftPane();
     d->createActions();
@@ -487,11 +507,31 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     d->actions[EnableDualPane]->setChecked(on);
     d->actions[CopyFiles]->setEnabled(on);
     d->actions[MoveFiles]->setEnabled(on);
+    d->actions[VerticalPanels]->setEnabled(on);
 }
 
 FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
 {
     return activeWidget()->viewMode();
+}
+
+Qt::Orientation DualPaneWidget::orientation() const
+{
+    Q_D(const DualPaneWidget);
+
+    return d->splitter->orientation();
+}
+
+void DualPaneWidget::setOrientation(Qt::Orientation orientation)
+{
+    Q_D(DualPaneWidget);
+
+    if (d->splitter->orientation() == orientation)
+        return;
+
+    d->splitter->setOrientation(orientation);
+    d->actions[VerticalPanels]->setChecked(orientation == Qt::Vertical);
+    emit orientationChanged(orientation);
 }
 
 void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
@@ -546,9 +586,13 @@ bool DualPaneWidget::restoreState(const QByteArray &arr)
     QDataStream s(&state, QIODevice::ReadOnly);
 
     bool b;
+    QByteArray splitterState;
     QByteArray subState;
     s >> b;
     setDualPaneModeEnabled(b);
+    s >> splitterState;
+    d->splitter->restoreState(splitterState);
+    d->actions[VerticalPanels]->setChecked(orientation() == Qt::Vertical);
     s >> subState;
     leftWidget()->restoreState(subState);
     s >> subState;
@@ -563,10 +607,13 @@ bool DualPaneWidget::restoreState(const QByteArray &arr)
 
 QByteArray DualPaneWidget::saveState() const
 {
+    Q_D(const DualPaneWidget);
+
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
 
     s << dualPaneModeEnabled();
+    s << d->splitter->saveState();
     s << leftWidget()->saveState();
     if (d_func()->panes[RightPane])
         s << rightWidget()->saveState();

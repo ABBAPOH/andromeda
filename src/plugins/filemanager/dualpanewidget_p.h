@@ -3,7 +3,8 @@
 
 #include "dualpanewidget.h"
 
-class QHBoxLayout;
+class QVBoxLayout;
+class QSplitter;
 class QActionGroup;
 
 namespace FileManager {
@@ -30,6 +31,7 @@ public slots:
     void openNewTab();
     void openNewWindow();
     void toggleViewMode(bool);
+    void toggleOrientation(bool);
     void toggleSortColumn(bool);
     void toggleSortOrder(bool descending);
     void onSelectionChanged();
@@ -38,7 +40,8 @@ public:
     DualPaneWidget::Pane activePane;
     bool dualPaneModeEnabled;
     FileManagerWidget *panes[2];
-    QHBoxLayout *layout;
+    QVBoxLayout *layout;
+    QSplitter *splitter;
     QAction *actions[DualPaneWidget::ActionCount];
 
     QActionGroup *viewModeGroup;

@@ -204,6 +204,11 @@ void FileManagerPlugin::createViewMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
+    cmd = new Command(Constants::Actions::VerticalPanels, this);
+    cmd->setDefaultText(tr("Layout panels vertically"));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
     // ================ View Menu (View Mode) ================
     container->addCommand(new Separator(this));
 
