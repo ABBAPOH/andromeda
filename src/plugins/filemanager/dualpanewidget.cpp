@@ -152,6 +152,10 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::VerticalPanels]->setEnabled(false);
     connect(actions[DualPaneWidget::VerticalPanels], SIGNAL(triggered(bool)), SLOT(toggleOrientation(bool)));
 
+    actions[DualPaneWidget::ToggleActivePane] = new QAction(this);
+    actions[DualPaneWidget::ToggleActivePane]->setEnabled(false);
+    connect(actions[DualPaneWidget::ToggleActivePane], SIGNAL(triggered()), q, SLOT(toggleActivePane()));
+
     actions[DualPaneWidget::SyncPanes] = new QAction(this);
     actions[DualPaneWidget::SyncPanes]->setEnabled(false);
     connect(actions[DualPaneWidget::SyncPanes], SIGNAL(triggered()), q, SLOT(syncPanes()));
@@ -209,6 +213,7 @@ void DualPaneWidgetPrivate::retranslateUi()
 
     actions[DualPaneWidget::EnableDualPane]->setText(tr("Enable dual pane"));
     actions[DualPaneWidget::VerticalPanels]->setText(tr("Vertical panels"));
+    actions[DualPaneWidget::ToggleActivePane]->setText(tr("Toggle active pane"));
     actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panels"));
     actions[DualPaneWidget::SwapPanes]->setText(tr("Swap panels"));
     actions[DualPaneWidget::CopyFiles]->setText(tr("Copy files"));
@@ -517,6 +522,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
 
     d->actions[EnableDualPane]->setChecked(on);
     d->actions[VerticalPanels]->setEnabled(on);
+    d->actions[ToggleActivePane]->setEnabled(on);
     d->actions[SyncPanes]->setEnabled(on);
     d->actions[SwapPanes]->setEnabled(on);
     d->actions[CopyFiles]->setEnabled(on);
@@ -547,6 +553,11 @@ void DualPaneWidget::setOrientation(Qt::Orientation orientation)
     d->splitter->setOrientation(orientation);
     d->actions[VerticalPanels]->setChecked(orientation == Qt::Vertical);
     emit orientationChanged(orientation);
+}
+
+void DualPaneWidget::toggleActivePane()
+{
+    setActivePane(activePane() == LeftPane ? RightPane : LeftPane);
 }
 
 void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)

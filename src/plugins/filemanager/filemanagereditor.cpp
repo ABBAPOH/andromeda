@@ -460,6 +460,7 @@ void FileManagerEditor::createActions()
 
     registerAction(m_widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
     registerAction(m_widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
+    registerAction(m_widget->action(DualPaneWidget::ToggleActivePane), Constants::Actions::ToggleActivePane);
     registerAction(m_widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
     registerAction(m_widget->action(DualPaneWidget::SwapPanes), Constants::Actions::SwapPanes);
     registerAction(m_widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);

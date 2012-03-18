@@ -326,6 +326,12 @@ void FileManagerPlugin::createPanesMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
+    cmd = new Command(Constants::Actions::ToggleActivePane, this);
+    cmd->setDefaultText(tr("Toggle active pane"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+U")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
     container->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::SyncPanes, tr("Sync panes"), this);

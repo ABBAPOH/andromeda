@@ -53,6 +53,7 @@ public:
 
                   EnableDualPane,
                   VerticalPanels,
+                  ToggleActivePane,
                   SyncPanes,
                   SwapPanes,
                   CopyFiles,
@@ -115,6 +116,7 @@ public slots:
     void setViewMode(FileManagerWidget::ViewMode mode);
     void setDualPaneModeEnabled(bool on);
     void setOrientation(Qt::Orientation orientation);
+    void toggleActivePane();
     void syncPanes();
     void swapPanes();
 

@@ -42,6 +42,7 @@ const char * const TreeMode = "TreeViewMode";
 const char * const CoverFlowMode = "CoverFlowMode";
 const char * const DualPane = "DualPane";
 const char * const VerticalPanels = "VerticalPanels";
+const char * const ToggleActivePane = "ToggleActivePane";
 
 const char * const ShowHiddenFiles = "ShowHiddenFiles";
 
