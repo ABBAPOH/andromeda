@@ -68,27 +68,27 @@
 <context>
     <name>FileManager::DualPaneWidgetPrivate</name>
     <message>
-        <location filename="../dualpanewidget.cpp" line="182"/>
+        <location filename="../dualpanewidget.cpp" line="184"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="183"/>
+        <location filename="../dualpanewidget.cpp" line="185"/>
         <source>Open in new tab</source>
         <translation>Открыть в новой вкладке</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="184"/>
+        <location filename="../dualpanewidget.cpp" line="186"/>
         <source>Open in new window</source>
         <translation>Открыть в новом окне</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="185"/>
+        <location filename="../dualpanewidget.cpp" line="217"/>
         <source>Sync panels</source>
         <translation>Синхронизовать панели</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="186"/>
+        <location filename="../dualpanewidget.cpp" line="218"/>
         <source>Swap panels</source>
         <translation>Поменять панели</translation>
     </message>
@@ -103,139 +103,144 @@
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="190"/>
+        <location filename="../dualpanewidget.cpp" line="219"/>
         <source>Copy files</source>
         <translation>Копировать файлы</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="191"/>
+        <location filename="../dualpanewidget.cpp" line="220"/>
         <source>Move files</source>
         <translation>Переместить файлы</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="192"/>
+        <location filename="../dualpanewidget.cpp" line="190"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="193"/>
+        <location filename="../dualpanewidget.cpp" line="191"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="194"/>
+        <location filename="../dualpanewidget.cpp" line="192"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="196"/>
+        <location filename="../dualpanewidget.cpp" line="194"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="197"/>
+        <location filename="../dualpanewidget.cpp" line="195"/>
         <source>Undo</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="198"/>
-        <location filename="../dualpanewidget.cpp" line="378"/>
+        <location filename="../dualpanewidget.cpp" line="196"/>
+        <location filename="../dualpanewidget.cpp" line="382"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="199"/>
-        <location filename="../dualpanewidget.cpp" line="379"/>
+        <location filename="../dualpanewidget.cpp" line="197"/>
+        <location filename="../dualpanewidget.cpp" line="383"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="200"/>
+        <location filename="../dualpanewidget.cpp" line="198"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="201"/>
+        <location filename="../dualpanewidget.cpp" line="199"/>
         <source>Select all</source>
         <translation>Выделить все</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="203"/>
+        <location filename="../dualpanewidget.cpp" line="201"/>
         <source>Show hidden files</source>
         <translation>Показывать скрытые файлы</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="205"/>
+        <location filename="../dualpanewidget.cpp" line="203"/>
         <source>Icon view</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="206"/>
+        <location filename="../dualpanewidget.cpp" line="204"/>
         <source>Column view</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="207"/>
+        <location filename="../dualpanewidget.cpp" line="205"/>
         <source>Tree view</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="208"/>
+        <location filename="../dualpanewidget.cpp" line="206"/>
         <source>Cover flow</source>
         <translation>Cover flow</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="209"/>
+        <location filename="../dualpanewidget.cpp" line="214"/>
         <source>Enable dual pane</source>
         <translation>Включить две панели</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="210"/>
+        <location filename="../dualpanewidget.cpp" line="215"/>
         <source>Vertical panels</source>
         <translation>Располагать панели вертикально</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="212"/>
+        <location filename="../dualpanewidget.cpp" line="208"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="213"/>
+        <location filename="../dualpanewidget.cpp" line="209"/>
         <source>Sort by size</source>
         <translation>Сортировать по размеру</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="214"/>
+        <location filename="../dualpanewidget.cpp" line="210"/>
         <source>Sort by type</source>
         <translation>Сортировать по типу</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="215"/>
+        <location filename="../dualpanewidget.cpp" line="211"/>
         <source>Sort by date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="216"/>
+        <location filename="../dualpanewidget.cpp" line="212"/>
         <source>Descending order</source>
         <translation>В обратном порядке</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="371"/>
+        <location filename="../dualpanewidget.cpp" line="216"/>
+        <source>Toggle active pane</source>
+        <translation>Переключить активную панель</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="375"/>
         <source>Cut &quot;%1&quot;</source>
         <translation>Вырезать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="372"/>
+        <location filename="../dualpanewidget.cpp" line="376"/>
         <source>Copy &quot;%1&quot;</source>
         <translation>Копировать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="374"/>
+        <location filename="../dualpanewidget.cpp" line="378"/>
         <source>Cut %1 items</source>
         <translation>Вырезать %1 элементов</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="375"/>
+        <location filename="../dualpanewidget.cpp" line="379"/>
         <source>Copy %1 items</source>
         <translation>Копировать %1 элементов</translation>
     </message>
@@ -654,12 +659,12 @@
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="331"/>
+        <location filename="../filemanagerplugin.cpp" line="337"/>
         <source>Sync panes</source>
         <translation>Синхронизовать панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="335"/>
+        <location filename="../filemanagerplugin.cpp" line="341"/>
         <source>Swap panes</source>
         <translation>Поменять панели</translation>
     </message>
@@ -674,12 +679,17 @@
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="342"/>
+        <location filename="../filemanagerplugin.cpp" line="330"/>
+        <source>Toggle active pane</source>
+        <translation>Переключить активную панель</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="348"/>
         <source>Copy files</source>
         <translation>Копировать файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="347"/>
+        <location filename="../filemanagerplugin.cpp" line="353"/>
         <source>Move files</source>
         <translation>Переместить файлы</translation>
     </message>
