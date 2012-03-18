@@ -194,8 +194,8 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::ColumnMode]->setText(tr("Column view"));
     actions[DualPaneWidget::TreeMode]->setText(tr("Tree view"));
     actions[DualPaneWidget::CoverFlowMode]->setText(tr("Cover flow"));
-    actions[DualPaneWidget::EnableDualPane]->setText(QObject::tr("Enable dual pane"));
-    actions[DualPaneWidget::VerticalPanels]->setText(QObject::tr("Vertical panels"));
+    actions[DualPaneWidget::EnableDualPane]->setText(tr("Enable dual pane"));
+    actions[DualPaneWidget::VerticalPanels]->setText(tr("Vertical panels"));
 
     actions[DualPaneWidget::SortByName]->setText(tr("Sort by name"));
     actions[DualPaneWidget::SortBySize]->setText(tr("Sort by size"));
