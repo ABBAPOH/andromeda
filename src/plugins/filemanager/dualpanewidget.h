@@ -26,12 +26,8 @@ public:
                   Open,
                   OpenInTab,
                   OpenInWindow,
-                  SyncPanes,
-                  SwapPanes,
                   SelectProgram,
                   NewFolder,
-                  CopyFiles,
-                  MoveFiles,
                   Rename,
                   Remove,
                   ShowFileInfo,
@@ -48,14 +44,19 @@ public:
                   ColumnMode,
                   TreeMode,
                   CoverFlowMode,
-                  EnableDualPane,
-                  VerticalPanels,
 
                   SortByName,
                   SortBySize,
                   SortByType,
                   SortByDate,
                   SortDescendingOrder,
+
+                  EnableDualPane,
+                  VerticalPanels,
+                  SyncPanes,
+                  SwapPanes,
+                  CopyFiles,
+                  MoveFiles,
 
                   ActionCount
                 };

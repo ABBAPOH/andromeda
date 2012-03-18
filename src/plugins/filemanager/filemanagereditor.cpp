@@ -433,11 +433,7 @@ void FileManagerEditor::createActions()
 //    registerAction(m_widget->action(DualPaneWidget::OpenInTab), Constants::Actions::Open);
 //    registerAction(m_widget->action(DualPaneWidget::OpenInWindow), Constants::Actions::Open);
 //    registerAction(m_widget->action(DualPaneWidget::SelectProgram), Constants::Actions::Open);
-    registerAction(m_widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
-    registerAction(m_widget->action(DualPaneWidget::SwapPanes), Constants::Actions::SwapPanes);
     registerAction(m_widget->action(DualPaneWidget::NewFolder), Constants::Actions::NewFolder);
-    registerAction(m_widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);
-    registerAction(m_widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
     registerAction(m_widget->action(DualPaneWidget::Rename), Constants::Actions::Rename);
     registerAction(m_widget->action(DualPaneWidget::Remove), Constants::Actions::Remove);
     registerAction(m_widget->action(DualPaneWidget::ShowFileInfo), Constants::Actions::FileInfo);
@@ -455,14 +451,19 @@ void FileManagerEditor::createActions()
     registerAction(m_widget->action(DualPaneWidget::ColumnMode), Constants::Actions::ColumnMode);
     registerAction(m_widget->action(DualPaneWidget::TreeMode), Constants::Actions::TreeMode);
     registerAction(m_widget->action(DualPaneWidget::CoverFlowMode), Constants::Actions::CoverFlowMode);
-    registerAction(m_widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
-    registerAction(m_widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
 
     registerAction(m_widget->action(DualPaneWidget::SortByName), Constants::Actions::SortByName);
     registerAction(m_widget->action(DualPaneWidget::SortBySize), Constants::Actions::SortBySize);
     registerAction(m_widget->action(DualPaneWidget::SortByType), Constants::Actions::SortByType);
     registerAction(m_widget->action(DualPaneWidget::SortByDate), Constants::Actions::SortByDate);
     registerAction(m_widget->action(DualPaneWidget::SortDescendingOrder), Constants::Actions::SortByDescendingOrder);
+
+    registerAction(m_widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
+    registerAction(m_widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
+    registerAction(m_widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
+    registerAction(m_widget->action(DualPaneWidget::SwapPanes), Constants::Actions::SwapPanes);
+    registerAction(m_widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);
+    registerAction(m_widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
 }
 
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
