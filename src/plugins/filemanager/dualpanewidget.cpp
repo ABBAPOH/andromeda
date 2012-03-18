@@ -643,6 +643,8 @@ void DualPaneWidget::syncPanes()
     // sync scroll bar
     int scrollBarValue = source->d_func()->currentView->verticalScrollBar()->value();
     target->d_func()->currentView->verticalScrollBar()->setValue(scrollBarValue);
+
+    // TODO: sync selection too
 }
 
 void DualPaneWidget::newFolder()
