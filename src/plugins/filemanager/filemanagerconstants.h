@@ -26,6 +26,7 @@ namespace Actions {
 
 const char * const Open = "Open";
 const char * const SyncPanes = "SyncPanes";
+const char * const SwapPanes = "SwapPanes";
 
 const char * const FileInfo = "FileInfo";
 

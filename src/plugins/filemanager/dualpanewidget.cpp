@@ -43,6 +43,10 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::SyncPanes]->setEnabled(false);
     connect(actions[DualPaneWidget::SyncPanes], SIGNAL(triggered()), q, SLOT(syncPanes()));
 
+    actions[DualPaneWidget::SwapPanes] = new QAction(this);
+    actions[DualPaneWidget::SwapPanes]->setEnabled(false);
+    connect(actions[DualPaneWidget::SwapPanes], SIGNAL(triggered()), q, SLOT(swapPanes()));
+
     actions[DualPaneWidget::SelectProgram] = new QAction(this);
     connect(actions[DualPaneWidget::SelectProgram], SIGNAL(triggered()), q, SLOT(selectProgram()));
 
@@ -179,6 +183,7 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[DualPaneWidget::OpenInWindow]->setText(tr("Open in new window"));
     actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panels"));
+    actions[DualPaneWidget::SwapPanes]->setText(tr("Swap panels"));
 
     actions[DualPaneWidget::SelectProgram]->setText(tr("Select program..."));
     actions[DualPaneWidget::NewFolder]->setText(tr("New Folder"));
@@ -512,6 +517,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     }
 
     d->actions[SyncPanes]->setEnabled(on);
+    d->actions[SwapPanes]->setEnabled(on);
     d->actions[EnableDualPane]->setChecked(on);
     d->actions[CopyFiles]->setEnabled(on);
     d->actions[MoveFiles]->setEnabled(on);
@@ -645,6 +651,24 @@ void DualPaneWidget::syncPanes()
     target->d_func()->currentView->verticalScrollBar()->setValue(scrollBarValue);
 
     // TODO: sync selection too
+}
+
+void DualPaneWidget::swapPanes()
+{
+    Pane pane = activePane();
+
+    FileManagerWidget *left = leftWidget();
+    FileManagerWidget *right = rightWidget();
+
+    QString leftPath = left->currentPath();
+    QString rightPath = right->currentPath();
+
+    left->setCurrentPath(rightPath);
+    right->setCurrentPath(leftPath);
+
+    // TODO: swap and scroll selection too
+
+    setActivePane(pane == LeftPane ? RightPane : LeftPane);
 }
 
 void DualPaneWidget::newFolder()
