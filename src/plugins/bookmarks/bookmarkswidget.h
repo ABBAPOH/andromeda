@@ -41,7 +41,7 @@ signals:
 
 private slots:
     void onClicked(const QModelIndex &);
-    void onDoubleClicked(const QModelIndex &);
+    void onActivated(const QModelIndex &);
     void onTextEdited(const QString &);
     void addFolder();
     void showTreeViewMenu(QPoint);
