@@ -16,7 +16,7 @@ class FILEMANAGER_EXPORT DualPaneWidget : public QWidget
     Q_DECLARE_PRIVATE(DualPaneWidget)
     Q_PROPERTY(Pane activePane READ activePane WRITE setActivePane NOTIFY activePaneChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
-    Q_PROPERTY(bool dualPaneModeEnabled READ dualPaneModeEnabled WRITE setDualPaneModeEnabled)
+    Q_PROPERTY(bool dualPaneModeEnabled READ dualPaneModeEnabled WRITE setDualPaneModeEnabled NOTIFY dualPaneModeChanged)
     Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
     Q_PROPERTY(FileManager::FileManagerWidget::ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
@@ -103,6 +103,7 @@ signals:
     void selectedPathsChanged();
     void sortingChanged();
     void viewModeChanged(FileManagerWidget::ViewMode mode);
+    void dualPaneModeChanged(bool enabled);
     void orientationChanged(Qt::Orientation orientation);
 
 public slots:

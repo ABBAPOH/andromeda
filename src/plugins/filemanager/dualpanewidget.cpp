@@ -508,6 +508,8 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     d->actions[CopyFiles]->setEnabled(on);
     d->actions[MoveFiles]->setEnabled(on);
     d->actions[VerticalPanels]->setEnabled(on);
+
+    emit dualPaneModeChanged(on);
 }
 
 FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
