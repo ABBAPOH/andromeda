@@ -62,11 +62,10 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 {
     bool paint = true;
 
-//#if defined(Q_OS_WIN)
     paint = false;
     QStyledItemDelegate::paint(painter, option, index);
-//#endif
 
+#if !defined(Q_OS_WIN)
     const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
     if (model) {
         QDriveInfo drive = model->driveInfo(index);
@@ -81,7 +80,6 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
                                   optionRight.rect.width() -
                                   (optionRight.rect.height() + BORDER)); // draw icon (size is rect's height*height)
 
-//#if !defined(Q_OS_WIN)
             QStyleOptionViewItemV4 optionLeft = option;
             // decrease text width so icon won't overlap text
             optionLeft.rect.setWidth(optionLeft.rect.width() - (optionLeft.rect.height() + BORDER));
@@ -90,7 +88,6 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
             QStyle *style = QApplication::style();
             style->drawControl(QStyle::CE_ItemViewItem, &optionRight, painter);
-//#endif
             QRect rect = optionRight.rect;
             rect.setRight(rect.right() - BORDER);
             m_ejectIcon.paint(painter, rect);
@@ -101,6 +98,7 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     if (paint)
         QStyledItemDelegate::paint(painter, option, index);
+#endif
 }
 
 NavigationPanel::NavigationPanel(QWidget *parent) :
