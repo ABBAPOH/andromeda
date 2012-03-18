@@ -17,7 +17,6 @@ BookmarksWidget::BookmarksWidget(QWidget *parent) :
     d->treeView->setModel(d->folderProxy);
     d->tableView->setModel(d->proxyModel);
 
-    connect(d->treeView, SIGNAL(clicked(const QModelIndex&)), d->tableView, SLOT(clearSelection()));
     connect(d->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClicked(QModelIndex)));
     connect(d->tableView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showTableViewMenu(QPoint)));
     connect(d->treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClicked(QModelIndex)));
@@ -140,7 +139,7 @@ void BookmarksWidget::showTreeViewMenu(QPoint p)
     menu.addAction(d->renameAction);
     menu.addSeparator();
     menu.addAction(d->removeAction);
-    menu.exec(d->treeView->mapToGlobal(p));
+    menu.exec(d->treeView->viewport()->mapToGlobal(p));
 }
 
 void BookmarksWidget::showTableViewMenu(QPoint p)
@@ -171,7 +170,7 @@ void BookmarksWidget::showTableViewMenu(QPoint p)
         menu.addSeparator();
         menu.addAction(d->removeAction);
     }
-    menu.exec(d->tableView->mapToGlobal(p));
+    menu.exec(d->tableView->viewport()->mapToGlobal(p));
 }
 
 void BookmarksWidget::openTriggered()
