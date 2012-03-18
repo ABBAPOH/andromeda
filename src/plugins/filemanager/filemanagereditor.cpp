@@ -190,10 +190,12 @@ void FileManagerEditor::restoreDefaults()
     int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder")).toInt();
     int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn")).toInt();
     int viewMode = m_settings->value(QLatin1String("fileManager/viewMode")).toInt();
+    bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled")).toInt();
     int orientation = m_settings->value(QLatin1String("fileManager/orientation")).toInt();
     m_widget->setSortingOrder((Qt::SortOrder)sortOrder);
     m_widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
     m_widget->setViewMode((FileManagerWidget::ViewMode)viewMode);
+    m_widget->setDualPaneModeEnabled(dualPaneModeEnabled);
     m_widget->setOrientation((Qt::Orientation)orientation);
     m_widget->blockSignals(false);
 }
@@ -297,6 +299,11 @@ void FileManagerEditor::onOrientationChanged(Qt::Orientation orientation)
     m_settings->setValue(QLatin1String("fileManager/orientation"), orientation);
 }
 
+void FileManagerEditor::onDualPaneModeChanged(bool enabled)
+{
+    m_settings->setValue(QLatin1String("fileManager/dualPaneModeEnabled"), enabled);
+}
+
 /*!
   \internal
 
@@ -394,8 +401,9 @@ void FileManagerEditor::setupConnections()
     connect(m_widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
     connect(m_widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
     connect(m_widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
-    connect(m_widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
     connect(m_widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
+    connect(m_widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
+    connect(m_widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(onDualPaneModeChanged(bool)));
 
     connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
 
