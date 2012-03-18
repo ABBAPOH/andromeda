@@ -636,12 +636,12 @@
 <context>
     <name>FileManager::NavigationPanel</name>
     <message>
-        <location filename="../navigationpanel.cpp" line="127"/>
+        <location filename="../navigationpanel.cpp" line="129"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../navigationpanel.cpp" line="129"/>
+        <location filename="../navigationpanel.cpp" line="131"/>
         <source>Remove from panel</source>
         <translation>Убрать с панели</translation>
     </message>
@@ -649,117 +649,122 @@
 <context>
     <name>FileManagerPlugin</name>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="101"/>
+        <location filename="../filemanagerplugin.cpp" line="102"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="110"/>
+        <location filename="../filemanagerplugin.cpp" line="331"/>
         <source>Sync panes</source>
         <translation>Синхронизовать панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="114"/>
+        <location filename="../filemanagerplugin.cpp" line="335"/>
         <source>Swap panes</source>
         <translation>Поменять панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="122"/>
+        <location filename="../filemanagerplugin.cpp" line="115"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="130"/>
+        <location filename="../filemanagerplugin.cpp" line="123"/>
         <source>New folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="135"/>
+        <location filename="../filemanagerplugin.cpp" line="342"/>
         <source>Copy files</source>
         <translation>Копировать файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="140"/>
+        <location filename="../filemanagerplugin.cpp" line="347"/>
         <source>Move files</source>
         <translation>Переместить файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="145"/>
+        <location filename="../filemanagerplugin.cpp" line="128"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="154"/>
+        <location filename="../filemanagerplugin.cpp" line="137"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="186"/>
+        <location filename="../filemanagerplugin.cpp" line="169"/>
         <source>Icon View</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="192"/>
+        <location filename="../filemanagerplugin.cpp" line="175"/>
         <source>Column View</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="198"/>
+        <location filename="../filemanagerplugin.cpp" line="181"/>
         <source>Tree View</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="204"/>
+        <location filename="../filemanagerplugin.cpp" line="187"/>
         <source>Cover flow</source>
         <translation>Cover flow</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="210"/>
+        <location filename="../filemanagerplugin.cpp" line="313"/>
+        <source>Panes</source>
+        <translation>Панели</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="318"/>
         <source>Dual Pane</source>
         <translation>Две панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="172"/>
+        <location filename="../filemanagerplugin.cpp" line="155"/>
         <source>Show Hidden Files</source>
         <translation>Показывать скрытые файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="178"/>
+        <location filename="../filemanagerplugin.cpp" line="161"/>
         <source>Show left panel</source>
         <translation>Показывать левую панель</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="216"/>
+        <location filename="../filemanagerplugin.cpp" line="324"/>
         <source>Layout panels vertically</source>
         <translation>Располагать панели вертикально</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="224"/>
+        <location filename="../filemanagerplugin.cpp" line="196"/>
         <source>Sort by</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="229"/>
+        <location filename="../filemanagerplugin.cpp" line="201"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="234"/>
+        <location filename="../filemanagerplugin.cpp" line="206"/>
         <source>Sort by size</source>
         <translation>Сортировать по размеру</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="239"/>
+        <location filename="../filemanagerplugin.cpp" line="211"/>
         <source>Sort by type</source>
         <translation>Сортировать по типу</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="244"/>
+        <location filename="../filemanagerplugin.cpp" line="216"/>
         <source>Sort by date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="251"/>
+        <location filename="../filemanagerplugin.cpp" line="223"/>
         <source>Descending Order</source>
         <translation>В обратном порядке</translation>
     </message>
