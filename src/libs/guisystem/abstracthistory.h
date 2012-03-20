@@ -42,6 +42,9 @@ signals:
     void canGoForwardChanged(bool);
 
     void currentItemIndexChanged(int index);
+
+protected:
+    void emitCurrentItemIndexChanged(int index, int oldIndex);
 };
 
 } // namespace GuiSystem

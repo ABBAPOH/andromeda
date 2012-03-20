@@ -110,3 +110,21 @@ void AbstractHistory::forward()
 
   \brief Emit this signal whenever current index becomes changed.
 */
+
+/*!
+  Emits currentItemIndexChanged signal for the given \a index and emits
+  canGoBackChanged and canGoForwardChanged signals if necessary.
+*/
+void AbstractHistory::emitCurrentItemIndexChanged(int index, int oldIndex)
+{
+    emit currentItemIndexChanged(index);
+
+    if (index == 0)
+        emit canGoBackChanged(false);
+    else if (oldIndex == 0)
+        emit canGoBackChanged(true);
+    if (index == count() - 1)
+        emit canGoForwardChanged(false);
+    else if (oldIndex == count() - 1)
+        emit canGoForwardChanged(true);
+}
