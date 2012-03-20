@@ -212,10 +212,10 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::SortDescendingOrder]->setText(tr("Descending order"));
 
     actions[DualPaneWidget::EnableDualPane]->setText(tr("Enable dual pane"));
-    actions[DualPaneWidget::VerticalPanels]->setText(tr("Vertical panels"));
+    actions[DualPaneWidget::VerticalPanels]->setText(tr("Vertical panes"));
     actions[DualPaneWidget::ToggleActivePane]->setText(tr("Toggle active pane"));
-    actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panels"));
-    actions[DualPaneWidget::SwapPanes]->setText(tr("Swap panels"));
+    actions[DualPaneWidget::SyncPanes]->setText(tr("Sync panes"));
+    actions[DualPaneWidget::SwapPanes]->setText(tr("Swap panes"));
     actions[DualPaneWidget::CopyFiles]->setText(tr("Copy files"));
     actions[DualPaneWidget::MoveFiles]->setText(tr("Move files"));
 }

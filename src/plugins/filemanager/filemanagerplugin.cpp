@@ -321,7 +321,7 @@ void FileManagerPlugin::createPanesMenu()
     container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::VerticalPanels, this);
-    cmd->setDefaultText(tr("Layout panels vertically"));
+    cmd->setDefaultText(tr("Vertical panes"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+U")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
