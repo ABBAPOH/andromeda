@@ -83,16 +83,6 @@
         <translation>Открыть в новом окне</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="217"/>
-        <source>Sync panels</source>
-        <translation>Синхронизовать панели</translation>
-    </message>
-    <message>
-        <location filename="../dualpanewidget.cpp" line="218"/>
-        <source>Swap panels</source>
-        <translation>Поменять панели</translation>
-    </message>
-    <message>
         <location filename="../dualpanewidget.cpp" line="188"/>
         <source>Select program...</source>
         <translation>Выбрать программу...</translation>
@@ -190,11 +180,6 @@
         <translation>Включить две панели</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="215"/>
-        <source>Vertical panels</source>
-        <translation>Располагать панели вертикально</translation>
-    </message>
-    <message>
         <location filename="../dualpanewidget.cpp" line="208"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
@@ -220,9 +205,24 @@
         <translation>В обратном порядке</translation>
     </message>
     <message>
+        <location filename="../dualpanewidget.cpp" line="215"/>
+        <source>Vertical panes</source>
+        <translation>Панели по вертикали</translation>
+    </message>
+    <message>
         <location filename="../dualpanewidget.cpp" line="216"/>
         <source>Toggle active pane</source>
         <translation>Переключить активную панель</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="217"/>
+        <source>Sync panes</source>
+        <translation>Синхронизовать панели</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="218"/>
+        <source>Swap panes</source>
+        <translation>Поменять панели</translation>
     </message>
     <message>
         <location filename="../dualpanewidget.cpp" line="375"/>
@@ -679,6 +679,11 @@
         <translation>Новая папка</translation>
     </message>
     <message>
+        <location filename="../filemanagerplugin.cpp" line="324"/>
+        <source>Vertical panes</source>
+        <translation>Панели по вертикали</translation>
+    </message>
+    <message>
         <location filename="../filemanagerplugin.cpp" line="330"/>
         <source>Toggle active pane</source>
         <translation>Переключить активную панель</translation>
@@ -742,11 +747,6 @@
         <location filename="../filemanagerplugin.cpp" line="161"/>
         <source>Show left panel</source>
         <translation>Показывать левую панель</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerplugin.cpp" line="324"/>
-        <source>Layout panels vertically</source>
-        <translation>Располагать панели вертикально</translation>
     </message>
     <message>
         <location filename="../filemanagerplugin.cpp" line="196"/>
