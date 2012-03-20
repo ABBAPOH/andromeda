@@ -1,5 +1,5 @@
-#ifndef ABSTRACTHISTORY_H
-#define ABSTRACTHISTORY_H
+#ifndef IHISTORY_H
+#define IHISTORY_H
 
 #include "guisystem_global.h"
 
@@ -9,17 +9,17 @@
 
 namespace GuiSystem {
 
-class GUISYSTEM_EXPORT AbstractHistory : public QObject
+class GUISYSTEM_EXPORT IHistory : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(AbstractHistory)
+    Q_DISABLE_COPY(IHistory)
 
     Q_PROPERTY(int currentItemIndex READ currentItemIndex WRITE setCurrentItemIndex NOTIFY currentItemIndexChanged)
     Q_PROPERTY(bool canGoBack READ canGoBack)
     Q_PROPERTY(bool canGoForward READ canGoForward)
 
 public:
-    explicit AbstractHistory(QObject *parent = 0);
+    explicit IHistory(QObject *parent = 0);
 
     bool canGoBack() const;
     bool canGoForward() const;
@@ -49,4 +49,4 @@ protected:
 
 } // namespace GuiSystem
 
-#endif // ABSTRACTHISTORY_H
+#endif // IHISTORY_H

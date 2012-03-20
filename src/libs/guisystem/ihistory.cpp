@@ -1,27 +1,27 @@
-#include "abstracthistory.h"
+#include "ihistory.h"
 
 using namespace GuiSystem;
 
 /*!
-  \class AbstractHistory
+  \class IHistory
 
-  \brief The AbstractHistory class is base class for Editor's history.
+  \brief The IHistory class is base class for Editor's history.
 */
 
 /*!
-  \brief Creates an AbstractHistory with the given \a parent.
+  \brief Creates an IHistory with the given \a parent.
 */
-AbstractHistory::AbstractHistory(QObject *parent) :
+IHistory::IHistory(QObject *parent) :
     QObject(parent)
 {
 }
 
 /*!
-  \property AbstractHistory::canGoBack
+  \property IHistory::canGoBack
 
   \brief This property holds whenever history can go  at least one item back.
 */
-bool AbstractHistory::canGoBack() const
+bool IHistory::canGoBack() const
 {
     return currentItemIndex() > 0;
 }
@@ -29,18 +29,18 @@ bool AbstractHistory::canGoBack() const
 /*!
   \brief Sets the current item to be the previous item in the history.
 */
-void AbstractHistory::back()
+void IHistory::back()
 {
     if (canGoBack())
         setCurrentItemIndex(currentItemIndex() - 1);
 }
 
 /*!
-  \property AbstractHistory::canGoForward
+  \property IHistory::canGoForward
 
   \brief This property holds whenever history can go at least one item forward.
 */
-bool AbstractHistory::canGoForward() const
+bool IHistory::canGoForward() const
 {
     return currentItemIndex() >= 0 && currentItemIndex() < count() - 1;
 }
@@ -48,7 +48,7 @@ bool AbstractHistory::canGoForward() const
 /*!
   \brief Sets the current item to be the next item in the history.
 */
-void AbstractHistory::forward()
+void IHistory::forward()
 {
     if (canGoForward()) {
         setCurrentItemIndex(currentItemIndex() + 1);
@@ -56,19 +56,19 @@ void AbstractHistory::forward()
 }
 
 /*!
-  \property AbstractHistory::currentItemIndex
+  \property IHistory::currentItemIndex
 
   \brief This property holds current index in history.
 */
 
 /*!
-  \fn int AbstractHistory::count() const
+  \fn int IHistory::count() const
 
   \brief Reimplement to return how many items this history contains.
 */
 
 /*!
-  \fn int AbstractHistory::currentItemIndex() const
+  \fn int IHistory::currentItemIndex() const
 
   \brief Reimplement to return current index in history.
 
@@ -76,37 +76,37 @@ void AbstractHistory::forward()
 */
 
 /*!
-  \fn void AbstractHistory::setCurrentItemIndex(int index)
+  \fn void IHistory::setCurrentItemIndex(int index)
 
   \brief Reimplement to navigate to specified \a index in history.
 */
 
 /*!
-  \fn HistoryItem AbstractHistory::itemAt(int index) const
+  \fn HistoryItem IHistory::itemAt(int index) const
 
   \brief Reimplement to return item located at specified \a index.
 */
 
 /*!
-  \fn void AbstractHistory::clear()
+  \fn void IHistory::clear()
 
   \brief Reimplement to clear this history.
 */
 
 /*!
-  \fn void AbstractHistory::canGoBackChanged(bool)
+  \fn void IHistory::canGoBackChanged(bool)
 
   \brief Emit this signal whenever history can go back or not.
 */
 
 /*!
-  \fn void AbstractHistory::canGoForwardChanged(bool)
+  \fn void IHistory::canGoForwardChanged(bool)
 
   \brief Emit this signal whenever history can go forward or not.
 */
 
 /*!
-  \fn void AbstractHistory::currentItemIndexChanged(int index)
+  \fn void IHistory::currentItemIndexChanged(int index)
 
   \brief Emit this signal whenever current index becomes changed.
 */
@@ -115,7 +115,7 @@ void AbstractHistory::forward()
   Emits currentItemIndexChanged signal for the given \a index and emits
   canGoBackChanged and canGoForwardChanged signals if necessary.
 */
-void AbstractHistory::emitCurrentItemIndexChanged(int index, int oldIndex)
+void IHistory::emitCurrentItemIndexChanged(int index, int oldIndex)
 {
     emit currentItemIndexChanged(index);
 

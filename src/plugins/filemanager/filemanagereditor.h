@@ -33,7 +33,7 @@ public:
     QUrl url() const;
     void open(const QUrl &url);
 
-    GuiSystem::AbstractHistory *history() const;
+    GuiSystem::IHistory *history() const;
 
     int currentIndex() const;
     void setCurrentIndex(int index);

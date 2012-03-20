@@ -3,12 +3,12 @@
 
 #include "filemanagereditor.h"
 #include "dualpanewidget.h"
-#include <guisystem/abstracthistory.h>
 #include <guisystem/historyitem.h>
+#include <guisystem/ihistory.h>
 
 namespace FileManager {
 
-class FileManagerHistory : public GuiSystem::AbstractHistory
+class FileManagerHistory : public GuiSystem::IHistory
 {
     Q_OBJECT
     Q_DISABLE_COPY(FileManagerHistory)

@@ -222,7 +222,7 @@ void StackedContainer::setCurrentIndex(int index)
 /*!
   \reimp
 */
-AbstractHistory * StackedContainer::history() const
+IHistory * StackedContainer::history() const
 {
     return d->history;
 }

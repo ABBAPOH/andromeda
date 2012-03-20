@@ -3,8 +3,8 @@
 
 #include "webvieweditor.h"
 
-#include <guisystem/abstracthistory.h>
 #include <guisystem/ifind.h>
+#include <guisystem/ihistory.h>
 
 namespace WebView {
 
@@ -30,7 +30,7 @@ private:
     QString m_currentFindString;
 };
 
-class WebViewHistory : public GuiSystem::AbstractHistory
+class WebViewHistory : public GuiSystem::IHistory
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebViewHistory)

@@ -38,7 +38,7 @@ public:
     QUrl url() const;
 
     GuiSystem::IFind *find() const;
-    GuiSystem::AbstractHistory *history() const;
+    GuiSystem::IHistory *history() const;
 
     QWidget *widget() const { return m_webView; }
 

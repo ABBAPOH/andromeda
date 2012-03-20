@@ -8,7 +8,7 @@ using namespace GuiSystem;
   \brief This class redirects method calls and signals to and from other history.
 */
 ProxyHistory::ProxyHistory(QObject *parent) :
-    AbstractHistory(parent),
+    IHistory(parent),
     m_sourceHistory(0)
 {
 }
@@ -58,7 +58,7 @@ HistoryItem ProxyHistory::itemAt(int index) const
 /*!
   \brief Returns source history.
 */
-AbstractHistory * ProxyHistory::sourceHistory() const
+IHistory * ProxyHistory::sourceHistory() const
 {
     return m_sourceHistory;
 }
@@ -66,7 +66,7 @@ AbstractHistory * ProxyHistory::sourceHistory() const
 /*!
   \brief Sets source \a history for the proxy.
 */
-void ProxyHistory::setSourceHistory(AbstractHistory *history)
+void ProxyHistory::setSourceHistory(IHistory *history)
 {
     if (m_sourceHistory == history)
         return;

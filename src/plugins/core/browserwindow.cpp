@@ -16,7 +16,7 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
-#include <guisystem/abstracthistory.h>
+#include <guisystem/ihistory.h>
 
 #include "constants.h"
 
@@ -273,7 +273,7 @@ QByteArray BrowserWindow::windowGeometry()
     return m_windowGeometry;
 }
 
-void BrowserWindow::setWindowGeometry(const QByteArray &geometry) 
+void BrowserWindow::setWindowGeometry(const QByteArray &geometry)
 {
     m_windowGeometry = geometry;
 }

@@ -28,7 +28,7 @@ public:
 
     QUrl url() const;
 
-    AbstractHistory *history() const;
+    IHistory *history() const;
 
     virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;

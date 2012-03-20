@@ -7,7 +7,7 @@
 
 namespace GuiSystem {
 
-class AbstractHistory;
+class IHistory;
 class AbstractEditorFactory;
 class IFind;
 
@@ -47,7 +47,7 @@ public:
     virtual QString windowTitle() const;
 
     virtual IFind *find() const;
-    virtual AbstractHistory *history() const;
+    virtual IHistory *history() const;
 
     virtual void restoreDefaults() {}
     virtual bool restoreState(const QByteArray &state);

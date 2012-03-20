@@ -5,7 +5,6 @@ set( HEADERS
     abstractcontainer.h
     abstracteditor.h
     abstracteditorfactory.h
-    abstracthistory.h
     abstractview.h
     abstractviewfactory.h
     command.h
@@ -18,6 +17,7 @@ set( HEADERS
     history.h
     historyitem.h
     ifind.h
+    ihistory.h
     mainwindow.h
     mainwindow_p.h
     proxyaction.h
@@ -34,7 +34,6 @@ set( SOURCES
     abstractcontainer.cpp
     abstracteditor.cpp
     abstracteditorfactory.cpp
-    abstracthistory.cpp
     abstractview.cpp
     abstractviewfactory.cpp
     command.cpp
@@ -46,6 +45,7 @@ set( SOURCES
     history.cpp
     historyitem.cpp
     ifind.cpp
+    ihistory.cpp
     mainwindow.cpp
     proxyaction.cpp
     proxyhistory.cpp

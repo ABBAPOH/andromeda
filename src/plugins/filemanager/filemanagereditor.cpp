@@ -26,7 +26,7 @@ using namespace GuiSystem;
 using namespace FileManager;
 
 FileManagerHistory::FileManagerHistory(QObject *parent) :
-    AbstractHistory(parent),
+    IHistory(parent),
     m_widget(0)
 {
 }
@@ -119,7 +119,7 @@ void FileManagerEditor::open(const QUrl &url)
 /*!
   \reimp
 */
-AbstractHistory * FileManagerEditor::history() const
+IHistory * FileManagerEditor::history() const
 {
     return m_history;
 }
