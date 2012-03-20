@@ -1,11 +1,11 @@
 #ifndef PROXYHISTORY_H
 #define PROXYHISTORY_H
 
-#include "abstracthistory.h"
+#include "ihistory.h"
 
 namespace GuiSystem {
 
-class GUISYSTEM_EXPORT ProxyHistory : public AbstractHistory
+class GUISYSTEM_EXPORT ProxyHistory : public IHistory
 {
     Q_OBJECT
     Q_DISABLE_COPY(ProxyHistory)
@@ -20,14 +20,14 @@ public:
 
     HistoryItem itemAt(int index) const;
 
-    AbstractHistory *sourceHistory() const;
-    void setSourceHistory(AbstractHistory *history);
+    IHistory *sourceHistory() const;
+    void setSourceHistory(IHistory *history);
 
 public slots:
     void clear();
 
 private:
-    AbstractHistory *m_sourceHistory;
+    IHistory *m_sourceHistory;
 };
 
 } // namespace GuiSystem

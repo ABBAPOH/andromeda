@@ -105,7 +105,7 @@ void WebViewFind::findStep(const QString &txt, IFind::FindFlags findFlags)
 }
 
 WebViewHistory::WebViewHistory(QObject *parent) :
-    AbstractHistory(parent)
+    IHistory(parent)
 {
 }
 
@@ -221,7 +221,7 @@ IFind *WebViewEditor::find() const
     return m_find;
 }
 
-AbstractHistory *WebViewEditor::history() const
+IHistory *WebViewEditor::history() const
 {
     return m_history;
 }

@@ -307,7 +307,7 @@ IFind *AbstractEditor::find() const
   Note that AbstractEditor::capabilities should return AbstractEditor::HasHistory among other flags.
   Default imlementation returns 0.
 */
-AbstractHistory * AbstractEditor::history() const
+IHistory * AbstractEditor::history() const
 {
     return 0;
 }

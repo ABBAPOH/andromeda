@@ -100,7 +100,7 @@ void TabContainer::setDefaultUrl(const QUrl &url)
 /*!
   \reimp
 */
-AbstractHistory * TabContainer::history() const
+IHistory * TabContainer::history() const
 {
     return m_proxyHistory;
 }

@@ -3,7 +3,7 @@
 
 #include "abstractcontainer.h"
 #include "actionmanager.h"
-#include "abstracthistory.h"
+#include "ihistory.h"
 #include "commandcontainer.h"
 #include "stackedcontainer.h"
 

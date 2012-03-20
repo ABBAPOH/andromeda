@@ -4,7 +4,7 @@
 #include "stackedcontainer.h"
 
 #include "abstracteditorfactory.h"
-#include "abstracthistory.h"
+#include "ihistory.h"
 #include "editormanager.h"
 #include "history.h"
 
@@ -12,13 +12,13 @@ class QStackedLayout;
 
 namespace GuiSystem {
 
-class StackedEditorHistory : public AbstractHistory
+class StackedEditorHistory : public IHistory
 {
     Q_OBJECT
 
 public:
     explicit StackedEditorHistory(QObject *parent) :
-        AbstractHistory(parent),
+        IHistory(parent),
         m_history(new History(this))
     {
         connect(m_history, SIGNAL(currentItemIndexChanged(int)),
