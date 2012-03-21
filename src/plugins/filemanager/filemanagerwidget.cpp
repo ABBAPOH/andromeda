@@ -103,21 +103,16 @@ void FileManagerWidgetPrivate::createActions()
 
     viewModeGroup = new QActionGroup(this);
 
-    actions[FileManagerWidget::IconMode] = new QAction(this);
-    actions[FileManagerWidget::ColumnMode] = new QAction(this);
-    actions[FileManagerWidget::TreeMode] = new QAction(this);
-    actions[FileManagerWidget::CoverFlowMode] = new QAction(this);
+    actions[FileManagerWidget::IconMode] = new QAction(viewModeGroup);
+    actions[FileManagerWidget::ColumnMode] = new QAction(viewModeGroup);
+    actions[FileManagerWidget::TreeMode] = new QAction(viewModeGroup);
+    actions[FileManagerWidget::CoverFlowMode] = new QAction(viewModeGroup);
 
     actions[FileManagerWidget::IconMode]->setCheckable(true);
     actions[FileManagerWidget::IconMode]->setChecked(true);
     actions[FileManagerWidget::ColumnMode]->setCheckable(true);
     actions[FileManagerWidget::TreeMode]->setCheckable(true);
     actions[FileManagerWidget::CoverFlowMode]->setCheckable(true);
-
-    viewModeGroup->addAction(actions[FileManagerWidget::IconMode]);
-    viewModeGroup->addAction(actions[FileManagerWidget::ColumnMode]);
-    viewModeGroup->addAction(actions[FileManagerWidget::TreeMode]);
-    viewModeGroup->addAction(actions[FileManagerWidget::CoverFlowMode]);
 
     actions[FileManagerWidget::IconMode]->setData(FileManagerWidget::IconView);
     actions[FileManagerWidget::ColumnMode]->setData(FileManagerWidget::ColumnView);
@@ -131,10 +126,10 @@ void FileManagerWidgetPrivate::createActions()
 
     sortByGroup = new QActionGroup(this);
 
-    actions[FileManagerWidget::SortByName] = new QAction(this);
-    actions[FileManagerWidget::SortBySize] = new QAction(this);
-    actions[FileManagerWidget::SortByType] = new QAction(this);
-    actions[FileManagerWidget::SortByDate] = new QAction(this);
+    actions[FileManagerWidget::SortByName] = new QAction(sortByGroup);
+    actions[FileManagerWidget::SortBySize] = new QAction(sortByGroup);
+    actions[FileManagerWidget::SortByType] = new QAction(sortByGroup);
+    actions[FileManagerWidget::SortByDate] = new QAction(sortByGroup);
     actions[FileManagerWidget::SortDescendingOrder] = new QAction(this);
 
     actions[FileManagerWidget::SortByName]->setCheckable(true);
@@ -144,11 +139,6 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::SortDescendingOrder]->setCheckable(true);
 
     actions[FileManagerWidget::SortByName]->setChecked(true);
-
-    sortByGroup->addAction(actions[FileManagerWidget::SortByName]);
-    sortByGroup->addAction(actions[FileManagerWidget::SortBySize]);
-    sortByGroup->addAction(actions[FileManagerWidget::SortByType]);
-    sortByGroup->addAction(actions[FileManagerWidget::SortByDate]);
 
     actions[FileManagerWidget::SortByName]->setData(FileManagerWidget::NameColumn);
     actions[FileManagerWidget::SortBySize]->setData(FileManagerWidget::SizeColumn);
