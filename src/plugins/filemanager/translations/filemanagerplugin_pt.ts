@@ -68,154 +68,179 @@
 <context>
     <name>FileManager::DualPaneWidgetPrivate</name>
     <message>
-        <location filename="../dualpanewidget.cpp" line="162"/>
+        <location filename="../dualpanewidget.cpp" line="174"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="163"/>
+        <location filename="../dualpanewidget.cpp" line="175"/>
         <source>Open in new tab</source>
         <translation>Abrir em novo separador</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="164"/>
+        <location filename="../dualpanewidget.cpp" line="176"/>
         <source>Open in new window</source>
         <translation>Abrir em nova janela</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="166"/>
+        <location filename="../dualpanewidget.cpp" line="178"/>
         <source>Select program...</source>
         <translation>Seleccionar programa...</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="167"/>
+        <location filename="../dualpanewidget.cpp" line="179"/>
         <source>New Folder</source>
         <translation>Nova Pasta</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="168"/>
+        <location filename="../dualpanewidget.cpp" line="205"/>
+        <source>Vertical panes</source>
+        <translation>Painéis verticais</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="207"/>
+        <source>Sync panes</source>
+        <translation>Sincronizar painéis</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="208"/>
+        <source>Swap panes</source>
+        <translation>Trocar painéis</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="209"/>
         <source>Copy files</source>
         <translation>Copiar Ficheiros</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="169"/>
+        <location filename="../dualpanewidget.cpp" line="210"/>
         <source>Move files</source>
         <translation>Mover Ficheiros</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="170"/>
+        <location filename="../dualpanewidget.cpp" line="180"/>
         <source>Rename</source>
         <translation>Renomear</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="171"/>
+        <location filename="../dualpanewidget.cpp" line="181"/>
         <source>Remove</source>
         <translation>Remover</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="172"/>
+        <location filename="../dualpanewidget.cpp" line="182"/>
         <source>File info</source>
         <translation>Informações</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="174"/>
+        <location filename="../dualpanewidget.cpp" line="184"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="175"/>
+        <location filename="../dualpanewidget.cpp" line="185"/>
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="176"/>
-        <location filename="../dualpanewidget.cpp" line="342"/>
+        <location filename="../dualpanewidget.cpp" line="186"/>
+        <location filename="../dualpanewidget.cpp" line="366"/>
         <source>Cut</source>
         <translation>Cortar</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="177"/>
-        <location filename="../dualpanewidget.cpp" line="343"/>
+        <location filename="../dualpanewidget.cpp" line="187"/>
+        <location filename="../dualpanewidget.cpp" line="367"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="178"/>
+        <location filename="../dualpanewidget.cpp" line="188"/>
         <source>Paste</source>
         <translation>Colar</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="179"/>
+        <location filename="../dualpanewidget.cpp" line="189"/>
         <source>Select all</source>
         <translation>Seleccionar tudo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="181"/>
+        <location filename="../dualpanewidget.cpp" line="191"/>
         <source>Show hidden files</source>
         <translation>Mostrar ficheiros escondidos</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="183"/>
+        <location filename="../dualpanewidget.cpp" line="193"/>
         <source>Icon view</source>
         <translation>Vista por ícones</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="184"/>
+        <location filename="../dualpanewidget.cpp" line="194"/>
         <source>Column view</source>
         <translation>Vista por colunas</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="185"/>
+        <location filename="../dualpanewidget.cpp" line="195"/>
         <source>Tree view</source>
         <translation>Vista por detalhes</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="186"/>
+        <location filename="../dualpanewidget.cpp" line="196"/>
         <source>Cover flow</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="189"/>
+        <location filename="../dualpanewidget.cpp" line="198"/>
         <source>Sort by name</source>
         <translation>Ordenar por nome</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="190"/>
+        <location filename="../dualpanewidget.cpp" line="199"/>
         <source>Sort by size</source>
         <translation>Ordenar por tamanho</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="191"/>
+        <location filename="../dualpanewidget.cpp" line="200"/>
         <source>Sort by type</source>
         <translation>Ordenar por tipo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="192"/>
+        <location filename="../dualpanewidget.cpp" line="201"/>
         <source>Sort by date</source>
         <translation>Ordenar por data</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="193"/>
+        <location filename="../dualpanewidget.cpp" line="202"/>
         <source>Descending order</source>
         <translation>Ordem descendente</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="335"/>
+        <location filename="../dualpanewidget.cpp" line="204"/>
+        <source>Enable dual pane</source>
+        <translation>Activar painel duplo</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="206"/>
+        <source>Toggle active pane</source>
+        <translation>Alternar painel activo</translation>
+    </message>
+    <message>
+        <location filename="../dualpanewidget.cpp" line="359"/>
         <source>Cut &quot;%1&quot;</source>
         <translation>Cortar &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="336"/>
+        <location filename="../dualpanewidget.cpp" line="360"/>
         <source>Copy &quot;%1&quot;</source>
         <translation>Copiar &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="338"/>
+        <location filename="../dualpanewidget.cpp" line="362"/>
         <source>Cut %1 items</source>
         <translation>Cortar &quot;%1&quot; itens</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="339"/>
+        <location filename="../dualpanewidget.cpp" line="363"/>
         <source>Copy %1 items</source>
         <translation>Copiar &quot;%1&quot; itens</translation>
     </message>
@@ -389,7 +414,7 @@
 <context>
     <name>FileManager::FileManagerEditor</name>
     <message>
-        <location filename="../filemanagereditor.cpp" line="401"/>
+        <location filename="../filemanagereditor.cpp" line="426"/>
         <source>Show left panel</source>
         <translation>Mostrar painel esquerdo</translation>
     </message>
@@ -410,42 +435,42 @@
 <context>
     <name>FileManager::FileManagerWidget</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="773"/>
+        <location filename="../filemanagerwidget.cpp" line="763"/>
         <source>New Folder</source>
         <translation>Nova Pasta</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="813"/>
+        <location filename="../filemanagerwidget.cpp" line="803"/>
         <source>Programs (*.exe *.cmd *.com *.bat);;All files (*)</source>
         <translation>Programas (* exe *cmd *.com *.bat);;Todos os Ficheiros (*)</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="818"/>
+        <location filename="../filemanagerwidget.cpp" line="808"/>
         <source>Select program</source>
         <translation>Seleccionar programa</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="844"/>
+        <location filename="../filemanagerwidget.cpp" line="834"/>
         <source>Can&apos;t open files</source>
         <translation>Não é possível abrir os ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="845"/>
+        <location filename="../filemanagerwidget.cpp" line="835"/>
         <source>Andromeda failed to open some files :%1</source>
         <translation>Andromeda falhou a abrir alguns ficheiros :%1</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1055"/>
+        <location filename="../filemanagerwidget.cpp" line="1045"/>
         <source>View Mode</source>
         <translation>Modo de Visualização</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1060"/>
+        <location filename="../filemanagerwidget.cpp" line="1050"/>
         <source>Sort by</source>
         <translation>Ordenar por</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1072"/>
+        <location filename="../filemanagerwidget.cpp" line="1062"/>
         <source>Open with</source>
         <translation>Abrir com</translation>
     </message>
@@ -453,144 +478,144 @@
 <context>
     <name>FileManager::FileManagerWidgetPrivate</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="171"/>
+        <location filename="../filemanagerwidget.cpp" line="161"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="172"/>
+        <location filename="../filemanagerwidget.cpp" line="162"/>
         <source>Open in new tab</source>
         <translation>Abrir em novo separador</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="173"/>
+        <location filename="../filemanagerwidget.cpp" line="163"/>
         <source>Open in new window</source>
         <translation>Abrir em nova janela</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="175"/>
+        <location filename="../filemanagerwidget.cpp" line="165"/>
         <source>Select program...</source>
         <translation>Seleccionar programa...</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="176"/>
+        <location filename="../filemanagerwidget.cpp" line="166"/>
         <source>New Folder</source>
         <translation>Nova Pasta</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="177"/>
+        <location filename="../filemanagerwidget.cpp" line="167"/>
         <source>Rename</source>
         <translation>Renomear</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="178"/>
+        <location filename="../filemanagerwidget.cpp" line="168"/>
         <source>Remove</source>
         <translation>Remover</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="179"/>
+        <location filename="../filemanagerwidget.cpp" line="169"/>
         <source>File info</source>
         <translation>Informações</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="181"/>
+        <location filename="../filemanagerwidget.cpp" line="171"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="182"/>
+        <location filename="../filemanagerwidget.cpp" line="172"/>
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="183"/>
-        <location filename="../filemanagerwidget.cpp" line="942"/>
+        <location filename="../filemanagerwidget.cpp" line="173"/>
+        <location filename="../filemanagerwidget.cpp" line="932"/>
         <source>Cut</source>
         <translation>Cortar</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="184"/>
-        <location filename="../filemanagerwidget.cpp" line="943"/>
+        <location filename="../filemanagerwidget.cpp" line="174"/>
+        <location filename="../filemanagerwidget.cpp" line="933"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="185"/>
+        <location filename="../filemanagerwidget.cpp" line="175"/>
         <source>Paste</source>
         <translation>Colar</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="186"/>
+        <location filename="../filemanagerwidget.cpp" line="176"/>
         <source>Select all</source>
         <translation>Seleccionar tudo</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="188"/>
+        <location filename="../filemanagerwidget.cpp" line="178"/>
         <source>Show hidden files</source>
         <translation>Mostrar ficheiros escondidos</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="190"/>
+        <location filename="../filemanagerwidget.cpp" line="180"/>
         <source>Icon view</source>
         <translation>Vista por ícones</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="191"/>
+        <location filename="../filemanagerwidget.cpp" line="181"/>
         <source>Column view</source>
         <translation>Vista por colunas</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="192"/>
+        <location filename="../filemanagerwidget.cpp" line="182"/>
         <source>Tree view</source>
         <translation>Vista por detalhes</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="193"/>
+        <location filename="../filemanagerwidget.cpp" line="183"/>
         <source>Cover flow</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="195"/>
+        <location filename="../filemanagerwidget.cpp" line="185"/>
         <source>Sort by name</source>
         <translation>Ordenar por nome</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="196"/>
+        <location filename="../filemanagerwidget.cpp" line="186"/>
         <source>Sort by size</source>
         <translation>Ordenar por tamanho</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="197"/>
+        <location filename="../filemanagerwidget.cpp" line="187"/>
         <source>Sort by type</source>
         <translation>Ordenar por tipo</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="198"/>
+        <location filename="../filemanagerwidget.cpp" line="188"/>
         <source>Sort by date</source>
         <translation>Ordenar por data</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="199"/>
+        <location filename="../filemanagerwidget.cpp" line="189"/>
         <source>Descending order</source>
         <translation>Ordem descendente</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="935"/>
+        <location filename="../filemanagerwidget.cpp" line="925"/>
         <source>Cut &quot;%1&quot;</source>
         <translation>Cortar &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="936"/>
+        <location filename="../filemanagerwidget.cpp" line="926"/>
         <source>Copy &quot;%1&quot;</source>
         <translation>Copiar &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="938"/>
+        <location filename="../filemanagerwidget.cpp" line="928"/>
         <source>Cut %1 items</source>
         <translation>Cortar &quot;%1&quot; itens</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="939"/>
+        <location filename="../filemanagerwidget.cpp" line="929"/>
         <source>Copy %1 items</source>
         <translation>Copiar &quot;%1&quot; itens</translation>
     </message>
@@ -598,17 +623,17 @@
 <context>
     <name>FileManager::NavigationModel</name>
     <message>
-        <location filename="../navigationmodel.cpp" line="137"/>
+        <location filename="../navigationmodel.cpp" line="140"/>
         <source>Devices</source>
         <translation>Dispositivos</translation>
     </message>
     <message>
-        <location filename="../navigationmodel.cpp" line="138"/>
+        <location filename="../navigationmodel.cpp" line="141"/>
         <source>Network</source>
         <translation>Rede</translation>
     </message>
     <message>
-        <location filename="../navigationmodel.cpp" line="139"/>
+        <location filename="../navigationmodel.cpp" line="142"/>
         <source>Folders</source>
         <translation>Pastas</translation>
     </message>
@@ -616,12 +641,12 @@
 <context>
     <name>FileManager::NavigationPanel</name>
     <message>
-        <location filename="../navigationpanel.cpp" line="118"/>
+        <location filename="../navigationpanel.cpp" line="129"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="../navigationpanel.cpp" line="120"/>
+        <location filename="../navigationpanel.cpp" line="131"/>
         <source>Remove from panel</source>
         <translation>Remover do painel</translation>
     </message>
@@ -629,102 +654,127 @@
 <context>
     <name>FileManagerPlugin</name>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="101"/>
+        <location filename="../filemanagerplugin.cpp" line="102"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="114"/>
+        <location filename="../filemanagerplugin.cpp" line="115"/>
         <source>File info</source>
         <translation>Informações</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="122"/>
+        <location filename="../filemanagerplugin.cpp" line="123"/>
         <source>New folder</source>
         <translation>Nova pasta</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="127"/>
+        <location filename="../filemanagerplugin.cpp" line="340"/>
+        <source>Toggle active pane</source>
+        <translation>Alternar painel activo</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="347"/>
+        <source>Sync panes</source>
+        <translation>Sincronizar painéis</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="351"/>
+        <source>Swap panes</source>
+        <translation>Trocar painéis</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="358"/>
         <source>Copy files</source>
         <translation>Copiar Ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="132"/>
+        <location filename="../filemanagerplugin.cpp" line="363"/>
         <source>Move files</source>
         <translation>Mover Ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="137"/>
+        <location filename="../filemanagerplugin.cpp" line="128"/>
         <source>Rename</source>
         <translation>Renomear</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="146"/>
+        <location filename="../filemanagerplugin.cpp" line="137"/>
         <source>Remove</source>
         <translation>Remover</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="164"/>
+        <location filename="../filemanagerplugin.cpp" line="155"/>
         <source>Show Hidden Files</source>
         <translation>Mostrar ficheiros escondidos</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="170"/>
+        <location filename="../filemanagerplugin.cpp" line="161"/>
         <source>Show left panel</source>
         <translation>Mostrar painel esquerdo</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="178"/>
+        <location filename="../filemanagerplugin.cpp" line="170"/>
         <source>Icon View</source>
         <translation>Vista por ícones</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="184"/>
+        <location filename="../filemanagerplugin.cpp" line="177"/>
         <source>Column View</source>
         <translation>Vista por colunas</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="190"/>
+        <location filename="../filemanagerplugin.cpp" line="184"/>
         <source>Tree View</source>
         <translation>Vista por detalhes</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="196"/>
+        <location filename="../filemanagerplugin.cpp" line="191"/>
         <source>Cover flow</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="202"/>
+        <location filename="../filemanagerplugin.cpp" line="323"/>
+        <source>Panes</source>
+        <translation>Painéis</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="328"/>
         <source>Dual Pane</source>
         <translation>Duplo Painel</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="211"/>
+        <location filename="../filemanagerplugin.cpp" line="334"/>
+        <source>Vertical panes</source>
+        <translation>Painéis verticais</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="202"/>
         <source>Sort by</source>
         <translation>Ordenar por</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="216"/>
+        <location filename="../filemanagerplugin.cpp" line="207"/>
         <source>Sort by name</source>
         <translation>Ordenar por nome</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="221"/>
+        <location filename="../filemanagerplugin.cpp" line="213"/>
         <source>Sort by size</source>
         <translation>Ordenar por tamanho</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="226"/>
+        <location filename="../filemanagerplugin.cpp" line="219"/>
         <source>Sort by type</source>
         <translation>Ordenar por tipo</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="231"/>
+        <location filename="../filemanagerplugin.cpp" line="225"/>
         <source>Sort by date</source>
         <translation>Ordenar por data</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="238"/>
+        <location filename="../filemanagerplugin.cpp" line="233"/>
         <source>Descending Order</source>
         <translation>Ordem descendente</translation>
     </message>
@@ -846,14 +896,6 @@
         <location filename="../filemanagersettingswidget.cpp" line="165"/>
         <source>Icon size: %1x%2</source>
         <translation>Tamanho dos ícones: %1x%2</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <location filename="../dualpanewidget.cpp" line="187"/>
-        <source>Enable dual pane</source>
-        <translation>Activar painel duplo</translation>
     </message>
 </context>
 </TS>
