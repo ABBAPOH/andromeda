@@ -85,21 +85,16 @@ void DualPaneWidgetPrivate::createActions()
 
     viewModeGroup = new QActionGroup(this);
 
-    actions[DualPaneWidget::IconMode] = new QAction(this);
-    actions[DualPaneWidget::ColumnMode] = new QAction(this);
-    actions[DualPaneWidget::TreeMode] = new QAction(this);
-    actions[DualPaneWidget::CoverFlowMode] = new QAction(this);
+    actions[DualPaneWidget::IconMode] = new QAction(viewModeGroup);
+    actions[DualPaneWidget::ColumnMode] = new QAction(viewModeGroup);
+    actions[DualPaneWidget::TreeMode] = new QAction(viewModeGroup);
+    actions[DualPaneWidget::CoverFlowMode] = new QAction(viewModeGroup);
 
     actions[DualPaneWidget::IconMode]->setCheckable(true);
     actions[DualPaneWidget::IconMode]->setChecked(true);
     actions[DualPaneWidget::ColumnMode]->setCheckable(true);
     actions[DualPaneWidget::TreeMode]->setCheckable(true);
     actions[DualPaneWidget::CoverFlowMode]->setCheckable(true);
-
-    viewModeGroup->addAction(actions[DualPaneWidget::IconMode]);
-    viewModeGroup->addAction(actions[DualPaneWidget::ColumnMode]);
-    viewModeGroup->addAction(actions[DualPaneWidget::TreeMode]);
-    viewModeGroup->addAction(actions[DualPaneWidget::CoverFlowMode]);
 
     actions[DualPaneWidget::IconMode]->setData(FileManagerWidget::IconView);
     actions[DualPaneWidget::ColumnMode]->setData(FileManagerWidget::ColumnView);
@@ -113,10 +108,10 @@ void DualPaneWidgetPrivate::createActions()
 
     sortByGroup = new QActionGroup(this);
 
-    actions[DualPaneWidget::SortByName] = new QAction(this);
-    actions[DualPaneWidget::SortBySize] = new QAction(this);
-    actions[DualPaneWidget::SortByType] = new QAction(this);
-    actions[DualPaneWidget::SortByDate] = new QAction(this);
+    actions[DualPaneWidget::SortByName] = new QAction(sortByGroup);
+    actions[DualPaneWidget::SortBySize] = new QAction(sortByGroup);
+    actions[DualPaneWidget::SortByType] = new QAction(sortByGroup);
+    actions[DualPaneWidget::SortByDate] = new QAction(sortByGroup);
     actions[DualPaneWidget::SortDescendingOrder] = new QAction(this);
 
     actions[DualPaneWidget::SortByName]->setCheckable(true);
@@ -126,11 +121,6 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::SortDescendingOrder]->setCheckable(true);
 
     actions[DualPaneWidget::SortByName]->setChecked(true);
-
-    sortByGroup->addAction(actions[DualPaneWidget::SortByName]);
-    sortByGroup->addAction(actions[DualPaneWidget::SortBySize]);
-    sortByGroup->addAction(actions[DualPaneWidget::SortByType]);
-    sortByGroup->addAction(actions[DualPaneWidget::SortByDate]);
 
     actions[DualPaneWidget::SortByName]->setData(FileManagerWidget::NameColumn);
     actions[DualPaneWidget::SortBySize]->setData(FileManagerWidget::SizeColumn);
@@ -317,14 +307,11 @@ void DualPaneWidgetPrivate::toggleViewMode(bool toggled)
 {
     Q_Q(DualPaneWidget);
 
-    QAction *action = qobject_cast<QAction*>(sender());
-    if (!action)
-        return;
-
-    if (toggled)
-        q->setViewMode((FileManagerWidget::ViewMode)action->data().toInt());
-    else
-        action->setChecked(true);
+    if (toggled) {
+        QAction *action = qobject_cast<QAction*>(sender());
+        if (action)
+            q->setViewMode((FileManagerWidget::ViewMode)action->data().toInt());
+    }
 }
 
 void DualPaneWidgetPrivate::toggleOrientation(bool toggled)
@@ -338,14 +325,11 @@ void DualPaneWidgetPrivate::toggleSortColumn(bool toggled)
 {
     Q_Q(DualPaneWidget);
 
-    QAction *action = qobject_cast<QAction*>(sender());
-    if (!action)
-        return;
-
-    if (toggled)
-        q->setSortingColumn((FileManagerWidget::Column)action->data().toInt());
-    else
-        action->setChecked(true);
+    if (toggled) {
+        QAction *action = qobject_cast<QAction*>(sender());
+        if (action)
+            q->setSortingColumn((FileManagerWidget::Column)action->data().toInt());
+    }
 }
 
 void DualPaneWidgetPrivate::toggleSortOrder(bool descending)

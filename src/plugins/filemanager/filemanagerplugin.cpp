@@ -164,33 +164,39 @@ void FileManagerPlugin::createViewMenu()
     container->addCommand(cmd);
 
     container->addCommand(new Separator(this));
+    QActionGroup * viewGroup = new QActionGroup(this);
 
     cmd = new Command(Constants::Actions::IconMode, this);
     cmd->setDefaultText(tr("Icon View"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+1")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
+    viewGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::ColumnMode, this);
     cmd->setDefaultText(tr("Column View"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+2")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
+    viewGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::TreeMode, this);
     cmd->setDefaultText(tr("Tree View"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+3")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
+    viewGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::CoverFlowMode, this);
     cmd->setDefaultText(tr("Cover flow"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+4")));
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
+    viewGroup->addAction(cmd->commandAction());
 
     // ================ View Menu (View Mode) ================
     container->addCommand(new Separator(this));
+    QActionGroup * sortGroup = new QActionGroup(this);
 
     CommandContainer *sortByMenu = new CommandContainer(Constants::Menus::SortBy, this);
     sortByMenu->setTitle(tr("Sort by"));
@@ -201,21 +207,25 @@ void FileManagerPlugin::createViewMenu()
     cmd->setDefaultText(tr("Sort by name"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+1")));
     container->addCommand(cmd);
+    sortGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::SortBySize, this);
     cmd->setDefaultText(tr("Sort by size"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+2")));
     container->addCommand(cmd);
+    sortGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::SortByType, this);
     cmd->setDefaultText(tr("Sort by type"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+3")));
     container->addCommand(cmd);
+    sortGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::SortByDate, this);
     cmd->setDefaultText(tr("Sort by date"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
     container->addCommand(cmd);
+    sortGroup->addAction(cmd->commandAction());
 
     container->addCommand(new Separator(this));
 
