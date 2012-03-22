@@ -48,8 +48,24 @@ public:
 
     virtual GuiSystem::HistoryItem itemAt(int index) const;
 
+    void updateCurrentItemIndex(int index);
+
 private:
     QWebHistory *m_history;
+    int m_index;
+};
+
+class WebViewPage : public QWebPage
+{
+public:
+    explicit WebViewPage(QObject *parent = 0);
+
+    inline void setHistory(WebViewHistory *history) { m_history = history; }
+
+protected:
+    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+
+    WebViewHistory *m_history;
 };
 
 } //namespace WebView
