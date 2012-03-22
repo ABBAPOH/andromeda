@@ -133,10 +133,7 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onCustomContextMenuRequested(QPoint)));
     setContextMenuPolicy(Qt::CustomContextMenu);
 
-    QAbstractItemDelegate *delegate = d->treeView->itemDelegate();
-    if (delegate)
-        delegate->deleteLater();
-    d->treeView->setItemDelegate(new NavigationPanelDelegate());
+    d->treeView->setItemDelegate(new NavigationPanelDelegate(this));
 
     setMinimumSize(100, 200);
 }
