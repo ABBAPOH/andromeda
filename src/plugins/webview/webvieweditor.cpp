@@ -284,7 +284,6 @@ void WebViewEditor::save(const QUrl &url)
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     m_webView->load(url);
-//    emit urlChanged(url);
 }
 
 void WebViewEditor::onIconChanged()
