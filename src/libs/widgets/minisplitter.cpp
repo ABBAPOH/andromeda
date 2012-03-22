@@ -60,8 +60,10 @@ void MiniSplitterHandle::resizeEvent(QResizeEvent *event)
 
 void MiniSplitterHandle::paintEvent(QPaintEvent *event)
 {
+#ifndef Q_OS_LINUX
     QPainter painter(this);
     painter.fillRect(event->rect(), Qt::darkGray);
+#endif
 }
 
 QSize MiniSplitterHandle::sizeHint() const
