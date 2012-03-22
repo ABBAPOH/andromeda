@@ -35,7 +35,6 @@ static inline QString getCacheDirectory()
     return directory;
 }
 
-
 WebViewFind::WebViewFind(WebViewEditor *editor) :
     IFind(editor),
     m_editor(editor)
@@ -105,7 +104,8 @@ void WebViewFind::findStep(const QString &txt, IFind::FindFlags findFlags)
 }
 
 WebViewHistory::WebViewHistory(QObject *parent) :
-    IHistory(parent)
+    IHistory(parent),
+    m_index(-1)
 {
 }
 
@@ -130,6 +130,8 @@ void WebViewHistory::setCurrentItemIndex(int index)
         return;
 
     m_history->goToItem(m_history->itemAt(index));
+
+    updateCurrentItemIndex(index);
 }
 
 HistoryItem WebViewHistory::itemAt(int index) const
@@ -141,6 +143,32 @@ HistoryItem WebViewHistory::itemAt(int index) const
     result.setLastVisited(item.lastVisited());
     result.setTitle(item.title());
     return result;
+}
+
+void WebViewHistory::updateCurrentItemIndex(int index)
+{
+    if (m_index == index)
+        return;
+
+    int oldIndex = m_index;
+    m_index = index;
+
+    emitCurrentItemIndexChanged(index, oldIndex);
+}
+
+WebViewPage::WebViewPage(QObject *parent) :
+    QWebPage(parent)
+{
+}
+
+bool WebViewPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type)
+{
+    if (type == NavigationTypeBackOrForward ||
+            type == NavigationTypeLinkClicked ||
+            type == NavigationTypeFormSubmitted) {
+        m_history->updateCurrentItemIndex(history()->currentItemIndex());
+    }
+    return QWebPage::acceptNavigationRequest(frame, request, type);
 }
 
 WebViewEditor::WebViewEditor(QWidget *parent) :
@@ -159,13 +187,18 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
 
     CookieJar *jar = WebViewPlugin::instance()->cookieJar();
 
+    m_history = new WebViewHistory(this);
+
     m_webView = new QWebView(this);
+
+    WebViewPage *page = new WebViewPage(m_webView);
+    page->setHistory(m_history);
+    m_history->setHistory(page->history());
+    m_webView->setPage(page);
+
     m_webView->page()->networkAccessManager()->setCookieJar(jar);
     jar->setParent(WebViewPlugin::instance());
     m_layout->addWidget(m_webView);
-
-    m_history = new WebViewHistory(this);
-    m_history->setHistory(m_webView->history());
 
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
