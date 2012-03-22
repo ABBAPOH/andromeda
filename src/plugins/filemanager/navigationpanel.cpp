@@ -119,8 +119,8 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     d->treeView->setDragDropMode(QAbstractItemView::DragDrop);
 
     QPalette pal = d->treeView->palette();
-    pal.setColor(QPalette::Base, QColor(214, 221, 229));
-    d->treeView->QAbstractItemView::setPalette(pal);
+    pal.setColor(QPalette::Base, pal.color(QPalette::Window));
+    d->treeView->setPalette(pal);
     d->treeView->expandAll();
 
     connect(d->treeView, SIGNAL(clicked(QModelIndex)), SLOT(onClick(QModelIndex)));
