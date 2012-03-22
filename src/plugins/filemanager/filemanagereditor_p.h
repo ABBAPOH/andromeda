@@ -8,13 +8,13 @@
 
 namespace FileManager {
 
-class FileManagerHistory : public GuiSystem::IHistory
+class FileManagerEditorHistory : public GuiSystem::IHistory
 {
     Q_OBJECT
-    Q_DISABLE_COPY(FileManagerHistory)
+    Q_DISABLE_COPY(FileManagerEditorHistory)
 
 public:
-    explicit FileManagerHistory(QObject *parent = 0);
+    explicit FileManagerEditorHistory(QObject *parent = 0);
 
     inline void setDualPaneWidget(DualPaneWidget *widget) { m_widget = widget; }
 
