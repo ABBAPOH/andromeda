@@ -14,7 +14,7 @@ namespace FileManager {
 class FileManagerWidget;
 class DualPaneWidget;
 class NavigationPanel;
-class FileManagerHistory;
+class FileManagerEditorHistory;
 
 class FileManagerEditor : public GuiSystem::AbstractEditor
 {
@@ -71,7 +71,7 @@ private:
     MiniSplitter *splitter;
     DualPaneWidget *m_widget;
     NavigationPanel *m_panel;
-    FileManagerHistory *m_history;
+    FileManagerEditorHistory *m_history;
 
     QSettings *m_settings;
 

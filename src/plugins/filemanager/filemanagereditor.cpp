@@ -25,24 +25,24 @@
 using namespace GuiSystem;
 using namespace FileManager;
 
-FileManagerHistory::FileManagerHistory(QObject *parent) :
+FileManagerEditorHistory::FileManagerEditorHistory(QObject *parent) :
     IHistory(parent),
     m_widget(0)
 {
 }
 
-void FileManagerHistory::clear()
+void FileManagerEditorHistory::clear()
 {
     // TODO: implement
 }
 
-int FileManagerHistory::count() const
+int FileManagerEditorHistory::count() const
 {
     // TODO: implement
     return -1;
 }
 
-int FileManagerHistory::currentItemIndex() const
+int FileManagerEditorHistory::currentItemIndex() const
 {
     if (m_widget->activePane() == DualPaneWidget::LeftPane)
         return m_widget->leftWidget()->history()->currentItemIndex(); // 0, 1, 2
@@ -50,7 +50,7 @@ int FileManagerHistory::currentItemIndex() const
         return -m_widget->rightWidget()->history()->currentItemIndex() - 2; // -2, -3, -4
 }
 
-void FileManagerHistory::setCurrentItemIndex(int index)
+void FileManagerEditorHistory::setCurrentItemIndex(int index)
 {
     DualPaneWidget::Pane pane;
     if (index < -1) {
@@ -63,7 +63,7 @@ void FileManagerHistory::setCurrentItemIndex(int index)
     m_widget->activeWidget()->history()->setCurrentItemIndex(index);
 }
 
-HistoryItem FileManagerHistory::itemAt(int index) const
+HistoryItem FileManagerEditorHistory::itemAt(int index) const
 {
     // TODO: implement
     return HistoryItem();
@@ -81,7 +81,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     setupConnections();
     createActions();
 
-    m_history = new FileManagerHistory(this);
+    m_history = new FileManagerEditorHistory(this);
     m_history->setDualPaneWidget(m_widget);
 }
 
