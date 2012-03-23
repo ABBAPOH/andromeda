@@ -454,10 +454,12 @@ void CorePlugin::createToolsMenu()
     pluginsCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(pluginsCommand);
 
+#ifdef QT_DEBUG
     Command *settingsCommand = new Command(Constants::Actions::Settings, this);
     settingsCommand->setDefaultText(tr("View all settings..."));
     settingsCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(settingsCommand);
+#endif
 
     // ================ Tools Menu (Preferences) ================
     toolsContainer->addCommand(new Separator(this));
