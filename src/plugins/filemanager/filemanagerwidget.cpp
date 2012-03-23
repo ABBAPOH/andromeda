@@ -4,10 +4,12 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include <QtGui/QAction>
 #include <QtGui/QHeaderView>
 #include <QtGui/QFileDialog>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
 
@@ -23,6 +25,31 @@
 
 using namespace GuiSystem;
 using namespace FileManager;
+
+FileDelegate::FileDelegate(QObject *parent) :
+    QStyledItemDelegate(parent)
+{
+}
+
+QWidget * FileDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QWidget *editor = QStyledItemDelegate::createEditor(parent, option, index);
+
+    QLineEdit *le = qobject_cast<QLineEdit*>(editor);
+    if (le) {
+        m_editor = le;
+        le->setAlignment(option.displayAlignment);
+        QTimer::singleShot(0, const_cast<FileDelegate*>(this), SLOT(selectFileName()));
+    }
+
+    return editor;
+}
+
+void FileDelegate::selectFileName()
+{
+    QString fileName = QFileInfo(m_editor->text()).baseName();
+    m_editor->setSelection(0, fileName.length());
+}
 
 void FileManagerWidgetPrivate::setupUi()
 {
@@ -251,6 +278,7 @@ void FileManagerWidgetPrivate::initViews()
         views[i]->setAcceptDrops(true);
         views[i]->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
         views[i]->setTextElideMode(Qt::ElideMiddle);
+        views[i]->setItemDelegate(new FileDelegate(views[i]));
 //        QAbstractItemView::InternalMove
 //        layout->addWidget(views[i]);
 //        views[i]->setDragEnabled(true);
