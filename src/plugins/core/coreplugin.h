@@ -52,6 +52,7 @@ private:
     void createEditMenu();
     void createViewMenu();
     void createGoToMenu();
+    void createWindowsMenu();
     void createToolsMenu();
     void createHelpMenu();
     void createDockMenu();
