@@ -32,7 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     d->retranslateUi();
     d->registerActions();
 
+#ifndef Q_OS_MAC
     setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
+#endif
 
     d->initGeometry();
 }
