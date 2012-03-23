@@ -13,6 +13,7 @@ set( HEADERS
     qxtflowview.h
     qxtflowview_p.h
     shortcutlineedit.h
+    windowsmenu.h
    )
 set( SOURCES
     addressbar.cpp
@@ -26,6 +27,7 @@ set( SOURCES
     qxtflowview.cpp
     qxtflowview_p.cpp
     shortcutlineedit.cpp
+    windowsmenu.cpp
    )
 set( FORMS
    )
