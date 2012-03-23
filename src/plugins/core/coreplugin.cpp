@@ -26,6 +26,8 @@
 #include <guisystem/settingsdialog.h>
 #include <guisystem/settingspagemanager.h>
 
+#include <widgets/windowsmenu.h>
+
 #include "settingswidget.h"
 
 using namespace Core;
@@ -33,6 +35,62 @@ using namespace GuiSystem;
 
 static const qint32 corePluginMagic = 0x6330386e; // "c08n"
 static const qint8 corePluginVersion = 1;
+
+class DockContainer : public CommandContainer
+{
+public:
+    explicit DockContainer(const QByteArray &id, QObject *parent = 0);
+    ~DockContainer();
+
+    QMenu *createMenu(QWidget *parent) const;
+
+private:
+    QPointer<WindowsMenu> m_menu;
+};
+
+class WindowsContainer : public CommandContainer
+{
+public:
+    explicit WindowsContainer(const QByteArray &id, QObject *parent = 0);
+    ~WindowsContainer();
+
+    QMenu *createMenu(QWidget *parent) const;
+
+private:
+    QPointer<WindowsMenu> m_menu;
+};
+
+DockContainer::DockContainer(const QByteArray &id, QObject *parent) :
+    CommandContainer(id, parent),
+    m_menu(new WindowsMenu)
+{
+}
+
+DockContainer::~DockContainer()
+{
+    delete m_menu;
+}
+
+QMenu * DockContainer::createMenu(QWidget */*parent*/) const
+{
+    return m_menu;
+}
+
+WindowsContainer::WindowsContainer(const QByteArray &id, QObject *parent) :
+    CommandContainer(id, parent),
+    m_menu(new WindowsMenu)
+{
+}
+
+WindowsContainer::~WindowsContainer()
+{
+    delete m_menu;
+}
+
+QMenu * WindowsContainer::createMenu(QWidget *parent) const
+{
+    return m_menu;
+}
 
 CorePlugin::CorePlugin() :
     IPlugin()
@@ -297,6 +355,7 @@ void CorePlugin::createActions()
     createEditMenu();
     createViewMenu();
     createGoToMenu();
+    createWindowsMenu();
     createToolsMenu();
     createHelpMenu();
     createDockMenu();
@@ -439,6 +498,16 @@ void CorePlugin::createGoToMenu()
     container->addCommand(cmd);
 }
 
+void CorePlugin::createWindowsMenu()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+
+    CommandContainer *container = new WindowsContainer(Constants::Menus::Windows, this);
+    container->setTitle(tr("Windows"));
+    menuBarContainer->addContainer(container);
+}
+
 void CorePlugin::createToolsMenu()
 {
     ActionManager *actionManager = ActionManager::instance();
@@ -510,7 +579,7 @@ void CorePlugin::createDockMenu()
     ActionManager *actionManager = ActionManager::instance();
 
     Command *cmd = 0;
-    CommandContainer *container = new CommandContainer(Constants::Menus::Dock, this);
+    CommandContainer *container = new DockContainer(Constants::Menus::Dock, this);
 #ifdef Q_OS_MAC
     container->setTitle(tr("Dock menu"));
 #else

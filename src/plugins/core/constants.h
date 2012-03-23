@@ -17,6 +17,7 @@ const char * const File = "FileMenu";
 const char * const Edit = "EditMenu";
 const char * const View = "ViewMenu";
 const char * const GoTo = "GoToMenu";
+const char * const Windows = "Windows";
 const char * const Tools = "ToolsMenu";
 const char * const Help = "HelpMenu";
 const char * const Dock = "DockMenu";
