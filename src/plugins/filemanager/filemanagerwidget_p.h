@@ -4,7 +4,9 @@
 #include "filemanagerwidget.h"
 
 #include <QtCore/QMimeData>
+#include <QtCore/QPointer>
 #include <QtCore/QUrl>
+
 #include <QtGui/QActionGroup>
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
@@ -12,6 +14,7 @@
 #include <QtGui/QFileSystemModel>
 #include <QtGui/QListView>
 #include <QtGui/QStackedLayout>
+#include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTableView>
 #include <QtGui/QTreeView>
 #include <QtGui/QUndoCommand>
@@ -21,6 +24,22 @@
 #include "filesystemmodel.h"
 
 namespace FileManager {
+
+class FileDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    explicit FileDelegate(QObject *parent = 0);
+
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+public slots:
+    void selectFileName();
+
+private:
+    mutable QPointer<QLineEdit> m_editor;
+};
 
 class FileManagerWidgetPrivate : public QObject
 {
