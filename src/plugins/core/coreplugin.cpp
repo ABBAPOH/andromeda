@@ -241,6 +241,11 @@ void CorePlugin::handleMessage(const QString &message)
 
 void CorePlugin::restoreSession()
 {
+#ifdef Q_OS_MAC
+    // Create menu bar now
+    menuBar = ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar();
+#endif
+
     loadSettings();
 
     if (!urls.isEmpty()) {
@@ -614,11 +619,6 @@ void CorePlugin::registerAtions()
     createAction(Constants::Actions::Preferences, SLOT(prefenrences()));
     createAction(Constants::Actions::About, SLOT(about()));
     createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
-
-#ifdef Q_OS_MAC
-    // Create menu bar now
-    menuBar = ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar();
-#endif
 }
 
 void CorePlugin::createAction(const QByteArray &id, const char *slot)
