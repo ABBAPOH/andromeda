@@ -964,16 +964,13 @@ void FileManagerWidgetPrivate::onSelectionChanged()
 
 void FileManagerWidget::remove()
 {
-    QString names("");
+    int res = QMessageBox::warning(this,
+                                   tr("Remove files"),
+                                   tr("Are you sure you want to delete selected item(s)?<br/><br/> \
+                                      This action can't be undone."),
+                                   QMessageBox::Yes | QMessageBox::No);
 
-    foreach(const QString& path, selectedPaths())
-        names += path.split(QDir::separator()).last() + "<br/>";
-
-    QMessageBox msgBox(QMessageBox::Warning, tr("Are you sure you want to delete?"),
-                       tr("The following files will be <b>permanently</b> deleted:<br/><br/> <i>%1</i>").
-                       arg(names), QMessageBox::Yes | QMessageBox::No);
-
-    if (msgBox.exec() == QMessageBox::Yes)
+    if (res == QMessageBox::Yes)
         fileSystemManager()->remove(selectedPaths());
 }
 
