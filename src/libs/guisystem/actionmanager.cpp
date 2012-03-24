@@ -10,6 +10,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QAction>
 
+// TODO: update containers correctly when adding new actions
+
 namespace GuiSystem {
 
 class ActionManagerPrivate
