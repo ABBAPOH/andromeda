@@ -998,14 +998,17 @@ void FileManagerWidgetPrivate::onSelectionChanged()
 
 void FileManagerWidget::remove()
 {
-    int res = QMessageBox::warning(this,
-                                   tr("Remove files"),
-                                   tr("Are you sure you want to delete selected item(s)?<br/><br/> \
-                                      This action can't be undone."),
-                                   QMessageBox::Yes | QMessageBox::No);
+    QMessageBox messageBox;
+    messageBox.setWindowTitle(tr("Remove files"));
+    messageBox.setIcon(QMessageBox::Warning);
+    messageBox.setText(tr("Are you sure you want to delete selected item(s)?"));
+    messageBox.setInformativeText(tr("This action can't be undone."));
+    messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
-    if (res == QMessageBox::Yes)
-        fileSystemManager()->remove(selectedPaths());
+    if (messageBox.exec() == QMessageBox::No)
+        return;
+
+    fileSystemManager()->remove(selectedPaths());
 }
 
 void FileManagerWidget::rename()
