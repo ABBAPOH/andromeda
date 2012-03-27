@@ -5,6 +5,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
+#include <QtCore/QMetaProperty>
 #include <QtGui/QAction>
 #include <QtGui/QHeaderView>
 #include <QtGui/QFileDialog>
@@ -43,6 +44,34 @@ QWidget * FileDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
     }
 
     return editor;
+}
+
+void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    FileSystemModel* fmodel = static_cast<const FileSystemModel*>(model);
+    QFileInfo prevFileInfo(fmodel->fileInfo(index));
+    QByteArray n = editor->metaObject()->userProperty().name();
+
+    if (!n.isEmpty()) {
+        QString newName(editor->property(n).toString());
+        QFileInfo newFileInfo(prevFileInfo.absoluteDir().absoluteFilePath(newName));
+        bool edit = true;
+
+        if (newFileInfo.suffix() != prevFileInfo.suffix()) {
+            QMessageBox msgBox (QMessageBox::Warning, tr("Change extension?"),
+                                tr("<b>Are you sure you want to change the extension of this file?</b><br/><br/>") +
+                                tr("If you make this change, your file may open in a different application."));
+
+            msgBox.addButton(tr("Use ") + "." + newFileInfo.suffix(), QMessageBox::AcceptRole);
+            msgBox.addButton(tr("Keep ") + "." + prevFileInfo.suffix(), QMessageBox::RejectRole);
+
+            if (msgBox.exec() == QMessageBox::RejectRole)
+                edit = false;
+        }
+
+        if (edit)
+            model->setData(index, editor->property(n), Qt::EditRole);
+    }
 }
 
 void FileDelegate::selectFileName()
