@@ -48,30 +48,35 @@ QWidget * FileDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
 
 void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    FileSystemModel* fmodel = static_cast<const FileSystemModel*>(model);
-    QFileInfo prevFileInfo(fmodel->fileInfo(index));
-    QByteArray n = editor->metaObject()->userProperty().name();
+    QLineEdit *le = qobject_cast<QLineEdit *>(editor);
+    if (!le)
+        return;
 
-    if (!n.isEmpty()) {
-        QString newName(editor->property(n).toString());
-        QFileInfo newFileInfo(prevFileInfo.absoluteDir().absoluteFilePath(newName));
-        bool edit = true;
+    // TODO: use mimetypes to determine extension
+    QString text = le->text();
+    QString oldSuffix = QFileInfo(index.data(Qt::EditRole).toString()).suffix();
+    QString newSuffix = QFileInfo(text).suffix();
+    QString newName = QFileInfo(text).baseName();
 
-        if (newFileInfo.suffix() != prevFileInfo.suffix()) {
-            QMessageBox msgBox (QMessageBox::Warning, tr("Change extension?"),
-                                tr("<b>Are you sure you want to change the extension of this file?</b><br/><br/>") +
-                                tr("If you make this change, your file may open in a different application."));
+    if (oldSuffix != newSuffix) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(tr("Rename"));
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText(tr("Are you sure you want to change the extension from \".%1\" to \".%2\"?").
+                       arg(oldSuffix).arg(newSuffix));
+        msgBox.setInformativeText("If you make this change, your file may open in a different application.");
 
-            msgBox.addButton(tr("Use ") + "." + newFileInfo.suffix(), QMessageBox::AcceptRole);
-            msgBox.addButton(tr("Keep ") + "." + prevFileInfo.suffix(), QMessageBox::RejectRole);
+        msgBox.addButton(tr("Use \".%1\"").arg(newSuffix), QMessageBox::AcceptRole);
+        msgBox.addButton(tr("Keep \".%1\"").arg(oldSuffix), QMessageBox::RejectRole);
+//        msgBox.setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint);
 
-            if (msgBox.exec() == QMessageBox::RejectRole)
-                edit = false;
+        if (msgBox.exec() == QMessageBox::RejectRole) {
+            model->setData(index, QString(QLatin1String("%1.%2")).arg(newName).arg(oldSuffix), Qt::EditRole);
+            return;
         }
-
-        if (edit)
-            model->setData(index, editor->property(n), Qt::EditRole);
     }
+
+    model->setData(index, text, Qt::EditRole);
 }
 
 void FileDelegate::selectFileName()
