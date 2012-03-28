@@ -1,6 +1,9 @@
-#ifndef FILEMANAGERSETTINGSWIDGET_H
-#define FILEMANAGERSETTINGSWIDGET_H
+#ifndef VIEWMODESSETTINGS_H
+#define VIEWMODESSETTINGS_H
 
+#include <guisystem/settingspage.h>
+#include <QtCore/QString>
+#include <QtGui/QIcon>
 #include <QtGui/QWidget>
 
 class QSettings;
@@ -11,16 +14,16 @@ namespace FileManager {
 } // namespace FileManager
 
 namespace Ui {
-    class FileManagerSettingsWidget;
+    class ViewModesSettingsWidget;
 }
 
-class FileManagerSettingsWidget : public QWidget
+class ViewModesSettingsWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit FileManagerSettingsWidget(QWidget *parent = 0);
-    ~FileManagerSettingsWidget();
+    explicit ViewModesSettingsWidget(QWidget *parent = 0);
+    ~ViewModesSettingsWidget();
 
 private slots:
     void onChecked(bool);
@@ -39,11 +42,33 @@ private:
     void setupTreeView();
 
 private:
-    Ui::FileManagerSettingsWidget *ui;
+    Ui::ViewModesSettingsWidget *ui;
 
     QSettings *m_settings;
     FileManager::FileManagerSettings *m_fileManagerSettings;
     FileManager::NavigationPanelSettings *m_panelSettings;
 };
 
-#endif // FILEMANAGERSETTINGSWIDGET_H
+namespace FileManager {
+
+class ViewModesSettingsPage : public GuiSystem::SettingsPage
+{
+    Q_OBJECT
+
+public:
+    explicit ViewModesSettingsPage(QObject *parent = 0);
+
+    QString name() const;
+    QIcon icon() const;
+
+    QString categoryName() const;
+    QIcon categoryIcon() const;
+
+    QWidget *createPage(QWidget *parent);
+};
+
+} // namespace FileManager
+
+
+
+#endif // VIEWMODESSETTINGS_H

@@ -1,6 +1,10 @@
-#include "filemanagersettingswidget.h"
-#include "ui_filemanagersettingswidget.h"
+#include "viewmodessettings.h"
 
+#include "ui_viewmodessettings.h"
+
+#include <guisystem/settingspage.h>
+#include <QtGui/QFileIconProvider>
+#include <QtGui/QLabel>
 #include <QtCore/QSettings>
 #include <QtCore/QSignalMapper>
 
@@ -10,9 +14,9 @@
 
 using namespace FileManager;
 
-FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
+ViewModesSettingsWidget::ViewModesSettingsWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileManagerSettingsWidget),
+    ui(new Ui::ViewModesSettingsWidget),
     m_settings(new QSettings(this)),
     m_fileManagerSettings(FileManagerSettings::globalSettings()),
     m_panelSettings(NavigationPanelSettings::globalSettings())
@@ -28,12 +32,12 @@ FileManagerSettingsWidget::FileManagerSettingsWidget(QWidget *parent) :
     setupTreeView();
 }
 
-FileManagerSettingsWidget::~FileManagerSettingsWidget()
+ViewModesSettingsWidget::~ViewModesSettingsWidget()
 {
     delete ui;
 }
 
-void FileManagerSettingsWidget::onChecked(bool checked)
+void ViewModesSettingsWidget::onChecked(bool checked)
 {
     int flags = m_panelSettings->standardLocations();
 
@@ -45,7 +49,7 @@ void FileManagerSettingsWidget::onChecked(bool checked)
     m_panelSettings->setStandardLocations(NavigationModel::StandardLocations(flags));
 }
 
-void FileManagerSettingsWidget::onIconSizeChanged(int value)
+void ViewModesSettingsWidget::onIconSizeChanged(int value)
 {
     value *= 4;
     QSize size(value, value);
@@ -73,7 +77,7 @@ static int calcGridFactor(int iconSize, int gridSize, bool iconMode)
     return (100.0*gridSize)/(iconSize + (iconMode ? minIconSize : minListSize)) - 100 + 0.5;
 }
 
-void FileManagerSettingsWidget::onGridSizeChanged(int value)
+void ViewModesSettingsWidget::onGridSizeChanged(int value)
 {
     bool iconMode = ui->flowComboBox->currentIndex() == 0;
     int iconSize = ui->iconSizeSlider->value()*4;
@@ -85,7 +89,7 @@ void FileManagerSettingsWidget::onGridSizeChanged(int value)
     m_fileManagerSettings->setGridSize(size);
 }
 
-void FileManagerSettingsWidget::onFlowChanged(int value)
+void ViewModesSettingsWidget::onFlowChanged(int value)
 {
     m_settings->setValue(QLatin1String("flow"), value);
     m_fileManagerSettings->setFlow((FileManagerSettings::Flow)value);
@@ -93,7 +97,7 @@ void FileManagerSettingsWidget::onFlowChanged(int value)
     onGridSizeChanged(ui->gridSizeSlider->value());
 }
 
-void FileManagerSettingsWidget::onColumnIconSizeChanged(int value)
+void ViewModesSettingsWidget::onColumnIconSizeChanged(int value)
 {
     value *= 4;
     QSize size(value, value);
@@ -102,7 +106,7 @@ void FileManagerSettingsWidget::onColumnIconSizeChanged(int value)
     m_fileManagerSettings->setIconSize(FileManagerSettings::ColumnView, size);
 }
 
-void FileManagerSettingsWidget::onTreeIconSizeChanged(int value)
+void ViewModesSettingsWidget::onTreeIconSizeChanged(int value)
 {
     value *= 4;
     QSize size(value, value);
@@ -111,13 +115,13 @@ void FileManagerSettingsWidget::onTreeIconSizeChanged(int value)
     m_fileManagerSettings->setIconSize(FileManagerSettings::TreeView, size);
 }
 
-void FileManagerSettingsWidget::onItemsExpandableChecked(bool checked)
+void ViewModesSettingsWidget::onItemsExpandableChecked(bool checked)
 {
     m_settings->setValue(QLatin1String("itemsExpandable"), checked);
     m_fileManagerSettings->setItemsExpandable(checked);
 }
 
-void FileManagerSettingsWidget::setupLeftPanel()
+void ViewModesSettingsWidget::setupLeftPanel()
 {
     int flags = m_panelSettings->standardLocations();
 
@@ -149,7 +153,7 @@ void FileManagerSettingsWidget::setupLeftPanel()
     connect(ui->homeCheckBox, SIGNAL(toggled(bool)), SLOT(onChecked(bool)));
 }
 
-void FileManagerSettingsWidget::setupIconSize()
+void ViewModesSettingsWidget::setupIconSize()
 {
     int iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView).height();
     int columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView).height();
@@ -169,7 +173,7 @@ void FileManagerSettingsWidget::setupIconSize()
     connect(ui->treeIconSize, SIGNAL(valueChanged(int)), SLOT(onTreeIconSizeChanged(int)));
 }
 
-void FileManagerSettingsWidget::setupGridSize()
+void ViewModesSettingsWidget::setupGridSize()
 {
     int iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView).height();
     int gridSize = m_fileManagerSettings->gridSize().height();
@@ -181,16 +185,47 @@ void FileManagerSettingsWidget::setupGridSize()
     connect(ui->gridSizeSlider, SIGNAL(valueChanged(int)), SLOT(onGridSizeChanged(int)));
 }
 
-void FileManagerSettingsWidget::setupFlow()
+void ViewModesSettingsWidget::setupFlow()
 {
     FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
     ui->flowComboBox->setCurrentIndex(flow);
     connect(ui->flowComboBox, SIGNAL(currentIndexChanged(int)), SLOT(onFlowChanged(int)));
 }
 
-void FileManagerSettingsWidget::setupTreeView()
+void ViewModesSettingsWidget::setupTreeView()
 {
     bool checked = m_settings->value(QLatin1String("itemsExpandable"), true).toBool();
     ui->itemsExpandable->setChecked(checked);
     connect(ui->itemsExpandable, SIGNAL(toggled(bool)), SLOT(onItemsExpandableChecked(bool)));
+}
+
+
+ViewModesSettingsPage::ViewModesSettingsPage(QObject *parent) :
+    SettingsPage("View Modes", "FileManager", parent)
+{
+}
+
+QString ViewModesSettingsPage::name() const
+{
+    return tr("View Modes");
+}
+
+QString ViewModesSettingsPage::categoryName() const
+{
+    return tr("FileManager");
+}
+
+QIcon ViewModesSettingsPage::icon() const
+{
+    return QFileIconProvider().icon(QFileIconProvider::Folder);
+}
+
+QWidget *ViewModesSettingsPage::createPage(QWidget *parent)
+{
+    return new ViewModesSettingsWidget(parent);
+}
+
+QIcon ViewModesSettingsPage::categoryIcon() const
+{
+    return icon();
 }
