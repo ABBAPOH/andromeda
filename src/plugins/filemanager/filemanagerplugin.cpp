@@ -27,11 +27,12 @@
 #include "filecopydialog.h"
 #include "filemanagereditor.h"
 #include "filemanagersettings.h"
+#include "viewmodessettings.h"
+#include "globalsettings.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 #include "navigationmodel.h"
 #include "navigationpanelsettings.h"
-#include "viewmodessettings.h"
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -53,6 +54,7 @@ bool FileManagerPlugin::initialize(const QVariantMap &options)
     addObject(navigationModel);
 
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
+    pageManager->addPage(new GlobalSettingsPage(this));
     pageManager->addPage(new ViewModesSettingsPage(this));
 
     FileSystemModel *model = new FileSystemModel;
@@ -378,6 +380,8 @@ void FileManagerPlugin::loadSettings()
     QSize gridSize = m_fileManagerSettings->gridSize();
     int flow = m_fileManagerSettings->flow();
     bool itemsExpandable = m_fileManagerSettings->itemsExpandable();
+    bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
+    bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
 
     iconSize = m_settings->value(QLatin1String("iconMode"), iconSize).toSize();
     columnIconSize = m_settings->value(QLatin1String("columnIconSize"), columnIconSize).toSize();
@@ -385,6 +389,8 @@ void FileManagerPlugin::loadSettings()
     gridSize = m_settings->value(QLatin1String("gridSize"), gridSize).toSize();
     flow = m_settings->value(QLatin1String("flow"), flow).toInt();
     itemsExpandable = m_settings->value(QLatin1String("itemsExpandable"), itemsExpandable).toBool();
+    warnOnFileRemove = m_settings->value(QLatin1String("warnOnFileRemove"), warnOnFileRemove).toBool();
+    warnOnExtensionChange = m_settings->value(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange).toBool();
 
     m_fileManagerSettings->setIconSize(FileManagerSettings::IconView, iconSize);
     m_fileManagerSettings->setIconSize(FileManagerSettings::ColumnView, columnIconSize);
@@ -392,6 +398,8 @@ void FileManagerPlugin::loadSettings()
     m_fileManagerSettings->setGridSize(gridSize);
     m_fileManagerSettings->setFlow((FileManagerSettings::Flow)flow);
     m_fileManagerSettings->setItemsExpandable(itemsExpandable);
+    m_fileManagerSettings->setWarnOnFileRemove(warnOnFileRemove);
+    m_fileManagerSettings->setWarnOnExtensionChange(warnOnExtensionChange);
 
     NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
 
@@ -409,6 +417,8 @@ void FileManagerPlugin::saveSettings()
     QSize gridSize = m_fileManagerSettings->gridSize();
     FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
     bool itemsExpandable = m_fileManagerSettings->itemsExpandable();
+    bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
+    bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
 
     m_settings->setValue(QLatin1String("iconMode"), iconSize);
     m_settings->setValue(QLatin1String("columnIconSize"), columnIconSize);
@@ -416,6 +426,8 @@ void FileManagerPlugin::saveSettings()
     m_settings->setValue(QLatin1String("gridSize"), gridSize);
     m_settings->setValue(QLatin1String("flow"), flow);
     m_settings->setValue(QLatin1String("itemsExpandable"), itemsExpandable);
+    m_settings->setValue(QLatin1String("warnOnFileRemove"), warnOnFileRemove);
+    m_settings->setValue(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange);
 
     NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
 

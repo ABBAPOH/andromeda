@@ -32,6 +32,8 @@ FileManagerSettings::FileManagerSettings() :
     d->iconSizes[ColumnView] = QSize(16, 16);
     d->iconSizes[TreeView] = QSize(16, 16);
     d->itemsExpandable = true;
+    d->warnOnFileRemove = true;
+    d->warnOnExtensionChange = true;
 }
 
 FileManagerSettings *FileManagerSettings::globalSettings()
@@ -127,4 +129,32 @@ void FileManagerSettings::setItemsExpandable(bool expandable)
     foreach (FileManagerWidget *widget, d->widgets) {
         widget->setItemsExpandable(expandable);
     }
+}
+
+bool FileManagerSettings::warnOnFileRemove() const
+{
+    Q_D(const FileManagerSettings);
+
+    return d->warnOnFileRemove;
+}
+
+void FileManagerSettings::setWarnOnFileRemove(bool warn)
+{
+    Q_D(FileManagerSettings);
+
+    d->warnOnFileRemove = warn;
+}
+
+bool FileManagerSettings::warnOnExtensionChange() const
+{
+    Q_D(const FileManagerSettings);
+
+    return d->warnOnExtensionChange;
+}
+
+void FileManagerSettings::setWarnOnExtensionChange(bool warn)
+{
+    Q_D(FileManagerSettings);
+
+    d->warnOnExtensionChange = warn;
 }

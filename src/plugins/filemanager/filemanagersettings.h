@@ -28,6 +28,12 @@ public:
     bool itemsExpandable() const;
     void setItemsExpandable(bool expandable);
 
+    bool warnOnFileRemove() const;
+    void setWarnOnFileRemove(bool);
+
+    bool warnOnExtensionChange() const;
+    void setWarnOnExtensionChange(bool);
+
 protected:
     FileManagerSettings();
 
