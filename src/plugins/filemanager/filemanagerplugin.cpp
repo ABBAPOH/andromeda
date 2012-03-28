@@ -27,11 +27,11 @@
 #include "filecopydialog.h"
 #include "filemanagereditor.h"
 #include "filemanagersettings.h"
-#include "filemanagersettingspage.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
 #include "navigationmodel.h"
 #include "navigationpanelsettings.h"
+#include "viewmodessettings.h"
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -53,7 +53,7 @@ bool FileManagerPlugin::initialize(const QVariantMap &options)
     addObject(navigationModel);
 
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
-    pageManager->addPage(new FileManagerSettingsPage);
+    pageManager->addPage(new ViewModesPage);
 
     FileSystemModel *model = new FileSystemModel;
     addObject(model);
