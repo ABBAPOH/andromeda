@@ -58,7 +58,7 @@ void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
     QString newSuffix = QFileInfo(text).suffix();
     QString newName = QFileInfo(text).baseName();
 
-    if (oldSuffix != newSuffix) {
+    if (FileManagerSettings::globalSettings()->warnOnExtensionChange() && oldSuffix != newSuffix) {
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Rename"));
         msgBox.setIcon(QMessageBox::Warning);
@@ -998,15 +998,17 @@ void FileManagerWidgetPrivate::onSelectionChanged()
 
 void FileManagerWidget::remove()
 {
-    QMessageBox messageBox;
-    messageBox.setWindowTitle(tr("Remove files"));
-    messageBox.setIcon(QMessageBox::Warning);
-    messageBox.setText(tr("Are you sure you want to delete selected item(s)?"));
-    messageBox.setInformativeText(tr("This action can't be undone."));
-    messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    if (FileManagerSettings::globalSettings()->warnOnFileRemove()) {
+        QMessageBox messageBox;
+        messageBox.setWindowTitle(tr("Remove files"));
+        messageBox.setIcon(QMessageBox::Warning);
+        messageBox.setText(tr("Are you sure you want to delete selected item(s)?"));
+        messageBox.setInformativeText(tr("This action can't be undone."));
+        messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
-    if (messageBox.exec() == QMessageBox::No)
-        return;
+        if (messageBox.exec() == QMessageBox::No)
+            return;
+    }
 
     fileSystemManager()->remove(selectedPaths());
 }

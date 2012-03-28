@@ -21,6 +21,8 @@ public:
     FileManagerSettings::Flow flow;
     QSize iconSizes[FileManagerSettings::ViewCount];
     bool itemsExpandable;
+    bool warnOnFileRemove;
+    bool warnOnExtensionChange;
 };
 
 } // namespace FileManager

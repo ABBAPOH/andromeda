@@ -18,6 +18,7 @@ set( HEADERS
     filemanagerwidget.h
     filemanagerwidget_p.h
     viewmodessettings.h
+    globalsettings.h
     filesystemmodel.h
     filesystemmanager.h
     filesystemmanager_p.h
@@ -41,6 +42,7 @@ set( SOURCES
     filesystemmodel.cpp
     filesystemmanager.cpp
     viewmodessettings.cpp
+    globalsettings.cpp
     navigationmodel.cpp
     navigationpanel.cpp
     navigationpanelsettings.cpp
@@ -50,6 +52,7 @@ set( FORMS
     filecopyreplacedialog.ui
     filecopywidget.ui
     viewmodessettings.ui
+    globalsettings.ui
    )
 
 set( RESOURCES resources.qrc )
