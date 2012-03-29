@@ -1,21 +1,23 @@
 #ifndef VIEWMODESSETTINGS_H
 #define VIEWMODESSETTINGS_H
 
-#include <guisystem/settingspage.h>
 #include <QtCore/QString>
-#include <QtGui/QIcon>
+
 #include <QtGui/QWidget>
+#include <QtGui/QIcon>
+
+#include <guisystem/settingspage.h>
 
 class QSettings;
-
-namespace FileManager {
-    class FileManagerSettings;
-    class NavigationPanelSettings;
-} // namespace FileManager
 
 namespace Ui {
     class ViewModesSettingsWidget;
 }
+
+namespace FileManager {
+
+class FileManagerSettings;
+class NavigationPanelSettings;
 
 class ViewModesSettingsWidget : public QWidget
 {
@@ -49,8 +51,6 @@ private:
     FileManager::NavigationPanelSettings *m_panelSettings;
 };
 
-namespace FileManager {
-
 class ViewModesSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
@@ -68,7 +68,5 @@ public:
 };
 
 } // namespace FileManager
-
-
 
 #endif // VIEWMODESSETTINGS_H

@@ -53,7 +53,7 @@ bool FileManagerPlugin::initialize(const QVariantMap &options)
     addObject(navigationModel);
 
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
-    pageManager->addPage(new ViewModesPage);
+    pageManager->addPage(new ViewModesSettingsPage(this));
 
     FileSystemModel *model = new FileSystemModel;
     addObject(model);
