@@ -8,14 +8,14 @@
 
 class QSettings;
 
-namespace FileManager {
-    class FileManagerSettings;
-    class NavigationPanelSettings;
-} // namespace FileManager
-
 namespace Ui {
-    class GlobalSettingsWidget;
+class GlobalSettingsWidget;
 }
+
+namespace FileManager {
+
+class FileManagerSettings;
+class NavigationPanelSettings;
 
 class GlobalSettingsWidget : public QWidget
 {
@@ -38,8 +38,6 @@ private:
     FileManager::FileManagerSettings *m_fileManagerSettings;
 };
 
-namespace FileManager {
-
 class GlobalSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
@@ -58,4 +56,4 @@ public:
 
 } // namespace FileManager
 
-#endif // GLOBALSETTINGS_H 
+#endif // GLOBALSETTINGS_H
