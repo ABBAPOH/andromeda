@@ -70,7 +70,6 @@ public:
 
     void build();
 
-
 public:
     CommandsModelItem *rootItem;
     QSettings *settings;
