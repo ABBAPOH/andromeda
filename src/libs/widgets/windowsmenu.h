@@ -1,10 +1,12 @@
 #ifndef WINDOWSMENU_H
 #define WINDOWSMENU_H
 
+#include "widgets_global.h"
+
 #include <QtGui/QMenu>
 
 class WindowsMenuPrivate;
-class WindowsMenu : public QMenu
+class WIDGETS_EXPORT WindowsMenu : public QMenu
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(WindowsMenu)
