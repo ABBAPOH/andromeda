@@ -453,9 +453,7 @@ int QFileCopierThread::addRequestToQueue(Request request)
         while (QFileInfo(dest).exists()) {
             QFileInfo destInfo(request.dest);
 
-#ifndef Q_CC_MSVC
-#warning "Uses mimetypes to determine type and extension"
-#endif
+// TODO: Use mimetypes to determine type and extension
             dest = destInfo.absolutePath() + QLatin1Char('/') + destInfo.completeBaseName() + QLatin1Char(' ') + QString::number(++i);
             if (!destInfo.suffix().isEmpty()) {
                 dest += '.' + destInfo.suffix();
