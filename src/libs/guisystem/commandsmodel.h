@@ -7,8 +7,6 @@
 
 namespace GuiSystem {
 
-class Command;
-
 class CommandsModelPrivate;
 class GUISYSTEM_EXPORT CommandsModel : public QAbstractItemModel
 {
