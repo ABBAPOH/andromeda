@@ -1,4 +1,4 @@
-<plugin name="FileManager Plugin" version="0.1.0.0" compatVersion="0.1.0.0">
+<plugin name="FileManager Plugin" version="0.2.0.0" compatVersion="0.2.0.0">
     <vendor>arch</vendor>
     <copyright></copyright>
     <license>other</license>
@@ -6,6 +6,6 @@
     <description>File manager plugin.</description>
     <url></url>
     <dependencyList>
-        <dependency name="Core Plugin" version="0.1.0.0"/>
+        <dependency name="Core Plugin" version="0.2.0.0"/>
     </dependencyList>
 </plugin>

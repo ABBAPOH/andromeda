@@ -13,7 +13,7 @@ endif()
 endmacro( get_git_revision )
 
 get_git_revision(GIT_REVISION)
-set( PROJECT_VERSION "0.0.0.1" )
+set( PROJECT_VERSION "0.2.0.0" )
 
 if(MSVC)
     add_definitions( -DGIT_REVISION="\""${GIT_REVISION}"\"" )
