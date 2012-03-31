@@ -1,4 +1,4 @@
-<plugin name="Core Plugin" version="0.1.0.0" compatVersion="0.1.0.0">
+<plugin name="Core Plugin" version="0.2.0.0" compatVersion="0.2.0.0">
     <vendor>arch</vendor>
     <copyright></copyright>
     <license>GNU Lesser General Public License</license>

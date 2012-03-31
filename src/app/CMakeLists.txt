@@ -33,7 +33,7 @@ if( APPLE )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/andromeda.icns ${APP_DATA_PATH}/andromeda.icns COPYONLY)
     set_target_properties( andromeda PROPERTIES MACOSX_BUNDLE_ICON_FILE andromeda.icns
                                                 MACOSX_BUNDLE_BUNDLE_NAME "Andromeda"
-                                                MACOSX_BUNDLE_LONG_VERSION_STRING "0.1.0.0"
+                                                MACOSX_BUNDLE_LONG_VERSION_STRING "0.2.0.0"
                                                 MACOSX_BUNDLE_INFO_STRING "Andromeda 0.1.0"
                                                 MACOSX_BUNDLE_INFO_STRING "Andromeda 0.1.0"
                                                 MACOSX_BUNDLE_GUI_IDENTIFIER "org.andromeda"
@@ -43,7 +43,7 @@ elseif( MSVC )
     set_target_properties( andromeda PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )
 elseif( UNIX )
     add_definitions( -DLIB_SUFFIX=\"${LIB_SUFFIX}\" )
-    
+
     set(ICON_LOCATION "${CMAKE_INSTALL_PREFIX}/share/pixmaps")
     add_definitions( -DICON_LOCATION=\"${ICON_LOCATION}\" )
 
