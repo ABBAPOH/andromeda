@@ -5,11 +5,11 @@
 
 #include <QtGui/QIcon>
 
-struct TreeItem
+struct SettingsModelItem
 {
     enum Type { Root = 0, Folder, Leaf };
 
-    explicit TreeItem(Type type = Root, TreeItem *parent = 0, int row = -1)
+    explicit SettingsModelItem(Type type = Root, SettingsModelItem *parent = 0, int row = -1)
     {
         m_type = type;
         m_parent = parent;
@@ -21,9 +21,9 @@ struct TreeItem
         }
     }
 
-    ~TreeItem()
+    ~SettingsModelItem()
     {
-        foreach (TreeItem *item, m_children) {
+        foreach (SettingsModelItem *item, m_children) {
             delete item;
         }
         if (m_parent) {
@@ -31,19 +31,19 @@ struct TreeItem
         }
     }
 
-    inline TreeItem *child(int row) const { return m_children.at(row); }
+    inline SettingsModelItem *child(int row) const { return m_children.at(row); }
     inline int childCount() const { return m_children.count(); }
-    inline QList<TreeItem *> children() const { return m_children; }
-    inline void insert(TreeItem *item, int row) { item->m_parent = this; m_children.insert(row, item);}
-    inline TreeItem *parent() const { return m_parent; }
-    inline void remove(TreeItem *item) { m_children.removeAll(item); }
-    inline int row() const { return m_parent ? m_parent->m_children.indexOf((TreeItem *)this) : 0; }
+    inline QList<SettingsModelItem *> children() const { return m_children; }
+    inline void insert(SettingsModelItem *item, int row) { item->m_parent = this; m_children.insert(row, item);}
+    inline SettingsModelItem *parent() const { return m_parent; }
+    inline void remove(SettingsModelItem *item) { m_children.removeAll(item); }
+    inline int row() const { return m_parent ? m_parent->m_children.indexOf((SettingsModelItem *)this) : 0; }
     inline Type type() const { return m_type; }
     inline void setType(Type type) { m_type = type; }
 
 private:
-    TreeItem *m_parent;
-    QList<TreeItem *> m_children;
+    SettingsModelItem *m_parent;
+    QList<SettingsModelItem *> m_children;
 
     Type m_type;
 
@@ -64,18 +64,18 @@ class SettingsModelPrivate
 public:
     explicit SettingsModelPrivate(SettingsModel *qq) : q_ptr(qq) {}
 
-    QModelIndex index(TreeItem *item) const;
-    TreeItem *item(const QModelIndex &index) const;
+    QModelIndex index(SettingsModelItem *item) const;
+    SettingsModelItem *item(const QModelIndex &index) const;
 
-    TreeItem *findItem(TreeItem *parent, const QString &key);
-    void moveItemUp(TreeItem *parent, int oldRow, int newRow);
-    void fillGroup(TreeItem *parent);
-    void refresh(TreeItem *parent);
+    SettingsModelItem *findItem(SettingsModelItem *parent, const QString &key);
+    void moveItemUp(SettingsModelItem *parent, int oldRow, int newRow);
+    void fillGroup(SettingsModelItem *parent);
+    void refresh(SettingsModelItem *parent);
     void rebuild();
-    void submit(TreeItem *item);
+    void submit(SettingsModelItem *item);
 
 public:
-    TreeItem *rootItem;
+    SettingsModelItem *rootItem;
 
     QSettings *settings;
     SettingsModel::EditStrategy editStrategy;

@@ -6,30 +6,30 @@
 #include <QtGui/QApplication>
 #include <QtGui/QStyle>
 
-QModelIndex SettingsModelPrivate::index(TreeItem *item) const
+QModelIndex SettingsModelPrivate::index(SettingsModelItem *item) const
 {
     return q_func()->createIndex(item->row(), 0, item);
 }
 
-TreeItem * SettingsModelPrivate::item(const QModelIndex &index) const
+SettingsModelItem * SettingsModelPrivate::item(const QModelIndex &index) const
 {
     if (!index.isValid())
         return rootItem;
 
-    return static_cast<TreeItem*>(index.internalPointer());
+    return static_cast<SettingsModelItem*>(index.internalPointer());
 }
 
-TreeItem *SettingsModelPrivate::findItem(TreeItem *parent, const QString &key)
+SettingsModelItem *SettingsModelPrivate::findItem(SettingsModelItem *parent, const QString &key)
 {
     for (int i = 0; i < parent->childCount(); i++) {
-        TreeItem *item = parent->child(i);
+        SettingsModelItem *item = parent->child(i);
         if (item->key == key)
             return item;
     }
     return 0;
 }
 
-void SettingsModelPrivate::moveItemUp(TreeItem *parent, int oldRow, int newRow)
+void SettingsModelPrivate::moveItemUp(SettingsModelItem *parent, int oldRow, int newRow)
 {
     Q_Q(SettingsModel);
     if (oldRow == newRow)
@@ -47,10 +47,10 @@ static QString getLongKey(const QString &group, const QString &key)
     return group.isEmpty() ? key : QString(QLatin1String("%1/%2")).arg(group).arg(key);
 }
 
-void SettingsModelPrivate::fillGroup(TreeItem *parent)
+void SettingsModelPrivate::fillGroup(SettingsModelItem *parent)
 {
     foreach (const QString &key, settings->childGroups()) {
-        TreeItem *item = new TreeItem(TreeItem::Folder, parent);
+        SettingsModelItem *item = new SettingsModelItem(SettingsModelItem::Folder, parent);
         item->key = key;
         item->longKey = getLongKey(settings->group(), key);
 
@@ -60,7 +60,7 @@ void SettingsModelPrivate::fillGroup(TreeItem *parent)
     }
 
     foreach (const QString &key, settings->childKeys()) {
-        TreeItem *item = new TreeItem(TreeItem::Leaf, parent);
+        SettingsModelItem *item = new SettingsModelItem(SettingsModelItem::Leaf, parent);
         item->key = key;
         QVariant value = settings->value(key);
         item->valueType = value.type();
@@ -69,21 +69,21 @@ void SettingsModelPrivate::fillGroup(TreeItem *parent)
     }
 }
 
-void SettingsModelPrivate::refresh(TreeItem *parent)
+void SettingsModelPrivate::refresh(SettingsModelItem *parent)
 {
     Q_Q(SettingsModel);
 
     int row = 0;
     foreach (const QString &key, settings->childGroups()) {
-        TreeItem *item = findItem(parent, key);
+        SettingsModelItem *item = findItem(parent, key);
         if (item) {
-            item->setType(TreeItem::Folder);
+            item->setType(SettingsModelItem::Folder);
             item->valueType = QVariant::Invalid;
             item->value = QVariant();
             moveItemUp(parent, item->row(), row);
         } else {
             q->beginInsertRows(index(parent), row, row);
-            item = new TreeItem(TreeItem::Folder, parent, row);
+            item = new SettingsModelItem(SettingsModelItem::Folder, parent, row);
             q->endInsertRows();
         }
 
@@ -97,13 +97,13 @@ void SettingsModelPrivate::refresh(TreeItem *parent)
     }
 
     foreach (const QString &key, settings->childKeys()) {
-        TreeItem *item = findItem(parent, key);
+        SettingsModelItem *item = findItem(parent, key);
         if (item) {
-            item->setType(TreeItem::Leaf);
+            item->setType(SettingsModelItem::Leaf);
             moveItemUp(parent, item->row(), row);
         } else {
             q->beginInsertRows(index(parent), row, row);
-            item = new TreeItem(TreeItem::Leaf, parent, row);
+            item = new SettingsModelItem(SettingsModelItem::Leaf, parent, row);
             q->endInsertRows();
         }
 
@@ -132,10 +132,10 @@ void SettingsModelPrivate::rebuild()
     q->endResetModel();
 }
 
-void SettingsModelPrivate::submit(TreeItem *item)
+void SettingsModelPrivate::submit(SettingsModelItem *item)
 {
     settings->remove(item->key);
-    if (item->type() != TreeItem::Leaf) {
+    if (item->type() != SettingsModelItem::Leaf) {
         settings->beginGroup(item->key);
         for (int i = 0; i < item->childCount(); i++) {
             submit(item->child(i));
@@ -152,7 +152,7 @@ SettingsModel::SettingsModel(QObject *parent) :
 {
     Q_D(SettingsModel);
 
-    d->rootItem = new TreeItem();
+    d->rootItem = new SettingsModelItem();
     d->settings = 0;
     d->editStrategy = OnFieldChange;
     d->readOnly = true;
@@ -180,18 +180,18 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    SettingsModelItem *item = static_cast<SettingsModelItem*>(index.internalPointer());
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch (index.column()) {
         case 0 : return item->key;
-        case 1 : return (item->type() != TreeItem::Folder) ?
+        case 1 : return (item->type() != SettingsModelItem::Folder) ?
                         QVariant(QLatin1String(QVariant::typeToName(item->valueType))) :
                         QVariant();
         case 2 : return item->value;
         }
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 0) {
-            if (item->type() == TreeItem::Folder)
+            if (item->type() == SettingsModelItem::Folder)
                 return d->dirIcon;
             else
                 return d->keyIcon;
@@ -207,11 +207,11 @@ Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    TreeItem *item = d_func()->item(index);
-    TreeItem::Type type = item->type();
+    SettingsModelItem *item = d_func()->item(index);
+    SettingsModelItem::Type type = item->type();
     Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
-    if (type == TreeItem::Leaf) {
+    if (type == SettingsModelItem::Leaf) {
         int column = index.column();
         if (column == 2 && !d_func()->readOnly)
             flags |= Qt::ItemIsEditable;
@@ -222,8 +222,8 @@ Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
 
 bool SettingsModel::hasChildren(const QModelIndex &parent) const
 {
-    TreeItem::Type type = d_func()->item(parent)->type();
-    return type == TreeItem::Folder || type == TreeItem::Root;
+    SettingsModelItem::Type type = d_func()->item(parent)->type();
+    return type == SettingsModelItem::Folder || type == SettingsModelItem::Root;
 }
 
 QVariant SettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -243,8 +243,8 @@ QModelIndex SettingsModel::index(int row, int column, const QModelIndex &parent)
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    TreeItem *parentItem = d_func()->item(parent);
-    TreeItem *childItem = parentItem->child(row);
+    SettingsModelItem *parentItem = d_func()->item(parent);
+    SettingsModelItem *childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
 
@@ -258,8 +258,8 @@ QModelIndex SettingsModel::parent(const QModelIndex &index) const
     if (!index.isValid())
         return QModelIndex();
 
-    TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
-    TreeItem *parentItem = childItem->parent();
+    SettingsModelItem *childItem = static_cast<SettingsModelItem*>(index.internalPointer());
+    SettingsModelItem *parentItem = childItem->parent();
 
     if (parentItem == d->rootItem)
         return QModelIndex();
@@ -280,10 +280,10 @@ bool SettingsModel::removeRows(int row, int count, const QModelIndex &parent)
     if (d->readOnly)
         return false;
 
-    TreeItem *parentItem = d->item(parent);
+    SettingsModelItem *parentItem = d->item(parent);
     beginRemoveRows(parent, row, row + count - 1);
     for (int i = row + count - 1; i >= row; --i) {
-        TreeItem *childItem = parentItem->child(i);
+        SettingsModelItem *childItem = parentItem->child(i);
         if (d->editStrategy == OnFieldChange) {
             d->settings->remove(childItem->longKey);
         } else {
@@ -314,7 +314,7 @@ bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int
     if (d->readOnly)
         return false;
 
-    TreeItem *item = d->item(index);
+    SettingsModelItem *item = d->item(index);
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         if (index.column() == 2) {
