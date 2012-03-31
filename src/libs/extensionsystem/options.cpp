@@ -164,7 +164,7 @@ bool Options::parse(const QStringList &lst)
         }
 
         if (arg.startsWith(QLatin1String("--"))) {
-            if (argi > 1 && (opt.multiple() || !opt.multiple() && argRead < opt.count()) && opt.name() != m_defaultOption) {
+            if (argi > 1 && (opt.multiple() || (!opt.multiple() && argRead < opt.count())) && opt.name() != m_defaultOption) {
                 if (argRead >= opt.count()) {
                     QString name = opt.name();
                     if (m_values.contains(name)) {
