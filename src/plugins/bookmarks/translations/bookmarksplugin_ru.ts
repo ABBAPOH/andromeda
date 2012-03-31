@@ -121,52 +121,52 @@
 <context>
     <name>Bookmarks::BookmarksWidget</name>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="262"/>
+        <location filename="../bookmarkswidget.cpp" line="269"/>
         <source>Add folder</source>
         <translation>Добавить папку закладок</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="268"/>
+        <location filename="../bookmarkswidget.cpp" line="275"/>
         <source>Filter</source>
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="307"/>
+        <location filename="../bookmarkswidget.cpp" line="314"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="308"/>
+        <location filename="../bookmarkswidget.cpp" line="315"/>
         <source>Open in new tab</source>
         <translation>Открыть в новой вкладке</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="309"/>
+        <location filename="../bookmarkswidget.cpp" line="316"/>
         <source>Open in new window</source>
         <translation>Открыть в новом окне</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="310"/>
+        <location filename="../bookmarkswidget.cpp" line="317"/>
         <source>Open in all tabs</source>
         <translation>Открыть по всех вкладках</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="311"/>
+        <location filename="../bookmarkswidget.cpp" line="318"/>
         <source>Edit url</source>
         <translation>Редактировать адрес</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="312"/>
+        <location filename="../bookmarkswidget.cpp" line="319"/>
         <source>Edit description</source>
         <translation>Редактировать описание</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="313"/>
+        <location filename="../bookmarkswidget.cpp" line="320"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../bookmarkswidget.cpp" line="314"/>
+        <location filename="../bookmarkswidget.cpp" line="321"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>

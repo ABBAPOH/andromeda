@@ -68,179 +68,179 @@
 <context>
     <name>FileManager::DualPaneWidgetPrivate</name>
     <message>
-        <location filename="../dualpanewidget.cpp" line="184"/>
+        <location filename="../dualpanewidget.cpp" line="174"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="185"/>
+        <location filename="../dualpanewidget.cpp" line="175"/>
         <source>Open in new tab</source>
         <translation>Открыть в новой вкладке</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="186"/>
+        <location filename="../dualpanewidget.cpp" line="176"/>
         <source>Open in new window</source>
         <translation>Открыть в новом окне</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="188"/>
+        <location filename="../dualpanewidget.cpp" line="178"/>
         <source>Select program...</source>
         <translation>Выбрать программу...</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="189"/>
+        <location filename="../dualpanewidget.cpp" line="179"/>
         <source>New Folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="219"/>
+        <location filename="../dualpanewidget.cpp" line="209"/>
         <source>Copy files</source>
         <translation>Копировать файлы</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="220"/>
+        <location filename="../dualpanewidget.cpp" line="210"/>
         <source>Move files</source>
         <translation>Переместить файлы</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="190"/>
+        <location filename="../dualpanewidget.cpp" line="180"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="191"/>
+        <location filename="../dualpanewidget.cpp" line="181"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="192"/>
+        <location filename="../dualpanewidget.cpp" line="182"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="194"/>
+        <location filename="../dualpanewidget.cpp" line="184"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="195"/>
+        <location filename="../dualpanewidget.cpp" line="185"/>
         <source>Undo</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="196"/>
-        <location filename="../dualpanewidget.cpp" line="382"/>
+        <location filename="../dualpanewidget.cpp" line="186"/>
+        <location filename="../dualpanewidget.cpp" line="366"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="197"/>
-        <location filename="../dualpanewidget.cpp" line="383"/>
+        <location filename="../dualpanewidget.cpp" line="187"/>
+        <location filename="../dualpanewidget.cpp" line="367"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="198"/>
+        <location filename="../dualpanewidget.cpp" line="188"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="199"/>
+        <location filename="../dualpanewidget.cpp" line="189"/>
         <source>Select all</source>
         <translation>Выделить все</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="201"/>
+        <location filename="../dualpanewidget.cpp" line="191"/>
         <source>Show hidden files</source>
         <translation>Показывать скрытые файлы</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="203"/>
+        <location filename="../dualpanewidget.cpp" line="193"/>
         <source>Icon view</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="204"/>
+        <location filename="../dualpanewidget.cpp" line="194"/>
         <source>Column view</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="205"/>
+        <location filename="../dualpanewidget.cpp" line="195"/>
         <source>Tree view</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="206"/>
+        <location filename="../dualpanewidget.cpp" line="196"/>
         <source>Cover flow</source>
         <translation>Cover flow</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="214"/>
+        <location filename="../dualpanewidget.cpp" line="204"/>
         <source>Enable dual pane</source>
         <translation>Включить две панели</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="208"/>
+        <location filename="../dualpanewidget.cpp" line="198"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="209"/>
+        <location filename="../dualpanewidget.cpp" line="199"/>
         <source>Sort by size</source>
         <translation>Сортировать по размеру</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="210"/>
+        <location filename="../dualpanewidget.cpp" line="200"/>
         <source>Sort by type</source>
         <translation>Сортировать по типу</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="211"/>
+        <location filename="../dualpanewidget.cpp" line="201"/>
         <source>Sort by date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="212"/>
+        <location filename="../dualpanewidget.cpp" line="202"/>
         <source>Descending order</source>
         <translation>В обратном порядке</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="215"/>
+        <location filename="../dualpanewidget.cpp" line="205"/>
         <source>Vertical panes</source>
         <translation>Панели по вертикали</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="216"/>
+        <location filename="../dualpanewidget.cpp" line="206"/>
         <source>Toggle active pane</source>
         <translation>Переключить активную панель</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="217"/>
+        <location filename="../dualpanewidget.cpp" line="207"/>
         <source>Sync panes</source>
         <translation>Синхронизовать панели</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="218"/>
+        <location filename="../dualpanewidget.cpp" line="208"/>
         <source>Swap panes</source>
         <translation>Поменять панели</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="375"/>
+        <location filename="../dualpanewidget.cpp" line="359"/>
         <source>Cut &quot;%1&quot;</source>
         <translation>Вырезать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="376"/>
+        <location filename="../dualpanewidget.cpp" line="360"/>
         <source>Copy &quot;%1&quot;</source>
         <translation>Копировать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="378"/>
+        <location filename="../dualpanewidget.cpp" line="362"/>
         <source>Cut %1 items</source>
         <translation>Вырезать %1 элементов</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="379"/>
+        <location filename="../dualpanewidget.cpp" line="363"/>
         <source>Copy %1 items</source>
         <translation>Копировать %1 элементов</translation>
     </message>
@@ -268,6 +268,29 @@
         <location filename="../filecopydialog.cpp" line="120"/>
         <source>Error occurred for %1 &quot;%2&quot;: %3</source>
         <translation>Произошла ошибка для %1 &quot;%2&quot;: %3</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::FileDelegate</name>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="63"/>
+        <source>Rename</source>
+        <translation>Переименовать</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="65"/>
+        <source>Are you sure you want to change the extension from &quot;.%1&quot; to &quot;.%2&quot;?</source>
+        <translation>Вы уверены, что хотите сменить расширение с&quot;.%1&quot; на &quot;.%2&quot;?</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="69"/>
+        <source>Use &quot;.%1&quot;</source>
+        <translation>Использовать &quot;.%1&quot;</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="70"/>
+        <source>Keep &quot;.%1&quot;</source>
+        <translation>Оставить &quot;.%1&quot;</translation>
     </message>
 </context>
 <context>
@@ -420,57 +443,59 @@
     </message>
 </context>
 <context>
-    <name>FileManager::FileManagerSettingsPage</name>
-    <message>
-        <location filename="../filemanagersettingspage.cpp" line="17"/>
-        <source>Global</source>
-        <translation>Основные</translation>
-    </message>
-    <message>
-        <location filename="../filemanagersettingspage.cpp" line="22"/>
-        <source>File Manager</source>
-        <translation>Файловый менеджер</translation>
-    </message>
-</context>
-<context>
     <name>FileManager::FileManagerWidget</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="773"/>
+        <location filename="../filemanagerwidget.cpp" line="825"/>
         <source>New Folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="813"/>
+        <location filename="../filemanagerwidget.cpp" line="865"/>
         <source>Programs (*.exe *.cmd *.com *.bat);;All files (*)</source>
         <translation>Программы (*.exe *.cmd *.com *.bat);;Все файлы (*)</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="818"/>
+        <location filename="../filemanagerwidget.cpp" line="870"/>
         <source>Select program</source>
         <translation>Выбрать программу</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="844"/>
+        <location filename="../filemanagerwidget.cpp" line="896"/>
         <source>Can&apos;t open files</source>
         <translation>Невозможно открыть файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="845"/>
+        <location filename="../filemanagerwidget.cpp" line="897"/>
         <source>Andromeda failed to open some files :%1</source>
         <translation>Andromeda не может открыть некоторые файлы :%1</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1055"/>
+        <location filename="../filemanagerwidget.cpp" line="1003"/>
+        <source>Remove files</source>
+        <translation>Удаление файлов</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="1005"/>
+        <source>Are you sure you want to delete selected item(s)?</source>
+        <translation>Вы уверены что хотите удалить выбранный(е) элемент(ы)?</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="1006"/>
+        <source>This action can&apos;t be undone.</source>
+        <translation>Это действие невозможно отменить.</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerwidget.cpp" line="1119"/>
         <source>View Mode</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1060"/>
+        <location filename="../filemanagerwidget.cpp" line="1124"/>
         <source>Sort by</source>
         <translation>Сортировкать по</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1072"/>
+        <location filename="../filemanagerwidget.cpp" line="1136"/>
         <source>Open with</source>
         <translation>Открыть с помощью</translation>
     </message>
@@ -478,146 +503,159 @@
 <context>
     <name>FileManager::FileManagerWidgetPrivate</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="171"/>
+        <location filename="../filemanagerwidget.cpp" line="222"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="172"/>
+        <location filename="../filemanagerwidget.cpp" line="223"/>
         <source>Open in new tab</source>
         <translation>Открыть в новой вкладке</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="173"/>
+        <location filename="../filemanagerwidget.cpp" line="224"/>
         <source>Open in new window</source>
         <translation>Открыть в новом окне</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="175"/>
+        <location filename="../filemanagerwidget.cpp" line="226"/>
         <source>Select program...</source>
         <translation>Выбрать программу...</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="176"/>
+        <location filename="../filemanagerwidget.cpp" line="227"/>
         <source>New Folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="177"/>
+        <location filename="../filemanagerwidget.cpp" line="228"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="178"/>
+        <location filename="../filemanagerwidget.cpp" line="229"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="179"/>
+        <location filename="../filemanagerwidget.cpp" line="230"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="181"/>
+        <location filename="../filemanagerwidget.cpp" line="232"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="182"/>
+        <location filename="../filemanagerwidget.cpp" line="233"/>
         <source>Undo</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="183"/>
-        <location filename="../filemanagerwidget.cpp" line="942"/>
+        <location filename="../filemanagerwidget.cpp" line="234"/>
+        <location filename="../filemanagerwidget.cpp" line="994"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="184"/>
-        <location filename="../filemanagerwidget.cpp" line="943"/>
+        <location filename="../filemanagerwidget.cpp" line="235"/>
+        <location filename="../filemanagerwidget.cpp" line="995"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="185"/>
+        <location filename="../filemanagerwidget.cpp" line="236"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="186"/>
+        <location filename="../filemanagerwidget.cpp" line="237"/>
         <source>Select all</source>
         <translation>Выделить все</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="188"/>
+        <location filename="../filemanagerwidget.cpp" line="239"/>
         <source>Show hidden files</source>
         <translation>Показывать скрытые файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="190"/>
+        <location filename="../filemanagerwidget.cpp" line="241"/>
         <source>Icon view</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="191"/>
+        <location filename="../filemanagerwidget.cpp" line="242"/>
         <source>Column view</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="192"/>
+        <location filename="../filemanagerwidget.cpp" line="243"/>
         <source>Tree view</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="193"/>
+        <location filename="../filemanagerwidget.cpp" line="244"/>
         <source>Cover flow</source>
         <translation>Cover flow</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="195"/>
+        <location filename="../filemanagerwidget.cpp" line="246"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="196"/>
+        <location filename="../filemanagerwidget.cpp" line="247"/>
         <source>Sort by size</source>
         <translation>Сортировать по размеру</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="197"/>
+        <location filename="../filemanagerwidget.cpp" line="248"/>
         <source>Sort by type</source>
         <translation>Сортировать по типу</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="198"/>
+        <location filename="../filemanagerwidget.cpp" line="249"/>
         <source>Sort by date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="199"/>
+        <location filename="../filemanagerwidget.cpp" line="250"/>
         <source>Descending order</source>
         <translation>В обратном порядке</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="935"/>
+        <location filename="../filemanagerwidget.cpp" line="987"/>
         <source>Cut &quot;%1&quot;</source>
         <translation>Вырезать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="936"/>
+        <location filename="../filemanagerwidget.cpp" line="988"/>
         <source>Copy &quot;%1&quot;</source>
         <translation>Копировать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="938"/>
+        <location filename="../filemanagerwidget.cpp" line="990"/>
         <source>Cut %1 items</source>
         <translation>Вырезать %1 элементов</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="939"/>
+        <location filename="../filemanagerwidget.cpp" line="991"/>
         <source>Copy %1 items</source>
         <translation>Копировать %1 элементов</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::GlobalSettingsPage</name>
+    <message>
+        <location filename="../globalsettings.cpp" line="56"/>
+        <source>Global</source>
+        <translation>Основные</translation>
+    </message>
+    <message>
+        <location filename="../globalsettings.cpp" line="61"/>
+        <source>File manager</source>
+        <translation>Файловый менеджер</translation>
     </message>
 </context>
 <context>
@@ -652,250 +690,289 @@
     </message>
 </context>
 <context>
+    <name>FileManager::ViewModesSettingsPage</name>
+    <message>
+        <location filename="../viewmodessettings.cpp" line="210"/>
+        <source>View Modes</source>
+        <translation>Режимы просмотра</translation>
+    </message>
+    <message>
+        <location filename="../viewmodessettings.cpp" line="215"/>
+        <source>File manager</source>
+        <translation>Файловый менеджер</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::ViewModesSettingsWidget</name>
+    <message>
+        <location filename="../viewmodessettings.cpp" line="56"/>
+        <location filename="../viewmodessettings.cpp" line="105"/>
+        <location filename="../viewmodessettings.cpp" line="114"/>
+        <location filename="../viewmodessettings.cpp" line="163"/>
+        <location filename="../viewmodessettings.cpp" line="166"/>
+        <location filename="../viewmodessettings.cpp" line="169"/>
+        <source>Icon size: %1x%2</source>
+        <translation>Размер иконки: %1x%2</translation>
+    </message>
+</context>
+<context>
     <name>FileManagerPlugin</name>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="102"/>
+        <location filename="../filemanagerplugin.cpp" line="104"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="337"/>
+        <location filename="../filemanagerplugin.cpp" line="349"/>
         <source>Sync panes</source>
         <translation>Синхронизовать панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="341"/>
+        <location filename="../filemanagerplugin.cpp" line="353"/>
         <source>Swap panes</source>
         <translation>Поменять панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="115"/>
+        <location filename="../filemanagerplugin.cpp" line="117"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="123"/>
+        <location filename="../filemanagerplugin.cpp" line="125"/>
         <source>New folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="324"/>
+        <location filename="../filemanagerplugin.cpp" line="336"/>
         <source>Vertical panes</source>
         <translation>Панели по вертикали</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="330"/>
+        <location filename="../filemanagerplugin.cpp" line="342"/>
         <source>Toggle active pane</source>
         <translation>Переключить активную панель</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="348"/>
+        <location filename="../filemanagerplugin.cpp" line="360"/>
         <source>Copy files</source>
         <translation>Копировать файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="353"/>
+        <location filename="../filemanagerplugin.cpp" line="365"/>
         <source>Move files</source>
         <translation>Переместить файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="128"/>
+        <location filename="../filemanagerplugin.cpp" line="130"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="137"/>
+        <location filename="../filemanagerplugin.cpp" line="139"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="169"/>
+        <location filename="../filemanagerplugin.cpp" line="172"/>
         <source>Icon View</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="175"/>
+        <location filename="../filemanagerplugin.cpp" line="179"/>
         <source>Column View</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="181"/>
+        <location filename="../filemanagerplugin.cpp" line="186"/>
         <source>Tree View</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="187"/>
+        <location filename="../filemanagerplugin.cpp" line="193"/>
         <source>Cover flow</source>
         <translation>Cover flow</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="313"/>
+        <location filename="../filemanagerplugin.cpp" line="325"/>
         <source>Panes</source>
         <translation>Панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="318"/>
+        <location filename="../filemanagerplugin.cpp" line="330"/>
         <source>Dual Pane</source>
         <translation>Две панели</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="155"/>
+        <location filename="../filemanagerplugin.cpp" line="157"/>
         <source>Show Hidden Files</source>
         <translation>Показывать скрытые файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="161"/>
+        <location filename="../filemanagerplugin.cpp" line="163"/>
         <source>Show left panel</source>
         <translation>Показывать левую панель</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="196"/>
+        <location filename="../filemanagerplugin.cpp" line="204"/>
         <source>Sort by</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="201"/>
+        <location filename="../filemanagerplugin.cpp" line="209"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="206"/>
+        <location filename="../filemanagerplugin.cpp" line="215"/>
         <source>Sort by size</source>
         <translation>Сортировать по размеру</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="211"/>
+        <location filename="../filemanagerplugin.cpp" line="221"/>
         <source>Sort by type</source>
         <translation>Сортировать по типу</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="216"/>
+        <location filename="../filemanagerplugin.cpp" line="227"/>
         <source>Sort by date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="223"/>
+        <location filename="../filemanagerplugin.cpp" line="235"/>
         <source>Descending Order</source>
         <translation>В обратном порядке</translation>
     </message>
 </context>
 <context>
-    <name>FileManagerSettingsWidget</name>
+    <name>GlobalSettingsWidget</name>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="14"/>
+        <location filename="../globalsettings.ui" line="14"/>
+        <source>Global Settings</source>
+        <translation>Основные настройки</translation>
+    </message>
+    <message>
+        <location filename="../globalsettings.ui" line="20"/>
+        <source>Confirmation Dialogs</source>
+        <translation>Диалоги подтверждения</translation>
+    </message>
+    <message>
+        <location filename="../globalsettings.ui" line="26"/>
+        <source>Show warning before removing file or folder</source>
+        <translation>Показывать предупреждение при удалении файла или папки</translation>
+    </message>
+    <message>
+        <location filename="../globalsettings.ui" line="36"/>
+        <source>Show warning before changing an extension</source>
+        <translation>Показывать предупреждение при смене расширения</translation>
+    </message>
+</context>
+<context>
+    <name>ViewModesSettingsWidget</name>
+    <message>
+        <location filename="../viewmodessettings.ui" line="14"/>
         <source>Filemanager settings</source>
         <translation>Настройки менеджера файлов</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="20"/>
+        <location filename="../viewmodessettings.ui" line="20"/>
         <source>Left Panel</source>
         <translation>Левая панель</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="26"/>
+        <location filename="../viewmodessettings.ui" line="26"/>
         <source>Folders</source>
         <translation>Папки</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="33"/>
+        <location filename="../viewmodessettings.ui" line="33"/>
         <source>Applications</source>
         <translation>Приложения</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="40"/>
+        <location filename="../viewmodessettings.ui" line="40"/>
         <source>Desktop</source>
         <translation>Рабочий стол</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="47"/>
+        <location filename="../viewmodessettings.ui" line="47"/>
         <source>Documents</source>
         <translation>Документы</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="57"/>
+        <location filename="../viewmodessettings.ui" line="57"/>
         <source>Downloads</source>
         <translation>Загрузки</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="64"/>
+        <location filename="../viewmodessettings.ui" line="64"/>
         <source>Movies</source>
         <translation>Фильмы</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="71"/>
+        <location filename="../viewmodessettings.ui" line="71"/>
         <source>Music</source>
         <translation>Музыка</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="78"/>
+        <location filename="../viewmodessettings.ui" line="78"/>
         <source>Pictures</source>
         <translation>Картинки</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="85"/>
+        <location filename="../viewmodessettings.ui" line="85"/>
         <source>Home</source>
         <translation>Домашня папка</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="114"/>
+        <location filename="../viewmodessettings.ui" line="114"/>
         <source>Icon view</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="123"/>
+        <location filename="../viewmodessettings.ui" line="123"/>
         <source>Icon size: 64x64</source>
         <translation>Размер иконки: 64x64</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="152"/>
+        <location filename="../viewmodessettings.ui" line="152"/>
         <source>Grid size:</source>
         <translation>Размер сетки:</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="188"/>
+        <location filename="../viewmodessettings.ui" line="188"/>
         <source>Flow:</source>
         <translation>Направление:</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="196"/>
+        <location filename="../viewmodessettings.ui" line="196"/>
         <source>Left to right</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="201"/>
+        <location filename="../viewmodessettings.ui" line="201"/>
         <source>Top to bottom</source>
         <translation>Сверху вниз</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="212"/>
+        <location filename="../viewmodessettings.ui" line="212"/>
         <source>Column view</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="221"/>
-        <location filename="../filemanagersettingswidget.ui" line="262"/>
+        <location filename="../viewmodessettings.ui" line="221"/>
+        <location filename="../viewmodessettings.ui" line="262"/>
         <source>Icon size: 16x16</source>
         <translation>Размер иконки: 16x16</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="253"/>
+        <location filename="../viewmodessettings.ui" line="253"/>
         <source>Tree view</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../filemanagersettingswidget.ui" line="298"/>
+        <location filename="../viewmodessettings.ui" line="298"/>
         <source>Items expandable</source>
         <translation>Папки можно разворачивать</translation>
-    </message>
-    <message>
-        <location filename="../filemanagersettingswidget.cpp" line="52"/>
-        <location filename="../filemanagersettingswidget.cpp" line="101"/>
-        <location filename="../filemanagersettingswidget.cpp" line="110"/>
-        <location filename="../filemanagersettingswidget.cpp" line="159"/>
-        <location filename="../filemanagersettingswidget.cpp" line="162"/>
-        <location filename="../filemanagersettingswidget.cpp" line="165"/>
-        <source>Icon size: %1x%2</source>
-        <translation>Размер иконки: %1x%2</translation>
     </message>
 </context>
 </TS>
