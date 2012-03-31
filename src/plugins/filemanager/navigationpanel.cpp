@@ -31,7 +31,7 @@ NavigationPanelDelegate::NavigationPanelDelegate(QObject* parent):
 }
 
 bool NavigationPanelDelegate::editorEvent(QEvent *event,
-                                          QAbstractItemModel */*model*/,
+                                          QAbstractItemModel *model,
                                           const QStyleOptionViewItem &option,
                                           const QModelIndex &index)
 {
@@ -41,14 +41,14 @@ bool NavigationPanelDelegate::editorEvent(QEvent *event,
         rect.setX(rect.x() + rect.width() - (rect.height() + BORDER)); // draw icon (size is rect's height*height)
         rect.setRight(rect.right() - BORDER);
         if (rect.contains(me->x(), me->y())) {
-            const NavigationModel *model = qobject_cast<const NavigationModel*>(index.model());
-            if (model) {
-                QDriveInfo driveInfo = model->driveInfo(index);
+            const NavigationModel *navigationModel = qobject_cast<const NavigationModel*>(model);
+            if (navigationModel) {
+                QDriveInfo driveInfo = navigationModel->driveInfo(index);
                 if (driveInfo.isValid() &&
                         (driveInfo.type() == QDriveInfo::RemoteDrive ||
                          driveInfo.type() == QDriveInfo::RemovableDrive ||
                          driveInfo.type() == QDriveInfo::CdromDrive))
-                    QDriveController().eject(model->path(index));
+                    QDriveController().eject(navigationModel->path(index));
             }
 
             return true;
