@@ -10,8 +10,6 @@ class QUndoStack;
 
 namespace Bookmarks {
 
-class TreeItem;
-
 class BookmarksModelPrivate;
 class BOOKMARKS_EXPORT BookmarksModel : public QAbstractItemModel
 {

@@ -14,30 +14,30 @@ using namespace Bookmarks;
 static const qint32 bookmarksMagic = 0x62303773; // "b07s"
 static const qint8 bookmarksVersion = 1;
 
-QModelIndex BookmarksModelPrivate::index(TreeItem *item) const
+QModelIndex BookmarksModelPrivate::index(BookmarksModelItem *item) const
 {
     return q_func()->createIndex(item->row(), 0, item);
 }
 
-TreeItem * BookmarksModelPrivate::item(const QModelIndex &index) const
+BookmarksModelItem * BookmarksModelPrivate::item(const QModelIndex &index) const
 {
     if (index.isValid())
-        return static_cast<TreeItem*>(index.internalPointer());
+        return static_cast<BookmarksModelItem*>(index.internalPointer());
 
     return rootItem;
 }
 
-void BookmarksModelPrivate::changeItem(TreeItem *item, const QVariant &value, int role)
+void BookmarksModelPrivate::changeItem(BookmarksModelItem *item, const QVariant &value, int role)
 {
     undoStack->push(new ChangeBookmarkCommand(q_func(), item, value, role));
 }
 
-void BookmarksModelPrivate::insertItem(TreeItem *item, TreeItem *parentItem, int row)
+void BookmarksModelPrivate::insertItem(BookmarksModelItem *item, BookmarksModelItem *parentItem, int row)
 {
     undoStack->push(new InsertItemCommand(q_func(), item, parentItem, row));
 }
 
-void BookmarksModelPrivate::removeItem(TreeItem *item)
+void BookmarksModelPrivate::removeItem(BookmarksModelItem *item)
 {
     undoStack->push(new RemoveItemCommand(q_func(), item, item->parent(), item->row()));
 }
@@ -49,7 +49,7 @@ void BookmarksModelPrivate::readItems(QDataStream &s)
     readRootItem(s, bookmarksItem);
 }
 
-void BookmarksModelPrivate::readRootItem(QDataStream &s, TreeItem *parent)
+void BookmarksModelPrivate::readRootItem(QDataStream &s, BookmarksModelItem *parent)
 {
     qint32 childCount;
     s >> childCount;
@@ -61,18 +61,18 @@ void BookmarksModelPrivate::readRootItem(QDataStream &s, TreeItem *parent)
     }
 }
 
-void BookmarksModelPrivate::readItem(QDataStream &s, TreeItem *parent)
+void BookmarksModelPrivate::readItem(QDataStream &s, BookmarksModelItem *parent)
 {
     qint32 childCount;
     s >> childCount;
     if (childCount != -1) {
-        TreeItem *child = new TreeItem(TreeItem::Folder, parent);
+        BookmarksModelItem *child = new BookmarksModelItem(BookmarksModelItem::Folder, parent);
         s >> child->name;
         for (int i = 0; i < childCount; i++) {
             readItem(s, child);
         }
     } else {
-        TreeItem *child = new TreeItem(TreeItem::Item, parent);
+        BookmarksModelItem *child = new BookmarksModelItem(BookmarksModelItem::Item, parent);
         s >> child->bookmark;
     }
 }
@@ -84,22 +84,22 @@ void BookmarksModelPrivate::writeItems(QDataStream &s) const
     writeItem(s, bookmarksItem);
 }
 
-void BookmarksModelPrivate::writeItem(QDataStream &s, const TreeItem *parent) const
+void BookmarksModelPrivate::writeItem(QDataStream &s, const BookmarksModelItem *parent) const
 {
-    if (parent->type() == TreeItem::Item) {
+    if (parent->type() == BookmarksModelItem::Item) {
         s << (qint32)-1;
         s << parent->bookmark;
     } else {
         s << parent->childCount();
-        if (parent->type() == TreeItem::Folder)
+        if (parent->type() == BookmarksModelItem::Folder)
             s << parent->name;
-        foreach (TreeItem *child, parent->children()) {
+        foreach (BookmarksModelItem *child, parent->children()) {
             writeItem(s, child);
         }
     }
 }
 
-InsertItemCommand::InsertItemCommand(BookmarksModel *m, TreeItem *i, TreeItem *p, int r) :
+InsertItemCommand::InsertItemCommand(BookmarksModel *m, BookmarksModelItem *i, BookmarksModelItem *p, int r) :
     model(m),
     item(i),
     parentItem(p),
@@ -130,7 +130,7 @@ void InsertItemCommand::undo()
     done = false;
 }
 
-ChangeBookmarkCommand::ChangeBookmarkCommand(BookmarksModel *m, TreeItem *i, const QVariant &v, int r) :
+ChangeBookmarkCommand::ChangeBookmarkCommand(BookmarksModel *m, BookmarksModelItem *i, const QVariant &v, int r) :
     model(m),
     item(i),
     newValue(v),
@@ -138,7 +138,7 @@ ChangeBookmarkCommand::ChangeBookmarkCommand(BookmarksModel *m, TreeItem *i, con
 {
     switch (r) {
     case DescriptionRole : oldValue = i->bookmark.description(); break;
-    case TitleRole : oldValue = (i->type() == TreeItem::Item) ? i->bookmark.title() : i->name; break;
+    case TitleRole : oldValue = (i->type() == BookmarksModelItem::Item) ? i->bookmark.title() : i->name; break;
     case UrlRole : oldValue = i->bookmark.url(); break;
     default: break;
     }
@@ -151,7 +151,7 @@ void ChangeBookmarkCommand::redo()
         item->bookmark.setDescription(newValue.toString());
         break;
     case TitleRole :
-        if (item->type() == TreeItem::Folder)
+        if (item->type() == BookmarksModelItem::Folder)
             item->name = newValue.toString();
         else
             item->bookmark.setTitle(newValue.toString());
@@ -175,7 +175,7 @@ void ChangeBookmarkCommand::undo()
         item->bookmark.setDescription(oldValue.toString());
         break;
     case TitleRole :
-        if (item->type() == TreeItem::Folder)
+        if (item->type() == BookmarksModelItem::Folder)
             item->name = oldValue.toString();
         else
             item->bookmark.setTitle(oldValue.toString());
@@ -201,11 +201,11 @@ BookmarksModel::BookmarksModel(QObject *parent) :
 {
     Q_D(BookmarksModel);
 
-    d->rootItem = new TreeItem();
+    d->rootItem = new BookmarksModelItem();
 
-    d->menuItem = new TreeItem(TreeItem::Folder, d->rootItem, 0);
-    d->toolbarItem = new TreeItem(TreeItem::Folder, d->rootItem, 1);
-    d->bookmarksItem = new TreeItem(TreeItem::Folder, d->rootItem, 2);
+    d->menuItem = new BookmarksModelItem(BookmarksModelItem::Folder, d->rootItem, 0);
+    d->toolbarItem = new BookmarksModelItem(BookmarksModelItem::Folder, d->rootItem, 1);
+    d->bookmarksItem = new BookmarksModelItem(BookmarksModelItem::Folder, d->rootItem, 2);
 
     d->menuItem->name = tr("Bookmarks menu");
     d->toolbarItem->name = tr("Bookmarks toolbar");
@@ -231,9 +231,9 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    BookmarksModelItem *item = static_cast<BookmarksModelItem*>(index.internalPointer());
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        if (item->type() == TreeItem::Item) {
+        if (item->type() == BookmarksModelItem::Item) {
             if (index.column() == 0)
                 return item->bookmark.title();
             else if (index.column() == 1)
@@ -246,24 +246,24 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 0) {
-            if (item->type() == TreeItem::Item)
+            if (item->type() == BookmarksModelItem::Item)
                 return item->bookmark.icon();
             else
                 return QFileIconProvider().icon(QFileIconProvider::Folder);
         }
     } else if (role == Qt::ToolTipRole) {
-        if (item->type() == TreeItem::Item)
+        if (item->type() == BookmarksModelItem::Item)
             return QString("%1\n%2").arg(item->bookmark.title()).arg(item->bookmark.url().toString());
         else
             return item->name;
     } else if (role == DescriptionRole) {
-        if (item->type() == TreeItem::Item)
+        if (item->type() == BookmarksModelItem::Item)
             return item->bookmark.description();
     } else if (role == PreviewRole) {
-        if (item->type() == TreeItem::Item)
+        if (item->type() == BookmarksModelItem::Item)
             return item->bookmark.preview();
     } else if (role == UrlRole) {
-        if (item->type() == TreeItem::Item)
+        if (item->type() == BookmarksModelItem::Item)
             return item->bookmark.url();
     }
     return QVariant();
@@ -274,8 +274,8 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    TreeItem *item = d_func()->item(index);
-    TreeItem::Type type = item->type();
+    BookmarksModelItem *item = d_func()->item(index);
+    BookmarksModelItem::Type type = item->type();
     Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     if (hasChildren(index))
@@ -284,7 +284,7 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
     flags |= Qt::ItemIsDragEnabled;
 
     if ((index.column() == 0) ||
-            ((index.column() == 1 || index.column() == 2) && type == TreeItem::Item))
+            ((index.column() == 1 || index.column() == 2) && type == BookmarksModelItem::Item))
         flags |= Qt::ItemIsEditable;
 
     return flags;
@@ -292,8 +292,8 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
 
 bool BookmarksModel::hasChildren(const QModelIndex &parent) const
 {
-    TreeItem::Type type = d_func()->item(parent)->type();
-    return type == TreeItem::Folder || type == TreeItem::Root;
+    BookmarksModelItem::Type type = d_func()->item(parent)->type();
+    return type == BookmarksModelItem::Folder || type == BookmarksModelItem::Root;
 }
 
 QVariant BookmarksModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -313,8 +313,8 @@ QModelIndex BookmarksModel::index(int row, int column, const QModelIndex &parent
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    TreeItem *parentItem = d_func()->item(parent);
-    TreeItem *childItem = parentItem->child(row);
+    BookmarksModelItem *parentItem = d_func()->item(parent);
+    BookmarksModelItem *childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
 
@@ -328,8 +328,8 @@ QModelIndex BookmarksModel::parent(const QModelIndex &index) const
     if (!index.isValid())
         return QModelIndex();
 
-    TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
-    TreeItem *parentItem = childItem->parent();
+    BookmarksModelItem *childItem = static_cast<BookmarksModelItem*>(index.internalPointer());
+    BookmarksModelItem *parentItem = childItem->parent();
 
     if (parentItem == d->rootItem)
         return QModelIndex();
@@ -344,9 +344,9 @@ bool BookmarksModel::removeRows(int row, int count, const QModelIndex &parent)
     if (row < 0 || count <= 0 || row + count > rowCount(parent))
         return false;
 
-    TreeItem *parentItem = d->item(parent);
+    BookmarksModelItem *parentItem = d->item(parent);
     for (int i = row + count - 1; i >= row; --i) {
-        TreeItem *childItem = parentItem->child(i);
+        BookmarksModelItem *childItem = parentItem->child(i);
         d->removeItem(childItem);
     }
 
@@ -370,7 +370,7 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, in
     if (!index.isValid() || (flags(index) & Qt::ItemIsEditable) == 0)
         return false;
 
-    TreeItem *item = d->item(index);
+    BookmarksModelItem *item = d->item(index);
 
     switch (role) {
     case Qt::EditRole:
@@ -431,7 +431,7 @@ QMimeData * BookmarksModel::mimeData(const QModelIndexList &indexes) const
 
         urls.append(index.data(BookmarksModel::UrlRole).toUrl());
 
-        TreeItem *item = d_func()->item(index);
+        BookmarksModelItem *item = d_func()->item(index);
         d_func()->writeItem(stream, item);
     }
 
@@ -477,15 +477,15 @@ bool BookmarksModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     d->endMacro = true;
 
     while (!stream.atEnd()) {
-        TreeItem *rootNode = new TreeItem;
+        BookmarksModelItem *rootNode = new BookmarksModelItem;
         d->readItem(stream, rootNode);
-        QList<TreeItem*> children = rootNode->children();
+        QList<BookmarksModelItem*> children = rootNode->children();
         for (int i = 0; i < children.count(); ++i) {
-            TreeItem *item = children.at(i);
+            BookmarksModelItem *item = children.at(i);
             rootNode->remove(item);
             row = qMax(0, row);
 
-            TreeItem *parentItem = static_cast<TreeItem*>(parent.internalPointer());
+            BookmarksModelItem *parentItem = static_cast<BookmarksModelItem*>(parent.internalPointer());
             d->insertItem(item, parentItem, row);
         }
         delete rootNode;
@@ -525,7 +525,7 @@ bool BookmarksModel::isFolder(const QModelIndex &index) const
     if (!index.isValid())
         return true;
 
-    return d_func()->item(index)->type() == TreeItem::Folder;
+    return d_func()->item(index)->type() == BookmarksModelItem::Folder;
 }
 
 QModelIndex BookmarksModel::index(const QString &path)
@@ -556,14 +556,14 @@ QModelIndex BookmarksModel::addBookmark(const Bookmark &bookmark, const QModelIn
     if (!parent.isValid())
         return QModelIndex();
 
-    TreeItem *parentItem = d->item(parent);
+    BookmarksModelItem *parentItem = d->item(parent);
 
-    if (parentItem->type() != TreeItem::Folder)
+    if (parentItem->type() != BookmarksModelItem::Folder)
         return QModelIndex();
 
     row = (row == -1) ? parentItem->childCount() : row;
 
-    TreeItem *item = new TreeItem(TreeItem::Item);
+    BookmarksModelItem *item = new BookmarksModelItem(BookmarksModelItem::Item);
     item->bookmark = bookmark;
     d->insertItem(item, parentItem, row);
 
@@ -574,11 +574,11 @@ QModelIndex BookmarksModel::addFolder(const QString &folder, const QModelIndex &
 {
     Q_D(BookmarksModel);
 
-    TreeItem *parentItem = d->item(parent);
+    BookmarksModelItem *parentItem = d->item(parent);
 
     row = (row == -1) ? parentItem->childCount() : row;
 
-    TreeItem *item = new TreeItem(TreeItem::Folder);
+    BookmarksModelItem *item = new BookmarksModelItem(BookmarksModelItem::Folder);
     item->name = folder;
     d->insertItem(item, parentItem, row);
 
@@ -592,7 +592,7 @@ void BookmarksModel::remove(const QModelIndex &index)
     if (!index.isValid())
         return;
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    BookmarksModelItem *item = static_cast<BookmarksModelItem*>(index.internalPointer());
     d->removeItem(item);
 }
 

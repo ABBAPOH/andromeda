@@ -7,11 +7,11 @@
 
 namespace Bookmarks {
 
-struct TreeItem
+struct BookmarksModelItem
 {
     enum Type { Root = 0, Folder, Item };
 
-    explicit TreeItem(Type type = Root, TreeItem *parent = 0, int row = -1)
+    explicit BookmarksModelItem(Type type = Root, BookmarksModelItem *parent = 0, int row = -1)
     {
         m_type = type;
         m_parent = parent;
@@ -23,9 +23,9 @@ struct TreeItem
         }
     }
 
-    ~TreeItem()
+    ~BookmarksModelItem()
     {
-        foreach (TreeItem *item, m_children) {
+        foreach (BookmarksModelItem *item, m_children) {
             delete item;
         }
         if (m_parent) {
@@ -33,18 +33,18 @@ struct TreeItem
         }
     }
 
-    inline TreeItem *child(int row) const { return m_children.at(row); }
+    inline BookmarksModelItem *child(int row) const { return m_children.at(row); }
     inline int childCount() const { return m_children.count(); }
-    inline QList<TreeItem *> children() const { return m_children; }
-    inline void insert(TreeItem *item, int row) { item->m_parent = this; m_children.insert(row, item);}
-    inline void remove(TreeItem *item) { m_children.removeAll(item); }
-    inline TreeItem *parent() const { return m_parent; }
-    inline int row() const { return m_parent ? m_parent->m_children.indexOf((TreeItem *)this) : 0; }
+    inline QList<BookmarksModelItem *> children() const { return m_children; }
+    inline void insert(BookmarksModelItem *item, int row) { item->m_parent = this; m_children.insert(row, item);}
+    inline void remove(BookmarksModelItem *item) { m_children.removeAll(item); }
+    inline BookmarksModelItem *parent() const { return m_parent; }
+    inline int row() const { return m_parent ? m_parent->m_children.indexOf((BookmarksModelItem *)this) : 0; }
     inline Type type() const { return m_type; }
 
 private:
-    TreeItem *m_parent;
-    QList<TreeItem *> m_children;
+    BookmarksModelItem *m_parent;
+    QList<BookmarksModelItem *> m_children;
 
     Type m_type;
 
@@ -64,24 +64,24 @@ class BookmarksModelPrivate
 public:
     BookmarksModelPrivate(BookmarksModel *qq) : q_ptr(qq) {}
 
-    QModelIndex index(TreeItem *item) const;
-    TreeItem *item(const QModelIndex &index) const;
+    QModelIndex index(BookmarksModelItem *item) const;
+    BookmarksModelItem *item(const QModelIndex &index) const;
 
-    void changeItem(TreeItem *item, const QVariant &value, int role);
-    void insertItem(TreeItem *item, TreeItem *parent, int row);
-    void removeItem(TreeItem *item);
+    void changeItem(BookmarksModelItem *item, const QVariant &value, int role);
+    void insertItem(BookmarksModelItem *item, BookmarksModelItem *parent, int row);
+    void removeItem(BookmarksModelItem *item);
 
     void readItems(QDataStream &s);
-    void readRootItem(QDataStream &s, TreeItem *parent);
-    void readItem(QDataStream &s, TreeItem *parent);
+    void readRootItem(QDataStream &s, BookmarksModelItem *parent);
+    void readItem(QDataStream &s, BookmarksModelItem *parent);
     void writeItems(QDataStream &s) const;
-    void writeItem(QDataStream &s, const TreeItem *parent) const;
+    void writeItem(QDataStream &s, const BookmarksModelItem *parent) const;
 
 public:
-    TreeItem *rootItem;
-    TreeItem *menuItem;
-    TreeItem *toolbarItem;
-    TreeItem *bookmarksItem;
+    BookmarksModelItem *rootItem;
+    BookmarksModelItem *menuItem;
+    BookmarksModelItem *toolbarItem;
+    BookmarksModelItem *bookmarksItem;
 
     QUndoStack *undoStack;
     bool endMacro;
@@ -92,7 +92,7 @@ private:
 class InsertItemCommand : public QUndoCommand
 {
 public:
-    InsertItemCommand(BookmarksModel *model, TreeItem *item, TreeItem *parentItem, int row);
+    InsertItemCommand(BookmarksModel *model, BookmarksModelItem *item, BookmarksModelItem *parentItem, int row);
     ~InsertItemCommand();
 
     void redo();
@@ -100,8 +100,8 @@ public:
 
 protected:
     BookmarksModel *model;
-    TreeItem *item;
-    TreeItem *parentItem;
+    BookmarksModelItem *item;
+    BookmarksModelItem *parentItem;
     int row;
     bool done;
 };
@@ -109,7 +109,7 @@ protected:
 class RemoveItemCommand : public InsertItemCommand
 {
 public:
-    RemoveItemCommand(BookmarksModel *model, TreeItem *item, TreeItem *parentItem, int row) :
+    RemoveItemCommand(BookmarksModel *model, BookmarksModelItem *item, BookmarksModelItem *parentItem, int row) :
         InsertItemCommand(model, item, parentItem, row)
     {}
 
@@ -121,14 +121,14 @@ class ChangeBookmarkCommand : public QUndoCommand
 {
 public:
     enum Role { TitleRole, UrlRole, DescriptionRole };
-    ChangeBookmarkCommand(BookmarksModel *model, TreeItem *item, const QVariant &value, int role);
+    ChangeBookmarkCommand(BookmarksModel *model, BookmarksModelItem *item, const QVariant &value, int role);
 
     void redo();
     void undo();
 
 protected:
     BookmarksModel *model;
-    TreeItem *item;
+    BookmarksModelItem *item;
     QVariant newValue;
     QVariant oldValue;
     int role;
