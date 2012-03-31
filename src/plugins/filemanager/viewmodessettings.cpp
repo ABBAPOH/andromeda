@@ -212,7 +212,7 @@ QString ViewModesSettingsPage::name() const
 
 QString ViewModesSettingsPage::categoryName() const
 {
-    return tr("FileManager");
+    return tr("File manager");
 }
 
 QIcon ViewModesSettingsPage::icon() const

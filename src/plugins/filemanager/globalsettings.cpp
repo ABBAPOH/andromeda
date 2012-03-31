@@ -58,7 +58,7 @@ QString GlobalSettingsPage::name() const
 
 QString GlobalSettingsPage::categoryName() const
 {
-    return tr("FileManager");
+    return tr("File manager");
 }
 
 QIcon GlobalSettingsPage::icon() const
