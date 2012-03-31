@@ -21,13 +21,13 @@ NavigationModelPrivate::NavigationModelPrivate(NavigationModel *qq) :
 {
 }
 
-void NavigationModelPrivate::insertItem(TreeItem *parentItem, const QString &name, const QString &path)
+void NavigationModelPrivate::insertItem(NavigationModelItem *parentItem, const QString &name, const QString &path)
 {
     Q_Q(NavigationModel);
 
     QModelIndex parent = q->createIndex(parentItem->row(), 0, parentItem);
     q->beginInsertRows(parent, parentItem->childCount(), parentItem->childCount());
-    TreeItem *item = new TreeItem(parentItem, name, path);
+    NavigationModelItem *item = new NavigationModelItem(parentItem, name, path);
     item->icon = iconProvider.icon(QFileInfo(path));
     mapToItem.insert(path, item);
     q->endInsertRows();
@@ -37,11 +37,11 @@ void NavigationModelPrivate::removeItem(const QString &path)
 {
     Q_Q(NavigationModel);
 
-    TreeItem *item = mapToItem.value(path);
+    NavigationModelItem *item = mapToItem.value(path);
     if (!item)
         return;
 
-    TreeItem *parentItem = item->parent();
+    NavigationModelItem *parentItem = item->parent();
 
     QModelIndex parent = q->createIndex(parentItem->row(), 0, parentItem);
     q->beginRemoveRows(parent, item->row(), item->row());
@@ -83,7 +83,7 @@ void NavigationModelPrivate::onDriveAdded(const QString &path)
 #endif
         insertItem(drivesItem, name, path);
 
-    TreeItem* item = mapToItem.value(path);
+    NavigationModelItem* item = mapToItem.value(path);
     if (item)
         item->driveInfo = info;
 }
@@ -135,11 +135,11 @@ NavigationModel::NavigationModel(QObject *parent) :
 {
     Q_D(NavigationModel);
 
-    d->rootItem = new TreeItem();
+    d->rootItem = new NavigationModelItem();
 
-    d->drivesItem = new TreeItem(d->rootItem, tr("Devices"));
-    d->networkItem = new TreeItem(d->rootItem, tr("Network"));
-    d->foldersItem = new TreeItem(d->rootItem, tr("Folders"));
+    d->drivesItem = new NavigationModelItem(d->rootItem, tr("Devices"));
+    d->networkItem = new NavigationModelItem(d->rootItem, tr("Network"));
+    d->foldersItem = new NavigationModelItem(d->rootItem, tr("Folders"));
 
     d->driveController = new QDriveController(this);
     connect(d->driveController, SIGNAL(driveMounted(QString)), d, SLOT(onDriveAdded(QString)));
@@ -150,11 +150,11 @@ NavigationModel::NavigationModel(QObject *parent) :
         QString name = getDriveName(info);
         QString path = info.rootPath();
 
-        TreeItem *item = 0;
+        NavigationModelItem *item = 0;
         if (info.type() == QDriveInfo::RemoteDrive)
-            item = new TreeItem(d->networkItem, name, path);
+            item = new NavigationModelItem(d->networkItem, name, path);
         else if (info.type() != QDriveInfo::InvalidDrive)
-            item = new TreeItem(d->drivesItem, name, path);
+            item = new NavigationModelItem(d->drivesItem, name, path);
 
         if (item) {
             item->icon = d->iconProvider.icon(QFileInfo(path));
@@ -184,7 +184,7 @@ NavigationModel::~NavigationModel()
 
     QSettings settings("NavigationModel");
     QStringList folders;
-    foreach (TreeItem *item, d->foldersItem->m_children) {
+    foreach (NavigationModelItem *item, d->foldersItem->m_children) {
         folders.append(item->path);
     }
     settings.setValue("folders", folders);
@@ -204,11 +204,11 @@ QVariant NavigationModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
     if (role == Qt::DisplayRole) {
         return item->name;
     } else if (role == Qt::DecorationRole) {
-        if (item->type == TreeItem::ChildItem)
+        if (item->type == NavigationModelItem::ChildItem)
             return item->icon;
         else
             return QVariant();
@@ -229,14 +229,14 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 
     Q_D(NavigationModel);
 
-    TreeItem *parentItem = static_cast<TreeItem*>(parent.internalPointer());
+    NavigationModelItem *parentItem = static_cast<NavigationModelItem*>(parent.internalPointer());
     if (parentItem == d->foldersItem) {
 
         const QList<QUrl> & urls = data->urls();
 
         for (int i = 0; i < urls.size(); i++) {
             QString path = urls[i].toLocalFile();
-            TreeItem *item = d->mapToItem.value(path);
+            NavigationModelItem *item = d->mapToItem.value(path);
             if (item) {
                 if (item->row() < row)
                     row--;
@@ -251,8 +251,8 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             QString path = urls[i].toLocalFile();
             QFileInfo info(path);
 
-            TreeItem *item = new TreeItem(d->foldersItem, row + i);
-            item->type = TreeItem::ChildItem;
+            NavigationModelItem *item = new NavigationModelItem(d->foldersItem, row + i);
+            item->type = NavigationModelItem::ChildItem;
             item->path = path;
             item->name = info.fileName();
             item->icon = d->iconProvider.icon(info);
@@ -288,7 +288,7 @@ QMimeData *NavigationModel::mimeData(const QModelIndexList &indexes) const
     QMimeData *data = new QMimeData;
     QList<QUrl> urls;
     foreach (const QModelIndex &index, indexes) {
-        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+        NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
         if (item->parent() == d->foldersItem) {
             urls.append(QUrl::fromLocalFile(item->path));
         }
@@ -305,14 +305,14 @@ Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
 
     Q_D(const NavigationModel);
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
-    if (item->type == TreeItem::ChildItem && item->parent() == d->foldersItem)
+    NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
+    if (item->type == NavigationModelItem::ChildItem && item->parent() == d->foldersItem)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
     if (item == d->foldersItem)
         return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 
-    if (item->type == TreeItem::ChildItem)
+    if (item->type == NavigationModelItem::ChildItem)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 
     return Qt::ItemIsEnabled;
@@ -325,14 +325,14 @@ QModelIndex NavigationModel::index(int row, int column, const QModelIndex &paren
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    TreeItem *parentItem;
+    NavigationModelItem *parentItem;
 
     if (!parent.isValid())
         parentItem = d->rootItem;
     else
-        parentItem = static_cast<TreeItem*>(parent.internalPointer());
+        parentItem = static_cast<NavigationModelItem*>(parent.internalPointer());
 
-    TreeItem *childItem = parentItem->child(row);
+    NavigationModelItem *childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
     else
@@ -346,8 +346,8 @@ QModelIndex NavigationModel::parent(const QModelIndex &index) const
     if (!index.isValid())
         return QModelIndex();
 
-    TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
-    TreeItem *parentItem = childItem->parent();
+    NavigationModelItem *childItem = static_cast<NavigationModelItem*>(index.internalPointer());
+    NavigationModelItem *parentItem = childItem->parent();
 
     if (parentItem == d->rootItem)
         return QModelIndex();
@@ -359,12 +359,12 @@ int NavigationModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const NavigationModel);
 
-    TreeItem *parentItem;
+    NavigationModelItem *parentItem;
 
     if (!parent.isValid())
         parentItem = d->rootItem;
     else
-        parentItem = static_cast<TreeItem*>(parent.internalPointer());
+        parentItem = static_cast<NavigationModelItem*>(parent.internalPointer());
 
     return parentItem->childCount();
 }
@@ -378,7 +378,7 @@ QModelIndex NavigationModel::index(const QString &path) const
 {
     Q_D(const NavigationModel);
 
-    TreeItem *item = d->mapToItem.value(path);
+    NavigationModelItem *item = d->mapToItem.value(path);
     if (!item)
         return QModelIndex();
     else
@@ -390,8 +390,8 @@ QString NavigationModel::path(const QModelIndex &index) const
     if (!index.isValid())
         return "";
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
-    if (item->type == TreeItem::ChildItem)
+    NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
+    if (item->type == NavigationModelItem::ChildItem)
         return item->path;
     else
         return "";
@@ -476,7 +476,7 @@ void NavigationModel::setStandardLocations(StandardLocations locations)
 
 QDriveInfo NavigationModel::driveInfo(const QModelIndex& index) const
 {
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
     if (item)
         return item->driveInfo;
 
