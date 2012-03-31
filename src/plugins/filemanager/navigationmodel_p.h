@@ -10,10 +10,10 @@ class QDriveController;
 
 namespace FileManager {
 
-struct TreeItem
+struct NavigationModelItem
 {
-    TreeItem *m_parent;
-    QList<TreeItem *> m_children;
+    NavigationModelItem *m_parent;
+    QList<NavigationModelItem *> m_children;
 
     enum Type { RootItem = 0, GroupItem, ChildItem };
     Type type;
@@ -22,7 +22,7 @@ struct TreeItem
     QIcon icon;
     QDriveInfo driveInfo;
 
-    explicit TreeItem(TreeItem *parent = 0)
+    explicit NavigationModelItem(NavigationModelItem *parent = 0)
     {
         m_parent = parent;
         if (parent)
@@ -30,37 +30,37 @@ struct TreeItem
         type = RootItem;
     }
 
-    TreeItem(TreeItem *parent, int row)
+    NavigationModelItem(NavigationModelItem *parent, int row)
     {
         m_parent = parent;
         if (parent)
             parent->m_children.insert(row, this);
     }
 
-    TreeItem(TreeItem *parent, const QString &name)
+    NavigationModelItem(NavigationModelItem *parent, const QString &name)
     {
         m_parent = parent;
         if (parent)
             parent->m_children.append(this);
 
-        type = TreeItem::GroupItem;
+        type = NavigationModelItem::GroupItem;
         this->name = name;
     }
 
-    TreeItem(TreeItem *parent, const QString &name, const QString &path)
+    NavigationModelItem(NavigationModelItem *parent, const QString &name, const QString &path)
     {
         m_parent = parent;
         if (parent)
             parent->m_children.append(this);
 
-        type = TreeItem::ChildItem;
+        type = NavigationModelItem::ChildItem;
         this->name = name;
         this->path = path;
     }
 
-    ~TreeItem()
+    ~NavigationModelItem()
     {
-        foreach (TreeItem *item, m_children) {
+        foreach (NavigationModelItem *item, m_children) {
             delete item;
         }
         if (m_parent) {
@@ -73,12 +73,12 @@ struct TreeItem
         return m_children.count();
     }
 
-    TreeItem *parent()
+    NavigationModelItem *parent()
     {
         return m_parent;
     }
 
-    TreeItem *child(int row)
+    NavigationModelItem *child(int row)
     {
         return m_children.at(row);
     }
@@ -101,12 +101,12 @@ class NavigationModelPrivate : public QObject
 public:
     NavigationModelPrivate(NavigationModel *qq);
 
-    TreeItem *rootItem;
-    TreeItem *drivesItem;
-    TreeItem *networkItem;
-    TreeItem *foldersItem;
+    NavigationModelItem *rootItem;
+    NavigationModelItem *drivesItem;
+    NavigationModelItem *networkItem;
+    NavigationModelItem *foldersItem;
 
-    QMap<QString, TreeItem*> mapToItem;
+    QMap<QString, NavigationModelItem*> mapToItem;
 
     QDriveController *driveController;
 
@@ -114,7 +114,7 @@ public:
 
     NavigationModel::StandardLocations locations;
 
-    void insertItem(TreeItem *parent, const QString &name, const QString &path);
+    void insertItem(NavigationModelItem *parent, const QString &name, const QString &path);
     void removeItem(const QString &path);
 
 public slots:
