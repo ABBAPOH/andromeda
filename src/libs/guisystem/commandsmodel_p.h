@@ -8,11 +8,11 @@ class QSettings;
 namespace GuiSystem {
 
 class Command;
-struct TreeItem
+struct CommandsModelItem
 {
     enum Type { Root = 0, Folder, Leaf };
 
-    explicit TreeItem(Type type = Root, TreeItem *parent = 0, int row = -1) :
+    explicit CommandsModelItem(Type type = Root, CommandsModelItem *parent = 0, int row = -1) :
         cmd(0)
     {
         m_type = type;
@@ -25,9 +25,9 @@ struct TreeItem
         }
     }
 
-    ~TreeItem()
+    ~CommandsModelItem()
     {
-        foreach (TreeItem *item, m_children) {
+        foreach (CommandsModelItem *item, m_children) {
             delete item;
         }
         if (m_parent) {
@@ -35,18 +35,18 @@ struct TreeItem
         }
     }
 
-    inline TreeItem *child(int row) const { return m_children.at(row); }
+    inline CommandsModelItem *child(int row) const { return m_children.at(row); }
     inline int childCount() const { return m_children.count(); }
-    inline QList<TreeItem *> children() const { return m_children; }
-    inline void insert(TreeItem *item, int row) { item->m_parent = this; m_children.insert(row, item);}
-    inline TreeItem *parent() const { return m_parent; }
-    inline void remove(TreeItem *item) { m_children.removeAll(item); }
-    inline int row() const { return m_parent ? m_parent->m_children.indexOf((TreeItem *)this) : 0; }
+    inline QList<CommandsModelItem *> children() const { return m_children; }
+    inline void insert(CommandsModelItem *item, int row) { item->m_parent = this; m_children.insert(row, item);}
+    inline CommandsModelItem *parent() const { return m_parent; }
+    inline void remove(CommandsModelItem *item) { m_children.removeAll(item); }
+    inline int row() const { return m_parent ? m_parent->m_children.indexOf((CommandsModelItem *)this) : 0; }
     inline Type type() const { return m_type; }
 
 private:
-    TreeItem *m_parent;
-    QList<TreeItem *> m_children;
+    CommandsModelItem *m_parent;
+    QList<CommandsModelItem *> m_children;
 
     Type m_type;
 
@@ -65,15 +65,16 @@ class CommandsModelPrivate
 public:
     explicit CommandsModelPrivate(CommandsModel *qq) : q_ptr(qq) {}
 
-    QModelIndex index(TreeItem *item) const;
-    TreeItem *item(const QModelIndex &index) const;
+    QModelIndex index(CommandsModelItem *item) const;
+    CommandsModelItem *item(const QModelIndex &index) const;
 
     void build();
 
+
 public:
-    TreeItem *rootItem;
+    CommandsModelItem *rootItem;
     QSettings *settings;
-    QMultiMap<QKeySequence, TreeItem *> mapToItem;
+    QMultiMap<QKeySequence, CommandsModelItem *> mapToItem;
     QMultiMap<QKeySequence, Command *> mapToCommand;
 };
 

@@ -10,17 +10,17 @@
 
 using namespace GuiSystem;
 
-QModelIndex CommandsModelPrivate::index(TreeItem *item) const
+QModelIndex CommandsModelPrivate::index(CommandsModelItem *item) const
 {
     return q_func()->createIndex(item->row(), 0, item);
 }
 
-TreeItem * CommandsModelPrivate::item(const QModelIndex &index) const
+CommandsModelItem * CommandsModelPrivate::item(const QModelIndex &index) const
 {
     if (!index.isValid())
         return rootItem;
 
-    return static_cast<TreeItem*>(index.internalPointer());
+    return static_cast<CommandsModelItem*>(index.internalPointer());
 }
 
 void CommandsModelPrivate::build()
@@ -40,14 +40,14 @@ void CommandsModelPrivate::build()
         if (commands.isEmpty())
             continue;
 
-        TreeItem *categoryItem = new TreeItem(TreeItem::Folder, rootItem);
+        CommandsModelItem *categoryItem = new CommandsModelItem(CommandsModelItem::Folder, rootItem);
         categoryItem->name = container->title();
 
         foreach (Command *c, commands) {
             if (c->isSeparator())
                 continue;
 
-            TreeItem *item = new TreeItem(TreeItem::Leaf, categoryItem);
+            CommandsModelItem *item = new CommandsModelItem(CommandsModelItem::Leaf, categoryItem);
             item->cmd = c;
             if (!mapToCommand.values(c->shortcut()).contains(c))
                 mapToCommand.insert(c->shortcut(), c);
@@ -64,7 +64,7 @@ CommandsModel::CommandsModel(QObject *parent) :
 {
     Q_D(CommandsModel);
 
-    d->rootItem = new TreeItem();
+    d->rootItem = new CommandsModelItem();
     d->settings = new QSettings(this);
     d->settings->beginGroup(QLatin1String("ActionManager/Shortcuts"));
 
@@ -87,10 +87,10 @@ QVariant CommandsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    CommandsModelItem *item = static_cast<CommandsModelItem*>(index.internalPointer());
     int column = index.column();
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        if (item->type() == TreeItem::Leaf) {
+        if (item->type() == CommandsModelItem::Leaf) {
             switch (column) {
             case 0: return item->cmd->defaultText();
             case 1: return item->cmd->shortcut();
@@ -106,7 +106,7 @@ QVariant CommandsModel::data(const QModelIndex &index, int role) const
 
     } else if (role == Qt::FontRole) {
         QFont f = qApp->font();
-        if (item->type() == TreeItem::Folder) {
+        if (item->type() == CommandsModelItem::Folder) {
             f.setBold(true);
             return f;
         } else {
@@ -116,7 +116,7 @@ QVariant CommandsModel::data(const QModelIndex &index, int role) const
             }
         }
     } else if (role == Qt::TextColorRole) {
-        if (item->type() == TreeItem::Leaf) {
+        if (item->type() == CommandsModelItem::Leaf) {
             if (column == 1 && d_func()->mapToCommand.values(item->cmd->shortcut()).count() > 1) {
                 return Qt::red;
             }
@@ -131,7 +131,7 @@ Qt::ItemFlags CommandsModel::flags(const QModelIndex &index) const
         return Qt::NoItemFlags;
 
     if (index.parent().isValid()) {
-        TreeItem *item = d_func()->item(index);
+        CommandsModelItem *item = d_func()->item(index);
         if (item->cmd->hasAttribute(Command::AttributeNonConfigurable))
             return Qt::NoItemFlags;
 
@@ -144,8 +144,8 @@ Qt::ItemFlags CommandsModel::flags(const QModelIndex &index) const
 
 bool CommandsModel::hasChildren(const QModelIndex &parent) const
 {
-    TreeItem::Type type = d_func()->item(parent)->type();
-    return type == TreeItem::Folder || type == TreeItem::Root;
+    CommandsModelItem::Type type = d_func()->item(parent)->type();
+    return type == CommandsModelItem::Folder || type == CommandsModelItem::Root;
 }
 
 QVariant CommandsModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -164,8 +164,8 @@ QModelIndex CommandsModel::index(int row, int column, const QModelIndex &parent)
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    TreeItem *parentItem = d_func()->item(parent);
-    TreeItem *childItem = parentItem->child(row);
+    CommandsModelItem *parentItem = d_func()->item(parent);
+    CommandsModelItem *childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
 
@@ -179,8 +179,8 @@ QModelIndex CommandsModel::parent(const QModelIndex &index) const
     if (!index.isValid())
         return QModelIndex();
 
-    TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
-    TreeItem *parentItem = childItem->parent();
+    CommandsModelItem *childItem = static_cast<CommandsModelItem*>(index.internalPointer());
+    CommandsModelItem *parentItem = childItem->parent();
 
     if (parentItem == d->rootItem)
         return QModelIndex();
@@ -200,12 +200,12 @@ bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int
     if (!index.isValid() || (flags(index) & Qt::ItemIsEditable) == 0)
         return false;
 
-    TreeItem *item = d->item(index);
+    CommandsModelItem *item = d->item(index);
 
     switch (role) {
     case Qt::EditRole:
     case Qt::DisplayRole:
-        if (item->type() == TreeItem::Leaf) {
+        if (item->type() == CommandsModelItem::Leaf) {
             QKeySequence oldShortcut = item->cmd->shortcut();
             QString shortcut = value.toString();
             d->mapToCommand.remove(oldShortcut, item->cmd);
@@ -215,7 +215,7 @@ bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int
             d->mapToItem.insert(item->cmd->shortcut(), item);
             d->settings->setValue(item->cmd->id(), shortcut);
 
-            foreach (TreeItem *item, d->mapToItem.values(oldShortcut)) {
+            foreach (CommandsModelItem *item, d->mapToItem.values(oldShortcut)) {
                 QModelIndex index = d->index(item);
                 index = index.sibling(index.row(), 1);
                 emit dataChanged(index, index);
@@ -235,7 +235,7 @@ bool CommandsModel::isModified(const QModelIndex &index) const
 {
     Q_D(const CommandsModel);
 
-    TreeItem *item = d->item(index);
+    CommandsModelItem *item = d->item(index);
     if (!item->cmd)
         return false;
 
@@ -246,8 +246,8 @@ void CommandsModel::resetShortcut(const QModelIndex &index)
 {
     Q_D(CommandsModel);
 
-    TreeItem *item = d->item(index);
-    if (item->type() == TreeItem::Leaf) {
+    CommandsModelItem *item = d->item(index);
+    if (item->type() == CommandsModelItem::Leaf) {
         Command *c = item->cmd;
         if (c->shortcut() != c->defaultShortcut()) {
             QKeySequence oldShortcut = item->cmd->shortcut();
@@ -258,7 +258,7 @@ void CommandsModel::resetShortcut(const QModelIndex &index)
             d->mapToCommand.insert(item->cmd->shortcut(), item->cmd);
             d->mapToItem.insert(item->cmd->shortcut(), item);
 
-            foreach (TreeItem *item, d->mapToItem.values(oldShortcut)) {
+            foreach (CommandsModelItem *item, d->mapToItem.values(oldShortcut)) {
                 QModelIndex index = d->index(item);
                 index = index.sibling(index.row(), 1);
                 emit dataChanged(index, index);
