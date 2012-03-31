@@ -14,4 +14,27 @@
         <translation>Очистить текст</translation>
     </message>
 </context>
+<context>
+    <name>WindowsMenu</name>
+    <message>
+        <location filename="../windowsmenu.cpp" line="103"/>
+        <source>Minimize</source>
+        <translation>Свернуть</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="104"/>
+        <source>Next window</source>
+        <translation>Следующее окно</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="105"/>
+        <source>Previous window</source>
+        <translation>Предыдущее окно</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="107"/>
+        <source>Windows</source>
+        <translation>Окна</translation>
+    </message>
+</context>
 </TS>

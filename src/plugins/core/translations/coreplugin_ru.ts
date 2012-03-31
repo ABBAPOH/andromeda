@@ -17,7 +17,7 @@
 <context>
     <name>Core::BrowserWindowPrivate</name>
     <message>
-        <location filename="../browserwindow.cpp" line="41"/>
+        <location filename="../browserwindow.cpp" line="43"/>
         <source>Up one level</source>
         <translation>Вверх</translation>
     </message>
@@ -58,8 +58,10 @@
 <context>
     <name>Core::TabContainer</name>
     <message>
-        <location filename="../tabcontainer.cpp" line="148"/>
-        <location filename="../tabcontainer.cpp" line="187"/>
+        <location filename="../tabcontainer.cpp" line="138"/>
+        <location filename="../tabcontainer.cpp" line="140"/>
+        <location filename="../tabcontainer.cpp" line="184"/>
+        <location filename="../tabcontainer.cpp" line="186"/>
         <source>New tab</source>
         <translation>Новая вкладка</translation>
     </message>
@@ -67,164 +69,179 @@
 <context>
     <name>CorePlugin</name>
     <message>
-        <location filename="../coreplugin.cpp" line="191"/>
+        <location filename="../coreplugin.cpp" line="270"/>
         <source>Couldn&apos;t restore session (located at %1)</source>
         <translation>Невозможно восстановить сессию (расположена в %1)</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="223"/>
+        <location filename="../coreplugin.cpp" line="316"/>
         <source>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Revision %2&lt;br/&gt;&lt;br/&gt;Copyright 2010-2011 %3&lt;br/&gt;Bugreports send to %4&lt;br/&gt;&lt;br/&gt;This is alpha version.&lt;br/&gt;&lt;br/&gt;The program is provided as is with no warranty of any kind, including the warranty of design, merchantability and fitness for a particular purpose.</source>
         <translation>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Ревизия %2&lt;br/&gt;&lt;br/&gt;Права 2010-2011 %3&lt;br/&gt;Отчеты об ошибках присылайте на %4&lt;br/&gt;&lt;br/&gt;Это альфа версия программы.&lt;br/&gt;&lt;br/&gt;Программа предоставляется &quot;как есть&quot;, без каких-либо гарантий, включая гарантию на дизайн, коммерческую ценность и пригодность для конкретных целей.</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="241"/>
+        <location filename="../coreplugin.cpp" line="334"/>
         <source>About Andromeda</source>
         <translation>О программе Andromeda</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="276"/>
+        <location filename="../coreplugin.cpp" line="380"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="282"/>
+        <location filename="../coreplugin.cpp" line="384"/>
         <source>New window</source>
         <translation>Новое окно</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="286"/>
+        <location filename="../coreplugin.cpp" line="388"/>
         <source>New tab</source>
         <translation>Новая вкладка</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="290"/>
+        <location filename="../coreplugin.cpp" line="392"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="297"/>
+        <location filename="../coreplugin.cpp" line="399"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="301"/>
+        <location filename="../coreplugin.cpp" line="403"/>
         <source>Save as...</source>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="309"/>
+        <location filename="../coreplugin.cpp" line="410"/>
         <source>Quit Andromeda</source>
         <translation>Завершить Andromeda</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="327"/>
+        <location filename="../coreplugin.cpp" line="427"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="333"/>
+        <location filename="../coreplugin.cpp" line="431"/>
         <source>Undo</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="337"/>
+        <location filename="../coreplugin.cpp" line="435"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="344"/>
+        <location filename="../coreplugin.cpp" line="442"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="348"/>
+        <location filename="../coreplugin.cpp" line="446"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="352"/>
+        <location filename="../coreplugin.cpp" line="450"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="355"/>
+        <location filename="../coreplugin.cpp" line="453"/>
         <source>Select All</source>
         <translation>Выделить всё</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="362"/>
+        <location filename="../coreplugin.cpp" line="459"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="365"/>
+        <location filename="../coreplugin.cpp" line="462"/>
         <source>Find next</source>
         <translation>Найти следующий</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="368"/>
+        <location filename="../coreplugin.cpp" line="465"/>
         <source>Find previous</source>
         <translation>Найти предыдущий</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="380"/>
+        <location filename="../coreplugin.cpp" line="476"/>
         <source>View</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="395"/>
+        <location filename="../coreplugin.cpp" line="490"/>
         <source>Go to</source>
         <translation>Переход</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="399"/>
+        <location filename="../coreplugin.cpp" line="494"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="403"/>
+        <location filename="../coreplugin.cpp" line="498"/>
         <source>Forward</source>
         <translation>Вперёд</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="407"/>
+        <location filename="../coreplugin.cpp" line="502"/>
         <source>Up one level</source>
         <translation>Вверх</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="419"/>
+        <location filename="../coreplugin.cpp" line="512"/>
+        <source>Windows</source>
+        <translation>Окна</translation>
+    </message>
+    <message>
+        <location filename="../coreplugin.cpp" line="523"/>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="423"/>
+        <location filename="../coreplugin.cpp" line="527"/>
         <source>Plugins...</source>
         <translation>Модули...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="428"/>
+        <location filename="../coreplugin.cpp" line="533"/>
         <source>View all settings...</source>
         <translation>Показать все настройки...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="436"/>
+        <location filename="../coreplugin.cpp" line="542"/>
         <source>Preferences</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="454"/>
+        <location filename="../coreplugin.cpp" line="560"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="457"/>
+        <location filename="../coreplugin.cpp" line="563"/>
         <source>About Andromeda...</source>
         <translation>О программе Andromeda...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="463"/>
+        <location filename="../coreplugin.cpp" line="570"/>
         <source>About Qt...</source>
         <translation>О Qt...</translation>
+    </message>
+    <message>
+        <location filename="../coreplugin.cpp" line="589"/>
+        <source>Dock menu</source>
+        <translation>Меню в Доке</translation>
+    </message>
+    <message>
+        <location filename="../coreplugin.cpp" line="591"/>
+        <source>Tray menu</source>
+        <translation>Меню в системном лотке</translation>
     </message>
 </context>
 <context>
