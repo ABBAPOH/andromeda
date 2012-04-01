@@ -322,9 +322,6 @@ void TabContainer::connectEditor(AbstractEditor *editor)
     connect(editor, SIGNAL(loadStarted()), this, SIGNAL(loadStarted()));
     connect(editor, SIGNAL(loadProgress(int)), this, SIGNAL(loadProgress(int)));
     connect(editor, SIGNAL(loadFinished(bool)), this, SIGNAL(loadFinished(bool)));
-
-    connect(editor, SIGNAL(capabilitiesChanged(Capabilities)),
-            this, SIGNAL(capabilitiesChanged(Capabilities)));
 }
 
 /*!

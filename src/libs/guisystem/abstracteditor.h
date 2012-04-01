@@ -24,16 +24,10 @@ class GUISYSTEM_EXPORT AbstractEditor : public QWidget
     Q_PROPERTY(QString windowTitle READ windowTitle NOTIFY windowTitleChanged)
 
 public:
-    enum Capability { NoCapabilities = 0, CanSave = 0x1, HasHistory = 0x2, HasFind = 0x4 };
-    Q_DECLARE_FLAGS(Capabilities, Capability)
-    Q_FLAGS(Capabilities)
-
     explicit AbstractEditor(QWidget *parent = 0);
     ~AbstractEditor();
 
     QByteArray id() const;
-
-    virtual Capabilities capabilities() const;
 
     virtual QUrl url() const = 0;
 
@@ -59,8 +53,6 @@ public slots:
     virtual void refresh();
 
 signals:
-    void capabilitiesChanged(Capabilities capabilities);
-
     void urlChanged(const QUrl &);
 
     void openTriggered(const QUrl &url);

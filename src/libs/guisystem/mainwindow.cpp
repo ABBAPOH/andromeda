@@ -205,18 +205,16 @@ void MainWindow::back()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
-        if (d->contanier->capabilities() & AbstractEditor::HasHistory)
-            d->contanier->history()->back();
+    if (d->contanier && d->contanier->history())
+        d->contanier->history()->back();
 }
 
 void MainWindow::forward()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
-        if (d->contanier->capabilities() & AbstractEditor::HasHistory)
-            d->contanier->history()->forward();
+    if (d->contanier && d->contanier->history())
+        d->contanier->history()->forward();
 }
 
 void MainWindow::open(const QUrl &url)

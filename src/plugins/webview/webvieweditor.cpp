@@ -232,13 +232,6 @@ WebViewEditor::~WebViewEditor()
     delete m_webView;
 }
 
-AbstractEditor::Capabilities WebViewEditor::capabilities() const
-{
-    return AbstractEditor::Capabilities(AbstractEditor::HasHistory |
-                                        AbstractEditor::HasFind |
-                                        AbstractEditor::CanSave);
-}
-
 void WebViewEditor::open(const QUrl &url)
 {
     m_webView->load(url);

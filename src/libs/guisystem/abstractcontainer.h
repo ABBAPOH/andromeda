@@ -16,8 +16,6 @@ class GUISYSTEM_EXPORT AbstractContainer : public AbstractEditor
 public:
     explicit AbstractContainer(QWidget *parent = 0);
 
-    Capabilities capabilities() const;
-
     virtual int count() const = 0;
     virtual int currentIndex() const = 0;
     virtual AbstractEditor *editor(int index) const = 0;

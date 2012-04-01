@@ -31,8 +31,6 @@ public:
     explicit WebViewEditor(QWidget *parent = 0);
     ~WebViewEditor();
 
-    Capabilities capabilities() const;
-
     void close() {}
 
     QUrl url() const;
