@@ -24,9 +24,6 @@ public:
 
     AbstractEditor *currentEditor() const;
 
-    bool isModified() const;
-    bool isReadOnly() const;
-
     QUrl url() const;
     QList<QUrl> urls() const;
 
@@ -36,9 +33,6 @@ public:
     QString windowTitle() const;
 
 public slots:
-    void setModified(bool modified = true);
-    void setReadOnly(bool readOnly = true);
-
     void open(const QUrl &url = QUrl());
     virtual void openNewEditor(const QUrl &url) = 0;
     void openNewEditor(const QList<QUrl> &urls);
@@ -50,8 +44,6 @@ public slots:
     void refresh();
 
     virtual void setCurrentIndex(int index) = 0;
-
-    void save(const QUrl &url = QUrl());
 
 signals:
     void currentChanged(int index);

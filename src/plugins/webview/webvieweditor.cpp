@@ -269,18 +269,6 @@ void WebViewEditor::cancel()
     m_webView->stop();
 }
 
-void WebViewEditor::save(const QUrl &url)
-{
-    QString html = m_webView->page()->mainFrame()->toHtml();
-    if (url.scheme() == QLatin1String("file")) {
-        QFile file(url.path());
-        if (!file.open(QFile::WriteOnly | QFile::Text))
-            return;
-
-        file.write(html.toUtf8());
-    }
-}
-
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     m_webView->load(url);
