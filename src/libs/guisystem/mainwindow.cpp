@@ -91,7 +91,8 @@ void MainWindow::setContanier(AbstractContainer *container)
     connect(d->contanier->history(), SIGNAL(canGoForwardChanged(bool)),
             d->actions[Forward], SLOT(setEnabled(bool)));
 
-    connect(d->contanier, SIGNAL(modificationChanged(bool)), d->actions[Save], SLOT(setEnabled(bool)));
+    if (d->contanier->file())
+        connect(d->contanier->file(), SIGNAL(modificationChanged(bool)), d->actions[Save], SLOT(setEnabled(bool)));
 
     d->actions[Back]->setEnabled(d->contanier->history()->canGoBack());
     d->actions[Forward]->setEnabled(d->contanier->history()->canGoForward());

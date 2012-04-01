@@ -27,6 +27,7 @@ public:
     QUrl defaultUrl() const;
     void setDefaultUrl(const QUrl &url);
 
+    GuiSystem::IFile *file() const;
     GuiSystem::IHistory *history() const;
 
     MyTabWidget *tabWidget() const;
