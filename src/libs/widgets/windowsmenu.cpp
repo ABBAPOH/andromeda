@@ -20,9 +20,9 @@ public:
     void retranslateUi();
 
 public:
-    QAction *minimizeAction;
-    QAction *nextAction;
-    QAction *prevAction;
+    QAction *minimizeWindowAction;
+    QAction *nextWindowAction;
+    QAction *prevWindowAction;
     QWidgetList widgets;
     QList<QAction *> actions;
     QActionGroup *actionGroup;
@@ -50,9 +50,9 @@ void WindowsMenuPrivate::addWindow(QWidget *w)
     widgets.append(w);
     actions.append(action);
 
-    minimizeAction->setEnabled(true);
-    nextAction->setEnabled(true);
-    prevAction->setEnabled(true);
+    minimizeWindowAction->setEnabled(true);
+    nextWindowAction->setEnabled(true);
+    prevWindowAction->setEnabled(true);
 }
 
 void WindowsMenuPrivate::removeWindow(QWidget *w)
@@ -65,9 +65,9 @@ void WindowsMenuPrivate::removeWindow(QWidget *w)
 
         if (actions.isEmpty()) {
             currentIndex = -1;
-            minimizeAction->setEnabled(false);
-            nextAction->setEnabled(false);
-            prevAction->setEnabled(false);
+            minimizeWindowAction->setEnabled(false);
+            nextWindowAction->setEnabled(false);
+            prevWindowAction->setEnabled(false);
         }
     }
 }
@@ -104,9 +104,9 @@ void WindowsMenuPrivate::retranslateUi()
 {
     Q_Q(WindowsMenu);
 
-    minimizeAction->setText(WindowsMenu::tr("Minimize"));
-    nextAction->setText(WindowsMenu::tr("Next window"));
-    prevAction->setText(WindowsMenu::tr("Previous window"));
+    minimizeWindowAction->setText(WindowsMenu::tr("Minimize"));
+    nextWindowAction->setText(WindowsMenu::tr("Next window"));
+    prevWindowAction->setText(WindowsMenu::tr("Previous window"));
 
     q->setTitle(WindowsMenu::tr("Windows"));
 }
@@ -117,20 +117,20 @@ WindowsMenu::WindowsMenu(QWidget *parent) :
 {
     Q_D(WindowsMenu);
 
-    d->minimizeAction = new QAction(this);
-    d->minimizeAction->setShortcut(QKeySequence("Ctrl+M"));
-    addAction(d->minimizeAction);
-    connect(d->minimizeAction, SIGNAL(triggered()), SLOT(minimizeWindow()));
+    d->minimizeWindowAction = new QAction(this);
+    d->minimizeWindowAction->setShortcut(QKeySequence("Ctrl+M"));
+    addAction(d->minimizeWindowAction);
+    connect(d->minimizeWindowAction, SIGNAL(triggered()), SLOT(minimizeWindow()));
 
-    d->nextAction = new QAction(this);
-    d->nextAction->setShortcut(QKeySequence("Ctrl+~"));
-    addAction(d->nextAction);
-    connect(d->nextAction, SIGNAL(triggered()), SLOT(nextWindow()));
+    d->nextWindowAction = new QAction(this);
+    d->nextWindowAction->setShortcut(QKeySequence("Ctrl+~"));
+    addAction(d->nextWindowAction);
+    connect(d->nextWindowAction, SIGNAL(triggered()), SLOT(nextWindow()));
 
-    d->prevAction = new QAction(this);
-    d->prevAction->setShortcut(QKeySequence("Ctrl+Shift+~"));
-    addAction(d->prevAction);
-    connect(d->prevAction, SIGNAL(triggered()), SLOT(prevWindow()));
+    d->prevWindowAction = new QAction(this);
+    d->prevWindowAction->setShortcut(QKeySequence("Ctrl+Shift+~"));
+    addAction(d->prevWindowAction);
+    connect(d->prevWindowAction, SIGNAL(triggered()), SLOT(prevWindow()));
 
     addSeparator();
 
@@ -156,21 +156,21 @@ QAction * WindowsMenu::minimizeAction() const
 {
     Q_D(const WindowsMenu);
 
-    return d->minimizeAction;
+    return d->minimizeWindowAction;
 }
 
 QAction *WindowsMenu::nextAction() const
 {
     Q_D(const WindowsMenu);
 
-    return d->nextAction;
+    return d->nextWindowAction;
 }
 
 QAction *WindowsMenu::prevAction() const
 {
     Q_D(const WindowsMenu);
 
-    return d->prevAction;
+    return d->prevWindowAction;
 }
 
 void WindowsMenu::minimizeWindow()
