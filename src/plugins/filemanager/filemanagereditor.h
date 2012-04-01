@@ -44,6 +44,8 @@ public:
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
 
+    void clear();
+
 protected:
     void resizeEvent(QResizeEvent *);
 

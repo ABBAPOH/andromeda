@@ -51,6 +51,7 @@ public slots:
     virtual void cancel();
     virtual void close();
     virtual void refresh();
+    virtual void clear();
 
 signals:
     void urlChanged(const QUrl &);

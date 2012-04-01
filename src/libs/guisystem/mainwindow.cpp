@@ -7,6 +7,7 @@
 #include "ihistory.h"
 #include "commandcontainer.h"
 #include "stackedcontainer.h"
+#include "history.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Q_D(MainWindow);
 
     d->contanier = 0;
+    d->history = new History(this);
     d->createActions();
     d->retranslateUi();
     d->registerActions();
@@ -36,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifndef Q_OS_MAC
     setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
 #endif
+
+    connect(d->history, SIGNAL(canGoBackChanged(bool)), d->actions[Back], SLOT(setEnabled(bool)));
+    connect(d->history, SIGNAL(canGoForwardChanged(bool)), d->actions[Forward], SLOT(setEnabled(bool)));
 
     d->initGeometry();
 }
@@ -72,12 +77,11 @@ void MainWindow::setContanier(AbstractContainer *container)
     if (d->contanier) {
         disconnect(d->contanier, 0, this, 0);
 
-        disconnect(d->contanier->history(), 0, d->actions[Back], 0);
-        disconnect(d->contanier->history(), 0, d->actions[Forward], 0);
         disconnect(d->contanier, 0, d->actions[Save], 0);
     }
 
     d->contanier = container;
+    d->history->setHistory(contanier()->history());
 
     connect(d->contanier, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
     connect(d->contanier, SIGNAL(openNewEditorTriggered(QList<QUrl>)), SLOT(openNewEditor(QList<QUrl>)));
@@ -86,16 +90,8 @@ void MainWindow::setContanier(AbstractContainer *container)
     connect(d->contanier, SIGNAL(iconChanged(QIcon)), SLOT(setWindowIcon(QIcon)));
     connect(d->contanier, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
 
-    connect(d->contanier->history(), SIGNAL(canGoBackChanged(bool)),
-            d->actions[Back], SLOT(setEnabled(bool)));
-    connect(d->contanier->history(), SIGNAL(canGoForwardChanged(bool)),
-            d->actions[Forward], SLOT(setEnabled(bool)));
-
     if (d->contanier->file())
         connect(d->contanier->file(), SIGNAL(modificationChanged(bool)), d->actions[Save], SLOT(setEnabled(bool)));
-
-    d->actions[Back]->setEnabled(d->contanier->history()->canGoBack());
-    d->actions[Forward]->setEnabled(d->contanier->history()->canGoForward());
 
     bool saveAsEnabled = d->contanier->file();
     bool saveEnabled = saveAsEnabled && !d->contanier->file()->isReadOnly() && d->contanier->file()->isModified();
@@ -206,16 +202,16 @@ void MainWindow::back()
 {
     Q_D(MainWindow);
 
-    if (d->contanier && d->contanier->history())
-        d->contanier->history()->back();
+    if (d->contanier)
+        d->history->back();
 }
 
 void MainWindow::forward()
 {
     Q_D(MainWindow);
 
-    if (d->contanier && d->contanier->history())
-        d->contanier->history()->forward();
+    if (d->contanier)
+        d->history->forward();
 }
 
 void MainWindow::open(const QUrl &url)
@@ -375,10 +371,12 @@ void MainWindowPrivate::createActions()
 
     actions[MainWindow::Back] = new QAction(q);
     actions[MainWindow::Back]->setShortcut(QKeySequence::Back);
+    actions[MainWindow::Back]->setEnabled(false);
     QObject::connect(actions[MainWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
 
     actions[MainWindow::Forward] = new QAction(q);
     actions[MainWindow::Forward]->setShortcut(QKeySequence::Forward);
+    actions[MainWindow::Forward]->setEnabled(false);
     QObject::connect(actions[MainWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
 
     actions[MainWindow::NextEditor] = new QAction(q);

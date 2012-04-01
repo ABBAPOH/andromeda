@@ -6,8 +6,9 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
+#include <QtCore/QUrl>
+#include <QtCore/QHash>
 #include <QtGui/QIcon>
-#include <QHash>
 
 namespace GuiSystem {
 
@@ -15,7 +16,7 @@ class HistoryItemData;
 class GUISYSTEM_EXPORT HistoryItem
 {
 public:
-    HistoryItem(const QString &path = QString());
+    HistoryItem(const QString &url = QString());
     HistoryItem(const HistoryItem &);
     HistoryItem &operator=(const HistoryItem &);
     ~HistoryItem();
@@ -31,8 +32,8 @@ public:
     QString title() const;
     void setTitle(const QString &title);
 
-    QString path() const;
-    void setPath(const QString &path);
+    QUrl url() const;
+    void setUrl(const QUrl &url);
 
     QVariant userData(const QString &key) const;
     QVariantHash userData() const;

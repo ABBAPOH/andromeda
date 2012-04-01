@@ -109,9 +109,16 @@ WebViewHistory::WebViewHistory(QObject *parent) :
 {
 }
 
+void WebViewHistory::setHistory(QWebHistory *history)
+{
+    m_history = history;
+    m_index = history->count() ? history->currentItemIndex() : -1;
+}
+
 void WebViewHistory::clear()
 {
     m_history->clear();
+    m_index = 0;
 }
 
 int WebViewHistory::count() const
@@ -129,46 +136,69 @@ void WebViewHistory::setCurrentItemIndex(int index)
     if (m_history->count() == 0)
         return;
 
+    m_index = index;
+
     m_history->goToItem(m_history->itemAt(index));
 
-    updateCurrentItemIndex(index);
+    emit currentItemIndexChanged(index);
 }
 
 HistoryItem WebViewHistory::itemAt(int index) const
 {
     QWebHistoryItem item = m_history->itemAt(index);
     HistoryItem result;
-    result.setPath(item.url().toString());
-    result.setIcon(item.icon());
+    result.setUrl(item.url());
+//    result.setIcon(item.icon());
     result.setLastVisited(item.lastVisited());
     result.setTitle(item.title());
     return result;
 }
 
-void WebViewHistory::updateCurrentItemIndex(int index)
+QByteArray WebViewHistory::store() const
 {
+    QByteArray history;
+    QDataStream s(&history, QIODevice::WriteOnly);
+    s << *m_history;
+    return history;
+}
+
+void WebViewHistory::restore(const QByteArray &arr)
+{
+    QByteArray history(arr);
+    QDataStream s(&history, QIODevice::ReadOnly);
+    s >> *m_history;
+}
+
+void WebViewHistory::updateCurrentItemIndex()
+{
+    int index = m_history->currentItemIndex();
     if (m_index == index)
         return;
 
-    int oldIndex = m_index;
     m_index = index;
 
-    emitCurrentItemIndexChanged(index, oldIndex);
+    emit currentItemIndexChanged(index);
 }
 
-WebViewPage::WebViewPage(QObject *parent) :
-    QWebPage(parent)
+WebHistoryInterface::WebHistoryInterface(QObject *parent) :
+    QWebHistoryInterface(parent)
 {
 }
 
-bool WebViewPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type)
+Q_GLOBAL_STATIC(WebHistoryInterface, static_instance)
+WebHistoryInterface * WebHistoryInterface::instance()
 {
-    if (type == NavigationTypeBackOrForward ||
-            type == NavigationTypeLinkClicked ||
-            type == NavigationTypeFormSubmitted) {
-        m_history->updateCurrentItemIndex(history()->currentItemIndex());
-    }
-    return QWebPage::acceptNavigationRequest(frame, request, type);
+    return static_instance();
+}
+
+bool WebHistoryInterface::historyContains(const QString &/*url*/) const
+{
+    return false;
+}
+
+void WebHistoryInterface::addHistoryEntry(const QString &/*url*/)
+{
+    emit itemAdded();
 }
 
 WebViewEditor::WebViewEditor(QWidget *parent) :
@@ -188,17 +218,20 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     CookieJar *jar = WebViewPlugin::instance()->cookieJar();
 
     m_history = new WebViewHistory(this);
-
     m_webView = new QWebView(this);
 
-    WebViewPage *page = new WebViewPage(m_webView);
-    page->setHistory(m_history);
-    m_history->setHistory(page->history());
-    m_webView->setPage(page);
+    WebHistoryInterface *iface = WebHistoryInterface::instance();
+
+    if (!QWebHistoryInterface::defaultInterface())
+        QWebHistoryInterface::setDefaultInterface(iface);
+
+    m_history->setHistory(m_webView->page()->history());
 
     m_webView->page()->networkAccessManager()->setCookieJar(jar);
     jar->setParent(WebViewPlugin::instance());
     m_layout->addWidget(m_webView);
+
+    connect(iface, SIGNAL(itemAdded()), m_history, SLOT(updateCurrentItemIndex()));
 
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
@@ -260,6 +293,12 @@ void WebViewEditor::refresh()
 void WebViewEditor::cancel()
 {
     m_webView->stop();
+}
+
+void WebViewEditor::clear()
+{
+    m_webView->setPage(new QWebPage(m_webView));
+    m_history->setHistory(m_webView->page()->history());
 }
 
 void WebViewEditor::onUrlClicked(const QUrl &url)

@@ -87,7 +87,7 @@ public:
 
     FileSystemManager *fileSystemManager;
 
-    GuiSystem::History * history;
+    FileManagerHistory * history;
 
     bool blockEvents;
     QSize gridSize;

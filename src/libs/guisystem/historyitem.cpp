@@ -11,7 +11,7 @@ public:
     bool valid;
     QDateTime lastVisited;
     QString title;
-    QString path;
+    QUrl url;
     QVariantHash userData;
 };
 
@@ -22,7 +22,7 @@ using namespace GuiSystem;
 HistoryItem::HistoryItem(const QString &path) :
     data(new HistoryItemData)
 {
-    data->path = path;
+    data->url = path;
 }
 
 HistoryItem::HistoryItem(const HistoryItem &other) :
@@ -53,7 +53,7 @@ void HistoryItem::setIcon(const QIcon &icon)
 
 bool HistoryItem::isValid() const
 {
-    return !data->path.isEmpty();
+    return !data->url.isEmpty();
 }
 
 QDateTime HistoryItem::lastVisited() const
@@ -82,17 +82,17 @@ void HistoryItem::setTitle(const QString &newTitle)
     data->title = newTitle;
 }
 
-QString HistoryItem::path() const
+QUrl HistoryItem::url() const
 {
-    return data->path;
+    return data->url;
 }
 
-void HistoryItem::setPath(const QString &newPath)
+void HistoryItem::setUrl(const QUrl &newPath)
 {
-    if (path() == newPath)
+    if (url() == newPath)
         return;
 
-    data->path = newPath;
+    data->url = newPath;
 }
 
 QVariant HistoryItem::userData(const QString &key) const

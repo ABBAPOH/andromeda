@@ -20,6 +20,8 @@
 
 #include <core/constants.h>
 
+#include "filemanagerhistory_p.h"
+#include "filemanagerhistoryitem_p.h"
 #include "fileinfodialog.h"
 #include "filemanagersettings.h"
 #include "filemanagersettings_p.h"
@@ -456,7 +458,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->sortingOrder = (Qt::SortOrder)-1;
     d->itemsExpandable = true;
 
-    d->history = new History(this);
+    d->history = new FileManagerHistory(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
     FileSystemModel *model = new FileSystemModel(this);
@@ -542,11 +544,11 @@ void FileManagerWidget::setCurrentPath(const QString &path)
             d->currentView->selectionModel()->clear(); // to prevent bug with selecting dir we enter in
             d->currentView->setRootIndex(index);
 
-            HistoryItem item;
-            item.setPath(path);
-            item.setTitle(QFileInfo(path).fileName());
-            item.setLastVisited(QDateTime::currentDateTime());
-            d->history->appendItem(item);
+            FileManagerHistoryItemData item;
+            item.path = path;
+            item.title = QFileInfo(path).fileName();
+            item.lastVisited = QDateTime::currentDateTime();
+            d->history->d_func()->appendItem(FileManagerHistoryItem(item));
 
             emit currentPathChanged(path);
         }
@@ -761,7 +763,7 @@ FileSystemManager * FileManagerWidget::fileSystemManager() const
     return d->fileSystemManager;
 }
 
-History * FileManagerWidget::history() const
+FileManagerHistory *FileManagerWidget::history() const
 {
     Q_D(const FileManagerWidget);
 
@@ -813,6 +815,15 @@ QByteArray FileManagerWidget::saveState() const
     s << (quint8)sortingOrder();
 
     return state;
+}
+
+void FileManagerWidget::clear()
+{
+    Q_D(FileManagerWidget);
+
+    setCurrentPath(QDir::homePath());
+    d->history->d_func()->items.clear();
+    d->history->d_func()->currentItemIndex = -1;
 }
 
 void FileManagerWidget::newFolder()

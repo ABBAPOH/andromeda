@@ -5,6 +5,7 @@
 
 #include <QtCore/QObject>
 
+#include "ihistory.h"
 #include "historyitem.h"
 
 namespace GuiSystem {
@@ -17,12 +18,14 @@ class GUISYSTEM_EXPORT History: public QObject
     Q_DISABLE_COPY(History)
 
     Q_PROPERTY(int currentItemIndex READ currentItemIndex NOTIFY currentItemIndexChanged)
-    Q_PROPERTY(int maximumItemCount READ maximumItemCount WRITE setMaximumItemCount)
     Q_PROPERTY(bool canGoBack READ canGoBack)
     Q_PROPERTY(bool canGoForward READ canGoForward)
+
 public:
     explicit History(QObject *parent = 0);
     ~History();
+
+    void setHistory(IHistory *history);
 
     void appendItem(const HistoryItem &item);
 
@@ -41,12 +44,8 @@ public:
     HistoryItem forwardItem() const;
     QList<HistoryItem> forwardItems(int maxItems) const;
 
-    void goToItem(const HistoryItem & item);
-    HistoryItem itemAt(int i) const;
+    HistoryItem itemAt(int index) const;
     QList<HistoryItem> items() const;
-
-    int maximumItemCount() const;
-    void setMaximumItemCount(int count);
 
 public slots:
     void back();
@@ -59,6 +58,9 @@ signals:
     void canGoForwardChanged(bool);
 
     void currentItemIndexChanged(int index);
+
+private slots:
+    void onCurrentItemIndexChanged(int index);
 
 protected:
     HistoryPrivate *d_ptr;

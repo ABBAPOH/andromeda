@@ -5,13 +5,13 @@
 
 #include <QtCore/QDir>
 #include <QtGui/QWidget>
-#include <guisystem/history.h>
 
 class QFileSystemModel;
 class QAbstractItemView;
 
 namespace FileManager {
 
+class FileManagerHistory;
 class FileSystemUndoManager;
 class FileSystemManager;
 class FileSystemModel;
@@ -115,12 +115,14 @@ public:
 
     FileSystemManager *fileSystemManager() const;
 
-    GuiSystem::History *history() const;
+    FileManagerHistory *history() const;
 
     FileSystemModel *model() const;
 
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
+
+    void clear();
 
 signals:
     void canRedoChanged(bool);

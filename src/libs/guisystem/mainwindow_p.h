@@ -6,6 +6,7 @@
 namespace GuiSystem {
 
 class AbstractContainer;
+class History;
 
 class MainWindowPrivate
 {
@@ -21,6 +22,7 @@ public:
 
 public:
     AbstractContainer *contanier;
+    History *history;
 
     QAction *actions[MainWindow::ActionCount];
 
