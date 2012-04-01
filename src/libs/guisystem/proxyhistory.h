@@ -23,6 +23,9 @@ public:
     IHistory *sourceHistory() const;
     void setSourceHistory(IHistory *history);
 
+    QByteArray store() const { return QByteArray(); }
+    void restore(const QByteArray &) {}
+
 public slots:
     void clear();
 

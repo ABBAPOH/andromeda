@@ -5,10 +5,10 @@
 #include "filemanagerwidget.h"
 
 #include <QtGui/QWidget>
-#include <guisystem/history.h>
 
 namespace FileManager {
 
+class FileManagerHistory;
 class DualPaneWidgetPrivate;
 class FILEMANAGER_EXPORT DualPaneWidget : public QWidget
 {
@@ -69,7 +69,7 @@ public:
 
     QAction *action(Action action) const;
 
-    GuiSystem::History *history() const;
+    FileManagerHistory *history() const;
     Pane activePane() const;
     FileManagerWidget *activeWidget() const;
 
@@ -94,8 +94,10 @@ public:
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
 
+    void clear();
+
 signals:
-    void activePaneChanged(Pane pane);
+    void activePaneChanged(DualPaneWidget::Pane pane);
     void currentPathChanged(const QString &path);
 
     void openRequested(const QString &path);

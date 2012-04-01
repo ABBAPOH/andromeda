@@ -2,8 +2,12 @@
 #include "stackedcontainer_p.h"
 
 #include <QtCore/QDataStream>
+#include <QtCore/QDebug>
+
 #include <QtGui/QDesktopServices>
 #include <QtGui/QStackedLayout>
+
+#include "stackedhistory.h"
 
 using namespace GuiSystem;
 
@@ -37,39 +41,6 @@ void StackedContainerPrivate::setEditor(AbstractEditor *e)
     QObject::connect(editor, SIGNAL(loadFinished(bool)), q, SIGNAL(loadFinished(bool)));
 }
 
-void StackedContainerPrivate::addItem(AbstractEditor *e)
-{
-    if (!e)
-        return;
-
-    // prevent recursion when navigating through history
-    if (e->history()) {
-        int index = history->currentItemIndex();
-        if (index != -1) {
-            HistoryItem item = history->itemAt(index);
-            if (item.userData(QLatin1String("editor")) == e->id()) {
-                QVariant value = item.userData(QLatin1String("index"));
-                if (value.isValid()) {
-                    if (e->history()->currentItemIndex() == value.toInt())
-                        return;
-                }
-            }
-        }
-    }
-
-    HistoryItem item;
-    item.setPath(e->url().toString());
-    item.setIcon(e->icon());
-    item.setLastVisited(QDateTime::currentDateTime());
-    item.setTitle(e->title());
-    if (e->history())
-        item.setUserData(QLatin1String("index"), e->history()->currentItemIndex());
-    item.setUserData(QLatin1String("layoutIndex"), layout->indexOf(e));
-    item.setUserData(QLatin1String("editor"), e->id());
-
-    history->history()->appendItem(item);
-}
-
 /*!
   \class StackedEditor
 
@@ -89,11 +60,14 @@ StackedContainer::StackedContainer(QWidget *parent) :
     d->editor = 0;
     d->layout = new QStackedLayout(this);
     d->file = new ProxyFile(this);
-    d->history = new StackedEditorHistory(this);
     d->ignoreSignals = false;
 
+    d->stackedHistory = new StackedHistory(this);
+    d->stackedHistory->setContainer(this);
+
     connect(d->layout, SIGNAL(currentChanged(int)), SIGNAL(currentChanged(int)));
-    connect(d->history, SIGNAL(currentItemIndexChanged(int)), SLOT(onIndexChanged(int)));
+
+    new StackedHistory;
 }
 
 /*!
@@ -172,12 +146,14 @@ void StackedContainer::open(const QUrl &url)
             d->layout->setCurrentWidget(editor);
         }
         d->setEditor(editor);
+        d->stackedHistory->open(url);
         editor->open(url);
     } else {
         QDesktopServices::openUrl(url);
         return;
     }
 
+    // todo: remove?
     emit urlChanged(d->currentUrl);
 }
 
@@ -194,7 +170,13 @@ void StackedContainer::openNewEditor(const QUrl &url)
 */
 void StackedContainer::setCurrentIndex(int index)
 {
+    // TODO: check this method
     d->layout->setCurrentIndex(index);
+    AbstractEditor *editor = this->editor(index);
+    d->setEditor(editor);
+    d->currentUrl = editor->url();
+    emit urlChanged(d->currentUrl);
+//    emit urlChanged(d->e);
 }
 
 /*!
@@ -202,7 +184,7 @@ void StackedContainer::setCurrentIndex(int index)
 */
 IHistory * StackedContainer::history() const
 {
-    return d->history;
+    return d->stackedHistory;
 }
 
 /*!
@@ -221,6 +203,7 @@ bool StackedContainer::restoreState(const QByteArray &arr)
         d->setEditor(e);
         d->layout->addWidget(e);
         d->editorHash.insert(id, e);
+        d->stackedHistory->open(QUrl());
         return e->restoreState(editorState);
     }
 
@@ -242,6 +225,32 @@ QByteArray StackedContainer::saveState() const
     return state;
 }
 
+AbstractEditor *StackedContainer::editor(const QString &id) const
+{
+    return d->editorHash.value(id);
+}
+
+bool StackedContainer::setEditor(const QString &id)
+{
+    AbstractEditor * editor = d->editorHash.value(id);
+    if (!editor) {
+        qWarning() << "Can't open editor with id" << id;
+        return false;
+    }
+
+    d->layout->setCurrentWidget(editor);
+    d->setEditor(editor);
+
+    d->currentUrl = d->editor->url();
+
+    emit urlChanged(d->currentUrl);
+    emit iconChanged(d->editor->icon());
+    emit titleChanged(d->editor->title());
+    emit windowTitleChanged(d->editor->windowTitle());
+
+    return true;
+}
+
 /*!
   \internal
 */
@@ -251,39 +260,7 @@ void StackedContainer::onUrlChanged(const QUrl &url)
         return;
 
     d->currentUrl = url;
-    d->addItem(qobject_cast<AbstractEditor*>(sender()));
     emit urlChanged(url);
-}
-
-/*!
-  \internal
-*/
-void StackedContainer::onIndexChanged(int index)
-{
-    HistoryItem item = d->history->itemAt(index);
-
-    if (!item.isValid())
-        return;
-
-    d->currentUrl = QUrl(item.path());
-
-    d->ignoreSignals = true;
-
-    int layoutIndex = item.userData(QLatin1String("layoutIndex")).toInt();
-    d->layout->setCurrentIndex(layoutIndex);
-    AbstractEditor *e = qobject_cast<AbstractEditor *>(d->layout->widget(layoutIndex));
-    int historyIndex = item.userData(QLatin1String("index")).toInt();
-    if (e) {
-        if (e->history()) {
-            e->history()->setCurrentItemIndex(historyIndex);
-        } else {
-            e->open(QUrl(item.path()));
-        }
-    }
-    d->setEditor(e);
-
-    d->ignoreSignals = false;
-    emit urlChanged(d->currentUrl);
 }
 
 /*!

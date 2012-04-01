@@ -29,6 +29,7 @@ set( HEADERS
     settingspagemanager.h
     stackedcontainer.h
     stackedcontainer_p.h
+    stackedhistory.h
    )
 set( SOURCES
     action.cpp
@@ -57,6 +58,7 @@ set( SOURCES
     settingspage.cpp
     settingspagemanager.cpp
     stackedcontainer.cpp
+    stackedhistory.cpp
    )
 set( FORMS
     commandssettingswidget.ui

@@ -13,7 +13,6 @@
 #include "filemanagerwidget_p.h"
 #include "filesystemmanager.h"
 
-using namespace GuiSystem;
 using namespace FileManager;
 
 void swapPalettes(QWidget *active, QWidget *inactive)
@@ -414,7 +413,7 @@ QAction * DualPaneWidget::action(FileManager::DualPaneWidget::Action action) con
     return d->actions[action];
 }
 
-History * DualPaneWidget::history() const
+FileManagerHistory * DualPaneWidget::history() const
 {
     return activeWidget()->history();
 }
@@ -629,6 +628,17 @@ QByteArray DualPaneWidget::saveState() const
         s << rightWidget()->saveState();
 
     return state;
+}
+
+void DualPaneWidget::clear()
+{
+    Q_D(DualPaneWidget);
+
+    d->panes[LeftPane]->setFocus();
+    d->panes[LeftPane]->clear();
+
+    if (d->panes[RightPane])
+        d->panes[RightPane]->clear();
 }
 
 void DualPaneWidget::syncPanes()

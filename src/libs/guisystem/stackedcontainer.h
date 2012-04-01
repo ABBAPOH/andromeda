@@ -30,6 +30,9 @@ public:
     virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
+    AbstractEditor *editor(const QString &id) const;
+    bool setEditor(const QString &id);
+
 public slots:
     void open(const QUrl &url = QUrl());
     void openNewEditor(const QUrl &url);
@@ -38,7 +41,6 @@ public slots:
 
 private slots:
     void onUrlChanged(const QUrl &url);
-    void onIndexChanged(int index);
     void onDestroy(QObject*);
 
 private:

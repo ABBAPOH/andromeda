@@ -3,6 +3,8 @@
 
 #include "webvieweditor.h"
 
+#include <QtWebKit/QWebHistoryInterface>
+
 #include <guisystem/ifind.h>
 #include <guisystem/ihistory.h>
 
@@ -38,34 +40,41 @@ class WebViewHistory : public GuiSystem::IHistory
 public:
     explicit WebViewHistory(QObject *parent = 0);
 
-    inline void setHistory(QWebHistory *history) { m_history = history; }
+    void setHistory(QWebHistory *history);
 
-    virtual void clear();
-    virtual int count() const;
+    void clear();
+    int count() const;
 
-    virtual int currentItemIndex() const;
-    virtual void setCurrentItemIndex(int index);
+    int currentItemIndex() const;
+    void setCurrentItemIndex(int index);
 
-    virtual GuiSystem::HistoryItem itemAt(int index) const;
+    GuiSystem::HistoryItem itemAt(int index) const;
 
-    void updateCurrentItemIndex(int index);
+    QByteArray store() const;
+    void restore(const QByteArray &);
+
+public slots:
+    void updateCurrentItemIndex();
 
 private:
     QWebHistory *m_history;
     int m_index;
 };
 
-class WebViewPage : public QWebPage
+class WebHistoryInterface : public QWebHistoryInterface
 {
+    Q_OBJECT
+
 public:
-    explicit WebViewPage(QObject *parent = 0);
+    explicit WebHistoryInterface(QObject *parent = 0);
 
-    inline void setHistory(WebViewHistory *history) { m_history = history; }
+    static WebHistoryInterface *instance();
 
-protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+    bool historyContains(const QString &url) const;
+    void addHistoryEntry(const QString &url);
 
-    WebViewHistory *m_history;
+signals:
+    void itemAdded();
 };
 
 } //namespace WebView

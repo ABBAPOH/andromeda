@@ -16,18 +16,30 @@ class FileManagerEditorHistory : public GuiSystem::IHistory
 public:
     explicit FileManagerEditorHistory(QObject *parent = 0);
 
-    inline void setDualPaneWidget(DualPaneWidget *widget) { m_widget = widget; }
+    void setDualPaneWidget(DualPaneWidget *widget);
 
-    virtual void clear();
-    virtual int count() const;
+    void clear();
+    void erase();
+    int count() const;
 
-    virtual int currentItemIndex() const;
-    virtual void setCurrentItemIndex(int index);
+    int currentItemIndex() const;
+    void setCurrentItemIndex(int index);
 
-    virtual GuiSystem::HistoryItem itemAt(int index) const;
+    GuiSystem::HistoryItem itemAt(int index) const;
+
+    QByteArray store() const;
+    void restore(const QByteArray &history);
+
+private slots:
+    void onLocalIndexChanged(int index);
+    void onActivePaneChanged(DualPaneWidget::Pane m_pane);
 
 private:
     DualPaneWidget *m_widget;
+
+    QList<int> m_indexes;
+    int m_currentItemIndex;
+    int m_pane;
 };
 
 } //namespace FileManager

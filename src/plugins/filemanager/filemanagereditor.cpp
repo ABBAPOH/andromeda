@@ -1,6 +1,7 @@
 #include "filemanagereditor.h"
 #include "filemanagereditor_p.h"
 
+#include "filemanagerhistory.h"
 #include "filemanagerconstants.h"
 #include "filesystemmanager.h"
 #include "filesystemmodel.h"
@@ -27,46 +28,152 @@ using namespace FileManager;
 
 FileManagerEditorHistory::FileManagerEditorHistory(QObject *parent) :
     IHistory(parent),
-    m_widget(0)
+    m_widget(0),
+    m_currentItemIndex(-1),
+    m_pane(0)
 {
+}
+
+void FileManagerEditorHistory::setDualPaneWidget(DualPaneWidget *widget)
+{
+    m_widget = widget;
+    connect(m_widget, SIGNAL(activePaneChanged(DualPaneWidget::Pane)),
+            SLOT(onActivePaneChanged(DualPaneWidget::Pane)));
+
+    connect(m_widget->leftWidget()->history(), SIGNAL(currentItemIndexChanged(int)), SLOT(onLocalIndexChanged(int)));
+    connect(m_widget->rightWidget()->history(), SIGNAL(currentItemIndexChanged(int)), SLOT(onLocalIndexChanged(int)));
 }
 
 void FileManagerEditorHistory::clear()
 {
     // TODO: implement
+    m_widget->leftWidget()->history()->clear();
+    m_widget->rightWidget()->history()->clear();
+}
+
+void FileManagerEditorHistory::erase()
+{
+    m_indexes.clear();
+    m_currentItemIndex = -1;
+    m_pane = DualPaneWidget::LeftPane;
 }
 
 int FileManagerEditorHistory::count() const
 {
-    // TODO: implement
-    return -1;
+    return m_indexes.count();
 }
 
 int FileManagerEditorHistory::currentItemIndex() const
 {
-    if (m_widget->activePane() == DualPaneWidget::LeftPane)
-        return m_widget->leftWidget()->history()->currentItemIndex(); // 0, 1, 2
-    else
-        return -m_widget->rightWidget()->history()->currentItemIndex() - 2; // -2, -3, -4
+    return m_currentItemIndex;
 }
 
 void FileManagerEditorHistory::setCurrentItemIndex(int index)
 {
-    DualPaneWidget::Pane pane;
-    if (index < -1) {
-        pane = DualPaneWidget::RightPane;
-        index = -index - 2;
+    if (m_currentItemIndex == index)
+        return;
+
+    if (index < 0 || index >= count())
+        return;
+
+    m_currentItemIndex = index;
+
+    int localIndex = m_indexes[index];
+    if (localIndex >= 0) {
+        m_pane = DualPaneWidget::LeftPane;
+        m_widget->setActivePane(DualPaneWidget::LeftPane);
+        m_widget->leftWidget()->history()->setCurrentItemIndex(localIndex);
     } else {
-        pane = DualPaneWidget::LeftPane;
+        m_pane = DualPaneWidget::RightPane;
+        m_widget->setActivePane(DualPaneWidget::RightPane);
+        m_widget->rightWidget()->history()->setCurrentItemIndex(-localIndex - 2);
     }
-    m_widget->setActivePane(pane);
-    m_widget->activeWidget()->history()->setCurrentItemIndex(index);
+
+    emit currentItemIndexChanged(m_currentItemIndex);
 }
 
 HistoryItem FileManagerEditorHistory::itemAt(int index) const
 {
-    // TODO: implement
-    return HistoryItem();
+    if (index < 0 || index >= m_indexes.count())
+        return HistoryItem();
+
+    FileManagerHistoryItem item;
+    int localIndex = m_indexes[index];
+    if (localIndex >= 0) {
+        item = m_widget->leftWidget()->history()->itemAt(localIndex);
+    } else {
+        item = m_widget->leftWidget()->history()->itemAt(-localIndex - 2);
+    }
+    HistoryItem result;
+    result.setUrl(QUrl::fromLocalFile(item.path()));
+
+    return result;
+}
+
+QByteArray FileManagerEditorHistory::store() const
+{
+    QByteArray history;
+    QDataStream s(&history, QIODevice::WriteOnly);
+
+    s << m_currentItemIndex;
+    s << m_indexes;
+    s << *(m_widget->leftWidget()->history());
+    s << *(m_widget->rightWidget()->history());
+
+    return history;
+}
+
+void FileManagerEditorHistory::restore(const QByteArray &arr)
+{
+    QByteArray history(arr);
+    QDataStream s(&history, QIODevice::ReadOnly);
+
+    s >> m_currentItemIndex;
+    s >> m_indexes;
+    s >> *(m_widget->leftWidget()->history());
+    s >> *(m_widget->rightWidget()->history());
+
+    emit currentItemIndexChanged(m_currentItemIndex);
+}
+
+void FileManagerEditorHistory::onLocalIndexChanged(int index)
+{
+    QObject *object = sender();
+    int localIndex = m_currentItemIndex == -1 ? -1 : m_indexes[m_currentItemIndex];
+    if (object == m_widget->leftWidget()->history()) {
+    } else {
+        if (index == 0)
+            return;
+
+        index = -index - 2;
+    }
+
+    if (localIndex == index)
+        return;
+
+    m_indexes.erase(m_indexes.begin() + m_currentItemIndex + 1, m_indexes.end());
+    m_indexes.append(index);
+    m_currentItemIndex++;
+
+    emit currentItemIndexChanged(m_currentItemIndex);
+}
+
+void FileManagerEditorHistory::onActivePaneChanged(DualPaneWidget::Pane pane)
+{
+    if (m_pane == pane)
+        return;
+
+    m_pane = pane;
+
+    m_indexes.erase(m_indexes.begin() + m_currentItemIndex + 1, m_indexes.end());
+    if (pane == DualPaneWidget::LeftPane) {
+        m_indexes.append(m_widget->leftWidget()->history()->currentItemIndex());
+    } else {
+        m_indexes.append(-m_widget->rightWidget()->history()->currentItemIndex() - 2);
+    }
+    m_currentItemIndex++;
+
+    emit currentItemIndexChanged(m_currentItemIndex);
 }
 
 /*!
@@ -235,6 +342,15 @@ QByteArray FileManagerEditor::saveState() const
     s << m_widget->saveState();
 
     return state;
+}
+
+/*!
+  \reimp
+*/
+void FileManagerEditor::clear()
+{
+    m_widget->clear();
+    m_history->erase();
 }
 
 /*!

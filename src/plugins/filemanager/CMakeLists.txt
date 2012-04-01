@@ -12,6 +12,8 @@ set( HEADERS
     filemanagerconstants.h
     filemanagereditor.h
     filemanagereditor_p.h
+    filemanagerhistory.h
+    filemanagerhistoryitem.h
     filemanagerplugin.h
     filemanagersettings.h
     filemanagersettings_p.h
@@ -36,6 +38,8 @@ set( SOURCES
     filecopydialog.cpp
     fileinfodialog.cpp
     filemanagereditor.cpp
+    filemanagerhistory.cpp
+    filemanagerhistoryitem.cpp
     filemanagerplugin.cpp
     filemanagersettings.cpp
     filemanagerwidget.cpp

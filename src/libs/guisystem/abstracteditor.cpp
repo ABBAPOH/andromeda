@@ -110,6 +110,17 @@ void AbstractEditor::refresh()
 }
 
 /*!
+  \brief Reimplement to reset editor to initial state.
+
+  This method should load empty or default page into an editor and completely clear history.
+
+  Default implementation does nothing.
+*/
+void AbstractEditor::clear()
+{
+}
+
+/*!
   \fn void openTriggered(const QUrl &url)
 
   \brief Emit this signal when user triggers opening url in current window and

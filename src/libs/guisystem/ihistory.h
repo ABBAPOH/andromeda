@@ -15,14 +15,9 @@ class GUISYSTEM_EXPORT IHistory : public QObject
     Q_DISABLE_COPY(IHistory)
 
     Q_PROPERTY(int currentItemIndex READ currentItemIndex WRITE setCurrentItemIndex NOTIFY currentItemIndexChanged)
-    Q_PROPERTY(bool canGoBack READ canGoBack)
-    Q_PROPERTY(bool canGoForward READ canGoForward)
 
 public:
     explicit IHistory(QObject *parent = 0);
-
-    bool canGoBack() const;
-    bool canGoForward() const;
 
     virtual int count() const = 0;
 
@@ -31,20 +26,14 @@ public:
 
     virtual HistoryItem itemAt(int index) const = 0;
 
-public slots:
-    void back();
-    void forward();
+    virtual QByteArray store() const = 0;
+    virtual void restore(const QByteArray &) = 0;
 
+public slots:
     virtual void clear() = 0;
 
 signals:
-    void canGoBackChanged(bool);
-    void canGoForwardChanged(bool);
-
     void currentItemIndexChanged(int index);
-
-protected:
-    void emitCurrentItemIndexChanged(int index, int oldIndex);
 };
 
 } // namespace GuiSystem

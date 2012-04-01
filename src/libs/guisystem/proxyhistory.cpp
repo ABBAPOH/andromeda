@@ -71,27 +71,15 @@ void ProxyHistory::setSourceHistory(IHistory *history)
     if (m_sourceHistory == history)
         return;
 
-    bool canGoBack = false;
-    bool canGoForward = false;
     if (m_sourceHistory) {
         disconnect(m_sourceHistory, 0, this, 0);
-        canGoBack = m_sourceHistory->canGoBack();
-        canGoForward = m_sourceHistory->canGoForward();
     }
 
     m_sourceHistory = history;
 
     if (m_sourceHistory) {
-        connect(m_sourceHistory, SIGNAL(canGoBackChanged(bool)), SIGNAL(canGoBackChanged(bool)));
-        connect(m_sourceHistory, SIGNAL(canGoForwardChanged(bool)), SIGNAL(canGoForwardChanged(bool)));
         connect(m_sourceHistory, SIGNAL(currentItemIndexChanged(int)), SIGNAL(currentItemIndexChanged(int)));
     }
-
-    if (canGoBack != m_sourceHistory->canGoBack())
-        emit canGoBackChanged(!canGoBack);
-
-    if (canGoForward != m_sourceHistory->canGoForward())
-        emit canGoForwardChanged(!canGoForward);
 }
 
 /*!
