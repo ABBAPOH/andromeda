@@ -69,172 +69,177 @@
 <context>
     <name>CorePlugin</name>
     <message>
-        <location filename="../coreplugin.cpp" line="207"/>
+        <location filename="../coreplugin.cpp" line="270"/>
         <source>Couldn&apos;t restore session (located at %1)</source>
         <translation>Não foi possível restaurar a sessão (localizada em %1)</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="253"/>
+        <location filename="../coreplugin.cpp" line="316"/>
         <source>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Revision %2&lt;br/&gt;&lt;br/&gt;Copyright 2010-2011 %3&lt;br/&gt;Bugreports send to %4&lt;br/&gt;&lt;br/&gt;This is alpha version.&lt;br/&gt;&lt;br/&gt;The program is provided as is with no warranty of any kind, including the warranty of design, merchantability and fitness for a particular purpose.</source>
         <translation>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Revisão %2&lt;br/&gt;&lt;br/&gt;Copyright 2010-2011 %3&lt;br/&gt;Enviar erros para %4&lt;br/&gt;&lt;br/&gt;Esta é uma versão alpha.&lt;br/&gt;&lt;br/&gt; Este programa é distribuido na esperança que possa ser  util, mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="271"/>
+        <location filename="../coreplugin.cpp" line="334"/>
         <source>About Andromeda</source>
         <translation>Acerca de Andromeda</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="316"/>
+        <location filename="../coreplugin.cpp" line="380"/>
         <source>File</source>
         <translation>Ficheiro</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="320"/>
+        <location filename="../coreplugin.cpp" line="384"/>
         <source>New window</source>
         <translation>Nova janela</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="324"/>
+        <location filename="../coreplugin.cpp" line="388"/>
         <source>New tab</source>
         <translation>Novo separador</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="328"/>
+        <location filename="../coreplugin.cpp" line="392"/>
         <source>Close</source>
         <translation>Fechar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="335"/>
+        <location filename="../coreplugin.cpp" line="399"/>
         <source>Save</source>
         <translation>Guardar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="339"/>
+        <location filename="../coreplugin.cpp" line="403"/>
         <source>Save as...</source>
         <translation>Guardar como...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="346"/>
+        <location filename="../coreplugin.cpp" line="410"/>
         <source>Quit Andromeda</source>
         <translation>Sair de Andromeda</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="363"/>
+        <location filename="../coreplugin.cpp" line="427"/>
         <source>Edit</source>
         <translation>Editar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="367"/>
+        <location filename="../coreplugin.cpp" line="431"/>
         <source>Undo</source>
         <translation>Dezfazer</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="371"/>
+        <location filename="../coreplugin.cpp" line="435"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="378"/>
+        <location filename="../coreplugin.cpp" line="442"/>
         <source>Cut</source>
         <translation>Cortar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="382"/>
+        <location filename="../coreplugin.cpp" line="446"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="386"/>
+        <location filename="../coreplugin.cpp" line="450"/>
         <source>Paste</source>
         <translation>Colar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="389"/>
+        <location filename="../coreplugin.cpp" line="453"/>
         <source>Select All</source>
         <translation>Seleccionar tudo</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="395"/>
+        <location filename="../coreplugin.cpp" line="459"/>
         <source>Find</source>
         <translation>Procurar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="398"/>
+        <location filename="../coreplugin.cpp" line="462"/>
         <source>Find next</source>
         <translation>Procurar próximo</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="401"/>
+        <location filename="../coreplugin.cpp" line="465"/>
         <source>Find previous</source>
         <translation>Procurar anterior</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="412"/>
+        <location filename="../coreplugin.cpp" line="476"/>
         <source>View</source>
         <translation>Vista</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="426"/>
+        <location filename="../coreplugin.cpp" line="490"/>
         <source>Go to</source>
         <translation>Ir para</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="430"/>
+        <location filename="../coreplugin.cpp" line="494"/>
         <source>Back</source>
         <translation>Recuar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="434"/>
+        <location filename="../coreplugin.cpp" line="498"/>
         <source>Forward</source>
         <translation>Avançar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="438"/>
+        <location filename="../coreplugin.cpp" line="502"/>
         <source>Up one level</source>
         <translation>Subir um nível</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="449"/>
+        <location filename="../coreplugin.cpp" line="512"/>
+        <source>Windows</source>
+        <translation>Janelas</translation>
+    </message>
+    <message>
+        <location filename="../coreplugin.cpp" line="523"/>
         <source>Tools</source>
         <translation>Ferramentas</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="453"/>
+        <location filename="../coreplugin.cpp" line="527"/>
         <source>Plugins...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="458"/>
+        <location filename="../coreplugin.cpp" line="533"/>
         <source>View all settings...</source>
         <translation>Ver todas as preferências...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="466"/>
+        <location filename="../coreplugin.cpp" line="542"/>
         <source>Preferences</source>
         <translation>Preferências</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="484"/>
+        <location filename="../coreplugin.cpp" line="560"/>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="487"/>
+        <location filename="../coreplugin.cpp" line="563"/>
         <source>About Andromeda...</source>
         <translation>Acerca de Andromeda...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="494"/>
+        <location filename="../coreplugin.cpp" line="570"/>
         <source>About Qt...</source>
         <translation>Acerca do Qt...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="513"/>
+        <location filename="../coreplugin.cpp" line="589"/>
         <source>Dock menu</source>
         <translation>Menu da dock</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="515"/>
+        <location filename="../coreplugin.cpp" line="591"/>
         <source>Tray menu</source>
         <translation>Menu da área de notificação</translation>
     </message>

@@ -14,4 +14,27 @@
         <translation>Apagar texto</translation>
     </message>
 </context>
+<context>
+    <name>WindowsMenu</name>
+    <message>
+        <location filename="../windowsmenu.cpp" line="103"/>
+        <source>Minimize</source>
+        <translation>Minimizar</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="104"/>
+        <source>Next window</source>
+        <translation>Janela seguinte</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="105"/>
+        <source>Previous window</source>
+        <translation>Janela anterior</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="107"/>
+        <source>Windows</source>
+        <translation>Janelas</translation>
+    </message>
+</context>
 </TS>
