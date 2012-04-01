@@ -101,6 +101,14 @@ void TabContainer::setDefaultUrl(const QUrl &url)
 /*!
   \reimp
 */
+IFile *TabContainer::file() const
+{
+    return m_proxyFile;
+}
+
+/*!
+  \reimp
+*/
 IHistory * TabContainer::history() const
 {
     return m_proxyHistory;
