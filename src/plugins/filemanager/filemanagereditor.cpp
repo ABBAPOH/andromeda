@@ -88,14 +88,6 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
 /*!
   \reimp
 */
-AbstractEditor::Capabilities FileManagerEditor::capabilities() const
-{
-    return HasHistory;
-}
-
-/*!
-  \reimp
-*/
 QUrl FileManagerEditor::url() const
 {
     return QUrl::fromLocalFile(m_widget->currentPath());

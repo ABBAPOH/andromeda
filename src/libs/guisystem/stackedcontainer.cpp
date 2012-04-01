@@ -35,11 +35,6 @@ void StackedContainerPrivate::setEditor(AbstractEditor *e)
     QObject::connect(editor, SIGNAL(loadStarted()), q, SIGNAL(loadStarted()));
     QObject::connect(editor, SIGNAL(loadProgress(int)), q, SIGNAL(loadProgress(int)));
     QObject::connect(editor, SIGNAL(loadFinished(bool)), q, SIGNAL(loadFinished(bool)));
-
-    QObject::connect(editor, SIGNAL(capabilitiesChanged(Capabilities)),
-                     q, SIGNAL(capabilitiesChanged(Capabilities)));
-
-    emit q->capabilitiesChanged(e->capabilities());
 }
 
 void StackedContainerPrivate::addItem(AbstractEditor *e)
@@ -48,7 +43,7 @@ void StackedContainerPrivate::addItem(AbstractEditor *e)
         return;
 
     // prevent recursion when navigating through history
-    if (e->capabilities() & AbstractEditor::HasHistory) {
+    if (e->history()) {
         int index = history->currentItemIndex();
         if (index != -1) {
             HistoryItem item = history->itemAt(index);
@@ -67,7 +62,7 @@ void StackedContainerPrivate::addItem(AbstractEditor *e)
     item.setIcon(e->icon());
     item.setLastVisited(QDateTime::currentDateTime());
     item.setTitle(e->title());
-    if (e->capabilities() & AbstractEditor::HasHistory)
+    if (e->history())
         item.setUserData(QLatin1String("index"), e->history()->currentItemIndex());
     item.setUserData(QLatin1String("layoutIndex"), layout->indexOf(e));
     item.setUserData(QLatin1String("editor"), e->id());
@@ -107,17 +102,6 @@ StackedContainer::StackedContainer(QWidget *parent) :
 StackedContainer::~StackedContainer()
 {
     delete d;
-}
-
-/*!
-  \reimp
-*/
-AbstractEditor::Capabilities StackedContainer::capabilities() const
-{
-    if (d->editor)
-        return d->editor->capabilities() | HasHistory;
-
-    return HasHistory;
 }
 
 /*!
@@ -290,7 +274,7 @@ void StackedContainer::onIndexChanged(int index)
     AbstractEditor *e = qobject_cast<AbstractEditor *>(d->layout->widget(layoutIndex));
     int historyIndex = item.userData(QLatin1String("index")).toInt();
     if (e) {
-        if (e->capabilities() & AbstractEditor::HasHistory) {
+        if (e->history()) {
             e->history()->setCurrentItemIndex(historyIndex);
         } else {
             e->open(QUrl(item.path()));

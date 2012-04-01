@@ -17,8 +17,6 @@ public:
     explicit StackedContainer(QWidget *parent = 0);
     ~StackedContainer();
 
-    Capabilities capabilities() const;
-
     int count() const;
     int currentIndex() const;
     AbstractEditor *editor(int index) const;

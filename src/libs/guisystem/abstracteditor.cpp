@@ -15,16 +15,6 @@ using namespace GuiSystem;
 */
 
 /*!
-  \enum AbstractEditor::Capabilities
-
-  This enum indicates functionality supported by editor, which can be one of following:
-
-  \value NoCapabilities editor can only open urls.
-  \value CanSave editor can save it's contents to file.
-  \value HasHistory editor has it's local history.
-*/
-
-/*!
   \brief Creates a AbstractEditor with the given \a parent.
 */
 AbstractEditor::AbstractEditor(QWidget *parent) :
@@ -54,16 +44,6 @@ QByteArray AbstractEditor::id() const
         return m_factory->id();
 
     return QByteArray();
-}
-
-/*!
-  \brief Reimplement to return what functionality is implemented by this editor.
-
-  Default implementation returns NoCapabilities.
-*/
-AbstractEditor::Capabilities AbstractEditor::capabilities() const
-{
-    return NoCapabilities;
 }
 
 /*!
@@ -227,8 +207,6 @@ IFile * AbstractEditor::file() const
 /*!
   \brief Reimplement to return find interface that corresponds to this editor.
 
-  Note that AbstractEditor::capabilities should return AbstractEditor::HasFind among other flags.
-
   Default imlementation returns 0.
 */
 IFind *AbstractEditor::find() const
@@ -245,7 +223,6 @@ IFind *AbstractEditor::find() const
 /*!
   \brief Reimplement to return history that corresponds to this editor.
 
-  Note that AbstractEditor::capabilities should return AbstractEditor::HasHistory among other flags.
   Default imlementation returns 0.
 */
 IHistory * AbstractEditor::history() const

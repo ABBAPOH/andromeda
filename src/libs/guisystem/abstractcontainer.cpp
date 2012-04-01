@@ -7,18 +7,6 @@ AbstractContainer::AbstractContainer(QWidget *parent) :
 {
 }
 
-/*!
-  \reimp
-*/
-AbstractEditor::Capabilities AbstractContainer::capabilities() const
-{
-    AbstractEditor *editor = currentEditor();
-    if (editor)
-        return editor->capabilities();
-
-    return 0;
-}
-
 AbstractEditor *AbstractContainer::currentEditor() const
 {
     return editor(currentIndex());

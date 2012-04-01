@@ -27,8 +27,6 @@ public:
 
     explicit FileManagerEditor(QWidget *parent = 0);
 
-    Capabilities capabilities() const;
-
     // from AbstractEditor
     QUrl url() const;
     void open(const QUrl &url);
