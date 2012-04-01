@@ -521,12 +521,16 @@ void CorePlugin::createToolsMenu()
     // ================ Tools Menu ================
     CommandContainer *toolsContainer = new CommandContainer(Constants::Menus::Tools, this);
     toolsContainer->setTitle(tr("Tools"));
+#if defined(QT_DEBUG) || !defined(Q_OS_MAC)
     menuBarContainer->addContainer(toolsContainer);
+#endif
 
+#ifdef QT_DEBUG
     Command *pluginsCommand = new Command(Constants::Actions::Plugins, this);
     pluginsCommand->setDefaultText(tr("Plugins..."));
     pluginsCommand->setContext(Command::ApplicationCommand);
     toolsContainer->addCommand(pluginsCommand);
+#endif
 
 #ifdef QT_DEBUG
     Command *settingsCommand = new Command(Constants::Actions::Settings, this);
