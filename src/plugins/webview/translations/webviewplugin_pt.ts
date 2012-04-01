@@ -4,12 +4,12 @@
 <context>
     <name>AppearanceSettingsPage</name>
     <message>
-        <location filename="../appearancesettings.h" line="56"/>
+        <location filename="../appearancesettings.h" line="55"/>
         <source>Appearance</source>
         <translation>Aparência</translation>
     </message>
     <message>
-        <location filename="../appearancesettings.h" line="59"/>
+        <location filename="../appearancesettings.h" line="58"/>
         <source>Web view</source>
         <translation>Vista Web</translation>
     </message>
@@ -178,12 +178,12 @@
 <context>
     <name>PrivacySettingsPage</name>
     <message>
-        <location filename="../privacysettings.h" line="66"/>
+        <location filename="../privacysettings.h" line="65"/>
         <source>Privacy</source>
         <translation>Privacidade</translation>
     </message>
     <message>
-        <location filename="../privacysettings.h" line="69"/>
+        <location filename="../privacysettings.h" line="68"/>
         <source>Web View</source>
         <translation>Vista Web</translation>
     </message>
@@ -324,12 +324,12 @@
 <context>
     <name>ProxySettingsPage</name>
     <message>
-        <location filename="../proxysettings.h" line="45"/>
+        <location filename="../proxysettings.h" line="44"/>
         <source>Proxy</source>
         <translation>Proxy</translation>
     </message>
     <message>
-        <location filename="../proxysettings.h" line="48"/>
+        <location filename="../proxysettings.h" line="47"/>
         <source>Web view</source>
         <translation>Vista web</translation>
     </message>
@@ -390,7 +390,7 @@
 <context>
     <name>WebView::WebViewEditor</name>
     <message>
-        <location filename="../webvieweditor.cpp" line="164"/>
+        <location filename="../webvieweditor.cpp" line="217"/>
         <source>Find</source>
         <translation>Procurar</translation>
     </message>
