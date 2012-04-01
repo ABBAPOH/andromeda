@@ -67,65 +67,6 @@ AbstractEditor::Capabilities AbstractEditor::capabilities() const
 }
 
 /*!
-  \property AbstractEditor::modified
-
-  \brief This property holds whether the document has been modified by the user.
-*/
-
-/*!
-  \brief Reimplement this function to return if opened document is modified and can be saved.
-
-  Default implementation returns false.
-*/
-bool AbstractEditor::isModified() const
-{
-    return false;
-}
-
-/*!
-  \brief Reimplement this function to set if opened document is modified and can be saved.
-
-  Default implementation does nothing.
-*/
-void AbstractEditor::setModified(bool modified)
-{
-    Q_UNUSED(modified);
-}
-
-/*!
-  \fn void modificationChanged(bool modified)
-
-  \brief Emit this signal whenever document changes it's modification state (i.e. modified by user).
-*/
-
-/*!
-  \property AbstractEditor::readOnly
-
-  \brief This property holds whether the document is read only
-  (i.e. can be saved with same url) or not.
-*/
-
-/*!
-  \brief Reimplement this function to return if opened document is readOnly.
-
-  Default implementation returns false.
-*/
-bool AbstractEditor::isReadOnly() const
-{
-    return false;
-}
-
-/*!
-  \brief Reimplement this function to set if opened document is read only or not.
-
-  Default implementation does nothing.
-*/
-void AbstractEditor::setReadOnly(bool readOnly)
-{
-    Q_UNUSED(readOnly);
-}
-
-/*!
   \property AbstractEditor::url
 
   \brief Contains current url opened in this editor.
@@ -209,16 +150,6 @@ void AbstractEditor::refresh()
 */
 
 /*!
-  \brief Reimplement to save currently opened document to \a url.
-
-  Empty url is passed when user requests to save document to current url.
-*/
-void AbstractEditor::save(const QUrl &url)
-{
-    Q_UNUSED(url);
-}
-
-/*!
   \property AbstractEditor::icon
 
   \brief Icon that can be shown on toolbars, menus and so on.
@@ -281,6 +212,16 @@ QString AbstractEditor::title() const
 QString AbstractEditor::windowTitle() const
 {
     return QString();
+}
+
+/*!
+  \brief Reimplement to return file interface that corresponds to this editor.
+
+  Default imlementation returns 0.
+*/
+IFile * AbstractEditor::file() const
+{
+    return 0;
 }
 
 /*!

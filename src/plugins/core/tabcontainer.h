@@ -2,6 +2,7 @@
 #define TABCONTAINER_H
 
 #include <guisystem/abstractcontainer.h>
+#include <guisystem/proxyfile.h>
 #include <guisystem/proxyhistory.h>
 
 #include <QtCore/QPointer>
@@ -62,6 +63,7 @@ private:
     TabBarButton *m_newTabButton;
     QPointer<AbstractEditor> m_editor;
     GuiSystem::ProxyHistory *m_proxyHistory;
+    GuiSystem::ProxyFile *m_proxyFile;
     QUrl m_defaultUrl;
 };
 

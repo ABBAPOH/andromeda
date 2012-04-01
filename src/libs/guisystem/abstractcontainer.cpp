@@ -27,51 +27,6 @@ AbstractEditor *AbstractContainer::currentEditor() const
 /*!
   \reimp
 */
-bool AbstractContainer::isModified() const
-{
-    AbstractEditor *editor = currentEditor();
-    if (editor)
-        return editor->isModified();
-
-    return AbstractEditor::isModified();
-}
-
-/*!
-  \reimp
-*/
-void AbstractContainer::setModified(bool modified)
-{
-    AbstractEditor *editor = currentEditor();
-    if (editor)
-        return editor->setModified(modified);
-}
-
-/*!
-  \reimp
-*/
-bool AbstractContainer::isReadOnly() const
-{
-    AbstractEditor *editor = currentEditor();
-
-    if (editor)
-        return editor->isReadOnly();
-
-    return AbstractEditor::isReadOnly();
-}
-
-/*!
-  \reimp
-*/
-void AbstractContainer::setReadOnly(bool readOnly)
-{
-    AbstractEditor *editor = currentEditor();
-    if (editor)
-        return editor->setReadOnly(readOnly);
-}
-
-/*!
-  \reimp
-*/
 QUrl AbstractContainer::url() const
 {
     AbstractEditor *editor = currentEditor();
@@ -141,15 +96,6 @@ void AbstractContainer::refresh()
     AbstractEditor *editor = currentEditor();
     if (editor)
         editor->refresh();
-}
-
-void AbstractContainer::save(const QUrl &url)
-{
-    AbstractEditor *editor = currentEditor();
-    if (editor) {
-        if (editor->capabilities() & CanSave)
-            editor->save(url);
-    }
 }
 
 /*!

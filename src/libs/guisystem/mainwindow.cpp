@@ -3,6 +3,7 @@
 
 #include "abstractcontainer.h"
 #include "actionmanager.h"
+#include "ifile.h"
 #include "ihistory.h"
 #include "commandcontainer.h"
 #include "stackedcontainer.h"
@@ -95,8 +96,8 @@ void MainWindow::setContanier(AbstractContainer *container)
     d->actions[Back]->setEnabled(d->contanier->history()->canGoBack());
     d->actions[Forward]->setEnabled(d->contanier->history()->canGoForward());
 
-    bool saveAsEnabled = d->contanier->capabilities() & AbstractEditor::CanSave;
-    bool saveEnabled = saveAsEnabled && d->contanier->isModified() && !d->contanier->isReadOnly();
+    bool saveAsEnabled = d->contanier->file();
+    bool saveEnabled = saveAsEnabled && !d->contanier->file()->isReadOnly() && d->contanier->file()->isModified();
     d->actions[SaveAs]->setEnabled(saveAsEnabled);
     d->actions[Save]->setEnabled(saveEnabled);
 
@@ -286,10 +287,10 @@ void MainWindow::save()
     if (d->contanier)
         return;
 
-    if (!(d->contanier->capabilities() & AbstractEditor::CanSave))
+    if (!d->contanier->file())
         return;
 
-    d->contanier->save();
+    d->contanier->file()->save();
 }
 
 void MainWindow::saveAs()
@@ -305,10 +306,10 @@ void MainWindow::saveAs()
     if (path.isEmpty())
         return;
 
-    if (!(d->contanier->capabilities() & AbstractEditor::CanSave))
+    if (!d->contanier->file())
         return;
 
-    d->contanier->save(QUrl::fromLocalFile(path));
+    d->contanier->file()->save(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::refresh()

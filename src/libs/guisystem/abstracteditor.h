@@ -7,9 +7,10 @@
 
 namespace GuiSystem {
 
-class IHistory;
 class AbstractEditorFactory;
+class IFile;
 class IFind;
+class IHistory;
 
 class GUISYSTEM_EXPORT AbstractEditor : public QWidget
 {
@@ -17,8 +18,6 @@ class GUISYSTEM_EXPORT AbstractEditor : public QWidget
     Q_DISABLE_COPY(AbstractEditor)
 
     Q_PROPERTY(QByteArray id READ id)
-    Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modificationChanged)
-    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly NOTIFY readOnlyChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
@@ -36,9 +35,6 @@ public:
 
     virtual Capabilities capabilities() const;
 
-    virtual bool isModified() const;
-    virtual bool isReadOnly() const;
-
     virtual QUrl url() const = 0;
 
     virtual QIcon icon() const;
@@ -46,6 +42,7 @@ public:
     virtual QString title() const;
     virtual QString windowTitle() const;
 
+    virtual IFile *file() const;
     virtual IFind *find() const;
     virtual IHistory *history() const;
 
@@ -54,9 +51,6 @@ public:
     virtual QByteArray saveState() const;
 
 public slots:
-    virtual void setModified(bool modified = true);
-    virtual void setReadOnly(bool readOnly = true);
-
     virtual void open(const QUrl &url) = 0;
     void setUrl(const QUrl &url);
 
@@ -64,13 +58,9 @@ public slots:
     virtual void close();
     virtual void refresh();
 
-    virtual void save(const QUrl &url = QUrl());
-
 signals:
     void capabilitiesChanged(Capabilities capabilities);
 
-    void modificationChanged(bool modified);
-    void readOnlyChanged(bool readOnly);
     void urlChanged(const QUrl &);
 
     void openTriggered(const QUrl &url);

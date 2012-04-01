@@ -19,6 +19,7 @@ void StackedContainerPrivate::setEditor(AbstractEditor *e)
     }
 
     editor = e;
+    file->setSourceFile(editor->file());
     QObject::connect(editor, SIGNAL(urlChanged(QUrl)),
                      q, SLOT(onUrlChanged(QUrl)));
     QObject::connect(editor, SIGNAL(openTriggered(QUrl)), q, SLOT(open(QUrl)));
@@ -92,6 +93,7 @@ StackedContainer::StackedContainer(QWidget *parent) :
 {
     d->editor = 0;
     d->layout = new QStackedLayout(this);
+    d->file = new ProxyFile(this);
     d->history = new StackedEditorHistory(this);
     d->ignoreSignals = false;
 
@@ -142,20 +144,12 @@ AbstractEditor * StackedContainer::editor(int index) const
     return qobject_cast<AbstractEditor *>(d->layout->widget(index));
 }
 
-bool StackedContainer::isModified() const
+/*!
+  \reimp
+*/
+IFile * StackedContainer::file() const
 {
-    if (d->editor)
-        return d->editor->isModified();
-
-    return AbstractEditor::isModified();
-}
-
-bool StackedContainer::isReadOnly() const
-{
-    if (d->editor)
-        return d->editor->isReadOnly();
-
-    return AbstractEditor::isReadOnly();
+    return d->file;
 }
 
 /*!

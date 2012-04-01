@@ -54,8 +54,6 @@ public slots:
     void refresh();
     void cancel();
 
-    void save(const QUrl &url = QUrl());
-
 private slots:
     void onUrlClicked(const QUrl &url);
     void onIconChanged();

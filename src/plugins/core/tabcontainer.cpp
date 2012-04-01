@@ -26,7 +26,8 @@ TabContainer::TabContainer(QWidget *parent) :
     m_tabWidget(new MyTabWidget(this)),
     m_newTabButton(new TabBarButton),
     m_editor(0),
-    m_proxyHistory(new ProxyHistory(this))
+    m_proxyHistory(new ProxyHistory(this)),
+    m_proxyFile(new ProxyFile(this))
 {
     m_newTabButton->setIcon(QIcon(":/images/icons/addtab.png"));
     m_newTabButton->setIconSize(QSize(32, 32));
@@ -294,6 +295,7 @@ void TabContainer::setEditor(AbstractEditor *editor)
 {
     m_editor = editor;
     m_proxyHistory->setSourceHistory(m_editor->history());
+    m_proxyFile->setSourceFile(m_editor->file());
     connectEditor(m_editor);
 
     emit urlChanged(m_editor->url());

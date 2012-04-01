@@ -16,11 +16,13 @@ set( HEADERS
     findtoolbar.h
     history.h
     historyitem.h
+    ifile.h
     ifind.h
     ihistory.h
     mainwindow.h
     mainwindow_p.h
     proxyaction.h
+    proxyfile.h
     proxyhistory.h
     settingsdialog.h
     settingspage.h
@@ -44,10 +46,12 @@ set( SOURCES
     findtoolbar.cpp
     history.cpp
     historyitem.cpp
+    ifile.cpp
     ifind.cpp
     ihistory.cpp
     mainwindow.cpp
     proxyaction.cpp
+    proxyfile.cpp
     proxyhistory.cpp
     settingsdialog.cpp
     settingspage.cpp

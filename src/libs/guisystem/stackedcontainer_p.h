@@ -7,6 +7,7 @@
 #include "ihistory.h"
 #include "editormanager.h"
 #include "history.h"
+#include "proxyfile.h"
 
 class QStackedLayout;
 
@@ -52,6 +53,7 @@ public:
     QUrl currentUrl;
     AbstractEditor *editor;
     QHash<QString, AbstractEditor *> editorHash;
+    ProxyFile *file;
     StackedEditorHistory * history;
     bool ignoreSignals;
 

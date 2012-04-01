@@ -23,8 +23,7 @@ public:
     int currentIndex() const;
     AbstractEditor *editor(int index) const;
 
-    bool isModified() const;
-    bool isReadOnly() const;
+    IFile *file() const;
 
     QUrl url() const;
 
