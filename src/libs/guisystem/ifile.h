@@ -1,12 +1,14 @@
 #ifndef IFILE_H
 #define IFILE_H
 
+#include "guisystem_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
 
 namespace GuiSystem {
 
-class IFile : public QObject
+class GUISYSTEM_EXPORT IFile : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(IFile)

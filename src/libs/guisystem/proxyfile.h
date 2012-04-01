@@ -1,11 +1,13 @@
 #ifndef PROXYFILE_H
 #define PROXYFILE_H
 
+#include "guisystem_global.h"
+
 #include "ifile.h"
 
 namespace GuiSystem {
 
-class ProxyFile : public IFile
+class GUISYSTEM_EXPORT ProxyFile : public IFile
 {
     Q_OBJECT
     Q_DISABLE_COPY(ProxyFile)
