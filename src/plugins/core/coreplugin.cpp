@@ -71,7 +71,7 @@ DockContainer::~DockContainer()
     delete m_menu;
 }
 
-QMenu * DockContainer::createMenu(QWidget */*parent*/) const
+QMenu * DockContainer::createMenu(QWidget * /*parent*/) const
 {
     return m_menu;
 }

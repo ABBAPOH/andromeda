@@ -3,8 +3,8 @@
 
 #include "qtrash.h"
 
-class IShellFolder2;
-class IMalloc;
+struct IShellFolder2;
+struct IMalloc;
 
 class QTrashPrivate
 {
