@@ -390,7 +390,7 @@
 <context>
     <name>WebView::WebViewEditor</name>
     <message>
-        <location filename="../webvieweditor.cpp" line="217"/>
+        <location filename="../webvieweditor.cpp" line="250"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>

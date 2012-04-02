@@ -17,7 +17,7 @@
 <context>
     <name>Core::BrowserWindowPrivate</name>
     <message>
-        <location filename="../browserwindow.cpp" line="43"/>
+        <location filename="../browserwindow.cpp" line="40"/>
         <source>Up one level</source>
         <translation>Вверх</translation>
     </message>
@@ -58,10 +58,10 @@
 <context>
     <name>Core::TabContainer</name>
     <message>
-        <location filename="../tabcontainer.cpp" line="138"/>
-        <location filename="../tabcontainer.cpp" line="140"/>
-        <location filename="../tabcontainer.cpp" line="184"/>
-        <location filename="../tabcontainer.cpp" line="186"/>
+        <location filename="../tabcontainer.cpp" line="147"/>
+        <location filename="../tabcontainer.cpp" line="149"/>
+        <location filename="../tabcontainer.cpp" line="193"/>
+        <location filename="../tabcontainer.cpp" line="195"/>
         <source>New tab</source>
         <translation>Новая вкладка</translation>
     </message>
@@ -204,42 +204,42 @@
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="527"/>
+        <location filename="../coreplugin.cpp" line="530"/>
         <source>Plugins...</source>
         <translation>Модули...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="533"/>
+        <location filename="../coreplugin.cpp" line="537"/>
         <source>View all settings...</source>
         <translation>Показать все настройки...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="542"/>
+        <location filename="../coreplugin.cpp" line="546"/>
         <source>Preferences</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="560"/>
+        <location filename="../coreplugin.cpp" line="564"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="563"/>
+        <location filename="../coreplugin.cpp" line="567"/>
         <source>About Andromeda...</source>
         <translation>О программе Andromeda...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="570"/>
+        <location filename="../coreplugin.cpp" line="574"/>
         <source>About Qt...</source>
         <translation>О Qt...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="589"/>
+        <location filename="../coreplugin.cpp" line="593"/>
         <source>Dock menu</source>
         <translation>Меню в Доке</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="591"/>
+        <location filename="../coreplugin.cpp" line="595"/>
         <source>Tray menu</source>
         <translation>Меню в системном лотке</translation>
     </message>
