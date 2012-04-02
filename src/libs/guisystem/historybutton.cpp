@@ -73,9 +73,16 @@ void HistoryButton::onAboutToShow()
     QMenu *menu = qobject_cast<QMenu*>(sender());
     menu->clear();
 
+    QString previousEditor;
     if (d->direction == Back) {
         for (int i = d->history->currentItemIndex() - 1; i >= 0 ; i--) {
             HistoryItem item = d->history->itemAt(i);
+
+            QString editor = item.userData(QLatin1String("editor")).toString();
+            if (previousEditor != editor)
+                menu->addSeparator();
+            previousEditor = editor;
+
             QAction *action = new QAction(menu);
             action->setText(urlToUserString(item.url()));
             action->setIcon(item.icon());
@@ -86,6 +93,12 @@ void HistoryButton::onAboutToShow()
     } else {
         for (int i = d->history->currentItemIndex() + 1; i < d->history->count() ; i++) {
             HistoryItem item = d->history->itemAt(i);
+
+            QString editor = item.userData(QLatin1String("editor")).toString();
+            if (previousEditor != editor)
+                menu->addSeparator();
+            previousEditor = editor;
+
             QAction *action = new QAction(menu);
             action->setText(urlToUserString(item.url()));
             action->setIcon(item.icon());
