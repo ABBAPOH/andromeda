@@ -169,6 +169,7 @@ HistoryItem StackedHistory::itemAt(int index) const
 
     HistoryItem item;
     item.setUrl(d->items[index].url);
+    item.setUserData(QLatin1String("editor"), d->items[index].editor);
     return item;
 }
 
