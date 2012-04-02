@@ -7,6 +7,7 @@ namespace GuiSystem {
 
 class AbstractContainer;
 class History;
+class HistoryButton;
 
 class MainWindowPrivate
 {
@@ -24,6 +25,8 @@ public:
     AbstractContainer *contanier;
     History *history;
 
+    HistoryButton *backButton;
+    HistoryButton *forwardButton;
     QAction *actions[MainWindow::ActionCount];
 
 private:
