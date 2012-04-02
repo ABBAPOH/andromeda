@@ -826,7 +826,7 @@ void FileManagerWidget::clear()
 {
     Q_D(FileManagerWidget);
 
-    setCurrentPath(QDir::homePath());
+    setCurrentPath(QString());
     d->history->d_func()->items.clear();
     d->history->d_func()->currentItemIndex = -1;
 }
