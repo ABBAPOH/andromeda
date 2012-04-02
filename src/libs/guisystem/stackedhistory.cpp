@@ -5,8 +5,6 @@
 
 using namespace GuiSystem;
 
-//#define STACKED_HISTORY_DEBUG
-
 StackedHistoryPrivate::StackedHistoryPrivate(StackedHistory *qq) :
     m_container(0),
     currentIndex(-1),
@@ -89,6 +87,7 @@ void StackedHistory::open(const QUrl &url)
     qDebug() << "  currentEditor" << d->currentEditor;
     qDebug() << "  currentStashedIndex" << d->currentStashedIndex;
     qDebug() << "  currentLocalIndex" << d->currentLocalIndex;
+    qDebug() << "  urls" << d->urls();
     qDebug();
 #endif
 
@@ -118,7 +117,7 @@ void StackedHistory::setCurrentItemIndex(int index)
     StackedHistoryItem &item = d->items[index];
 
     AbstractEditor *oldEditor = d->m_container->editor(d->currentEditor);
-    if (d->currentEditor != item.editor) {
+    if (d->currentEditor != item.editor || d->currentStashedIndex != item.stashedIndex) {
         d->stashEditor(oldEditor);
 
         if (!d->m_container->setEditor(item.editor)) {
@@ -154,6 +153,7 @@ void StackedHistory::setCurrentItemIndex(int index)
     qDebug() << "  currentEditor" << d->currentEditor;
     qDebug() << "  currentStashedIndex" << d->currentStashedIndex;
     qDebug() << "  currentLocalIndex" << d->currentLocalIndex;
+    qDebug() << "  urls" << d->urls();
     qDebug();
 #endif
 
@@ -213,7 +213,7 @@ void StackedHistoryPrivate::stashEditor(AbstractEditor *editor)
 void StackedHistoryPrivate::unstashEditor(AbstractEditor *editor)
 {
 #ifdef STACKED_HISTORY_DEBUG
-    qDebug() << "StackedHistoryPrivate::unstashEditor" << editor->id() << currentStashedIndex;
+    qDebug() << "StackedHistoryPrivate::unstashEditor" << editor->id() << currentStashedIndex << stashedHistory.count();
 #endif
 
     IHistory *history = editor->history();
@@ -272,6 +272,7 @@ void StackedHistory::localHistoryIndexChanged(int index)
     qDebug() << "  currentEditor" << d->currentEditor;
     qDebug() << "  currentStashedIndex" << d->currentStashedIndex;
     qDebug() << "  currentLocalIndex" << d->currentLocalIndex;
+    qDebug() << "  urls" << d->urls();
     qDebug();
 #endif
 
