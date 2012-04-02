@@ -386,14 +386,12 @@ void MainWindowPrivate::createActions()
     wa = new QWidgetAction(q);
     wa->setDefaultWidget(backButton);
     actions[MainWindow::Back] = wa;
-    actions[MainWindow::Back]->setShortcut(QKeySequence::Back);
     actions[MainWindow::Back]->setEnabled(false);
     QObject::connect(actions[MainWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
 
     wa = new QWidgetAction(q);
     wa->setDefaultWidget(forwardButton);
     actions[MainWindow::Forward] = wa;
-    actions[MainWindow::Forward]->setShortcut(QKeySequence::Forward);
     actions[MainWindow::Forward]->setEnabled(false);
     QObject::connect(actions[MainWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
 
