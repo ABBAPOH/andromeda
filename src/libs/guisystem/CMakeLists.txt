@@ -31,6 +31,7 @@ set( HEADERS
     stackedcontainer.h
     stackedcontainer_p.h
     stackedhistory.h
+    stackedhistory_p.h
    )
 set( SOURCES
     action.cpp
