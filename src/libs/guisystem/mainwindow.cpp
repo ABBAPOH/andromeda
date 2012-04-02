@@ -8,6 +8,7 @@
 #include "commandcontainer.h"
 #include "stackedcontainer.h"
 #include "history.h"
+#include "historybutton.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
@@ -15,6 +16,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFileDialog>
+#include <QtGui/QWidgetAction>
 
 static const qint32 mainWindowMagic = 0x6d303877; // "m08w"
 static const qint8 mainWindowVersion = 1;
@@ -369,12 +371,28 @@ void MainWindowPrivate::createActions()
     actions[MainWindow::Cancel] = new QAction(q);
     QObject::connect(actions[MainWindow::Cancel], SIGNAL(triggered()), q, SLOT(cancel()));
 
-    actions[MainWindow::Back] = new QAction(q);
+    backButton = new HistoryButton;
+    backButton->setHistory(history);
+    backButton->setDirection(HistoryButton::Back);
+    backButton->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")));
+
+    forwardButton = new HistoryButton;
+    forwardButton->setHistory(history);
+    forwardButton->setDirection(HistoryButton::Forward);
+    forwardButton->setIcon(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")));
+
+    QWidgetAction *wa;
+
+    wa = new QWidgetAction(q);
+    wa->setDefaultWidget(backButton);
+    actions[MainWindow::Back] = wa;
     actions[MainWindow::Back]->setShortcut(QKeySequence::Back);
     actions[MainWindow::Back]->setEnabled(false);
     QObject::connect(actions[MainWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
 
-    actions[MainWindow::Forward] = new QAction(q);
+    wa = new QWidgetAction(q);
+    wa->setDefaultWidget(forwardButton);
+    actions[MainWindow::Forward] = wa;
     actions[MainWindow::Forward]->setShortcut(QKeySequence::Forward);
     actions[MainWindow::Forward]->setEnabled(false);
     QObject::connect(actions[MainWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
@@ -406,8 +424,9 @@ void MainWindowPrivate::retranslateUi()
     actions[MainWindow::SaveAs]->setText(MainWindow::tr("Save as..."));
     actions[MainWindow::Refresh]->setText(MainWindow::tr("Refresh"));
     actions[MainWindow::Cancel]->setText(MainWindow::tr("Cancel"));
-    actions[MainWindow::Back]->setText(MainWindow::tr("Back"));
-    actions[MainWindow::Forward]->setText(MainWindow::tr("Forward"));
+
+    backButton->setText(MainWindow::tr("Back"));
+    forwardButton->setText(MainWindow::tr("Forward"));
 
     actions[MainWindow::NextEditor]->setText(MainWindow::tr("Next editor"));
     actions[MainWindow::PreviousEditor]->setText(MainWindow::tr("Previous editor"));

@@ -15,6 +15,7 @@ set( HEADERS
     editormanager.h
     findtoolbar.h
     history.h
+    historybutton.h
     historyitem.h
     ifile.h
     ifind.h
@@ -46,6 +47,7 @@ set( SOURCES
     editormanager.cpp
     findtoolbar.cpp
     history.cpp
+    historybutton.cpp
     historyitem.cpp
     ifile.cpp
     ifind.cpp

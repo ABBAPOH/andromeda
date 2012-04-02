@@ -37,9 +37,6 @@ void BrowserWindowPrivate::setupActions()
     actionManager->registerAction(newTabAction, Constants::Actions::NewTab);
 
     // ToolBar
-    q->action(MainWindow::Back)->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")));
-    q->action(MainWindow::Forward)->setIcon(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")));
-
     upAction = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), q);
     connect(upAction, SIGNAL(triggered()), q, SLOT(up()));
     q->addAction(upAction);
