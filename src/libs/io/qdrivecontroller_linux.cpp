@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <mntent.h>
+#include <unistd.h>
 #include <linux/cdrom.h>
 
 #include  "qdriveinfo.h"

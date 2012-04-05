@@ -9,6 +9,7 @@
 #include <QtCore/QUrl>
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "qdriveinfo.h"
 #include "qtrashfileinfo_p.h"
