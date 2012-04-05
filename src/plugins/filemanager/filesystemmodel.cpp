@@ -2,7 +2,9 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
+#include <QApplication>
 #include <io/fileimageprovider.h>
+#include <io/qdriveinfo.h>
 
 #include "filesystemmanager.h"
 
@@ -70,6 +72,24 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
 
     if (files.isEmpty())
         return false;
+
+    QDriveInfo srcDrive(filePath(parent));
+    QDriveInfo dstDrive(files[0]);
+
+    //default actions
+    if (srcDrive != dstDrive)
+        action = Qt::CopyAction;
+    else
+        action = Qt::MoveAction;
+
+    Qt::KeyboardModifiers keyboardModifiers = QApplication::keyboardModifiers();
+    //change action according to the keyboard modifier, if any.
+    if (keyboardModifiers.testFlag(Qt::AltModifier))
+        action = Qt::CopyAction;
+    else if (keyboardModifiers.testFlag(Qt::ControlModifier))
+        action = Qt::MoveAction;
+    else if (keyboardModifiers.testFlag(Qt::ShiftModifier))
+        action = Qt::LinkAction;
 
     FileSystemManager * manager = fileSystemManager();
 
