@@ -17,22 +17,22 @@
 <context>
     <name>WindowsMenu</name>
     <message>
-        <location filename="../windowsmenu.cpp" line="103"/>
+        <location filename="../windowsmenu.cpp" line="107"/>
         <source>Minimize</source>
         <translation>Minimizar</translation>
     </message>
     <message>
-        <location filename="../windowsmenu.cpp" line="104"/>
+        <location filename="../windowsmenu.cpp" line="108"/>
         <source>Next window</source>
         <translation>Janela seguinte</translation>
     </message>
     <message>
-        <location filename="../windowsmenu.cpp" line="105"/>
+        <location filename="../windowsmenu.cpp" line="109"/>
         <source>Previous window</source>
         <translation>Janela anterior</translation>
     </message>
     <message>
-        <location filename="../windowsmenu.cpp" line="107"/>
+        <location filename="../windowsmenu.cpp" line="111"/>
         <source>Windows</source>
         <translation>Janelas</translation>
     </message>

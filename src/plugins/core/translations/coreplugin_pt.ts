@@ -17,7 +17,7 @@
 <context>
     <name>Core::BrowserWindowPrivate</name>
     <message>
-        <location filename="../browserwindow.cpp" line="43"/>
+        <location filename="../browserwindow.cpp" line="40"/>
         <source>Up one level</source>
         <translation>Subir um nível</translation>
     </message>
@@ -58,10 +58,10 @@
 <context>
     <name>Core::TabContainer</name>
     <message>
-        <location filename="../tabcontainer.cpp" line="138"/>
-        <location filename="../tabcontainer.cpp" line="140"/>
-        <location filename="../tabcontainer.cpp" line="184"/>
-        <location filename="../tabcontainer.cpp" line="186"/>
+        <location filename="../tabcontainer.cpp" line="147"/>
+        <location filename="../tabcontainer.cpp" line="149"/>
+        <location filename="../tabcontainer.cpp" line="193"/>
+        <location filename="../tabcontainer.cpp" line="195"/>
         <source>New tab</source>
         <translation>Novo separador</translation>
     </message>
@@ -189,57 +189,58 @@
         <translation>Avançar</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="502"/>
+        <location filename="../coreplugin.cpp" line="503"/>
+        <location filename="../coreplugin.cpp" line="505"/>
         <source>Up one level</source>
         <translation>Subir um nível</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="512"/>
+        <location filename="../coreplugin.cpp" line="516"/>
         <source>Windows</source>
         <translation>Janelas</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="523"/>
+        <location filename="../coreplugin.cpp" line="527"/>
         <source>Tools</source>
         <translation>Ferramentas</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="527"/>
+        <location filename="../coreplugin.cpp" line="534"/>
         <source>Plugins...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="533"/>
+        <location filename="../coreplugin.cpp" line="541"/>
         <source>View all settings...</source>
         <translation>Ver todas as preferências...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="542"/>
+        <location filename="../coreplugin.cpp" line="550"/>
         <source>Preferences</source>
         <translation>Preferências</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="560"/>
+        <location filename="../coreplugin.cpp" line="568"/>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="563"/>
+        <location filename="../coreplugin.cpp" line="571"/>
         <source>About Andromeda...</source>
         <translation>Acerca de Andromeda...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="570"/>
+        <location filename="../coreplugin.cpp" line="578"/>
         <source>About Qt...</source>
         <translation>Acerca do Qt...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="589"/>
+        <location filename="../coreplugin.cpp" line="597"/>
         <source>Dock menu</source>
         <translation>Menu da dock</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="591"/>
+        <location filename="../coreplugin.cpp" line="599"/>
         <source>Tray menu</source>
         <translation>Menu da área de notificação</translation>
     </message>
