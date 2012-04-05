@@ -317,6 +317,7 @@ void FileManagerWidgetPrivate::initViews()
         views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
         views[i]->setDragDropMode(QAbstractItemView::DragDrop);
         views[i]->setAcceptDrops(true);
+        views[i]->setDefaultDropAction(Qt::MoveAction);
         views[i]->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
         views[i]->setTextElideMode(Qt::ElideMiddle);
         views[i]->setItemDelegate(new FileDelegate(views[i]));
