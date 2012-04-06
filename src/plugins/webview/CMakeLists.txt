@@ -11,6 +11,7 @@ set( HEADERS
     privacysettings.h
     proxysettings.h
     webview_global.h
+    webviewconstants.h
     webvieweditor.h
     webvieweditor_p.h
     webviewplugin.h
