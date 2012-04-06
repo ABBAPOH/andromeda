@@ -40,9 +40,10 @@ class QSplitterHandle;
 class WIDGETS_EXPORT MiniSplitter : public QSplitter
 {
     Q_OBJECT
+
 public:
-    MiniSplitter(QWidget *parent = 0);
-    MiniSplitter(Qt::Orientation orientation);
+    explicit MiniSplitter(QWidget *parent = 0);
+    explicit MiniSplitter(Qt::Orientation orientation, QWidget *parent = 0);
 
 protected:
     QSplitterHandle *createHandle();
