@@ -544,7 +544,7 @@ void CorePlugin::createToolsMenu()
 #endif
 
     // ================ Tools Menu (Preferences) ================
-    toolsContainer->addCommand(new Separator(this));
+    toolsContainer->addCommand(new Separator(this), "80");
 
     Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
     preferencesCommand->setDefaultText(tr("Preferences"));
@@ -552,7 +552,7 @@ void CorePlugin::createToolsMenu()
     preferencesCommand->setContext(Command::ApplicationCommand);
     preferencesCommand->setAttributes(Command::AttributeNonConfigurable);
     preferencesCommand->commandAction()->setMenuRole(QAction::PreferencesRole);
-    toolsContainer->addCommand(preferencesCommand);
+    toolsContainer->addCommand(preferencesCommand, "85");
 }
 
 void CorePlugin::createHelpMenu()
