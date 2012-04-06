@@ -6,7 +6,11 @@ exec_program(
     ${GIT_EXECUTABLE}
     ${PROJECT_SOURCE_DIR}
     ARGS "rev-parse -q HEAD"
-    OUTPUT_VARIABLE ${VAR} )
+    OUTPUT_VARIABLE ${VAR}
+    RETURN_VALUE RET )
+if( "${RET}" GREATER 0 )
+    set( ${VAR} "unknown" )
+endif()
 else()
     set( ${VAR} "unknown" )
 endif()
