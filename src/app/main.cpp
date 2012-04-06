@@ -4,7 +4,10 @@
 #include <QtCore/QDir>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
+
+#ifndef QT_WEBKIT_NOT_FOUND
 #include <QtWebKit/QWebSecurityOrigin>
+#endif
 
 #include <pluginmanager.h>
 #include <pluginview.h>
@@ -12,9 +15,12 @@
 
 using namespace ExtensionSystem;
 
+// we need this to prevent libraries from unloading when they are not used
 void preloadLibraries()
 {
+#ifndef QT_WEBKIT_NOT_FOUND
     QStringList schemes = QWebSecurityOrigin::localSchemes(); // preloading WebKit
+#endif
 }
 
 // returns root path of the application

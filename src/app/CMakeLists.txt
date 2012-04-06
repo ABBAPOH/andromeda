@@ -1,5 +1,9 @@
-set( QT_USE_QTWEBKIT TRUE )
-include( ${QT_USE_FILE} )
+if( ${QT_QTWEBKIT_FOUND} )
+    set( QT_USE_QTWEBKIT TRUE )
+    include( ${QT_USE_FILE} )
+else()
+    add_definitions( -DQT_WEBKIT_NOT_FOUND )
+endif()
 
 set( SOURCES main.cpp )
 

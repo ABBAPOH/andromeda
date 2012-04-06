@@ -1,3 +1,5 @@
+if( ${QT_QTWEBKIT_FOUND} )
+
 set( QT_USE_QTWEBKIT TRUE )
 include( ${QT_USE_FILE} )
 
@@ -49,3 +51,5 @@ add_library( webviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEAD
 target_link_libraries( webviewplugin ${QT_LIBRARIES} extensionsystem guisystem )
 add_dependencies( webviewplugin plugineditor)
 install_plugin( webviewplugin )
+
+endif( ${QT_QTWEBKIT_FOUND} )
