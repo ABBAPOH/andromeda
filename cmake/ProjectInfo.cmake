@@ -1,19 +1,19 @@
 find_package( Git )
 
 macro( get_git_revision VAR)
-if( GIT_EXECUTABLE )
-exec_program(
-    ${GIT_EXECUTABLE}
-    ${PROJECT_SOURCE_DIR}
-    ARGS "rev-parse -q HEAD"
-    OUTPUT_VARIABLE ${VAR}
-    RETURN_VALUE RET )
-if( "${RET}" GREATER 0 )
-    set( ${VAR} "unknown" )
-endif()
-else()
-    set( ${VAR} "unknown" )
-endif()
+    if( GIT_EXECUTABLE )
+        exec_program(
+            ${GIT_EXECUTABLE}
+            ${PROJECT_SOURCE_DIR}
+            ARGS "rev-parse -q HEAD"
+            OUTPUT_VARIABLE ${VAR}
+            RETURN_VALUE RET )
+        if( "${RET}" GREATER 0 )
+            set( ${VAR} "unknown" )
+        endif()
+    else()
+        set( ${VAR} "unknown" )
+    endif()
 endmacro( get_git_revision )
 
 get_git_revision(GIT_REVISION)
