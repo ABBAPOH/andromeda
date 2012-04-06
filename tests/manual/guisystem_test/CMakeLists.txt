@@ -1,3 +1,4 @@
+if( ${QT_QTWEBKIT_FOUND} )
 set( QT_USE_QTWEBKIT TRUE )
 include( ${QT_USE_FILE} )
 
@@ -16,3 +17,5 @@ qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 add_executable( guisystem_test ${HEADERS} ${UI_HEADERS} ${SOURCES} ${MOC_SOURCES} )
 target_link_libraries( guisystem_test ${QT_LIBRARIES} guisystem )
+
+endif( ${QT_QTWEBKIT_FOUND} )
