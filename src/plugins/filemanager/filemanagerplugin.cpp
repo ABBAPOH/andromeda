@@ -52,6 +52,8 @@ bool FileManagerPlugin::initialize(const QVariantMap &options)
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");
     addObject(navigationModel);
+    connect(navigationModel, SIGNAL(pathsDropped(QString,QStringList,Qt::DropAction)),
+            SLOT(onPathsDropped(QString,QStringList,Qt::DropAction)));
 
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
     pageManager->addPage(new GlobalSettingsPage(this));
@@ -83,6 +85,20 @@ void FileManagerPlugin::goTo(const QString &s)
     if (window) {
         window->open(QUrl::fromLocalFile(s));
     }
+}
+
+/*!
+ \internal
+*/
+void FileManagerPlugin::onPathsDropped(const QString &destination, const QStringList &paths, Qt::DropAction action)
+{
+    FileSystemManager *fsManager = FileSystemManager::instance();
+    if (action == Qt::CopyAction)
+        fsManager->copy(paths, destination);
+    else if (action == Qt::MoveAction)
+        fsManager->move(paths, destination);
+    else if (action == Qt::LinkAction)
+        fsManager->link(paths, destination);
 }
 
 void FileManagerPlugin::createActions()

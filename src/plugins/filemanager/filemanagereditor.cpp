@@ -443,20 +443,6 @@ void FileManagerEditor::onSplitterMoved(int, int)
 /*!
  \internal
 */
-void FileManagerEditor::onPathsDropped(const QString &destination, const QStringList &paths, Qt::DropAction action)
-{
-    FileSystemManager *fsManager = m_widget->leftWidget()->fileSystemManager();
-    if (action == Qt::CopyAction)
-        fsManager->copy(paths, destination);
-    else if (action == Qt::MoveAction)
-        fsManager->move(paths, destination);
-    else if (action == Qt::LinkAction)
-        fsManager->link(paths, destination);
-}
-
-/*!
- \internal
-*/
 void FileManagerEditor::openNewTab(const QStringList &paths)
 {
     QList<QUrl> urls;
@@ -487,8 +473,6 @@ void FileManagerEditor::setupUi()
 {
     ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
     NavigationModel *model = pm->object<NavigationModel>("navigationModel");
-    connect(model, SIGNAL(pathsDropped(QString,QStringList,Qt::DropAction)),
-            SLOT(onPathsDropped(QString,QStringList,Qt::DropAction)));
 
     splitter = new MiniSplitter(this);
 
