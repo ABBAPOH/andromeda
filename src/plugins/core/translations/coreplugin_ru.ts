@@ -189,57 +189,58 @@
         <translation>Вперёд</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="502"/>
+        <location filename="../coreplugin.cpp" line="503"/>
+        <location filename="../coreplugin.cpp" line="505"/>
         <source>Up one level</source>
         <translation>Вверх</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="512"/>
+        <location filename="../coreplugin.cpp" line="516"/>
         <source>Windows</source>
         <translation>Окна</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="523"/>
+        <location filename="../coreplugin.cpp" line="527"/>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="530"/>
+        <location filename="../coreplugin.cpp" line="534"/>
         <source>Plugins...</source>
         <translation>Модули...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="537"/>
+        <location filename="../coreplugin.cpp" line="541"/>
         <source>View all settings...</source>
         <translation>Показать все настройки...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="546"/>
+        <location filename="../coreplugin.cpp" line="550"/>
         <source>Preferences</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="564"/>
+        <location filename="../coreplugin.cpp" line="568"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="567"/>
+        <location filename="../coreplugin.cpp" line="571"/>
         <source>About Andromeda...</source>
         <translation>О программе Andromeda...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="574"/>
+        <location filename="../coreplugin.cpp" line="578"/>
         <source>About Qt...</source>
         <translation>О Qt...</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="593"/>
+        <location filename="../coreplugin.cpp" line="597"/>
         <source>Dock menu</source>
         <translation>Меню в Доке</translation>
     </message>
     <message>
-        <location filename="../coreplugin.cpp" line="595"/>
+        <location filename="../coreplugin.cpp" line="599"/>
         <source>Tray menu</source>
         <translation>Меню в системном лотке</translation>
     </message>
