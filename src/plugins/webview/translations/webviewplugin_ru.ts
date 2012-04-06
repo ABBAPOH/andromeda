@@ -390,9 +390,17 @@
 <context>
     <name>WebView::WebViewEditor</name>
     <message>
-        <location filename="../webvieweditor.cpp" line="250"/>
+        <location filename="../webvieweditor.cpp" line="262"/>
         <source>Find</source>
         <translation>Найти</translation>
+    </message>
+</context>
+<context>
+    <name>WebViewPlugin</name>
+    <message>
+        <location filename="../webviewplugin.cpp" line="257"/>
+        <source>Show web inspector</source>
+        <translation>Показать веб инспектор</translation>
     </message>
 </context>
 </TS>
