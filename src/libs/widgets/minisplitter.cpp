@@ -83,8 +83,8 @@ MiniSplitter::MiniSplitter(QWidget *parent)
     setChildrenCollapsible(false);
 }
 
-MiniSplitter::MiniSplitter(Qt::Orientation orientation)
-    : QSplitter(orientation)
+MiniSplitter::MiniSplitter(Qt::Orientation orientation, QWidget *parent)
+    : QSplitter(orientation, parent)
 {
     setHandleWidth(1);
     setChildrenCollapsible(false);
