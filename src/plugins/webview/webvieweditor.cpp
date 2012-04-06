@@ -4,18 +4,24 @@
 #include <QtCore/QFile>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+
 #include <QtGui/QAction>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QSplitter>
 #include <QtGui/QVBoxLayout>
 
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebHistory>
+#include <QtWebKit/QWebInspector>
 
 #include <guisystem/findtoolbar.h>
+
+#include <widgets/minisplitter.h>
 
 #include <core/constants.h>
 
 #include "cookiejar.h"
+#include "webviewconstants.h"
 #include "webviewplugin.h"
 
 using namespace GuiSystem;
@@ -202,7 +208,8 @@ void WebHistoryInterface::addHistoryEntry(const QString &/*url*/)
 }
 
 WebViewEditor::WebViewEditor(QWidget *parent) :
-    AbstractEditor(parent)
+    AbstractEditor(parent),
+    m_webInspector(0)
 {
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(0, 0, 0, 0);
@@ -215,6 +222,9 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_findToolBar->hide();
     m_layout->addWidget(m_findToolBar);
 
+    m_splitter = new MiniSplitter(Qt::Vertical, this);
+    m_layout->addWidget(m_splitter);
+
     CookieJar *jar = WebViewPlugin::instance()->cookieJar();
 
     m_history = new WebViewHistory(this);
@@ -225,11 +235,13 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     if (!QWebHistoryInterface::defaultInterface())
         QWebHistoryInterface::setDefaultInterface(iface);
 
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
     m_history->setHistory(m_webView->page()->history());
 
     m_webView->page()->networkAccessManager()->setCookieJar(jar);
     jar->setParent(WebViewPlugin::instance());
-    m_layout->addWidget(m_webView);
+    m_splitter->addWidget(m_webView);
 
     connect(iface, SIGNAL(itemAdded()), m_history, SLOT(updateCurrentItemIndex()));
 
@@ -258,6 +270,8 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     addAction(m_webView->pageAction(QWebPage::Copy), Constants::Actions::Copy);
     addAction(m_webView->pageAction(QWebPage::Paste), Constants::Actions::Paste);
     addAction(m_webView->pageAction(QWebPage::SelectAll), Constants::Actions::SelectAll);
+
+    createActions();
 }
 
 WebViewEditor::~WebViewEditor()
@@ -299,6 +313,8 @@ void WebViewEditor::clear()
 {
     m_webView->setPage(new QWebPage(m_webView));
     m_history->setHistory(m_webView->page()->history());
+    if (m_webInspector)
+        m_webInspector->setPage(m_webView->page());
 }
 
 void WebViewEditor::onUrlClicked(const QUrl &url)
@@ -309,6 +325,26 @@ void WebViewEditor::onUrlClicked(const QUrl &url)
 void WebViewEditor::onIconChanged()
 {
     emit iconChanged(m_webView->icon());
+}
+
+void WebViewEditor::showWebInspector(bool show)
+{
+    if (!m_webInspector) {
+        m_webInspector = new QWebInspector(this);
+        m_webInspector->setPage(m_webView->page());
+        m_splitter->addWidget(m_webInspector);
+    }
+
+    m_webInspector->setVisible(show);
+}
+
+void WebViewEditor::createActions()
+{
+    m_showWebInspectorAction = new QAction(this);
+    m_showWebInspectorAction->setCheckable(true);
+    connect(m_showWebInspectorAction, SIGNAL(triggered(bool)), SLOT(showWebInspector(bool)));
+
+    addAction(m_showWebInspectorAction, Constants::Actions::ShowWebInspector);
 }
 
 AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)

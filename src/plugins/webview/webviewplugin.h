@@ -25,6 +25,7 @@ public:
     QWebSettings* webSettings();
 
 private:
+    void createActions();
     void loadSettings();
     void loadAppearanceSettings();
     void loadProxySettings();

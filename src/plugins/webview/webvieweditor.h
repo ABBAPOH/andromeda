@@ -11,6 +11,8 @@
 
 class QVBoxLayout;
 class QWebView;
+class QWebInspector;
+class QSplitter;
 //class IFind;
 
 namespace GuiSystem {
@@ -57,13 +59,20 @@ public slots:
 private slots:
     void onUrlClicked(const QUrl &url);
     void onIconChanged();
+    void showWebInspector(bool show);
+
+private:
+    void createActions();
 
 private:
     QVBoxLayout *m_layout;
+    QSplitter *m_splitter;
     QWebView *m_webView;
     WebViewHistory *m_history;
     WebViewFind *m_find;
     GuiSystem::FindToolBar *m_findToolBar;
+    QWebInspector *m_webInspector;
+    QAction *m_showWebInspectorAction;
 };
 
 class WebViewEditorFactory : public GuiSystem::AbstractEditorFactory

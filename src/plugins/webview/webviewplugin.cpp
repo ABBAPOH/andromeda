@@ -1,21 +1,28 @@
 #include "webviewplugin.h"
 
 #include <QtCore/QtPlugin>
+#include <QtCore/QSettings>
+#include <QtCore/QVariant>
+
 #include <QtGui/QFileIconProvider>
 
+#include <QtNetwork/QNetworkProxy>
+#include <QtWebKit/QWebSettings>
+
+#include <guisystem/actionmanager.h>
+#include <guisystem/command.h>
+#include <guisystem/commandcontainer.h>
 #include <guisystem/editormanager.h>
 #include <guisystem/settingspagemanager.h>
+
+#include <core/constants.h>
 
 #include "appearancesettings.h"
 #include "cookiejar.h"
 #include "privacysettings.h"
 #include "proxysettings.h"
+#include "webviewconstants.h"
 #include "webvieweditor.h"
-
-#include <QtCore/QSettings>
-#include <QtCore/QVariant>
-#include <QtNetwork/QNetworkProxy>
-#include <QtWebKit/QWebSettings>
 
 using namespace GuiSystem;
 using namespace WebView;
@@ -51,6 +58,7 @@ bool WebViewPlugin::initialize(const QVariantMap &)
 
     m_cookieJar = new CookieJar(this);
 
+    createActions();
     loadSettings();
 
     return true;
@@ -236,6 +244,20 @@ void WebViewPlugin::loadPrivacySettings()
 QWebSettings* WebViewPlugin::webSettings()
 {
     return m_webSettings;
+}
+
+void WebViewPlugin::createActions()
+{
+    ActionManager *actionManager = ActionManager::instance();
+    CommandContainer *toolsContainer = actionManager->container(Constants::Menus::Tools);
+
+    toolsContainer->addCommand(new Separator(this));
+
+    Command *inspectorCommand = new Command(Constants::Actions::ShowWebInspector, this);
+    inspectorCommand->setDefaultText(tr("Show web inspector..."));
+    inspectorCommand->setDefaultShortcut(QKeySequence("Ctrl+Alt+I"));
+    inspectorCommand->setContext(Command::WindowCommand);
+    toolsContainer->addCommand(inspectorCommand);
 }
 
 Q_EXPORT_PLUGIN(WebViewPlugin)
