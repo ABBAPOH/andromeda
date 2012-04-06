@@ -58,7 +58,6 @@ private slots:
     void onDualPaneModeChanged(bool);
     void showLeftPanel(bool);
     void onSplitterMoved(int,int);
-    void onPathsDropped(const QString &, const QStringList &, Qt::DropAction);
     void openNewTab(const QStringList &paths);
     void openNewWindow(const QStringList &paths);
 

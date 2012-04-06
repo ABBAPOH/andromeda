@@ -28,6 +28,7 @@ public:
 
 private slots:
     void goTo(const QString &s);
+    void onPathsDropped(const QString &destination, const QStringList &paths, Qt::DropAction action);
 
 private:
     void createActions();
