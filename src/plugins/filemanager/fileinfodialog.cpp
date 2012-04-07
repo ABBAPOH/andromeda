@@ -13,6 +13,7 @@
 #include <QtGui/QLineEdit>
 
 #include <io/QDriveInfo>
+#include <io/qmimedatabase.h>
 
 namespace FileManager {
 
@@ -45,6 +46,8 @@ public:
     QFormLayout *layout_1;
     QFormLayout *layout_2;
     QFormLayout *layout_3;
+    QLabel *mimeTypeLabel;
+    QLabel *mimeType;
     QLabel *sizeLabel;
     QLabel *size;
     QLabel *locationLabel;
@@ -114,6 +117,10 @@ void FileInfoDialogPrivate::updateUi()
     q->setWindowTitle(FileInfoDialog::tr("\"%1\" info").arg(fileInfo.fileName()));
 
     iconLabel->setPixmap(icon.pixmap(32));
+
+    QMimeDatabase db;
+    mimeType->setText(db.mimeTypeForFile(fileInfo).name());
+
     if (fileInfo.isDir())
         sizeLabel->setText(FileInfoDialog::tr("Calculating..."));
     else
@@ -176,6 +183,14 @@ void FileInfoDialogPrivate::setupUi()
     layout_1 = new QFormLayout(widget_1);
     layout_1->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layout_1->setSizeConstraint(QLayout::SetMinimumSize);
+
+    mimeTypeLabel = new QLabel(widget_1);
+    mimeTypeLabel->setObjectName(QLatin1String("mimeTypeLabel"));
+
+    mimeType = new QLabel(widget_1);
+    mimeType->setObjectName(QLatin1String("mimeType"));
+    mimeType->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    layout_1->addRow(mimeTypeLabel, mimeType);
 
     sizeLabel = new QLabel(widget_1);
     sizeLabel->setObjectName(QLatin1String("sizeLabel"));
@@ -299,6 +314,7 @@ void FileInfoDialogPrivate::setupUi()
 
 void FileInfoDialogPrivate::retranslateUi()
 {
+    mimeTypeLabel->setText(FileInfoDialog::tr("Mime type:"));
     sizeLabel->setText(FileInfoDialog::tr("Size:"));
     locationLabel->setText(FileInfoDialog::tr("Location:"));
     createdLabel->setText(FileInfoDialog::tr("Created:"));
