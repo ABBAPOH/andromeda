@@ -119,7 +119,6 @@ QList<HistoryItem> History::backItems(int maxItems) const
     return items;
 }
 
-// TODO: clear from..to?
 void History::clear()
 {
     Q_D(History);
