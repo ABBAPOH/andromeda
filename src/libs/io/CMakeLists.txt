@@ -11,6 +11,7 @@ set( GLOBAL_HEADERS
     QFileCopier
    )
 set( HEADERS
+    inqt5/qstandardpaths.h
     io_global.h
     info2_p.h
     directorydetails.h
@@ -21,6 +22,15 @@ set( HEADERS
     qdriveinfo_p.h
     qfilecopier.h
     qfilecopier_p.h
+    qmimedatabase.h
+    qmimedatabase_p.h
+    qmimeglobpattern_p.h
+    qmimemagicrule_p.h
+    qmimemagicrulematcher_p.h
+    qmimeprovider_p.h
+    qmimetype.h
+    qmimetype_p.h
+    qmimetypeparser_p.h
     qsystemerror_p.h
     qtrash.h
     qtrash_p.h
@@ -28,23 +38,33 @@ set( HEADERS
     qtrashfileinfo_p.h
    )
 set( SOURCES
+    inqt5/qstandardpaths.cpp
     info2.cpp
     directorydetails.cpp
     fileimageprovider.cpp
     qdrivecontroller.cpp
     qdriveinfo.cpp
     qfilecopier.cpp
+    qmimedatabase.cpp
+    qmimeglobpattern.cpp
+    qmimemagicrule.cpp
+    qmimemagicrulematcher.cpp
+    qmimeprovider.cpp
+    qmimetype.cpp
+    qmimetypeparser.cpp
     qsystemerror.cpp
     qtrash.cpp
     qtrashfileinfo.cpp
    )
 set( FORMS
    )
+set( RESOURCES resources.qrc )
 
 if( WIN32 )
 
 set( SOURCES
     ${SOURCES}
+    inqt5/qstandardpaths_win.cpp
     qdrivecontroller_win.cpp
     qdriveinfo_win.cpp
     qtrash_win.cpp
@@ -60,6 +80,7 @@ elseif( APPLE )
 
 set( SOURCES
     ${SOURCES}
+    inqt5/qstandardpaths_mac.cpp
     qdrivecontroller_mac.cpp
     qdriveinfo_mac.cpp
     qtrash_mac.mm
@@ -75,6 +96,7 @@ elseif( UNIX )
 
 set( SOURCES
     ${SOURCES}
+    inqt5/qstandardpaths_unix.cpp
     qdrivecontroller_linux.cpp
     qdriveinfo_linux.cpp
     qtrash_linux.cpp
@@ -89,9 +111,11 @@ endif()
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_add_resources( QRC_SOURCES ${RESOURCES} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/inqt5 )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/include )
 
 add_definitions( -DIO_LIBRARY )
@@ -102,7 +126,7 @@ if( MSVC )
     add_definitions( /Zc:wchar_t- )
 endif( MSVC )
 
-add_library( io SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
+add_library( io SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
 target_link_libraries( io ${QT_LIBRARIES} ${LIBS} )
 
 install_lib( io )
