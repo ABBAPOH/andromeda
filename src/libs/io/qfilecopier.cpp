@@ -2,6 +2,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMetaType>
+#include "qmimedatabase.h"
 
 Q_DECLARE_METATYPE(QFileCopier::State)
 Q_DECLARE_METATYPE(QFileCopier::Error)
@@ -21,6 +22,17 @@ static bool removePath(const QString &path)
         result = QFile::remove(path);
     }
     return result;
+}
+
+static QString getSuffix(const QString &fileName)
+{
+    QMimeDatabase db;
+
+    QString suffix = db.suffixForFileName(fileName);
+    if (suffix.isEmpty())
+        suffix = QFileInfo(fileName).suffix();
+
+    return suffix;
 }
 
 QFileCopierThread::QFileCopierThread(QObject *parent) :
@@ -453,10 +465,17 @@ int QFileCopierThread::addRequestToQueue(Request request)
         while (QFileInfo(dest).exists()) {
             QFileInfo destInfo(request.dest);
 
-// TODO: Use mimetypes to determine type and extension
-            dest = destInfo.absolutePath() + QLatin1Char('/') + destInfo.completeBaseName() + QLatin1Char(' ') + QString::number(++i);
-            if (!destInfo.suffix().isEmpty()) {
-                dest += '.' + destInfo.suffix();
+            QString fileName = destInfo.fileName();
+            QString suffix = getSuffix(fileName);
+            QString baseName;
+            if (suffix.isEmpty())
+                baseName = fileName;
+            else
+                baseName = fileName.left(fileName.length() - suffix.length() - 1);
+
+            dest = destInfo.absolutePath() + QLatin1Char('/') + baseName + QLatin1Char(' ') + QString::number(++i);
+            if (!suffix.isEmpty()) {
+                dest += '.' + suffix;
             }
         }
         request.dest = dest;
