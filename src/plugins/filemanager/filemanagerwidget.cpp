@@ -16,6 +16,7 @@
 
 #include <guisystem/actionmanager.h>
 #include <io/QDriveInfo>
+#include <io/qmimedatabase.h>
 #include <widgets/coverflow.h>
 
 #include <core/constants.h>
@@ -28,6 +29,17 @@
 
 using namespace GuiSystem;
 using namespace FileManager;
+
+static QString getSuffix(const QString &fileName)
+{
+    QMimeDatabase db;
+
+    QString suffix = db.suffixForFileName(fileName);
+    if (suffix.isEmpty())
+        suffix = QFileInfo(fileName).suffix();
+
+    return suffix;
+}
 
 FileDelegate::FileDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
@@ -54,11 +66,15 @@ void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
     if (!le)
         return;
 
-    // TODO: use mimetypes to determine extension
     QString text = le->text();
-    QString oldSuffix = QFileInfo(index.data(Qt::EditRole).toString()).suffix();
-    QString newSuffix = QFileInfo(text).suffix();
-    QString newName = QFileInfo(text).baseName();
+
+    QString oldSuffix = getSuffix(index.data(Qt::EditRole).toString());
+    QString newSuffix = getSuffix(text);
+    QString newName;
+    if (newSuffix.isEmpty())
+        newName = text;
+    else
+        newName = text.left(text.length() - newSuffix.length() - 1);
 
     if (FileManagerSettings::globalSettings()->warnOnExtensionChange() && oldSuffix != newSuffix) {
         QMessageBox msgBox;
@@ -83,8 +99,13 @@ void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 
 void FileDelegate::selectFileName()
 {
-    QString fileName = QFileInfo(m_editor->text()).baseName();
-    m_editor->setSelection(0, fileName.length());
+    QString text = m_editor->text();
+    QString suffix = getSuffix(text);
+
+    if (suffix.isEmpty())
+        m_editor->setSelection(0, text.length());
+    else
+        m_editor->setSelection(0, text.length() - suffix.length() - 1);
 }
 
 void FileManagerWidgetPrivate::setupUi()
