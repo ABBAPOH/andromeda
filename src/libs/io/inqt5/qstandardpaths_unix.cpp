@@ -49,6 +49,7 @@
 // LOCAL HACK #include <private/qfilesystemengine_p.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #ifndef QT_NO_STANDARDPATHS
 
