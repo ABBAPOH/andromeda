@@ -223,8 +223,7 @@ void History::onCurrentItemIndexChanged(int index)
 {
     Q_D(History);
 
-    if (d->currentItemIndex == index)
-        return;
+    int oldIndex = d->currentItemIndex;
 
     d->currentItemIndex = index;
 
@@ -233,7 +232,8 @@ void History::onCurrentItemIndexChanged(int index)
     d->canGoBack = index > 0;
     d->canGoForward = index < d->history->count() - 1;
 
-    emit currentItemIndexChanged(d->currentItemIndex);
+    if (oldIndex != d->currentItemIndex)
+        emit currentItemIndexChanged(d->currentItemIndex);
 
     if (canGoBack != d->canGoBack)
         emit canGoBackChanged(d->canGoBack);

@@ -77,9 +77,15 @@ void ProxyHistory::setSourceHistory(IHistory *history)
 
     m_sourceHistory = history;
 
+    int index = -1;
     if (m_sourceHistory) {
         connect(m_sourceHistory, SIGNAL(currentItemIndexChanged(int)), SIGNAL(currentItemIndexChanged(int)));
+
+        index = m_sourceHistory->currentItemIndex();
     }
+
+    // we need to notify that current history changed, even if index is the same
+    emit currentItemIndexChanged(index);
 }
 
 /*!
