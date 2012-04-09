@@ -3,6 +3,7 @@
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 
 #include <QtGui/QDesktopServices>
 #include <QtGui/QStackedLayout>
@@ -121,8 +122,11 @@ QUrl StackedContainer::url() const
 /*!
   \reimp
 */
-void StackedContainer::open(const QUrl &url)
+void StackedContainer::open(const QUrl &dirtyUrl)
 {
+    QUrl url = dirtyUrl;
+    url.setPath(QDir::cleanPath(url.path()));
+
     if (url.isEmpty())
         return;
 
