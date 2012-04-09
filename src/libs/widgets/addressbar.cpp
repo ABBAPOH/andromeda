@@ -1,5 +1,8 @@
 #include "addressbar.h"
 
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+
 #include <QtGui/QApplication>
 #include <QtGui/QPaintEvent>
 
@@ -104,8 +107,26 @@ void AddressBar::paintEvent(QPaintEvent *event)
 
 void AddressBar::updateUrl()
 {
-    QUrl url = QUrl::fromUserInput(text());
+    QUrl url;
+    if (m_url.scheme() == QLatin1String("file")) {
+        // we try to resolve local paths
+        QFileInfo info(text());
+        if (info.isAbsolute()) {
+            if (info.exists())
+                url = QUrl::fromLocalFile(info.canonicalFilePath());
+        } else {
+            QDir dir(m_url.toLocalFile());
+            QString path = QDir::cleanPath(dir.absoluteFilePath(text()));
+            QFileInfo info(path);
+            if (info.exists())
+                url = QUrl::fromLocalFile(path);
+        }
+    } else {
+        url = QUrl::fromUserInput(text());
+    }
+
     if (m_url != url) {
+        setText(urlToUserOutput(url));
         m_url = url;
         emit open(m_url);
     } else {
