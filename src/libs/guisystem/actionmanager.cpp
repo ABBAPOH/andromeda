@@ -293,7 +293,8 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
             QWidgetList widgets = w->findChildren<QWidget*>();
             widgets.prepend(w);
             foreach (QWidget *w, widgets) {
-                setActionsEnabled(w, enable, Command::WindowCommand);
+                if (w->isVisible())
+                    setActionsEnabled(w, enable, Command::WindowCommand);
             }
         }
     }
