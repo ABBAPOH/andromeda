@@ -278,16 +278,6 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
             if (w->isActiveWindow()) {
                 setActionsEnabled(w, false, Command::WindowCommand);
             }
-//        } else if (e->type() == QEvent::FocusIn) {
-//            while (w) {
-//                setActionsEnabled(w, true, Command::WidgetCommand);
-//                w = w->parentWidget();
-//            }
-//        } else if (e->type() == QEvent::FocusOut) {
-//            while (w) {
-//                setActionsEnabled(w, false, Command::WidgetCommand);
-//                w = w->parentWidget();
-//            }
         } else if (e->type() == QEvent::ActivationChange) {
             bool enable = w->isActiveWindow();
             QWidgetList widgets = w->findChildren<QWidget*>();
