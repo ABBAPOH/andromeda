@@ -12,15 +12,37 @@ namespace GuiSystem {
 class CommandContainerPrivate
 {
 public:
+    explicit CommandContainerPrivate(CommandContainer *qq) : q(qq) {}
+
+    void addObject(QObject *o, const QByteArray &weight);
+
+public:
     QByteArray id;
     QString title;
-    QObjectList objects;
 
+    QObjectList objects;
+    QList<QByteArray> weights;
+
+private:
+    CommandContainer *q;
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
+
+void CommandContainerPrivate::addObject(QObject *o, const QByteArray &weight)
+{
+    QByteArray w = weight;
+    if (w.isEmpty())
+        w = QString("%1").arg(objects.count(), 2, 10, QLatin1Char('0')).toLatin1();
+
+    QList<QByteArray>::iterator i = qLowerBound(weights.begin(), weights.end(), w);
+    int index = i - weights.begin();
+    objects.insert(index, o);
+    weights.insert(index, w);
+    QObject::connect(o, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
+}
 
 /*!
     \class CommandContainer
@@ -37,7 +59,7 @@ using namespace GuiSystem;
 */
 CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
     QObject(parent),
-    d_ptr(new CommandContainerPrivate)
+    d_ptr(new CommandContainerPrivate(this))
 {
     Q_D(CommandContainer);
 
@@ -65,6 +87,8 @@ bool commandLessThen(QObject *o1, QObject *o2)
     return weight1 < weight2;
 }
 
+#include <QDebug>
+
 /*!
     \brief Adds \a command to a \a group.
 */
@@ -72,14 +96,7 @@ void CommandContainer::addCommand(Command *c, const QByteArray &weight)
 {
     Q_D(CommandContainer);
 
-    QByteArray w = weight;
-    if (w.isEmpty())
-        w = QString("%1").arg(d->objects.count(), 2, 10, QLatin1Char('0')).toLatin1();
-    c->setProperty("CommandContainer::weight", w);
-
-    QObjectList::iterator i = qLowerBound(d->objects.begin(), d->objects.end(), c, commandLessThen);
-    d->objects.insert(i, c);
-    connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
+    d->addObject(c, weight);
 }
 
 /*!
@@ -89,14 +106,7 @@ void CommandContainer::addContainer(CommandContainer *c, const QByteArray &weigh
 {
     Q_D(CommandContainer);
 
-    QByteArray w = weight;
-    if (w.isEmpty())
-        w = QString("%1").arg(d->objects.count(), 2, 10, QLatin1Char('0')).toLatin1();
-    c->setProperty("CommandContainer::weight", w);
-
-    QObjectList::iterator i = qLowerBound(d->objects.begin(), d->objects.end(), c, commandLessThen);
-    d->objects.insert(i, c);
-    connect(c, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
+    d->addObject(c, weight);
 }
 
 /*!
@@ -107,6 +117,7 @@ void CommandContainer::clear()
     Q_D(CommandContainer);
 
     d->objects.clear();
+    d->weights.clear();
 }
 
 /*!
@@ -239,7 +250,9 @@ void CommandContainer::onDestroy(QObject *o)
 {
     Q_D(CommandContainer);
 
-    d->objects.removeAll(o);
+    int index = d->objects.indexOf(o);
+    d->objects.removeAt(index);
+    d->weights.removeAt(index);
 }
 
 QMenu * CommandContainer::createMenu(QWidget *parent) const
