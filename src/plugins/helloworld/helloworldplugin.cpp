@@ -12,7 +12,7 @@ HelloWorldPlugin::HelloWorldPlugin() :
 {
 }
 
-bool HelloWorldPlugin::initialize(const QVariantMap &)
+bool HelloWorldPlugin::initialize()
 {
     HelloWorldEditorFactory *f = new HelloWorldEditorFactory(this);
     EditorManager::instance()->addFactory(f);

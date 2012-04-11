@@ -19,7 +19,7 @@ class BookmarksPlugin : public ExtensionSystem::IPlugin
 public:
     explicit BookmarksPlugin();
 
-    bool initialize(const QVariantMap &options);
+    bool initialize();
     void shutdown();
 
 private slots:

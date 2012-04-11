@@ -63,7 +63,9 @@ int main(int argc, char *argv[])
     app.setApplicationName(QLatin1String("andromeda"));
 
     if (app.isRunning()) {
-        app.sendMessage(QLatin1String("activate"));
+        QStringList arguments = app.arguments();
+        arguments.prepend(QDir::currentPath());
+        app.sendMessage(arguments.join("\n"));
         return 0;
     }
 
@@ -79,12 +81,12 @@ int main(int argc, char *argv[])
     PluginManager manager;
     manager.setPluginsFolder(QLatin1String("andromeda"));
     manager.setDefaultPlugins(QStringList() << QLatin1String("Core Plugin"));
-    manager.setArguments(app.arguments());
     manager.setTranslations(QStringList() <<
                             QLatin1String("extensionsystem") <<
                             QLatin1String("guisystem") <<
                             QLatin1String("widgets"));
     manager.loadPlugins();
+    manager.postInitialize(app.arguments());
 
     if (manager.hasErrors()) {
         ErrorsDialog dlg;

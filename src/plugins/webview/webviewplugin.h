@@ -19,7 +19,7 @@ public:
 
     inline CookieJar *cookieJar() const { return m_cookieJar; }
 
-    bool initialize(const QVariantMap &);
+    bool initialize();
     void shutdown();
 
     QWebSettings* webSettings();

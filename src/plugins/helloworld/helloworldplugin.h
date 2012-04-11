@@ -10,7 +10,7 @@ class HelloWorldPlugin : public ExtensionSystem::IPlugin
 public:
     explicit HelloWorldPlugin();
 
-    bool initialize(const QVariantMap &options);
+    bool initialize();
 };
 
 #endif // HELLOWORLPLUGIN_H

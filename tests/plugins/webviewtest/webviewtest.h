@@ -11,7 +11,7 @@ class WebViewTest : public ExtensionSystem::IPlugin
 public:
     WebViewTest();
 
-    bool initialize(const QVariantMap &);
+    bool initialize();
     void shutdown();
 
     QObject * m_view;

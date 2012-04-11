@@ -18,7 +18,6 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_PROPERTY(bool hasErrors READ hasErrors)
     Q_PROPERTY(QStringList errors READ errors)
     Q_PROPERTY(bool loaded READ loaded)
-    Q_PROPERTY(QStringList arguments READ arguments WRITE setArguments)
     Q_PROPERTY(QStringList defaultPlugins READ defaultPlugins WRITE setDefaultPlugins)
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
     Q_PROPERTY(QString translationsDir READ translationsDir WRITE setTranslationsDir)
@@ -28,9 +27,6 @@ public:
     ~PluginManager();
 
     static PluginManager *instance();
-
-    QStringList arguments() const;
-    void setArguments(const QStringList &arguments);
 
     QStringList defaultPlugins() const;
     void setDefaultPlugins(const QStringList &plugins);
@@ -61,6 +57,7 @@ signals:
 
 public slots:
     void loadPlugins();
+    void postInitialize(const QStringList &arguments);
     void unloadPlugins();
 
     void updateDirectory(const QString &);

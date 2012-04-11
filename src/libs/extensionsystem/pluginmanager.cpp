@@ -90,16 +90,6 @@ PluginManager::~PluginManager()
     qDeleteAll(d_func()->formatHandlers);
 }
 
-QStringList PluginManager::arguments() const
-{
-    return d_func()->arguments;
-}
-
-void PluginManager::setArguments(const QStringList &arguments)
-{
-     d_func()->arguments = arguments;
-}
-
 /*!
     \fn void PluginManager::loadPlugins()
     \brief Loads all plugins from plugins folder.
@@ -135,6 +125,28 @@ void PluginManager::loadPlugins()
 
     emit pluginsLoaded();
     emit pluginsChanged();
+}
+
+void PluginManager::postInitialize(const QStringList &arguments)
+{
+    Q_D(PluginManager);
+
+    if (!d->loaded)
+        return;
+
+    if (!d->opts.parse(arguments)) {
+        d->addErrorString(PluginManager::tr("Error parsing options : '%1'").arg(d->opts.errorString()));
+        return;
+    }
+
+    foreach (PluginSpec *spec, plugins()) {
+        if (!spec->loaded())
+            continue;
+
+        QString name = spec->name();
+        QVariantMap options = d->options(name);
+        spec->plugin()->postInitialize(options);
+    }
 }
 
 /*!
@@ -292,11 +304,6 @@ bool PluginManagerPrivate::load()
     if (pluginSpecs.isEmpty()) {
         addErrorString(PluginManager::tr("No plugins found in (%1)").
                        arg(folders.join(QLatin1String(", "))));
-        return false;
-    }
-
-    if (!opts.parse(arguments)) {
-        addErrorString(PluginManager::tr("Error parsing options : '%1'").arg(opts.errorString()));
         return false;
     }
 

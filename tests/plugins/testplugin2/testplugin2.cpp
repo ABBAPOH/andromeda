@@ -7,7 +7,7 @@ TestPlugin2::TestPlugin2()
 {
 }
 
-bool TestPlugin2::initialize(const QVariantMap &)
+bool TestPlugin2::initialize()
 {
     qDebug("TestPlugin2::initialize");
     return true;

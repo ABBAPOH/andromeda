@@ -102,8 +102,7 @@ bool PluginSpecPrivate::load()
 #ifdef DEBUG_OUTPUT
     qDebug() << "      initializing" << name;
 #endif
-    QVariantMap options = PluginManager::instance()->d_func()->options(name);
-    if (!plugin->initialize(options)) {
+    if (!plugin->initialize()) {
         setError(PluginSpec::tr("Failed to initialize plugin %1").arg(name));
         return false;
     }

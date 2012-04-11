@@ -10,7 +10,7 @@ class TestPlugin : public ExtensionSystem::IPlugin
 
 public:
     TestPlugin();
-    bool initialize(const QVariantMap &);
+    bool initialize();
 };
 
 #endif // TESTPLUGIN_H
