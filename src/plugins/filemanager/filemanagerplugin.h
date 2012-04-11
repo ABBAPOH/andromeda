@@ -23,7 +23,7 @@ class FileManagerPlugin : public ExtensionSystem::IPlugin
 public:
     explicit FileManagerPlugin(QObject *parent = 0);
 
-    bool initialize(const QVariantMap &);
+    bool initialize();
     void shutdown();
 
 private slots:

@@ -46,7 +46,7 @@ WebViewPlugin * WebViewPlugin::instance()
     return m_instance;
 }
 
-bool WebViewPlugin::initialize(const QVariantMap &)
+bool WebViewPlugin::initialize()
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 

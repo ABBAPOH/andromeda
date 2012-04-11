@@ -111,7 +111,7 @@ BookmarksPlugin::BookmarksPlugin() :
 {
 }
 
-bool BookmarksPlugin::initialize(const QVariantMap &)
+bool BookmarksPlugin::initialize()
 {
     model = new BookmarksModel(this);
     addObject(model, QLatin1String(Constants::Objects::BookmarksModel));

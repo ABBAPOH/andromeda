@@ -1,11 +1,14 @@
 #include "coreplugin.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtCore/QtPlugin>
 #include <QtCore/QUrl>
+
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QMenu>
@@ -35,6 +38,26 @@ using namespace GuiSystem;
 
 static const qint32 corePluginMagic = 0x6330386e; // "c08n"
 static const qint8 corePluginVersion = 1;
+
+static QUrl urlFromUserInput(const QString &currentPath, const QString &text)
+{
+    // we try to resolve local paths
+    QFileInfo info(text);
+    if (info.isAbsolute()) {
+        if (info.exists())
+            return QUrl::fromLocalFile(info.canonicalFilePath());
+        else
+            return QUrl::fromUserInput(text);
+    } else {
+        QDir dir(currentPath);
+        QString path = QDir::cleanPath(dir.absoluteFilePath(text));
+        QFileInfo info(path);
+        if (info.exists())
+            return QUrl::fromLocalFile(path);
+        else
+            return QUrl::fromUserInput(text);
+    }
+}
 
 class DockContainer : public CommandContainer
 {
@@ -101,10 +124,8 @@ CorePlugin::~CorePlugin()
 {
 }
 
-bool CorePlugin::initialize(const QVariantMap &options)
+bool CorePlugin::initialize()
 {
-    urls = options.value("files").toStringList();
-
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));
     addObject(pageManager);
@@ -116,6 +137,23 @@ bool CorePlugin::initialize(const QVariantMap &options)
     connect(PluginManager::instance(), SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
 
     return true;
+}
+
+void CorePlugin::postInitialize(const QVariantMap &options)
+{
+    QStringList urls = options.value("files").toStringList();
+
+    if (!urls.isEmpty()) {
+        BrowserWindow *window = new BrowserWindow();
+        foreach (const QString &url, urls)
+            window->openNewEditor(urlFromUserInput(m_currentPath, url));
+        window->show();
+        return;
+    }
+
+    if (MainWindow::windows().isEmpty()) {
+        BrowserWindow::newWindow();
+    }
 }
 
 void CorePlugin::shutdown()
@@ -235,8 +273,12 @@ void CorePlugin::prefenrences()
 
 void CorePlugin::handleMessage(const QString &message)
 {
-    if (message == QLatin1String("activate"))
-        newWindow();
+    QStringList arguments = message.split("\n");
+    if (arguments.isEmpty())
+        return;
+
+    m_currentPath = arguments.first();
+    PluginManager::instance()->postInitialize(arguments.mid(1));
 }
 
 void CorePlugin::restoreSession()

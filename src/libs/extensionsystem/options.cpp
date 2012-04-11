@@ -154,6 +154,7 @@ bool Options::parse(const QStringList &lst)
     QVariantList list;
 
     m_errorString.clear();
+    m_values.clear();
 
     while (++argi < arguments.count()) {
         QString arg = arguments[argi];

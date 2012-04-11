@@ -19,7 +19,8 @@ public:
     CorePlugin();
     ~CorePlugin();
 
-    bool initialize(const QVariantMap &);
+    bool initialize();
+    void postInitialize(const QVariantMap &);
     void shutdown();
 
     bool restoreState(const QByteArray &state);
@@ -66,6 +67,7 @@ private:
     QByteArray settingsDialogState;
     QMenu *dockMenu;
     QSettings *m_settings;
+    QString m_currentPath;
 #ifdef Q_OS_MAC
     QMenuBar *menuBar;
 #endif
