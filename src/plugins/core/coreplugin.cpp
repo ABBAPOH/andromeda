@@ -116,7 +116,8 @@ QMenu * WindowsContainer::createMenu(QWidget *parent) const
 }
 
 CorePlugin::CorePlugin() :
-    IPlugin()
+    IPlugin(),
+    m_firstStart(true)
 {
 }
 
@@ -150,9 +151,11 @@ void CorePlugin::postInitialize(const QVariantMap &options)
         return;
     }
 
-    if (MainWindow::windows().isEmpty()) {
+    if (MainWindow::windows().isEmpty() || !m_firstStart) {
         BrowserWindow::newWindow();
     }
+
+    m_firstStart = false;
 }
 
 void CorePlugin::shutdown()
