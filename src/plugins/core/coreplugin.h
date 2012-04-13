@@ -34,8 +34,6 @@ public slots:
     void showSettings();
     void prefenrences();
 
-    void handleMessage(const QString &);
-
     void restoreSession();
     void saveSession();
 
@@ -67,7 +65,6 @@ private:
     QByteArray settingsDialogState;
     QMenu *dockMenu;
     QSettings *m_settings;
-    QString m_currentPath;
 #ifdef Q_OS_MAC
     QMenuBar *menuBar;
 #endif
