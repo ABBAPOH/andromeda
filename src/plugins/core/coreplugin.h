@@ -65,6 +65,7 @@ private:
     QByteArray settingsDialogState;
     QMenu *dockMenu;
     QSettings *m_settings;
+    bool m_firstStart;
 #ifdef Q_OS_MAC
     QMenuBar *menuBar;
 #endif
