@@ -47,7 +47,8 @@ static inline QString getPluginPath()
 Application::Application(int &argc, char **argv) :
     QtSingleApplication(QLatin1String("Andromeda"), argc, argv),
     m_pluginManager(0),
-    m_pluginView(0)
+    m_pluginView(0),
+    m_currentPath(QDir::currentPath())
 {
     setOrganizationName(QLatin1String("arch"));
     setApplicationName(QLatin1String("andromeda"));

@@ -25,9 +25,9 @@ private slots:
     void handleMessage(const QString &message);
 
 private:
-    QString m_currentPath;
     ExtensionSystem::PluginManager *m_pluginManager;
     ExtensionSystem::PluginView *m_pluginView;
+    QString m_currentPath;
 };
 
 #endif // APPLICATION_H
