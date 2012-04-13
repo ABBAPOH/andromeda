@@ -5,8 +5,10 @@ else()
     add_definitions( -DQT_WEBKIT_NOT_FOUND )
 endif()
 
-set( SOURCES main.cpp )
+set( HEADERS application.h )
+set( SOURCES application.cpp main.cpp )
 
+include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/guisystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
@@ -30,7 +32,9 @@ else()
     set( EXECUTABLE_OUTPUT_PATH ${APP_BINARY_PATH} )
 endif()
 
-add_executable( andromeda MACOSX_BUNDLE WIN32 ${SOURCES} ${GUI_RESOURCES} )
+qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
+
+add_executable( andromeda MACOSX_BUNDLE WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${GUI_RESOURCES} )
 target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
 
 if( APPLE )

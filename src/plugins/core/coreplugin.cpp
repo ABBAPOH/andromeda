@@ -133,7 +133,6 @@ bool CorePlugin::initialize()
     pageManager->addPage(new CommandsSettingsPage(this));
 
     createActions();
-    connect(qApp, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
     connect(PluginManager::instance(), SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
 
     return true;
@@ -146,7 +145,7 @@ void CorePlugin::postInitialize(const QVariantMap &options)
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
-            window->openNewEditor(urlFromUserInput(m_currentPath, url));
+            window->openNewEditor(urlFromUserInput(qApp->property("currentPath").toString(), url));
         window->show();
         return;
     }
@@ -269,16 +268,6 @@ void CorePlugin::prefenrences()
         settingsDialog->raise();
         settingsDialog->activateWindow();
     }
-}
-
-void CorePlugin::handleMessage(const QString &message)
-{
-    QStringList arguments = message.split("\n");
-    if (arguments.isEmpty())
-        return;
-
-    m_currentPath = arguments.first();
-    PluginManager::instance()->postInitialize(arguments.mid(1));
 }
 
 void CorePlugin::restoreSession()
