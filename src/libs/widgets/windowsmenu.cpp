@@ -1,7 +1,6 @@
 #include "windowsmenu.h"
 
 #include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
 
 class WindowsMenuPrivate
 {
@@ -37,7 +36,11 @@ void WindowsMenuPrivate::addWindow(QWidget *w)
 {
     Q_Q(WindowsMenu);
 
-    if (!qobject_cast<QMainWindow*>(w))
+    Qt::WindowFlags flags = w->windowFlags();
+    if (flags.testFlag(Qt::ToolTip) ||
+            flags.testFlag(Qt::Desktop) ||
+            flags.testFlag(Qt::Popup) ||
+            flags.testFlag(Qt::Drawer))
         return;
 
     if (widgets.contains(w))
