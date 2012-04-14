@@ -175,7 +175,7 @@ void SettingsDialogPrivate::setupUi()
     closeAction = new QAction(q);
     closeAction->setShortcut(QKeySequence::Close);
     q->addAction(closeAction);
-    QObject::connect(closeAction, SIGNAL(triggered()), q, SLOT(reject()));
+    QObject::connect(closeAction, SIGNAL(triggered()), q, SLOT(close()));
 
     retranslateUi();
 }
