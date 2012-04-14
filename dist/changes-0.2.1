@@ -1,0 +1,29 @@
+The Andromeda 0.2.1 release contains bug fixes and new features.
+
+The most important changes are listed in this document. For a complete
+list of changes, see the Git log for the Andromeda sources that
+you can check out from the public Git repository. For example:
+
+git clone git@github.com:ABBAPOH/Andromeda.git
+git log --cherry-pick --pretty=oneline v0.2..v0.2.1
+
+Global
+   * Fix Windows menu to switch between dialogs too
+   * Fix Windows menu to disable switching when there's only one window
+   * Fix opening urls from command line
+   * Fix history
+   * Add popup menu in back/forward buttons in tool bar
+   * Fix compilation problems with gcc 4.7
+   * Fix updating actions when changing active window
+
+Bookmarks plugin
+
+Core plugin
+
+FileManager plugin
+   * Fix keyboard modifiers when dropping files
+   * Add mimetype support (extensions are determined more accurate now)
+   * Fix bug when dropping files to NavigationPanel
+
+WebView plugin
+   * Add Web Inspector
