@@ -394,8 +394,8 @@ void CorePlugin::createActions()
     createEditMenu();
     createViewMenu();
     createGoToMenu();
-    createWindowsMenu();
     createToolsMenu();
+    createWindowsMenu();
     createHelpMenu();
     createDockMenu();
     registerAtions();
