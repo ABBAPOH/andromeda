@@ -60,6 +60,9 @@ void WindowsMenuPrivate::addWindow(QWidget *w)
 
 void WindowsMenuPrivate::removeWindow(QWidget *w)
 {
+    if (w->isMinimized())
+        return;
+
     int index = widgets.indexOf(w);
     if (index != -1) {
         widgets.removeAt(index);
@@ -233,6 +236,8 @@ bool WindowsMenu::eventFilter(QObject *o, QEvent *e)
             if (e->type() == QEvent::Show) {
                 d->addWindow(w);
             } else if (e->type() == QEvent::Close) {
+                d->removeWindow(w);
+            } else if (e->type() == QEvent::Hide) {
                 d->removeWindow(w);
             } else if (e->type() == QEvent::ActivationChange) {
                 d->activateWindow(w);
