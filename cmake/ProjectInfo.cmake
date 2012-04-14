@@ -17,7 +17,7 @@ macro( get_git_revision VAR)
 endmacro( get_git_revision )
 
 get_git_revision(GIT_REVISION)
-set( PROJECT_VERSION "0.2.0.0" )
+set( PROJECT_VERSION "0.2.1.0" )
 
 if(MSVC)
     add_definitions( -DGIT_REVISION="\""${GIT_REVISION}"\"" )
