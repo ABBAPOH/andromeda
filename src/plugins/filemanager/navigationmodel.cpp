@@ -6,6 +6,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 
+#include <QtGui/QApplication>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QFileIconProvider>
 
@@ -273,7 +274,28 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             foreach (const QUrl &url, data->urls())
                 paths.append(url.toLocalFile());
 
-            emit pathsDropped(parentItem->path, paths);
+            if (paths.isEmpty())
+                return false;
+
+            QDriveInfo srcDrive(parentItem->path);
+            QDriveInfo dstDrive(paths[0]);
+
+            //default actions
+            if (srcDrive != dstDrive)
+                action = Qt::CopyAction;
+            else
+                action = Qt::MoveAction;
+
+            Qt::KeyboardModifiers keyboardModifiers = QApplication::keyboardModifiers();
+            //change action according to the keyboard modifier, if any.
+            if (keyboardModifiers.testFlag(Qt::AltModifier))
+                action = Qt::CopyAction;
+            else if (keyboardModifiers.testFlag(Qt::ControlModifier))
+                action = Qt::MoveAction;
+            else if (keyboardModifiers.testFlag(Qt::ShiftModifier))
+                action = Qt::LinkAction;
+
+            emit pathsDropped(parentItem->path, paths, action);
         } else {
             return dropMimeData(data, action, parent.row(), column, parent.parent());
         }
