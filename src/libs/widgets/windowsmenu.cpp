@@ -54,8 +54,8 @@ void WindowsMenuPrivate::addWindow(QWidget *w)
     actions.append(action);
 
     minimizeWindowAction->setEnabled(true);
-    nextWindowAction->setEnabled(true);
-    prevWindowAction->setEnabled(true);
+    nextWindowAction->setEnabled(widgets.count() > 1);
+    prevWindowAction->setEnabled(widgets.count() > 1);
 }
 
 void WindowsMenuPrivate::removeWindow(QWidget *w)
@@ -69,9 +69,9 @@ void WindowsMenuPrivate::removeWindow(QWidget *w)
         if (actions.isEmpty()) {
             currentIndex = -1;
             minimizeWindowAction->setEnabled(false);
-            nextWindowAction->setEnabled(false);
-            prevWindowAction->setEnabled(false);
         }
+        nextWindowAction->setEnabled(widgets.count() > 1);
+        prevWindowAction->setEnabled(widgets.count() > 1);
     }
 }
 
