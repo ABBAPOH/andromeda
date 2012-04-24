@@ -13,3 +13,4 @@ function( qt4_wrap_single_cpp SOURCE )
 endfunction( qt4_wrap_single_cpp )
 
 add_subdirectory( pluginspec )
+add_subdirectory( kdesettings )

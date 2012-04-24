@@ -16,6 +16,7 @@ set( HEADERS
     info2_p.h
     directorydetails.h
     fileimageprovider.h
+    kdesettings.h
     qdrivecontroller.h
     qdrivecontroller_p.h
     qdriveinfo.h
@@ -42,6 +43,7 @@ set( SOURCES
     info2.cpp
     directorydetails.cpp
     fileimageprovider.cpp
+    kdesettings.cpp
     qdrivecontroller.cpp
     qdriveinfo.cpp
     qfilecopier.cpp
