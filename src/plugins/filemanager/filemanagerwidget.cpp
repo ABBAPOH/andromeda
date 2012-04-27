@@ -141,9 +141,6 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::OpenInWindow]->setEnabled(false);
     connect(actions[FileManagerWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
 
-    actions[FileManagerWidget::SelectProgram] = new QAction(this);
-    connect(actions[FileManagerWidget::SelectProgram], SIGNAL(triggered()), q, SLOT(selectProgram()));
-
     actions[FileManagerWidget::NewFolder] = new QAction(this);
     connect(actions[FileManagerWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
 
@@ -250,7 +247,6 @@ void FileManagerWidgetPrivate::retranslateUi()
     actions[FileManagerWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[FileManagerWidget::OpenInWindow]->setText(tr("Open in new window"));
 
-    actions[FileManagerWidget::SelectProgram]->setText(tr("Select program..."));
     actions[FileManagerWidget::NewFolder]->setText(tr("New Folder"));
     actions[FileManagerWidget::Rename]->setText(tr("Rename"));
     actions[FileManagerWidget::MoveToTrash]->setText(tr("Move to trash"));
@@ -881,62 +877,6 @@ void FileManagerWidget::open()
     }
 }
 
-void FileManagerWidget::selectProgram()
-{
-//    emit selectProgramRequested();
-    QSettings settings;
-    QString programsFolder;
-    QVariant value = settings.value(QLatin1String("filemanager/programsFolder"));
-    if (value.isValid()) {
-        programsFolder = value.toString();
-    } else {
-#if defined(Q_OS_MAC)
-        programsFolder = QLatin1String("/Applications");
-#elif defined(Q_OS_WIN)
-        programsFolder = QDriveInfo::rootDrive().rootPath() + QLatin1String("/Program Files");
-#elif defined(Q_OS_UNIX)
-        programsFolder = QLatin1String("/usr/bin");
-#endif
-    }
-
-#ifdef Q_OS_WIN
-    QString filter = tr("Programs (*.exe *.cmd *.com *.bat);;All files (*)");
-#else
-    QString filter;
-#endif
-
-    QString programPath = QFileDialog::getOpenFileName(this, tr("Select program"), programsFolder, filter);
-    if (programPath.isEmpty())
-        return;
-
-    settings.setValue(QLatin1String("filemanager/programsFolder"), QFileInfo(programPath).absolutePath());
-
-    bool result = true;
-    QStringList failedPaths;
-    foreach (const QString path, selectedPaths()) {
-        QString program;
-        QStringList arguments;
-#if defined(Q_OS_MAC)
-        program = QLatin1String("open");
-        arguments << QLatin1String("-a") << programPath << path;
-#else
-        program = programPath;
-        arguments << path;
-#endif
-        bool r = QProcess::startDetached(program, arguments);
-        if (!r)
-            failedPaths.append(path);
-        result &= r;
-    }
-
-    if (!result) {
-        QMessageBox::warning(this,
-                             tr("Can't open files"),
-                             tr("Andromeda failed to open some files :%1").
-                             arg(failedPaths.join(QLatin1String("\n"))));
-    }
-}
-
 void FileManagerWidget::showFileInfo()
 {
     QStringList paths = selectedPaths();
@@ -1143,6 +1083,7 @@ void FileManagerWidget::showHiddenFiles(bool show)
         d->model->setFilter(mBaseFilters);
 }
 
+#include "openwithmenu.h"
 /*!
   \brief Shows FileManagerWidget's context menu.
 */
@@ -1177,9 +1118,9 @@ void FileManagerWidget::showContextMenu(QPoint pos)
         menu->addAction(d->actions[OpenInTab]);
         menu->addAction(d->actions[OpenInWindow]);
 
-        QMenu *openWithMenu = menu->addMenu(tr("Open with"));
-        openWithMenu->addSeparator();
-        openWithMenu->addAction(d->actions[SelectProgram]);
+        OpenWithMenu *openWithMenu = new OpenWithMenu(menu);
+        openWithMenu->setPaths(paths);
+        menu->addMenu(openWithMenu);
 
         menu->addSeparator();
         menu->addAction(d->actions[ShowFileInfo]);

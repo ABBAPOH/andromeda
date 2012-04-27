@@ -26,7 +26,6 @@ public:
                   Open,
                   OpenInTab,
                   OpenInWindow,
-                  SelectProgram,
                   NewFolder,
                   Rename,
                   MoveToTrash,
@@ -125,7 +124,6 @@ public slots:
 
     void newFolder();
     void open();
-    void selectProgram();
     void showFileInfo();
     void remove();
     void rename();
