@@ -38,9 +38,6 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::OpenInWindow] = new QAction(this);
     connect(actions[DualPaneWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
 
-    actions[DualPaneWidget::SelectProgram] = new QAction(this);
-    connect(actions[DualPaneWidget::SelectProgram], SIGNAL(triggered()), q, SLOT(selectProgram()));
-
     actions[DualPaneWidget::NewFolder] = new QAction(this);
     connect(actions[DualPaneWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
 
@@ -178,7 +175,6 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[DualPaneWidget::OpenInWindow]->setText(tr("Open in new window"));
 
-    actions[DualPaneWidget::SelectProgram]->setText(tr("Select program..."));
     actions[DualPaneWidget::NewFolder]->setText(tr("New Folder"));
     actions[DualPaneWidget::Rename]->setText(tr("Rename"));
     actions[DualPaneWidget::MoveToTrash]->setText(tr("Move to trash"));
@@ -689,11 +685,6 @@ void DualPaneWidget::newFolder()
 void DualPaneWidget::open()
 {
     activeWidget()->open();
-}
-
-void DualPaneWidget::selectProgram()
-{
-    activeWidget()->selectProgram();
 }
 
 void DualPaneWidget::showFileInfo()
