@@ -94,12 +94,18 @@ qt4_wrap_single_cpp( qdrivecontroller_mac.cpp )
 
 elseif( UNIX )
 
+set( HEADERS
+    ${HEADERS}
+    qxdg.h
+)
+
 set( SOURCES
     ${SOURCES}
     inqt5/qstandardpaths_unix.cpp
     qdrivecontroller_linux.cpp
     qdriveinfo_linux.cpp
     qtrash_linux.cpp
+    qxdg.cpp
    )
 
 qt4_wrap_single_cpp( qdrivecontroller_linux.cpp )
