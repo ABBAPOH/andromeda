@@ -15,6 +15,7 @@
 
 //#include <QDebug>
 
+// TODO: sort applications using their weight
 static QMap<QString, QStringList> getDefaultPrograms()
 {
     QMap<QString, QStringList> result;
@@ -32,8 +33,10 @@ static QMap<QString, QStringList> getDefaultPrograms()
         mimeCache.beginGroup("MIME Cache");
 
         foreach (const QString &mimeType, mimeCache.allKeys()) {
-            QStringList list = mimeCache.value(mimeType).toStringList();
+            QStringList list = result.value(mimeType);
+            list.append(mimeCache.value(mimeType).toStringList()); // join programs from all caches
             list.removeAll(QString(""));
+            list.removeDuplicates();
             result.insert(mimeType, list);
         }
     }
@@ -44,6 +47,16 @@ static QMap<QString, QStringList> getDefaultPrograms()
 
     KDESettings mimeApps(info.absoluteFilePath());
     mimeApps.beginGroup("Added Associations");
+
+    foreach (const QString &mimeType, mimeApps.allKeys()) {
+        QStringList list = mimeApps.value(mimeType).toStringList();
+        list.removeAll(QString(""));
+        result.insert(mimeType, list);
+    }
+
+    mimeApps.endGroup();
+
+    mimeApps.beginGroup("Default Applications");
 
     foreach (const QString &mimeType, mimeApps.allKeys()) {
         QStringList list = mimeApps.value(mimeType).toStringList();
@@ -310,23 +323,24 @@ static QString findDesktopFile(const QString &application)
     return QString();
 }
 
-static QStringList defaultPrograms(const QString &mimeType)
+static QStringList defaultPrograms(const QString &mimeTypeName)
 {
     QMimeDatabase db;
 
     QMap<QString, QStringList> programs = getDefaultPrograms();
 
     QStringList mimeTypes;
-    mimeTypes.append(mimeType);
+    QMimeType mimeType = db.mimeTypeForName(mimeTypeName);
+    mimeTypes.append(mimeType.name());
+    mimeTypes.append(mimeType.allAncestors());
 
     QStringList result;
-    while (!mimeTypes.isEmpty()) {
-        QMimeType mimeType = db.mimeTypeForName(mimeTypes.takeFirst());
-        if (!mimeType.isValid())
-            continue;
-        mimeTypes.append(mimeType.parentMimeTypes());
-        result.append(programs.value(mimeType.name()));
+
+    foreach (const QString &mimeType, mimeTypes) {
+        result.append(programs.value(mimeType));
     }
+
+    result.removeDuplicates();
 
     return result;
 }
@@ -380,7 +394,7 @@ QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
 
 QString QDefaultPrograms::defaultProgram(const QString &mimeType)
 {
-    QStringList programs = defaultPrograms(mimeType);
+    QStringList programs = ::defaultPrograms(mimeType);
     if (programs.isEmpty())
         return QString();
 
