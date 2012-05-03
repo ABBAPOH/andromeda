@@ -706,7 +706,8 @@ bool QFileCopierThread::move(const Request &r, QFileCopier::Error *err)
 
         } else {
             result = copyFile(r, err);
-            if (result)
+            // need to check if copying was canceled
+            if (result && (*err == QFileCopier::NoError))
                 result = remove(r, err);
         }
 
