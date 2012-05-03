@@ -358,10 +358,11 @@ void QFileCopierThread::restart()
 
 void QFileCopierThread::createRequest(Task t)
 {
+    // remove '/' at end of path if exists
+    t.source = QDir::cleanPath(t.source);
     QFileInfo sourceInfo(t.source);
 
     t.source = sourceInfo.absoluteFilePath();
-    t.source = QDir::cleanPath(t.source);
 
     if (!t.dest.isEmpty()) {
         QFileInfo destInfo(t.dest);
