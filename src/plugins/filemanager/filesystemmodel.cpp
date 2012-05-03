@@ -59,7 +59,7 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
         return false;
 
     bool success = true;
-    QString to = filePath(parent) + QDir::separator();
+    QString to = filePath(parent) + '/';
 
     QList<QUrl> urls = data->urls();
 
