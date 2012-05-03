@@ -15,7 +15,54 @@
 
 //#include <QDebug>
 
-// TODO: sort applications using their weight
+static QString findDesktopFile(const QString &application)
+{
+    QStringList paths;
+    paths.append(dataHome() + QLatin1String("/applications"));
+    paths.append(QLatin1String("/usr/local/share/applications"));
+    paths.append(QLatin1String("/usr/share/applications"));
+
+    QString relativePath = application;
+    relativePath.replace(QLatin1Char('-'), QLatin1Char('/'));
+    foreach (const QString &path, paths) {
+        QString filePath = path + QLatin1Char('/') + relativePath;
+        if (QFile::exists(filePath))
+            return filePath;
+    }
+
+    return QString();
+}
+
+static bool LessThan(const QString s1, const QString s2)
+{
+    int w1 = 0, w2 = 0;
+
+    QString file;
+    file = findDesktopFile(s1);
+    if (!file.isEmpty()) {
+        KDESettings s(file);
+        s.beginGroup("Desktop Entry");
+        w1 = s.value("InitialPreference", 5).toInt();
+    }
+
+    file = findDesktopFile(s2);
+    if (!file.isEmpty()) {
+        KDESettings s(file);
+        s.beginGroup("Desktop Entry");
+        w2 = s.value("InitialPreference", 5).toInt();
+    }
+
+    return w1 >= w2;
+}
+
+// TODO : speedup this hell
+static QStringList sortByWeight(const QStringList & programs)
+{
+    QStringList result = programs;
+    qSort(result.begin(), result.end(), LessThan);
+    return result;
+}
+
 static QMap<QString, QStringList> getDefaultPrograms()
 {
     QMap<QString, QStringList> result;
@@ -39,6 +86,10 @@ static QMap<QString, QStringList> getDefaultPrograms()
             list.removeDuplicates();
             result.insert(mimeType, list);
         }
+    }
+
+    foreach (const QString &key, result.keys()) {
+        result.insert(key, sortByWeight(result.value(key)));
     }
 
     QFileInfo info(dataHome() + QLatin1String("/applications/") + "mimeapps.list");
@@ -303,24 +354,6 @@ static QStringList expandExecString(QSettings &desktopFile, const QList<QUrl> &u
     }
 
     return result;
-}
-
-static QString findDesktopFile(const QString &application)
-{
-    QStringList paths;
-    paths.append(dataHome() + QLatin1String("/applications"));
-    paths.append(QLatin1String("/usr/local/share/applications"));
-    paths.append(QLatin1String("/usr/share/applications"));
-
-    QString relativePath = application;
-    relativePath.replace(QLatin1Char('-'), QLatin1Char('/'));
-    foreach (const QString &path, paths) {
-        QString filePath = path + QLatin1Char('/') + relativePath;
-        if (QFile::exists(filePath))
-            return filePath;
-    }
-
-    return QString();
 }
 
 static QStringList defaultPrograms(const QString &mimeTypeName)
