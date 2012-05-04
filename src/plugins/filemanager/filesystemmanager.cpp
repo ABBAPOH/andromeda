@@ -7,8 +7,9 @@
 #include <QtCore/QDir>
 #include <QtGui/QUndoCommand>
 
-#include <io/qtrash.h>
+#include <io/QDriveInfo>
 #include <io/QFileCopier>
+#include <io/qtrash.h>
 
 using namespace FileManager;
 
@@ -149,13 +150,36 @@ void CopyCommand::undo()
     copier->remove(op.destinationPaths());
 }
 
+static QString getExistingPath(const QString &path)
+{
+    QString dir = path;
+    while (!QFile::exists(dir) && !dir.isEmpty()) {
+        dir = QFileInfo(dir).absolutePath();
+    }
+    return dir;
+}
+
+static bool canMove(const QStringList &sources, const QString &dest)
+{
+    QDriveInfo destDrive(getExistingPath(dest));
+
+    foreach (const QString &source, sources) {
+        QDriveInfo sourceDrive(getExistingPath(source));
+        if (destDrive != sourceDrive)
+            return false;
+    }
+
+    return true;
+}
+
 void MoveCommand::redo()
 {
     int index = operationIndex();
     const FileSystemManager::FileOperation &op = managerPrivate()->operations[index];
 
     QFileCopier *copier = managerPrivate()->copier(op.index());
-    copier->move(op.sources(), op.destination(), QFileCopier::CopyOnMove);
+    bool canMove = ::canMove(op.sources(), op.destination());
+    copier->move(op.sources(), op.destination(), canMove ? QFileCopier::CopyFlag(0) : QFileCopier::CopyOnMove);
 }
 
 void MoveCommand::undo()
@@ -165,7 +189,9 @@ void MoveCommand::undo()
 
     QFileCopier *copier = managerPrivate()->copier(op.index());
     for (int i = 0; i < op.destinationPaths().size(); i++) {
-        copier->move(op.destinationPaths()[i], op.sources()[i], QFileCopier::CopyOnMove);
+        bool canMove = ::canMove(QStringList() << op.destinationPaths()[i], op.sources()[i]);
+        QFileCopier::CopyFlags flags = canMove ? QFileCopier::CopyFlag(0) : QFileCopier::CopyOnMove;
+        copier->move(op.destinationPaths()[i], op.sources()[i], flags);
     }
 }
 
