@@ -25,11 +25,6 @@ public:
     QFileInfo fileInfo() const;
     void setFileInfo(const QFileInfo &info);
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
-
-private:
-
 private slots:
     void onActivatedUser(int);
     void onActivatedGroup(int);
