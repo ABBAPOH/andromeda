@@ -402,24 +402,6 @@ void FileInfoDialog::setFileInfo(const QFileInfo &info)
     d->updateUi();
 }
 
-QSize FileInfoDialog::minimumSizeHint() const
-{
-    return QSize(300, 400);
-}
-
-QSize FileInfoDialog::sizeHint() const
-{
-    this->ensurePolished();
-
-    int w = 0, h = 0;
-    for (int i = 0; i < d->widget->count(); i++) {
-        QSize sizeHint = d->widget->widget(i)->sizeHint();
-        w = qMax(sizeHint.width(), w);
-        h += sizeHint.height() + 20;
-    }
-    return QSize(300, 100 + h);
-}
-
 void FileInfoDialog::onActivatedUser(int i)
 {
     d->fileInfo.refresh();
