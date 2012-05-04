@@ -15,6 +15,8 @@
 #include <io/QDriveInfo>
 #include <io/qmimedatabase.h>
 
+#include "permissionswidget.h"
+
 namespace FileManager {
 
 class LabelLineEdit : public QLineEdit
@@ -42,7 +44,7 @@ public:
     QLabel *nameLabel;
     QWidget *widget_1;
     QWidget *widget_2;
-    QWidget *widget_3;
+    PermissionsWidget *permissionsWidget;
     QFormLayout *layout_1;
     QFormLayout *layout_2;
     QFormLayout *layout_3;
@@ -138,9 +140,7 @@ void FileInfoDialogPrivate::updateUi()
     totalSize->setText(sizeToString(driveInfo.bytesTotal()));
     availableSize->setText(sizeToString(driveInfo.bytesAvailable()));
 
-    userPermissionsComboBox->setCurrentIndex((fileInfo.permissions() & QFile::WriteOwner) ? 1 : 0);
-    groupPermissionsComboBox->setCurrentIndex((fileInfo.permissions() & QFile::WriteGroup) ? 1 : 0);
-    otherPermissionsComboBox->setCurrentIndex((fileInfo.permissions() & QFile::WriteOther) ? 1 : 0);
+    permissionsWidget->setFileInfo(fileInfo);
 }
 
 void FileInfoDialogPrivate::setupUi()
@@ -278,36 +278,8 @@ void FileInfoDialogPrivate::setupUi()
     availableSize->setTextInteractionFlags(Qt::TextBrowserInteraction);
     layout_2->addRow(availableSizeLabel, availableSize);
 
-    widget_3 = new QWidget;
-    widget->addWidget(widget_3, FileInfoDialog::tr("Permissions"));
-
-    layout_3 = new QFormLayout(widget_3);
-    layout_3->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
-    layout_3->setSizeConstraint(QLayout::SetMinimumSize);
-
-    userPermissionsLabel = new QLabel(widget_3);
-    userPermissionsLabel->setObjectName(QLatin1String("userPermissionsLabel"));
-
-    userPermissionsComboBox = new QComboBox(widget_3);
-    userPermissionsComboBox->setObjectName(QLatin1String("userPermissionsComboBox"));
-    userPermissionsComboBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout_3->addRow(userPermissionsLabel, userPermissionsComboBox);
-
-    groupPermissionsLabel = new QLabel(widget_3);
-    groupPermissionsLabel->setObjectName(QLatin1String("userPermissionsLabel"));
-
-    groupPermissionsComboBox = new QComboBox(widget_3);
-    groupPermissionsComboBox->setObjectName(QLatin1String("groupPermissionsComboBox"));
-    groupPermissionsComboBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout_3->addRow(groupPermissionsLabel, groupPermissionsComboBox);
-
-    otherPermissionsLabel = new QLabel(widget_3);
-    otherPermissionsLabel->setObjectName(QLatin1String("userPermissionsLabel"));
-
-    otherPermissionsComboBox = new QComboBox(widget_3);
-    otherPermissionsComboBox->setObjectName(QLatin1String("otherPermissionsComboBox"));
-    otherPermissionsComboBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout_3->addRow(otherPermissionsLabel, otherPermissionsComboBox);
+    permissionsWidget = new PermissionsWidget;
+    widget->addWidget(permissionsWidget, FileInfoDialog::tr("Permissions"));
 
     retranslateUi();
 }
@@ -330,22 +302,6 @@ void FileInfoDialogPrivate::retranslateUi()
     widget->setText(0, FileInfoDialog::tr("General Info"));
     widget->setText(1, FileInfoDialog::tr("Drive Info"));
     widget->setText(2, FileInfoDialog::tr("Permissions"));
-
-    userPermissionsLabel->setText(FileInfoDialog::tr("User:"));
-    groupPermissionsLabel->setText(FileInfoDialog::tr("Group:"));
-    otherPermissionsLabel->setText(FileInfoDialog::tr("Other:"));
-
-    QStringList permissions;
-    permissions << FileInfoDialog::tr("Read only") << FileInfoDialog::tr("Read write");
-
-    userPermissionsComboBox->clear();
-    userPermissionsComboBox->addItems(permissions);
-
-    groupPermissionsComboBox->clear();
-    groupPermissionsComboBox->addItems(permissions);
-
-    otherPermissionsComboBox->clear();
-    otherPermissionsComboBox->addItems(permissions);
 }
 
 FileInfoDialog::FileInfoDialog(QWidget *parent) :
@@ -360,10 +316,6 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
 
     setMinimumSize(200, 400);
     setMaximumWidth(400);
-
-    connect(d->userPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedUser(int)));
-    connect(d->groupPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedGroup(int)));
-    connect(d->otherPermissionsComboBox, SIGNAL(activated(int)), SLOT(onActivatedOther(int)));
 }
 
 FileInfoDialog::~FileInfoDialog()
