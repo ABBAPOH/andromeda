@@ -179,6 +179,9 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::Paste] = new QAction(this);
     connect(actions[FileManagerWidget::Paste], SIGNAL(triggered()), q, SLOT(paste()));
 
+    actions[FileManagerWidget::MoveHere] = new QAction(this);
+    connect(actions[FileManagerWidget::MoveHere], SIGNAL(triggered()), q, SLOT(moveHere()));
+
     actions[FileManagerWidget::SelectAll] = new QAction(this);
     connect(actions[FileManagerWidget::SelectAll], SIGNAL(triggered()), q, SLOT(selectAll()));
 
@@ -258,6 +261,7 @@ void FileManagerWidgetPrivate::retranslateUi()
     actions[FileManagerWidget::Cut]->setText(tr("Cut"));
     actions[FileManagerWidget::Copy]->setText(tr("Copy"));
     actions[FileManagerWidget::Paste]->setText(tr("Paste"));
+    actions[FileManagerWidget::MoveHere]->setText(tr("Move object(s) here"));
     actions[FileManagerWidget::SelectAll]->setText(tr("Select all"));
 
     actions[FileManagerWidget::ShowHiddenFiles]->setText(tr("Show hidden files"));
@@ -412,6 +416,23 @@ void FileManagerWidgetPrivate::updateSorting()
     view->sortByColumn(sortingColumn, sortingOrder);
 
     model->sort(sortingColumn, sortingOrder);
+}
+
+void FileManagerWidgetPrivate::paste(bool copy)
+{
+    QClipboard * clipboard = QApplication::clipboard();
+    const QMimeData * data = clipboard->mimeData();
+    const QList<QUrl> & urls = data->urls();
+
+    QStringList files;
+    foreach (const QUrl &url, urls) {
+        files.append(url.toLocalFile());
+    }
+
+    if (copy)
+        fileSystemManager->copy(files, currentPath);
+    else
+        fileSystemManager->move(files, currentPath);
 }
 
 void FileManagerWidgetPrivate::registerAction(QAction *action, const QByteArray &id)
@@ -1036,15 +1057,16 @@ void FileManagerWidget::copy()
 
 void FileManagerWidget::paste()
 {
-    QClipboard * clipboard = QApplication::clipboard();
-    const QMimeData * data = clipboard->mimeData();
-    const QList<QUrl> & urls = data->urls();
+    Q_D(FileManagerWidget);
 
-    QStringList files;
-    foreach (const QUrl &url, urls) {
-        files.append(url.toLocalFile());
-    }
-    fileSystemManager()->copy(files, currentPath());
+    d->paste(true);
+}
+
+void FileManagerWidget::moveHere()
+{
+    Q_D(FileManagerWidget);
+
+    d->paste(false);
 }
 
 void FileManagerWidget::selectAll()
@@ -1099,6 +1121,7 @@ void FileManagerWidget::showContextMenu(QPoint pos)
         menu->addAction(d->actions[ShowFileInfo]);
         menu->addSeparator();
         menu->addAction(d->actions[Paste]);
+        menu->addAction(d->actions[MoveHere]);
         menu->addAction(d->actions[SelectAll]);
         menu->addSeparator();
         QMenu * viewModeMenu = menu->addMenu(tr("View Mode"));

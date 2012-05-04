@@ -76,6 +76,9 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::Paste] = new QAction(this);
     connect(actions[DualPaneWidget::Paste], SIGNAL(triggered()), q, SLOT(paste()));
 
+    actions[DualPaneWidget::MoveHere] = new QAction(this);
+    connect(actions[DualPaneWidget::MoveHere], SIGNAL(triggered()), q, SLOT(moveHere()));
+
     actions[DualPaneWidget::SelectAll] = new QAction(this);
     connect(actions[DualPaneWidget::SelectAll], SIGNAL(triggered()), q, SLOT(selectAll()));
 
@@ -186,6 +189,7 @@ void DualPaneWidgetPrivate::retranslateUi()
     actions[DualPaneWidget::Cut]->setText(tr("Cut"));
     actions[DualPaneWidget::Copy]->setText(tr("Copy"));
     actions[DualPaneWidget::Paste]->setText(tr("Paste"));
+    actions[DualPaneWidget::MoveHere]->setText(tr("Move object(s) here"));
     actions[DualPaneWidget::SelectAll]->setText(tr("Select all"));
 
     actions[DualPaneWidget::ShowHiddenFiles]->setText(tr("Show hidden files"));
@@ -757,6 +761,11 @@ void DualPaneWidget::copy()
 void DualPaneWidget::paste()
 {
     activeWidget()->paste();
+}
+
+void DualPaneWidget::moveHere()
+{
+    activeWidget()->moveHere();
 }
 
 void DualPaneWidget::selectAll()

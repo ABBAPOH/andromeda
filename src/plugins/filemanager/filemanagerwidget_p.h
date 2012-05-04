@@ -62,6 +62,8 @@ public:
     QModelIndexList selectedIndexes() const;
     void updateSorting();
 
+    void paste(bool copy = true);
+
     void registerAction(QAction *action, const QByteArray &id);
 
 public slots:
