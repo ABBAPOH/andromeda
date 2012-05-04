@@ -100,7 +100,7 @@ QSize OutlineWidget::sizeHint() const
             width = w;
         height += sizeHint.height() + d->treeView->sizeHintForRow(i) + 1;
     }
-    return QSize(d->treeView->indentation() + width, height);
+    return QSize(d->treeView->indentation()*2 + width + 2, height);
 }
 
 int OutlineWidget::addWidget(QWidget *widget, const QString &label)
