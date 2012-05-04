@@ -5,6 +5,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QScrollBar>
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QStyle>
 #include <QtGui/QStyleOptionFrameV3>
@@ -71,6 +72,8 @@ OutlineWidget::OutlineWidget(QWidget *parent) :
     d->treeView->header()->hide();
     d->treeView->setExpandsOnDoubleClick(false);
     d->treeView->setFrameShape(QFrame::NoFrame);
+    d->treeView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    d->treeView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     QPalette pal = d->treeView->palette();
     pal.setColor(QPalette::Base, pal.color(QPalette::Window));
@@ -87,7 +90,17 @@ OutlineWidget::~OutlineWidget()
 
 QSize OutlineWidget::sizeHint() const
 {
-    return QSize(400, 300);
+    Q_D(const OutlineWidget);
+
+    int width = 0, height = 0;
+    for (int i = 0; i < d->widgets.count(); i++) {
+        QSize sizeHint = d->widgets[i]->sizeHint();
+        int w = sizeHint.width();
+        if (w > width)
+            width = w;
+        height += sizeHint.height() + d->treeView->sizeHintForRow(i) + 1;
+    }
+    return QSize(d->treeView->indentation() + width, height);
 }
 
 int OutlineWidget::addWidget(QWidget *widget, const QString &label)
