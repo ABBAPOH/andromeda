@@ -123,12 +123,13 @@ void FileInfoDialogPrivate::updateUi()
     QMimeDatabase db;
     mimeType->setText(db.mimeTypeForFile(fileInfo).name());
 
-    if (fileInfo.isDir())
-        sizeLabel->setText(FileInfoDialog::tr("Calculating..."));
-    else
-        nameLabel->setText(fileInfo.fileName());
+    nameLabel->setText(fileInfo.fileName());
 
-    size->setText(sizeToString(fileInfo.size()));
+    if (fileInfo.isDir())
+        size->setText(FileInfoDialog::tr("Calculating..."));
+    else
+        size->setText(sizeToString(fileInfo.size()));
+
     location->setText(fileInfo.path());
     created->setText(fileInfo.created().toString(Qt::SystemLocaleShortDate));
     modified->setText(fileInfo.lastModified().toString(Qt::SystemLocaleShortDate));
