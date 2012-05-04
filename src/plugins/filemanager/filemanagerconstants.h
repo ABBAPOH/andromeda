@@ -37,6 +37,8 @@ const char * const Rename = "Rename";
 const char * const MoveToTrash = "MoveToTrash";
 const char * const Remove = "Remove";
 
+const char * const MoveHere = "MoveHere";
+
 const char * const IconMode = "IconMode";
 const char * const ColumnMode = "ColumnMode";
 const char * const TreeMode = "TreeViewMode";

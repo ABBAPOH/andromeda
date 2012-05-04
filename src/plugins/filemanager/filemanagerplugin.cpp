@@ -104,6 +104,7 @@ void FileManagerPlugin::onPathsDropped(const QString &destination, const QString
 void FileManagerPlugin::createActions()
 {
     createFileMenu();
+    createEditMenu();
     createViewMenu();
     createGoToMenu();
     createGoToActions();
@@ -168,6 +169,20 @@ void FileManagerPlugin::createFileMenu()
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Shift+Del")));
 #endif
     container->addCommand(cmd, "66");
+}
+
+void FileManagerPlugin::createEditMenu()
+{
+    Command *cmd = 0;
+    CommandContainer *container = 0;
+
+    container = ActionManager::instance()->container(Constants::Menus::Edit);
+
+    cmd = new Command(Constants::Actions::MoveHere, this);
+    cmd->setDefaultText(tr("Move object(s) here"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+V")));
+    cmd->setContext(Command::WidgetCommand);
+    container->addCommand(cmd, "055");
 }
 
 void FileManagerPlugin::createViewMenu()

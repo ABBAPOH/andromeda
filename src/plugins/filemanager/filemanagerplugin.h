@@ -33,6 +33,7 @@ private slots:
 private:
     void createActions();
     void createFileMenu();
+    void createEditMenu();
     void createViewMenu();
     void createGoToMenu();
     void createGoToDirCommand(QDesktopServices::StandardLocation location,

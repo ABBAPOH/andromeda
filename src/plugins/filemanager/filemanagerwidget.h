@@ -53,6 +53,7 @@ public:
                   Cut,
                   Copy,
                   Paste,
+                  MoveHere,
                   SelectAll,
                   ShowHiddenFiles,
 
@@ -150,6 +151,7 @@ public slots:
     void redo();
     void copy();
     void paste();
+    void moveHere();
     void selectAll();
 
     void back();

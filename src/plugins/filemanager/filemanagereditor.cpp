@@ -536,6 +536,7 @@ void FileManagerEditor::createActions()
     registerAction(m_widget->action(DualPaneWidget::Cut), Constants::Actions::Cut);
     registerAction(m_widget->action(DualPaneWidget::Copy), Constants::Actions::Copy);
     registerAction(m_widget->action(DualPaneWidget::Paste), Constants::Actions::Paste);
+    registerAction(m_widget->action(DualPaneWidget::MoveHere), Constants::Actions::MoveHere);
     registerAction(m_widget->action(DualPaneWidget::SelectAll), Constants::Actions::SelectAll);
 
     registerAction(m_widget->action(DualPaneWidget::ShowHiddenFiles), Constants::Actions::ShowHiddenFiles);
