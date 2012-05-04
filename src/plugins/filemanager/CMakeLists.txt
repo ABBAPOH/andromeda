@@ -30,6 +30,7 @@ set( HEADERS
     navigationpanel_p.h
     navigationpanelsettings.h
     openwithmenu.h
+    permissionswidget.h
    )
 set( SOURCES
     dualpanewidget.cpp
@@ -52,6 +53,7 @@ set( SOURCES
     navigationpanel.cpp
     navigationpanelsettings.cpp
     openwithmenu.cpp
+    permissionswidget.cpp
    )
 set( FORMS
     filecopyerrordialog.ui
@@ -59,6 +61,7 @@ set( FORMS
     filecopywidget.ui
     viewmodessettings.ui
     globalsettings.ui
+    permissionswidget.ui
    )
 
 set( RESOURCES resources.qrc )
