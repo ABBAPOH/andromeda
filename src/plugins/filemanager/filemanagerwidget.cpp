@@ -6,7 +6,9 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtCore/QMetaProperty>
+
 #include <QtGui/QAction>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QHeaderView>
 #include <QtGui/QFileDialog>
 #include <QtGui/QKeyEvent>
@@ -449,7 +451,7 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     if (info.isDir() && !info.isBundle()) {
         q->setCurrentPath(info.absoluteFilePath());
     }  else {
-        emit q->openRequested(path);
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
 }
 
@@ -893,7 +895,7 @@ void FileManagerWidget::open()
             setCurrentPath(path);
             return;
         } else {
-            emit openRequested(path);
+            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
         }
     }
 }
