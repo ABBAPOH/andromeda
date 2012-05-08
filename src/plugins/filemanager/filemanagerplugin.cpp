@@ -127,6 +127,15 @@ void FileManagerPlugin::createFileMenu()
     cmd->setContext(Command::WidgetCommand);
     container->addCommand(cmd, "015");
 
+    cmd = new Command(Constants::Actions::Edit, tr("Edit"), this);
+#ifdef Q_OS_MAC
+    cmd->setDefaultShortcut(QKeySequence("Ctrl+E"));
+#else
+    cmd->setDefaultShortcut(tr("F4"));
+#endif
+    cmd->setContext(Command::WidgetCommand);
+    container->addCommand(cmd, "016");
+
     // ================ File Menu (Info) ================
     container->addCommand(new Separator(this), "55");
 

@@ -32,6 +32,10 @@ void DualPaneWidgetPrivate::createActions()
     actions[DualPaneWidget::Open]->setEnabled(false);
     connect(actions[DualPaneWidget::Open], SIGNAL(triggered()), q, SLOT(open()));
 
+    actions[DualPaneWidget::Edit] = new QAction(this);
+    actions[DualPaneWidget::Edit]->setEnabled(false);
+    connect(actions[DualPaneWidget::Edit], SIGNAL(triggered()), q, SLOT(edit()));
+
     actions[DualPaneWidget::OpenInTab] = new QAction(this);
     connect(actions[DualPaneWidget::OpenInTab], SIGNAL(triggered()), this, SLOT(openNewTab()));
 
@@ -175,6 +179,7 @@ void DualPaneWidgetPrivate::createActions()
 void DualPaneWidgetPrivate::retranslateUi()
 {
     actions[DualPaneWidget::Open]->setText(tr("Open"));
+    actions[DualPaneWidget::Edit]->setText(tr("Edit"));
     actions[DualPaneWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[DualPaneWidget::OpenInWindow]->setText(tr("Open in new window"));
 
@@ -223,7 +228,7 @@ FileManagerWidget * DualPaneWidgetPrivate::createPane()
     pane->installEventFilter(q);
 
     QObject::connect(pane, SIGNAL(currentPathChanged(QString)), q, SIGNAL(currentPathChanged(QString)));
-    QObject::connect(pane, SIGNAL(openRequested(QString)), q, SIGNAL(openRequested(QString)));
+    QObject::connect(pane, SIGNAL(editRequested(QString)), q, SIGNAL(editRequested(QString)));
     QObject::connect(pane, SIGNAL(openNewTabRequested(QStringList)), q, SIGNAL(openNewTabRequested(QStringList)));
     QObject::connect(pane, SIGNAL(openNewWindowRequested(QStringList)), q, SIGNAL(openNewWindowRequested(QStringList)));
     QObject::connect(pane, SIGNAL(canRedoChanged(bool)), q, SIGNAL(canRedoChanged(bool)));
@@ -349,6 +354,7 @@ void DualPaneWidgetPrivate::onSelectionChanged()
     bool enabled = !paths.empty();
 
     actions[DualPaneWidget::Open]->setEnabled(enabled);
+    actions[DualPaneWidget::Edit]->setEnabled(enabled && FileManagerWidgetPrivate::hasFiles(paths));
     actions[DualPaneWidget::OpenInTab]->setEnabled(enabled);
     actions[DualPaneWidget::OpenInWindow]->setEnabled(enabled);
     actions[DualPaneWidget::Rename]->setEnabled(enabled);
@@ -689,6 +695,11 @@ void DualPaneWidget::newFolder()
 void DualPaneWidget::open()
 {
     activeWidget()->open();
+}
+
+void DualPaneWidget::edit()
+{
+    activeWidget()->edit();
 }
 
 void DualPaneWidget::showFileInfo()

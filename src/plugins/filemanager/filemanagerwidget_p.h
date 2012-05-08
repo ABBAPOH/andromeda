@@ -65,6 +65,7 @@ public:
     void paste(bool copy = true);
 
     void registerAction(QAction *action, const QByteArray &id);
+    static bool hasFiles(const QStringList &paths);
 
 public slots:
     void onDoubleClick(const QModelIndex &index);
