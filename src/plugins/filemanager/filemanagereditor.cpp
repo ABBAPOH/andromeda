@@ -379,7 +379,7 @@ void FileManagerEditor::onCurrentPathChanged(const QString &path)
 
   Opens file in current tab
 */
-void FileManagerEditor::onOpenRequested(const QString &path)
+void FileManagerEditor::onEditRequested(const QString &path)
 {
     emit openTriggered(QUrl::fromLocalFile(path));
 }
@@ -495,7 +495,7 @@ void FileManagerEditor::setupUi()
 void FileManagerEditor::setupConnections()
 {
     connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
-    connect(m_widget, SIGNAL(openRequested(QString)), SLOT(onOpenRequested(QString)));
+    connect(m_widget, SIGNAL(editRequested(QString)), SLOT(onEditRequested(QString)));
     connect(m_widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
     connect(m_widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
     connect(m_widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
@@ -522,6 +522,7 @@ void FileManagerEditor::createActions()
     addAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
 
     registerAction(m_widget->action(DualPaneWidget::Open), Constants::Actions::Open);
+    registerAction(m_widget->action(DualPaneWidget::Edit), Constants::Actions::Edit);
 //    registerAction(m_widget->action(DualPaneWidget::OpenInTab), Constants::Actions::Open);
 //    registerAction(m_widget->action(DualPaneWidget::OpenInWindow), Constants::Actions::Open);
 //    registerAction(m_widget->action(DualPaneWidget::SelectProgram), Constants::Actions::Open);

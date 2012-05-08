@@ -51,7 +51,7 @@ protected:
 
 private slots:
     void onCurrentPathChanged(const QString &path);
-    void onOpenRequested(const QString &path);
+    void onEditRequested(const QString &path);
     void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
     void onOrientationChanged(Qt::Orientation orientation);

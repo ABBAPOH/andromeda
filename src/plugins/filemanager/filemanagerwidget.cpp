@@ -135,6 +135,10 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::Open]->setEnabled(false);
     connect(actions[FileManagerWidget::Open], SIGNAL(triggered()), q, SLOT(open()));
 
+    actions[FileManagerWidget::Edit] = new QAction(this);
+    actions[FileManagerWidget::Edit]->setEnabled(false);
+    connect(actions[FileManagerWidget::Edit], SIGNAL(triggered()), q, SLOT(edit()));
+
     actions[FileManagerWidget::OpenInTab] = new QAction(this);
     actions[FileManagerWidget::OpenInTab]->setEnabled(false);
     connect(actions[FileManagerWidget::OpenInTab], SIGNAL(triggered()), this, SLOT(openNewTab()));
@@ -249,6 +253,7 @@ void FileManagerWidgetPrivate::createActions()
 void FileManagerWidgetPrivate::retranslateUi()
 {
     actions[FileManagerWidget::Open]->setText(tr("Open"));
+    actions[FileManagerWidget::Edit]->setText(tr("Edit"));
     actions[FileManagerWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[FileManagerWidget::OpenInWindow]->setText(tr("Open in new window"));
 
@@ -440,6 +445,17 @@ void FileManagerWidgetPrivate::paste(bool copy)
 void FileManagerWidgetPrivate::registerAction(QAction *action, const QByteArray &id)
 {
     GuiSystem::ActionManager::instance()->registerAction(action, id);
+}
+
+bool FileManagerWidgetPrivate::hasFiles(const QStringList &paths)
+{
+    // TODO: use model for speedup
+    foreach (const QString &path, paths) {
+        if (!QFileInfo(path).isDir()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
@@ -900,6 +916,16 @@ void FileManagerWidget::open()
     }
 }
 
+void FileManagerWidget::edit()
+{
+    foreach (const QString path, selectedPaths()) {
+        QFileInfo info(path);
+        if (!info.isDir() || info.isBundle()) {
+            emit editRequested(path);
+        }
+    }
+}
+
 void FileManagerWidget::showFileInfo()
 {
     QStringList paths = selectedPaths();
@@ -976,6 +1002,7 @@ void FileManagerWidgetPrivate::onSelectionChanged()
     bool enabled = !paths.empty();
 
     actions[FileManagerWidget::Open]->setEnabled(enabled);
+    actions[FileManagerWidget::Edit]->setEnabled(enabled && hasFiles(paths));
     actions[FileManagerWidget::OpenInTab]->setEnabled(enabled);
     actions[FileManagerWidget::OpenInWindow]->setEnabled(enabled);
     actions[FileManagerWidget::Rename]->setEnabled(enabled);
@@ -1140,6 +1167,8 @@ void FileManagerWidget::showContextMenu(QPoint pos)
         sortByMenu->addAction(d->actions[SortDescendingOrder]);
     } else {
         menu->addAction(d->actions[Open]);
+        if (d->hasFiles(paths))
+            menu->addAction(d->actions[Edit]);
         menu->addAction(d->actions[OpenInTab]);
         menu->addAction(d->actions[OpenInWindow]);
 
