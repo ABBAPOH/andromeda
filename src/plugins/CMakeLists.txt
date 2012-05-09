@@ -9,6 +9,7 @@ if( CMAKE_BUILD_TYPE STREQUAL "Release" )
     add_definitions( -DQT_NO_DEBUG )
 endif()
 
+add_subdirectory( bineditor )
 add_subdirectory( bookmarks )
 add_subdirectory( core )
 add_subdirectory( filemanager )
