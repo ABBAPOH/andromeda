@@ -6,6 +6,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
 
+#include <io/qmimedatabase.h>
+
 namespace GuiSystem {
 
 class EditorManagerPrivate
@@ -118,7 +120,17 @@ AbstractEditorFactory * EditorManager::factoryById(const QString &id) const
 */
 AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeType) const
 {
-    return d_func()->factories.value(mimeType);
+    QMimeDatabase db;
+    QMimeType mt = db.mimeTypeForName(mimeType);
+    QStringList mimeTypes;
+    mimeTypes.append(mimeType);
+    mimeTypes.append(mt.parentMimeTypes());
+    foreach (const QString &mimeType, mimeTypes) {
+        AbstractEditorFactory * f = d_func()->factories.value(mimeType);
+        if (f)
+        return f;
+    }
+    return 0;
 }
 
 /*!
@@ -129,7 +141,8 @@ AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
     if (url.scheme() == qApp->applicationName()) {
         return factoryById(url.host());
     } else {
-        QString mimeType = getMimeType(url);
+        QMimeDatabase db;
+        QString mimeType = db.mimeTypeForUrl(url).name();
         return factoryForMimeType(mimeType);
     }
     return 0;
