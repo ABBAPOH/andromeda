@@ -1,0 +1,263 @@
+/**************************************************************************
+**
+** This file is part of Qt Creator
+**
+** Copyright (c) 2012 Nokia Corporation and/or its subsidiary(-ies).
+**
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+**
+** GNU Lesser General Public License Usage
+**
+** This file may be used under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation and
+** appearing in the file LICENSE.LGPL included in the packaging of this file.
+** Please review the following information to ensure the GNU Lesser General
+** Public License version 2.1 requirements will be met:
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** In addition, as a special exception, Nokia gives you certain additional
+** rights. These rights are described in the Nokia Qt LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+**
+** Other Usage
+**
+** Alternatively, this file may be used in accordance with the terms and
+** conditions contained in a signed written agreement between you and Nokia.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at qt-info@nokia.com.
+**
+**************************************************************************/
+
+#ifndef BINEDIT_H
+#define BINEDIT_H
+
+#include <QBasicTimer>
+#include <QMap>
+#include <QSet>
+#include <QStack>
+#include <QString>
+
+#include <QAbstractScrollArea>
+#include <QTextDocument>
+
+QT_FORWARD_DECLARE_CLASS(QMenu)
+QT_FORWARD_DECLARE_CLASS(QHelpEvent)
+
+// Rename to QBinEditor ?
+class BinEdit : public QAbstractScrollArea
+{
+    Q_OBJECT
+    Q_PROPERTY(bool modified READ isModified WRITE setModified DESIGNABLE false)
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly DESIGNABLE false)
+    Q_PROPERTY(bool newWindowRequestAllowed READ newWindowRequestAllowed WRITE setNewWindowRequestAllowed DESIGNABLE false)
+
+public:
+    BinEdit(QWidget *parent = 0);
+    ~BinEdit();
+
+    QIODevice *device() const;
+    void setDevice(QIODevice *device, const QString &fileName = QString());
+
+    void open(const QString &filePath);
+
+    quint64 baseAddress() const { return m_baseAddr; }
+
+    Q_INVOKABLE void setSizes(quint64 startAddr, int range, int blockSize = 4096);
+    int dataBlockSize() const { return m_blockSize; }
+    Q_INVOKABLE void addData(quint64 block, const QByteArray &data);
+
+    bool newWindowRequestAllowed() const { return m_canRequestNewWindow; }
+
+    Q_INVOKABLE void updateContents();
+    bool save(QString *errorString, const QString &oldFileName, const QString &newFileName);
+
+    void zoomIn(int range = 1);
+    void zoomOut(int range = 1);
+
+    enum MoveMode {
+        MoveAnchor,
+        KeepAnchor
+    };
+
+    int cursorPosition() const;
+    Q_INVOKABLE void setCursorPosition(int pos, MoveMode moveMode = MoveAnchor);
+    void jumpToAddress(quint64 address);
+
+    void setModified(bool);
+    bool isModified() const;
+
+    void setReadOnly(bool);
+    bool isReadOnly() const;
+
+    int find(const QByteArray &pattern, int from = 0,
+             QTextDocument::FindFlags findFlags = 0);
+
+    void clear();
+
+    bool hasSelection() const { return m_cursorPosition != m_anchorPosition; }
+    int selectionStart() const { return qMin(m_anchorPosition, m_cursorPosition); }
+    int selectionEnd() const { return qMax(m_anchorPosition, m_cursorPosition); }
+
+    bool event(QEvent*);
+
+    bool isUndoAvailable() const { return m_undoStack.size(); }
+    bool isRedoAvailable() const { return m_redoStack.size(); }
+
+    QString addressString(quint64 address);
+
+    bool isMemoryView() const; // Is a debugger memory view without file?
+
+    static const int SearchStride = 1024 * 1024;
+
+public slots:
+    void undo();
+    void redo();
+
+    void selectAll();
+
+    //void setFontSettings(const TextEditor::FontSettings &fs);
+    void highlightSearchResults(const QByteArray &pattern,
+                                QTextDocument::FindFlags findFlags = 0);
+    void copy(bool raw = false);
+    void setNewWindowRequestAllowed(bool c);
+
+signals:
+    void modificationChanged(bool modified);
+    void undoAvailable(bool);
+    void redoAvailable(bool);
+    void copyAvailable(bool);
+    void cursorPositionChanged(int position);
+
+    void dataRequested(quint64 block);
+    void newWindowRequested(quint64 address);
+    void newRangeRequested(quint64 address);
+    void startOfFileRequested();
+    void endOfFileRequested();
+    void dataChanged(quint64 address, const QByteArray &data);
+
+protected:
+    void scrollContentsBy(int dx, int dy);
+    void paintEvent(QPaintEvent *e);
+    void resizeEvent(QResizeEvent *);
+    void changeEvent(QEvent *);
+    void wheelEvent(QWheelEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void keyPressEvent(QKeyEvent *e);
+    void focusInEvent(QFocusEvent *);
+    void focusOutEvent(QFocusEvent *);
+    void timerEvent(QTimerEvent *);
+    void contextMenuEvent(QContextMenuEvent *event);
+
+private slots:
+    void provideData(quint64 block);
+    void provideNewRange(quint64 offset);
+    void handleStartOfFileRequested();
+    void handleEndOfFileRequested();
+
+private:
+    typedef QMap<int, QByteArray> BlockMap;
+    BlockMap m_data;
+    BlockMap m_oldData;
+    int m_blockSize;
+    BlockMap m_modifiedData;
+    mutable QSet<int> m_requests;
+    QByteArray m_emptyBlock;
+    QByteArray m_lowerBlock;
+    int m_size;
+
+    bool setOffset(/*QString *errorString,*/ /*const QString &fileName,*/ quint64 offset = 0);
+
+    int dataIndexOf(const QByteArray &pattern, int from, bool caseSensitive = true) const;
+    int dataLastIndexOf(const QByteArray &pattern, int from, bool caseSensitive = true) const;
+
+    bool requestDataAt(int pos) const;
+    bool requestOldDataAt(int pos) const;
+    char dataAt(int pos, bool old = false) const;
+    char oldDataAt(int pos) const;
+    void changeDataAt(int pos, char c);
+    QByteArray dataMid(int from, int length, bool old = false) const;
+    QByteArray blockData(int block, bool old = false) const;
+
+    QPoint offsetToPos(int offset) const;
+    void asIntegers(int offset, int count, quint64 &bigEndianValue, quint64 &littleEndianValue,
+                    bool old = false) const;
+    void asFloat(int offset, float &value, bool old) const;
+    void asDouble(int offset, double &value, bool old) const;
+    QString toolTip(const QHelpEvent *helpEvent) const;
+
+    void raiseError(const QString &errorString);
+
+private:
+    QIODevice *m_device;
+    int m_bytesPerLine;
+    int m_unmodifiedState;
+    int m_readOnly;
+    int m_margin;
+    int m_descent;
+    int m_ascent;
+    int m_lineHeight;
+    int m_charWidth;
+    int m_labelWidth;
+    int m_textWidth;
+    int m_columnWidth;
+    int m_numLines;
+    int m_numVisibleLines;
+
+    quint64 m_baseAddr;
+
+    bool m_cursorVisible;
+    int m_cursorPosition;
+    int m_anchorPosition;
+    bool m_hexCursor;
+    bool m_lowNibble;
+    bool m_isMonospacedFont;
+
+    QByteArray m_searchPattern;
+    QByteArray m_searchPatternHex;
+    bool m_caseSensitiveSearch;
+
+    QBasicTimer m_cursorBlinkTimer;
+
+    void init();
+    int posAt(const QPoint &pos) const;
+    bool inTextArea(const QPoint &pos) const;
+    QRect cursorRect() const;
+    void updateLines();
+    void updateLines(int fromPosition, int toPosition);
+    void ensureCursorVisible();
+    void setBlinkingCursorEnabled(bool enable);
+
+    void changeData(int position, uchar character, bool highNibble = false);
+
+    int findPattern(const QByteArray &data, const QByteArray &dataHex,
+                    int from, int offset, int *match);
+    void drawItems(QPainter *painter, int x, int y, const QString &itemString);
+    void drawChanges(QPainter *painter, int x, int y, const char *changes);
+
+    void setupJumpToMenuAction(QMenu *menu, QAction *actionHere, QAction *actionNew,
+                               quint64 addr);
+
+    struct BinEditorEditCommand {
+        int position;
+        uchar character;
+        bool highNibble;
+    };
+    QStack<BinEditorEditCommand> m_undoStack, m_redoStack;
+
+    QBasicTimer m_autoScrollTimer;
+    QString m_addressString;
+    int m_addressBytes;
+    bool m_canRequestNewWindow;
+    //BinEditorDocument *m_file;
+    QString m_fileName;
+    QString m_autoSaveName;
+    //InfoBar *m_infoBar;
+    bool m_hasWriteWarning;
+    bool m_restored;
+};
+
+#endif // BINEDIT_H
