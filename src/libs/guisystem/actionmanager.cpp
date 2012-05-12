@@ -275,9 +275,7 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
                 setActionsEnabled(w, true, Command::WindowCommand);
             }
         } else if (e->type() == QEvent::Hide) {
-            if (w->isActiveWindow()) {
-                setActionsEnabled(w, false, Command::WindowCommand);
-            }
+            setActionsEnabled(w, false, Command::WindowCommand);
         } else if (e->type() == QEvent::ActivationChange) {
             bool enable = w->isActiveWindow();
             QWidgetList widgets = w->findChildren<QWidget*>();
