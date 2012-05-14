@@ -7,6 +7,7 @@ ShortcutLineEdit::ShortcutLineEdit(QWidget *parent) :
     m_keyNum(0)
 {
     m_key[0] = m_key[1] = m_key[2] = m_key[3] = 0;
+    setAttribute(Qt::WA_InputMethodEnabled, false);
 
     connect(this, SIGNAL(buttonClicked(FancyLineEdit::Side)), SLOT(clearKeySequence()));
 }
