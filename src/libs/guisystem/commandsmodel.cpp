@@ -23,6 +23,17 @@ CommandsModelItem * CommandsModelPrivate::item(const QModelIndex &index) const
     return static_cast<CommandsModelItem*>(index.internalPointer());
 }
 
+void CommandsModelPrivate::setItemShortcut(CommandsModelItem *item, const QKeySequence &shortcut)
+{
+    QKeySequence oldShortcut = item->cmd->shortcut();
+
+    mapToCommand.remove(oldShortcut, item->cmd);
+    mapToItem.remove(oldShortcut, item);
+    item->cmd->setShortcut(shortcut);
+    mapToCommand.insert(item->cmd->shortcut(), item->cmd);
+    mapToItem.insert(item->cmd->shortcut(), item);
+}
+
 void CommandsModelPrivate::build()
 {
     Q_Q(CommandsModel);
@@ -208,11 +219,7 @@ bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int
         if (item->type() == CommandsModelItem::Leaf) {
             QKeySequence oldShortcut = item->cmd->shortcut();
             QString shortcut = value.toString();
-            d->mapToCommand.remove(oldShortcut, item->cmd);
-            d->mapToItem.remove(oldShortcut, item);
-            item->cmd->setShortcut(shortcut);
-            d->mapToCommand.insert(item->cmd->shortcut(), item->cmd);
-            d->mapToItem.insert(item->cmd->shortcut(), item);
+            d->setItemShortcut(item, value.toString());
             d->settings->setValue(item->cmd->id(), shortcut);
 
             foreach (CommandsModelItem *item, d->mapToItem.values(oldShortcut)) {
@@ -252,11 +259,7 @@ void CommandsModel::resetShortcut(const QModelIndex &index)
         if (c->shortcut() != c->defaultShortcut()) {
             QKeySequence oldShortcut = item->cmd->shortcut();
 
-            d->mapToCommand.remove(oldShortcut, item->cmd);
-            d->mapToItem.remove(oldShortcut, item);
-            c->setShortcut(c->defaultShortcut());
-            d->mapToCommand.insert(item->cmd->shortcut(), item->cmd);
-            d->mapToItem.insert(item->cmd->shortcut(), item);
+            d->setItemShortcut(item, c->defaultShortcut());
 
             foreach (CommandsModelItem *item, d->mapToItem.values(oldShortcut)) {
                 QModelIndex index = d->index(item);

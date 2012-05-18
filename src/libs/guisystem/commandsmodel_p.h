@@ -67,6 +67,7 @@ public:
 
     QModelIndex index(CommandsModelItem *item) const;
     CommandsModelItem *item(const QModelIndex &index) const;
+    void setItemShortcut(CommandsModelItem *item, const QKeySequence &shortcut);
 
     void build();
 
