@@ -320,10 +320,6 @@ void TabContainer::connectEditor(AbstractEditor *editor)
     connect(editor, SIGNAL(urlChanged(QUrl)),
             this, SIGNAL(urlChanged(QUrl)));
     connect(editor, SIGNAL(openTriggered(QUrl)), this, SLOT(open(QUrl)));
-    connect(editor, SIGNAL(openNewEditorTriggered(QList<QUrl>)),
-            this, SIGNAL(openNewEditorTriggered(QList<QUrl>)));
-    connect(editor, SIGNAL(openNewWindowTriggered(QList<QUrl>)),
-            this, SIGNAL(openNewWindowTriggered(QList<QUrl>)));
 
     connect(editor, SIGNAL(windowTitleChanged(QString)), this, SIGNAL(windowTitleChanged(QString)));
 

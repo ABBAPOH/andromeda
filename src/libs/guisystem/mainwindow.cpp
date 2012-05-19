@@ -9,6 +9,7 @@
 #include "stackedcontainer.h"
 #include "history.h"
 #include "historybutton.h"
+#include "mainwindowfactory.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
@@ -22,8 +23,6 @@ static const qint32 mainWindowMagic = 0x6d303877; // "m08w"
 static const qint8 mainWindowVersion = 1;
 
 using namespace GuiSystem;
-
-MainWindow::CreateWindowFunc MainWindow::createWindowFunc = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -86,8 +85,6 @@ void MainWindow::setContanier(AbstractContainer *container)
     d->history->setHistory(contanier()->history());
 
     connect(d->contanier, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
-    connect(d->contanier, SIGNAL(openNewEditorTriggered(QList<QUrl>)), SLOT(openNewEditor(QList<QUrl>)));
-    connect(d->contanier, SIGNAL(openNewWindowTriggered(QList<QUrl>)), SLOT(openNewWindow(QList<QUrl>)));
 
     connect(d->contanier, SIGNAL(iconChanged(QIcon)), SLOT(setWindowIcon(QIcon)));
     connect(d->contanier, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
@@ -141,10 +138,11 @@ QList<MainWindow *> MainWindow::windows()
 
 MainWindow * MainWindow::createWindow()
 {
-    if (createWindowFunc)
-        return createWindowFunc();
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory)
+        return factory->create();
     else
-        qWarning() << "MainWindow::createWindow:" << "createWindowFunc is not set";
+        qWarning() << "MainWindow::createWindow:" << "MainWindowFactory is not set";
 
     return 0;
 }
@@ -224,31 +222,6 @@ void MainWindow::open(const QUrl &url)
         d->contanier->open(url);
 }
 
-void MainWindow::openEditor(const QString &id)
-{
-    QUrl url;
-    url.setScheme(qApp->applicationName());
-    url.setHost(id);
-    open(url);
-}
-
-void MainWindow::openNewEditor(const QUrl &url)
-{
-    Q_D(MainWindow);
-
-    if (d->contanier)
-        d->contanier->openNewEditor(url);
-}
-
-void MainWindow::openNewEditor(const QList<QUrl> &urls)
-{
-    Q_D(MainWindow);
-
-    if (d->contanier) {
-        d->contanier->openNewEditor(urls);
-    }
-}
-
 void MainWindow::closeEditor()
 {
     Q_D(MainWindow);
@@ -263,19 +236,23 @@ void MainWindow::closeEditor()
 
 void MainWindow::openNewWindow(const QUrl &url)
 {
-    return openNewWindow(QList<QUrl>() << url);
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory) {
+        factory->open(MainWindowFactory::OpenNewWindows, QList<QUrl>() << url);
+    } else {
+        qWarning() << "MainWindow::openNewWindow :" << "Must call MainWindowFactory::setDefaultfactory first";
+    }
 }
 
-void MainWindow::openNewWindow(const QList<QUrl> &urls)
-{
-    MainWindow *window = new MainWindow;
-    window->setAttribute(Qt::WA_DeleteOnClose);
-    window->setContanier(new StackedContainer(window));
-    foreach (const QUrl &url, urls) {
-        window->openNewEditor(url);
-    }
-    window->show();
-}
+//void MainWindow::openNewWindow(const QList<QUrl> &urls)
+//{
+//    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+//    if (factory) {
+//            factory->open(MainWindowFactory::OpenInNewWindow, urls);
+//    } else {
+//        qWarning() << "MainWindow::openNewWindow :" << "Must call MainWindowFactory::setDefaultfactory first";
+//    }
+//}
 
 void MainWindow::save()
 {

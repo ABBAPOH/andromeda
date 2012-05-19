@@ -14,6 +14,7 @@
 #include <guisystem/abstractcontainer.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/mainwindow.h>
+#include <guisystem/mainwindowfactory.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
 
@@ -145,32 +146,26 @@ void BookmarksPlugin::open(const QUrl &url)
 
 void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
 {
-    MainWindow * window = MainWindow::currentWindow();
-    if (!window)
-        return;
-
-    for (int i = 0; i < urls.size(); i++) {
-        window->openNewEditor(urls.at(i));
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory) {
+        factory->open(MainWindowFactory::OpenNewEditor, urls);
     }
 }
 
 void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
 {
-    MainWindow * window = MainWindow::createWindow();
-
-    for (int i = 0; i < urls.size(); i++) {
-        window->openNewEditor(urls.at(i));
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory) {
+        factory->open(MainWindowFactory::OpenNewWindow, urls);
     }
-    window->show();
 }
 
 void BookmarksPlugin::showBookmarks()
 {
-    MainWindow * window = MainWindow::currentWindow();
-    if (!window)
-        return;
-
-    window->openEditor(QLatin1String(Constants::Editors::Bookmarks));
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory) {
+        factory->openEditor(Constants::Editors::Bookmarks);
+    }
 }
 
 void BookmarksPlugin::addBookmark()

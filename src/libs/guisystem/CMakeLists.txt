@@ -22,6 +22,7 @@ set( HEADERS
     ihistory.h
     mainwindow.h
     mainwindow_p.h
+    mainwindowfactory.h
     proxyaction.h
     proxyfile.h
     proxyhistory.h
@@ -54,6 +55,7 @@ set( SOURCES
     ifind.cpp
     ihistory.cpp
     mainwindow.cpp
+    mainwindowfactory.cpp
     proxyaction.cpp
     proxyfile.cpp
     proxyhistory.cpp

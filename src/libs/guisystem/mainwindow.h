@@ -53,22 +53,16 @@ public:
     virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
-    static CreateWindowFunc createWindowFunc;
-
 public slots:
     void back();
     void forward();
 
-    void open(const QUrl &url);
-    void openEditor(const QString &id);
-    void openNewEditor(const QUrl &url);
-    void openNewEditor(const QList<QUrl> &urls);
+    virtual void open(const QUrl &url);
 
     void closeEditor();
 
-    // TODO: Move to separate singletone aka Application?
-    void openNewWindow(const QUrl &url);
-    virtual void openNewWindow(const QList<QUrl> &urls);
+    static void openNewWindow(const QUrl &url);
+//    static void openNewWindow(const QList<QUrl> &urls);
 
     void save();
     void saveAs();

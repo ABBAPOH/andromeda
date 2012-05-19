@@ -159,12 +159,47 @@ void BrowserWindowPrivate::onUrlChanged(const QUrl &url)
     upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
+BrowserWindowFactory::BrowserWindowFactory(QObject *parent) :
+    MainWindowFactory(parent)
+{
+}
+
+MainWindow *BrowserWindowFactory::create()
+{
+    qDebug("BrowserWindowFactory::create");
+    return new BrowserWindow;
+}
+
+void BrowserWindowFactory::open(MainWindowFactory::Capability cap, QList<QUrl> urls)
+{
+    if (urls.isEmpty())
+        return;
+
+    switch (cap) {
+    case OpenNewEditor : {
+        BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
+        if (window)
+            window->openNewTabs(urls);
+        else
+            open(OpenNewWindow, urls);
+        break;
+    }
+    case OpenNewWindow : {
+        BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
+        window->openNewTabs(urls);
+        window->show();
+        break;
+    }
+    default:
+        MainWindowFactory::open(cap, urls);
+        break;
+    }
+}
+
 BrowserWindow::BrowserWindow(QWidget *parent) :
     MainWindow(parent),
     d_ptr(new BrowserWindowPrivate(this))
 {
-    createWindowFunc = (CreateWindowFunc)createWindow;
-
     Q_D(BrowserWindow);
 
     d->setupUi();
@@ -226,18 +261,18 @@ void BrowserWindow::up()
     open(url);
 }
 
-void BrowserWindow::openNewWindow(const QUrl &url)
+void BrowserWindow::openNewTab(const QUrl &url)
 {
-    MainWindow::openNewWindow(url);
+    Q_D(BrowserWindow);
+
+    d->container->openNewEditor(url);
 }
 
-void BrowserWindow::openNewWindow(const QList<QUrl> &urls)
+void BrowserWindow::openNewTabs(const QList<QUrl> &urls)
 {
-    BrowserWindow *window = createWindow();
-    foreach (const QUrl & url, urls) {
-        window->openNewEditor(url);
+    foreach (const QUrl &url, urls) {
+        openNewTab(url);
     }
-    window->show();
 }
 
 void BrowserWindow::newTab()
@@ -250,9 +285,7 @@ void BrowserWindow::newTab()
 void BrowserWindow::newWindow()
 {
     QUrl url = QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
-    BrowserWindow *window = createWindow();
-    window->openNewEditor(url);
-    window->show();
+    MainWindow::openNewWindow(url);
 }
 
 void BrowserWindow::moveEvent(QMoveEvent*)

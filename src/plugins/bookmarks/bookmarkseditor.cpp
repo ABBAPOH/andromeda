@@ -9,6 +9,7 @@
 #include <extensionsystem/pluginmanager.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/mainwindow.h>
+#include <guisystem/mainwindowfactory.h>
 
 #include <core/constants.h>
 
@@ -97,16 +98,17 @@ void BookmarksEditor::openTriggered(const QUrl &url)
 
 void BookmarksEditor::openInTabTriggered(const QUrl &url)
 {
-    MainWindow *window = MainWindow::currentWindow();
-    if (window)
-        window->openNewEditor(url);
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory) {
+        factory->open(MainWindowFactory::OpenNewEditor, QList<QUrl>() << url);
+    }
 }
 
 void BookmarksEditor::openInWindowTriggered(const QUrl &url)
 {
-    MainWindow *window = MainWindow::currentWindow();
-    if (window)
-        window->openNewWindow(url);
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory)
+        factory->open(MainWindowFactory::OpenNewWindow, QList<QUrl>() << url);
 }
 
 void BookmarksEditor::onStateChanged()
