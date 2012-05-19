@@ -32,6 +32,7 @@
 #include <widgets/windowsmenu.h>
 
 #include "settingswidget.h"
+#include "browserwindow_p.h"
 
 using namespace Core;
 using namespace GuiSystem;
@@ -127,6 +128,8 @@ CorePlugin::~CorePlugin()
 
 bool CorePlugin::initialize()
 {
+    MainWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
+
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));
     addObject(pageManager);
@@ -146,7 +149,7 @@ void CorePlugin::postInitialize(const QVariantMap &options)
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
-            window->openNewEditor(urlFromUserInput(qApp->property("currentPath").toString(), url));
+            window->openNewTab(urlFromUserInput(qApp->property("currentPath").toString(), url));
         window->show();
         return;
     }
@@ -285,7 +288,7 @@ void CorePlugin::restoreSession()
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
-            window->openNewEditor(QUrl::fromUserInput(url));
+            window->openNewTab(QUrl::fromUserInput(url));
         window->show();
         return;
     }

@@ -28,10 +28,6 @@ void StackedContainerPrivate::setEditor(AbstractEditor *e)
     QObject::connect(editor, SIGNAL(urlChanged(QUrl)),
                      q, SLOT(onUrlChanged(QUrl)));
     QObject::connect(editor, SIGNAL(openTriggered(QUrl)), q, SLOT(open(QUrl)));
-    QObject::connect(editor, SIGNAL(openNewEditorTriggered(QList<QUrl>)),
-                     q, SIGNAL(openNewEditorTriggered(QList<QUrl>)));
-    QObject::connect(editor, SIGNAL(openNewWindowTriggered(QList<QUrl>)),
-                     q, SIGNAL(openNewWindowTriggered(QList<QUrl>)));
     QObject::connect(editor, SIGNAL(iconChanged(QIcon)), q, SIGNAL(iconChanged(QIcon)));
     QObject::connect(editor, SIGNAL(titleChanged(QString)), q, SIGNAL(titleChanged(QString)));
     QObject::connect(editor, SIGNAL(windowTitleChanged(QString)), q, SIGNAL(windowTitleChanged(QString)));

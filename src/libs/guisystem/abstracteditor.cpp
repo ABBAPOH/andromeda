@@ -128,19 +128,6 @@ void AbstractEditor::clear()
 */
 
 /*!
-  \fn void openNewEditorTriggered(const QList<QUrl> &urls)
-
-  \brief Emit this signal when user triggers opening urls in current window and
-  in new tab or new page.
-*/
-
-/*!
-  \fn void openNewWindowTriggered(const QList<QUrl> &urls)
-
-  \brief Emit this signal when user triggers opening urls in new window.
-*/
-
-/*!
   \property AbstractEditor::icon
 
   \brief Icon that can be shown on toolbars, menus and so on.

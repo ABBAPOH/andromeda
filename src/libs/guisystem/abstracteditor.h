@@ -57,8 +57,6 @@ signals:
     void urlChanged(const QUrl &);
 
     void openTriggered(const QUrl &url);
-    void openNewEditorTriggered(const QList<QUrl> &urls);
-    void openNewWindowTriggered(const QList<QUrl> &urls);
 
     void iconChanged(const QIcon &icon);
     void titleChanged(const QString &title);
