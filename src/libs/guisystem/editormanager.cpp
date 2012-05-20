@@ -61,7 +61,7 @@ EditorManager * EditorManager::instance()
 */
 AbstractEditor * EditorManager::editorForId(const QString &id, QWidget *parent)
 {
-    AbstractEditorFactory *f = factoryById(id);
+    AbstractEditorFactory *f = factoryForId(id);
     if (f)
         return f->editor(parent);
 
@@ -105,25 +105,9 @@ AbstractEditor * EditorManager::editorForUrl(const QUrl &url, QWidget *parent)
 }
 
 /*!
-  \brief Returns list of all factories.
-*/
-QList<AbstractEditorFactory *> EditorManager::factories() const
-{
-    return d_func()->factories.values();
-}
-
-/*!
-  \brief Returns list of factories that can handle given \a mimeType.
-*/
-QList<AbstractEditorFactory *> EditorManager::factoriesForMimeType(const QString &mimeType) const
-{
-    return d_func()->factories.values(mimeType);
-}
-
-/*!
   \brief Returns factory with given \a id.
 */
-AbstractEditorFactory * EditorManager::factoryById(const QString &id) const
+AbstractEditorFactory * EditorManager::factoryForId(const QString &id) const
 {
     return d_func()->factoriesById.value(id);
 }
@@ -164,7 +148,7 @@ AbstractEditorFactory *EditorManager::factoryForScheme(const QString &scheme) co
 AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
 {
     if (url.scheme() == qApp->applicationName()) {
-        return factoryById(url.host());
+        return factoryForId(url.host());
     } else {
         AbstractEditorFactory *f = factoryForScheme(url.scheme());
         if (f)
@@ -175,6 +159,22 @@ AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
         return factoryForMimeType(mimeType);
     }
     return 0;
+}
+
+/*!
+  \brief Returns list of all factories.
+*/
+QList<AbstractEditorFactory *> EditorManager::factories() const
+{
+    return d_func()->factories.values();
+}
+
+/*!
+  \brief Returns list of factories that can handle given \a mimeType.
+*/
+QList<AbstractEditorFactory *> EditorManager::factoriesForMimeType(const QString &mimeType) const
+{
+    return d_func()->factories.values(mimeType);
 }
 
 /*!
