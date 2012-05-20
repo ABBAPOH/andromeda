@@ -126,11 +126,6 @@ BookmarksEditorFactory::BookmarksEditorFactory(QObject *parent) :
 {
 }
 
-QStringList BookmarksEditorFactory::mimeTypes()
-{
-    return QStringList();
-}
-
 QByteArray BookmarksEditorFactory::id() const
 {
     return Constants::Editors::Bookmarks;

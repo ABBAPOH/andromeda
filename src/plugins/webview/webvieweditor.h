@@ -85,7 +85,8 @@ public:
     ~WebViewEditorFactory() {}
 
     QByteArray id() const { return "WebView"; }
-    QStringList mimeTypes() { return QStringList() << "text/html"; }
+    QStringList mimeTypes() const { return QStringList() << "text/html"; }
+    QStringList urlSchemes() const { return QStringList() << "http" << "https"; }
 
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);

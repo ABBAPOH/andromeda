@@ -573,14 +573,14 @@ FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
 {
 }
 
-QStringList FileManagerEditorFactory::mimeTypes()
-{
-    return QStringList() << QLatin1String("inode/directory");
-}
-
 QByteArray FileManagerEditorFactory::id() const
 {
     return "FileManager";
+}
+
+QStringList FileManagerEditorFactory::mimeTypes() const
+{
+    return QStringList() << QLatin1String("inode/directory");
 }
 
 AbstractEditor * FileManagerEditorFactory::createEditor(QWidget *parent)

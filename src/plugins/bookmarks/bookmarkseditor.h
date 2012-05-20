@@ -57,7 +57,6 @@ class BookmarksEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit BookmarksEditorFactory(QObject *parent = 0);
 
-    QStringList mimeTypes();
     QByteArray id() const;
 
 protected:

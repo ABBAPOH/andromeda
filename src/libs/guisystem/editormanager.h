@@ -28,6 +28,7 @@ public:
 
     AbstractEditor *editorForId(const QString &id, QWidget *parent = 0);
     AbstractEditor *editorForMimeType(const QString &mimeType, QWidget *parent = 0);
+    AbstractEditor *editorForScheme(const QString &scheme, QWidget *parent = 0);
     AbstractEditor *editorForUrl(const QUrl &url, QWidget *parent = 0);
 
     QList<AbstractEditorFactory *> factories() const;
@@ -35,6 +36,7 @@ public:
 
     AbstractEditorFactory *factoryById(const QString &id) const;
     AbstractEditorFactory *factoryForMimeType(const QString &mimeType) const;
+    AbstractEditorFactory *factoryForScheme(const QString &scheme) const;
     AbstractEditorFactory *factoryForUrl(const QUrl &url) const;
 
     void addFactory(AbstractEditorFactory *factory);

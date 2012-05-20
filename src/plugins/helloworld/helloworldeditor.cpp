@@ -48,11 +48,6 @@ HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :
 {
 }
 
-QStringList HelloWorldEditorFactory::mimeTypes()
-{
-    return QStringList();
-}
-
 QByteArray HelloWorldEditorFactory::id() const
 {
     return "helloworld";
