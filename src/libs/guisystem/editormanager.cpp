@@ -3,6 +3,7 @@
 #include "abstracteditorfactory.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
 
@@ -217,6 +218,12 @@ void EditorManager::addFactory(AbstractEditorFactory *factory)
 
     if (!factory)
         return;
+
+    if (d->factoriesForId.contains(factory->id())) {
+        qWarning() << "EditorManager::addFactory :"
+                   << QString("Factory with id %1 already exists").arg(QString(factory->id()));
+        return;
+    }
 
     foreach (const QString &mimeType, factory->mimeTypes()) {
         d->factoriesForMimeType.insert(mimeType, factory);
