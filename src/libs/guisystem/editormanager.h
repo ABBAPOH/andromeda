@@ -31,13 +31,13 @@ public:
     AbstractEditor *editorForScheme(const QString &scheme, QWidget *parent = 0);
     AbstractEditor *editorForUrl(const QUrl &url, QWidget *parent = 0);
 
-    QList<AbstractEditorFactory *> factories() const;
-    QList<AbstractEditorFactory *> factoriesForMimeType(const QString &mimeType) const;
-
-    AbstractEditorFactory *factoryById(const QString &id) const;
+    AbstractEditorFactory *factoryForId(const QString &id) const;
     AbstractEditorFactory *factoryForMimeType(const QString &mimeType) const;
     AbstractEditorFactory *factoryForScheme(const QString &scheme) const;
     AbstractEditorFactory *factoryForUrl(const QUrl &url) const;
+
+    QList<AbstractEditorFactory *> factories() const;
+    QList<AbstractEditorFactory *> factoriesForMimeType(const QString &mimeType) const;
 
     void addFactory(AbstractEditorFactory *factory);
     void removeFactory(AbstractEditorFactory *factory);
