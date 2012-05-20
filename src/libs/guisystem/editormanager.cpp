@@ -166,7 +166,7 @@ AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
 */
 QList<AbstractEditorFactory *> EditorManager::factories() const
 {
-    return d_func()->factoriesForMimeType.values();
+    return d_func()->factoriesForId.values();
 }
 
 /*!
