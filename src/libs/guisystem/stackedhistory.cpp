@@ -35,8 +35,8 @@ void StackedHistory::open(const QUrl &url)
 {
     Q_ASSERT(d->m_container);
 
-    int newEditorIndex = d->m_container->currentIndex();
-    AbstractEditor *editor = d->m_container->editor(newEditorIndex);
+//    int newEditorIndex = d->m_container->currentIndex();
+    AbstractEditor *editor = d->m_container->currentEditor();
     if (!editor)
         return;
 

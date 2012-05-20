@@ -38,8 +38,13 @@ public slots:
     void openNewTab(const QUrl &url);
     void openNewTabs(const QList<QUrl> &urls);
 
+    void close();
+
     void newTab();
     static void newWindow();
+
+    void nextEditor();
+    void previousEditor();
 
 protected:
     void moveEvent(QMoveEvent *);

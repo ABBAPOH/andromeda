@@ -26,9 +26,6 @@ public:
     StackedHistory *stackedHistory;
     bool ignoreSignals;
 
-public:
-    void setEditor(AbstractEditor *e);
-
 protected:
     StackedContainer *q_ptr;
 };

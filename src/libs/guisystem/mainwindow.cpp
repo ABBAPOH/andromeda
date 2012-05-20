@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "mainwindow_p.h"
 
-#include "abstractcontainer.h"
 #include "actionmanager.h"
 #include "ifile.h"
 #include "ihistory.h"
@@ -10,6 +9,7 @@
 #include "history.h"
 #include "historybutton.h"
 #include "mainwindowfactory.h"
+#include "proxyeditor.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
@@ -61,14 +61,14 @@ QAction * MainWindow::action(Action action) const
     return d->actions[action];
 }
 
-AbstractContainer * MainWindow::contanier() const
+ProxyEditor * MainWindow::contanier() const
 {
     Q_D(const MainWindow);
 
     return d->contanier;
 }
 
-void MainWindow::setContanier(AbstractContainer *container)
+void MainWindow::setContanier(ProxyEditor *container)
 {
     Q_D(MainWindow);
 
@@ -108,16 +108,6 @@ QUrl MainWindow::url() const
         return d->contanier->url();
 
     return QUrl();
-}
-
-QList<QUrl> MainWindow::urls() const
-{
-    Q_D(const MainWindow);
-
-    if (d->contanier)
-        return d->contanier->urls();
-
-    return QList<QUrl>();
 }
 
 MainWindow * MainWindow::currentWindow()
@@ -222,16 +212,9 @@ void MainWindow::open(const QUrl &url)
         d->contanier->open(url);
 }
 
-void MainWindow::closeEditor()
+void MainWindow::close()
 {
-    Q_D(MainWindow);
-
-    if (d->contanier) {
-        if (d->contanier->count() > 1)
-            d->contanier->closeEditor(d->contanier->currentIndex());
-        else
-            close();
-    }
+    QMainWindow::close();
 }
 
 void MainWindow::openNewWindow(const QUrl &url)
@@ -302,26 +285,6 @@ void MainWindow::cancel()
         d->contanier->cancel();
 }
 
-void MainWindow::nextEditor()
-{
-    Q_D(MainWindow);
-
-    if (d->contanier) {
-        int index = d->contanier->currentIndex();
-        d->contanier->setCurrentIndex(index == d->contanier->count() - 1 ? 0 : index + 1);
-    }
-}
-
-void MainWindow::previousEditor()
-{
-    Q_D(MainWindow);
-
-    if (d->contanier) {
-        int index = d->contanier->currentIndex();
-        d->contanier->setCurrentIndex(index ? index - 1 : d->contanier->count() - 1);
-    }
-}
-
 void MainWindow::setWindowIcon(const QIcon &icon)
 {
     QMainWindow::setWindowIcon(icon);
@@ -334,7 +297,7 @@ void MainWindowPrivate::createActions()
     actions[MainWindow::OpenFile] = new QAction(q);
 
     actions[MainWindow::Close] = new QAction(q);
-    QObject::connect(actions[MainWindow::Close], SIGNAL(triggered()), q, SLOT(closeEditor()));
+    QObject::connect(actions[MainWindow::Close], SIGNAL(triggered()), q, SLOT(close()));
 
     actions[MainWindow::Save] = new QAction(q);
     QObject::connect(actions[MainWindow::Save], SIGNAL(triggered()), q, SLOT(save()));
@@ -372,22 +335,6 @@ void MainWindowPrivate::createActions()
     actions[MainWindow::Forward]->setEnabled(false);
     QObject::connect(actions[MainWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
 
-    actions[MainWindow::NextEditor] = new QAction(q);
-#ifdef Q_OS_MAC
-    actions[MainWindow::NextEditor]->setShortcut(QKeySequence(QLatin1String("Ctrl+Right")));
-#else
-    actions[MainWindow::NextEditor]->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
-#endif
-    QObject::connect(actions[MainWindow::NextEditor], SIGNAL(triggered()), q, SLOT(nextEditor()));
-
-    actions[MainWindow::PreviousEditor] = new QAction(q);
-#ifdef Q_OS_MAC
-    actions[MainWindow::PreviousEditor]->setShortcut(QKeySequence(QLatin1String("Ctrl+Left")));
-#else
-    actions[MainWindow::PreviousEditor]->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
-#endif
-    QObject::connect(actions[MainWindow::PreviousEditor], SIGNAL(triggered()), q, SLOT(previousEditor()));
-
     for (int i = 0; i < MainWindow::ActionCount; i++) {
         q->addAction(actions[i]);
     }
@@ -402,9 +349,6 @@ void MainWindowPrivate::retranslateUi()
 
     backButton->setText(MainWindow::tr("Back"));
     forwardButton->setText(MainWindow::tr("Forward"));
-
-    actions[MainWindow::NextEditor]->setText(MainWindow::tr("Next editor"));
-    actions[MainWindow::PreviousEditor]->setText(MainWindow::tr("Previous editor"));
 }
 
 void MainWindowPrivate::registerActions()

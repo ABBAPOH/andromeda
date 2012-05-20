@@ -30,6 +30,8 @@ public:
 
     QAction *upAction;
     QAction *newTabAction;
+    QAction *prevTabAction;
+    QAction *nextTabAction;
 
     void setupActions();
     void setupToolBar();

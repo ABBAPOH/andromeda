@@ -41,6 +41,24 @@ void BrowserWindowPrivate::setupActions()
     connect(upAction, SIGNAL(triggered()), q, SLOT(up()));
     q->addAction(upAction);
     actionManager->registerAction(upAction, Constants::Actions::Up);
+
+    nextTabAction = new QAction(q);
+#ifdef Q_OS_MAC
+    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Right")));
+#else
+    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
+#endif
+    connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextEditor()));
+    q->addAction(nextTabAction);
+
+    prevTabAction = new QAction(q);
+#ifdef Q_OS_MAC
+    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Left")));
+#else
+    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
+#endif
+    connect(prevTabAction, SIGNAL(triggered()), q, SLOT(previousEditor()));
+    q->addAction(prevTabAction);
 }
 
 void BrowserWindowPrivate::setupToolBar()
@@ -265,13 +283,25 @@ void BrowserWindow::openNewTab(const QUrl &url)
 {
     Q_D(BrowserWindow);
 
-    d->container->openNewEditor(url);
+    d->container->newTab(url);
 }
 
 void BrowserWindow::openNewTabs(const QList<QUrl> &urls)
 {
     foreach (const QUrl &url, urls) {
         openNewTab(url);
+    }
+}
+
+void BrowserWindow::close()
+{
+    Q_D(BrowserWindow);
+
+    if (d->container) {
+        if (d->container->count() > 1)
+            d->container->close();
+        else
+            MainWindow::close();
     }
 }
 
@@ -286,6 +316,26 @@ void BrowserWindow::newWindow()
 {
     QUrl url = QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
     MainWindow::openNewWindow(url);
+}
+
+void BrowserWindow::nextEditor()
+{
+    Q_D(BrowserWindow);
+
+    if (d->container) {
+        int index = d->container->currentIndex();
+        d->container->setCurrentIndex(index == d->container->count() - 1 ? 0 : index + 1);
+    }
+}
+
+void BrowserWindow::previousEditor()
+{
+    Q_D(BrowserWindow);
+
+    if (d->container) {
+        int index = d->container->currentIndex();
+        d->container->setCurrentIndex(index ? index - 1 : d->container->count() - 1);
+    }
 }
 
 void BrowserWindow::moveEvent(QMoveEvent*)

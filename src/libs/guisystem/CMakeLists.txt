@@ -2,7 +2,6 @@ set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     action.h
     actionmanager.h
-    abstractcontainer.h
     abstracteditor.h
     abstracteditorfactory.h
     abstractview.h
@@ -24,6 +23,7 @@ set( HEADERS
     mainwindow_p.h
     mainwindowfactory.h
     proxyaction.h
+    proxyeditor.h
     proxyfile.h
     proxyhistory.h
     settingsdialog.h
@@ -37,7 +37,6 @@ set( HEADERS
 set( SOURCES
     action.cpp
     actionmanager.cpp
-    abstractcontainer.cpp
     abstracteditor.cpp
     abstracteditorfactory.cpp
     abstractview.cpp
@@ -57,6 +56,7 @@ set( SOURCES
     mainwindow.cpp
     mainwindowfactory.cpp
     proxyaction.cpp
+    proxyeditor.cpp
     proxyfile.cpp
     proxyhistory.cpp
     settingsdialog.cpp
