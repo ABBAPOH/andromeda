@@ -141,6 +141,11 @@ void BinEdit::open(const QString &filePath)
     if (m_device && m_device->parent() == this)
         delete m_device;
 
+    if (filePath.isEmpty()) {
+        setDevice(0);
+        return;
+    }
+
     QFile *file = new QFile(filePath, this);
     setDevice(file/*, filePath*/);
 }
