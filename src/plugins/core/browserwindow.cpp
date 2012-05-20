@@ -170,7 +170,7 @@ MainWindow *BrowserWindowFactory::create()
     return new BrowserWindow;
 }
 
-void BrowserWindowFactory::open(MainWindowFactory::Capability cap, QList<QUrl> urls)
+void BrowserWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
 {
     if (urls.isEmpty())
         return;

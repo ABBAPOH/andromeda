@@ -40,12 +40,12 @@ MainWindow * MainWindowFactory::activeWindow() const
     return m_activeWindow;
 }
 
-MainWindowFactory::Capabilities MainWindowFactory::capabilities() const
+MainWindowFactory::OpenFlags MainWindowFactory::openFlags() const
 {
-    return Capabilities(Open | Open);
+    return OpenFlags(Open | OpenNewWindows);
 }
 
-void MainWindowFactory::open(MainWindowFactory::Capability cap, QList<QUrl> urls)
+void MainWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
 {
     if (urls.isEmpty())
         return;

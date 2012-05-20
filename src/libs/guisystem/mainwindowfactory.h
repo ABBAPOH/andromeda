@@ -13,13 +13,13 @@ class MainWindowFactory : public QObject
 {
     Q_OBJECT
 public:
-    enum Capability {
+    enum OpenFlag {
         Open = 0x1, // open in current tab
         OpenNewEditor = 0x2, // open in new tabs
         OpenNewWindow = 0x4, // open new window with urls in it
         OpenNewWindows = 0x8 // open new windows with single url each
     };
-    Q_DECLARE_FLAGS(Capabilities, Capability)
+    Q_DECLARE_FLAGS(OpenFlags, OpenFlag)
 
     explicit MainWindowFactory(QObject *parent = 0);
 
@@ -28,8 +28,8 @@ public:
 
     MainWindow *activeWindow() const;
 
-    virtual Capabilities capabilities() const;
-    virtual void open(Capability cap, QList<QUrl> urls);
+    virtual OpenFlags openFlags() const;
+    virtual void open(OpenFlag cap, QList<QUrl> urls);
     virtual void openEditor(const QString &id);
 
     virtual MainWindow *create();

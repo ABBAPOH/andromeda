@@ -48,7 +48,7 @@ public:
     explicit BrowserWindowFactory(QObject *parent = 0);
 
     GuiSystem::MainWindow *create();
-    void open(Capability cap, QList<QUrl> urls);
+    void open(OpenFlag cap, QList<QUrl> urls);
 };
 
 } // namespace Core
