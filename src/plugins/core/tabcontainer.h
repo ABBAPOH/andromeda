@@ -1,7 +1,7 @@
 #ifndef TABCONTAINER_H
 #define TABCONTAINER_H
 
-#include <guisystem/abstractcontainer.h>
+#include <guisystem/proxyeditor.h>
 #include <guisystem/proxyfile.h>
 #include <guisystem/proxyhistory.h>
 
@@ -12,7 +12,7 @@ class TabBarButton;
 
 namespace Core {
 
-class TabContainer : public GuiSystem::AbstractContainer
+class TabContainer : public GuiSystem::ProxyEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(TabContainer)
@@ -20,9 +20,10 @@ class TabContainer : public GuiSystem::AbstractContainer
 public:
     explicit TabContainer(QWidget *parent = 0);
 
+    void setSourceEditor(AbstractEditor *editor);
+
     int count() const;
     int currentIndex() const;
-    AbstractEditor *editor(int index) const;
 
     QUrl defaultUrl() const;
     void setDefaultUrl(const QUrl &url);
@@ -36,9 +37,10 @@ public:
     QByteArray saveState() const;
 
 public slots:
-    void openNewEditor(const QUrl &url);
+    void newTab(const QUrl &url);
 
-    void closeEditor(int index);
+    void closeTab(int index);
+    void close();
 
     void setCurrentIndex(int index);
 
@@ -54,15 +56,10 @@ private slots:
 
 private:
     AbstractEditor *createEditor();
-    void setEditor(AbstractEditor *editor);
-    void connectEditor(AbstractEditor *editor);
-    void disconnectEditor(AbstractEditor *editor);
-    void reconnectEditor(AbstractEditor *editor);
 
 private:
     MyTabWidget *m_tabWidget;
     TabBarButton *m_newTabButton;
-    QPointer<AbstractEditor> m_editor;
     GuiSystem::ProxyHistory *m_proxyHistory;
     GuiSystem::ProxyFile *m_proxyFile;
     QUrl m_defaultUrl;

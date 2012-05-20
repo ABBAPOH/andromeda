@@ -8,7 +8,7 @@
 
 namespace GuiSystem {
 
-class AbstractContainer;
+class ProxyEditor;
 
 class MainWindowPrivate;
 class GUISYSTEM_EXPORT MainWindow : public QMainWindow
@@ -27,9 +27,6 @@ public:
                   Back,
                   Forward,
 
-                  NextEditor,
-                  PreviousEditor,
-
                   ActionCount
                 };
 
@@ -40,11 +37,10 @@ public:
 
     QAction *action(Action action) const;
 
-    AbstractContainer *contanier() const;
-    virtual void setContanier(AbstractContainer *container);
+    ProxyEditor *contanier() const;
+    virtual void setContanier(ProxyEditor *container);
 
     QUrl url() const;
-    QList<QUrl> urls() const;
 
     static MainWindow *currentWindow();
     static QList<MainWindow*> windows();
@@ -59,7 +55,7 @@ public slots:
 
     virtual void open(const QUrl &url);
 
-    void closeEditor();
+    virtual void close();
 
     static void openNewWindow(const QUrl &url);
 //    static void openNewWindow(const QList<QUrl> &urls);
@@ -69,9 +65,6 @@ public slots:
 
     void refresh();
     void cancel();
-
-    void nextEditor();
-    void previousEditor();
 
 private slots:
     void setWindowIcon(const QIcon &icon);

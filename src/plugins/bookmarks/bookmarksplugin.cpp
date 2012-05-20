@@ -11,12 +11,12 @@
 
 #include <extensionsystem/pluginmanager.h>
 
-#include <guisystem/abstractcontainer.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/mainwindow.h>
 #include <guisystem/mainwindowfactory.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
+#include <guisystem/proxyeditor.h>
 
 #include <core/constants.h>
 

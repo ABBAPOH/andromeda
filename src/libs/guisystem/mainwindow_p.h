@@ -5,7 +5,7 @@
 
 namespace GuiSystem {
 
-class AbstractContainer;
+class ProxyEditor;
 class History;
 class HistoryButton;
 
@@ -22,7 +22,7 @@ public:
     void initGeometry();
 
 public:
-    AbstractContainer *contanier;
+    ProxyEditor *contanier;
     History *history;
 
     HistoryButton *backButton;

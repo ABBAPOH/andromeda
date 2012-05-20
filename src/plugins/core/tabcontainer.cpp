@@ -22,10 +22,9 @@ using namespace GuiSystem;
   \brief Constructs TabContainer with the given \a parent.
 */
 TabContainer::TabContainer(QWidget *parent) :
-    AbstractContainer(parent),
+    ProxyEditor(parent),
     m_tabWidget(new MyTabWidget(this)),
     m_newTabButton(new TabBarButton),
-    m_editor(0),
     m_proxyHistory(new ProxyHistory(this)),
     m_proxyFile(new ProxyFile(this))
 {
@@ -41,8 +40,19 @@ TabContainer::TabContainer(QWidget *parent) :
 
     connect(m_tabWidget, SIGNAL(currentChanged(int)), SLOT(onCurrentChanged(int)));
     connect(m_tabWidget, SIGNAL(tabBarDoubleClicked()), SLOT(newTab()));
-    connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeEditor(int)));
+    connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
     connect(m_newTabButton, SIGNAL(clicked()), SLOT(newTab()));
+}
+
+/*!
+  \reimp
+*/
+void TabContainer::setSourceEditor(AbstractEditor *editor)
+{
+    ProxyEditor::setSourceEditor(editor);
+
+    m_proxyHistory->setSourceHistory(m_editor->history());
+    m_proxyFile->setSourceFile(m_editor->file());
 }
 
 /*!
@@ -74,15 +84,7 @@ void TabContainer::setCurrentIndex(int index)
 */
 void TabContainer::newTab()
 {
-    openNewEditor(m_defaultUrl);
-}
-
-/*!
-  \reimp
-*/
-AbstractEditor * TabContainer::editor(int index) const
-{
-    return qobject_cast<AbstractEditor *>(m_tabWidget->widget(index));
+    newTab(m_defaultUrl);
 }
 
 /*!
@@ -138,22 +140,22 @@ bool TabContainer::restoreState(const QByteArray &arr)
     for (int i = 0; i < tabCount; i++) {
         QByteArray childState;
         s >> childState;
-        AbstractEditor *container = createEditor();
-        bool ok = container->restoreState(childState);
+        AbstractEditor *editor = createEditor();
+        bool ok = editor->restoreState(childState);
         if (!ok)
             return false;
-        QString title = container->title();
+        QString title = editor->title();
 #ifdef Q_OS_MAC
-        m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
+        m_tabWidget->addTab(editor, title.isEmpty() ? tr("New tab") : title);
 #else
-        m_tabWidget->addTab(container, container->icon(), title.isEmpty() ? tr("New tab") : title);
+        m_tabWidget->addTab(editor, editor->icon(), title.isEmpty() ? tr("New tab") : title);
 #endif
     }
 
     m_tabWidget->setCurrentIndex(currentIndex);
     m_tabWidget->setTabsClosable(tabCount > 1);
     StackedContainer *container = qobject_cast<StackedContainer *>(m_tabWidget->currentWidget());
-    setEditor(container);
+    setSourceEditor(container);
 
     return true;
 }
@@ -172,17 +174,14 @@ QByteArray TabContainer::saveState() const
     s << currentIndex;
     s << tabCount;
     for (int i = 0; i < tabCount; i++) {
-        AbstractEditor *e = editor(i);
+        AbstractEditor *e = qobject_cast<AbstractEditor *>(m_tabWidget->widget(i));
         s << e->saveState();
     }
 
     return state;
 }
 
-/*!
-  \reimp
-*/
-void TabContainer::openNewEditor(const QUrl &url)
+void TabContainer::newTab(const QUrl &url)
 {
     AbstractEditor *container = createEditor();
     container->open(url);
@@ -198,16 +197,13 @@ void TabContainer::openNewEditor(const QUrl &url)
     if (index != m_tabWidget->currentIndex())
         m_tabWidget->setCurrentIndex(index);
     else
-        setEditor(container);
+        setSourceEditor(container);
 
     if (m_tabWidget->count() > 1)
         m_tabWidget->setTabsClosable(true);
 }
 
-/*!
-  \reimp
-*/
-void TabContainer::closeEditor(int index)
+void TabContainer::closeTab(int index)
 {
     if (m_tabWidget->count() <= 1) {
         return;
@@ -228,6 +224,11 @@ void TabContainer::closeEditor(int index)
         m_tabWidget->setTabsClosable(false);
 }
 
+void TabContainer::close()
+{
+    closeTab(-1);
+}
+
 /*!
   \reimp
 */
@@ -244,11 +245,11 @@ void Core::TabContainer::resizeEvent(QResizeEvent *e)
 void TabContainer::onCurrentChanged(int index)
 {
     if (m_editor) {
-        disconnectEditor(m_editor);
         emit loadFinished(true);
     }
 
-    setEditor(editor(index));
+    AbstractEditor *e = qobject_cast<AbstractEditor *>(m_tabWidget->widget(index));
+    setSourceEditor(e);
 
     emit currentChanged(index);
 }
@@ -258,15 +259,14 @@ void TabContainer::onCurrentChanged(int index)
 */
 void TabContainer::onIconChanged(const QIcon &icon)
 {
+#ifdef Q_OS_MAC
+    Q_UNUSED(icon)
+#else
     AbstractEditor *editor = qobject_cast<AbstractEditor *>(sender());
 
     int index = m_tabWidget->indexOf(editor);
-#ifndef Q_OS_MAC
     m_tabWidget->setTabIcon(index, icon);
 #endif
-
-    if (index == m_tabWidget->currentIndex())
-        emit iconChanged(icon);
 }
 
 /*!
@@ -278,9 +278,6 @@ void TabContainer::onTitleChanged(const QString &title)
 
     int index = m_tabWidget->indexOf(editor);
     m_tabWidget->setTabText(index, title);
-
-    if (index == m_tabWidget->currentIndex())
-        emit titleChanged(title);
 }
 
 /*!
@@ -294,48 +291,4 @@ AbstractEditor * TabContainer::createEditor()
     connect(editor, SIGNAL(titleChanged(QString)), this, SLOT(onTitleChanged(QString)));
 
     return editor;
-}
-
-/*!
-  \internal
-*/
-void TabContainer::setEditor(AbstractEditor *editor)
-{
-    m_editor = editor;
-    m_proxyHistory->setSourceHistory(m_editor->history());
-    m_proxyFile->setSourceFile(m_editor->file());
-    connectEditor(m_editor);
-
-    emit urlChanged(m_editor->url());
-    emit iconChanged(m_editor->icon());
-    emit titleChanged(m_editor->title());
-    emit windowTitleChanged(m_editor->windowTitle());
-}
-
-/*!
-  \internal
-*/
-void TabContainer::connectEditor(AbstractEditor *editor)
-{
-    connect(editor, SIGNAL(urlChanged(QUrl)),
-            this, SIGNAL(urlChanged(QUrl)));
-    connect(editor, SIGNAL(openTriggered(QUrl)), this, SLOT(open(QUrl)));
-
-    connect(editor, SIGNAL(windowTitleChanged(QString)), this, SIGNAL(windowTitleChanged(QString)));
-
-    connect(editor, SIGNAL(loadStarted()), this, SIGNAL(loadStarted()));
-    connect(editor, SIGNAL(loadProgress(int)), this, SIGNAL(loadProgress(int)));
-    connect(editor, SIGNAL(loadFinished(bool)), this, SIGNAL(loadFinished(bool)));
-}
-
-/*!
-  \internal
-*/
-void TabContainer::disconnectEditor(AbstractEditor *editor)
-{
-    disconnect(m_editor, 0, this, 0);
-
-    // these connections should be always present to update tab text and icon
-    connect(editor, SIGNAL(iconChanged(QIcon)), this, SLOT(onIconChanged(QIcon)));
-    connect(editor, SIGNAL(titleChanged(QString)), this, SLOT(onTitleChanged(QString)));
 }

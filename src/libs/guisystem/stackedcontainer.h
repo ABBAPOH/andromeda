@@ -3,12 +3,12 @@
 
 #include "guisystem_global.h"
 
-#include "abstractcontainer.h"
+#include "proxyeditor.h"
 
 namespace GuiSystem {
 
 class StackedContainerPrivate;
-class GUISYSTEM_EXPORT StackedContainer : public AbstractContainer
+class GUISYSTEM_EXPORT StackedContainer : public ProxyEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(StackedContainer)
@@ -17,9 +17,9 @@ public:
     explicit StackedContainer(QWidget *parent = 0);
     ~StackedContainer();
 
-    int count() const;
-    int currentIndex() const;
-    AbstractEditor *editor(int index) const;
+    void setSourceEditor(AbstractEditor *editor);
+
+    AbstractEditor *currentEditor() const;
 
     IFile *file() const;
 
@@ -35,9 +35,6 @@ public:
 
 public slots:
     void open(const QUrl &url = QUrl());
-    void openNewEditor(const QUrl &url);
-
-    void setCurrentIndex(int index);
 
 private slots:
     void onUrlChanged(const QUrl &url);

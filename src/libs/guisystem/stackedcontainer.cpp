@@ -12,32 +12,6 @@
 
 using namespace GuiSystem;
 
-void StackedContainerPrivate::setEditor(AbstractEditor *e)
-{
-    Q_Q(StackedContainer);
-
-    if (editor == e)
-        return;
-
-    if (editor) {
-        QObject::disconnect(editor, 0, q, 0);
-    }
-
-    editor = e;
-    file->setSourceFile(editor->file());
-    QObject::connect(editor, SIGNAL(urlChanged(QUrl)),
-                     q, SLOT(onUrlChanged(QUrl)));
-    QObject::connect(editor, SIGNAL(openTriggered(QUrl)), q, SLOT(open(QUrl)));
-    QObject::connect(editor, SIGNAL(iconChanged(QIcon)), q, SIGNAL(iconChanged(QIcon)));
-    QObject::connect(editor, SIGNAL(titleChanged(QString)), q, SIGNAL(titleChanged(QString)));
-    QObject::connect(editor, SIGNAL(windowTitleChanged(QString)), q, SIGNAL(windowTitleChanged(QString)));
-    QObject::connect(editor, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
-
-    QObject::connect(editor, SIGNAL(loadStarted()), q, SIGNAL(loadStarted()));
-    QObject::connect(editor, SIGNAL(loadProgress(int)), q, SIGNAL(loadProgress(int)));
-    QObject::connect(editor, SIGNAL(loadFinished(bool)), q, SIGNAL(loadFinished(bool)));
-}
-
 /*!
   \class StackedEditor
 
@@ -51,7 +25,7 @@ void StackedContainerPrivate::setEditor(AbstractEditor *e)
   \brief Creates a StackedEditor with the given \a parent.
 */
 StackedContainer::StackedContainer(QWidget *parent) :
-    AbstractContainer(parent),
+    ProxyEditor(parent),
     d(new StackedContainerPrivate(this))
 {
     d->editor = 0;
@@ -75,28 +49,28 @@ StackedContainer::~StackedContainer()
     delete d;
 }
 
-/*!
-  \reimp
-*/
-int StackedContainer::count() const
+void StackedContainer::setSourceEditor(AbstractEditor *editor)
 {
-    return d->layout->count();
+    if (d->editor == editor)
+        return;
+
+    if (d->editor) {
+        QObject::disconnect(d->editor, SIGNAL(urlChanged(QUrl)),
+                            this, SLOT(onUrlChanged(QUrl)));
+        QObject::disconnect(d->editor, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
+    }
+
+    d->editor = editor;
+    ProxyEditor::setSourceEditor(editor);
+    d->file->setSourceFile(editor->file());
+    connect(editor, SIGNAL(urlChanged(QUrl)),
+                     this, SLOT(onUrlChanged(QUrl)));
+    connect(editor, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroy(QObject*)));
 }
 
-/*!
-  \reimp
-*/
-int StackedContainer::currentIndex() const
+AbstractEditor *StackedContainer::currentEditor() const
 {
-    return d->layout->currentIndex();
-}
-
-/*!
-  \reimp
-*/
-AbstractEditor * StackedContainer::editor(int index) const
-{
-    return qobject_cast<AbstractEditor *>(d->layout->widget(index));
+    return d->editor;
 }
 
 /*!
@@ -145,7 +119,7 @@ void StackedContainer::open(const QUrl &dirtyUrl)
         } else {
             d->layout->setCurrentWidget(editor);
         }
-        d->setEditor(editor);
+        setSourceEditor(editor);
         d->stackedHistory->open(url);
         editor->open(url);
     } else {
@@ -155,28 +129,6 @@ void StackedContainer::open(const QUrl &dirtyUrl)
 
     // todo: remove?
     emit urlChanged(d->currentUrl);
-}
-
-/*!
-  \reimp
-*/
-void StackedContainer::openNewEditor(const QUrl &url)
-{
-    open(url);
-}
-
-/*!
-  \reimp
-*/
-void StackedContainer::setCurrentIndex(int index)
-{
-    // TODO: check this method
-    d->layout->setCurrentIndex(index);
-    AbstractEditor *editor = this->editor(index);
-    d->setEditor(editor);
-    d->currentUrl = editor->url();
-    emit urlChanged(d->currentUrl);
-//    emit urlChanged(d->e);
 }
 
 /*!
@@ -200,12 +152,13 @@ bool StackedContainer::restoreState(const QByteArray &arr)
     s >> editorState;
     AbstractEditor *e = EditorManager::instance()->editorForId(id, this);
     if (e) {
-        d->setEditor(e);
+        setSourceEditor(e);
         d->layout->addWidget(e);
         d->editorHash.insert(id, e);
         d->stackedHistory->open(QUrl());
         return e->restoreState(editorState);
     }
+
 
     return true;
 }
@@ -239,7 +192,7 @@ bool StackedContainer::setEditor(const QString &id)
     }
 
     d->layout->setCurrentWidget(editor);
-    d->setEditor(editor);
+    setSourceEditor(editor);
 
     d->currentUrl = d->editor->url();
 

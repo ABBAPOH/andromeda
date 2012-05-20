@@ -2,7 +2,7 @@
 #define STACKEDHISTORY_H
 
 #include "ihistory.h"
-#include "abstractcontainer.h"
+#include "proxyeditor.h"
 
 namespace GuiSystem {
 
