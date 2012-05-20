@@ -15,6 +15,7 @@ class EditorManagerPrivate
 public:
     QHash<QString, AbstractEditorFactory *> factories;
     QHash<QString, AbstractEditorFactory *> factoriesById;
+    QHash<QString, AbstractEditorFactory *> factoriesByScheme;
     QHash<QString, AbstractViewFactory *> viewFactories;
 };
 
@@ -80,6 +81,18 @@ AbstractEditor * EditorManager::editorForMimeType(const QString &mimeType, QWidg
 }
 
 /*!
+  \brief Creates new editor with \a parent that can handle given \a scheme.
+*/
+AbstractEditor *EditorManager::editorForScheme(const QString &scheme, QWidget *parent)
+{
+    AbstractEditorFactory *f = factoryForScheme(scheme);
+    if (f)
+        return f->editor(parent);
+
+    return 0;
+}
+
+/*!
   \brief Creates new editor with \a parent that can handle given \a url.
 */
 AbstractEditor * EditorManager::editorForUrl(const QUrl &url, QWidget *parent)
@@ -116,7 +129,7 @@ AbstractEditorFactory * EditorManager::factoryById(const QString &id) const
 }
 
 /*!
-  \brief Returns factory that can hanlde given \a mimeType.
+  \brief Returns factory that can handle given \a mimeType.
 */
 AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeType) const
 {
@@ -134,13 +147,29 @@ AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeTyp
 }
 
 /*!
-  \brief Returns factory that can hanlde given \a url.
+  \brief Returns factory that can handle given \a scheme.
+*/
+AbstractEditorFactory *EditorManager::factoryForScheme(const QString &scheme) const
+{
+    AbstractEditorFactory * f = d_func()->factoriesByScheme.value(scheme);
+    if (f)
+        return f;
+
+    return 0;
+}
+
+/*!
+  \brief Returns factory that can handle given \a url.
 */
 AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
 {
     if (url.scheme() == qApp->applicationName()) {
         return factoryById(url.host());
     } else {
+        AbstractEditorFactory *f = factoryForScheme(url.scheme());
+        if (f)
+            return f;
+
         QMimeDatabase db;
         QString mimeType = db.mimeTypeForUrl(url).name();
         return factoryForMimeType(mimeType);
@@ -163,6 +192,11 @@ void EditorManager::addFactory(AbstractEditorFactory *factory)
     foreach (const QString &mimeType, factory->mimeTypes()) {
         d->factories.insert(mimeType, factory);
     }
+
+    foreach (const QString &scheme, factory->urlSchemes()) {
+        d->factoriesByScheme.insert(scheme, factory);
+    }
+
     d->factoriesById.insert(factory->id(), factory);
 
     connect(factory, SIGNAL(destroyed(QObject *)), this, SLOT(onDestroyed1(QObject*)));

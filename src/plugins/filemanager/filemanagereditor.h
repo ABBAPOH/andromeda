@@ -84,8 +84,8 @@ class FileManagerEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit FileManagerEditorFactory(QObject *parent = 0);
 
-    QStringList mimeTypes();
     QByteArray id() const;
+    QStringList mimeTypes() const;
 
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);

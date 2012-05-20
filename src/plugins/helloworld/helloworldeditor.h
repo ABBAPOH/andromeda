@@ -37,7 +37,6 @@ class HelloWorldEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit HelloWorldEditorFactory(QObject *parent = 0);
 
-    QStringList mimeTypes();
     QByteArray id() const;
 
 protected:

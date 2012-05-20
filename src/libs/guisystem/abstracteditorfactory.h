@@ -6,6 +6,7 @@
 #include "abstractviewfactory.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 class QWidget;
 
@@ -25,7 +26,8 @@ public:
     AbstractEditor *editor(QWidget *parent);
 
     virtual QByteArray id() const = 0;
-    virtual QStringList mimeTypes() = 0;
+    virtual QStringList mimeTypes() const { return QStringList(); }
+    virtual QStringList urlSchemes() const { return QStringList(); }
 
 protected:
     virtual AbstractEditor *createEditor(QWidget *parent) = 0;

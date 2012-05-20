@@ -97,7 +97,7 @@ BinEditorFactory::BinEditorFactory(QObject *parent) :
 {
 }
 
-QStringList BinEditorFactory::mimeTypes()
+QStringList BinEditorFactory::mimeTypes() const
 {
     return QStringList() << "application/octet-stream";
 }
