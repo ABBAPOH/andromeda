@@ -238,7 +238,7 @@ void MainWindow::openNewWindow(const QUrl &url)
 {
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory) {
-        factory->open(MainWindowFactory::OpenNewWindows, QList<QUrl>() << url);
+        factory->openNewWindow(url);
     } else {
         qWarning() << "MainWindow::openNewWindow :" << "Must call MainWindowFactory::setDefaultfactory first";
     }
