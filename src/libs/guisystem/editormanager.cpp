@@ -13,10 +13,11 @@ namespace GuiSystem {
 class EditorManagerPrivate
 {
 public:
-    QHash<QString, AbstractEditorFactory *> factoriesForId;
-    QHash<QString, AbstractEditorFactory *> factoriesForMimeType;
-    QHash<QString, AbstractEditorFactory *> factoriesForScheme;
     QHash<QString, AbstractViewFactory *> viewFactories;
+
+    QHash<QString, AbstractEditorFactory *> factoriesForId;
+    QMultiHash<QString, AbstractEditorFactory *> factoriesForMimeType;
+    QMultiHash<QString, AbstractEditorFactory *> factoriesForScheme;
 };
 
 } // namespace Core
@@ -241,11 +242,11 @@ void EditorManager::removeFactory(AbstractEditorFactory *factory)
         return;
 
     foreach (const QString &mimeType, d->factoriesForMimeType.keys(factory)) {
-        d->factoriesForMimeType.remove(mimeType);
+        d->factoriesForMimeType.remove(mimeType, factory);
     }
 
     foreach (const QString &scheme, d->factoriesForScheme.keys(factory)) {
-        d->factoriesForScheme.remove(scheme);
+        d->factoriesForScheme.remove(scheme, factory);
     }
 
     d->factoriesForId.remove(d->factoriesForId.key(factory));
