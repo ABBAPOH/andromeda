@@ -38,6 +38,8 @@ public:
 
     QList<AbstractEditorFactory *> factories() const;
     QList<AbstractEditorFactory *> factoriesForMimeType(const QString &mimeType) const;
+    QList<AbstractEditorFactory *> factoriesForScheme(const QString &scheme) const;
+    QList<AbstractEditorFactory *> factoriesForUrl(const QUrl &url) const;
 
     void addFactory(AbstractEditorFactory *factory);
     void removeFactory(AbstractEditorFactory *factory);

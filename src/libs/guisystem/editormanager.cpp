@@ -178,6 +178,34 @@ QList<AbstractEditorFactory *> EditorManager::factoriesForMimeType(const QString
 }
 
 /*!
+  \brief Returns list of factories that can handle given \a scheme.
+*/
+QList<AbstractEditorFactory *> EditorManager::factoriesForScheme(const QString &scheme) const
+{
+    return d_func()->factoriesByScheme.values(scheme);
+}
+
+/*!
+  \brief Returns list of factories that can handle given \a url.
+*/
+QList<AbstractEditorFactory *> EditorManager::factoriesForUrl(const QUrl &url) const
+{
+    QList<AbstractEditorFactory *> result;
+
+    if (url.scheme() == qApp->applicationName()) {
+        result.append(factoryForId(url.host()));
+    } else {
+        result.append(factoriesForScheme(url.scheme()));
+
+        QMimeDatabase db;
+        QString mimeType = db.mimeTypeForUrl(url).name();
+        result.append(factoriesForMimeType(mimeType));
+    }
+
+    return result;
+}
+
+/*!
   \brief Adds \a factory to EditorManager.
 
   Factories automatically removed when being destroyed.
@@ -215,6 +243,11 @@ void EditorManager::removeFactory(AbstractEditorFactory *factory)
     foreach (const QString &mimeType, d->factories.keys(factory)) {
         d->factories.remove(mimeType);
     }
+
+    foreach (const QString &scheme, d->factoriesByScheme.keys(factory)) {
+        d->factoriesByScheme.remove(scheme);
+    }
+
     d->factoriesById.remove(d->factoriesById.key(factory));
 
     disconnect(factory, 0, this, 0);
