@@ -45,7 +45,7 @@ MainWindowFactory::OpenFlags MainWindowFactory::openFlags() const
     return OpenFlags(Open | OpenNewWindows);
 }
 
-void MainWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
+void MainWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
 {
     if (urls.isEmpty())
         return;
@@ -77,12 +77,47 @@ void MainWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
     }
 }
 
+void MainWindowFactory::open(const QUrl &url)
+{
+    openFlag(Open, QList<QUrl>() << url);
+}
+
+void MainWindowFactory::open(const QList<QUrl> &urls)
+{
+    openFlag(Open, urls);
+}
+
+void MainWindowFactory::openNewEditor(const QUrl &url)
+{
+    openFlag(OpenNewEditor, QList<QUrl>() << url);
+}
+
+void MainWindowFactory::openNewEditor(const QList<QUrl> &urls)
+{
+    openFlag(OpenNewEditor, urls);
+}
+
+void MainWindowFactory::openNewWindow(const QUrl &url)
+{
+    openFlag(OpenNewWindows, QList<QUrl>() << url);
+}
+
+void MainWindowFactory::openNewWindow(const QList<QUrl> &urls)
+{
+    openFlag(OpenNewWindow, urls);
+}
+
+void MainWindowFactory::openNewWindows(const QList<QUrl> &urls)
+{
+    openFlag(OpenNewWindows, urls);
+}
+
 void MainWindowFactory::openEditor(const QString &id)
 {
     QUrl url;
     url.setScheme(qApp->applicationName());
     url.setHost(id);
-    open(Open, QList<QUrl>() << url);
+    openFlag(Open, QList<QUrl>() << url);
 }
 
 MainWindow * MainWindowFactory::create()

@@ -191,7 +191,7 @@ void BrowserWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> url
         break;
     }
     default:
-        MainWindowFactory::open(cap, urls);
+        MainWindowFactory::openFlag(cap, urls);
         break;
     }
 }

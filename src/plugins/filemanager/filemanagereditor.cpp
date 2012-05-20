@@ -452,7 +452,7 @@ void FileManagerEditor::openNewTab(const QStringList &paths)
     }
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory)
-        factory->open(MainWindowFactory::OpenNewEditor, urls);
+        factory->openNewEditor(urls);
 }
 
 /*!
@@ -467,7 +467,7 @@ void FileManagerEditor::openNewWindow(const QStringList &paths)
 
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory)
-        factory->open(MainWindowFactory::OpenNewWindow, urls);
+        factory->openNewWindow(urls);
 }
 
 /*!

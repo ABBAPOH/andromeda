@@ -137,18 +137,17 @@ void BookmarksPlugin::shutdown()
 
 void BookmarksPlugin::open(const QUrl &url)
 {
-    MainWindow * window = MainWindow::currentWindow();
-    if (!window)
-        return;
-
-    window->open(url);
+    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    if (factory) {
+        factory->open(url);
+    }
 }
 
 void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
 {
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory) {
-        factory->open(MainWindowFactory::OpenNewEditor, urls);
+        factory->openNewEditor(urls);
     }
 }
 
@@ -156,7 +155,7 @@ void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
 {
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory) {
-        factory->open(MainWindowFactory::OpenNewWindow, urls);
+        factory->openNewWindow(urls);
     }
 }
 

@@ -100,7 +100,7 @@ void BookmarksEditor::openInTabTriggered(const QUrl &url)
 {
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory) {
-        factory->open(MainWindowFactory::OpenNewEditor, QList<QUrl>() << url);
+        factory->openNewEditor(url);
     }
 }
 
@@ -108,7 +108,7 @@ void BookmarksEditor::openInWindowTriggered(const QUrl &url)
 {
     MainWindowFactory *factory = MainWindowFactory::defaultFactory();
     if (factory)
-        factory->open(MainWindowFactory::OpenNewWindow, QList<QUrl>() << url);
+        factory->openNewWindow(url);
 }
 
 void BookmarksEditor::onStateChanged()

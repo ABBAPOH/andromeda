@@ -29,8 +29,20 @@ public:
     MainWindow *activeWindow() const;
 
     virtual OpenFlags openFlags() const;
-    virtual void open(OpenFlag cap, QList<QUrl> urls);
-    virtual void openEditor(const QString &id);
+    virtual void openFlag(OpenFlag cap, QList<QUrl> urls);
+
+    void open(const QUrl &url);
+    void open(const QList<QUrl> &urls);
+
+    void openNewEditor(const QUrl &url);
+    void openNewEditor(const QList<QUrl> &urls);
+
+    void openNewWindow(const QUrl &url);
+    void openNewWindow(const QList<QUrl> &urls);
+
+    void openNewWindows(const QList<QUrl> &urls);
+
+    void openEditor(const QString &id);
 
     virtual MainWindow *create();
 
