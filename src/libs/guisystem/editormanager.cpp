@@ -13,9 +13,9 @@ namespace GuiSystem {
 class EditorManagerPrivate
 {
 public:
-    QHash<QString, AbstractEditorFactory *> factories;
-    QHash<QString, AbstractEditorFactory *> factoriesById;
-    QHash<QString, AbstractEditorFactory *> factoriesByScheme;
+    QHash<QString, AbstractEditorFactory *> factoriesForId;
+    QHash<QString, AbstractEditorFactory *> factoriesForMimeType;
+    QHash<QString, AbstractEditorFactory *> factoriesForScheme;
     QHash<QString, AbstractViewFactory *> viewFactories;
 };
 
@@ -109,7 +109,7 @@ AbstractEditor * EditorManager::editorForUrl(const QUrl &url, QWidget *parent)
 */
 AbstractEditorFactory * EditorManager::factoryForId(const QString &id) const
 {
-    return d_func()->factoriesById.value(id);
+    return d_func()->factoriesForId.value(id);
 }
 
 /*!
@@ -123,7 +123,7 @@ AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeTyp
     mimeTypes.append(mimeType);
     mimeTypes.append(mt.parentMimeTypes());
     foreach (const QString &mimeType, mimeTypes) {
-        AbstractEditorFactory * f = d_func()->factories.value(mimeType);
+        AbstractEditorFactory * f = d_func()->factoriesForMimeType.value(mimeType);
         if (f)
         return f;
     }
@@ -135,7 +135,7 @@ AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeTyp
 */
 AbstractEditorFactory *EditorManager::factoryForScheme(const QString &scheme) const
 {
-    AbstractEditorFactory * f = d_func()->factoriesByScheme.value(scheme);
+    AbstractEditorFactory * f = d_func()->factoriesForScheme.value(scheme);
     if (f)
         return f;
 
@@ -166,7 +166,7 @@ AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
 */
 QList<AbstractEditorFactory *> EditorManager::factories() const
 {
-    return d_func()->factories.values();
+    return d_func()->factoriesForMimeType.values();
 }
 
 /*!
@@ -174,7 +174,7 @@ QList<AbstractEditorFactory *> EditorManager::factories() const
 */
 QList<AbstractEditorFactory *> EditorManager::factoriesForMimeType(const QString &mimeType) const
 {
-    return d_func()->factories.values(mimeType);
+    return d_func()->factoriesForMimeType.values(mimeType);
 }
 
 /*!
@@ -182,7 +182,7 @@ QList<AbstractEditorFactory *> EditorManager::factoriesForMimeType(const QString
 */
 QList<AbstractEditorFactory *> EditorManager::factoriesForScheme(const QString &scheme) const
 {
-    return d_func()->factoriesByScheme.values(scheme);
+    return d_func()->factoriesForScheme.values(scheme);
 }
 
 /*!
@@ -218,14 +218,14 @@ void EditorManager::addFactory(AbstractEditorFactory *factory)
         return;
 
     foreach (const QString &mimeType, factory->mimeTypes()) {
-        d->factories.insert(mimeType, factory);
+        d->factoriesForMimeType.insert(mimeType, factory);
     }
 
     foreach (const QString &scheme, factory->urlSchemes()) {
-        d->factoriesByScheme.insert(scheme, factory);
+        d->factoriesForScheme.insert(scheme, factory);
     }
 
-    d->factoriesById.insert(factory->id(), factory);
+    d->factoriesForId.insert(factory->id(), factory);
 
     connect(factory, SIGNAL(destroyed(QObject *)), this, SLOT(onDestroyed1(QObject*)));
 }
@@ -240,15 +240,15 @@ void EditorManager::removeFactory(AbstractEditorFactory *factory)
     if (!factory)
         return;
 
-    foreach (const QString &mimeType, d->factories.keys(factory)) {
-        d->factories.remove(mimeType);
+    foreach (const QString &mimeType, d->factoriesForMimeType.keys(factory)) {
+        d->factoriesForMimeType.remove(mimeType);
     }
 
-    foreach (const QString &scheme, d->factoriesByScheme.keys(factory)) {
-        d->factoriesByScheme.remove(scheme);
+    foreach (const QString &scheme, d->factoriesForScheme.keys(factory)) {
+        d->factoriesForScheme.remove(scheme);
     }
 
-    d->factoriesById.remove(d->factoriesById.key(factory));
+    d->factoriesForId.remove(d->factoriesForId.key(factory));
 
     disconnect(factory, 0, this, 0);
 }
