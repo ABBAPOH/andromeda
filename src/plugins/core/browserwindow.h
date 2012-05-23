@@ -35,6 +35,7 @@ public:
 public slots:
     void up();
 
+    void open(const QUrl &url);
     void openNewTab(const QUrl &url);
     void openNewTabs(const QList<QUrl> &urls);
 
