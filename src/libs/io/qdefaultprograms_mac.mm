@@ -186,9 +186,13 @@ QStringList QDefaultPrograms::defaultPrograms(const QUrl &qurl)
     if (!url)
         return QStringList();
 
+    CFArrayRef applications = LSCopyApplicationURLsForURL(url, kLSRolesAll);
+    CFRelease(url);
+    if (!applications)
+        return QStringList();
+
     QStringList result;
 
-    CFArrayRef applications = LSCopyApplicationURLsForURL(url, kLSRolesAll);
     CFIndex count = CFArrayGetCount(applications);
 
     for (CFIndex index = 0; index < count; index++) {
