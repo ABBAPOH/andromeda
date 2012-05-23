@@ -187,7 +187,7 @@ MainWindow *BrowserWindowFactory::create()
     return new BrowserWindow;
 }
 
-void BrowserWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
+void BrowserWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
 {
     if (urls.isEmpty())
         return;
@@ -198,7 +198,7 @@ void BrowserWindowFactory::open(MainWindowFactory::OpenFlag cap, QList<QUrl> url
         if (window)
             window->openNewTabs(urls);
         else
-            open(OpenNewWindow, urls);
+            openFlag(OpenNewWindow, urls);
         break;
     }
     case OpenNewWindow : {
@@ -276,6 +276,16 @@ void BrowserWindow::up()
     QFileInfo info(path);
     url.setPath(info.path());
     open(url);
+}
+
+void BrowserWindow::open(const QUrl &url)
+{
+    Q_D(BrowserWindow);
+
+    if (d->container->count() == 0)
+        d->container->newTab(url);
+    else
+        MainWindow::open(url);
 }
 
 void BrowserWindow::openNewTab(const QUrl &url)
