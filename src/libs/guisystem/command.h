@@ -96,6 +96,7 @@ signals:
     void changed();
 
 protected:
+    QAction *realAction() const;
     void setRealAction(QAction *commandAction);
 
 protected:
