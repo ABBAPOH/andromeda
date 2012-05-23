@@ -28,6 +28,9 @@ void BinEditor::open(const QUrl &url)
     m_url = url;
     m_editor->open(url.toLocalFile());
     emit urlChanged(url);
+    emit iconChanged(icon());
+    emit titleChanged(title());
+    emit windowTitleChanged(windowTitle());
 }
 
 QUrl BinEditor::url() const
