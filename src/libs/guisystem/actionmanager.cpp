@@ -318,7 +318,12 @@ void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Command::Command
         if (!id.isEmpty()) {
             Command *c = qobject_cast<Command *>(d->objects.value(id));
             if (c && c->context() == context) {
-                c->setRealAction(enabled ? action : 0);
+                if (enabled) {
+                    c->setRealAction(action);
+                } else {
+                    if (c->realAction() == action)
+                        c->setRealAction(0);
+                }
             }
         }
     }

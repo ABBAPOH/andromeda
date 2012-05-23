@@ -375,6 +375,13 @@ QByteArray Command::id() const
     return d_func()->id;
 }
 
+QAction *Command::realAction() const
+{
+    Q_D(const Command);
+
+    return d->realAction;
+}
+
 /*!
     \internal
 
