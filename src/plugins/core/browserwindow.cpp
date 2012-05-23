@@ -184,7 +184,6 @@ BrowserWindowFactory::BrowserWindowFactory(QObject *parent) :
 
 MainWindow *BrowserWindowFactory::create()
 {
-    qDebug("BrowserWindowFactory::create");
     return new BrowserWindow;
 }
 
