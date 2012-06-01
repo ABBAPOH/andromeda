@@ -75,6 +75,9 @@ void WindowsMenuPrivate::removeWindow(QWidget *w)
         }
         nextWindowAction->setEnabled(widgets.count() > 1);
         prevWindowAction->setEnabled(widgets.count() > 1);
+
+        if (currentIndex >= index)
+            currentIndex--;
     }
 }
 
