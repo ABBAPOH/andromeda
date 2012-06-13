@@ -48,6 +48,7 @@ void WindowsMenuPrivate::addWindow(QWidget *w)
 
     QAction *action = new QAction(w->windowTitle(), actionGroup);
     action->setCheckable(true);
+    action->setChecked(w->isActiveWindow());
     q->insertAction(separatorAction, action);
     QObject::connect(action, SIGNAL(triggered(bool)), q, SLOT(onTriggered(bool)));
     widgets.append(w);
@@ -84,7 +85,7 @@ void WindowsMenuPrivate::removeWindow(QWidget *w)
 void WindowsMenuPrivate::activateWindow(QWidget *w)
 {
     int index = widgets.indexOf(w);
-    if (index != -1) {
+    if (index != -1 && w->isActiveWindow()) {
         QAction *action = actions[index];
         action->setChecked(true);
         currentIndex = index;
