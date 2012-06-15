@@ -19,15 +19,23 @@ void ProxyEditor::setSourceEditor(AbstractEditor *editor)
 
     disconnectEditor(m_editor);
 
-        m_editor = editor;
+    m_editor = editor;
 
     connectEditor(m_editor);
 
-    emit urlChanged(m_editor->url());
-    emit iconChanged(m_editor->icon());
-    emit titleChanged(m_editor->title());
-    emit windowTitleChanged(m_editor->windowTitle());
-    emit loadFinished(true);
+    if (m_editor) {
+        emit urlChanged(m_editor->url());
+        emit iconChanged(m_editor->icon());
+        emit titleChanged(m_editor->title());
+        emit windowTitleChanged(m_editor->windowTitle());
+        emit loadFinished(true);
+    } else {
+        emit urlChanged(QUrl());
+        emit iconChanged(QIcon());
+        emit titleChanged(QString());
+        emit windowTitleChanged(QString());
+        emit loadFinished(true);
+    }
 }
 
 /*!

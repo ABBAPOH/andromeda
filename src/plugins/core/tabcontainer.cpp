@@ -51,8 +51,8 @@ void TabContainer::setSourceEditor(AbstractEditor *editor)
 {
     ProxyEditor::setSourceEditor(editor);
 
-    m_proxyHistory->setSourceHistory(m_editor->history());
-    m_proxyFile->setSourceFile(m_editor->file());
+    m_proxyHistory->setSourceHistory(m_editor ? m_editor->history() : 0);
+    m_proxyFile->setSourceFile(m_editor ? m_editor->file() : 0);
 }
 
 /*!
