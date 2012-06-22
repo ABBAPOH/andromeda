@@ -5,7 +5,9 @@
 
 namespace FileManager {
 
+class FileThumbnails;
 class FileSystemManager;
+
 class FileSystemModel : public QFileSystemModel
 {
     Q_OBJECT
@@ -22,6 +24,17 @@ public:
                       int column,
                       const QModelIndex &parent
                       );
+signals:
+    void updateIndex(const QModelIndex index);
+
+private slots:
+    void onThumbDone(const QString &path, const QImage &thumb);
+    void loadThumbs(const QString &dir);
+
+private:
+    QHash<QString, QIcon> thumbs;
+    FileThumbnails *thumbnails;
+
 protected:
     FileSystemManager *m_manager; // can be safely changed to d_ptr
 };
