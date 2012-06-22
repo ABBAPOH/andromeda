@@ -19,6 +19,7 @@ set( HEADERS
     filemanagersettings_p.h
     filemanagerwidget.h
     filemanagerwidget_p.h
+    filethumbnails.h
     viewmodessettings.h
     globalsettings.h
     filesystemmodel.h
@@ -47,6 +48,7 @@ set( SOURCES
     filemanagerwidget.cpp
     filesystemmodel.cpp
     filesystemmanager.cpp
+    filethumbnails.cpp
     viewmodessettings.cpp
     globalsettings.cpp
     navigationmodel.cpp

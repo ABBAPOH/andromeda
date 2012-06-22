@@ -2,11 +2,15 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QMimeData>
-#include <QApplication>
+
+#include <QtGui/QApplication>
+#include <QtGui/QImageReader>
+
 #include <io/fileimageprovider.h>
 #include <io/qdriveinfo.h>
 
 #include "filesystemmanager.h"
+#include "filethumbnails.h"
 
 using namespace FileManager;
 
@@ -17,6 +21,10 @@ FileSystemModel::FileSystemModel(QObject *parent) :
     m_manager(FileSystemManager::instance())
 {
     setObjectName("FileSystemModel");
+
+    thumbnails = new FileThumbnails(this);
+    connect(thumbnails,SIGNAL(done(QString,QImage)),this,SLOT(onThumbDone(QString,QImage)));
+    connect(this,SIGNAL(directoryLoaded(QString)),this,SLOT(loadThumbs(QString)));
 }
 
 FileSystemManager * FileSystemModel::fileSystemManager() const
@@ -40,8 +48,15 @@ void FileSystemModel::setFileSystemManager(FileSystemManager *manager)
 
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 {
-    if (index.isValid() && index.column() == 0 && role == Qt::UserRole)
-        return imageProvider()->image(QFileInfo(filePath(index)), QSize(512, 512));
+    if (index.isValid() && index.column() == 0) {
+        if (role == Qt::UserRole) {
+            return imageProvider()->image(QFileInfo(filePath(index)), QSize(512, 512));
+        } else if (role == Qt::DecorationRole) {
+            QString path = filePath(index);
+            if (thumbs.contains(path))
+                return thumbs.value(path);
+        }
+    }
 
     return QFileSystemModel::data(index, role);
 }
@@ -111,4 +126,27 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
     }
 
     return success;
+}
+
+void FileSystemModel::onThumbDone(const QString &path, const QImage &thumb)
+{
+    thumbs.insert(path, QIcon(QPixmap::fromImage(thumb)));
+    QModelIndex idx = index(path);
+    emit dataChanged(idx, idx);
+}
+
+void FileSystemModel::loadThumbs(const QString &dir)
+{
+    QList<QByteArray> types = QImageReader::supportedImageFormats();
+    QModelIndex dirIndex = index(dir);
+    QStringList files;
+
+    for (int row = 0; row < rowCount(dirIndex); row++) {
+        QModelIndex idx = index(row, 0, dirIndex);
+        QString path = filePath(idx);
+        if (types.contains(QFileInfo(path).suffix().toUtf8()))
+            files.append(path);
+    }
+
+    thumbnails->getThumbnails(files);
 }

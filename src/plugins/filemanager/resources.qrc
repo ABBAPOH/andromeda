@@ -3,5 +3,6 @@
         <file>icons/eject.png</file>
         <file>icons/cancelCopy.png</file>
         <file>icons/copyDetails.png</file>
+        <file>thumbnails/background.jpg</file>
     </qresource>
 </RCC>
