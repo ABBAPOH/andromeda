@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/pdfview.png</file>
+        <!-- find widget -->
+        <file>icons/dialog-cancel.png</file>
+        <file>icons/go-up.png</file>
+        <file>icons/go-down.png</file>
+        <!-- line edit clear button -->
+        <file>icons/edit-clear-locationbar-rtl.png</file>
+        <!-- zoom tools -->
+        <file>icons/zoom-in.png</file>
+        <file>icons/zoom-out.png</file>
+        <!-- mouse tools -->
+        <file>icons/input-mouse.png</file>
+        <file>icons/page-zoom.png</file>
+        <file>icons/select-rectangular.png</file>
+        <file>icons/draw-text.png</file>
+    </qresource>
+</RCC>
