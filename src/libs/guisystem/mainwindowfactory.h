@@ -1,6 +1,8 @@
 #ifndef MAINWINDOWFACTORY_H
 #define MAINWINDOWFACTORY_H
 
+#include "guisystem_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtCore/QUrl>
@@ -9,7 +11,7 @@ namespace GuiSystem {
 
 class MainWindow;
 
-class MainWindowFactory : public QObject
+class GUISYSTEM_EXPORT MainWindowFactory : public QObject
 {
     Q_OBJECT
 public:
