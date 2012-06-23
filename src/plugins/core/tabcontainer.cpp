@@ -35,6 +35,7 @@ TabContainer::TabContainer(QWidget *parent) :
     m_tabWidget->setMovable(true);
     m_tabWidget->setUsesScrollButtons(true);
     m_tabWidget->setCornerWidget(m_newTabButton, Qt::TopRightCorner);
+    m_tabWidget->setTabBarVisible(false);
 
     m_defaultUrl = QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
 
@@ -154,6 +155,7 @@ bool TabContainer::restoreState(const QByteArray &arr)
 
     m_tabWidget->setCurrentIndex(currentIndex);
     m_tabWidget->setTabsClosable(tabCount > 1);
+    m_tabWidget->setTabBarVisible(tabCount > 1);
     StackedContainer *container = qobject_cast<StackedContainer *>(m_tabWidget->currentWidget());
     setSourceEditor(container);
 
@@ -199,8 +201,10 @@ void TabContainer::newTab(const QUrl &url)
     else
         setSourceEditor(container);
 
-    if (m_tabWidget->count() > 1)
+    if (m_tabWidget->count() > 1) {
         m_tabWidget->setTabsClosable(true);
+        m_tabWidget->setTabBarVisible(true);
+    }
 }
 
 void TabContainer::closeTab(int index)
@@ -220,8 +224,10 @@ void TabContainer::closeTab(int index)
     m_tabWidget->removeTab(index);
     widget->deleteLater();
 
-    if (m_tabWidget->count() == 1)
+    if (m_tabWidget->count() == 1) {
         m_tabWidget->setTabsClosable(false);
+        m_tabWidget->setTabBarVisible(false);
+    }
 }
 
 void TabContainer::close()
