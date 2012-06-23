@@ -9,11 +9,16 @@
 class MyTabWidget : public QTabWidget
 {
     Q_OBJECT
+    Q_PROPERTY(bool tabBarVisible READ isTabBarVisible WRITE setTabBarVisible NOTIFY tabBarVisibleChanged)
 public:
     explicit MyTabWidget(QWidget *parent = 0);
 
+    bool isTabBarVisible() const;
+    void setTabBarVisible(bool visible);
+
 signals:
     void tabBarDoubleClicked();
+    void tabBarVisibleChanged(bool visible);
 
 protected:
     bool eventFilter(QObject *o, QEvent *e);
