@@ -162,11 +162,11 @@ void FindToolBar::setupActions()
 
     d->findPrevAction = new QAction(this);
     d->findPrevAction->setShortcut(QKeySequence::FindPrevious);
-    manager->registerAction(d->findPrevAction, "Actions.FindPrevious");
+    manager->registerAction(d->findPrevAction, "FindPrevious");
 
     d->findNextAction = new QAction(this);
     d->findNextAction->setShortcut(QKeySequence::FindNext);
-    manager->registerAction(d->findNextAction, "Actions.FindNext");
+    manager->registerAction(d->findNextAction, "FindNext");
 
     d->closeAction = new QAction(this);
     d->closeAction->setShortcut(QKeySequence("Esc"));
