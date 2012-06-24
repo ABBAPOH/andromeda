@@ -6,6 +6,8 @@
 #include <QtCore/QUrl>
 #include <QtGui/QMainWindow>
 
+class QToolButton;
+
 namespace GuiSystem {
 
 class ProxyEditor;
@@ -15,6 +17,7 @@ class GUISYSTEM_EXPORT MainWindow : public QMainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MainWindow)
+    Q_PROPERTY(bool menuVisible READ menuVisible WRITE setMenuVisible NOTIFY menuVisibleChanged)
 
 public:
     enum Action { NoAction = -1,
@@ -26,6 +29,8 @@ public:
                   Cancel,
                   Back,
                   Forward,
+
+                  ShowMenu,
 
                   ActionCount
                 };
@@ -40,7 +45,11 @@ public:
     ProxyEditor *contanier() const;
     virtual void setContanier(ProxyEditor *container);
 
+    bool menuVisible() const;
+
     QUrl url() const;
+
+    QToolButton *menuBarButton() const;
 
     static MainWindow *currentWindow();
     static QList<MainWindow*> windows();
@@ -65,6 +74,11 @@ public slots:
 
     void refresh();
     void cancel();
+
+    void setMenuVisible(bool visible);
+
+signals:
+    void menuVisibleChanged(bool visible);
 
 private slots:
     void setWindowIcon(const QIcon &icon);

@@ -12,6 +12,7 @@
 #include <QtGui/QDirModel>
 #include <QtGui/QFileDialog>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QToolButton>
 
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
@@ -76,6 +77,12 @@ void BrowserWindowPrivate::setupToolBar()
 
     toolBar->addSeparator();
     toolBar->addWidget(lineEdit);
+
+#ifndef Q_OS_MAC
+    q->setMenuVisible(false);
+#endif
+    menuBarAction = toolBar->addWidget(q->menuBarButton());
+    connect(q, SIGNAL(menuVisibleChanged(bool)), this, SLOT(onMenuVisibleChanged(bool)));
 
     q->addToolBar(toolBar);
     q->setUnifiedTitleAndToolBarOnMac(true);
@@ -175,6 +182,11 @@ void BrowserWindowPrivate::setupUi()
 void BrowserWindowPrivate::onUrlChanged(const QUrl &url)
 {
     upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
+}
+
+void BrowserWindowPrivate::onMenuVisibleChanged(bool visible)
+{
+    menuBarAction->setVisible(!visible);
 }
 
 BrowserWindowFactory::BrowserWindowFactory(QObject *parent) :

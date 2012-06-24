@@ -3,6 +3,8 @@
 
 #include "mainwindow.h"
 
+class QToolButton;
+
 namespace GuiSystem {
 
 class ProxyEditor;
@@ -28,6 +30,9 @@ public:
     HistoryButton *backButton;
     HistoryButton *forwardButton;
     QAction *actions[MainWindow::ActionCount];
+
+    bool menuVisible;
+    QToolButton *menuBarButton;
 
 private:
     MainWindow *q_ptr;
