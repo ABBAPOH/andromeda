@@ -164,8 +164,6 @@ void CorePlugin::postInitialize(const QVariantMap &options)
 
 void CorePlugin::shutdown()
 {
-    qDeleteAll(BrowserWindow::windows());
-
     delete dockMenu;
 #ifdef Q_OS_MAC
     delete menuBar;
@@ -344,6 +342,8 @@ void CorePlugin::saveSettings()
 void CorePlugin::quit()
 {
     saveSession();
+
+    qDeleteAll(BrowserWindow::windows());
 
     QMetaObject::invokeMethod(PluginManager::instance(), "unloadPlugins", Qt::QueuedConnection);
     QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
