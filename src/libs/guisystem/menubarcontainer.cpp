@@ -45,6 +45,13 @@ void MenuBarContainerPrivate::createFileMenu()
     commands[MenuBarContainer::OpenFile]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::OpenFile]);
 
+    commands[MenuBarContainer::Close] = new Command(q->standardCommandName(MenuBarContainer::Close), q);
+    commands[MenuBarContainer::Close]->setDefaultShortcut(QKeySequence("Ctrl+W"));
+    commands[MenuBarContainer::Close]->setContext(Command::WindowCommand);
+    containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Close]);
+
+    containers[MenuBarContainer::FileMenu]->addCommand(new Separator(q));
+
     commands[MenuBarContainer::Save] = new Command(q->standardCommandName(MenuBarContainer::Save), q);
     commands[MenuBarContainer::Save]->setDefaultShortcut(QKeySequence("Ctrl+S"));
     commands[MenuBarContainer::Save]->setContext(Command::WindowCommand);
@@ -55,10 +62,7 @@ void MenuBarContainerPrivate::createFileMenu()
     commands[MenuBarContainer::SaveAs]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::SaveAs]);
 
-    commands[MenuBarContainer::Close] = new Command(q->standardCommandName(MenuBarContainer::Close), q);
-    commands[MenuBarContainer::Close]->setDefaultShortcut(QKeySequence("Ctrl+W"));
-    commands[MenuBarContainer::Close]->setContext(Command::WindowCommand);
-    containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Close]);
+    containers[MenuBarContainer::FileMenu]->addCommand(new Separator(q));
 
     commands[MenuBarContainer::Refresh] = new Command(q->standardCommandName(MenuBarContainer::Refresh), q);
     commands[MenuBarContainer::Refresh]->setDefaultShortcut(QKeySequence("Ctrl+R"));

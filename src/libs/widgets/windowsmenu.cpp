@@ -20,6 +20,7 @@ public:
 
 public:
     QAction *minimizeWindowAction;
+    QAction *fullscreenAction;
     QAction *nextWindowAction;
     QAction *prevWindowAction;
     QWidgetList widgets;
@@ -115,6 +116,7 @@ void WindowsMenuPrivate::retranslateUi()
     Q_Q(WindowsMenu);
 
     minimizeWindowAction->setText(WindowsMenu::tr("Minimize"));
+    fullscreenAction->setText(WindowsMenu::tr("Toggle fullsreen"));
     nextWindowAction->setText(WindowsMenu::tr("Next window"));
     prevWindowAction->setText(WindowsMenu::tr("Previous window"));
 
@@ -131,6 +133,11 @@ WindowsMenu::WindowsMenu(QWidget *parent) :
     d->minimizeWindowAction->setShortcut(QKeySequence("Ctrl+M"));
     addAction(d->minimizeWindowAction);
     connect(d->minimizeWindowAction, SIGNAL(triggered()), SLOT(minimizeWindow()));
+
+    d->fullscreenAction = new QAction(this);
+    d->fullscreenAction->setShortcut(QKeySequence("Ctrl+F"));
+    addAction(d->fullscreenAction);
+    connect(d->fullscreenAction, SIGNAL(triggered()), SLOT(toggleFullscreen()));
 
     d->nextWindowAction = new QAction(this);
     d->nextWindowAction->setShortcut(QKeySequence("Ctrl+~"));
@@ -169,6 +176,13 @@ QAction * WindowsMenu::minimizeAction() const
     return d->minimizeWindowAction;
 }
 
+QAction *WindowsMenu::toggleFullscreenAction() const
+{
+    Q_D(const WindowsMenu);
+
+    return d->fullscreenAction;
+}
+
 QAction *WindowsMenu::nextAction() const
 {
     Q_D(const WindowsMenu);
@@ -192,6 +206,20 @@ void WindowsMenu::minimizeWindow()
 
     QWidget *w = d->widgets[d->currentIndex];
     w->showMinimized();
+}
+
+void WindowsMenu::toggleFullscreen()
+{
+    Q_D(WindowsMenu);
+
+    if (d->currentIndex == -1)
+        return;
+
+    QWidget *w = d->widgets[d->currentIndex];
+    if (w->windowState() & Qt::WindowFullScreen)
+        w->showNormal();
+    else
+        w->showFullScreen();
 }
 
 void WindowsMenu::nextWindow()
