@@ -35,6 +35,7 @@ public:
         FindNext,
         FindPrevious,
 
+        ShowMenu,
         Preferences,
 
         About,

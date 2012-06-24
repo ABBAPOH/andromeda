@@ -32,6 +32,7 @@ public:
     QAction *newTabAction;
     QAction *prevTabAction;
     QAction *nextTabAction;
+    QAction *menuBarAction;
 
     void setupActions();
     void setupToolBar();
@@ -40,6 +41,8 @@ public:
 
 public slots:
     void onUrlChanged(const QUrl &);
+
+    void onMenuVisibleChanged(bool visible);
 
 };
 

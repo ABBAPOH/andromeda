@@ -155,6 +155,14 @@ void MenuBarContainerPrivate::createToolsMenu()
 
     Command *c = 0;
 
+#ifndef Q_OS_MAC
+    containers[MenuBarContainer::ToolsMenu]->addCommand(new Separator(q));
+    createCommand(MenuBarContainer::ToolsMenu,
+                  MenuBarContainer::ShowMenu,
+                  QKeySequence("Alt+M"),
+                  Command::WindowCommand);
+#endif
+
     containers[MenuBarContainer::ToolsMenu]->addCommand(new Separator(q), "80");
 
     c = new Command(q->standardCommandName(MenuBarContainer::Preferences), q);
@@ -224,6 +232,9 @@ void MenuBarContainerPrivate::retranslateCommands()
     retranslateCommand(MenuBarContainer::FindNext, MenuBarContainer::tr("Find next"));
     retranslateCommand(MenuBarContainer::FindPrevious, MenuBarContainer::tr("Find previous"));
 
+#ifndef Q_OS_MAC
+    retranslateCommand(MenuBarContainer::ShowMenu, MenuBarContainer::tr("Show menu"));
+#endif
     retranslateCommand(MenuBarContainer::Preferences, MenuBarContainer::tr("Preferences"));
 
     retranslateCommand(MenuBarContainer::About, MenuBarContainer::tr("About..."));

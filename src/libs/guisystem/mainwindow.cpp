@@ -14,10 +14,12 @@
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
+
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFileDialog>
+#include <QtGui/QMenuBar>
 #include <QtGui/QWidgetAction>
 
 static const qint32 mainWindowMagic = 0x6d303877; // "m08w"
@@ -43,6 +45,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(d->history, SIGNAL(canGoBackChanged(bool)), d->actions[Back], SLOT(setEnabled(bool)));
     connect(d->history, SIGNAL(canGoForwardChanged(bool)), d->actions[Forward], SLOT(setEnabled(bool)));
+
+    d->menuVisible = true;
+    d->menuBarButton = new QToolButton(0);
+    d->menuBarButton->setMenu(MenuBarContainer::instance()->menu(d->menuBarButton));
+    d->menuBarButton->setPopupMode(QToolButton::InstantPopup);
+    d->menuBarButton->setText(tr("Menu"));
+    d->menuBarButton->setIcon(QIcon(":/icons/menu.png"));
+    d->menuBarButton->setVisible(false);
 
     d->initGeometry();
 }
@@ -101,6 +111,29 @@ void MainWindow::setContanier(ProxyEditor *container)
     setCentralWidget(d->contanier);
 }
 
+bool MainWindow::menuVisible() const
+{
+    Q_D(const MainWindow);
+
+    return d->menuVisible;
+}
+
+void MainWindow::setMenuVisible(bool visible)
+{
+    Q_D(MainWindow);
+
+    if (d->menuVisible == visible)
+        return;
+
+    d->menuVisible = visible;
+
+    if (menuBar())
+        menuBar()->setVisible(d->menuVisible);
+    d->menuBarButton->setVisible(!d->menuVisible);
+
+    emit menuVisibleChanged(d->menuVisible);
+}
+
 QUrl MainWindow::url() const
 {
     Q_D(const MainWindow);
@@ -109,6 +142,13 @@ QUrl MainWindow::url() const
         return d->contanier->url();
 
     return QUrl();
+}
+
+QToolButton *MainWindow::menuBarButton() const
+{
+    Q_D(const MainWindow);
+
+    return d->menuBarButton;
 }
 
 MainWindow * MainWindow::currentWindow()
@@ -336,6 +376,11 @@ void MainWindowPrivate::createActions()
     actions[MainWindow::Forward]->setEnabled(false);
     QObject::connect(actions[MainWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
 
+    actions[MainWindow::ShowMenu] = new QAction(q);
+    actions[MainWindow::ShowMenu]->setCheckable(true);
+    actions[MainWindow::ShowMenu]->setChecked(true);
+    QObject::connect(actions[MainWindow::ShowMenu], SIGNAL(triggered(bool)), q, SLOT(setMenuVisible(bool)));
+
     for (int i = 0; i < MainWindow::ActionCount; i++) {
         q->addAction(actions[i]);
     }
@@ -359,6 +404,10 @@ void MainWindowPrivate::registerActions()
 
     manager->registerAction(actions[MainWindow::Back], "Back");
     manager->registerAction(actions[MainWindow::Forward], "Forward");
+
+#ifndef Q_OS_MAC
+    manager->registerAction(actions[MainWindow::ShowMenu], MenuBarContainer::standardCommandName(MenuBarContainer::ShowMenu));
+#endif
 }
 
 void MainWindowPrivate::initGeometry()
