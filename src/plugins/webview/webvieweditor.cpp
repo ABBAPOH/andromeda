@@ -261,7 +261,7 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
 
     QAction *findAction = new QAction(tr("Find"), this);
     connect(findAction, SIGNAL(triggered()), m_findToolBar, SLOT(openFind()));
-    addAction(findAction, "Actions.Find");
+    addAction(findAction, "Find");
 
     addAction(m_webView->pageAction(QWebPage::Redo), Constants::Actions::Redo);
     addAction(m_webView->pageAction(QWebPage::Undo), Constants::Actions::Undo);
