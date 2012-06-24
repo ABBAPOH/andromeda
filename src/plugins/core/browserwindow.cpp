@@ -84,7 +84,8 @@ void BrowserWindowPrivate::setupToolBar()
     connect(q, SIGNAL(menuVisibleChanged(bool)), this, SLOT(onMenuVisibleChanged(bool)));
 
     q->addToolBar(toolBar);
-    q->setUnifiedTitleAndToolBarOnMac(true);
+    // TODO: fix Qt bugs
+//    q->setUnifiedTitleAndToolBarOnMac(true);
 }
 
 void BrowserWindowPrivate::setupAlternateToolBar()
@@ -241,10 +242,10 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
 #endif
     setAttribute(Qt::WA_DeleteOnClose);
 
-    if ( !(m_windowGeometry.isNull() || m_windowGeometry.isEmpty()) ) {
-        restoreGeometry(m_windowGeometry);
-        move(pos() + QPoint(20, 20));
-    }
+//    if ( !(m_windowGeometry.isNull() || m_windowGeometry.isEmpty()) ) {
+//        restoreGeometry(m_windowGeometry);
+//        move(pos() + QPoint(20, 20));
+//    }
 }
 
 BrowserWindow::~BrowserWindow()

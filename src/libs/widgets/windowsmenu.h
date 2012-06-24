@@ -16,11 +16,13 @@ public:
     ~WindowsMenu();
 
     QAction *minimizeAction() const;
+    QAction *toggleFullscreenAction() const;
     QAction *nextAction() const;
     QAction *prevAction() const;
 
 public slots:
     void minimizeWindow();
+    void toggleFullscreen();
     void nextWindow();
     void prevWindow();
 
