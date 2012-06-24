@@ -133,8 +133,10 @@ void MainWindow::setMenuVisible(bool visible)
 
     d->menuVisible = visible;
 
+#ifndef Q_OS_MAC
     if (menuBar())
         menuBar()->setVisible(d->menuVisible);
+#endif
     d->menuBarButton->setVisible(!d->menuVisible);
 
     QSettings settings;
