@@ -11,6 +11,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QAction>
+#include <QtGui/QMenu>
 
 // TODO: update containers correctly when adding new actions
 
@@ -320,6 +321,10 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
 
 void ActionManager::onFocusChanged(QWidget *old, QWidget *newWidget)
 {
+    // TODO: check this carefully
+    if (qobject_cast<QMenu*>(newWidget))
+        return;
+
     QWidget *w = old;
     while (w) {
         setActionsEnabled(w, false, Command::WidgetCommand);
