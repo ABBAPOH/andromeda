@@ -425,7 +425,7 @@ void CorePlugin::createGoToMenu()
 #ifdef Q_OS_MAC
     c = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Ctrl+Up")), tr("Up one level"), this);
 #else
-    cmd = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Alt+Up")), tr("Up one level"), this);
+    c = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Alt+Up")), tr("Up one level"), this);
 #endif
     goToMenu->addCommand(c);
 }

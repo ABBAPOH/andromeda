@@ -18,6 +18,7 @@
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
 #include <guisystem/ihistory.h>
+#include <guisystem/menubarcontainer.h>
 
 #include "constants.h"
 
@@ -237,7 +238,7 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
     d->setupAlternateToolBar();
 
 #ifndef Q_OS_MAC
-    setMenuBar(ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar());
+    setMenuBar(MenuBarContainer::instance()->menuBar());
 #endif
     setAttribute(Qt::WA_DeleteOnClose);
 
