@@ -14,6 +14,7 @@
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
+#include <QtCore/QSettings>
 
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -46,13 +47,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(d->history, SIGNAL(canGoBackChanged(bool)), d->actions[Back], SLOT(setEnabled(bool)));
     connect(d->history, SIGNAL(canGoForwardChanged(bool)), d->actions[Forward], SLOT(setEnabled(bool)));
 
-    d->menuVisible = true;
-    d->menuBarButton = new QToolButton(0);
+    d->menuBarButton = new QToolButton(this);
     d->menuBarButton->setMenu(MenuBarContainer::instance()->menu(d->menuBarButton));
     d->menuBarButton->setPopupMode(QToolButton::InstantPopup);
     d->menuBarButton->setText(tr("Menu"));
     d->menuBarButton->setIcon(QIcon(":/icons/menu.png"));
-    d->menuBarButton->setVisible(false);
+
+    QSettings settings;
+    settings.beginGroup("MainWindow");
+    bool visible = settings.value("menuVisible", true).toBool();
+    d->menuVisible = !visible; // to skip check in setMenuVisible
+    setMenuVisible(visible);
+    d->actions[MainWindow::ShowMenu]->setChecked(visible);
 
     d->initGeometry();
 }
@@ -130,6 +136,10 @@ void MainWindow::setMenuVisible(bool visible)
     if (menuBar())
         menuBar()->setVisible(d->menuVisible);
     d->menuBarButton->setVisible(!d->menuVisible);
+
+    QSettings settings;
+    settings.beginGroup("MainWindow");
+    settings.setValue("menuVisible", visible);
 
     emit menuVisibleChanged(d->menuVisible);
 }

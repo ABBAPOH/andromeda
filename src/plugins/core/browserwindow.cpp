@@ -12,6 +12,7 @@
 #include <QtGui/QDirModel>
 #include <QtGui/QFileDialog>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QMenuBar>
 #include <QtGui/QToolButton>
 
 #include <guisystem/actionmanager.h>
@@ -79,9 +80,6 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar->addSeparator();
     toolBar->addWidget(lineEdit);
 
-#ifndef Q_OS_MAC
-    q->setMenuVisible(false);
-#endif
     menuBarAction = toolBar->addWidget(q->menuBarButton());
     connect(q, SIGNAL(menuVisibleChanged(bool)), this, SLOT(onMenuVisibleChanged(bool)));
 
@@ -239,6 +237,7 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
 
 #ifndef Q_OS_MAC
     setMenuBar(MenuBarContainer::instance()->menuBar());
+    menuBar()->setVisible(menuVisible());
 #endif
     setAttribute(Qt::WA_DeleteOnClose);
 
