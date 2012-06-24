@@ -10,6 +10,7 @@
 #include "historybutton.h"
 #include "mainwindowfactory.h"
 #include "proxyeditor.h"
+#include "menubarcontainer.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
@@ -354,7 +355,7 @@ void MainWindowPrivate::retranslateUi()
 void MainWindowPrivate::registerActions()
 {
     ActionManager *manager = ActionManager::instance();
-    manager->registerAction(actions[MainWindow::Close], "CloseTab");
+    manager->registerAction(actions[MainWindow::Close], MenuBarContainer::standardCommandName(MenuBarContainer::Close));
 
     manager->registerAction(actions[MainWindow::Back], "Back");
     manager->registerAction(actions[MainWindow::Forward], "Forward");

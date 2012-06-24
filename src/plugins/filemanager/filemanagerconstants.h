@@ -6,6 +6,7 @@ namespace Constants {
 namespace Menus {
 
 const char * const SortBy = "SortBy";
+const char * const Panes = "Panes";
 
 } // namespace Menus
 

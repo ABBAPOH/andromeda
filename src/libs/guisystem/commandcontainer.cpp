@@ -94,6 +94,9 @@ bool commandLessThen(QObject *o1, QObject *o2)
 */
 void CommandContainer::addCommand(Command *c, const QByteArray &weight)
 {
+    if (!c)
+        return;
+
     Q_D(CommandContainer);
 
     d->addObject(c, weight);
@@ -104,6 +107,9 @@ void CommandContainer::addCommand(Command *c, const QByteArray &weight)
 */
 void CommandContainer::addContainer(CommandContainer *c, const QByteArray &weight)
 {
+    if (!c)
+        return;
+
     Q_D(CommandContainer);
 
     d->addObject(c, weight);

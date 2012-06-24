@@ -26,6 +26,7 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+#include <guisystem/menubarcontainer.h>
 #include <guisystem/settingsdialog.h>
 #include <guisystem/settingspagemanager.h>
 
@@ -280,7 +281,7 @@ void CorePlugin::restoreSession()
 {
 #ifdef Q_OS_MAC
     // Create menu bar now
-    menuBar = ActionManager::instance()->container(Constants::Menus::MenuBar)->menuBar();
+    menuBar = MenuBarContainer::instance()->menuBar();
 #endif
 
     loadSettings();
@@ -391,231 +392,73 @@ bool CorePlugin::eventFilter(QObject *o, QEvent *e)
 
 void CorePlugin::createActions()
 {
-    new CommandContainer(Constants::Menus::MenuBar, this);
+    MenuBarContainer *menuBar = new MenuBarContainer(this);
+    menuBar->createMenus();
 
-    createFileMenu();
-    createEditMenu();
-    createViewMenu();
     createGoToMenu();
     createToolsMenu();
     createWindowsMenu();
-    createHelpMenu();
     createDockMenu();
     registerAtions();
 }
 
-void CorePlugin::createFileMenu()
-{
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
-
-    Command *cmd = 0;
-    CommandContainer *container = 0;
-
-    // ================ File Menu ================
-    container = new CommandContainer(Constants::Menus::File, this);
-    container->setTitle(tr("File"));
-    menuBarContainer->addContainer(container);
-
-    // ================ File Menu (New) ================
-    cmd = new Command(Constants::Actions::NewWindow, QKeySequence("Ctrl+N"), tr("New window"), this);
-    cmd->setContext(Command::ApplicationCommand);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::NewTab, QKeySequence("Ctrl+T"), tr("New tab"), this);
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::CloseTab, QKeySequence("Ctrl+W"), tr("Close"), this);
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
-
-    // ================ File Menu (Save) ================
-    container->addCommand(new Separator(this));
-
-    cmd = new Command(Constants::Actions::Save, QKeySequence::Save, tr("Save"), this);
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::SaveAs, QKeySequence::SaveAs, tr("Save as..."), this);
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
-
-    // ================ File Menu (Quit) ================
-    container->addCommand(new Separator(this), "98");
-
-    cmd = new Command(Constants::Actions::Quit, QKeySequence("Ctrl+Q"), tr("Quit Andromeda"), this);
-    cmd->setContext(Command::ApplicationCommand);
-    cmd->setAttributes(Command::AttributeNonConfigurable);
-    cmd->commandAction()->setMenuRole(QAction::QuitRole);
-    container->addCommand(cmd, "99");
-}
-
-void CorePlugin::createEditMenu()
-{
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
-
-    Command *cmd = 0;
-    CommandContainer *container = 0;
-
-    // ================ Edit Menu ================
-    container = new CommandContainer(Constants::Menus::Edit, this);
-    container->setTitle(tr("Edit"));
-    menuBarContainer->addContainer(container);
-
-    // ================ Edit Menu (Redo) ================
-    cmd = new Command(Constants::Actions::Undo, QKeySequence::Undo, tr("Undo"), this);
-    cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::Redo, QKeySequence::Redo, tr("Redo"), this);
-    cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd);
-
-    // ================ Edit Menu (CopyPaste) ================
-    container->addCommand(new Separator(this));
-
-    cmd = new Command(Constants::Actions::Cut, QKeySequence::Cut, tr("Cut"), this);
-    cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::Copy, QKeySequence::Copy, tr("Copy"), this);
-    cmd->setAttributes(Command::AttributeUpdateText);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::Paste, QKeySequence::Paste, tr("Paste"), this);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::SelectAll, QKeySequence::SelectAll, tr("Select All"), this);
-    container->addCommand(cmd);
-
-    // ================ Edit Menu (Find) ================
-    container->addCommand(new Separator(this));
-
-    cmd = new Command(Constants::Actions::Find, QKeySequence::Find, tr("Find"), this);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::FindNext, QKeySequence::FindNext, tr("Find next"), this);
-    container->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::FindPrevious, QKeySequence::FindPrevious, tr("Find previous"), this);
-    container->addCommand(cmd);
-}
-
-void CorePlugin::createViewMenu()
-{
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
-
-    // ================ View Menu ================
-    CommandContainer *container = new CommandContainer(Constants::Menus::View, this);
-    container->setTitle(tr("View"));
-    menuBarContainer->addContainer(container);
-}
-
 void CorePlugin::createGoToMenu()
 {
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+    MenuBarContainer *menuBar = MenuBarContainer::instance();
 
-    Command *cmd = 0;
-    CommandContainer *container = 0;
+    Command *c = 0;
 
     // ================ GoTo Menu ================
-    container = new CommandContainer(Constants::Menus::GoTo, this);
-    container->setTitle(tr("Go to"));
-    menuBarContainer->addContainer(container);
+    CommandContainer *goToMenu = new CommandContainer(Constants::Menus::GoTo, this);
+    goToMenu->setTitle(tr("Go to"));
+    menuBar->addContainer(goToMenu);
 
     // ================ GoTo Menu (default) ================
-    cmd = new Command(Constants::Actions::Back, tr("Back"), this);
-    cmd->setDefaultShortcut(QKeySequence::Back);
-    container->addCommand(cmd);
+    c = new Command(Constants::Actions::Back, tr("Back"), this);
+    c->setDefaultShortcut(QKeySequence::Back);
+    goToMenu->addCommand(c);
 
-    cmd = new Command(Constants::Actions::Forward, tr("Forward"), this);
-    cmd->setDefaultShortcut(QKeySequence::Forward);
-    container->addCommand(cmd);
+    c = new Command(Constants::Actions::Forward, tr("Forward"), this);
+    c->setDefaultShortcut(QKeySequence::Forward);
+    goToMenu->addCommand(c);
 
 #ifdef Q_OS_MAC
-    cmd = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Ctrl+Up")), tr("Up one level"), this);
+    c = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Ctrl+Up")), tr("Up one level"), this);
 #else
     cmd = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Alt+Up")), tr("Up one level"), this);
 #endif
-    container->addCommand(cmd);
+    goToMenu->addCommand(c);
 }
 
 void CorePlugin::createWindowsMenu()
 {
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+    MenuBarContainer *menuBar = MenuBarContainer::instance();
 
-    CommandContainer *container = new WindowsContainer(Constants::Menus::Windows, this);
-    container->setTitle(tr("Windows"));
-    menuBarContainer->addContainer(container);
+    CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
+    windowsMenu->setTitle(tr("Windows"));
+    menuBar->addContainer(windowsMenu);
 }
 
 void CorePlugin::createToolsMenu()
 {
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+    MenuBarContainer *menuBar = MenuBarContainer::instance();
 
     // ================ Tools Menu ================
-    CommandContainer *toolsContainer = new CommandContainer(Constants::Menus::Tools, this);
-    toolsContainer->setTitle(tr("Tools"));
-    menuBarContainer->addContainer(toolsContainer);
+    CommandContainer *toolsMenu = menuBar->container(MenuBarContainer::ToolsMenu);
 
 #ifdef QT_DEBUG
-    Command *pluginsCommand = new Command(Constants::Actions::Plugins, this);
-    pluginsCommand->setDefaultText(tr("Plugins..."));
-    pluginsCommand->setContext(Command::ApplicationCommand);
-    toolsContainer->addCommand(pluginsCommand);
+    Command *plugins = new Command(Constants::Actions::Plugins, this);
+    plugins->setDefaultText(tr("Plugins..."));
+    plugins->setContext(Command::ApplicationCommand);
+    toolsMenu->addCommand(plugins);
 #endif
 
 #ifdef QT_DEBUG
-    Command *settingsCommand = new Command(Constants::Actions::Settings, this);
-    settingsCommand->setDefaultText(tr("View all settings..."));
-    settingsCommand->setContext(Command::ApplicationCommand);
-    toolsContainer->addCommand(settingsCommand);
+    Command *settings = new Command(Constants::Actions::Settings, this);
+    settings->setDefaultText(tr("View all settings..."));
+    settings->setContext(Command::ApplicationCommand);
+    toolsMenu->addCommand(settings);
 #endif
-
-    // ================ Tools Menu (Preferences) ================
-    toolsContainer->addCommand(new Separator(this), "80");
-
-    Command *preferencesCommand = new Command(Constants::Actions::Preferences, this);
-    preferencesCommand->setDefaultText(tr("Preferences"));
-    preferencesCommand->setDefaultShortcut(QKeySequence::Preferences);
-    preferencesCommand->setContext(Command::ApplicationCommand);
-    preferencesCommand->setAttributes(Command::AttributeNonConfigurable);
-    preferencesCommand->commandAction()->setMenuRole(QAction::PreferencesRole);
-    toolsContainer->addCommand(preferencesCommand, "85");
-}
-
-void CorePlugin::createHelpMenu()
-{
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
-
-    Command *cmd = 0;
-    CommandContainer *container = 0;
-
-    // ================ Help Menu ================
-    container = new CommandContainer(Constants::Menus::Help, this);
-    container->setTitle(tr("Help"));
-    menuBarContainer->addContainer(container);
-
-    cmd = new Command(Constants::Actions::About, tr("About Andromeda..."), this);
-    cmd->setContext(Command::ApplicationCommand);
-    cmd->setAttributes(Command::AttributeNonConfigurable);
-    cmd->commandAction()->setMenuRole(QAction::AboutRole);
-    container->addCommand(cmd);
-//    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(about()));
-
-    cmd = new Command(Constants::Actions::AboutQt, tr("About Qt..."), this);
-    cmd->setContext(Command::ApplicationCommand);
-    cmd->setAttributes(Command::AttributeNonConfigurable);
-    cmd->commandAction()->setMenuRole(QAction::AboutQtRole);
-    container->addCommand(cmd);
-//    connect(cmd->commandAction(), SIGNAL(triggered()), SLOT(aboutQt()));
 }
 
 #ifdef Q_OS_MAC
@@ -624,24 +467,22 @@ void qt_mac_set_dock_menu(QMenu *menu);
 
 void CorePlugin::createDockMenu()
 {
-    ActionManager *actionManager = ActionManager::instance();
+    MenuBarContainer *menuBar = MenuBarContainer::instance();
 
-    Command *cmd = 0;
-    CommandContainer *container = new DockContainer(Constants::Menus::Dock, this);
+    CommandContainer *dock = new DockContainer(Constants::Menus::Dock, this);
 #ifdef Q_OS_MAC
-    container->setTitle(tr("Dock menu"));
+    dock->setTitle(tr("Dock menu"));
 #else
-    container->setTitle(tr("Tray menu"));
+    dock->setTitle(tr("Tray menu"));
 #endif
 
-    cmd = actionManager->command(Constants::Actions::Quit);
-    container->addCommand(actionManager->command(Constants::Actions::NewWindow));
+    dock->addCommand(menuBar->command(MenuBarContainer::NewWindow));
 #ifndef Q_OS_MAC
-    container->addCommand(new Separator(this));
-    container->addCommand(actionManager->command(Constants::Actions::Quit));
+    dock->addCommand(new Separator(this));
+    dock->addCommand(menuBar->command(MenuBarContainer::Quit));
 #endif
 
-    dockMenu = container->menu();
+    dockMenu = dock->menu();
 
 #ifdef Q_OS_MAC
     qt_mac_set_dock_menu(dockMenu);

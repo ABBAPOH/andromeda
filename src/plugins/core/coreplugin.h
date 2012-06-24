@@ -47,13 +47,9 @@ protected:
 
 private:
     void createActions();
-    void createFileMenu();
-    void createEditMenu();
-    void createViewMenu();
     void createGoToMenu();
     void createWindowsMenu();
     void createToolsMenu();
-    void createHelpMenu();
     void createDockMenu();
     void registerAtions();
 
