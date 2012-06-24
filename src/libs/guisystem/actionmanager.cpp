@@ -4,9 +4,11 @@
 #include "commandcontainer.h"
 
 #include <QtCore/QDateTime>
+#include <QtCore/QDebug>
 #include <QtCore/QHash>
 #include <QtCore/QSettings>
 #include <QtCore/QXmlStreamWriter>
+
 #include <QtGui/QApplication>
 #include <QtGui/QAction>
 
@@ -17,6 +19,8 @@ namespace GuiSystem {
 class ActionManagerPrivate
 {
 public:
+    ActionManagerPrivate() {}
+
     QHash<QString, QObject *> objects;
     QSettings *settings;
 };
@@ -56,6 +60,13 @@ ActionManager::ActionManager(QObject *parent) :
 */
 ActionManager::~ActionManager()
 {
+    Q_D(ActionManager);
+
+    foreach (QObject *o, d->objects.values()) {
+        if (o->parent() == this)
+            delete o;
+    }
+
     delete d_ptr;
 }
 
@@ -64,7 +75,14 @@ ActionManager::~ActionManager()
 */
 Command * ActionManager::command(const QString &id)
 {
-    return qobject_cast<Command *>(d_func()->objects.value(id));
+    Q_D(ActionManager);
+
+    Command *c = qobject_cast<Command *>(d->objects.value(id));
+    Q_ASSERT_X(c, "ActionManager::command", QString("Can't find command with id %1").arg(id).toUtf8());
+    if (!c)
+        qWarning() << "ActionManager::command :" << "Can't find command with id" << id;
+
+    return c;
 }
 
 /*!
@@ -88,7 +106,14 @@ QList<Command *> ActionManager::commands() const
 */
 CommandContainer * ActionManager::container(const QString &id)
 {
-    return qobject_cast<CommandContainer *>(d_func()->objects.value(id));
+    Q_D(ActionManager);
+
+    CommandContainer *c = qobject_cast<CommandContainer *>(d->objects.value(id));
+    Q_ASSERT_X(c, "ActionManager::container", QString("Can't find container with id %1").arg(id).toUtf8());
+    if (!c)
+        qWarning() << "ActionManager::container :" << "Can't find command with id" << id;
+
+    return c;
 }
 
 /*!
@@ -217,6 +242,8 @@ void ActionManager::registerCommand(Command *cmd)
 {
     Q_D(ActionManager);
 
+    Q_ASSERT(!d->objects.contains(cmd->id()));
+
     d->objects.insert(cmd->id(), cmd);
     if (!cmd->parent())
         cmd->setParent(this);
@@ -230,6 +257,8 @@ void ActionManager::registerCommand(Command *cmd)
 void ActionManager::registerContainer(CommandContainer *c)
 {
     Q_D(ActionManager);
+
+    Q_ASSERT(!d->objects.contains(c->id()));
 
     d->objects.insert(c->id(), c);
     if (!c->parent())
