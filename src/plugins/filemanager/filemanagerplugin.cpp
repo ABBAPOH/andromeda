@@ -19,6 +19,7 @@
 #include <guisystem/mainwindow.h>
 
 #include <guisystem/editormanager.h>
+#include <guisystem/menubarcontainer.h>
 #include <guisystem/settingspagemanager.h>
 
 #include <core/constants.h>
@@ -116,7 +117,7 @@ void FileManagerPlugin::createFileMenu()
     Command *cmd = 0;
     CommandContainer *container = 0;
 
-    container = ActionManager::instance()->container(Constants::Menus::File);
+    container = MenuBarContainer::instance()->container(MenuBarContainer::FileMenu);
 
     cmd = new Command(Constants::Actions::Open, tr("Open"), this);
 #ifdef Q_OS_MAC
@@ -185,7 +186,8 @@ void FileManagerPlugin::createEditMenu()
     Command *cmd = 0;
     CommandContainer *container = 0;
 
-    container = ActionManager::instance()->container(Constants::Menus::Edit);
+    container = MenuBarContainer::instance()->container(MenuBarContainer::EditMenu);
+    Q_ASSERT(container);
 
     cmd = new Command(Constants::Actions::MoveHere, this);
     cmd->setDefaultText(tr("Move object(s) here"));
@@ -199,7 +201,7 @@ void FileManagerPlugin::createViewMenu()
     Command *cmd = 0;
     CommandContainer *container = 0;
 
-    container = ActionManager::instance()->container(Constants::Menus::View);
+    container = MenuBarContainer::instance()->container(MenuBarContainer::ViewMenu);
 
     // ================ View Menu (View Mode) ================
     cmd = new Command(Constants::Actions::ShowHiddenFiles, this);
@@ -366,54 +368,52 @@ void FileManagerPlugin::createSortByActons()
 void FileManagerPlugin::createPanesMenu()
 {
     Command *cmd = 0;
-    CommandContainer *container = 0;
 
-    container = ActionManager::instance()->container(Constants::Menus::MenuBar);
+    MenuBarContainer *menuBar = MenuBarContainer::instance();
 
-    CommandContainer *panesMenu = new CommandContainer(Constants::Menus::SortBy, this);
+    CommandContainer *panesMenu = new CommandContainer(Constants::Menus::Panes, this);
     panesMenu->setTitle(tr("Panes"));
-    container->addContainer(panesMenu, "035");
-    container = panesMenu;
+    menuBar->addContainer(panesMenu, "035");
 
     cmd = new Command(Constants::Actions::DualPane, this);
     cmd->setDefaultText(tr("Dual Pane"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+U")));
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::VerticalPanels, this);
     cmd->setDefaultText(tr("Vertical panes"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+U")));
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::ToggleActivePane, this);
     cmd->setDefaultText(tr("Toggle active pane"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+U")));
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 
-    container->addCommand(new Separator(this));
+    panesMenu->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::SyncPanes, tr("Sync panes"), this);
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::SwapPanes, tr("Swap panes"), this);
     cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 
-    container->addCommand(new Separator(this));
+    panesMenu->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::CopyFiles, this);
     cmd->setDefaultText(tr("Copy files"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("F5")));
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::MoveFiles, this);
     cmd->setDefaultText(tr("Move files"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("F6")));
-    container->addCommand(cmd);
+    panesMenu->addCommand(cmd);
 }
 
 void FileManagerPlugin::loadSettings()

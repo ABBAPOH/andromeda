@@ -12,6 +12,7 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+#include <guisystem/menubarcontainer.h>
 #include <guisystem/editormanager.h>
 #include <guisystem/settingspagemanager.h>
 
@@ -248,8 +249,7 @@ QWebSettings* WebViewPlugin::webSettings()
 
 void WebViewPlugin::createActions()
 {
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *toolsContainer = actionManager->container(Constants::Menus::Tools);
+    CommandContainer *toolsContainer = MenuBarContainer::instance()->container(MenuBarContainer::ToolsMenu);
 
     toolsContainer->addCommand(new Separator(this));
 

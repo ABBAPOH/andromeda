@@ -11,14 +11,14 @@ const char * const AlternateToolbar = "AlternateToolbar";
 
 namespace Menus {
 
-const char * const MenuBar = "MenuBar";
+//const char * const MenuBar = "MenuBar";
 
-const char * const File = "FileMenu";
-const char * const Edit = "EditMenu";
-const char * const View = "ViewMenu";
+const char * const File = "File";
+const char * const Edit = "Edit";
+const char * const View = "View";
 const char * const GoTo = "GoToMenu";
 const char * const Windows = "Windows";
-const char * const Tools = "ToolsMenu";
+const char * const Tools = "Tools";
 const char * const Help = "HelpMenu";
 const char * const Dock = "DockMenu";
 

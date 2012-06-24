@@ -22,6 +22,8 @@ set( HEADERS
     mainwindow.h
     mainwindow_p.h
     mainwindowfactory.h
+    menubarcontainer.h
+    menubarcontainer_p.h
     proxyaction.h
     proxyeditor.h
     proxyfile.h
@@ -55,6 +57,7 @@ set( SOURCES
     ihistory.cpp
     mainwindow.cpp
     mainwindowfactory.cpp
+    menubarcontainer.cpp
     proxyaction.cpp
     proxyeditor.cpp
     proxyfile.cpp

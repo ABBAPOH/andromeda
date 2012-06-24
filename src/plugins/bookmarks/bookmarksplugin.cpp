@@ -14,6 +14,7 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/mainwindow.h>
 #include <guisystem/mainwindowfactory.h>
+#include <guisystem/menubarcontainer.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
 #include <guisystem/proxyeditor.h>
@@ -181,8 +182,7 @@ void BookmarksPlugin::createActions()
 {
     BookmarksModel *model = object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
 
-    ActionManager *actionManager = ActionManager::instance();
-    CommandContainer *menuBarContainer = actionManager->container(Constants::Menus::MenuBar);
+    MenuBarContainer *menuBarContainer = MenuBarContainer::instance();
 
     addBookmarkAction = new QAction(tr("Add bookmark"), this);
     addBookmarkAction->setShortcut(QKeySequence(QLatin1String("Ctrl+D")));
@@ -202,7 +202,7 @@ void BookmarksPlugin::createActions()
     actions.append(showBookmarksAction);
 
     // ================ View Menu ================
-    CommandContainer *viewMenu = actionManager->container(Constants::Menus::View);
+    CommandContainer *viewMenu = MenuBarContainer::instance()->container(MenuBarContainer::ViewMenu);
     Command *c = new Command(Constants::Actions::ShowBookmarks, QKeySequence(), tr("Show Bookmarks toolbar"), this);
     c->setContext(Command::WindowCommand);
     viewMenu->addCommand(c);
