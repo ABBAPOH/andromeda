@@ -43,6 +43,7 @@ public:
 
     enum CommandContext {
         WidgetCommand,
+        WidgetWithChildrenCommand,
         WindowCommand,
         ApplicationCommand
     };

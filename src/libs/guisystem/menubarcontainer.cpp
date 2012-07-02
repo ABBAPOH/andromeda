@@ -93,14 +93,14 @@ void MenuBarContainerPrivate::createEditMenu()
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Undo,
                   QKeySequence::Undo,
-                  Command::WidgetCommand,
+                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
 
     // Redo
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Redo,
                   QKeySequence::Redo,
-                  Command::WidgetCommand,
+                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
 
     containers[MenuBarContainer::EditMenu]->addCommand(new Separator(q));
@@ -109,13 +109,13 @@ void MenuBarContainerPrivate::createEditMenu()
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Cut,
                   QKeySequence::Cut,
-                  Command::WidgetCommand,
+                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
     // Copy
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Copy,
                   QKeySequence::Copy,
-                  Command::WidgetCommand,
+                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
 
     // Paste

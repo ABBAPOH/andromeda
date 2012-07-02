@@ -4,6 +4,26 @@
 
 using namespace GuiSystem;
 
+static void updateActionContext(Command::CommandContext context, Action *action)
+{
+    switch (context) {
+    case Command::WidgetCommand:
+        action->setShortcutContext(Qt::WidgetShortcut);
+        break;
+    case Command::WindowCommand:
+        action->setShortcutContext(Qt::WindowShortcut);
+        break;
+    case Command::ApplicationCommand:
+        action->setShortcutContext(Qt::WindowShortcut);
+        break;
+    case Command::WidgetWithChildrenCommand:
+        action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+        break;
+    default:
+        break;
+    }
+}
+
 /*!
     \class Action
 
@@ -24,6 +44,7 @@ Action::Action(const QByteArray &id, QObject *parent) :
     if (c) {
         setText(c->defaultText());
         setIcon(c->defaultIcon());
+        updateActionContext(c->context(), this);
     }
 }
 
@@ -40,6 +61,7 @@ Action::Action(const QString &text, const QByteArray &id, QObject *parent) :
     Command *c = am->command(id);
     if (c) {
         setIcon(c->defaultIcon());
+        updateActionContext(c->context(), this);
     }
 }
 
@@ -52,4 +74,9 @@ Action::Action(const QIcon &icon, const QString &text, const QByteArray &id, QOb
 {
     ActionManager *am = ActionManager::instance();
     am->registerAction(this, id);
+
+    Command *c = am->command(id);
+    if (c) {
+        updateActionContext(c->context(), this);
+    }
 }
