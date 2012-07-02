@@ -27,7 +27,7 @@ public:
     void createMenu(MenuBarContainer::StandardContainer menu);
     void createCommand(MenuBarContainer::StandardContainer menu, MenuBarContainer::StandardCommand command,
                        const QKeySequence &shortcut = QKeySequence(),
-                       Command::CommandContext context = Command::WidgetCommand,
+                       Command::CommandContext context = Command::WidgetWithChildrenCommand,
                        Command::Attributes attributes = 0);
 
     void retranslateCommand(MenuBarContainer::StandardCommand command, const QString &defaultText);

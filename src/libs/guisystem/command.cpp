@@ -41,7 +41,7 @@ CommandPrivate::CommandPrivate(const QByteArray &id, Command *qq)
     action->setEnabled(false);
     realAction = 0;
     isSeparator = false;
-    context = Command::WidgetCommand;
+    context = Command::WidgetWithChildrenCommand;
 }
 
 void CommandPrivate::update()
@@ -144,6 +144,7 @@ Command::~Command()
     This enum type set's Commands context, which can be one of following:
 
     \value WidgetCommand Command is linked to action added to focus widget.
+    \value WidgetWithChildrenCommand Command is linked to action added to focus widget or one of it's parents.
     \value WindowCommand Command is linked to action added to widget that belongs to currently active window.
     \value ApplicationCommand Command is linked to it's own action and always enabled.
 */
@@ -193,7 +194,7 @@ void Command::setAttributes(Attributes attrs)
 
     \brief Command's context
 
-    Default value is Command::WidgetCommand.
+    Default value is Command::WidgetWithChildrenCommand.
 */
 Command::CommandContext Command::context() const
 {

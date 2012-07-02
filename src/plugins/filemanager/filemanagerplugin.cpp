@@ -125,7 +125,6 @@ void FileManagerPlugin::createFileMenu()
 #else
 //    openCommand->setDefaultShortcut(tr("Return"));
 #endif
-    cmd->setContext(Command::WidgetCommand);
     container->addCommand(cmd, "015");
 
     cmd = new Command(Constants::Actions::Edit, tr("Edit"), this);
@@ -134,7 +133,6 @@ void FileManagerPlugin::createFileMenu()
 #else
     cmd->setDefaultShortcut(tr("F4"));
 #endif
-    cmd->setContext(Command::WidgetCommand);
     container->addCommand(cmd, "016");
 
     // ================ File Menu (Info) ================
@@ -192,7 +190,6 @@ void FileManagerPlugin::createEditMenu()
     cmd = new Command(Constants::Actions::MoveHere, this);
     cmd->setDefaultText(tr("Move object(s) here"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+V")));
-    cmd->setContext(Command::WidgetCommand);
     container->addCommand(cmd, "055");
 }
 

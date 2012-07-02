@@ -326,14 +326,18 @@ void ActionManager::onFocusChanged(QWidget *old, QWidget *newWidget)
         return;
 
     QWidget *w = old;
-    while (w) {
+    if (w)
         setActionsEnabled(w, false, Command::WidgetCommand);
+    while (w) {
+        setActionsEnabled(w, false, Command::WidgetWithChildrenCommand);
         w = w->parentWidget();
     }
 
     w = newWidget;
-    while (w) {
+    if (w)
         setActionsEnabled(w, true, Command::WidgetCommand);
+    while (w) {
+        setActionsEnabled(w, true, Command::WidgetWithChildrenCommand);
         w = w->parentWidget();
     }
 }
