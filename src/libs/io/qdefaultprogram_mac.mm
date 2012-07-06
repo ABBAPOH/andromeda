@@ -1,4 +1,5 @@
-#include "qdefaultprograms.h"
+#include "qdefaultprogram.h"
+#include "qdefaultprogram_p.h"
 
 #include <AppKit/AppKit.h>
 #include <CoreServices/CoreServices.h>
@@ -10,8 +11,6 @@
 #include <QtGui/QFileIconProvider>
 
 #include "qmimedatabase.h"
-#include "qprograminfo.h"
-#include "qprograminfo_p.h"
 
 static CFStringRef copyBundleUrl(CFStringRef bundle)
 {
@@ -83,7 +82,7 @@ static QString applicationPath(const QString &application)
     return result;
 }
 
-QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
+QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
 {
     CFStringRef id = CFStringCreateWithCharacters(kCFAllocatorDefault,
                                                   (const UniChar*)application.constData(),
@@ -91,7 +90,7 @@ QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
     CFStringRef path = copyBundleUrl(id);
     CFRelease(id);
     if (!path)
-        return QProgramInfo();
+        return QDefaultProgram();
 
     CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
                                                  path,
@@ -101,19 +100,19 @@ QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
     CFRelease(path);
 
     if (!url)
-        return QProgramInfo();
+        return QDefaultProgram();
 
     CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, url);
     CFRelease(url);
     if (!bundle)
-        return QProgramInfo();
+        return QDefaultProgram();
 
     CFStringRef copyright = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleGetInfoString"));
     CFStringRef name = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleDisplayName"));
     CFStringRef version = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleShortVersionString"));
 //    CFStringRef icon = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleIconFile"));
 
-    QProgramInfoData data;
+    QDefaultProgramData data;
     data.comment = QString();
     data.copyright = getQString(copyright);
     data.genericName = QString();
@@ -130,19 +129,19 @@ QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
     CFRelease(bundle);
 
     if (data.path.isEmpty())
-        return QProgramInfo();
+        return QDefaultProgram();
 
-    return QProgramInfo(data);
+    return QDefaultProgram(data);
 }
 
-QString QDefaultPrograms::defaultProgram(const QString &qtMimeType)
+QString QDefaultProgram::defaultProgram(const QString &qtMimeType)
 {
     QMimeDatabase db;
     QString extension = db.mimeTypeForName(qtMimeType).preferredSuffix();
     return defaultProgramForExtension(extension);
 }
 
-bool QDefaultPrograms::setDefaultProgram(const QString &qtMimeType, const QString &program)
+bool QDefaultProgram::setDefaultProgram(const QString &qtMimeType, const QString &program)
 {
     QMimeDatabase db;
     QString extension = db.mimeTypeForName(qtMimeType).preferredSuffix();
@@ -174,7 +173,7 @@ bool QDefaultPrograms::setDefaultProgram(const QString &qtMimeType, const QStrin
     return result == noErr;
 }
 
-QStringList QDefaultPrograms::defaultPrograms(const QUrl &qurl)
+QStringList QDefaultProgram::defaultPrograms(const QUrl &qurl)
 {
     QString qUrlString = qurl.toString();
     CFStringRef urlString = CFStringCreateWithCharacters(kCFAllocatorDefault,
@@ -218,7 +217,7 @@ QStringList QDefaultPrograms::defaultPrograms(const QUrl &qurl)
     return result;
 }
 
-bool QDefaultPrograms::openUrlWith(const QUrl &qurl, const QString &application)
+bool QDefaultProgram::openUrlWith(const QUrl &qurl, const QString &application)
 {
     QString qUrlString = qurl.toString();
 
@@ -263,7 +262,7 @@ bool QDefaultPrograms::openUrlWith(const QUrl &qurl, const QString &application)
     return result == noErr;
 }
 
-bool QDefaultPrograms::openUrlsWith(const QList<QUrl> &urls, const QString &application)
+bool QDefaultProgram::openUrlsWith(const QList<QUrl> &urls, const QString &application)
 {
     bool result = true;
     foreach (const QUrl &url, urls) {

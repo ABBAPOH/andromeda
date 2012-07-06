@@ -17,15 +17,13 @@ set( HEADERS
     directorydetails.h
     fileimageprovider.h
     kdesettings.h
-    qdefaultprograms.h
+    qdefaultprogram.h
     qdrivecontroller.h
     qdrivecontroller_p.h
     qdriveinfo.h
     qdriveinfo_p.h
     qfilecopier.h
     qfilecopier_p.h
-    qprograminfo.h
-    qprograminfo_p.h
     qmimedatabase.h
     qmimedatabase_p.h
     qmimeglobpattern_p.h
@@ -47,7 +45,7 @@ set( SOURCES
     directorydetails.cpp
     fileimageprovider.cpp
     kdesettings.cpp
-    qdefaultprograms.cpp
+    qdefaultprogram.cpp
     qdrivecontroller.cpp
     qdriveinfo.cpp
     qfilecopier.cpp
@@ -58,7 +56,6 @@ set( SOURCES
     qmimeprovider.cpp
     qmimetype.cpp
     qmimetypeparser.cpp
-    qprograminfo.cpp
     qsystemerror.cpp
     qtrash.cpp
     qtrashfileinfo.cpp
@@ -72,7 +69,7 @@ if( WIN32 )
 set( SOURCES
     ${SOURCES}
     inqt5/qstandardpaths_win.cpp
-    qdefaultprograms_win.cpp
+    qdefaultprogram_win.cpp
     qdrivecontroller_win.cpp
     qdriveinfo_win.cpp
     qtrash_win.cpp
@@ -89,7 +86,7 @@ elseif( APPLE )
 set( SOURCES
     ${SOURCES}
     inqt5/qstandardpaths_mac.cpp
-    qdefaultprograms_mac.mm
+    qdefaultprogram_mac.mm
     qdrivecontroller_mac.cpp
     qdriveinfo_mac.cpp
     qtrash_mac.mm
@@ -111,7 +108,7 @@ set( HEADERS
 set( SOURCES
     ${SOURCES}
     inqt5/qstandardpaths_unix.cpp
-    qdefaultprograms_linux.cpp
+    qdefaultprogram_linux.cpp
     qdrivecontroller_linux.cpp
     qdriveinfo_linux.cpp
     qtrash_linux.cpp

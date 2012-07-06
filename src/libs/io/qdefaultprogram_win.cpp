@@ -1,4 +1,5 @@
-#include "qdefaultprograms.h"
+#include "qdefaultprogram.h"
+#include "qdefaultprogram_p.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -9,7 +10,6 @@
 
 #include "qmimetype.h"
 #include "qmimedatabase.h"
-#include "qprograminfo_p.h"
 
 static QString replaceVariables(const QString &string)
 {
@@ -255,27 +255,27 @@ static QString urlToString(const QUrl &url)
     return url.toString();
 }
 
-QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
+QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
 {
-    QProgramInfoData data;
+    QDefaultProgramData data;
 
     QString path = getAppPath(application);
     if (path.isEmpty())
-        return QProgramInfo();
+        return QDefaultProgram();
 
     QFileInfo info(path);
     if (!info.exists())
-        return QProgramInfo();
+        return QDefaultProgram();
 
     data.path = info.canonicalFilePath();
     data.icon = QFileIconProvider().icon(info);
     data.identifier = application.toLower();
     data.name = getAppName(data.path);
 
-    return QProgramInfo(data);
+    return QDefaultProgram(data);
 }
 
-QString QDefaultPrograms::defaultProgram(const QString &mimeType)
+QString QDefaultProgram::defaultProgram(const QString &mimeType)
 {
     QMimeDatabase db;
 
@@ -296,7 +296,7 @@ QString QDefaultPrograms::defaultProgram(const QString &mimeType)
     return QString();
 }
 
-bool QDefaultPrograms::setDefaultProgram(const QString &mimeType, const QString &program)
+bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &program)
 {
     QMimeDatabase db;
 
@@ -307,7 +307,7 @@ bool QDefaultPrograms::setDefaultProgram(const QString &mimeType, const QString 
     return ::setDefaultProgram(extension, program);
 }
 
-QStringList QDefaultPrograms::defaultPrograms(const QUrl &url)
+QStringList QDefaultProgram::defaultPrograms(const QUrl &url)
 {
     QFileInfo info(url.path());
     QString extension = QLatin1Char('.') + info.suffix();
@@ -320,7 +320,7 @@ QStringList QDefaultPrograms::defaultPrograms(const QUrl &url)
     return removeDuplicates(result);
 }
 
-bool QDefaultPrograms::openUrlWith(const QUrl &url, const QString &application)
+bool QDefaultProgram::openUrlWith(const QUrl &url, const QString &application)
 {
     QString command = getAppOpenCommand(application);
     QStringList arguments = splitCommand(command);
@@ -341,7 +341,7 @@ bool QDefaultPrograms::openUrlWith(const QUrl &url, const QString &application)
     return QProcess::startDetached(arguments.first(), arguments.mid(1));
 }
 
-bool QDefaultPrograms::openUrlsWith(const QList<QUrl> &urls, const QString &application)
+bool QDefaultProgram::openUrlsWith(const QList<QUrl> &urls, const QString &application)
 {
     bool result = true;
     foreach (const QUrl &url, urls) {
