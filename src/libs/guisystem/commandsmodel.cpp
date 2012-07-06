@@ -204,6 +204,7 @@ int CommandsModel::rowCount(const QModelIndex &parent) const
     return d_func()->item(parent)->childCount();
 }
 
+#include <QDebug>
 bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_D(CommandsModel);
