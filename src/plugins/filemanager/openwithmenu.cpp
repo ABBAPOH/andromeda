@@ -8,9 +8,8 @@
 #include <QtGui/QMessageBox>
 
 #include <io/QDriveInfo>
-#include <io/qdefaultprograms.h>
+#include <io/qdefaultprogram.h>
 #include <io/qmimedatabase.h>
-#include <io/qprograminfo.h>
 
 OpenWithMenu::OpenWithMenu(QWidget *parent) :
     QMenu(parent)
@@ -27,13 +26,13 @@ QList<QUrl> OpenWithMenu::urls() const
 
 static void getPrograms(const QUrl &url, QString &defaultId, QStringList &defaultIds)
 {
-    defaultId = QDefaultPrograms::defaultProgram(url);
-    defaultIds = QDefaultPrograms::defaultPrograms(url);
+    defaultId = QDefaultProgram::defaultProgram(url);
+    defaultIds = QDefaultProgram::defaultPrograms(url);
 }
 
-static void getPrograms(const QList<QUrl> &urls, QProgramInfo &defaultProgram, QList<QProgramInfo> &defaultPrograms)
+static void getPrograms(const QList<QUrl> &urls, QDefaultProgram &defaultProgram, QList<QDefaultProgram> &defaultPrograms)
 {
-    defaultProgram = QProgramInfo();
+    defaultProgram = QDefaultProgram();
     defaultPrograms.clear();
 
     if (urls.isEmpty())
@@ -48,7 +47,7 @@ static void getPrograms(const QList<QUrl> &urls, QProgramInfo &defaultProgram, Q
     defaultIdsSet.remove(defaultId);
 
     if (!defaultId.isEmpty())
-        defaultProgram = QDefaultPrograms::progamInfo(defaultId);
+        defaultProgram = QDefaultProgram::progamInfo(defaultId);
 
     if (defaultIdsSet.isEmpty())
         return;
@@ -57,7 +56,7 @@ static void getPrograms(const QList<QUrl> &urls, QProgramInfo &defaultProgram, Q
     for (int i = 0; i < defaultIds.count(); i++) {
         QString id = defaultIds.at(i);
         if (defaultIdsSet.contains(id)) {
-            QProgramInfo info = QDefaultPrograms::progamInfo(id);
+            QDefaultProgram info = QDefaultProgram::progamInfo(id);
             if (info.isValid())
                 defaultPrograms.append(info);
         }
@@ -73,8 +72,8 @@ void OpenWithMenu::setUrls(const QList<QUrl> &urls)
 
     clear();
 
-    QProgramInfo defaultProgram;
-    QList<QProgramInfo> defaultPrograms;
+    QDefaultProgram defaultProgram;
+    QList<QDefaultProgram> defaultPrograms;
     getPrograms(urls, defaultProgram, defaultPrograms);
 
     if (defaultProgram.isValid()) {
@@ -83,7 +82,7 @@ void OpenWithMenu::setUrls(const QList<QUrl> &urls)
         addSeparator();
     }
 
-    foreach (const QProgramInfo &program, defaultPrograms) {
+    foreach (const QDefaultProgram &program, defaultPrograms) {
         QAction *act = addAction(program.icon(), program.name());
         act->setData(program.identifier());
     }
@@ -108,7 +107,7 @@ void OpenWithMenu::onTriggered(QAction *action)
 {
     QString program = action->data().toString();
 
-    QDefaultPrograms::openUrlsWith(m_urls, program);
+    QDefaultProgram::openUrlsWith(m_urls, program);
 }
 
 void OpenWithMenu::selectProgram()

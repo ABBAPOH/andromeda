@@ -1,11 +1,11 @@
-#ifndef QPROGRAMINFO_P_H
-#define QPROGRAMINFO_P_H
+#ifndef QDEFAULTPROGRAM_P_H
+#define QDEFAULTPROGRAM_P_H
 
-#include "qprograminfo.h"
+#include "qdefaultprogram.h"
 
 #include <QtCore/QSharedData>
 
-class QProgramInfoData : public QSharedData
+class QDefaultProgramData : public QSharedData
 {
 public:
     bool valid;
@@ -19,4 +19,4 @@ public:
     QString version;
 };
 
-#endif // QPROGRAMINFO_P_H
+#endif // QDEFAULTPROGRAM_P_H

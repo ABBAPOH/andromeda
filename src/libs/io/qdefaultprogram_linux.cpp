@@ -1,4 +1,5 @@
-#include "qdefaultprograms.h"
+#include "qdefaultprogram.h"
+#include "qdefaultprogram_p.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -9,8 +10,6 @@
 
 #include "kdesettings.h"
 #include "qmimedatabase.h"
-#include "qprograminfo.h"
-#include "qprograminfo_p.h"
 #include "qxdg.h"
 
 //#include <QDebug>
@@ -396,19 +395,19 @@ static QString whereis(const QString &binaryName)
     return QString();
 }
 
-QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
+QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
 {
     QString desktopFilePath = findDesktopFile(application);
     if (desktopFilePath.isEmpty())
-        return QProgramInfo();
+        return QDefaultProgram();
 
     KDESettings desktopFile(desktopFilePath);
     desktopFile.beginGroup("Desktop Entry");
 
     if (desktopFile.status() != QSettings::NoError)
-        return QProgramInfo();
+        return QDefaultProgram();
 
-    QProgramInfoData data;
+    QDefaultProgramData data;
 
     QStringList args = parseCombinedArgString(desktopFile.value("Exec").toString());
     QString binaryName = !args.isEmpty() ? args.first() : QString();
@@ -422,10 +421,10 @@ QProgramInfo QDefaultPrograms::progamInfo(const QString &application)
     data.path = whereis(binaryName);
     data.version = desktopFile.value("Version").toString();
 
-    return QProgramInfo(data);
+    return QDefaultProgram(data);
 }
 
-QString QDefaultPrograms::defaultProgram(const QString &mimeType)
+QString QDefaultProgram::defaultProgram(const QString &mimeType)
 {
     QStringList programs = ::defaultPrograms(mimeType);
     if (programs.isEmpty())
@@ -434,7 +433,7 @@ QString QDefaultPrograms::defaultProgram(const QString &mimeType)
     return programs.first();
 }
 
-bool QDefaultPrograms::setDefaultProgram(const QString &mimeType, const QString &program)
+bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &program)
 {
     QFileInfo info(dataHome() + QLatin1String("/applications/") + "mimeapps.list");
 
@@ -463,19 +462,19 @@ bool QDefaultPrograms::setDefaultProgram(const QString &mimeType, const QString 
     return mimeApps.status() == QSettings::NoError;
 }
 
-QStringList QDefaultPrograms::defaultPrograms(const QUrl &url)
+QStringList QDefaultProgram::defaultPrograms(const QUrl &url)
 {
     QMimeDatabase db;
     QMimeType mimeType = db.mimeTypeForUrl(url);
     return ::defaultPrograms(mimeType.name());
 }
 
-bool QDefaultPrograms::openUrlWith(const QUrl &url, const QString &application)
+bool QDefaultProgram::openUrlWith(const QUrl &url, const QString &application)
 {
     return openUrlsWith(QList<QUrl>() << url, application);
 }
 
-bool QDefaultPrograms::openUrlsWith(const QList<QUrl> &urls, const QString &application)
+bool QDefaultProgram::openUrlsWith(const QList<QUrl> &urls, const QString &application)
 {
     if (urls.isEmpty())
         return false;
