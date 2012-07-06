@@ -9,7 +9,7 @@ namespace Ui {
 class CommandsSettingsWidget;
 }
 
-class ShortcutLineEdit;
+class ShortcutEdit;
 class QItemSelection;
 class QSortFilterProxyModel;
 

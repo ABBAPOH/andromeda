@@ -16,7 +16,7 @@ set( HEADERS
     outlinewidget_p.h
     qxtflowview.h
     qxtflowview_p.h
-    shortcutlineedit.h
+    shortcutedit.h
     windowsmenu.h
    )
 set( SOURCES
@@ -31,7 +31,7 @@ set( SOURCES
     qcolorbutton.cpp
     qxtflowview.cpp
     qxtflowview_p.cpp
-    shortcutlineedit.cpp
+    shortcutedit.cpp
     windowsmenu.cpp
    )
 set( FORMS

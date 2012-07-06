@@ -11,7 +11,7 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QStyledItemDelegate>
 
-#include <widgets/shortcutlineedit.h>
+#include <widgets/shortcutedit.h>
 
 using namespace GuiSystem;
 
@@ -73,7 +73,7 @@ ShortcutDelegate::ShortcutDelegate(QObject *parent) :
 
 QWidget * ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    return new ShortcutLineEdit(parent);
+    return new ShortcutEdit(parent);
 }
 
 bool ShortcutDelegate::eventFilter(QObject *object, QEvent *event)
@@ -86,7 +86,7 @@ bool ShortcutDelegate::eventFilter(QObject *object, QEvent *event)
 
 void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    ShortcutLineEdit *edit = qobject_cast<ShortcutLineEdit *>(editor);
+    ShortcutEdit *edit = qobject_cast<ShortcutEdit *>(editor);
     Q_ASSERT(edit);
     edit->setKeySequence(index.data().toString());
 }
