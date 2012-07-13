@@ -156,13 +156,7 @@ void BrowserWindowPrivate::setupUi()
     connect(lineEdit, SIGNAL(canceled()), q, SLOT(cancel()));
 
     container = new TabContainer(/*q*/);
-    q->setContanier(container);
-
-    connect(container, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
-    connect(container, SIGNAL(urlChanged(QUrl)), lineEdit, SLOT(setUrl(QUrl)));
-    connect(container, SIGNAL(loadStarted()), lineEdit, SLOT(startLoad()));
-    connect(container, SIGNAL(loadProgress(int)), lineEdit, SLOT(setLoadProgress(int)));
-    connect(container, SIGNAL(loadFinished(bool)), lineEdit, SLOT(finishLoad()));
+    q->setEditor(container);
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.
@@ -177,11 +171,6 @@ void BrowserWindowPrivate::setupUi()
     lineEdit->setCompleter(completer);
 
     q->resize(800, 600);
-}
-
-void BrowserWindowPrivate::onUrlChanged(const QUrl &url)
-{
-    upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
 }
 
 void BrowserWindowPrivate::onMenuVisibleChanged(bool visible)
@@ -358,6 +347,36 @@ void BrowserWindow::previousEditor()
         int index = d->container->currentIndex();
         d->container->setCurrentIndex(index ? index - 1 : d->container->count() - 1);
     }
+}
+
+void BrowserWindow::onUrlChanged(const QUrl &url)
+{
+    Q_D(BrowserWindow);
+
+    d->upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
+    d->lineEdit->setUrl(url);
+    MainWindow::onUrlChanged(url);
+}
+
+void BrowserWindow::startLoad()
+{
+    Q_D(BrowserWindow);
+    d->lineEdit->startLoad();
+    MainWindow::startLoad();
+}
+
+void BrowserWindow::setLoadProgress(int progress)
+{
+    Q_D(BrowserWindow);
+    d->lineEdit->setLoadProgress(progress);
+    MainWindow::setLoadProgress(progress);
+}
+
+void BrowserWindow::finishLoad(bool ok)
+{
+    Q_D(BrowserWindow);
+    d->lineEdit->finishLoad();
+    MainWindow::finishLoad(ok);
 }
 
 void BrowserWindow::moveEvent(QMoveEvent*)

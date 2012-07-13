@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     Q_D(MainWindow);
 
-    d->contanier = 0;
+    d->editor = 0;
     d->history = new History(this);
     d->createActions();
     d->retranslateUi();
@@ -78,43 +78,47 @@ QAction * MainWindow::action(Action action) const
     return d->actions[action];
 }
 
-ProxyEditor * MainWindow::contanier() const
+ProxyEditor * MainWindow::editor() const
 {
     Q_D(const MainWindow);
 
-    return d->contanier;
+    return d->editor;
 }
 
-void MainWindow::setContanier(ProxyEditor *container)
+void MainWindow::setEditor(ProxyEditor *container)
 {
     Q_D(MainWindow);
 
-    if (d->contanier == container)
+    if (d->editor == container)
         return;
 
-    if (d->contanier) {
-        disconnect(d->contanier, 0, this, 0);
+    if (d->editor) {
+        disconnect(d->editor, 0, this, 0);
 
-        disconnect(d->contanier, 0, d->actions[Save], 0);
+        if (d->editor->file())
+        disconnect(d->editor->file(), 0, d->actions[Save], 0);
     }
 
-    d->contanier = container;
-    d->history->setHistory(contanier()->history());
+    d->editor = container;
+    d->history->setHistory(editor()->history());
 
-    connect(d->contanier, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
+    connect(d->editor, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
+    connect(d->editor, SIGNAL(iconChanged(QIcon)), SLOT(setWindowIcon(QIcon)));
+    connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
+    connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
+    connect(d->editor, SIGNAL(loadStarted()), SLOT(startLoad()));
+    connect(d->editor, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
+    connect(d->editor, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
 
-    connect(d->contanier, SIGNAL(iconChanged(QIcon)), SLOT(setWindowIcon(QIcon)));
-    connect(d->contanier, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
+    if (d->editor->file())
+        connect(d->editor->file(), SIGNAL(modificationChanged(bool)), d->actions[Save], SLOT(setEnabled(bool)));
 
-    if (d->contanier->file())
-        connect(d->contanier->file(), SIGNAL(modificationChanged(bool)), d->actions[Save], SLOT(setEnabled(bool)));
-
-    bool saveAsEnabled = d->contanier->file();
-    bool saveEnabled = saveAsEnabled && !d->contanier->file()->isReadOnly() && d->contanier->file()->isModified();
+    bool saveAsEnabled = d->editor->file();
+    bool saveEnabled = saveAsEnabled && !d->editor->file()->isReadOnly() && d->editor->file()->isModified();
     d->actions[SaveAs]->setEnabled(saveAsEnabled);
     d->actions[Save]->setEnabled(saveEnabled);
 
-    setCentralWidget(d->contanier);
+    setCentralWidget(d->editor);
 }
 
 bool MainWindow::menuVisible() const
@@ -150,8 +154,8 @@ QUrl MainWindow::url() const
 {
     Q_D(const MainWindow);
 
-    if (d->contanier)
-        return d->contanier->url();
+    if (d->editor)
+        return d->editor->url();
 
     return QUrl();
 }
@@ -218,8 +222,8 @@ bool MainWindow::restoreState(const QByteArray &arr)
     restoreGeometry(geometry);
     QMainWindow::restoreState(mainWindowState);
 
-    if (d->contanier)
-        return d->contanier->restoreState(containerState);
+    if (d->editor)
+        return d->editor->restoreState(containerState);
 
     return true;
 }
@@ -235,8 +239,8 @@ QByteArray MainWindow::saveState() const
     s << mainWindowVersion;
     s << saveGeometry();
     s << QMainWindow::saveState();
-    if (d->contanier)
-        s << d->contanier->saveState();
+    if (d->editor)
+        s << d->editor->saveState();
 
     return state;
 }
@@ -245,7 +249,7 @@ void MainWindow::back()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
+    if (d->editor)
         d->history->back();
 }
 
@@ -253,7 +257,7 @@ void MainWindow::forward()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
+    if (d->editor)
         d->history->forward();
 }
 
@@ -261,8 +265,8 @@ void MainWindow::open(const QUrl &url)
 {
     Q_D(const MainWindow);
 
-    if (d->contanier)
-        d->contanier->open(url);
+    if (d->editor)
+        d->editor->open(url);
 }
 
 void MainWindow::close()
@@ -294,20 +298,20 @@ void MainWindow::save()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
+    if (d->editor)
         return;
 
-    if (!d->contanier->file())
+    if (!d->editor->file())
         return;
 
-    d->contanier->file()->save();
+    d->editor->file()->save();
 }
 
 void MainWindow::saveAs()
 {
     Q_D(MainWindow);
 
-    if (!d->contanier)
+    if (!d->editor)
         return;
 
     // TODO: remember previous dir and set filename using title + extension from mimetype
@@ -316,31 +320,47 @@ void MainWindow::saveAs()
     if (path.isEmpty())
         return;
 
-    if (!d->contanier->file())
+    if (!d->editor->file())
         return;
 
-    d->contanier->file()->save(QUrl::fromLocalFile(path));
+    d->editor->file()->save(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::refresh()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
-        d->contanier->refresh();
+    if (d->editor)
+        d->editor->refresh();
 }
 
 void MainWindow::cancel()
 {
     Q_D(MainWindow);
 
-    if (d->contanier)
-        d->contanier->cancel();
+    if (d->editor)
+        d->editor->cancel();
 }
 
 void MainWindow::setWindowIcon(const QIcon &icon)
 {
     QMainWindow::setWindowIcon(icon);
+}
+
+void MainWindow::onUrlChanged(const QUrl &/*url*/)
+{
+}
+
+void MainWindow::startLoad()
+{
+}
+
+void MainWindow::setLoadProgress(int /*progress*/)
+{
+}
+
+void MainWindow::finishLoad(bool /*ok*/)
+{
 }
 
 void MainWindowPrivate::createActions()

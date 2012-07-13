@@ -233,7 +233,7 @@ void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder
     if (!window)
         return;
 
-    AbstractEditor *editor = window->contanier();
+    AbstractEditor *editor = window->editor();
     if (!editor) // paranoia
         return;
 

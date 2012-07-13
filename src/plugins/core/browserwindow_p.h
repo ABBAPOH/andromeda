@@ -40,8 +40,6 @@ public:
     void setupUi();
 
 public slots:
-    void onUrlChanged(const QUrl &);
-
     void onMenuVisibleChanged(bool visible);
 
 };

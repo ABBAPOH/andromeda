@@ -24,7 +24,7 @@ public:
     void initGeometry();
 
 public:
-    ProxyEditor *contanier;
+    ProxyEditor *editor;
     History *history;
 
     HistoryButton *backButton;
