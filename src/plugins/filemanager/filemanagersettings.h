@@ -14,7 +14,7 @@ public:
     static FileManagerSettings *globalSettings();
 
     enum Flow { LeftToRight = 0, TopToBottom = 1 };
-    enum ViewMode { IconView = 0, ColumnView = 1, TreeView = 3, ViewCount };
+    enum ViewMode { IconView = 0, ColumnView, TreeView, ViewCount };
 
     QSize gridSize() const;
     void setGridSize(QSize size);

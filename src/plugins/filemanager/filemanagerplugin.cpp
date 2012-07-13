@@ -237,13 +237,6 @@ void FileManagerPlugin::createViewMenu()
     container->addCommand(cmd);
     viewGroup->addAction(cmd->commandAction());
 
-    cmd = new Command(Constants::Actions::CoverFlowMode, this);
-    cmd->setDefaultText(tr("Cover flow"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+4")));
-    cmd->setContext(Command::WindowCommand);
-    container->addCommand(cmd);
-    viewGroup->addAction(cmd->commandAction());
-
     // ================ View Menu (View Mode) ================
     container->addCommand(new Separator(this));
     QActionGroup * sortGroup = new QActionGroup(this);

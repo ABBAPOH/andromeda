@@ -5,7 +5,6 @@ set( CPP_HEADERS
 )
 set( HEADERS
     addressbar.h
-    coverflow.h
     fancylineedit.h
     fancylineedit_p.h
     filterlineedit.h
@@ -14,14 +13,11 @@ set( HEADERS
     modeltoolbar.h
     outlinewidget.h
     outlinewidget_p.h
-    qxtflowview.h
-    qxtflowview_p.h
     shortcutedit.h
     windowsmenu.h
    )
 set( SOURCES
     addressbar.cpp
-    coverflow.cpp
     fancylineedit.cpp
     filterlineedit.cpp
     minisplitter.cpp
@@ -29,8 +25,6 @@ set( SOURCES
     modeltoolbar.cpp
     outlinewidget.cpp
     qcolorbutton.cpp
-    qxtflowview.cpp
-    qxtflowview_p.cpp
     shortcutedit.cpp
     windowsmenu.cpp
    )

@@ -35,7 +35,7 @@ class FILEMANAGER_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
-    enum ViewMode { IconView = 0, ColumnView, TreeView, CoverFlow, MaxViews };
+    enum ViewMode { IconView = 0, ColumnView, TreeView, MaxViews };
     enum Flow { LeftToRight = 0, TopToBottom = 1 };
     enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateColumn, ColumnCount };
     enum Action { NoAction = -1,
@@ -61,7 +61,6 @@ public:
                   IconMode,
                   ColumnMode,
                   TreeMode,
-                  CoverFlowMode,
 
                   SortByName,
                   SortBySize,

@@ -566,7 +566,6 @@ void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)
     registerAction(widget->action(FileManagerWidget::IconMode), Constants::Actions::IconMode);
     registerAction(widget->action(FileManagerWidget::ColumnMode), Constants::Actions::ColumnMode);
     registerAction(widget->action(FileManagerWidget::TreeMode), Constants::Actions::TreeMode);
-    registerAction(widget->action(FileManagerWidget::CoverFlowMode), Constants::Actions::CoverFlowMode);
 
     registerAction(widget->action(FileManagerWidget::SortByName), Constants::Actions::SortByName);
     registerAction(widget->action(FileManagerWidget::SortBySize), Constants::Actions::SortBySize);
