@@ -11,41 +11,7 @@
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTabWidget>
 
-// ----------- Category list view
-
-class CategoryListViewDelegate : public QStyledItemDelegate
-{
-public:
-    CategoryListViewDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-    {
-        QSize size = QStyledItemDelegate::sizeHint(option, index);
-        size.setHeight(qMax(size.height(), 32));
-        return size;
-    }
-};
-
-/**
- * Special version of a QListView that has the width of the first column as
- * minimum size.
- */
-class CategoryListView : public QListView
-{
-public:
-    CategoryListView(QWidget *parent = 0) : QListView(parent)
-    {
-        setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
-        setItemDelegate(new CategoryListViewDelegate(this));
-    }
-
-    virtual QSize sizeHint() const
-    {
-        int width = sizeHintForColumn(0) + frameWidth() * 2 + 5;
-        if (verticalScrollBar()->isVisible())
-            width += verticalScrollBar()->width();
-        return QSize(width, 100);
-    }
-};
+#include <widgets/modeltoolbar.h>
 
 namespace GuiSystem {
 
@@ -56,11 +22,9 @@ class SettingsDialogPrivate
 public:
     SettingsDialogPrivate(SettingsDialog *qq) : q_ptr(qq) {}
 
-    QLabel *headerLabel;
-    QHBoxLayout *headerLayout;
     QStackedLayout *stackedLayout;
     QGridLayout *mainLayout;
-    QListView *categoryList;
+    ModelToolBar *toolbar;
 
     QList<QString> categories;
     QList<QTabWidget *> tabWidgets;
@@ -69,11 +33,13 @@ public:
     SettingsPageManager *manager;
     QStandardItemModel *model;
     QAction *closeAction;
+    bool ignoreDataChanged;
 
 public:
     void addCategory(const QString &id);
     void addPage(SettingsPage *page);
     void removePage(SettingsPage *page);
+    void selectRow(int row);
 
     void setupUi();
     void retranslateUi();
@@ -89,7 +55,7 @@ using namespace GuiSystem;
 static const qint32 settingsDialogMagic = 0x73313267; // "s12g"
 static const qint32 settingsDialogVersion = 1;
 
-const int categoryIconSize = 24;
+const int categoryIconSize = 32;
 
 void SettingsDialogPrivate::addCategory(const QString &id)
 {
@@ -101,14 +67,16 @@ void SettingsDialogPrivate::addCategory(const QString &id)
     QStandardItem *item = new QStandardItem;
     item->setIcon(page->categoryIcon());
     item->setText(page->categoryName());
+    item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
     item->setData(categories.size());
 
     model->appendRow(item);
     categories.append(id);
 
-    QTabWidget *widget = new QTabWidget;
-    stackedLayout->addWidget(widget);
-    tabWidgets.append(widget);
+    QTabWidget *tabWidget = new QTabWidget;
+    tabWidget->setFocusPolicy(Qt::NoFocus);
+    stackedLayout->addWidget(tabWidget);
+    tabWidgets.append(tabWidget);
 }
 
 void SettingsDialogPrivate::addPage(SettingsPage *page)
@@ -129,47 +97,26 @@ void SettingsDialogPrivate::removePage(SettingsPage *page)
     }
 }
 
+void SettingsDialogPrivate::selectRow(int row)
+{
+    model->setData(model->index(row, 0), Qt::Checked, Qt::CheckStateRole);
+}
+
 void SettingsDialogPrivate::setupUi()
 {
     Q_Q(SettingsDialog);
 
-    headerLabel = new QLabel;
-    headerLabel->setAlignment(Qt::AlignHCenter);
+    toolbar = new ModelToolBar;
+    toolbar->setIconSize(QSize(categoryIconSize, categoryIconSize));
+    toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    q->addToolBar(toolbar);
+    q->setUnifiedTitleAndToolBarOnMac(true);
 
-    // Header label with large font and a bit of spacing (align with group boxes)
-    QFont headerLabelFont = headerLabel->font();
-    headerLabelFont.setBold(true);
-    // Paranoia: Should a font be set in pixels...
-    const int pointSize = headerLabelFont.pointSize();
-    if (pointSize > 0)
-        headerLabelFont.setPointSize(pointSize + 2);
-    headerLabel->setFont(headerLabelFont);
-    headerLabel->setAlignment(Qt::AlignLeft);
+    q->setCentralWidget(new QWidget);
+    stackedLayout = new QStackedLayout();
 
-//    const int leftMargin = qApp->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
-//    QSpacerItem *spacer = new QSpacerItem(leftMargin, 0, QSizePolicy::Fixed, QSizePolicy::Ignored);
-
-    headerLayout = new QHBoxLayout;
-//    headerLayout->addSpacerItem(spacer);
-    headerLayout->addWidget(headerLabel);
-    headerLayout->setSpacing(0);
-    headerLayout->setMargin(0);
-
-    categoryList = new CategoryListView;
-    categoryList->setIconSize(QSize(categoryIconSize, categoryIconSize));
-    categoryList->setSelectionMode(QAbstractItemView::SingleSelection);
-    categoryList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    categoryList->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    stackedLayout = new QStackedLayout;
-    stackedLayout->setMargin(0);
-
-    mainLayout = new QGridLayout;
-    mainLayout->addLayout(headerLayout,  0, 1, 1, 1);
-    mainLayout->addWidget(categoryList,  0, 0, 2, 1);
-    mainLayout->addLayout(stackedLayout, 1, 1, 1, 1);
-    mainLayout->setColumnStretch(1, 4);
-    q->setLayout(mainLayout);
+    mainLayout = new QGridLayout(q->centralWidget());
+    mainLayout->addLayout(stackedLayout, 0, 0);
     q->resize(1024, 576);
 
     closeAction = new QAction(q);
@@ -197,18 +144,18 @@ void SettingsDialogPrivate::retranslateUi()
     \brief Creates an empty SettingsDialog with the given \a parent.
 */
 SettingsDialog::SettingsDialog(QWidget *parent) :
-    QDialog(parent),
+    QMainWindow(parent),
     d_ptr(new SettingsDialogPrivate(this))
 {
     Q_D(SettingsDialog);
 
     d->manager = 0;
     d->model = new QStandardItemModel(this);
+    d->ignoreDataChanged = false;
     d->setupUi();
 
-    d->categoryList->setModel(d->model);
-    connect(d->categoryList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(onSelectionChanged(QItemSelection)), Qt::UniqueConnection);
+    d->toolbar->setModel(d->model);
+    connect(d->model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(onDataChanged(QModelIndex,QModelIndex)));
 
     setObjectName(QLatin1String("SettingsDialog"));
 }
@@ -253,7 +200,7 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
     connect(d->manager, SIGNAL(pageAdded(SettingsPage*)), SLOT(onPageAdded(SettingsPage*)));
     connect(d->manager, SIGNAL(pageRemoved(SettingsPage*)), SLOT(onPageRemoved(SettingsPage*)));
 
-    d->categoryList->selectionModel()->select(d->model->index(0, 0), QItemSelectionModel::Select);
+    d->selectRow(0);
 }
 
 QByteArray SettingsDialog::saveState() const
@@ -296,8 +243,7 @@ bool SettingsDialog::restoreState(const QByteArray &arr)
 
     s >> currentPage;
     if (0 <= currentPage && currentPage < d->stackedLayout->count()) {
-        d->categoryList->selectionModel()->select(d->model->index(currentPage, 0),
-                                                  QItemSelectionModel::Select | QItemSelectionModel::Clear);
+        d->selectRow(currentPage);
     } else {
         return false;
     }
@@ -323,7 +269,6 @@ void SettingsDialog::onSelectionChanged(const QItemSelection &newSelection)
     if (!newSelection.isEmpty()) {
         QModelIndex index = newSelection.indexes().first();
         d->stackedLayout->setCurrentIndex(index.data(Qt::UserRole + 1).toInt());
-        d->headerLabel->setText(index.data(Qt::DisplayRole).toString());
     }
 }
 
@@ -345,4 +290,26 @@ void SettingsDialog::onPageAdded(SettingsPage *page)
 void SettingsDialog::onPageRemoved(SettingsPage *page)
 {
     d_func()->removePage(page);
+}
+
+void SettingsDialog::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    Q_D(SettingsDialog);
+
+    if (d->ignoreDataChanged)
+        return;
+
+    for (int row = topLeft.row(); row <= bottomRight.row(); row++) {
+        QModelIndex index = d->model->index(row, 0);
+        if (index.data(Qt::CheckStateRole).toInt() == Qt::Checked) {
+            int oldIndex = d->stackedLayout->currentIndex();
+            if (row != oldIndex) { // special case when selecting first time
+                d->ignoreDataChanged = true;
+                d->model->setData(d->model->index(oldIndex, 0), Qt::Unchecked, Qt::CheckStateRole);
+                d->ignoreDataChanged = false;
+            }
+            d->stackedLayout->setCurrentIndex(row);
+            return;
+        }
+    }
 }

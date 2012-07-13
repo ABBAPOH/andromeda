@@ -3,7 +3,7 @@
 
 #include "guisystem_global.h"
 
-#include <QtGui/QDialog>
+#include <QtGui/QMainWindow>
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
 #include <QtGui/QStackedLayout>
@@ -17,7 +17,7 @@ class Category;
 class CategoryModel;
 
 class SettingsDialogPrivate;
-class GUISYSTEM_EXPORT SettingsDialog : public QDialog
+class GUISYSTEM_EXPORT SettingsDialog : public QMainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SettingsDialog)
@@ -37,6 +37,7 @@ private slots:
     void onSelectionChanged(const QItemSelection &current);
     void onPageAdded(SettingsPage *page);
     void onPageRemoved(SettingsPage *page);
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 protected:
     SettingsDialogPrivate *d_ptr;

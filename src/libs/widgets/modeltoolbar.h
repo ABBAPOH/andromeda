@@ -47,6 +47,7 @@ protected:
 
 protected slots:
     void build();
+    void onActionTriggered(bool);
 
 private:
     ModelToolBarPrivate *d;
