@@ -96,6 +96,7 @@ void ModelToolBar::build()
 {
     Q_ASSERT(d->model);
 
+    setUpdatesEnabled(false);
     clear();
 
     prePopulated();
@@ -113,6 +114,11 @@ void ModelToolBar::build()
         QAction *action = addAction(icon, title);
         if (!toolTip.isEmpty())
             action->setToolTip(toolTip);
+        if (d->model->flags(index) & Qt::ItemIsUserCheckable) {
+            action->setCheckable(true);
+            action->setChecked(index.data(Qt::CheckStateRole).toInt() == Qt::Checked);
+            connect(action, SIGNAL(triggered(bool)), SLOT(onActionTriggered(bool)));
+        }
         action->setData(variant);
 
         QWidget *actionWidget = widgetForAction(action);
@@ -131,6 +137,15 @@ void ModelToolBar::build()
     }
 
     postPopulated();
+    setUpdatesEnabled(true);
+    update();
+}
+
+void ModelToolBar::onActionTriggered(bool toggled)
+{
+    QAction *action = qobject_cast<QAction*>(sender());
+    QModelIndex index = qvariant_cast<QModelIndex>(action->data());
+    d->model->setData(index, toggled ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole);
 }
 
 QModelIndex ModelToolBar::index(QAction *action)
