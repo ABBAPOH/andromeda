@@ -19,15 +19,16 @@
 #include <guisystem/actionmanager.h>
 #include <io/QDriveInfo>
 #include <io/qmimedatabase.h>
-#include <widgets/coverflow.h>
 
 #include <core/constants.h>
 
 #include "filemanagerhistory_p.h"
 #include "filemanagerhistoryitem_p.h"
+#include "filemanagersettings.h"
 #include "fileinfodialog.h"
 #include "filemanagersettings.h"
 #include "filemanagersettings_p.h"
+#include "openwithmenu.h"
 
 using namespace GuiSystem;
 using namespace FileManager;
@@ -117,8 +118,6 @@ void FileManagerWidgetPrivate::setupUi()
     layout = new QStackedLayout(q);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    initViews();
-
     q->setLayout(layout);
     q->setFocusPolicy(Qt::StrongFocus);
     q->setMinimumSize(200, 200);
@@ -200,23 +199,19 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::IconMode] = new QAction(viewModeGroup);
     actions[FileManagerWidget::ColumnMode] = new QAction(viewModeGroup);
     actions[FileManagerWidget::TreeMode] = new QAction(viewModeGroup);
-    actions[FileManagerWidget::CoverFlowMode] = new QAction(viewModeGroup);
 
     actions[FileManagerWidget::IconMode]->setCheckable(true);
     actions[FileManagerWidget::IconMode]->setChecked(true);
     actions[FileManagerWidget::ColumnMode]->setCheckable(true);
     actions[FileManagerWidget::TreeMode]->setCheckable(true);
-    actions[FileManagerWidget::CoverFlowMode]->setCheckable(true);
 
     actions[FileManagerWidget::IconMode]->setData(FileManagerWidget::IconView);
     actions[FileManagerWidget::ColumnMode]->setData(FileManagerWidget::ColumnView);
     actions[FileManagerWidget::TreeMode]->setData(FileManagerWidget::TreeView);
-    actions[FileManagerWidget::CoverFlowMode]->setData(FileManagerWidget::CoverFlow);
 
     connect(actions[FileManagerWidget::IconMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
     connect(actions[FileManagerWidget::ColumnMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
     connect(actions[FileManagerWidget::TreeMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
-    connect(actions[FileManagerWidget::CoverFlowMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
 
     sortByGroup = new QActionGroup(this);
 
@@ -276,7 +271,6 @@ void FileManagerWidgetPrivate::retranslateUi()
     actions[FileManagerWidget::IconMode]->setText(tr("Icon view"));
     actions[FileManagerWidget::ColumnMode]->setText(tr("Column view"));
     actions[FileManagerWidget::TreeMode]->setText(tr("Tree view"));
-    actions[FileManagerWidget::CoverFlowMode]->setText(tr("Cover flow"));
 
     actions[FileManagerWidget::SortByName]->setText(tr("Sort by name"));
     actions[FileManagerWidget::SortBySize]->setText(tr("Sort by size"));
@@ -296,72 +290,6 @@ public:
         doItemsLayout(); // fix for wrong layout after dropping
     }
 };
-
-void FileManagerWidgetPrivate::initViews()
-{
-    Q_Q(FileManagerWidget);
-
-    QListView *iconView = new ListView(q);
-    QColumnView *columnView = new QColumnView(q);
-    QTreeView *treeView = new QTreeView(q);
-    CoverFlow *coverFlow = new CoverFlow(q);
-
-    iconView->setWordWrap(true);
-    iconView->setWrapping(true);
-    iconView->setFlow(QListView::LeftToRight);
-    iconView->setViewMode(QListView::IconMode);
-#ifdef Q_OS_MAC
-    iconView->setIconSize(QSize(64, 64));
-    iconView->setGridSize(QSize(128, 128));
-#else
-    iconView->setIconSize(QSize(32, 32));
-    iconView->setGridSize(QSize(100, 100));
-#endif
-
-    iconView->setResizeMode(QListView::Adjust);
-    iconView->setMovement(QListView::Static);
-    iconView->setDragEnabled(true);
-    iconView->viewport()->setAcceptDrops(true);
-    iconView->setMouseTracking(true);
-
-    treeView->setAlternatingRowColors(true);
-    treeView->setExpandsOnDoubleClick(false);
-    treeView->setSortingEnabled(true);
-    connect(treeView->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
-            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
-
-    coverFlow->setPictureColumn(0);
-    coverFlow->setPictureRole(Qt::UserRole);
-
-    views[FileManagerWidget::IconView] = iconView;
-    views[FileManagerWidget::ColumnView] = columnView;
-    views[FileManagerWidget::TreeView] = treeView;
-    views[FileManagerWidget::CoverFlow] = coverFlow->treeView();
-    blockEvents = false;
-
-    for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
-        views[i]->setFocusProxy(q);
-        views[i]->setSelectionMode(QAbstractItemView::ExtendedSelection);
-        views[i]->setSelectionBehavior(QAbstractItemView::SelectRows);
-        views[i]->setDragDropMode(QAbstractItemView::DragDrop);
-        views[i]->setAcceptDrops(true);
-        views[i]->setDefaultDropAction(Qt::MoveAction);
-        views[i]->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
-        views[i]->setTextElideMode(Qt::ElideMiddle);
-        views[i]->setItemDelegate(new FileDelegate(views[i]));
-//        QAbstractItemView::InternalMove
-//        layout->addWidget(views[i]);
-//        views[i]->setDragEnabled(true);
-        connect(views[i], SIGNAL(doubleClicked(QModelIndex)),
-                this, SLOT(onDoubleClick(QModelIndex)),
-                Qt::QueuedConnection);
-    }
-
-    layout->addWidget(iconView);
-    layout->addWidget(columnView);
-    layout->addWidget(treeView);
-    layout->addWidget(coverFlow);
-}
 
 void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
 {
@@ -389,9 +317,8 @@ void FileManagerWidgetPrivate::setModel(FileSystemModel *m)
         return;
 
     if (model) {
-        for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
-            disconnect(views[i]->selectionModel(), 0, q, 0);
-        }
+        if (currentView)
+            disconnect(currentView->selectionModel(), 0, q, 0);
     }
 
     if (model && model->QObject::parent() == this)
@@ -399,9 +326,12 @@ void FileManagerWidgetPrivate::setModel(FileSystemModel *m)
 
     model = m;
 
-    for (int i = 0; i < FileManagerWidget::MaxViews; i++) {
-        views[i]->setModel(m);
-        connect(views[i]->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    if (currentView) {
+        currentView->setModel(model);
+        QTreeView *view = qobject_cast<QTreeView *>(currentView);
+        if (view)
+            view->setColumnWidth(0, 250);
+        connect(currentView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SIGNAL(selectedPathsChanged()));
     }
     connect(q, SIGNAL(selectedPathsChanged()), SLOT(onSelectionChanged()));
@@ -417,10 +347,9 @@ QModelIndexList FileManagerWidgetPrivate::selectedIndexes() const
 
 void FileManagerWidgetPrivate::updateSorting()
 {
-    QTreeView *view = 0;
-
-    view = static_cast<QTreeView*>(views[FileManagerWidget::TreeView]);
-    view->sortByColumn(sortingColumn, sortingOrder);
+    QTreeView *view = qobject_cast<QTreeView*>(currentView);
+    if (view)
+        view->sortByColumn(sortingColumn, sortingOrder);
 
     model->sort(sortingColumn, sortingOrder);
 }
@@ -456,6 +385,126 @@ bool FileManagerWidgetPrivate::hasFiles(const QStringList &paths)
         }
     }
     return false;
+}
+
+QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::ViewMode mode)
+{
+    Q_Q(FileManagerWidget);
+
+    QAbstractItemView *view = 0;
+    switch (mode) {
+    case FileManagerWidget::IconView:
+        view = createListView();
+        break;
+    case FileManagerWidget::ColumnView:
+        view = createColumnView();
+        break;
+    case FileManagerWidget::TreeView:
+        view = createTreeView();
+        break;
+    default:
+        break;
+    }
+
+    view->setFocusProxy(q);
+    view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setDragDropMode(QAbstractItemView::DragDrop);
+    view->setAcceptDrops(true);
+    view->setDefaultDropAction(Qt::MoveAction);
+    view->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
+    view->setTextElideMode(Qt::ElideMiddle);
+    view->setItemDelegate(new FileDelegate(view));
+    view->setIconSize(iconSizes[mode]);
+    connect(view, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(onDoubleClick(QModelIndex)),
+            Qt::QueuedConnection);
+    if (model) {
+        view->setModel(model);
+        QTreeView *treeView = qobject_cast<QTreeView *>(view);
+        if (treeView)
+            treeView->setColumnWidth(0, 250);
+        connect(view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                q, SIGNAL(selectedPathsChanged()));
+    }
+
+    return view;
+}
+
+QListView * FileManagerWidgetPrivate::createListView()
+{
+    Q_Q(FileManagerWidget);
+
+    QListView *iconView = new ListView(q);
+
+    iconView->setWordWrap(true);
+    iconView->setWrapping(true);
+    iconView->setFlow(QListView::LeftToRight);
+    iconView->setViewMode(QListView::IconMode);
+    iconView->setResizeMode(QListView::Adjust);
+    iconView->setMovement(QListView::Static);
+
+    updateListViewFlow(iconView);
+
+    return iconView;
+}
+
+QColumnView *FileManagerWidgetPrivate::createColumnView()
+{
+    Q_Q(FileManagerWidget);
+
+    return new QColumnView(q);
+}
+
+QTreeView * FileManagerWidgetPrivate::createTreeView()
+{
+    Q_Q(FileManagerWidget);
+
+    QTreeView *treeView = new QTreeView(q);
+
+    treeView->setAlternatingRowColors(alternatingRowColors);
+    treeView->setExpandsOnDoubleClick(false);
+    treeView->setItemsExpandable(itemsExpandable);
+    treeView->setSortingEnabled(true);
+
+    connect(treeView->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
+            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
+
+    return treeView;
+}
+
+QAbstractItemView *FileManagerWidgetPrivate::testCurrentView(FileManagerWidget::ViewMode mode)
+{
+    switch (mode) {
+    case FileManagerWidget::IconView:
+        return qobject_cast<QListView*>(currentView);
+    case FileManagerWidget::ColumnView:
+        return qobject_cast<QColumnView*>(currentView);
+    case FileManagerWidget::TreeView:
+        return qobject_cast<QTreeView*>(currentView);
+    default:
+        break;
+    }
+    return 0;
+}
+
+void FileManagerWidgetPrivate::updateListViewFlow(QListView *view)
+{
+    QSize s = gridSize;
+    if (flow == FileManagerWidget::LeftToRight) {
+        view->setFlow(QListView::LeftToRight);
+        view->setViewMode(QListView::IconMode);
+        view->update();
+    } else if (flow == FileManagerWidget::TopToBottom) {
+        view->setFlow(QListView::TopToBottom);
+        view->setViewMode(QListView::ListMode);
+        s.setWidth(256);
+    }
+    view->setGridSize(s);
+    // fixes dragging
+    view->setDragEnabled(true);
+    view->viewport()->setAcceptDrops(true);
+    view->setMouseTracking(true);
 }
 
 void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
@@ -501,7 +550,6 @@ void FileManagerWidgetPrivate::onSortIndicatorChanged(int logicalIndex, Qt::Sort
 
 static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
 
-#include "filemanagersettings.h"
 FileManagerWidget::FileManagerWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new FileManagerWidgetPrivate(this))
@@ -512,6 +560,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     d->setupUi();
 
+    d->blockEvents = false;
     d->model = 0;
     d->currentView = 0;
     d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
@@ -519,6 +568,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->sortingColumn = (FileManagerWidget::Column)-1;
     d->sortingOrder = (Qt::SortOrder)-1;
     d->itemsExpandable = true;
+    d->alternatingRowColors = true;
 
     d->history = new FileManagerHistory(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -529,9 +579,6 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     model->setReadOnly(false);
     d->setModel(model);
     d->setFileSystemManager(FileSystemManager::instance());
-
-//    ((QTreeView*)d->views[FileManagerWidget::TableView])->setColumnWidth(0, 250);
-    ((QTreeView*)d->views[FileManagerWidget::TreeView])->setColumnWidth(0, 250);
 
     FileManagerSettings *settings = FileManagerSettings::globalSettings();
 
@@ -568,14 +615,19 @@ bool FileManagerWidget::alternatingRowColors() const
 {
     Q_D(const FileManagerWidget);
 
-    return d->views[TreeView]->alternatingRowColors();
+    return d->alternatingRowColors;
 }
 
 void FileManagerWidget::setAlternatingRowColors(bool enable)
 {
     Q_D(FileManagerWidget);
 
-    d->views[TreeView]->setAlternatingRowColors(enable);
+    if (d->alternatingRowColors == enable)
+        return;
+
+    QTreeView *view = qobject_cast<QTreeView*>(d->currentView);
+    if (view)
+        view->setAlternatingRowColors(enable);
 }
 
 bool FileManagerWidget::canRedo() const
@@ -631,24 +683,11 @@ void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
     if (d->flow == flow)
         return;
 
-    QListView *view = (QListView *)d->views[IconView];
-    QSize s = d->gridSize;
-    if (flow == LeftToRight) {
-        view->setFlow(QListView::LeftToRight);
-        view->setViewMode(QListView::IconMode);
-        view->update();
-        d->flow = flow;
-    } else if (flow == TopToBottom) {
-        view->setFlow(QListView::TopToBottom);
-        view->setViewMode(QListView::ListMode);
-        d->flow = flow;
-        s.setWidth(256);
-    }
-    view->setGridSize(s);
-    // fix dragging
-    view->setDragEnabled(true);
-    view->viewport()->setAcceptDrops(true);
-    view->setMouseTracking(true);
+    d->flow = flow;
+
+    QListView *view = qobject_cast<QListView*>(d->currentView);
+    if (view)
+        d->updateListViewFlow(view);
 }
 
 QSize FileManagerWidget::gridSize() const
@@ -666,17 +705,23 @@ void FileManagerWidget::setGridSize(QSize s)
         return;
 
     d->gridSize = s;
-    QListView *view = (QListView *)d->views[IconView];
-    if (d->flow == TopToBottom)
-        s.setWidth(256);
-    view->setGridSize(s);
+
+    QListView *view = qobject_cast<QListView*>(d->currentView);
+    if (view) {
+        if (d->flow == TopToBottom)
+            s.setWidth(256);
+        view->setGridSize(s);
+    }
 }
 
 QSize FileManagerWidget::iconSize(FileManagerWidget::ViewMode mode) const
 {
     Q_D(const FileManagerWidget);
 
-    return d->views[mode]->iconSize();
+    if (mode < 0 || mode >= FileManagerWidget::MaxViews)
+        return QSize();
+
+    return d->iconSizes[mode];
 }
 
 void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size)
@@ -686,7 +731,14 @@ void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size
     if (mode < 0 && mode >= FileManagerWidget::MaxViews)
         return;
 
-    d->views[mode]->setIconSize(size);
+    if (d->iconSizes[mode] == size)
+        return;
+
+    d->iconSizes[mode] = size;
+
+    QAbstractItemView *view = d->testCurrentView(mode);
+    if (view)
+        view->setIconSize(size);
 }
 
 bool FileManagerWidget::itemsExpandable() const
@@ -705,14 +757,16 @@ void FileManagerWidget::setItemsExpandable(bool expandable)
 
     d->itemsExpandable = expandable;
 
-    QTreeView *view = static_cast<QTreeView *>(d->views[TreeView]);
-    if (!expandable) {
-        view->collapseAll();
-        view->setRootIsDecorated(false);
-        view->setItemsExpandable(false);
-    } else {
-        view->setRootIsDecorated(true);
-        view->setItemsExpandable(true);
+    QTreeView *view = qobject_cast<QTreeView *>(d->currentView);
+    if (view) {
+        if (!expandable) {
+            view->collapseAll();
+            view->setRootIsDecorated(false);
+            view->setItemsExpandable(false);
+        } else {
+            view->setRootIsDecorated(true);
+            view->setItemsExpandable(true);
+        }
     }
 }
 
@@ -797,7 +851,9 @@ void FileManagerWidget::setViewMode(ViewMode mode)
         d->viewMode = mode;
         bool focus = d->currentView ? d->currentView->hasFocus() : false;
         d->layout->setCurrentIndex(mode);
-        d->currentView = d->views[mode];
+        delete d->currentView;
+        d->currentView = d->createView(mode);
+        d->layout->addWidget(d->currentView);
         if (focus) {
             d->currentView->setFocus();
         }
@@ -808,7 +864,6 @@ void FileManagerWidget::setViewMode(ViewMode mode)
         d->actions[IconMode]->setChecked(mode == IconView);
         d->actions[ColumnMode]->setChecked(mode == ColumnView);
         d->actions[TreeMode]->setChecked(mode == TreeView);
-        d->actions[CoverFlowMode]->setChecked(mode == CoverFlow);
 
         emit viewModeChanged(d->viewMode);
     }
@@ -1134,7 +1189,6 @@ void FileManagerWidget::showHiddenFiles(bool show)
         d->model->setFilter(mBaseFilters);
 }
 
-#include "openwithmenu.h"
 /*!
   \brief Shows FileManagerWidget's context menu.
 */
@@ -1157,7 +1211,6 @@ void FileManagerWidget::showContextMenu(QPoint pos)
         viewModeMenu->addAction(d->actions[IconMode]);
         viewModeMenu->addAction(d->actions[ColumnMode]);
         viewModeMenu->addAction(d->actions[TreeMode]);
-        viewModeMenu->addAction(d->actions[CoverFlowMode]);
         QMenu * sortByMenu = menu->addMenu(tr("Sort by"));
         sortByMenu->addAction(d->actions[SortByName]);
         sortByMenu->addAction(d->actions[SortByType]);

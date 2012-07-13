@@ -53,7 +53,6 @@ public:
     void setupUi();
     void createActions();
     void retranslateUi();
-    void initViews();
 
     void setFileSystemManager(FileSystemManager *manager);
 
@@ -66,6 +65,14 @@ public:
 
     void registerAction(QAction *action, const QByteArray &id);
     static bool hasFiles(const QStringList &paths);
+
+    QAbstractItemView *createView(FileManagerWidget::ViewMode mode);
+    QListView *createListView();
+    QColumnView *createColumnView();
+    QTreeView *createTreeView();
+    QAbstractItemView *testCurrentView(FileManagerWidget::ViewMode mode);
+
+    void updateListViewFlow(QListView *view);
 
 public slots:
     void onDoubleClick(const QModelIndex &index);
@@ -82,7 +89,7 @@ public slots:
 public:
     FileManagerWidget::ViewMode viewMode;
     QAbstractItemView * currentView;
-    QAbstractItemView * views[FileManagerWidget::MaxViews];
+    QSize iconSizes[FileManagerWidget::MaxViews];
     QStackedLayout * layout;
 
     FileSystemModel *model;
@@ -96,6 +103,7 @@ public:
     QSize gridSize;
     FileManagerWidget::Flow flow;
 
+    bool alternatingRowColors;
     bool itemsExpandable;
 
     FileManagerWidget::Column sortingColumn;
