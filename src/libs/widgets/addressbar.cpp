@@ -4,7 +4,9 @@
 #include <QtCore/QDir>
 
 #include <QtGui/QApplication>
+#include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
+#include <QtGui/QStyleOptionFrameV2>
 
 static inline QString urlToUserOutput(const QUrl &url)
 {
@@ -21,7 +23,6 @@ AddressBar::AddressBar(QWidget *parent) :
     m_loading(false),
     m_progress(0)
 {
-    setFrame(false);
     setButtonVisible(Right, true);
     setButtonPixmap(Right, QIcon(":/icons/refresh.png").pixmap(16));
 
@@ -75,34 +76,81 @@ void AddressBar::keyPressEvent(QKeyEvent *e)
     }
 }
 
+QLinearGradient AddressBar::generateGradient(const QColor &color) const
+{
+    QColor defaultBaseColor = QApplication::palette().color(QPalette::Base);
+
+    QLinearGradient gradient(0, 0, 0, height());
+    gradient.setColorAt(0, defaultBaseColor);
+    gradient.setColorAt(0.15, color.lighter(120));
+    gradient.setColorAt(0.5, color);
+    gradient.setColorAt(0.85, color.lighter(120));
+    gradient.setColorAt(1, defaultBaseColor);
+    return gradient;
+}
+
 void AddressBar::paintEvent(QPaintEvent *event)
 {
     QPalette p = palette();
 
     QColor defaultBaseColor = QApplication::palette().color(QPalette::Base);
-    QColor backgroundColor = defaultBaseColor;
     if (m_url.scheme() == QLatin1String("https")
         && p.color(QPalette::Text).value() < 128) {
         QColor lightYellow(248, 248, 210);
-        backgroundColor = lightYellow;
-    }
-
-    // set the progress bar
-    if (m_progress == 0) {
-        p.setBrush(QPalette::Base, backgroundColor);
+        p.setBrush(QPalette::Base, generateGradient(lightYellow));
     } else {
-        QColor loadingColor = QColor(116, 192, 250);
-        if (p.color(QPalette::Text).value() >= 128)
-            loadingColor = defaultBaseColor.darker(200);
-
-        QLinearGradient gradient(0, 0, width(), 0);
-        gradient.setColorAt(0, loadingColor);
-        gradient.setColorAt(m_progress/100.0, backgroundColor);
-        p.setBrush(QPalette::Base, gradient);
+        p.setBrush(QPalette::Base, defaultBaseColor);
     }
     setPalette(p);
 
     FancyLineEdit::paintEvent(event);
+
+    if (!hasFocus() && m_progress) {
+        QPainter painter(this);
+        QStyleOptionFrameV2 panel;
+        initStyleOption(&panel);
+        QRect backgroundRect = style()->subElementRect(QStyle::SE_LineEditContents, &panel, this);
+
+        QColor loadingColor = QColor(116, 192, 250);
+        painter.save();
+        painter.setBrush(generateGradient(loadingColor));
+        painter.setPen(Qt::transparent);
+        int mid = backgroundRect.width() / 100 * m_progress;
+        QRect progressRect(backgroundRect.x(), backgroundRect.y(), mid, backgroundRect.height());
+        painter.drawRect(progressRect);
+        painter.restore();
+
+        painter.setPen(palette().text().color());
+        QFontMetrics fm = fontMetrics();
+        QRect r = style()->subElementRect(QStyle::SE_LineEditContents, &panel, this);
+
+        static int horizontalMargin = 2;
+        static int verticalMargin = 1;
+        int vscroll = 0;
+
+        Qt::Alignment va = QStyle::visualAlignment(layoutDirection(), QFlag(alignment()));
+        switch (va & Qt::AlignVertical_Mask) {
+         case Qt::AlignBottom:
+             vscroll = r.y() + r.height() - fm.height() - verticalMargin;
+             break;
+         case Qt::AlignTop:
+             vscroll = r.y() + verticalMargin;
+             break;
+         default:
+             //center
+             vscroll = r.y() + (r.height() - fm.height() + 1) / 2;
+             break;
+        }
+        QRect lineRect(r.x() + horizontalMargin, vscroll, r.width() - 2*horizontalMargin, fm.height());
+
+        int minLB = qMax(0, -fm.minLeftBearing());
+//            int minRB = qMax(0, -fm.minRightBearing());
+        lineRect.adjust(minLB, 0, 0, 0);
+
+        QString elidedText = fm.elidedText(text(), Qt::ElideRight, lineRect.width());
+        painter.drawText(lineRect, va, elidedText);
+    }
+
 }
 
 void AddressBar::updateUrl()
