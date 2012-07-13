@@ -28,9 +28,9 @@ set( HEADERS
     proxyeditor.h
     proxyfile.h
     proxyhistory.h
-    settingsdialog.h
     settingspage.h
     settingspagemanager.h
+    settingswindow.h
     stackedcontainer.h
     stackedcontainer_p.h
     stackedhistory.h
@@ -62,9 +62,9 @@ set( SOURCES
     proxyeditor.cpp
     proxyfile.cpp
     proxyhistory.cpp
-    settingsdialog.cpp
     settingspage.cpp
     settingspagemanager.cpp
+    settingswindow.cpp
     stackedcontainer.cpp
     stackedhistory.cpp
    )

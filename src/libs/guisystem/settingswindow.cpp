@@ -1,4 +1,4 @@
-#include "settingsdialog.h"
+#include "settingswindow.h"
 
 #include "settingspage.h"
 #include "settingspagemanager.h"
@@ -9,12 +9,12 @@
 
 namespace GuiSystem {
 
-class SettingsDialogPrivate
+class SettingsWindowPrivate
 {
-    Q_DECLARE_PUBLIC(SettingsDialog)
+    Q_DECLARE_PUBLIC(SettingsWindow)
 
 public:
-    SettingsDialogPrivate(SettingsDialog *qq) : q_ptr(qq) {}
+    SettingsWindowPrivate(SettingsWindow *qq) : q_ptr(qq) {}
 
     QStackedLayout *stackedLayout;
     QGridLayout *mainLayout;
@@ -38,7 +38,7 @@ public:
     void retranslateUi();
 
 private:
-    SettingsDialog *q_ptr;
+    SettingsWindow *q_ptr;
 };
 
 } // namespace GuiSystem
@@ -50,9 +50,9 @@ static const qint32 settingsDialogVersion = 1;
 
 const int categoryIconSize = 32;
 
-void SettingsDialogPrivate::addCategory(const QString &id)
+void SettingsWindowPrivate::addCategory(const QString &id)
 {
-    Q_Q(SettingsDialog);
+    Q_Q(SettingsWindow);
 
     if (categories.contains(id))
         return;
@@ -76,7 +76,7 @@ void SettingsDialogPrivate::addCategory(const QString &id)
     tabWidgets.append(tabWidget);
 }
 
-void SettingsDialogPrivate::addPage(SettingsPage *page)
+void SettingsWindowPrivate::addPage(SettingsPage *page)
 {
     int index = categories.indexOf(page->category());
 
@@ -86,7 +86,7 @@ void SettingsDialogPrivate::addPage(SettingsPage *page)
     tabWidget->addTab(widget, page->name());
 }
 
-void SettingsDialogPrivate::removePage(SettingsPage *page)
+void SettingsWindowPrivate::removePage(SettingsPage *page)
 {
     QWidget *widget = widgets.take(page);
     if (widget) {
@@ -94,14 +94,14 @@ void SettingsDialogPrivate::removePage(SettingsPage *page)
     }
 }
 
-void SettingsDialogPrivate::selectPage(int index)
+void SettingsWindowPrivate::selectPage(int index)
 {
     toolbar->actions().at(index)->trigger();
 }
 
-void SettingsDialogPrivate::setupUi()
+void SettingsWindowPrivate::setupUi()
 {
-    Q_Q(SettingsDialog);
+    Q_Q(SettingsWindow);
 
     actionGroup = new QActionGroup(q);
     actionGroup->setExclusive(true);
@@ -127,11 +127,11 @@ void SettingsDialogPrivate::setupUi()
     retranslateUi();
 }
 
-void SettingsDialogPrivate::retranslateUi()
+void SettingsWindowPrivate::retranslateUi()
 {
-    Q_Q(SettingsDialog);
+    Q_Q(SettingsWindow);
 
-    q->setWindowTitle(SettingsDialog::tr("Preferences"));
+    q->setWindowTitle(SettingsWindow::tr("Preferences"));
 }
 
 /*!
@@ -143,11 +143,11 @@ void SettingsDialogPrivate::retranslateUi()
 /*!
     \brief Creates an empty SettingsDialog with the given \a parent.
 */
-SettingsDialog::SettingsDialog(QWidget *parent) :
+SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
-    d_ptr(new SettingsDialogPrivate(this))
+    d_ptr(new SettingsWindowPrivate(this))
 {
-    Q_D(SettingsDialog);
+    Q_D(SettingsWindow);
 
     d->manager = 0;
     d->setupUi();
@@ -158,7 +158,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 /*!
     \brief Destroys SettingsDialog.
 */
-SettingsDialog::~SettingsDialog()
+SettingsWindow::~SettingsWindow()
 {
     delete d_ptr;
 }
@@ -167,7 +167,7 @@ SettingsDialog::~SettingsDialog()
 
     \brief Returns SettingsManager assigned to this dialog.
 */
-SettingsPageManager *SettingsDialog::settingsPageManager() const
+SettingsPageManager *SettingsWindow::settingsPageManager() const
 {
     return d_func()->manager;
 }
@@ -175,9 +175,9 @@ SettingsPageManager *SettingsDialog::settingsPageManager() const
 /*!
     \brief Assigned \a manager to this dialog fill it with settings pages.
 */
-void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
+void SettingsWindow::setSettingsPageManager(SettingsPageManager *manager)
 {
-    Q_D(SettingsDialog);
+    Q_D(SettingsWindow);
 
     if (d->manager) {
         // clear;
@@ -198,9 +198,9 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
     d->selectPage(0);
 }
 
-QByteArray SettingsDialog::saveState() const
+QByteArray SettingsWindow::saveState() const
 {
-    Q_D(const SettingsDialog);
+    Q_D(const SettingsWindow);
 
     qint32 currentPage = d->stackedLayout->currentIndex();
     qint32 currentTab = d->tabWidgets[currentPage]->currentIndex();
@@ -217,9 +217,9 @@ QByteArray SettingsDialog::saveState() const
     return state;
 }
 
-bool SettingsDialog::restoreState(const QByteArray &arr)
+bool SettingsWindow::restoreState(const QByteArray &arr)
 {
-    Q_D(SettingsDialog);
+    Q_D(SettingsWindow);
 
     QByteArray state = arr;
 
@@ -257,9 +257,9 @@ bool SettingsDialog::restoreState(const QByteArray &arr)
 /*!
     \internal
 */
-void SettingsDialog::onSelectionChanged(const QItemSelection &newSelection)
+void SettingsWindow::onSelectionChanged(const QItemSelection &newSelection)
 {
-    Q_D(SettingsDialog);
+    Q_D(SettingsWindow);
 
     if (!newSelection.isEmpty()) {
         QModelIndex index = newSelection.indexes().first();
@@ -270,9 +270,9 @@ void SettingsDialog::onSelectionChanged(const QItemSelection &newSelection)
 /*!
     \internal
 */
-void SettingsDialog::onPageAdded(SettingsPage *page)
+void SettingsWindow::onPageAdded(SettingsPage *page)
 {
-    Q_D(SettingsDialog);
+    Q_D(SettingsWindow);
 
     QString category = page->category();
     d->addCategory(category);
@@ -282,14 +282,14 @@ void SettingsDialog::onPageAdded(SettingsPage *page)
 /*!
     \internal
 */
-void SettingsDialog::onPageRemoved(SettingsPage *page)
+void SettingsWindow::onPageRemoved(SettingsPage *page)
 {
     d_func()->removePage(page);
 }
 
-void SettingsDialog::onActionTriggered(bool toggled)
+void SettingsWindow::onActionTriggered(bool toggled)
 {
-    Q_D(SettingsDialog);
+    Q_D(SettingsWindow);
     QAction *action = qobject_cast<QAction*>(sender());
     int index = d->toolbar->actions().indexOf(action);
     d->stackedLayout->setCurrentIndex(index);
