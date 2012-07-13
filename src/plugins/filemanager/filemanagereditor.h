@@ -65,6 +65,7 @@ private:
     void setupUi();
     void setupConnections();
     void createActions();
+    void registerWidgetActions(FileManagerWidget *widget);
 
 private:
     MiniSplitter *splitter;

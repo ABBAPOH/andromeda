@@ -23,8 +23,6 @@ public:
     void createLeftPane();
     void createRightPane();
     void ensureRightPaneCreated();
-    void updateViewModeActions();
-    void updateSortActions();
     void updateState();
 
 public slots:

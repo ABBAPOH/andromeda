@@ -23,35 +23,6 @@ class FILEMANAGER_EXPORT DualPaneWidget : public QWidget
 public:
     enum Pane { LeftPane = 0, RightPane = 1 };
     enum Action { NoAction = -1,
-                  Open,
-                  Edit,
-                  OpenInTab,
-                  OpenInWindow,
-                  NewFolder,
-                  Rename,
-                  MoveToTrash,
-                  Remove,
-                  ShowFileInfo,
-
-                  Redo,
-                  Undo,
-                  Cut,
-                  Copy,
-                  Paste,
-                  MoveHere,
-                  SelectAll,
-                  ShowHiddenFiles,
-
-                  IconMode,
-                  ColumnMode,
-                  TreeMode,
-                  CoverFlowMode,
-
-                  SortByName,
-                  SortBySize,
-                  SortByType,
-                  SortByDate,
-                  SortDescendingOrder,
 
                   EnableDualPane,
                   VerticalPanels,
