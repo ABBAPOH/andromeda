@@ -33,6 +33,7 @@ private slots:
 
 private:
     void updateUrl();
+    QLinearGradient generateGradient(const QColor &color) const;
 
 private:
     QUrl m_url;
