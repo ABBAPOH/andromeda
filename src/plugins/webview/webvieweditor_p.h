@@ -3,8 +3,6 @@
 
 #include "webvieweditor.h"
 
-#include <QtWebKit/QWebHistoryInterface>
-
 #include <guisystem/ifind.h>
 #include <guisystem/ihistory.h>
 
@@ -59,22 +57,6 @@ public slots:
 private:
     QWebHistory *m_history;
     int m_index;
-};
-
-class WebHistoryInterface : public QWebHistoryInterface
-{
-    Q_OBJECT
-
-public:
-    explicit WebHistoryInterface(QObject *parent = 0);
-
-    static WebHistoryInterface *instance();
-
-    bool historyContains(const QString &url) const;
-    void addHistoryEntry(const QString &url);
-
-signals:
-    void itemAdded();
 };
 
 } //namespace WebView

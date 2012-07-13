@@ -59,6 +59,11 @@ bool WebViewPlugin::initialize()
 
     m_cookieJar = new CookieJar(this);
 
+    WebHistoryInterface *iface = new WebHistoryInterface(this);
+
+    if (!QWebHistoryInterface::defaultInterface())
+        QWebHistoryInterface::setDefaultInterface(iface);
+
     createActions();
     loadSettings();
 
@@ -258,6 +263,34 @@ void WebViewPlugin::createActions()
     inspectorCommand->setDefaultShortcut(QKeySequence("Ctrl+Alt+I"));
     inspectorCommand->setContext(Command::WindowCommand);
     toolsContainer->addCommand(inspectorCommand);
+}
+
+WebHistoryInterface *staticHistory = 0;
+WebHistoryInterface::WebHistoryInterface(QObject *parent) :
+    QWebHistoryInterface(parent)
+{
+    Q_ASSERT(!staticHistory);
+    ::staticHistory = this;
+}
+
+WebHistoryInterface::~WebHistoryInterface()
+{
+    ::staticHistory = 0;
+}
+
+WebHistoryInterface * WebHistoryInterface::instance()
+{
+    return staticHistory;
+}
+
+bool WebHistoryInterface::historyContains(const QString &/*url*/) const
+{
+    return false;
+}
+
+void WebHistoryInterface::addHistoryEntry(const QString &/*url*/)
+{
+    emit itemAdded();
 }
 
 Q_EXPORT_PLUGIN(WebViewPlugin)
