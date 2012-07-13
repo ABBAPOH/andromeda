@@ -186,27 +186,6 @@ void WebViewHistory::updateCurrentItemIndex()
     emit currentItemIndexChanged(index);
 }
 
-WebHistoryInterface::WebHistoryInterface(QObject *parent) :
-    QWebHistoryInterface(parent)
-{
-}
-
-Q_GLOBAL_STATIC(WebHistoryInterface, static_instance)
-WebHistoryInterface * WebHistoryInterface::instance()
-{
-    return static_instance();
-}
-
-bool WebHistoryInterface::historyContains(const QString &/*url*/) const
-{
-    return false;
-}
-
-void WebHistoryInterface::addHistoryEntry(const QString &/*url*/)
-{
-    emit itemAdded();
-}
-
 WebViewEditor::WebViewEditor(QWidget *parent) :
     AbstractEditor(parent),
     m_webInspector(0)
@@ -230,11 +209,6 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_history = new WebViewHistory(this);
     m_webView = new QWebView(this);
 
-    WebHistoryInterface *iface = WebHistoryInterface::instance();
-
-    if (!QWebHistoryInterface::defaultInterface())
-        QWebHistoryInterface::setDefaultInterface(iface);
-
     QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
     m_history->setHistory(m_webView->page()->history());
@@ -243,7 +217,7 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     jar->setParent(WebViewPlugin::instance());
     m_splitter->addWidget(m_webView);
 
-    connect(iface, SIGNAL(itemAdded()), m_history, SLOT(updateCurrentItemIndex()));
+    connect(WebHistoryInterface::instance(), SIGNAL(itemAdded()), m_history, SLOT(updateCurrentItemIndex()));
 
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
