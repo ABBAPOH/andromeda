@@ -4,14 +4,8 @@
 #include "settingspagemanager.h"
 
 #include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QLineEdit>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QScrollBar>
-#include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTabWidget>
-
-#include <widgets/modeltoolbar.h>
+#include <QtGui/QToolBar>
 
 namespace GuiSystem {
 
@@ -24,22 +18,21 @@ public:
 
     QStackedLayout *stackedLayout;
     QGridLayout *mainLayout;
-    ModelToolBar *toolbar;
+    QToolBar *toolbar;
 
     QList<QString> categories;
     QList<QTabWidget *> tabWidgets;
     QMap<SettingsPage *, QWidget *> widgets;
 
     SettingsPageManager *manager;
-    QStandardItemModel *model;
     QAction *closeAction;
-    bool ignoreDataChanged;
+    QActionGroup *actionGroup;
 
 public:
     void addCategory(const QString &id);
     void addPage(SettingsPage *page);
     void removePage(SettingsPage *page);
-    void selectRow(int row);
+    void selectPage(int row);
 
     void setupUi();
     void retranslateUi();
@@ -59,18 +52,22 @@ const int categoryIconSize = 32;
 
 void SettingsDialogPrivate::addCategory(const QString &id)
 {
+    Q_Q(SettingsDialog);
+
     if (categories.contains(id))
         return;
 
     SettingsPage *page = manager->pages(id).first();
 
-    QStandardItem *item = new QStandardItem;
-    item->setIcon(page->categoryIcon());
-    item->setText(page->categoryName());
-    item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-    item->setData(categories.size());
+    QAction *action = new QAction(toolbar);
+    action->setCheckable(true);
+    action->setIcon(page->categoryIcon());
+    action->setText(page->categoryName());
+    action->setData(categories.size());
+    actionGroup->addAction(action);
+    toolbar->addAction(action);
+    q->connect(action, SIGNAL(triggered(bool)), q, SLOT(onActionTriggered(bool)));
 
-    model->appendRow(item);
     categories.append(id);
 
     QTabWidget *tabWidget = new QTabWidget;
@@ -97,16 +94,19 @@ void SettingsDialogPrivate::removePage(SettingsPage *page)
     }
 }
 
-void SettingsDialogPrivate::selectRow(int row)
+void SettingsDialogPrivate::selectPage(int index)
 {
-    model->setData(model->index(row, 0), Qt::Checked, Qt::CheckStateRole);
+    toolbar->actions().at(index)->trigger();
 }
 
 void SettingsDialogPrivate::setupUi()
 {
     Q_Q(SettingsDialog);
 
-    toolbar = new ModelToolBar;
+    actionGroup = new QActionGroup(q);
+    actionGroup->setExclusive(true);
+
+    toolbar = new QToolBar;
     toolbar->setIconSize(QSize(categoryIconSize, categoryIconSize));
     toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     q->addToolBar(toolbar);
@@ -150,12 +150,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     Q_D(SettingsDialog);
 
     d->manager = 0;
-    d->model = new QStandardItemModel(this);
-    d->ignoreDataChanged = false;
     d->setupUi();
-
-    d->toolbar->setModel(d->model);
-    connect(d->model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(onDataChanged(QModelIndex,QModelIndex)));
 
     setObjectName(QLatin1String("SettingsDialog"));
 }
@@ -200,7 +195,7 @@ void SettingsDialog::setSettingsPageManager(SettingsPageManager *manager)
     connect(d->manager, SIGNAL(pageAdded(SettingsPage*)), SLOT(onPageAdded(SettingsPage*)));
     connect(d->manager, SIGNAL(pageRemoved(SettingsPage*)), SLOT(onPageRemoved(SettingsPage*)));
 
-    d->selectRow(0);
+    d->selectPage(0);
 }
 
 QByteArray SettingsDialog::saveState() const
@@ -243,7 +238,7 @@ bool SettingsDialog::restoreState(const QByteArray &arr)
 
     s >> currentPage;
     if (0 <= currentPage && currentPage < d->stackedLayout->count()) {
-        d->selectRow(currentPage);
+        d->selectPage(currentPage);
     } else {
         return false;
     }
@@ -292,24 +287,10 @@ void SettingsDialog::onPageRemoved(SettingsPage *page)
     d_func()->removePage(page);
 }
 
-void SettingsDialog::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void SettingsDialog::onActionTriggered(bool toggled)
 {
     Q_D(SettingsDialog);
-
-    if (d->ignoreDataChanged)
-        return;
-
-    for (int row = topLeft.row(); row <= bottomRight.row(); row++) {
-        QModelIndex index = d->model->index(row, 0);
-        if (index.data(Qt::CheckStateRole).toInt() == Qt::Checked) {
-            int oldIndex = d->stackedLayout->currentIndex();
-            if (row != oldIndex) { // special case when selecting first time
-                d->ignoreDataChanged = true;
-                d->model->setData(d->model->index(oldIndex, 0), Qt::Unchecked, Qt::CheckStateRole);
-                d->ignoreDataChanged = false;
-            }
-            d->stackedLayout->setCurrentIndex(row);
-            return;
-        }
-    }
+    QAction *action = qobject_cast<QAction*>(sender());
+    int index = d->toolbar->actions().indexOf(action);
+    d->stackedLayout->setCurrentIndex(index);
 }

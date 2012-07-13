@@ -37,7 +37,7 @@ private slots:
     void onSelectionChanged(const QItemSelection &current);
     void onPageAdded(SettingsPage *page);
     void onPageRemoved(SettingsPage *page);
-    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onActionTriggered(bool toggled);
 
 protected:
     SettingsDialogPrivate *d_ptr;
