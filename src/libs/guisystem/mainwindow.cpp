@@ -102,6 +102,7 @@ void MainWindow::setEditor(ProxyEditor *container)
     d->editor = container;
     d->history->setHistory(editor()->history());
 
+    connect(d->editor, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
     connect(d->editor, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
     connect(d->editor, SIGNAL(iconChanged(QIcon)), SLOT(setWindowIcon(QIcon)));
     connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
