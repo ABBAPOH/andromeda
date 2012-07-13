@@ -103,7 +103,7 @@ HistoryItem FileManagerEditorHistory::itemAt(int index) const
     if (localIndex >= 0) {
         item = m_widget->leftWidget()->history()->itemAt(localIndex);
     } else {
-        item = m_widget->leftWidget()->history()->itemAt(-localIndex - 2);
+        item = m_widget->rightWidget()->history()->itemAt(-localIndex - 2);
     }
     HistoryItem result;
     result.setUrl(QUrl::fromLocalFile(item.path()));
