@@ -9,7 +9,7 @@
 using namespace ExtensionSystem;
 
 namespace GuiSystem {
-class SettingsDialog;
+class SettingsWindow;
 }
 
 class CorePlugin : public IPlugin
@@ -57,7 +57,7 @@ private:
 
 private:
     QStringList urls;
-    QPointer<GuiSystem::SettingsDialog> settingsDialog;
+    QPointer<GuiSystem::SettingsWindow> settingsDialog;
     QByteArray settingsDialogState;
     QMenu *dockMenu;
     QSettings *m_settings;

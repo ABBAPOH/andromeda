@@ -16,16 +16,16 @@ class SettingsPageManager;
 class Category;
 class CategoryModel;
 
-class SettingsDialogPrivate;
-class GUISYSTEM_EXPORT SettingsDialog : public QMainWindow
+class SettingsWindowPrivate;
+class GUISYSTEM_EXPORT SettingsWindow : public QMainWindow
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(SettingsDialog)
-    Q_DISABLE_COPY(SettingsDialog)
+    Q_DECLARE_PRIVATE(SettingsWindow)
+    Q_DISABLE_COPY(SettingsWindow)
 
 public:
-    explicit SettingsDialog(QWidget *parent = 0);
-    ~SettingsDialog();
+    explicit SettingsWindow(QWidget *parent = 0);
+    ~SettingsWindow();
 
     SettingsPageManager *settingsPageManager() const;
     void setSettingsPageManager(SettingsPageManager *manager);
@@ -40,7 +40,7 @@ private slots:
     void onActionTriggered(bool toggled);
 
 protected:
-    SettingsDialogPrivate *d_ptr;
+    SettingsWindowPrivate *d_ptr;
 };
 
 } // namespace GuiSystem

@@ -27,7 +27,7 @@
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
 #include <guisystem/menubarcontainer.h>
-#include <guisystem/settingsdialog.h>
+#include <guisystem/settingswindow.h>
 #include <guisystem/settingspagemanager.h>
 
 #include <widgets/windowsmenu.h>
@@ -263,7 +263,7 @@ void CorePlugin::prefenrences()
 
     // TODO: test unloading pages while dialog is running
     if (!settingsDialog) {
-        settingsDialog = new SettingsDialog();
+        settingsDialog = new SettingsWindow();
         settingsDialog->setAttribute(Qt::WA_DeleteOnClose);
         settingsDialog->setSettingsPageManager(pageManager);
         settingsDialog->restoreState(settingsDialogState);
