@@ -7,6 +7,7 @@
 #include <QtGui/QMainWindow>
 
 class QToolButton;
+class QUrl;
 
 namespace GuiSystem {
 
@@ -42,8 +43,8 @@ public:
 
     QAction *action(Action action) const;
 
-    ProxyEditor *contanier() const;
-    virtual void setContanier(ProxyEditor *container);
+    ProxyEditor *editor() const;
+    virtual void setEditor(ProxyEditor *container);
 
     bool menuVisible() const;
 
@@ -80,8 +81,14 @@ public slots:
 signals:
     void menuVisibleChanged(bool visible);
 
-private slots:
+protected slots:
     void setWindowIcon(const QIcon &icon);
+
+    virtual void onUrlChanged(const QUrl &url);
+
+    virtual void startLoad();
+    virtual void setLoadProgress(int progress);
+    virtual void finishLoad(bool ok);
 
 protected:
     MainWindowPrivate *d_ptr;

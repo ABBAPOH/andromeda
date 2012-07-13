@@ -47,6 +47,12 @@ public slots:
     void nextEditor();
     void previousEditor();
 
+    void onUrlChanged(const QUrl &url);
+
+    void startLoad();
+    void setLoadProgress(int progress);
+    void finishLoad(bool ok);
+
 protected:
     void moveEvent(QMoveEvent *);
     void resizeEvent(QResizeEvent *);
