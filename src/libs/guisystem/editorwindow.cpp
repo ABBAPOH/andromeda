@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "mainwindow_p.h"
+#include "editorwindow.h"
+#include "editorwindow_p.h"
 
 #include "abstracteditor.h"
 #include "actionmanager.h"
@@ -9,7 +9,7 @@
 #include "stackedcontainer.h"
 #include "history.h"
 #include "historybutton.h"
-#include "mainwindowfactory.h"
+#include "editorwindowfactory.h"
 #include "menubarcontainer.h"
 
 #include <QtCore/QDataStream>
@@ -28,11 +28,11 @@ static const qint8 mainWindowVersion = 1;
 
 using namespace GuiSystem;
 
-MainWindow::MainWindow(QWidget *parent) :
+EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
-    d_ptr(new MainWindowPrivate(this))
+    d_ptr(new EditorWindowPrivate(this))
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     d->editor = 0;
     d->history = new History(this);
@@ -58,19 +58,19 @@ MainWindow::MainWindow(QWidget *parent) :
     bool visible = settings.value("menuVisible", true).toBool();
     d->menuVisible = !visible; // to skip check in setMenuVisible
     setMenuVisible(visible);
-    d->actions[MainWindow::ShowMenu]->setChecked(visible);
+    d->actions[EditorWindow::ShowMenu]->setChecked(visible);
 
     d->initGeometry();
 }
 
-MainWindow::~MainWindow()
+EditorWindow::~EditorWindow()
 {
     delete d_ptr;
 }
 
-QAction * MainWindow::action(Action action) const
+QAction * EditorWindow::action(Action action) const
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     if (action <= NoAction || action >= ActionCount)
         return 0;
@@ -78,16 +78,16 @@ QAction * MainWindow::action(Action action) const
     return d->actions[action];
 }
 
-GuiSystem::AbstractEditor *MainWindow::editor() const
+GuiSystem::AbstractEditor *EditorWindow::editor() const
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     return d->editor;
 }
 
-void MainWindow::setEditor(AbstractEditor *editor)
+void EditorWindow::setEditor(AbstractEditor *editor)
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->editor == editor)
         return;
@@ -122,16 +122,16 @@ void MainWindow::setEditor(AbstractEditor *editor)
     setCentralWidget(d->editor);
 }
 
-bool MainWindow::menuVisible() const
+bool EditorWindow::menuVisible() const
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     return d->menuVisible;
 }
 
-void MainWindow::setMenuVisible(bool visible)
+void EditorWindow::setMenuVisible(bool visible)
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->menuVisible == visible)
         return;
@@ -151,9 +151,9 @@ void MainWindow::setMenuVisible(bool visible)
     emit menuVisibleChanged(d->menuVisible);
 }
 
-QUrl MainWindow::url() const
+QUrl EditorWindow::url() const
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     if (d->editor)
         return d->editor->url();
@@ -161,32 +161,32 @@ QUrl MainWindow::url() const
     return QUrl();
 }
 
-QToolButton *MainWindow::menuBarButton() const
+QToolButton *EditorWindow::menuBarButton() const
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     return d->menuBarButton;
 }
 
-MainWindow * MainWindow::currentWindow()
+EditorWindow * EditorWindow::currentWindow()
 {
-    return qobject_cast<MainWindow*>(qApp->activeWindow());
+    return qobject_cast<EditorWindow*>(qApp->activeWindow());
 }
 
-QList<MainWindow *> MainWindow::windows()
+QList<EditorWindow *> EditorWindow::windows()
 {
-    QList<MainWindow*> result;
+    QList<EditorWindow*> result;
     foreach (QWidget *widget, qApp->topLevelWidgets()) {
-        MainWindow* window = qobject_cast<MainWindow*>(widget);
+        EditorWindow* window = qobject_cast<EditorWindow*>(widget);
         if (window)
             result.append(window);
     }
     return result;
 }
 
-MainWindow * MainWindow::createWindow()
+EditorWindow * EditorWindow::createWindow()
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
         return factory->create();
     else
@@ -195,9 +195,9 @@ MainWindow * MainWindow::createWindow()
     return 0;
 }
 
-bool MainWindow::restoreState(const QByteArray &arr)
+bool EditorWindow::restoreState(const QByteArray &arr)
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     QByteArray state = arr;
 
@@ -229,9 +229,9 @@ bool MainWindow::restoreState(const QByteArray &arr)
     return true;
 }
 
-QByteArray MainWindow::saveState() const
+QByteArray EditorWindow::saveState() const
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
@@ -246,38 +246,38 @@ QByteArray MainWindow::saveState() const
     return state;
 }
 
-void MainWindow::back()
+void EditorWindow::back()
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->editor)
         d->history->back();
 }
 
-void MainWindow::forward()
+void EditorWindow::forward()
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->editor)
         d->history->forward();
 }
 
-void MainWindow::open(const QUrl &url)
+void EditorWindow::open(const QUrl &url)
 {
-    Q_D(const MainWindow);
+    Q_D(const EditorWindow);
 
     if (d->editor)
         d->editor->open(url);
 }
 
-void MainWindow::close()
+void EditorWindow::close()
 {
     QMainWindow::close();
 }
 
-void MainWindow::openNewWindow(const QUrl &url)
+void EditorWindow::openNewWindow(const QUrl &url)
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         factory->openNewWindow(url);
     } else {
@@ -295,9 +295,9 @@ void MainWindow::openNewWindow(const QUrl &url)
 //    }
 //}
 
-void MainWindow::save()
+void EditorWindow::save()
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->editor)
         return;
@@ -308,9 +308,9 @@ void MainWindow::save()
     d->editor->file()->save();
 }
 
-void MainWindow::saveAs()
+void EditorWindow::saveAs()
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (!d->editor)
         return;
@@ -327,63 +327,63 @@ void MainWindow::saveAs()
     d->editor->file()->save(QUrl::fromLocalFile(path));
 }
 
-void MainWindow::refresh()
+void EditorWindow::refresh()
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->editor)
         d->editor->refresh();
 }
 
-void MainWindow::cancel()
+void EditorWindow::cancel()
 {
-    Q_D(MainWindow);
+    Q_D(EditorWindow);
 
     if (d->editor)
         d->editor->cancel();
 }
 
-void MainWindow::setWindowIcon(const QIcon &icon)
+void EditorWindow::setWindowIcon(const QIcon &icon)
 {
     QMainWindow::setWindowIcon(icon);
 }
 
-void MainWindow::onUrlChanged(const QUrl &/*url*/)
+void EditorWindow::onUrlChanged(const QUrl &/*url*/)
 {
 }
 
-void MainWindow::startLoad()
+void EditorWindow::startLoad()
 {
 }
 
-void MainWindow::setLoadProgress(int /*progress*/)
+void EditorWindow::setLoadProgress(int /*progress*/)
 {
 }
 
-void MainWindow::finishLoad(bool /*ok*/)
+void EditorWindow::finishLoad(bool /*ok*/)
 {
 }
 
-void MainWindowPrivate::createActions()
+void EditorWindowPrivate::createActions()
 {
-    Q_Q(MainWindow);
+    Q_Q(EditorWindow);
 
-    actions[MainWindow::OpenFile] = new QAction(q);
+    actions[EditorWindow::OpenFile] = new QAction(q);
 
-    actions[MainWindow::Close] = new QAction(q);
-    QObject::connect(actions[MainWindow::Close], SIGNAL(triggered()), q, SLOT(close()));
+    actions[EditorWindow::Close] = new QAction(q);
+    QObject::connect(actions[EditorWindow::Close], SIGNAL(triggered()), q, SLOT(close()));
 
-    actions[MainWindow::Save] = new QAction(q);
-    QObject::connect(actions[MainWindow::Save], SIGNAL(triggered()), q, SLOT(save()));
+    actions[EditorWindow::Save] = new QAction(q);
+    QObject::connect(actions[EditorWindow::Save], SIGNAL(triggered()), q, SLOT(save()));
 
-    actions[MainWindow::SaveAs] = new QAction(q);
-    QObject::connect(actions[MainWindow::SaveAs], SIGNAL(triggered()), q, SLOT(saveAs()));
+    actions[EditorWindow::SaveAs] = new QAction(q);
+    QObject::connect(actions[EditorWindow::SaveAs], SIGNAL(triggered()), q, SLOT(saveAs()));
 
-    actions[MainWindow::Refresh] = new QAction(q);
-    QObject::connect(actions[MainWindow::Refresh], SIGNAL(triggered()), q, SLOT(refresh()));
+    actions[EditorWindow::Refresh] = new QAction(q);
+    QObject::connect(actions[EditorWindow::Refresh], SIGNAL(triggered()), q, SLOT(refresh()));
 
-    actions[MainWindow::Cancel] = new QAction(q);
-    QObject::connect(actions[MainWindow::Cancel], SIGNAL(triggered()), q, SLOT(cancel()));
+    actions[EditorWindow::Cancel] = new QAction(q);
+    QObject::connect(actions[EditorWindow::Cancel], SIGNAL(triggered()), q, SLOT(cancel()));
 
     backButton = new HistoryButton;
     backButton->setHistory(history);
@@ -399,53 +399,53 @@ void MainWindowPrivate::createActions()
 
     wa = new QWidgetAction(q);
     wa->setDefaultWidget(backButton);
-    actions[MainWindow::Back] = wa;
-    actions[MainWindow::Back]->setEnabled(false);
-    QObject::connect(actions[MainWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
+    actions[EditorWindow::Back] = wa;
+    actions[EditorWindow::Back]->setEnabled(false);
+    QObject::connect(actions[EditorWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
 
     wa = new QWidgetAction(q);
     wa->setDefaultWidget(forwardButton);
-    actions[MainWindow::Forward] = wa;
-    actions[MainWindow::Forward]->setEnabled(false);
-    QObject::connect(actions[MainWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
+    actions[EditorWindow::Forward] = wa;
+    actions[EditorWindow::Forward]->setEnabled(false);
+    QObject::connect(actions[EditorWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
 
-    actions[MainWindow::ShowMenu] = new QAction(q);
-    actions[MainWindow::ShowMenu]->setCheckable(true);
-    actions[MainWindow::ShowMenu]->setChecked(true);
-    QObject::connect(actions[MainWindow::ShowMenu], SIGNAL(triggered(bool)), q, SLOT(setMenuVisible(bool)));
+    actions[EditorWindow::ShowMenu] = new QAction(q);
+    actions[EditorWindow::ShowMenu]->setCheckable(true);
+    actions[EditorWindow::ShowMenu]->setChecked(true);
+    QObject::connect(actions[EditorWindow::ShowMenu], SIGNAL(triggered(bool)), q, SLOT(setMenuVisible(bool)));
 
-    for (int i = 0; i < MainWindow::ActionCount; i++) {
+    for (int i = 0; i < EditorWindow::ActionCount; i++) {
         q->addAction(actions[i]);
     }
 }
 
-void MainWindowPrivate::retranslateUi()
+void EditorWindowPrivate::retranslateUi()
 {
-    actions[MainWindow::Save]->setText(MainWindow::tr("Save"));
-    actions[MainWindow::SaveAs]->setText(MainWindow::tr("Save as..."));
-    actions[MainWindow::Refresh]->setText(MainWindow::tr("Refresh"));
-    actions[MainWindow::Cancel]->setText(MainWindow::tr("Cancel"));
+    actions[EditorWindow::Save]->setText(EditorWindow::tr("Save"));
+    actions[EditorWindow::SaveAs]->setText(EditorWindow::tr("Save as..."));
+    actions[EditorWindow::Refresh]->setText(EditorWindow::tr("Refresh"));
+    actions[EditorWindow::Cancel]->setText(EditorWindow::tr("Cancel"));
 
-    backButton->setText(MainWindow::tr("Back"));
-    forwardButton->setText(MainWindow::tr("Forward"));
+    backButton->setText(EditorWindow::tr("Back"));
+    forwardButton->setText(EditorWindow::tr("Forward"));
 }
 
-void MainWindowPrivate::registerActions()
+void EditorWindowPrivate::registerActions()
 {
     ActionManager *manager = ActionManager::instance();
-    manager->registerAction(actions[MainWindow::Close], MenuBarContainer::standardCommandName(MenuBarContainer::Close));
+    manager->registerAction(actions[EditorWindow::Close], MenuBarContainer::standardCommandName(MenuBarContainer::Close));
 
-    manager->registerAction(actions[MainWindow::Back], "Back");
-    manager->registerAction(actions[MainWindow::Forward], "Forward");
+    manager->registerAction(actions[EditorWindow::Back], "Back");
+    manager->registerAction(actions[EditorWindow::Forward], "Forward");
 
 #ifndef Q_OS_MAC
     manager->registerAction(actions[MainWindow::ShowMenu], MenuBarContainer::standardCommandName(MenuBarContainer::ShowMenu));
 #endif
 }
 
-void MainWindowPrivate::initGeometry()
+void EditorWindowPrivate::initGeometry()
 {
-    Q_Q(MainWindow);
+    Q_Q(EditorWindow);
 
     static const float percent = 0.58f;
     QDesktopWidget desktop;

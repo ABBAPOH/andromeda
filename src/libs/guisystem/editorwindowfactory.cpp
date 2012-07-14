@@ -1,26 +1,26 @@
-#include "mainwindowfactory.h"
+#include "editorwindowfactory.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QPointer>
 
-#include "mainwindow.h"
+#include "editorwindow.h"
 
 using namespace GuiSystem;
 
-QPointer<MainWindowFactory> m_defaultFactory;
+QPointer<EditorWindowFactory> m_defaultFactory;
 
-MainWindowFactory::MainWindowFactory(QObject *parent) :
+EditorWindowFactory::EditorWindowFactory(QObject *parent) :
     QObject(parent)
 {
 }
 
-MainWindowFactory *MainWindowFactory::defaultFactory()
+EditorWindowFactory *EditorWindowFactory::defaultFactory()
 {
     return ::m_defaultFactory;
 }
 
-void MainWindowFactory::setDefaultfactory(MainWindowFactory *factory)
+void EditorWindowFactory::setDefaultfactory(EditorWindowFactory *factory)
 {
     Q_ASSERT_X(qApp, "MainWindowFactory::setDefaultfactory", "Must construct a QApplication before calling this method");
 
@@ -35,17 +35,17 @@ void MainWindowFactory::setDefaultfactory(MainWindowFactory *factory)
     qApp->installEventFilter(::m_defaultFactory);
 }
 
-MainWindow * MainWindowFactory::activeWindow() const
+EditorWindow * EditorWindowFactory::activeWindow() const
 {
     return m_activeWindow;
 }
 
-MainWindowFactory::OpenFlags MainWindowFactory::openFlags() const
+EditorWindowFactory::OpenFlags EditorWindowFactory::openFlags() const
 {
     return OpenFlags(Open | OpenNewWindows);
 }
 
-void MainWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
+void EditorWindowFactory::openFlag(EditorWindowFactory::OpenFlag cap, QList<QUrl> urls)
 {
     if (urls.isEmpty())
         return;
@@ -56,7 +56,7 @@ void MainWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> ur
             if (m_activeWindow) {
                 m_activeWindow->open(urls.first());
             } else {
-                MainWindow *window = create();
+                EditorWindow *window = create();
                 window->open(urls.first());
                 window->show();
             }
@@ -65,7 +65,7 @@ void MainWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> ur
     }
     case OpenNewWindows: {
         foreach (const QUrl &url, urls) {
-            MainWindow *window = create();
+            EditorWindow *window = create();
             window->open(url);
             window->show();
         }
@@ -77,42 +77,42 @@ void MainWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> ur
     }
 }
 
-void MainWindowFactory::open(const QUrl &url)
+void EditorWindowFactory::open(const QUrl &url)
 {
     openFlag(Open, QList<QUrl>() << url);
 }
 
-void MainWindowFactory::open(const QList<QUrl> &urls)
+void EditorWindowFactory::open(const QList<QUrl> &urls)
 {
     openFlag(Open, urls);
 }
 
-void MainWindowFactory::openNewEditor(const QUrl &url)
+void EditorWindowFactory::openNewEditor(const QUrl &url)
 {
     openFlag(OpenNewEditor, QList<QUrl>() << url);
 }
 
-void MainWindowFactory::openNewEditor(const QList<QUrl> &urls)
+void EditorWindowFactory::openNewEditor(const QList<QUrl> &urls)
 {
     openFlag(OpenNewEditor, urls);
 }
 
-void MainWindowFactory::openNewWindow(const QUrl &url)
+void EditorWindowFactory::openNewWindow(const QUrl &url)
 {
     openFlag(OpenNewWindows, QList<QUrl>() << url);
 }
 
-void MainWindowFactory::openNewWindow(const QList<QUrl> &urls)
+void EditorWindowFactory::openNewWindow(const QList<QUrl> &urls)
 {
     openFlag(OpenNewWindow, urls);
 }
 
-void MainWindowFactory::openNewWindows(const QList<QUrl> &urls)
+void EditorWindowFactory::openNewWindows(const QList<QUrl> &urls)
 {
     openFlag(OpenNewWindows, urls);
 }
 
-void MainWindowFactory::openEditor(const QString &id)
+void EditorWindowFactory::openEditor(const QString &id)
 {
     QUrl url;
     url.setScheme(qApp->applicationName());
@@ -120,16 +120,16 @@ void MainWindowFactory::openEditor(const QString &id)
     openFlag(Open, QList<QUrl>() << url);
 }
 
-MainWindow * MainWindowFactory::create()
+EditorWindow * EditorWindowFactory::create()
 {
-    return new MainWindow;
+    return new EditorWindow;
 }
 
-bool MainWindowFactory::eventFilter(QObject *object, QEvent *event)
+bool EditorWindowFactory::eventFilter(QObject *object, QEvent *event)
 {
     if (object->isWidgetType()) {
         if (event->type() == QEvent::ActivationChange) {
-            MainWindow *window = qobject_cast<MainWindow*>(object);
+            EditorWindow *window = qobject_cast<EditorWindow*>(object);
             if (window && window->isActiveWindow()) {
                 m_activeWindow = window;
             }

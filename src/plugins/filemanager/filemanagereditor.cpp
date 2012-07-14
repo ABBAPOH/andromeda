@@ -19,7 +19,7 @@
 #include <QtGui/QResizeEvent>
 
 #include <extensionsystem/pluginmanager.h>
-#include <guisystem/mainwindowfactory.h>
+#include <guisystem/editorwindowfactory.h>
 #include <widgets/minisplitter.h>
 
 #include <core/constants.h>
@@ -450,7 +450,7 @@ void FileManagerEditor::openNewTab(const QStringList &paths)
     foreach (const QString &path, paths) {
         urls.append(QUrl::fromLocalFile(path));
     }
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
         factory->openNewEditor(urls);
 }
@@ -465,7 +465,7 @@ void FileManagerEditor::openNewWindow(const QStringList &paths)
         urls.append(QUrl::fromLocalFile(path));
     }
 
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
         factory->openNewWindow(urls);
 }

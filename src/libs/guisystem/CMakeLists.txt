@@ -12,6 +12,9 @@ set( HEADERS
     commandsmodel_p.h
     commandssettingswidget.h
     editormanager.h
+    editorwindow.h
+    editorwindow_p.h
+    editorwindowfactory.h
     findtoolbar.h
     history.h
     historybutton.h
@@ -19,9 +22,6 @@ set( HEADERS
     ifile.h
     ifind.h
     ihistory.h
-    mainwindow.h
-    mainwindow_p.h
-    mainwindowfactory.h
     menubarcontainer.h
     menubarcontainer_p.h
     proxyaction.h
@@ -48,6 +48,8 @@ set( SOURCES
     commandsmodel.cpp
     commandssettingswidget.cpp
     editormanager.cpp
+    editorwindow.cpp
+    editorwindowfactory.cpp
     findtoolbar.cpp
     history.cpp
     historybutton.cpp
@@ -55,8 +57,6 @@ set( SOURCES
     ifile.cpp
     ifind.cpp
     ihistory.cpp
-    mainwindow.cpp
-    mainwindowfactory.cpp
     menubarcontainer.cpp
     proxyaction.cpp
     proxyeditor.cpp

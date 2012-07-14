@@ -3,7 +3,7 @@
 
 #include "core_global.h"
 
-#include <guisystem/mainwindow.h>
+#include <guisystem/editorwindow.h>
 
 class QSettings;
 class QUrl;
@@ -16,7 +16,7 @@ class StackedContainer;
 namespace Core {
 
 class BrowserWindowPrivate;
-class CORE_EXPORT BrowserWindow : public GuiSystem::MainWindow
+class CORE_EXPORT BrowserWindow : public GuiSystem::EditorWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(BrowserWindow)

@@ -12,8 +12,8 @@
 #include <extensionsystem/pluginmanager.h>
 
 #include <guisystem/actionmanager.h>
-#include <guisystem/mainwindow.h>
-#include <guisystem/mainwindowfactory.h>
+#include <guisystem/editorwindow.h>
+#include <guisystem/editorwindowfactory.h>
 #include <guisystem/menubarcontainer.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
@@ -138,7 +138,7 @@ void BookmarksPlugin::shutdown()
 
 void BookmarksPlugin::open(const QUrl &url)
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         factory->open(url);
     }
@@ -146,7 +146,7 @@ void BookmarksPlugin::open(const QUrl &url)
 
 void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         factory->openNewEditor(urls);
     }
@@ -154,7 +154,7 @@ void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
 
 void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         factory->openNewWindow(urls);
     }
@@ -162,7 +162,7 @@ void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
 
 void BookmarksPlugin::showBookmarks()
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         factory->openEditor(Constants::Editors::Bookmarks);
     }
@@ -229,7 +229,7 @@ void BookmarksPlugin::createActions()
 
 void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder)
 {
-    MainWindow * window = MainWindow::currentWindow();
+    EditorWindow * window = EditorWindow::currentWindow();
     if (!window)
         return;
 

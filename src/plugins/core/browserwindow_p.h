@@ -8,7 +8,7 @@
 
 #include <QtCore/QEvent>
 #include <QtGui/QToolBar>
-#include <guisystem/mainwindowfactory.h>
+#include <guisystem/editorwindowfactory.h>
 #include <guisystem/stackedcontainer.h>
 
 #include "tabcontainer.h"
@@ -44,13 +44,13 @@ public slots:
 
 };
 
-class BrowserWindowFactory : public GuiSystem::MainWindowFactory
+class BrowserWindowFactory : public GuiSystem::EditorWindowFactory
 {
     Q_OBJECT
 public:
     explicit BrowserWindowFactory(QObject *parent = 0);
 
-    GuiSystem::MainWindow *create();
+    GuiSystem::EditorWindow *create();
     void openFlag(OpenFlag cap, QList<QUrl> urls);
 };
 
