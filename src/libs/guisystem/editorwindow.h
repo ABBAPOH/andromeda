@@ -88,6 +88,9 @@ protected slots:
     virtual void setLoadProgress(int progress);
     virtual void finishLoad(bool ok);
 
+    virtual void onModificationChanged(bool modified);
+    virtual void onReadOnlyChanged(bool readOnly);
+
 protected:
     EditorWindowPrivate *d_ptr;
 };
