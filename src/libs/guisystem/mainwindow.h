@@ -11,7 +11,7 @@ class QUrl;
 
 namespace GuiSystem {
 
-class ProxyEditor;
+class AbstractEditor;
 
 class MainWindowPrivate;
 class GUISYSTEM_EXPORT MainWindow : public QMainWindow
@@ -41,8 +41,8 @@ public:
 
     QAction *action(Action action) const;
 
-    ProxyEditor *editor() const;
-    virtual void setEditor(ProxyEditor *container);
+    AbstractEditor *editor() const;
+    virtual void setEditor(AbstractEditor *editor);
 
     bool menuVisible() const;
 

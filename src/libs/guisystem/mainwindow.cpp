@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "mainwindow_p.h"
 
+#include "abstracteditor.h"
 #include "actionmanager.h"
 #include "ifile.h"
 #include "ihistory.h"
@@ -9,7 +10,6 @@
 #include "history.h"
 #include "historybutton.h"
 #include "mainwindowfactory.h"
-#include "proxyeditor.h"
 #include "menubarcontainer.h"
 
 #include <QtCore/QDataStream>
@@ -78,18 +78,18 @@ QAction * MainWindow::action(Action action) const
     return d->actions[action];
 }
 
-ProxyEditor * MainWindow::editor() const
+GuiSystem::AbstractEditor *MainWindow::editor() const
 {
     Q_D(const MainWindow);
 
     return d->editor;
 }
 
-void MainWindow::setEditor(ProxyEditor *container)
+void MainWindow::setEditor(AbstractEditor *editor)
 {
     Q_D(MainWindow);
 
-    if (d->editor == container)
+    if (d->editor == editor)
         return;
 
     if (d->editor) {
@@ -99,8 +99,8 @@ void MainWindow::setEditor(ProxyEditor *container)
         disconnect(d->editor->file(), 0, d->actions[Save], 0);
     }
 
-    d->editor = container;
-    d->history->setHistory(editor()->history());
+    d->editor = editor;
+    d->history->setHistory(editor->history());
 
     connect(d->editor, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
     connect(d->editor, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
