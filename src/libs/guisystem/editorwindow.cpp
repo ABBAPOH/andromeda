@@ -95,8 +95,9 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     if (d->editor) {
         disconnect(d->editor, 0, this, 0);
 
-        if (d->editor->file())
-        disconnect(d->editor->file(), 0, d->actions[Save], 0);
+        if (d->editor->file()) {
+            disconnect(d->editor->file(), 0, this, 0);
+        }
     }
 
     d->editor = editor;
@@ -111,8 +112,10 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     connect(d->editor, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
     connect(d->editor, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
 
-    if (d->editor->file())
-        connect(d->editor->file(), SIGNAL(modificationChanged(bool)), d->actions[Save], SLOT(setEnabled(bool)));
+    if (d->editor->file()) {
+        connect(d->editor->file(), SIGNAL(modificationChanged(bool)), SLOT(onModificationChanged(bool)));
+        connect(d->editor->file(), SIGNAL(readOnlyChanged(bool)), SLOT(onReadOnlyChanged(bool)));
+    }
 
     bool saveAsEnabled = d->editor->file();
     bool saveEnabled = saveAsEnabled && !d->editor->file()->isReadOnly() && d->editor->file()->isModified();
@@ -362,6 +365,22 @@ void EditorWindow::setLoadProgress(int /*progress*/)
 
 void EditorWindow::finishLoad(bool /*ok*/)
 {
+}
+
+void EditorWindow::onModificationChanged(bool modified)
+{
+    Q_D(EditorWindow);
+
+    IFile *file = d->editor ? d->editor->file() : 0;
+    bool readOnly = file ? file->isReadOnly() : false;
+    d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
+}
+
+void EditorWindow::onReadOnlyChanged(bool readOnly)
+{
+    Q_D(EditorWindow);
+
+    d->actions[EditorWindow::SaveAs]->setEnabled(!readOnly);
 }
 
 void EditorWindowPrivate::createActions()
