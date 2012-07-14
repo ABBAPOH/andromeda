@@ -8,8 +8,8 @@
 
 #include <extensionsystem/pluginmanager.h>
 #include <guisystem/actionmanager.h>
-#include <guisystem/mainwindow.h>
-#include <guisystem/mainwindowfactory.h>
+#include <guisystem/editorwindow.h>
+#include <guisystem/editorwindowfactory.h>
 
 #include <core/constants.h>
 
@@ -91,14 +91,14 @@ bool BookmarksEditor::restoreState(const QByteArray &state)
 
 void BookmarksEditor::openTriggered(const QUrl &url)
 {
-    MainWindow *window = MainWindow::currentWindow();
+    EditorWindow *window = EditorWindow::currentWindow();
     if (window)
         window->open(url);
 }
 
 void BookmarksEditor::openInTabTriggered(const QUrl &url)
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         factory->openNewEditor(url);
     }
@@ -106,7 +106,7 @@ void BookmarksEditor::openInTabTriggered(const QUrl &url)
 
 void BookmarksEditor::openInWindowTriggered(const QUrl &url)
 {
-    MainWindowFactory *factory = MainWindowFactory::defaultFactory();
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
         factory->openNewWindow(url);
 }

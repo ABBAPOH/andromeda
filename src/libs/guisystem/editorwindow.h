@@ -13,11 +13,11 @@ namespace GuiSystem {
 
 class AbstractEditor;
 
-class MainWindowPrivate;
-class GUISYSTEM_EXPORT MainWindow : public QMainWindow
+class EditorWindowPrivate;
+class GUISYSTEM_EXPORT EditorWindow : public QMainWindow
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(MainWindow)
+    Q_DECLARE_PRIVATE(EditorWindow)
     Q_PROPERTY(bool menuVisible READ menuVisible WRITE setMenuVisible NOTIFY menuVisibleChanged)
 
 public:
@@ -36,8 +36,8 @@ public:
                   ActionCount
                 };
 
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit EditorWindow(QWidget *parent = 0);
+    ~EditorWindow();
 
     QAction *action(Action action) const;
 
@@ -50,9 +50,9 @@ public:
 
     QToolButton *menuBarButton() const;
 
-    static MainWindow *currentWindow();
-    static QList<MainWindow*> windows();
-    static MainWindow *createWindow();
+    static EditorWindow *currentWindow();
+    static QList<EditorWindow*> windows();
+    static EditorWindow *createWindow();
 
     virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
@@ -89,7 +89,7 @@ protected slots:
     virtual void finishLoad(bool ok);
 
 protected:
-    MainWindowPrivate *d_ptr;
+    EditorWindowPrivate *d_ptr;
 };
 
 } // namespace GuiSystem

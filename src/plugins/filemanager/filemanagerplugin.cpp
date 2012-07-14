@@ -16,7 +16,7 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
-#include <guisystem/mainwindow.h>
+#include <guisystem/editorwindow.h>
 
 #include <guisystem/editormanager.h>
 #include <guisystem/menubarcontainer.h>
@@ -82,7 +82,7 @@ void FileManagerPlugin::shutdown()
 
 void FileManagerPlugin::goTo(const QString &s)
 {
-    MainWindow *window = MainWindow::currentWindow();
+    EditorWindow *window = EditorWindow::currentWindow();
     if (window) {
         window->open(QUrl::fromLocalFile(s));
     }

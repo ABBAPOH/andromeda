@@ -9,9 +9,9 @@
 
 namespace GuiSystem {
 
-class MainWindow;
+class EditorWindow;
 
-class GUISYSTEM_EXPORT MainWindowFactory : public QObject
+class GUISYSTEM_EXPORT EditorWindowFactory : public QObject
 {
     Q_OBJECT
 public:
@@ -23,12 +23,12 @@ public:
     };
     Q_DECLARE_FLAGS(OpenFlags, OpenFlag)
 
-    explicit MainWindowFactory(QObject *parent = 0);
+    explicit EditorWindowFactory(QObject *parent = 0);
 
-    static MainWindowFactory *defaultFactory();
-    static void setDefaultfactory(MainWindowFactory *factory);
+    static EditorWindowFactory *defaultFactory();
+    static void setDefaultfactory(EditorWindowFactory *factory);
 
-    MainWindow *activeWindow() const;
+    EditorWindow *activeWindow() const;
 
     virtual OpenFlags openFlags() const;
     virtual void openFlag(OpenFlag cap, QList<QUrl> urls);
@@ -46,13 +46,13 @@ public:
 
     void openEditor(const QString &id);
 
-    virtual MainWindow *create();
+    virtual EditorWindow *create();
 
 protected:
     bool eventFilter(QObject *, QEvent *);
 
 protected:
-    QPointer<MainWindow> m_activeWindow;
+    QPointer<EditorWindow> m_activeWindow;
 };
 
 } // namespace GuiSystem

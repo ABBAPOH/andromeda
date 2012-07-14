@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_P_H
 #define MAINWINDOW_P_H
 
-#include "mainwindow.h"
+#include "editorwindow.h"
 
 #include <QtCore/QPointer>
 
@@ -13,12 +13,12 @@ class ProxyEditor;
 class History;
 class HistoryButton;
 
-class MainWindowPrivate
+class EditorWindowPrivate
 {
-    Q_DECLARE_PUBLIC(MainWindow)
+    Q_DECLARE_PUBLIC(EditorWindow)
 
 public:
-    explicit MainWindowPrivate(MainWindow *qq) : q_ptr(qq) {}
+    explicit EditorWindowPrivate(EditorWindow *qq) : q_ptr(qq) {}
 
     void createActions();
     void retranslateUi();
@@ -31,13 +31,13 @@ public:
 
     HistoryButton *backButton;
     HistoryButton *forwardButton;
-    QAction *actions[MainWindow::ActionCount];
+    QAction *actions[EditorWindow::ActionCount];
 
     bool menuVisible;
     QToolButton *menuBarButton;
 
 private:
-    MainWindow *q_ptr;
+    EditorWindow *q_ptr;
 };
 
 } // namespace GuiSystem

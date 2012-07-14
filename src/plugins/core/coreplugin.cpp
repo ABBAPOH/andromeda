@@ -129,7 +129,7 @@ CorePlugin::~CorePlugin()
 
 bool CorePlugin::initialize()
 {
-    MainWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
+    EditorWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
 
     SettingsPageManager *pageManager = new SettingsPageManager;
     pageManager->setObjectName(QLatin1String("settingsPageManager"));
@@ -155,7 +155,7 @@ void CorePlugin::postInitialize(const QVariantMap &options)
         return;
     }
 
-    if (MainWindow::windows().isEmpty() || !m_firstStart) {
+    if (EditorWindow::windows().isEmpty() || !m_firstStart) {
         BrowserWindow::newWindow();
     }
 

@@ -73,8 +73,8 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar->setMovable(false);
     toolBar->setObjectName("toolBar");
 
-    toolBar->addAction(q->action(MainWindow::Back));
-    toolBar->addAction(q->action(MainWindow::Forward));
+    toolBar->addAction(q->action(EditorWindow::Back));
+    toolBar->addAction(q->action(EditorWindow::Forward));
     toolBar->addAction(upAction);
 
     toolBar->addSeparator();
@@ -179,16 +179,16 @@ void BrowserWindowPrivate::onMenuVisibleChanged(bool visible)
 }
 
 BrowserWindowFactory::BrowserWindowFactory(QObject *parent) :
-    MainWindowFactory(parent)
+    EditorWindowFactory(parent)
 {
 }
 
-MainWindow *BrowserWindowFactory::create()
+EditorWindow *BrowserWindowFactory::create()
 {
     return new BrowserWindow;
 }
 
-void BrowserWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl> urls)
+void BrowserWindowFactory::openFlag(EditorWindowFactory::OpenFlag cap, QList<QUrl> urls)
 {
     if (urls.isEmpty())
         return;
@@ -209,13 +209,13 @@ void BrowserWindowFactory::openFlag(MainWindowFactory::OpenFlag cap, QList<QUrl>
         break;
     }
     default:
-        MainWindowFactory::openFlag(cap, urls);
+        EditorWindowFactory::openFlag(cap, urls);
         break;
     }
 }
 
 BrowserWindow::BrowserWindow(QWidget *parent) :
-    MainWindow(parent),
+    EditorWindow(parent),
     d_ptr(new BrowserWindowPrivate(this))
 {
     Q_D(BrowserWindow);
@@ -287,7 +287,7 @@ void BrowserWindow::open(const QUrl &url)
     if (d->container->count() == 0)
         d->container->newTab(url);
     else
-        MainWindow::open(url);
+        EditorWindow::open(url);
 }
 
 void BrowserWindow::openNewTab(const QUrl &url)
@@ -312,7 +312,7 @@ void BrowserWindow::close()
         if (d->container->count() > 1)
             d->container->close();
         else
-            MainWindow::close();
+            EditorWindow::close();
     }
 }
 
@@ -326,7 +326,7 @@ void BrowserWindow::newTab()
 void BrowserWindow::newWindow()
 {
     QUrl url = QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
-    MainWindow::openNewWindow(url);
+    EditorWindow::openNewWindow(url);
 }
 
 void BrowserWindow::nextEditor()
@@ -355,28 +355,28 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
 
     d->upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
     d->lineEdit->setUrl(url);
-    MainWindow::onUrlChanged(url);
+    EditorWindow::onUrlChanged(url);
 }
 
 void BrowserWindow::startLoad()
 {
     Q_D(BrowserWindow);
     d->lineEdit->startLoad();
-    MainWindow::startLoad();
+    EditorWindow::startLoad();
 }
 
 void BrowserWindow::setLoadProgress(int progress)
 {
     Q_D(BrowserWindow);
     d->lineEdit->setLoadProgress(progress);
-    MainWindow::setLoadProgress(progress);
+    EditorWindow::setLoadProgress(progress);
 }
 
 void BrowserWindow::finishLoad(bool ok)
 {
     Q_D(BrowserWindow);
     d->lineEdit->finishLoad();
-    MainWindow::finishLoad(ok);
+    EditorWindow::finishLoad(ok);
 }
 
 void BrowserWindow::moveEvent(QMoveEvent*)
