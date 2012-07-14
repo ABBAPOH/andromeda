@@ -3,6 +3,8 @@
 
 #include "mainwindow.h"
 
+#include <QtCore/QPointer>
+
 class QToolButton;
 
 namespace GuiSystem {
@@ -24,7 +26,7 @@ public:
     void initGeometry();
 
 public:
-    ProxyEditor *editor;
+    QPointer<AbstractEditor> editor;
     History *history;
 
     HistoryButton *backButton;
