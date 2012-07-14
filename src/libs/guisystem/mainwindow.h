@@ -36,8 +36,6 @@ public:
                   ActionCount
                 };
 
-    typedef MainWindow * (*CreateWindowFunc)(void);
-
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
