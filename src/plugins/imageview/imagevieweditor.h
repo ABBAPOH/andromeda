@@ -7,8 +7,12 @@
 #include <guisystem/abstracteditorfactory.h>
 
 class QImageView;
+class QToolBar;
+class QVBoxLayout;
 
 namespace ImageView {
+
+class ImageViewFile;
 
 class IMAGEVIEW_EXPORT ImageViewEditor : public GuiSystem::AbstractEditor
 {
@@ -25,12 +29,18 @@ public:
     QString title() const;
     QString windowTitle() const;
 
+    GuiSystem::IFile *file() const;
+
 protected:
-    void resizeEvent(QResizeEvent *);
+    void setupUi();
+    void registerActions();
 
 private:
+    QVBoxLayout *m_layout;
+    QToolBar *m_toolBar;
     QImageView *m_view;
     QUrl m_url;
+    ImageViewFile *m_file;
 };
 
 class ImageViewEditorFactory : public GuiSystem::AbstractEditorFactory
