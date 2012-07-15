@@ -41,6 +41,8 @@ private:
     QImageView *m_view;
     QUrl m_url;
     ImageViewFile *m_file;
+
+    friend class ImageViewFile;
 };
 
 class ImageViewEditorFactory : public GuiSystem::AbstractEditorFactory

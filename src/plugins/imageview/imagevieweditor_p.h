@@ -4,13 +4,22 @@
 #include "imagevieweditor.h"
 
 #include <guisystem/ifile.h>
+#include <qimageview/qimageview.h>
 
 namespace ImageView {
 
 class ImageViewFile : public GuiSystem::IFile
 {
 public:
-    explicit ImageViewFile(QObject *parent) : IFile(parent) {}
+    explicit ImageViewFile(ImageViewEditor *parent) : IFile(parent), editor(parent) {}
+
+    bool isModified() const { return editor->m_view->isModified(); }
+    void setModified(bool modified) { editor->m_view->setModified(modified); }
+
+    bool isReadOnly() const { return false; }
+
+private:
+    ImageViewEditor *editor;
 };
 
 } // namespace ImageView
