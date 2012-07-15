@@ -157,6 +157,7 @@ void BrowserWindowPrivate::setupUi()
 
     container = new TabContainer(/*q*/);
     q->setEditor(container);
+    q->setCentralWidget(container);
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.

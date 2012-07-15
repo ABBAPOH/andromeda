@@ -103,11 +103,13 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     d->editor = editor;
     d->history->setHistory(editor->history());
 
+    onWindowIconChanged(d->editor->icon());
+    onWindowTitleChanged(d->editor->windowTitle());
+
     connect(d->editor, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
     connect(d->editor, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
-    connect(d->editor, SIGNAL(iconChanged(QIcon)), SLOT(setWindowIcon(QIcon)));
-    connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
-    connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
+    connect(d->editor, SIGNAL(iconChanged(QIcon)), SLOT(onWindowIconChanged(QIcon)));
+    connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(onWindowTitleChanged(QString)));
     connect(d->editor, SIGNAL(loadStarted()), SLOT(startLoad()));
     connect(d->editor, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
     connect(d->editor, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
@@ -121,8 +123,6 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     bool saveEnabled = saveAsEnabled && !d->editor->file()->isReadOnly() && d->editor->file()->isModified();
     d->actions[SaveAs]->setEnabled(saveAsEnabled);
     d->actions[Save]->setEnabled(saveEnabled);
-
-    setCentralWidget(d->editor);
 }
 
 bool EditorWindow::menuVisible() const
@@ -346,13 +346,21 @@ void EditorWindow::cancel()
         d->editor->cancel();
 }
 
-void EditorWindow::setWindowIcon(const QIcon &icon)
+void EditorWindow::onUrlChanged(const QUrl &/*url*/)
+{
+}
+
+void EditorWindow::onWindowIconChanged(const QIcon &icon)
 {
     QMainWindow::setWindowIcon(icon);
 }
 
-void EditorWindow::onUrlChanged(const QUrl &/*url*/)
+void EditorWindow::onWindowTitleChanged(const QString &title)
 {
+    Q_D(EditorWindow);
+
+    bool modified = d->editor->file()->isModified();
+    setWindowTitle(QString("%1%2 - %3").arg(title).arg(modified ? "*" : "").arg(qApp->applicationName()));
 }
 
 void EditorWindow::startLoad()
@@ -374,6 +382,8 @@ void EditorWindow::onModificationChanged(bool modified)
     IFile *file = d->editor ? d->editor->file() : 0;
     bool readOnly = file ? file->isReadOnly() : false;
     d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
+
+    onWindowTitleChanged(d->editor->windowTitle());
 }
 
 void EditorWindow::onReadOnlyChanged(bool readOnly)
