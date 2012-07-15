@@ -58,7 +58,7 @@ elseif( UNIX )
     add_definitions( -DICON_LOCATION=\"${ICON_LOCATION}\" )
 
     install( FILES qimageviewer.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" )
-    install( FILES qimageviewer.png DESTINATION "${ICON_LOCATION}" )
+    install( FILES icons/qimageviewer.png DESTINATION "${ICON_LOCATION}" )
 endif()
 
 install_bin( qimageviewer )
