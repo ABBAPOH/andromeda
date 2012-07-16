@@ -18,6 +18,8 @@ public:
 
     bool isReadOnly() const { return false; }
 
+    void save(const QUrl &url);
+
 private:
     ImageViewEditor *editor;
 };
