@@ -45,7 +45,7 @@ void CommandContainerPrivate::addObject(QObject *o, const QByteArray &weight)
 }
 
 /*!
-    \class CommandContainer
+    \class GuiSystem::CommandContainer
 
     \brief The CommandContainer is an abstraction over menus and toolbars which allows
     to store Commands.

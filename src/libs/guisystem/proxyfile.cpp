@@ -3,7 +3,7 @@
 using namespace GuiSystem;
 
 /*!
-  \class ProxyFile
+  \class GuiSystem::ProxyFile
 
   \brief This class redirects method calls and signals to and from other IFile.
 */

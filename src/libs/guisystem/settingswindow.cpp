@@ -45,8 +45,8 @@ private:
 
 using namespace GuiSystem;
 
-static const qint32 settingsDialogMagic = 0x73313267; // "s12g"
-static const qint32 settingsDialogVersion = 1;
+static const qint32 SettingsWindowMagic = 0x73313267; // "s12g"
+static const qint32 SettingsWindowVersion = 1;
 
 const int categoryIconSize = 32;
 
@@ -135,13 +135,13 @@ void SettingsWindowPrivate::retranslateUi()
 }
 
 /*!
-    \class SettingsDialog
+    \class GuiSystem::SettingsWindow
 
-    \brief SettingsDialog represents application preferences.
+    \brief SettingsWindow represents application preferences.
 */
 
 /*!
-    \brief Creates an empty SettingsDialog with the given \a parent.
+    \brief Creates an empty SettingsWindow with the given \a parent.
 */
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -152,11 +152,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     d->manager = 0;
     d->setupUi();
 
-    setObjectName(QLatin1String("SettingsDialog"));
+    setObjectName(QLatin1String("SettingsWindow"));
 }
 
 /*!
-    \brief Destroys SettingsDialog.
+    \brief Destroys SettingsWindow.
 */
 SettingsWindow::~SettingsWindow()
 {
@@ -208,8 +208,8 @@ QByteArray SettingsWindow::saveState() const
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
 
-    s << settingsDialogMagic;
-    s << settingsDialogVersion;
+    s << SettingsWindowMagic;
+    s << SettingsWindowVersion;
     s << currentPage;
     s << currentTab;
     s << saveGeometry();
@@ -229,11 +229,11 @@ bool SettingsWindow::restoreState(const QByteArray &arr)
     QByteArray geometry;
 
     s >> magic;
-    if (magic != settingsDialogMagic)
+    if (magic != SettingsWindowMagic)
         return false;
 
     s >> version;
-    if (version != settingsDialogVersion)
+    if (version != SettingsWindowVersion)
         return false;
 
     s >> currentPage;

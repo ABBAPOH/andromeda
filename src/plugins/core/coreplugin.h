@@ -57,8 +57,8 @@ private:
 
 private:
     QStringList urls;
-    QPointer<GuiSystem::SettingsWindow> settingsDialog;
-    QByteArray settingsDialogState;
+    QPointer<GuiSystem::SettingsWindow> settingsWindow;
+    QByteArray settingsWindowState;
     QMenu *dockMenu;
     QSettings *m_settings;
     bool m_firstStart;

@@ -6,7 +6,7 @@
 using namespace GuiSystem;
 
 /*!
-  \class AbstractView
+  \class GuiSystem::AbstractView
 
   \brief AbstractView is a base class different "panel" widgets, like docks.
 */

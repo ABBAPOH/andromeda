@@ -13,8 +13,9 @@
 using namespace GuiSystem;
 
 /*!
-  \class StackedEditor
+  \class GuiSystem::StackedEditor
 
+  \internal
   \brief The StackedEditor class represents container for editors, layed out in
   a stacked layout.
 

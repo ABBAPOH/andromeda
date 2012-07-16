@@ -3,9 +3,9 @@
 using namespace GuiSystem;
 
 /*!
-  \class ProxyHistory
+    \class GuiSystem::ProxyHistory
 
-  \brief This class redirects method calls and signals to and from other history.
+    \brief This class redirects method calls and signals to and from other history.
 */
 ProxyHistory::ProxyHistory(QObject *parent) :
     IHistory(parent),
@@ -14,7 +14,7 @@ ProxyHistory::ProxyHistory(QObject *parent) :
 }
 
 /*!
-  \reimp
+    \reimp
 */
 int ProxyHistory::count() const
 {
@@ -25,7 +25,7 @@ int ProxyHistory::count() const
 }
 
 /*!
-  \reimp
+    \reimp
 */
 int ProxyHistory::currentItemIndex() const
 {
@@ -36,7 +36,7 @@ int ProxyHistory::currentItemIndex() const
 }
 
 /*!
-  \reimp
+    \reimp
 */
 void ProxyHistory::setCurrentItemIndex(int index)
 {
@@ -45,7 +45,7 @@ void ProxyHistory::setCurrentItemIndex(int index)
 }
 
 /*!
-  \reimp
+    \reimp
 */
 HistoryItem ProxyHistory::itemAt(int index) const
 {
@@ -56,7 +56,7 @@ HistoryItem ProxyHistory::itemAt(int index) const
 }
 
 /*!
-  \brief Returns source history.
+    \brief Returns source history.
 */
 IHistory * ProxyHistory::sourceHistory() const
 {
@@ -64,7 +64,7 @@ IHistory * ProxyHistory::sourceHistory() const
 }
 
 /*!
-  \brief Sets source \a history for the proxy.
+    \brief Sets source \a history for the proxy.
 */
 void ProxyHistory::setSourceHistory(IHistory *history)
 {
@@ -89,7 +89,7 @@ void ProxyHistory::setSourceHistory(IHistory *history)
 }
 
 /*!
-  \reimp
+    \reimp
 */
 void ProxyHistory::clear()
 {

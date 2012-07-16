@@ -25,7 +25,7 @@ static void updateActionContext(Command::CommandContext context, Action *action)
 }
 
 /*!
-    \class Action
+    \class GuiSystem::Action
 
     \brief The Action class is convenience class to make registering actions easier
 */

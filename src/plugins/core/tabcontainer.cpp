@@ -13,9 +13,10 @@ using namespace Core;
 using namespace GuiSystem;
 
 /*!
-  \class TabContainer
+    \class Core::TabContainer
+    \internal
 
-  \brief This class implements AbstractContainer interface for a TabWidget.
+    \brief This class implements AbstractContainer interface for a TabWidget.
 */
 
 /*!

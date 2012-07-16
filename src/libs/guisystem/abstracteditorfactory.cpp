@@ -4,6 +4,12 @@
 using namespace GuiSystem;
 
 /*!
+    \class GuiSystem::AbstractEditorFactory
+
+    \brief AbstractEditorFactory is a base class for factories for creating AbstractEditors.
+*/
+
+/*!
     \brief Creates a AbstractEditorFactory with the given \a parent.
 */
 AbstractEditorFactory::AbstractEditorFactory(QObject *parent) :

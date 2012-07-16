@@ -3,7 +3,7 @@
 using namespace GuiSystem;
 
 /*!
-  \class IFile
+  \class GuiSystem::IFile
 
   \brief IFile is an interface for file saving API.
 */

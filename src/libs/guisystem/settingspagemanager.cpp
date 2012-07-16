@@ -24,9 +24,9 @@ public:
 using namespace GuiSystem;
 
 /*!
-    \class SettingsPageManager
+    \class GuiSystem::SettingsPageManager
 
-    \brief The SettingsPageManager class contains implementations of ISettingsPage interface used in SettingsDialog
+    \brief The SettingsPageManager class contains implementations of SettingsPage interface used in SettingsWindow
 */
 
 /*!

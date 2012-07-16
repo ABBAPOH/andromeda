@@ -58,7 +58,7 @@ void CommandPrivate::update()
 }
 
 /*!
-    \class Command
+    \class GuiSystem::Command
 
     \brief The Command class allows to link QActions with entries in application's menu.
 
@@ -402,7 +402,7 @@ void Command::setRealAction(QAction *action)
 }
 
 /*!
-    \class Separator
+    \class GuiSystem::Separator
 
     \brief Helper class to add separators to CommandContainers.
 
