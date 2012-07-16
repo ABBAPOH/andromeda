@@ -115,14 +115,16 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     connect(d->editor, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
 
     if (d->editor->file()) {
+        onReadOnlyChanged(d->editor->file()->isReadOnly());
+        onModificationChanged(d->editor->file()->isModified());
         connect(d->editor->file(), SIGNAL(modificationChanged(bool)), SLOT(onModificationChanged(bool)));
         connect(d->editor->file(), SIGNAL(readOnlyChanged(bool)), SLOT(onReadOnlyChanged(bool)));
     }
 
-    bool saveAsEnabled = d->editor->file();
-    bool saveEnabled = saveAsEnabled && !d->editor->file()->isReadOnly() && d->editor->file()->isModified();
-    d->actions[SaveAs]->setEnabled(saveAsEnabled);
-    d->actions[Save]->setEnabled(saveEnabled);
+//    bool saveAsEnabled = d->editor->file();
+//    bool saveEnabled = saveAsEnabled && !d->editor->file()->isReadOnly() && d->editor->file()->isModified();
+//    d->actions[SaveAs]->setEnabled(saveAsEnabled);
+//    d->actions[Save]->setEnabled(saveEnabled);
 }
 
 bool EditorWindow::menuVisible() const
@@ -463,6 +465,8 @@ void EditorWindowPrivate::registerActions()
 {
     ActionManager *manager = ActionManager::instance();
     manager->registerAction(actions[EditorWindow::Close], MenuBarContainer::standardCommandName(MenuBarContainer::Close));
+    manager->registerAction(actions[EditorWindow::Save], MenuBarContainer::standardCommandName(MenuBarContainer::Save));
+    manager->registerAction(actions[EditorWindow::SaveAs], MenuBarContainer::standardCommandName(MenuBarContainer::SaveAs));
 
     manager->registerAction(actions[EditorWindow::Back], "Back");
     manager->registerAction(actions[EditorWindow::Forward], "Forward");
