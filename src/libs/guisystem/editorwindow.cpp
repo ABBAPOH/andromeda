@@ -28,6 +28,13 @@ static const qint8 mainWindowVersion = 1;
 
 using namespace GuiSystem;
 
+/*!
+    \class GuiSystem::EditorWindow
+
+    \brief This class is able to display and control specified editor.
+
+    \sa setEditor(AbstractEditor*)
+*/
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new EditorWindowPrivate(this))
@@ -85,6 +92,9 @@ GuiSystem::AbstractEditor *EditorWindow::editor() const
     return d->editor;
 }
 
+/*!
+    \brief Sets current editor and update window state.
+*/
 void EditorWindow::setEditor(AbstractEditor *editor)
 {
     Q_D(EditorWindow);

@@ -1,5 +1,5 @@
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef SettingsWindow_H
+#define SettingsWindow_H
 
 #include "guisystem_global.h"
 
@@ -45,4 +45,4 @@ protected:
 
 } // namespace GuiSystem
 
-#endif // SETTINGSDIALOG_H
+#endif // SettingsWindow_H

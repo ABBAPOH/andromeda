@@ -3,7 +3,7 @@
 using namespace GuiSystem;
 
 /*!
-  \class IHistory
+  \class GuiSystem::IHistory
 
   \brief The IHistory class is base class for Editor's history.
 */

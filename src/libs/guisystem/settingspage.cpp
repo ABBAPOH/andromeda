@@ -3,15 +3,15 @@
 using namespace GuiSystem;
 
 /*!
-    \class ISettingsPage
+    \class GuiSystem::SettingsPage
 
-    \brief ISettingsPage represents single page in SettingsDialog
+    \brief SettingsPage represents single page in SettingsWindow
 */
 
 /*!
-    \brief Creates a ISettingsPage with the given \a id and \a category.
+    \brief Creates a SettingsPage with the given \a id and \a category.
 
-    Pages are separated by categories in the SettingsDialog. The first page added to a category represents
+    Pages are separated by categories in the SettingsWindow. The first page added to a category represents
     icon and name of the category.
 */
 SettingsPage::SettingsPage(const QString &id, const QString &category, QObject *parent) :
@@ -22,31 +22,31 @@ SettingsPage::SettingsPage(const QString &id, const QString &category, QObject *
 }
 
 /*!
-    \fn QString ISettingsPage::id() const
+    \fn QString SettingsPage::id() const
 
     \brief Returns the id of this page. It should be unique for each page.
 */
 
 /*!
-    \fn QString ISettingsPage::category() const
+    \fn QString SettingsPage::category() const
 
     \brief Returns the category of this page.
 */
 
 /*!
-    \fn QString ISettingsPage::name() const
+    \fn QString SettingsPage::name() const
 
-    \brief Returns name of a page that is displayed on tab in SettingsDialog.
+    \brief Returns name of a page that is displayed on tab in SettingsWindow.
 */
 
 /*!
-    \fn QString ISettingsPage::icon() const
+    \fn QString SettingsPage::icon() const
 
     \brief Returns icon of a page that is displayed as a window icon when page is active.
 */
 
 /*!
-    \fn QString ISettingsPage::categoryName() const
+    \fn QString SettingsPage::categoryName() const
 
     \brief Returns name of a category of this page.
 
@@ -54,7 +54,7 @@ SettingsPage::SettingsPage(const QString &id, const QString &category, QObject *
 */
 
 /*!
-    \fn QString ISettingsPage::categoryIcon() const
+    \fn QString SettingsPage::categoryIcon() const
 
     \brief Returns icon of a category of this page.
 
@@ -62,9 +62,9 @@ SettingsPage::SettingsPage(const QString &id, const QString &category, QObject *
 */
 
 /*!
-    \fn QString ISettingsPage::createPage(QWidget *parent) const
+    \fn QString SettingsPage::createPage(QWidget *parent) const
 
     \brief Reimplement to create new widget within tab.
 
-    This function is called each time new SettingsDialog created.
+    This function is called each time new SettingsWindow created.
 */

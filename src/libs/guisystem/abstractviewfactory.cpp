@@ -5,6 +5,12 @@
 using namespace GuiSystem;
 
 /*!
+    \class GuiSystem::AbstractViewFactory
+
+    \brief AbstractViewFactory is a base class for factories for creating AbstractViews.
+*/
+
+/*!
     \brief Creates a AbstractViewFactory with the given \a parent.
 */
 AbstractViewFactory::AbstractViewFactory(QObject *parent) :

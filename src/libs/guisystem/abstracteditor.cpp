@@ -9,7 +9,7 @@
 using namespace GuiSystem;
 
 /*!
-  \class AbstractEditor
+  \class GuiSystem::AbstractEditor
 
   \brief AbstractEditor is a base class for opening content located at url.
 */

@@ -2,6 +2,12 @@
 
 using namespace GuiSystem;
 
+/*!
+    \class GuiSystem::ProxyEditor
+
+    \brief This class redirects method calls and signals to and from other ProxyEditor.
+*/
+
 ProxyEditor::ProxyEditor(QWidget *parent) :
     AbstractEditor(parent)
 {

@@ -24,6 +24,10 @@ private:
 
 using namespace GuiSystem;
 
+/*!
+    \class GuiSystem::History
+*/
+
 History::History(QObject *parent) :
     QObject(parent),
     d_ptr(new HistoryPrivate(this))

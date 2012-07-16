@@ -3,7 +3,7 @@
 using namespace GuiSystem;
 
 /*!
-  \class IFind
+  \class GuiSystem::IFind
 
   \brief The IFind class is a basic interface class for all find imlementations.
 */

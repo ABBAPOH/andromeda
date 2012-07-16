@@ -10,6 +10,10 @@ using namespace GuiSystem;
 
 QPointer<EditorWindowFactory> m_defaultFactory;
 
+/*!
+    \class GuiSystem::AbstractEditor
+*/
+
 EditorWindowFactory::EditorWindowFactory(QObject *parent) :
     QObject(parent)
 {

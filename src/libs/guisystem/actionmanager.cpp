@@ -31,7 +31,7 @@ public:
 using namespace GuiSystem;
 
 /*!
-    \class ActionManager
+    \class GuiSystem::ActionManager
 
     \brief The ActionManager class handles Commands and CommandContainers
 

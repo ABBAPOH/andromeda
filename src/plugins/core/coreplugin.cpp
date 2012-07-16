@@ -204,7 +204,7 @@ bool CorePlugin::restoreState(const QByteArray &arr)
         window->show();
     }
 
-    s >> settingsDialogState;
+    s >> settingsWindowState;
 
     return true;
 }
@@ -228,7 +228,7 @@ QByteArray CorePlugin::saveState() const
         windows[i]->hide();
     }
 
-    s << settingsDialogState;
+    s << settingsWindowState;
 
     return state;
 }
@@ -262,16 +262,16 @@ void CorePlugin::prefenrences()
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
     // TODO: test unloading pages while dialog is running
-    if (!settingsDialog) {
-        settingsDialog = new SettingsWindow();
-        settingsDialog->setAttribute(Qt::WA_DeleteOnClose);
-        settingsDialog->setSettingsPageManager(pageManager);
-        settingsDialog->restoreState(settingsDialogState);
-        settingsDialog->installEventFilter(this);
-        settingsDialog->show();
+    if (!settingsWindow) {
+        settingsWindow = new SettingsWindow();
+        settingsWindow->setAttribute(Qt::WA_DeleteOnClose);
+        settingsWindow->setSettingsPageManager(pageManager);
+        settingsWindow->restoreState(settingsWindowState);
+        settingsWindow->installEventFilter(this);
+        settingsWindow->show();
     } else {
-        settingsDialog->raise();
-        settingsDialog->activateWindow();
+        settingsWindow->raise();
+        settingsWindow->activateWindow();
     }
 }
 
@@ -382,9 +382,9 @@ void CorePlugin::aboutQt()
 
 bool CorePlugin::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == settingsDialog) {
+    if (o == settingsWindow) {
         if (e->type() == QEvent::Close) {
-            settingsDialogState = settingsDialog->saveState();
+            settingsWindowState = settingsWindow->saveState();
         }
     }
     return false;

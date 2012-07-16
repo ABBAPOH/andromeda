@@ -12,6 +12,7 @@
 
 /*!
     \class OutlineTreeView
+    \internal
 
     Helper class for drawing line between rows.
 */

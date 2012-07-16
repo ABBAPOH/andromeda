@@ -26,7 +26,7 @@ public:
 using namespace GuiSystem;
 
 /*!
-  \class EditorManager
+  \class GuiSystem::EditorManager
 
   \brief The EditorManager class contains all editors' and views' factories.
 */
