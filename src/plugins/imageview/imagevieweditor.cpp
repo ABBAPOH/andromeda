@@ -12,6 +12,23 @@
 using namespace GuiSystem;
 using namespace ImageView;
 
+void ImageViewFile::save(const QUrl &url)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 0))
+    if (!url.isLocalFile())
+#else
+    if (url.scheme() != QLatin1String("file"))
+#endif
+        return;
+
+    QString path = url.toLocalFile();
+    QFile file(path);
+    if (!file.open(QFile::WriteOnly))
+        return;
+
+    editor->m_view->write(&file, QFileInfo(path).suffix().toUtf8());
+}
+
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
     AbstractEditor(parent),
     m_file(new ImageViewFile(this))
