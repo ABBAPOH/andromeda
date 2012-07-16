@@ -472,7 +472,7 @@ void EditorWindowPrivate::registerActions()
     manager->registerAction(actions[EditorWindow::Forward], "Forward");
 
 #ifndef Q_OS_MAC
-    manager->registerAction(actions[MainWindow::ShowMenu], MenuBarContainer::standardCommandName(MenuBarContainer::ShowMenu));
+    manager->registerAction(actions[EditorWindow::ShowMenu], MenuBarContainer::standardCommandName(MenuBarContainer::ShowMenu));
 #endif
 }
 
