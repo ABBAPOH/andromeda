@@ -55,7 +55,11 @@ static inline QString getDefaultTranslationsPath()
 }
 
 /*!
-    \fn PluginManager::PluginManager(QObject *parent)
+    \class ExtensionSystem::PluginManager
+    \brief PluginManager is a class for searching, (un)loading and monitoring for plugins.
+*/
+
+/*!
     \brief Creates PluginManager with given \a parent.
 */
 PluginManager::PluginManager(QObject *parent) :
@@ -80,7 +84,6 @@ PluginManager::PluginManager(QObject *parent) :
 }
 
 /*!
-    \fn PluginManager::~PluginManager()
     \brief Destroys PluginManager.
 */
 PluginManager::~PluginManager()
@@ -91,9 +94,16 @@ PluginManager::~PluginManager()
 }
 
 /*!
-    \fn void PluginManager::loadPlugins()
     \brief Loads all plugins from plugins folder.
 
+    Plugins loaded in order specified byt their dependencies, i.e. dependency
+    plugins are loaded before and dependent plugins are loaded after plugin.
+
+    Plugins are searched in subfolders specified by pluginsFolder property in
+    QCoreApplication::libraryPaths().
+
+    PluginManager also automatically loads translations for plugins, Qt and
+    additional list of translations, specified by PluginManager::translations.
 */
 void PluginManager::loadPlugins()
 {
@@ -127,6 +137,13 @@ void PluginManager::loadPlugins()
     emit pluginsChanged();
 }
 
+/*!
+    \brief Performs post initialization for all pugins with given \a arguments.
+
+    This function should be called after all arguments are parsed or new
+    arguments arive (for example, when new instance is started with different
+    arguments).
+*/
 void PluginManager::postInitialize(const QStringList &arguments)
 {
     Q_D(PluginManager);
@@ -150,10 +167,10 @@ void PluginManager::postInitialize(const QStringList &arguments)
 }
 
 /*!
-    \fn void PluginManager::unloadPlugins()
     \brief Unloads all currently loaded plugins.
 
-    This function automatically called when destroying PluginManager class;
+    Plugins are unloaded in reverse order to the oreder they were loaded.
+    This function is automatically called when destroying PluginManager class.
 */
 void PluginManager::unloadPlugins()
 {
@@ -185,16 +202,32 @@ void PluginManager::setDefaultPlugins(const QStringList &plugins)
     d_func()->defaultPlugins = plugins;
 }
 
+/*!
+    \property PluginManager::hasErrors
+
+    Holds whether errors occured during lad operation, or not.
+*/
 bool PluginManager::hasErrors() const
 {
     return d_func()->hasErrors;
 }
 
+/*!
+    \property PluginManager::errors
+
+    This property contains list of all errors occured during last operation.
+*/
 QStringList PluginManager::errors() const
 {
     return d_func()->errors;
 }
 
+/*!
+    \property PluginManager::pluginsFolder
+
+    This propety holds subfolder in a QCoreApplication::libraryPaths() where
+    PluginManager searches for plugins.
+*/
 QString PluginManager::pluginsFolder() const
 {
     return d_func()->pluginsFolder;
@@ -205,6 +238,14 @@ void PluginManager::setPluginsFolder(const QString &name)
     d_func()->pluginsFolder = name;
 }
 
+/*!
+    \property PluginManager::translationsDir
+
+    This propety holds folder where PluginManager should look for
+    translations for plugins and/or specified libraries.
+
+    \sa PluginManager::translations
+*/
 QString PluginManager::translationsDir() const
 {
     return d_func()->translationsDir;
@@ -215,6 +256,13 @@ void PluginManager::setTranslationsDir(const QString &dir)
     d_func()->translationsDir = dir;
 }
 
+/*!
+    \property PluginManager::translations
+
+    This property hold additional translations that should be loaded by
+    PluginManager. Typically, this is list of translations for librries used
+    by application and plugins.
+*/
 QStringList PluginManager::translations() const
 {
     return d_func()->translations;
@@ -225,15 +273,18 @@ void PluginManager::setTranslations(const QStringList &translations)
     d_func()->translations = translations;
 }
 
+/*!
+    \property PluginManager::loaded
+
+    Holds whether plugins are loaded (i.e. load() function was called), or not.
+*/
 bool PluginManager::loaded()
 {
     return d_func()->loaded;
 }
 
 /*!
-    \fn QList<PluginSpec *> PluginManager::plugins() const
     \brief Return list of PluginSpecs loaded at current moment.
-
 */
 QList<PluginSpec *> PluginManager::plugins() const
 {
@@ -241,9 +292,7 @@ QList<PluginSpec *> PluginManager::plugins() const
 }
 
 /*!
-    \fn PluginSpec *PluginManager::plugin(const QString &name) const
-    \brief Return PluginSpecs with name \a name.
-
+    \brief Return PluginSpec with the given \a name.
 */
 PluginSpec *PluginManager::plugin(const QString &name) const
 {
@@ -255,6 +304,21 @@ PluginSpec *PluginManager::plugin(const QString &name) const
     }
     return 0;
 }
+
+/*!
+    \fn void PluginManager::pluginsLoaded()
+    \brief This signal is emitted after plugins loading is finished.
+*/
+
+/*!
+    \fn void PluginManager::pluginsUnloaded()
+    \brief This signal is emitted after plugins unloading is finished.
+*/
+
+/*!
+    \fn void PluginManager::error(const QString &error)
+    \brief This signal is emitted every time an error occured.
+*/
 
 void PluginManager::updateDirectory(const QString &dirPath)
 {
@@ -271,6 +335,9 @@ void PluginManager::updateLibrary(const QString &specPath)
     d_func()->fileChanged(specPath);
 }
 
+/*!
+    \reimp
+*/
 void PluginManager::timerEvent(QTimerEvent *event)
 {
     Q_D(PluginManager);
