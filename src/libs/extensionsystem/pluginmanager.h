@@ -54,7 +54,7 @@ signals:
 
     void pluginsLoaded();
     void pluginsUnloaded();
-    void error(const QString &errors);
+    void error(const QString &error);
 
 public slots:
     void loadPlugins();
