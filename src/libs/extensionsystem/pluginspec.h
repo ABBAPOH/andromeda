@@ -18,10 +18,10 @@ public:
     unsigned revision;
 
     Version();
-    explicit Version(const QString &);
+    explicit Version(const QString &version);
 
     QString toString() const;
-    static Version fromString(const QString &);
+    static Version fromString(const QString &version);
 
     bool operator==(const Version &) const;
 };
