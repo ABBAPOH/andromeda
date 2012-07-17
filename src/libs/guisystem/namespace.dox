@@ -1,0 +1,5 @@
+/*!
+    \namespace GuiSystem
+
+    \brief The GuiSystem namespace contains framework for creating gui applications.
+*/
