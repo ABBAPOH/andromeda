@@ -128,7 +128,7 @@ Command::~Command()
 }
 
 /*!
-    \enum Command::Attribute
+    \enum GuiSystem::Command::Attribute
 
     This enum type describes Commands parameters.
 
@@ -139,7 +139,7 @@ Command::~Command()
 */
 
 /*!
-    \enum Command::CommandContext
+    \enum GuiSystem::Command::CommandContext
 
     This enum type set's Commands context, which can be one of following:
 
