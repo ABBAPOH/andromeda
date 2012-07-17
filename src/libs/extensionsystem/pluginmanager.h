@@ -21,6 +21,7 @@ class EXTENSIONSYSTEM_EXPORT PluginManager : public QObjectPool
     Q_PROPERTY(QStringList defaultPlugins READ defaultPlugins WRITE setDefaultPlugins)
     Q_PROPERTY(QString pluginsFolder READ pluginsFolder WRITE setPluginsFolder)
     Q_PROPERTY(QString translationsDir READ translationsDir WRITE setTranslationsDir)
+    Q_PROPERTY(QStringList translations READ translations WRITE setTranslations)
 
 public:
     explicit PluginManager(QObject *parent = 0);
