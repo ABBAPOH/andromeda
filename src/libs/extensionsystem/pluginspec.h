@@ -20,6 +20,8 @@ public:
     Version();
     explicit Version(const QString &version);
 
+    bool isNull() const;
+
     QString toString() const;
     static Version fromString(const QString &version);
 
@@ -50,6 +52,14 @@ class EXTENSIONSYSTEM_EXPORT PluginSpec : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(PluginSpec)
     Q_DISABLE_COPY(PluginSpec)
+
+    Q_PROPERTY(QString name READ name)
+    Q_PROPERTY(QString vendor READ name)
+    Q_PROPERTY(QString category READ name)
+    Q_PROPERTY(QString copyright READ name)
+    Q_PROPERTY(QString license READ name)
+    Q_PROPERTY(QString description READ name)
+    Q_PROPERTY(QString url READ name)
 
     Q_PROPERTY(bool loaded READ loaded WRITE setLoaded NOTIFY loadedChanged)
     Q_PROPERTY(bool loadOnStartup READ loadOnStartup WRITE setLoadOnStartup NOTIFY loadOnStartupChanged)

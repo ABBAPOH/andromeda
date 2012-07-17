@@ -16,6 +16,18 @@
 
 using namespace ExtensionSystem;
 
+/*!
+    \class ExtensionSystem::Version
+    \brief PluginDependency is a small class for representing library version.
+
+    This class consists of 4 subversions - major, minor, build and revision.
+*/
+
+/*!
+    \brief Constructs null Version object (0.0.0.0 version).
+
+    \sa isNull
+*/
 Version::Version() :
     build(0),
     revision(0)
@@ -24,6 +36,9 @@ Version::Version() :
     this->minor = 0;
 }
 
+/*!
+    \brief Constructs Version object with the given \a version string.
+*/
 Version::Version(const QString &version) :
     build(0),
     revision(0)
@@ -41,19 +56,81 @@ Version::Version(const QString &version) :
     }
 }
 
+/*!
+    \brief Returns true if Version object represents null version, i.e.
+    version 0.0.0.0.
+*/
+bool Version::isNull() const
+{
+    return build == revision == major == minor == 0;
+}
+
+/*!
+    \brief Converts Version object to string.
+*/
 QString Version::toString() const
 {
     return QString("%1.%2.%3.%4").arg(major).arg(minor).arg(build).arg(revision);
 }
 
+/*!
+    \brief Creates and returns Version object with the given \a version string.
+*/
 Version Version::fromString(const QString &version)
 {
     return Version(version);
 }
 
+/*!
+    \brief Compares one Version object to an other.
+*/
 bool Version::operator==(const Version &other) const
 {
     return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
+}
+
+/*!
+    \class ExtensionSystem::PluginDependency
+    \brief PluginDependency is a small class for representing library
+    dependencies.
+
+    Dependency is identified by 2 fields - name and version.
+*/
+
+/*!
+    \brief Constructs PluginDependency class with given \a name and \a version.
+*/
+PluginDependency::PluginDependency(const QString &name, const QString &version)
+{
+    m_name = name;
+    m_version = Version(version);
+}
+
+/*!
+    \brief Constructs PluginDependency class with given \a name and \a version.
+*/
+PluginDependency::PluginDependency(const QString &name, const Version &version)
+{
+    m_name = name;
+    m_version = version;
+}
+
+/*!
+    \fn QString PluginDependency::name() const
+    \brief Returns name of dependency library.
+*/
+
+/*!
+    \fn QString PluginDependency::version() const
+    \brief Returns version of dependency library.
+*/
+
+/*!
+    \brief Compares one PluginDependency to an other.
+*/
+bool PluginDependency::operator==(const PluginDependency &other)
+{
+    return m_name == other.m_name && m_version == other.m_version;
 }
 
 PluginSpecPrivate::PluginSpecPrivate(PluginSpec *qq) :
@@ -284,32 +361,12 @@ void PluginSpecPrivate::setError(const QString &message)
 }
 
 /*!
-    \fn PluginDependency::PluginDependency(const QString &name, const QString &version)
-    \brief Constructs PluginDependency class with given \a name and \a version.
-*/
-PluginDependency::PluginDependency(const QString &name, const QString &version)
-{
-    m_name = name;
-    m_version = Version(version);
-}
+    \class ExtensionSystem::PluginSpec
 
-PluginDependency::PluginDependency(const QString &name, const Version &version)
-{
-    m_name = name;
-    m_version = version;
-}
+    \brief PluginSpec class is a descriptor object for a plugin and it's controller.
+*/
 
 /*!
-    \fn bool PluginDependency::operator==(const PluginDependency &other)
-    \brief Comparator for PluginDependency.
-*/
-bool PluginDependency::operator==(const PluginDependency &other)
-{
-    return m_name == other.m_name && m_version == other.m_version;
-}
-
-/*!
-    \fn PluginSpec::PluginSpec()
     \internal
 */
 PluginSpec::PluginSpec(QObject *parent) :
@@ -319,7 +376,6 @@ PluginSpec::PluginSpec(QObject *parent) :
 }
 
 /*!
-    \fn PluginSpec::~PluginSpec()
     \internal
 */
 PluginSpec::~PluginSpec()
@@ -333,9 +389,9 @@ PluginSpec::~PluginSpec()
 }
 
 /*!
-    \fn QString PluginSpec::name() const
-    \brief Returns name of the plugin.
-    Name and version are used to resolve dependencies.
+    \property PluginSpec::name
+    Holds the name of the plugin. This name is used to resolve dependencies
+    among with version.
 */
 QString PluginSpec::name() const
 {
@@ -343,7 +399,6 @@ QString PluginSpec::name() const
 }
 
 /*!
-    \fn Version PluginSpec::version() const
     \brief Returns version of the plugin.
     Version should be in format "Major.Minor.Build.Revision".
 */
@@ -353,7 +408,6 @@ Version PluginSpec::version() const
 }
 
 /*!
-    \fn Version PluginSpec::compatibilityVersion() const
     \brief Returns compatibility version of the plugin.
 */
 Version PluginSpec::compatibilityVersion() const
@@ -362,8 +416,8 @@ Version PluginSpec::compatibilityVersion() const
 }
 
 /*!
-    \fn QString PluginSpec::vendor() const
-    \brief Returns vendor of the plugin.
+    \property PluginSpec::vendor
+    Holds the vendor of the plugin.
 */
 QString PluginSpec::vendor() const
 {
@@ -371,8 +425,11 @@ QString PluginSpec::vendor() const
 }
 
 /*!
-    \fn QString PluginSpec::category() const
-    \brief Returns category (i.e. group) that plugin belongs to.
+    \property PluginSpec::category
+    Holds the category (i.e. group) that plugin belongs to.
+
+    Categories can be used to group plugins together to display list of
+    plugins in more user-friendly way.
 */
 QString PluginSpec::category() const
 {
@@ -380,8 +437,8 @@ QString PluginSpec::category() const
 }
 
 /*!
-    \fn QString PluginSpec::copyright() const
-    \brief Returns copyright.
+    \property PluginSpec::copyright
+    Holds the copyright.
 */
 QString PluginSpec::copyright() const
 {
@@ -389,8 +446,10 @@ QString PluginSpec::copyright() const
 }
 
 /*!
-    \fn QString PluginSpec::license() const
-    \brief Returns full licence of the plugin.
+    \property PluginSpec::license
+    Holds the license name.
+
+    Only license name should be here, not it's full text.
 */
 QString PluginSpec::license() const
 {
@@ -398,8 +457,8 @@ QString PluginSpec::license() const
 }
 
 /*!
-    \fn QString PluginSpec::description() const
-    \brief Returns description of the plugin.
+    \property PluginSpec::description
+    Holds human-readable description of the plugin.
 */
 QString PluginSpec::description() const
 {
@@ -407,8 +466,8 @@ QString PluginSpec::description() const
 }
 
 /*!
-    \fn QString PluginSpec::url() const
-    \brief Returns vendor's site url.
+    \property PluginSpec::url
+    Holds vendor's site url.
 */
 QString PluginSpec::url() const
 {
@@ -416,7 +475,6 @@ QString PluginSpec::url() const
 }
 
 /*!
-    \fn QList<PluginDependency> PluginSpec::dependencies() const
     \brief Returns list of dependencies that are needed for this plugin.
 */
 QList<PluginDependency> PluginSpec::dependencies() const
@@ -425,7 +483,6 @@ QList<PluginDependency> PluginSpec::dependencies() const
 }
 
 /*!
-    \fn QList<PluginSpec*> PluginSpec::dependencySpecs() const
     \brief Returns list of PluginSpecs that need for this plugin.
 */
 QList<PluginSpec*> PluginSpec::dependencySpecs() const
@@ -434,7 +491,6 @@ QList<PluginSpec*> PluginSpec::dependencySpecs() const
 }
 
 /*!
-    \fn QList<PluginSpec*> PluginSpec::dependentSpecs() const
     \brief Returns list of PluginSpecs that require this plugin.
 */
 QList<PluginSpec*> PluginSpec::dependentSpecs() const
@@ -443,7 +499,6 @@ QList<PluginSpec*> PluginSpec::dependentSpecs() const
 }
 
 /*!
-    \fn QString PluginSpec::libraryPath() const
     \brief Returns path to dynamic library.
     In case of static plugin, returns empty string.
 
@@ -455,8 +510,8 @@ QString PluginSpec::libraryPath() const
 }
 
 /*!
-    \fn bool PluginSpec::loaded() const
-    \brief Returns if plugin is loaded.
+    \property PluginSpec::loaded
+    Holds if plugin is loaded or not.
 */
 bool PluginSpec::loaded() const
 {
@@ -464,7 +519,6 @@ bool PluginSpec::loaded() const
 }
 
 /*!
-    \fn void PluginSpec::load()
     \brief Loads plugin into memory and initialises it.
 */
 void PluginSpec::load()
@@ -483,8 +537,7 @@ void PluginSpec::load()
 }
 
 /*!
-    \fn void PluginSpec::unload()
-    \brief UnLoads plugin from memory and shutdowns it.
+    \brief Shutdowns and unloads plugin from memory.
 */
 void PluginSpec::unload()
 {
@@ -502,9 +555,7 @@ void PluginSpec::unload()
 }
 
 /*!
-    \fn void PluginSpec::setEnabled(bool enabled)
-    \brief Enables or disables plugin.
-    Note that library is loaded or unloaded when necessary.
+    \brief Loads or unloads plugin.
 */
 void PluginSpec::setLoaded(bool yes)
 {
@@ -514,6 +565,12 @@ void PluginSpec::setLoaded(bool yes)
         unload();
 }
 
+/*!
+    \property PluginSpec::loadOnStartup
+
+    Holds if plugin should be loaded during application startup
+    (i.e. when PluginManager::load() function is called).
+*/
 bool PluginSpec::loadOnStartup() const
 {
     return d_func()->loadOnStartup;
@@ -530,6 +587,11 @@ void PluginSpec::setLoadOnStartup(bool yes)
     emit loadOnStartupChanged(yes);
 }
 
+/*!
+    \property PluginSpec::canBeUnloaded
+
+    Holds whether plugin can be unloaded or not (i.e. it is not default plugin).
+*/
 bool PluginSpec::canBeUnloaded() const
 {
     if (d_func()->isDefault)
@@ -539,7 +601,6 @@ bool PluginSpec::canBeUnloaded() const
 }
 
 /*!
-    \fn bool PluginSpec::hasError()
     \brief Returns true if error occured.
 */
 bool PluginSpec::hasError() const
@@ -548,7 +609,6 @@ bool PluginSpec::hasError() const
 }
 
 /*!
-    \fn QString PluginSpec::errorString()
     \brief Returns message of last occured error.
 */
 QString PluginSpec::errorString() const
@@ -559,7 +619,6 @@ QString PluginSpec::errorString() const
 }
 
 /*!
-    \fn IPlugin *PluginSpec::plugin() const
     \brief Returnes pointer to IPlugin implementation.
 */
 IPlugin *PluginSpec::plugin() const
@@ -568,7 +627,6 @@ IPlugin *PluginSpec::plugin() const
 }
 
 /*!
-    \fn bool PluginSpec::provides(const PluginDependency &pluginDependency) const
     Returns if this plugin can be used to fill in a of the given \a dependency.
     \sa PluginSpec::dependencies()
 */
@@ -580,6 +638,11 @@ bool PluginSpec::provides(const PluginDependency &dependency) const
            (PluginSpecPrivate::compareVersion(compatibilityVersion(), dependency.version()) <= 0);
 }
 
+/*!
+    Reads plugins spec file located at the given \a path.
+
+    Returns true on success.
+*/
 bool PluginSpec::read(const QString &path)
 {
     Q_D(PluginSpec);
@@ -636,6 +699,13 @@ bool PluginSpec::read(const QString &path)
     return true;
 }
 
+/*!
+    Writes PluginSpec to the file located at \a path. If file already exists,
+    it is overwritten.
+
+    \a format parameter is deprecated and shouldn't be used - the only supported
+    format is xml; binary format is broken.
+*/
 bool PluginSpec::write(const QString &path, Format format)
 {
     Q_D(PluginSpec);
@@ -660,3 +730,22 @@ bool PluginSpec::write(const QString &path, Format format)
 
     return true;
 }
+
+/*!
+    \fn void PluginSpec::loadedChanged(bool loaded)
+
+    This signal is emitted when PluginSpec::loaded property is changed.
+*/
+
+/*!
+    \fn void PluginSpec::loadOnStartupChanged(bool loads)
+
+    This signal is emitted when PluginSpec::loadOnStartup property is changed.
+*/
+
+/*!
+    \fn void PluginSpec::error(const QString &message)
+
+    This signal is emitted when error occurs. \a message is a human-readable
+    error string.
+*/
