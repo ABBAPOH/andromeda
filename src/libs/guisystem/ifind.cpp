@@ -5,7 +5,7 @@ using namespace GuiSystem;
 /*!
   \class GuiSystem::IFind
 
-  \brief The IFind class is a basic interface class for all find imlementations.
+  \brief The IFind class is an interface class for all find imlementations.
 */
 
 /*!
