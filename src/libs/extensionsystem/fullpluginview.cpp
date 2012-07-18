@@ -7,6 +7,14 @@
 
 using namespace ExtensionSystem;
 
+/*!
+    \class ExtensionSystem::FullPluginView
+    \brief FullPluginView provides detalied view of a single plugin.
+*/
+
+/*!
+    Creates FullPluginView with given \a parent.
+*/
 FullPluginView::FullPluginView(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FullPluginView),
@@ -16,16 +24,25 @@ FullPluginView::FullPluginView(QWidget *parent) :
     ui->setupUi(this);
 }
 
+/*!
+    Destroys FullPluginView.
+*/
 FullPluginView::~FullPluginView()
 {
     delete ui;
 }
 
+/*!
+    Returns current model.
+*/
 PluginViewModel * FullPluginView::model() const
 {
     return m_model;
 }
 
+/*!
+    Sets current model.
+*/
 void FullPluginView::setModel(PluginViewModel * model)
 {
     if (m_model == model)
@@ -49,6 +66,9 @@ void FullPluginView::setModel(PluginViewModel * model)
     }
 }
 
+/*!
+    Sets current model \a index corresponding to a specified plugin.
+*/
 void FullPluginView::setIndex(const QModelIndex &index)
 {
     m_mapper->setRootIndex(index.parent());
