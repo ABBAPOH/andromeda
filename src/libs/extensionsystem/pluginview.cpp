@@ -6,6 +6,18 @@
 
 using namespace ExtensionSystem;
 
+/*!
+    \class ExtensionSystem::PluginView
+
+    \brief PluginView is a dialog for displaying application's plugins.
+
+    This class shows list of available plugins in a tree structure and allows
+    to view specified plugin in a detailed form using ExtensionSystem::FullPluginView.
+*/
+
+/*!
+    Creates PluginView with given \a parent.
+*/
 PluginView::PluginView(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PluginView)
@@ -33,11 +45,17 @@ PluginView::PluginView(QWidget *parent) :
             SLOT(onSelectionChanged()));
 }
 
+/*!
+    Destroys PluginView.
+*/
 PluginView::~PluginView()
 {
     delete ui;
 }
 
+/*!
+    \internal
+*/
 void PluginView::showFullInfo(const QModelIndex & i)
 {
     FullPluginView fullPluginView(this);
@@ -61,6 +79,9 @@ void PluginView::showFullInfo(const QModelIndex & i)
     fullPluginView.exec();
 }
 
+/*!
+    \internal
+*/
 void PluginView::onSelectionChanged()
 {
     QItemSelectionModel *model = ui->treeView->selectionModel();
