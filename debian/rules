@@ -50,7 +50,7 @@ install: build
 	cp -R lib $(CURDIR)/debian/andromeda/usr/share/andromeda
 	cp -R plugins $(CURDIR)/debian/andromeda/usr/share/andromeda
 	cp -R share $(CURDIR)/debian/andromeda/usr/share/andromeda
-	ln -sf /usr/share/andromeda/bin/andromeda $(CURDIR)/debian/dfm/usr/bin/andromeda
+	ln -sf /usr/share/andromeda/bin/andromeda $(CURDIR)/debian/andromeda/usr/bin/andromeda
 
         
 
