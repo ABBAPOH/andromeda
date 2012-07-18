@@ -10,6 +10,8 @@ class QListView;
 class QStringListModel;
 class QDialogButtonBox;
 
+namespace ExtensionSystem {
+
 class EXTENSIONSYSTEM_EXPORT ErrorsDialog : public QDialog
 {
     Q_OBJECT
@@ -29,5 +31,7 @@ private:
     QStringListModel *m_model;
     QDialogButtonBox *m_buttonBox;
 };
+
+} // namespace ExtensionSystem
 
 #endif // ERRORSDIALOG_H
