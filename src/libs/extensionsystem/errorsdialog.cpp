@@ -8,6 +8,15 @@
 
 using namespace ExtensionSystem;
 
+/*!
+    \class ExtensionSystem::ErrorsDialog
+
+    \brief Helper class for displaying errors from ExtensionSystem::PluginManager.
+*/
+
+/*!
+    Creates ErrorsDialog with the given \a parent.
+*/
 ErrorsDialog::ErrorsDialog(QWidget *parent) :
     QDialog(parent),
     m_label(new QLabel(this)),
@@ -32,16 +41,25 @@ ErrorsDialog::ErrorsDialog(QWidget *parent) :
     resize(640, 480);
 }
 
+/*!
+    Returns brief message of an error.
+*/
 QString ErrorsDialog::message() const
 {
     return m_label->text();
 }
 
+/*!
+    Sets brief message of an error.
+*/
 void ErrorsDialog::setMessage(const QString &message)
 {
     m_label->setText(message);
 }
 
+/*!
+    Sets list of error strings.
+*/
 void ErrorsDialog::setErrors(const QStringList &errors)
 {
     m_model->setStringList(errors);
