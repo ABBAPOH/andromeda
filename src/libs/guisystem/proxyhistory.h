@@ -26,7 +26,6 @@ public:
     QByteArray store() const { return QByteArray(); }
     void restore(const QByteArray &) {}
 
-public slots:
     void clear();
 
 private:

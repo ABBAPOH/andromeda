@@ -21,7 +21,6 @@ public:
     bool isModified() const;
     bool isReadOnly() const;
 
-public slots:
     void setModified(bool modified = true);
     void setReadOnly(bool readOnly = true);
 
