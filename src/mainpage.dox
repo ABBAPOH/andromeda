@@ -10,12 +10,17 @@
     It is based on on two core libraries - ExtensionSystem and GuiSystem.
 
     ExtensionSystem is a basic library for a plugin system. It allows to create
-    mature plugin architecture with plugin dependensies and possibility to
+    plugin architecture with plugin dependenсies and possibility to
     load plugins at runtime.
 
-    GuiSystem is a library that helps creating highly reuseable applications -
-    you can implement specific editor for some kind of files and embedd it into
-    different applications.
+    GuiSystem is a library that helps creating highly reusable applications -
+    it introduces an abstraction of editors - an independent parts of a GUI
+    application that are capable of opening resources of some kind. Applications
+    based on GuiSystem compose separate parts into a complete program that suites
+    your needs. Also guisystem takes care of some details to simplify writing
+    applications - for example, it allows to perform flexible and unified menus,
+    toolbar and action management. Also it introduces some additional abstractions
+    that unifies interoperation of a different parts of your application.
 
     \section section2 Andromeda API
     - \ref classes
