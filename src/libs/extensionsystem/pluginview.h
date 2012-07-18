@@ -25,7 +25,6 @@ public:
 
 private:
     Ui::PluginView *ui;
-    FullPluginView *m_fullPluginView;
 
 private slots:
     void showFullInfo(const QModelIndex &index = QModelIndex());
