@@ -31,7 +31,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-public slots:
+private slots:
     void updateModel();
 
 private:
