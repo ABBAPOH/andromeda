@@ -6,6 +6,14 @@
 
 using namespace ExtensionSystem;
 
+/*!
+    \class ExtensionSystem::PluginEditor
+    \brief PluginEditor is a widget for editing plugin specs.
+*/
+
+/*!
+    Creates PluginEditor with given \a parent.
+*/
 PluginEditor::PluginEditor(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PluginEditor)
@@ -15,16 +23,25 @@ PluginEditor::PluginEditor(QWidget *parent) :
     ui->listView_Dependencies->setModel(dependenciesModel);
 }
 
+/*!
+    Destroys PluginEditor.
+*/
 PluginEditor::~PluginEditor()
 {
     delete ui;
 }
 
+/*!
+    Returns current plugin.
+*/
 PluginSpec * PluginEditor::pluginSpec()
 {
     return m_pluginSpec;
 }
 
+/*!
+    Sets current plugin.
+*/
 void PluginEditor::setPluginSpec(MutablePluginSpec *spec)
 {
     if (m_pluginSpec != spec) {
@@ -34,6 +51,9 @@ void PluginEditor::setPluginSpec(MutablePluginSpec *spec)
     }
 }
 
+/*!
+    Applies all data from widget to the current plugin.
+*/
 void PluginEditor::apply()
 {
     m_pluginSpec->setName(ui->lineEdit_Name->text());
@@ -52,6 +72,9 @@ void PluginEditor::apply()
     dependenciesModel->setStringList(dependecyList);
 }
 
+/*!
+    Resets all data in widget to the data in current plugin.
+*/
 void PluginEditor::reset()
 {
     ui->lineEdit_Name->setText(m_pluginSpec->name());
