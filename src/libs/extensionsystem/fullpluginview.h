@@ -24,15 +24,16 @@ public:
     explicit FullPluginView(QWidget *parent = 0);
     ~FullPluginView();
 
-    void setModel(PluginViewModel *model);
+    PluginViewModel *model() const;
+    void setModel(PluginViewModel *m_model);
 
 public slots:
     void setIndex(const QModelIndex &index);
 
 private:
     Ui::FullPluginView *ui;
-    QDataWidgetMapper *mapper;
-    PluginViewModel *model;
+    QDataWidgetMapper *m_mapper;
+    PluginViewModel *m_model;
 };
 
 } // namespace ExtensionSystem
