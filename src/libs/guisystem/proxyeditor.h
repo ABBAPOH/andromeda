@@ -26,7 +26,6 @@ public:
     QString title() const;
     QString windowTitle() const;
 
-public slots:
     void open(const QUrl &url = QUrl());
 
     void cancel();
