@@ -29,7 +29,7 @@ IPlugin::IPlugin() :
 }
 
 /*!
-  \brief Destroys IPlugin.
+    \brief Destroys IPlugin.
 */
 IPlugin::~IPlugin()
 {
@@ -45,21 +45,16 @@ IPlugin::~IPlugin()
 }
 
 /*!
-    \fn bool IPlugin::initialize()
     \brief Reiplement to perform primary initialization of a plugin.
 
     This function called after plugin was loaded and after all dependencies are initialized.
 */
 
 /*!
-    \fn void IPlugin::postInitialize(const QVariantMap &options)
     \brief Reiplement to perform secondary initialization of a plugin.
 
     Passed \a options are the command line arguments for this plugin. They only
     include keys described in plugin's spec file.
-
-    For a multiple-instance applications, this function is called after all
-    plugins were initialized.
 
     For a single-instance applications, this function is called for a first
     instance each time new instance is trying to start (i.e. when QtSingleApplication
@@ -67,7 +62,6 @@ IPlugin::~IPlugin()
 */
 
 /*!
-    \fn bool IPlugin::shutdown()
     \brief Reiplement to perform deinitialization of a plugin.
 
     This function called before plugin will be unloaded.
