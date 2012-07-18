@@ -3,8 +3,53 @@
 
 using namespace ExtensionSystem;
 
-// ============= PluginViewModel =============
+PluginViewModelPrivate::PluginViewModelPrivate()
+{
+    manager = PluginManager::instance();
+    rootNode = new Node;
+}
 
+PluginViewModelPrivate::~PluginViewModelPrivate()
+{
+    delete rootNode;
+}
+
+Node *PluginViewModelPrivate::node(const QString &category)
+{
+    if (nodesForCategories.contains(category))
+        return nodesForCategories.value(category);
+    Node *result = new Node(rootNode);
+    result->categoryName = category;
+    result->isCategory = true;
+    nodesForCategories.insert(category, result);
+    return result;
+}
+
+Node * PluginViewModelPrivate::node(PluginSpec *spec)
+{
+    if (nodesForSpecs.contains(spec))
+        return nodesForSpecs.value(spec);
+    Node *parent = node(spec->category());
+    Node *result = new Node(parent);
+    result->spec = spec;
+    nodesForSpecs.insert(spec, result);
+    return result;
+}
+
+/*!
+    \class ExtensionSystem::PluginViewModel
+
+    \brief PluginViewModel class allows to display list of application plugins
+    in item views.
+
+    PluginViewModel groups plugins by PluginSpec::category in a tree structure.
+    Each row represents a single plugin, each column provides data about
+    PluginSpec's property.
+*/
+
+/*!
+    Constructs PluginViewModel with the given \a parent.
+*/
 PluginViewModel::PluginViewModel(QObject *parent) :
     QAbstractItemModel(parent),
     d_ptr(new PluginViewModelPrivate)
@@ -17,16 +62,25 @@ PluginViewModel::PluginViewModel(QObject *parent) :
     }
 }
 
+/*!
+    Destroys PluginViewModel.
+*/
 PluginViewModel::~PluginViewModel()
 {
     delete d_ptr;
 }
 
+/*!
+    \reimp
+*/
 int PluginViewModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return 12;
 }
 
+/*!
+    \reimp
+*/
 QVariant PluginViewModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -75,6 +129,9 @@ QVariant PluginViewModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+/*!
+    \reimp
+*/
 Qt::ItemFlags PluginViewModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -91,6 +148,9 @@ Qt::ItemFlags PluginViewModel::flags(const QModelIndex &index) const
     return flags;
 }
 
+/*!
+    \reimp
+*/
 QVariant PluginViewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -113,6 +173,9 @@ QVariant PluginViewModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
+/*!
+    \reimp
+*/
 QModelIndex PluginViewModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -132,6 +195,9 @@ QModelIndex PluginViewModel::index(int row, int column, const QModelIndex &paren
         return QModelIndex();
 }
 
+/*!
+    \reimp
+*/
 QModelIndex PluginViewModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -145,6 +211,9 @@ QModelIndex PluginViewModel::parent(const QModelIndex &index) const
     return createIndex(parentNode->row(), 0, parentNode);
 }
 
+/*!
+    \reimp
+*/
 int PluginViewModel::rowCount(const QModelIndex &parent) const
 {
     Node *parentNode;
@@ -159,6 +228,9 @@ int PluginViewModel::rowCount(const QModelIndex &parent) const
     return parentNode->childCount();
 }
 
+/*!
+    \reimp
+*/
 bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid())
@@ -180,6 +252,9 @@ bool PluginViewModel::setData(const QModelIndex &index, const QVariant &value, i
     return false;
 }
 
+/*!
+    \internal
+*/
 void PluginViewModel::updateModel()
 {
     Q_D(PluginViewModel);
@@ -200,39 +275,4 @@ void PluginViewModel::updateModel()
             endInsertRows();
         }
     }
-}
-
-// ============= PluginViewModelPrivate =============
-
-PluginViewModelPrivate::PluginViewModelPrivate()
-{
-    manager = PluginManager::instance();
-    rootNode = new Node;
-}
-
-PluginViewModelPrivate::~PluginViewModelPrivate()
-{
-    delete rootNode;
-}
-
-Node *PluginViewModelPrivate::node(const QString &category)
-{
-    if (nodesForCategories.contains(category))
-        return nodesForCategories.value(category);
-    Node *result = new Node(rootNode);
-    result->categoryName = category;
-    result->isCategory = true;
-    nodesForCategories.insert(category, result);
-    return result;
-}
-
-Node * PluginViewModelPrivate::node(PluginSpec *spec)
-{
-    if (nodesForSpecs.contains(spec))
-        return nodesForSpecs.value(spec);
-    Node *parent = node(spec->category());
-    Node *result = new Node(parent);
-    result->spec = spec;
-    nodesForSpecs.insert(spec, result);
-    return result;
 }
