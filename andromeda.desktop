@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Andromeda
+GenericName=Andromeda
+Comment=Cross-platform file manager, written on Qt
+Exec=andromeda
+Icon=system-file-manager
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=FileTransfer;FileManager;Qt;
+MimeType=inode/directory;
