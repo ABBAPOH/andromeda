@@ -6,6 +6,8 @@
 #include <QtGui/QStringListModel>
 #include <QtGui/QVBoxLayout>
 
+using namespace ExtensionSystem;
+
 ErrorsDialog::ErrorsDialog(QWidget *parent) :
     QDialog(parent),
     m_label(new QLabel(this)),
