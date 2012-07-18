@@ -1,0 +1,37 @@
+/*!
+    \mainpage Andromeda Documentation
+
+    \tableofcontents
+    \section section1 What is Andromeda
+
+    Andromeda is a cross-platform file manager written on Qt designed to be
+    easy to use, but, at the same time, to have lot of features.
+
+    It is based on on two core libraries - ExtensionSystem and GuiSystem.
+
+    ExtensionSystem is a basic library for a plugin system. It allows to create
+    mature plugin architecture with plugin dependensies and possibility to
+    load plugins at runtime.
+
+    GuiSystem is a library that helps creating highly reuseable applications -
+    you can implement specific editor for some kind of files and embedd it into
+    different applications.
+
+    \section section2 Andromeda API
+    - \ref classes
+    - \ref functions
+    - \ref namespaces
+*/
+
+/*!
+    \page classes All classes
+*/
+
+/*!
+    \page functions All functions
+*/
+
+/*!
+    \page namespaces All Namespaces
+*/
+
