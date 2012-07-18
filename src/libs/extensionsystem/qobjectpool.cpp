@@ -3,32 +3,52 @@
 
 using namespace ExtensionSystem;
 
+/*!
+    \class ExtensionSystem::QObjectPool
+
+    \brief QObjectPool class represents collection of QObjects.
+
+    QObjectPool allows to retrieve all objects or a single object by name.
+
+    \sa addObject(), object(), objects()
+*/
+
+/*!
+    Constructs QObjectPool with the given \a parent;
+*/
 QObjectPool::QObjectPool(QObject *parent) :
     QObject(parent),
     d_ptr(new QObjectPoolPrivate)
 {
 }
 
+/*!
+    \internal
+*/
 QObjectPool::QObjectPool(QObjectPoolPrivate &dd, QObject* parent) :
         QObject(parent),
         d_ptr(&dd)
 {
 }
 
+/*!
+    Destroys QObjectPool.
+*/
 QObjectPool::~QObjectPool()
 {
     delete d_ptr;
 }
 
 /*!
-    \fn void QObjectPool::addObject(QObject * object, const QString &type)
     \brief Adds \a object to object pool.
 
-    There are 3 kinds of objects - named objects, typed objects and other objects.
-    If object name if not an empty string, object counts as named object.
-    If \a type if not an empty string, object counts as typed object.
+    There are 2 kinds of objects - named objects, and other objects.
+    You can retrieve named objects using object() or objects() function (it is
+    possible to add multiple objects with the same name)
 
-    In fact, there can be many objects with same name.
+    If object name is empty, and \a name parameter is not, \a object's name
+    is set to \a name. If both are empty, \a object is counted as unnamed
+    object and simply added to pool.
 */
 void QObjectPool::addObject(QObject * object, const QString &name)
 {
@@ -51,7 +71,6 @@ void QObjectPool::addObject(QObject * object, const QString &name)
 }
 
 /*!
-    \fn void QObjectPool::removeObject(QObject * object)
     \brief Removes \a object to object pool.
 
     \sa QObjectPool::addObject
@@ -68,13 +87,17 @@ void QObjectPool::removeObject(QObject * object)
     emit objectRemoved(object);
 }
 
+/*!
+    \brief Returns list of all objects contained in the object pool.
+
+    \sa QObjectPool::addObject
+*/
 QObjectList QObjectPool::objects() const
 {
     return d_func()->objects;
 }
 
 /*!
-    \fn QObject * QObjectPool::object(const QString &name)
     \brief Returns object from object pool with objectName property equal to \a name.
 
     \sa QObjectPool::addObject
@@ -85,8 +108,7 @@ QObject * QObjectPool::object(const QString &name) const
 }
 
 /*!
-    \fn QObject * QObjectPool::objects(const QString &name)
-    \brief Returns list object from object pool with objectName property equal to \a name.
+    \brief Returns list of objects from object pool with objectName property equal to \a name.
 
     \sa PluginManager::addObject
 */
