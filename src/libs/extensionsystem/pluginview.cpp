@@ -8,8 +8,7 @@ using namespace ExtensionSystem;
 
 PluginView::PluginView(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PluginView),
-    m_fullPluginView(new FullPluginView(this))
+    ui(new Ui::PluginView)
 {
     ui->setupUi(this);
 
@@ -17,7 +16,6 @@ PluginView::PluginView(QWidget *parent) :
     ui->treeView->setModel(model);
     ui->treeView->setColumnWidth(0, 190);
     ui->treeView->expandAll();
-    m_fullPluginView->setModel(model);
 
     ui->treeView->hideColumn(4);
     ui->treeView->hideColumn(6);
@@ -42,6 +40,9 @@ PluginView::~PluginView()
 
 void PluginView::showFullInfo(const QModelIndex & i)
 {
+    FullPluginView fullPluginView(this);
+    fullPluginView.setModel(qobject_cast<PluginViewModel*>(ui->treeView->model()));
+
     QModelIndex index;
     if (!i.isValid()) {
         QModelIndexList rows = ui->treeView->selectionModel()->selectedRows();
@@ -55,8 +56,9 @@ void PluginView::showFullInfo(const QModelIndex & i)
 
         return;
     }
-    m_fullPluginView->setIndex(index);
-    m_fullPluginView->exec();
+
+    fullPluginView.setIndex(index);
+    fullPluginView.exec();
 }
 
 void PluginView::onSelectionChanged()
