@@ -357,6 +357,9 @@ void DualPaneWidget::setOrientation(Qt::Orientation orientation)
     if (d->splitter->orientation() == orientation)
         return;
 
+    if (orientation != Qt::Vertical && orientation != Qt::Horizontal)
+        return;
+
     d->splitter->setOrientation(orientation);
     d->actions[VerticalPanels]->setChecked(orientation == Qt::Vertical);
     emit orientationChanged(orientation);
