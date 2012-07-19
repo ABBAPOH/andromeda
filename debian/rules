@@ -21,7 +21,7 @@ build-stamp:
 
 	# Add here commands to compile the package.
 
-	( cmake ./ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release; make )
+	( cmake ./ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release; make )
 
 	touch build-stamp
 
