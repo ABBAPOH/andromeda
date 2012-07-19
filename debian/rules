@@ -21,7 +21,7 @@ build-stamp:
 
 	# Add here commands to compile the package.
 
-	( cmake ./; make )
+	( cmake ./ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release; make )
 
 	touch build-stamp
 
@@ -41,16 +41,8 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/gentoo.
-	mkdir -p $(CURDIR)/debian/andromeda/usr/share/andromeda
-	mkdir -p $(CURDIR)/debian/andromeda/usr/share/andromeda/bin
-	mkdir -p $(CURDIR)/debian/andromeda/usr/share/applications
-	mkdir -p $(CURDIR)/debian/andromeda/usr/bin
-	cp -R andromeda.desktop $(CURDIR)/debian/andromeda/usr/share/applications  
-	cp -R bin/andromeda $(CURDIR)/debian/andromeda/usr/share/andromeda/bin 
-	cp -R lib $(CURDIR)/debian/andromeda/usr/share/andromeda
-	cp -R plugins $(CURDIR)/debian/andromeda/usr/share/andromeda
-	cp -R share $(CURDIR)/debian/andromeda/usr/share/andromeda
-	ln -sf /usr/share/andromeda/bin/andromeda $(CURDIR)/debian/andromeda/usr/bin/andromeda
+	mkdir %(CURRDIR)/debian/andromeda
+	make DESTDIR=%(CURRDIR)/debian/andromeda install
 
         
 
@@ -69,7 +61,7 @@ binary-arch: build install
 #	dh_installlogrotate
 #	dh_installemacsen
 #	dh_installpam
-#	dh_installmime
+	dh_installmime
 #	dh_installinit
 	dh_installcron
 	dh_installman
