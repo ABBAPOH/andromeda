@@ -287,12 +287,12 @@ void FileManagerEditor::restoreDefaults()
     showLeftPanelAction->setChecked(showLeftPanel); // FIXME
 
     m_widget->blockSignals(true);
-    int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder")).toInt();
-    int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn")).toInt();
-    int viewModeLeft = m_settings->value(QLatin1String("fileManager/viewModeLeft")).toInt();
-    int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight")).toInt();
-    bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled")).toInt();
-    int orientation = m_settings->value(QLatin1String("fileManager/orientation")).toInt();
+    int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder"), Qt::AscendingOrder).toInt();
+    int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn"), FileManagerWidget::NameColumn).toInt();
+    int viewModeLeft = m_settings->value(QLatin1String("fileManager/viewModeLeft"), FileManagerWidget::IconView).toInt();
+    int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight"), FileManagerWidget::IconView).toInt();
+    bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled"), false).toInt();
+    int orientation = m_settings->value(QLatin1String("fileManager/orientation"), Qt::Horizontal).toInt();
     m_widget->setSortingOrder((Qt::SortOrder)sortOrder);
     m_widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
     m_widget->rightWidget()->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
