@@ -320,7 +320,7 @@ bool FileManagerEditor::restoreState(const QByteArray &arr)
     s >> widgetState;
 
     AbstractEditor::restoreState(baseState);
-    m_panel->setVisible(visible);
+    showLeftPanel(visible);
     ok |= splitter->restoreState(splitterState);
     m_widget->blockSignals(true);
     ok |= m_widget->restoreState(widgetState);
@@ -429,6 +429,7 @@ void FileManagerEditor::showLeftPanel(bool show)
     m_settings->setValue(QLatin1String("fileManager/showLeftPanel"), show);
 
     m_panel->setVisible(show);
+    showLeftPanelAction->setChecked(show);
 }
 
 /*!
