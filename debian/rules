@@ -41,7 +41,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/gentoo.
-	make DESTDIR=%(CURRDIR)/debian/andromeda install
+	dh_auto_install
 
         
 
