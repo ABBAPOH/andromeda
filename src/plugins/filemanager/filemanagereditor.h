@@ -57,6 +57,7 @@ private slots:
     void onSortingChanged();
     void onOrientationChanged(Qt::Orientation orientation);
     void onDualPaneModeChanged(bool);
+    void initRightPane(bool);
     void onPanelVisibleChanged(bool);
     void onStatusBarVisibleChanged(bool);
     void onSplitterMoved(int,int);

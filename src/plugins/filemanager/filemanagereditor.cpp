@@ -45,7 +45,6 @@ void FileManagerEditorHistory::setDualPaneWidget(DualPaneWidget *widget)
             SLOT(onActivePaneChanged(DualPaneWidget::Pane)));
 
     connect(m_widget->leftWidget()->history(), SIGNAL(currentItemIndexChanged(int)), SLOT(onLocalIndexChanged(int)));
-    connect(m_widget->rightWidget()->history(), SIGNAL(currentItemIndexChanged(int)), SLOT(onLocalIndexChanged(int)));
 }
 
 void FileManagerEditorHistory::clear()
@@ -89,6 +88,7 @@ void FileManagerEditorHistory::setCurrentItemIndex(int index)
         m_widget->leftWidget()->history()->setCurrentItemIndex(localIndex);
     } else {
         m_pane = DualPaneWidget::RightPane;
+        m_widget->setDualPaneModeEnabled(true);
         m_widget->setActivePane(DualPaneWidget::RightPane);
         m_widget->rightWidget()->history()->setCurrentItemIndex(-localIndex - 2);
     }
@@ -293,12 +293,10 @@ void FileManagerEditor::restoreDefaults()
     int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder"), Qt::AscendingOrder).toInt();
     int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn"), FileManagerWidget::NameColumn).toInt();
     int viewModeLeft = m_settings->value(QLatin1String("fileManager/viewModeLeft"), FileManagerWidget::IconView).toInt();
-    int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight"), FileManagerWidget::IconView).toInt();
     bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled"), false).toInt();
     int orientation = m_settings->value(QLatin1String("fileManager/orientation"), Qt::Horizontal).toInt();
     widget->setSortingOrder((Qt::SortOrder)sortOrder);
     widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
-    widget->rightWidget()->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
     widget->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
     widget->setDualPaneModeEnabled(dualPaneModeEnabled);
     widget->setOrientation((Qt::Orientation)orientation);
@@ -330,6 +328,8 @@ bool FileManagerEditor::restoreState(const QByteArray &arr)
     m_widget->splitter()->blockSignals(bs1);
     m_widget->dualPane()->blockSignals(bs2);
     m_widget->statusBar()->blockSignals(bs3);
+
+    initRightPane(m_widget->dualPane()->dualPaneModeEnabled());
 
     return ok;
 }
@@ -422,6 +422,18 @@ void FileManagerEditor::onDualPaneModeChanged(bool enabled)
     m_settings->setValue(QLatin1String("fileManager/dualPaneModeEnabled"), enabled);
 }
 
+void FileManagerEditor::initRightPane(bool enabled)
+{
+    if (enabled) {
+        FileManagerWidget *widget = m_widget->dualPane()->rightWidget();
+        registerWidgetActions(widget);
+        connect(widget->history(), SIGNAL(currentItemIndexChanged(int)),
+                history(), SLOT(onLocalIndexChanged(int)));
+        int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight"), FileManagerWidget::IconView).toInt();
+        widget->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
+    }
+}
+
 /*!
     \internal
 */
@@ -500,6 +512,7 @@ void FileManagerEditor::setupConnections()
     connect(widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
     connect(widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
     connect(widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(onDualPaneModeChanged(bool)));
+    connect(widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(initRightPane(bool)));
 
     connect(m_widget->panel(), SIGNAL(triggered(QString)), widget, SLOT(setCurrentPath(QString)));
 
@@ -517,7 +530,6 @@ void FileManagerEditor::createActions()
     DualPaneWidget *widget = m_widget->dualPane();
     // TODO: register panes when created
     registerWidgetActions(widget->leftWidget());
-    registerWidgetActions(widget->rightWidget());
 
     registerAction(widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
     registerAction(widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
