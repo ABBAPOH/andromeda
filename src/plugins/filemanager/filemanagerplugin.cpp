@@ -369,7 +369,7 @@ void FileManagerPlugin::createPanesMenu()
 
     CommandContainer *panesMenu = new CommandContainer(Constants::Menus::Panes, this);
     panesMenu->setTitle(tr("Panes"));
-    menuBar->addContainer(panesMenu, "035");
+    menuBar->addContainer(panesMenu, "028");
 
     cmd = new Command(Constants::Actions::DualPane, this);
     cmd->setDefaultText(tr("Dual Pane"));
