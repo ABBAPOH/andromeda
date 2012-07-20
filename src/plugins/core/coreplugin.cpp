@@ -411,7 +411,7 @@ void CorePlugin::createGoToMenu()
     // ================ GoTo Menu ================
     CommandContainer *goToMenu = new CommandContainer(Constants::Menus::GoTo, this);
     goToMenu->setTitle(tr("Go to"));
-    menuBar->addContainer(goToMenu);
+    menuBar->addContainer(goToMenu, "025");
 
     // ================ GoTo Menu (default) ================
     c = new Command(Constants::Actions::Back, tr("Back"), this);
