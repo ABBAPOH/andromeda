@@ -1,6 +1,9 @@
 #include "filemanagereditor.h"
 #include "filemanagereditor_p.h"
 
+#include <QVBoxLayout>
+
+#include "fileexplorerwidget.h"
 #include "filemanagerhistory.h"
 #include "filemanagerconstants.h"
 #include "filesystemmanager.h"
@@ -190,7 +193,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     createActions();
 
     m_history = new FileManagerEditorHistory(this);
-    m_history->setDualPaneWidget(m_widget);
+    m_history->setDualPaneWidget(m_widget->dualPane());
 }
 
 /*!
@@ -198,7 +201,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
 */
 QUrl FileManagerEditor::url() const
 {
-    return QUrl::fromLocalFile(m_widget->currentPath());
+    return QUrl::fromLocalFile(m_widget->dualPane()->currentPath());
 }
 
 /*!
@@ -212,7 +215,7 @@ void FileManagerEditor::open(const QUrl &url)
     if (path == QLatin1String("/"))
         path.clear();
 #endif
-    m_widget->setCurrentPath(path);
+    m_widget->dualPane()->setCurrentPath(path);
     emit loadFinished(true);
 }
 
@@ -229,7 +232,7 @@ IHistory * FileManagerEditor::history() const
 */
 QIcon FileManagerEditor::icon() const
 {
-    return QFileIconProvider().icon(QFileInfo(m_widget->currentPath()));
+    return QFileIconProvider().icon(QFileInfo(m_widget->dualPane()->currentPath()));
 }
 
 /*!
@@ -237,7 +240,7 @@ QIcon FileManagerEditor::icon() const
 */
 QString FileManagerEditor::title() const
 {
-    QString path = m_widget->currentPath();
+    QString path = m_widget->dualPane()->currentPath();
     if (path.endsWith(QLatin1Char('/')))
         path = path.left(path.length() - 1);
 
@@ -271,35 +274,33 @@ void FileManagerEditor::restoreDefaults()
 {
     bool showLeftPanel = true;
 
-    if (m_settings->contains(QLatin1String("fileManager/showLeftPanel")))
-        showLeftPanel = m_settings->value(QLatin1String("fileManager/showLeftPanel")).toBool();
+    showLeftPanel = m_settings->value(QLatin1String("fileManager/showLeftPanel"), true).toBool();
 
     QVariant value = m_settings->value(QLatin1String("fileManager/splitterState"));
 
-    m_panel->setVisible(showLeftPanel);
+    m_widget->setPanelVisible(showLeftPanel);
 
     if (value.isValid()) {
-        splitter->restoreState(value.toByteArray());
+        m_widget->splitter()->restoreState(value.toByteArray());
     } else {
-        splitter->setSizes(QList<int>() << 200 << 600);
+        m_widget->splitter()->setSizes(QList<int>() << 200 << 600);
     }
 
-    showLeftPanelAction->setChecked(showLeftPanel); // FIXME
-
-    m_widget->blockSignals(true);
+    DualPaneWidget *widget = m_widget->dualPane();
+    widget->blockSignals(true);
     int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder"), Qt::AscendingOrder).toInt();
     int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn"), FileManagerWidget::NameColumn).toInt();
     int viewModeLeft = m_settings->value(QLatin1String("fileManager/viewModeLeft"), FileManagerWidget::IconView).toInt();
     int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight"), FileManagerWidget::IconView).toInt();
     bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled"), false).toInt();
     int orientation = m_settings->value(QLatin1String("fileManager/orientation"), Qt::Horizontal).toInt();
-    m_widget->setSortingOrder((Qt::SortOrder)sortOrder);
-    m_widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
-    m_widget->rightWidget()->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
-    m_widget->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
-    m_widget->setDualPaneModeEnabled(dualPaneModeEnabled);
-    m_widget->setOrientation((Qt::Orientation)orientation);
-    m_widget->blockSignals(false);
+    widget->setSortingOrder((Qt::SortOrder)sortOrder);
+    widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
+    widget->rightWidget()->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
+    widget->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
+    widget->setDualPaneModeEnabled(dualPaneModeEnabled);
+    widget->setOrientation((Qt::Orientation)orientation);
+    widget->blockSignals(false);
 }
 
 /*!
@@ -311,20 +312,20 @@ bool FileManagerEditor::restoreState(const QByteArray &arr)
     QDataStream s(&state, QIODevice::ReadOnly);
 
     bool ok = true;
-    bool visible;
-    QByteArray splitterState, widgetState, baseState;
+    QByteArray baseState, widgetState;
 
     s >> baseState;
-    s >> visible;
-    s >> splitterState;
     s >> widgetState;
 
-    AbstractEditor::restoreState(baseState);
-    showLeftPanel(visible);
-    ok |= splitter->restoreState(splitterState);
-    m_widget->blockSignals(true);
+    ok |= AbstractEditor::restoreState(baseState);
+    // we have to block signals to not rewrite user settings
+    bool bs0 = m_widget->blockSignals(true);
+    bool bs1 = m_widget->splitter()->blockSignals(true);
+    bool bs2 = m_widget->dualPane()->blockSignals(true);
     ok |= m_widget->restoreState(widgetState);
-    m_widget->blockSignals(false);
+    m_widget->blockSignals(bs0);
+    m_widget->splitter()->blockSignals(bs1);
+    m_widget->dualPane()->blockSignals(bs2);
 
     return ok;
 }
@@ -338,8 +339,6 @@ QByteArray FileManagerEditor::saveState() const
     QDataStream s(&state, QIODevice::WriteOnly);
 
     s << AbstractEditor::saveState();
-    s << !m_panel->isHidden();
-    s << splitter->saveState();
     s << m_widget->saveState();
 
     return state;
@@ -350,7 +349,7 @@ QByteArray FileManagerEditor::saveState() const
 */
 void FileManagerEditor::clear()
 {
-    m_widget->clear();
+    m_widget->dualPane()->clear();
     m_history->erase();
 }
 
@@ -359,7 +358,7 @@ void FileManagerEditor::clear()
 */
 void FileManagerEditor::resizeEvent(QResizeEvent *e)
 {
-    splitter->resize(e->size());
+    m_widget->resize(e->size());
 }
 
 /*!
@@ -387,7 +386,7 @@ void FileManagerEditor::onEditRequested(const QString &path)
 
 void FileManagerEditor::onViewModeChanged(FileManagerWidget::ViewMode mode)
 {
-    int pane = m_widget->activePane();
+    int pane = m_widget->dualPane()->activePane();
     if (pane == DualPaneWidget::LeftPane)
         m_settings->setValue(QLatin1String("fileManager/viewModeLeft"), mode);
     else
@@ -395,19 +394,19 @@ void FileManagerEditor::onViewModeChanged(FileManagerWidget::ViewMode mode)
 }
 
 /*!
-  \internal
+    \internal
 */
 void FileManagerEditor::onSortingChanged()
 {
-    int sortOrder = m_widget->sortingOrder();
-    int sortColumn = m_widget->sortingColumn();
+    int sortOrder = m_widget->dualPane()->sortingOrder();
+    int sortColumn = m_widget->dualPane()->sortingColumn();
 
     m_settings->setValue(QLatin1String("fileManager/sortingOrder"), sortOrder);
     m_settings->setValue(QLatin1String("fileManager/sortingColumn"), sortColumn);
 }
 
 /*!
-  \internal
+    \internal
 */
 void FileManagerEditor::onOrientationChanged(Qt::Orientation orientation)
 {
@@ -420,30 +419,23 @@ void FileManagerEditor::onDualPaneModeChanged(bool enabled)
 }
 
 /*!
-  \internal
-
-  Shows or hides left panel and sets default visibility.
+    \internal
 */
-void FileManagerEditor::showLeftPanel(bool show)
+void FileManagerEditor::onPanelVisibleChanged(bool visible)
 {
-    m_settings->setValue(QLatin1String("fileManager/showLeftPanel"), show);
-
-    m_panel->setVisible(show);
-    showLeftPanelAction->setChecked(show);
+    m_settings->setValue(QLatin1String("fileManager/showLeftPanel"), visible);
 }
 
 /*!
- \internal
-
- Stores default splitter size.
+    \internal
 */
 void FileManagerEditor::onSplitterMoved(int, int)
 {
-    m_settings->setValue("fileManager/splitterState", splitter->saveState());
+    m_settings->setValue("fileManager/splitterState", m_widget->splitter()->saveState());
 }
 
 /*!
- \internal
+    \internal
 */
 void FileManagerEditor::openNewTab(const QStringList &paths)
 {
@@ -457,7 +449,7 @@ void FileManagerEditor::openNewTab(const QStringList &paths)
 }
 
 /*!
- \internal
+    \internal
 */
 void FileManagerEditor::openNewWindow(const QStringList &paths)
 {
@@ -472,73 +464,57 @@ void FileManagerEditor::openNewWindow(const QStringList &paths)
 }
 
 /*!
- \internal
-
- Creates UI objects.
+    \internal
 */
 void FileManagerEditor::setupUi()
 {
     ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
     NavigationModel *model = pm->object<NavigationModel>("navigationModel");
 
-    splitter = new MiniSplitter(this);
-
-    m_widget = new DualPaneWidget(splitter);
-//    m_widget->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_widget->setFocus();
-
-    m_panel = new NavigationPanel(splitter);
-    m_panel->setModel(model);
-
-    splitter->addWidget(m_panel);
-    splitter->addWidget(m_widget);
+    m_widget = new FileExplorerWidget(model, this);
 }
 
 /*!
-  \internal
-
-  Connects UI objects to private slots.
+    \internal
 */
 void FileManagerEditor::setupConnections()
 {
-    connect(m_widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
-    connect(m_widget, SIGNAL(editRequested(QString)), SLOT(onEditRequested(QString)));
-    connect(m_widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
-    connect(m_widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
-    connect(m_widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
-    connect(m_widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
-    connect(m_widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
-    connect(m_widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(onDualPaneModeChanged(bool)));
+    DualPaneWidget *widget = m_widget->dualPane();
+    connect(widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
+    connect(widget, SIGNAL(editRequested(QString)), SLOT(onEditRequested(QString)));
+    connect(widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
+    connect(widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
+    connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
+    connect(widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
+    connect(widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
+    connect(widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(onDualPaneModeChanged(bool)));
 
-    connect(m_panel, SIGNAL(triggered(QString)), m_widget, SLOT(setCurrentPath(QString)));
+    connect(m_widget->panel(), SIGNAL(triggered(QString)), widget, SLOT(setCurrentPath(QString)));
 
-    connect(splitter, SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
+    connect(m_widget->splitter(), SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
+
+    connect(m_widget, SIGNAL(panelVisibleChanged(bool)), SLOT(onPanelVisibleChanged(bool)));
 }
 
 /*!
-  \internal
-
-  Creates all actions.
+    \internal
 */
 void FileManagerEditor::createActions()
 {
-    showLeftPanelAction = new QAction(tr("Show left panel"), this);
-    showLeftPanelAction->setCheckable(true);
-
-    connect(showLeftPanelAction, SIGNAL(triggered(bool)), this, SLOT(showLeftPanel(bool)));
-    addAction(showLeftPanelAction, Constants::Actions::ShowLeftPanel);
-
+    DualPaneWidget *widget = m_widget->dualPane();
     // TODO: register panes when created
-    registerWidgetActions(m_widget->leftWidget());
-    registerWidgetActions(m_widget->rightWidget());
+    registerWidgetActions(widget->leftWidget());
+    registerWidgetActions(widget->rightWidget());
 
-    registerAction(m_widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
-    registerAction(m_widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
-    registerAction(m_widget->action(DualPaneWidget::ToggleActivePane), Constants::Actions::ToggleActivePane);
-    registerAction(m_widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
-    registerAction(m_widget->action(DualPaneWidget::SwapPanes), Constants::Actions::SwapPanes);
-    registerAction(m_widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);
-    registerAction(m_widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
+    registerAction(widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
+    registerAction(widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
+    registerAction(widget->action(DualPaneWidget::ToggleActivePane), Constants::Actions::ToggleActivePane);
+    registerAction(widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
+    registerAction(widget->action(DualPaneWidget::SwapPanes), Constants::Actions::SwapPanes);
+    registerAction(widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);
+    registerAction(widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
+
+    registerAction(m_widget->showLeftPanelAction(), Constants::Actions::ShowLeftPanel);
 }
 
 void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)

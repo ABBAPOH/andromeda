@@ -15,6 +15,7 @@ class FileManagerWidget;
 class DualPaneWidget;
 class NavigationPanel;
 class FileManagerEditorHistory;
+class FileExplorerWidget;
 
 class FileManagerEditor : public GuiSystem::AbstractEditor
 {
@@ -56,7 +57,7 @@ private slots:
     void onSortingChanged();
     void onOrientationChanged(Qt::Orientation orientation);
     void onDualPaneModeChanged(bool);
-    void showLeftPanel(bool);
+    void onPanelVisibleChanged(bool);
     void onSplitterMoved(int,int);
     void openNewTab(const QStringList &paths);
     void openNewWindow(const QStringList &paths);
@@ -68,14 +69,10 @@ private:
     void registerWidgetActions(FileManagerWidget *widget);
 
 private:
-    MiniSplitter *splitter;
-    DualPaneWidget *m_widget;
-    NavigationPanel *m_panel;
+    FileExplorerWidget *m_widget;
     FileManagerEditorHistory *m_history;
 
     QSettings *m_settings;
-
-    QAction *showLeftPanelAction;
 
     bool ignoreSignals;
 };
