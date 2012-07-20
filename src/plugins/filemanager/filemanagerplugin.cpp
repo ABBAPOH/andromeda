@@ -213,6 +213,12 @@ void FileManagerPlugin::createViewMenu()
     cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
+    cmd = new Command(Constants::Actions::ShowStatusBar, this);
+    cmd->setDefaultText(tr("Show status bar"));
+    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+B")));
+    cmd->setContext(Command::WindowCommand);
+    container->addCommand(cmd);
+
     container->addCommand(new Separator(this));
     QActionGroup * viewGroup = new QActionGroup(this);
 

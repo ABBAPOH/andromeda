@@ -1,6 +1,8 @@
 #include "fileexplorerwidget.h"
 
 #include <QtGui/QAction>
+#include <QtGui/QLabel>
+#include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 
 #include <widgets/minisplitter.h>
@@ -16,8 +18,9 @@ class FileExplorerWidgetPrivate
 {
     Q_DECLARE_PUBLIC(FileExplorerWidget)
 public:
-    explicit FileExplorerWidgetPrivate(FileExplorerWidget *qq);
+    explicit FileExplorerWidgetPrivate(FileExplorerWidget *qq) : q_ptr(qq) {}
 
+    void init();
     void retranslateUi();
 
 public:
@@ -25,7 +28,12 @@ public:
     DualPaneWidget *dualPane;
     NavigationPanel *panel;
 
+    QToolBar *statusBar;
+    QLabel *statusLabel;
+    QWidget *widget;
+
     QAction *showLeftPanelAction;
+    QAction *showStatusBarAction;
 
 private:
     FileExplorerWidget *q_ptr;
@@ -38,24 +46,9 @@ static const quint8 fileExplorerVersion = 1;
 
 using namespace FileManager;
 
-FileExplorerWidgetPrivate::FileExplorerWidgetPrivate(FileExplorerWidget *qq) :
-    q_ptr(qq)
+void FileExplorerWidgetPrivate::init()
 {
     Q_Q(FileExplorerWidget);
-
-    QVBoxLayout *layout = new QVBoxLayout(q);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-    splitter = new MiniSplitter(q);
-    layout->addWidget(splitter);
-
-    dualPane = new DualPaneWidget(splitter);
-    dualPane->setFocus();
-
-    panel = new NavigationPanel(splitter);
-
-    splitter->addWidget(panel);
-    splitter->addWidget(dualPane);
 
     showLeftPanelAction = new QAction(q);
     showLeftPanelAction->setCheckable(true);
@@ -64,16 +57,64 @@ FileExplorerWidgetPrivate::FileExplorerWidgetPrivate(FileExplorerWidget *qq) :
     q->connect(showLeftPanelAction, SIGNAL(triggered(bool)), q, SLOT(setPanelVisible(bool)));
     q->addAction(showLeftPanelAction);
 
+    showStatusBarAction = new QAction(q);
+    showStatusBarAction->setCheckable(true);
+    showStatusBarAction->setChecked(true);
+
+    q->connect(showStatusBarAction, SIGNAL(triggered(bool)), q, SLOT(setStatusBarVisible(bool)));
+    q->addAction(showStatusBarAction);
+
+    QVBoxLayout *layout = new QVBoxLayout(q);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    splitter = new MiniSplitter(q);
+    layout->addWidget(splitter);
+
+    panel = new NavigationPanel(splitter);
+
+    widget = new QWidget(splitter);
+    QVBoxLayout *rightLayout = new QVBoxLayout(widget);
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+    rightLayout->setSpacing(0);
+
+    dualPane = new DualPaneWidget(widget);
+    dualPane->setFocus();
+    dualPane->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    rightLayout->addWidget(dualPane);
+
+    statusBar = new QToolBar(widget);
+    statusBar->addAction(showLeftPanelAction);
+    statusBar->addAction(dualPane->action(DualPaneWidget::EnableDualPane));
+
+    statusLabel = new QLabel(statusBar);
+    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    statusLabel->setFont(statusBar->font());
+    statusBar->addWidget(statusLabel);
+    rightLayout->addWidget(statusBar);
+
+    splitter->addWidget(panel);
+    splitter->addWidget(widget);
+
+    q->connect(dualPane, SIGNAL(selectedPathsChanged()), q, SLOT(onSelectedPathsChanged()));
+
     retranslateUi();
 }
 
 void FileExplorerWidgetPrivate::retranslateUi()
 {
+    Q_Q(FileExplorerWidget);
+
     showLeftPanelAction->setText(FileExplorerWidget::tr("Show left panel"));
     showLeftPanelAction->setToolTip(FileExplorerWidget::tr("Shows or hides left panel"));
     showLeftPanelAction->setWhatsThis(FileExplorerWidget::tr("Shows or hides left panel"));
-}
 
+    showStatusBarAction->setText(FileExplorerWidget::tr("Show status bar"));
+    showStatusBarAction->setToolTip(FileExplorerWidget::tr("Shows or hides status bar"));
+    showStatusBarAction->setWhatsThis(FileExplorerWidget::tr("Shows or hides status bar"));
+
+    q->onSelectedPathsChanged();
+}
 
 /*!
     \class FileManager::FileExplorerWidget
@@ -92,6 +133,7 @@ FileExplorerWidget::FileExplorerWidget(QWidget *parent) :
     d_ptr(new FileExplorerWidgetPrivate(this))
 {
     Q_D(FileExplorerWidget);
+    d->init();
     d->panel->setModel(new NavigationModel(this));
 }
 
@@ -106,6 +148,8 @@ FileExplorerWidget::FileExplorerWidget(NavigationModel *model, QWidget *parent) 
     d_ptr(new FileExplorerWidgetPrivate(this))
 {
     Q_D(FileExplorerWidget);
+
+    d->init();
 
     if (model)
         d->panel->setModel(model);
@@ -146,7 +190,38 @@ void FileExplorerWidget::setPanelVisible(bool visible)
 /*!
     \fn void FileExplorerWidget::panelVisibleChanged(bool visible)
 
-    This signal is emitted when FileExplorerWidget::panelVisible is changed.
+    This signal is emitted when FileExplorerWidget::panelVisible property is changed.
+
+    \note this signal is NOT emited when panel is hidden via QWidget::setVisible call.
+*/
+
+/*!
+    \property FileExplorerWidget::statusBarVisible
+    Holds whether status bars is visible, or not.
+*/
+bool FileExplorerWidget::isStatusBarVisible() const
+{
+    Q_D(const FileExplorerWidget);
+
+    return !d->statusBar->isHidden();
+}
+
+void FileExplorerWidget::setStatusBarVisible(bool visible)
+{
+    if (isStatusBarVisible() == visible)
+        return;
+
+    Q_D(FileExplorerWidget);
+    d->statusBar->setVisible(visible);
+    d->showStatusBarAction->setChecked(visible);
+    emit statusBarVisibleChanged(visible);
+}
+
+/*!
+    \fn void FileExplorerWidget::statusBarVisibleChanged(bool visible)
+
+    This signal is emitted when FileExplorerWidget::statusBarVisible property
+    is changed.
 
     \note this signal is NOT emited when panel is hidden via QWidget::setVisible call.
 */
@@ -171,6 +246,13 @@ NavigationPanel * FileExplorerWidget::panel() const
     return d->panel;
 }
 
+QToolBar * FileExplorerWidget::statusBar() const
+{
+    Q_D(const FileExplorerWidget);
+
+    return d->statusBar;
+}
+
 /*!
     Returns pointer to the splitter.
 */
@@ -192,6 +274,16 @@ QAction * FileExplorerWidget::showLeftPanelAction() const
 }
 
 /*!
+    Returns pointer to the action that can be used to control status bar's visibility.
+*/
+QAction * FileExplorerWidget::showStatusBarAction() const
+{
+    Q_D(const FileExplorerWidget);
+
+    return d->showStatusBarAction;
+}
+
+/*!
     Restores widget's state. Returns true on success.
 */
 bool FileExplorerWidget::restoreState(const QByteArray &arr)
@@ -204,8 +296,8 @@ bool FileExplorerWidget::restoreState(const QByteArray &arr)
     bool ok = true;
     quint32 magic;
     quint8 version;
+    bool panelVisible, statusBarVisible;
     QByteArray splitterState, widgetState;
-    bool visible;
 
     s >> magic;
     if (magic != fileExplorerMagic)
@@ -215,11 +307,13 @@ bool FileExplorerWidget::restoreState(const QByteArray &arr)
     if (version != fileExplorerVersion)
         return false;
 
-    s >> visible;
+    s >> panelVisible;
+    s >> statusBarVisible;
     s >> splitterState;
     s >> widgetState;
 
-    setPanelVisible(visible);
+    setPanelVisible(panelVisible);
+    setStatusBarVisible(statusBarVisible);
     ok |= d->splitter->restoreState(splitterState);
     ok |= d->dualPane->restoreState(widgetState);
 
@@ -239,8 +333,20 @@ QByteArray FileExplorerWidget::saveState() const
     s << fileExplorerMagic;
     s << fileExplorerVersion;
     s << isPanelVisible();
+    s << isStatusBarVisible();
     s << d->splitter->saveState();
     s << d->dualPane->saveState();
 
     return state;
+}
+
+/*!
+    \internal
+*/
+void FileExplorerWidget::onSelectedPathsChanged()
+{
+    Q_D(FileExplorerWidget);
+
+    QStringList paths = d->dualPane->selectedPaths();
+    d->statusLabel->setText(tr("Selected %1 objects").arg(paths.count()));
 }

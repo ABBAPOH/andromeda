@@ -46,6 +46,7 @@ const char * const FindNext = "FindNext";
 const char * const FindPrevious = "FindPrevious";
 
 const char * const ShowLeftPanel = "ShowLeftPanel";
+const char * const ShowStatusBar = "ShowStatusBar";
 
 const char * const Back = "Back";
 const char * const Forward = "Forward";
