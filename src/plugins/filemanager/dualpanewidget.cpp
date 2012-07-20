@@ -112,12 +112,17 @@ void DualPaneWidgetPrivate::createRightPane()
     splitter->addWidget(panes[DualPaneWidget::RightPane]);
 
     swapPalettes(panes[DualPaneWidget::LeftPane], panes[DualPaneWidget::RightPane]);
+    if (!rightPaneState.isEmpty()) {
+        panes[DualPaneWidget::RightPane]->restoreState(rightPaneState);
+        rightPaneState.clear();
+    }
 }
 
-void DualPaneWidgetPrivate::ensureRightPaneCreated()
+void DualPaneWidgetPrivate::deleteRightPane()
 {
-    if (!panes[DualPaneWidget::RightPane])
-        createRightPane();
+    rightPaneState = panes[DualPaneWidget::RightPane]->saveState();
+    delete panes[DualPaneWidget::RightPane];
+    panes[DualPaneWidget::RightPane] = 0;
 }
 
 void DualPaneWidgetPrivate::openNewTab()
@@ -272,9 +277,8 @@ FileManagerWidget * DualPaneWidget::leftWidget() const
 
 FileManagerWidget * DualPaneWidget::rightWidget() const
 {
-    DualPaneWidgetPrivate * d = d_ptr;
-    d->ensureRightPaneCreated();
-    return d_func()->panes[RightPane];
+    Q_D(const DualPaneWidget);
+    return d->panes[RightPane];
 }
 
 QString DualPaneWidget::currentPath() const
@@ -306,7 +310,7 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
 
     d->dualPaneModeEnabled = on;
     if (on) {
-        d->ensureRightPaneCreated();
+        d->createRightPane();
 
         d->panes[RightPane]->show();
 
@@ -317,12 +321,9 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
         d->panes[RightPane]->setAlternatingRowColors(false);
 
     } else {
-        if (d->panes[RightPane])
-            d->panes[RightPane]->hide();
-
         setActivePane(LeftPane);
         d->panes[LeftPane]->setAlternatingRowColors(true);
-        d->panes[RightPane]->setAlternatingRowColors(true);
+        d->deleteRightPane();
     }
 
     d->actions[EnableDualPane]->setChecked(on);
@@ -412,19 +413,16 @@ bool DualPaneWidget::restoreState(const QByteArray &arr)
 
     bool b;
     QByteArray splitterState;
-    QByteArray subState;
+    QByteArray leftPaneState;
     s >> b;
-    setDualPaneModeEnabled(b);
     s >> splitterState;
+    s >> leftPaneState;
+    s >> d->rightPaneState;
+
+    setDualPaneModeEnabled(b);
     d->splitter->restoreState(splitterState);
     d->actions[VerticalPanels]->setChecked(orientation() == Qt::Vertical);
-    s >> subState;
-    leftWidget()->restoreState(subState);
-    s >> subState;
-    if (!subState.isEmpty()) {
-        d->ensureRightPaneCreated();
-        rightWidget()->restoreState(subState);
-    }
+    leftWidget()->restoreState(leftPaneState);
 
     return true;
 }

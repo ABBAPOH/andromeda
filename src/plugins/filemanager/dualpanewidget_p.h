@@ -22,7 +22,7 @@ public:
     FileManagerWidget *createPane();
     void createLeftPane();
     void createRightPane();
-    void ensureRightPaneCreated();
+    void deleteRightPane();
     void updateState();
 
 public slots:
@@ -41,6 +41,7 @@ public:
     QVBoxLayout *layout;
     QSplitter *splitter;
     QAction *actions[DualPaneWidget::ActionCount];
+    QByteArray rightPaneState;
 
     QActionGroup *viewModeGroup;
     QActionGroup *sortByGroup;
