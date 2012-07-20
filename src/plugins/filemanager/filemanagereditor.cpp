@@ -1,7 +1,7 @@
 #include "filemanagereditor.h"
 #include "filemanagereditor_p.h"
 
-#include <QVBoxLayout>
+#include <QtGui/QToolBar>
 
 #include "fileexplorerwidget.h"
 #include "filemanagerhistory.h"
@@ -276,9 +276,11 @@ void FileManagerEditor::restoreDefaults()
 
     showLeftPanel = m_settings->value(QLatin1String("fileManager/showLeftPanel"), true).toBool();
 
+    bool showStatusBar = m_settings->value(QLatin1String("fileManager/showStatusBar"), false).toBool();
     QVariant value = m_settings->value(QLatin1String("fileManager/splitterState"));
 
     m_widget->setPanelVisible(showLeftPanel);
+    m_widget->setStatusBarVisible(showStatusBar);
 
     if (value.isValid()) {
         m_widget->splitter()->restoreState(value.toByteArray());
@@ -322,10 +324,12 @@ bool FileManagerEditor::restoreState(const QByteArray &arr)
     bool bs0 = m_widget->blockSignals(true);
     bool bs1 = m_widget->splitter()->blockSignals(true);
     bool bs2 = m_widget->dualPane()->blockSignals(true);
+    bool bs3 = m_widget->statusBar()->blockSignals(true);
     ok |= m_widget->restoreState(widgetState);
     m_widget->blockSignals(bs0);
     m_widget->splitter()->blockSignals(bs1);
     m_widget->dualPane()->blockSignals(bs2);
+    m_widget->statusBar()->blockSignals(bs3);
 
     return ok;
 }
@@ -429,6 +433,14 @@ void FileManagerEditor::onPanelVisibleChanged(bool visible)
 /*!
     \internal
 */
+void FileManagerEditor::onStatusBarVisibleChanged(bool visible)
+{
+    m_settings->setValue(QLatin1String("fileManager/showStatusBar"), visible);
+}
+
+/*!
+    \internal
+*/
 void FileManagerEditor::onSplitterMoved(int, int)
 {
     m_settings->setValue("fileManager/splitterState", m_widget->splitter()->saveState());
@@ -494,6 +506,7 @@ void FileManagerEditor::setupConnections()
     connect(m_widget->splitter(), SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
 
     connect(m_widget, SIGNAL(panelVisibleChanged(bool)), SLOT(onPanelVisibleChanged(bool)));
+    connect(m_widget, SIGNAL(statusBarVisibleChanged(bool)), SLOT(onStatusBarVisibleChanged(bool)));
 }
 
 /*!
@@ -515,6 +528,7 @@ void FileManagerEditor::createActions()
     registerAction(widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
 
     registerAction(m_widget->showLeftPanelAction(), Constants::Actions::ShowLeftPanel);
+    registerAction(m_widget->showStatusBarAction(), Constants::Actions::ShowStatusBar);
 }
 
 void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)

@@ -58,6 +58,7 @@ private slots:
     void onOrientationChanged(Qt::Orientation orientation);
     void onDualPaneModeChanged(bool);
     void onPanelVisibleChanged(bool);
+    void onStatusBarVisibleChanged(bool);
     void onSplitterMoved(int,int);
     void openNewTab(const QStringList &paths);
     void openNewWindow(const QStringList &paths);
