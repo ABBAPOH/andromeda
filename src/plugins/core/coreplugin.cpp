@@ -436,7 +436,7 @@ void CorePlugin::createWindowsMenu()
 
     CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
     windowsMenu->setTitle(tr("Windows"));
-    menuBar->addContainer(windowsMenu);
+    menuBar->addContainer(windowsMenu, "035");
 }
 
 void CorePlugin::createToolsMenu()
