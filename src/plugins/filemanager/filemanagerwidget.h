@@ -29,7 +29,7 @@ class FILEMANAGER_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
     Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
-    Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY currentPathChanged)
+    Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY selectedPathsChanged)
     Q_PROPERTY(Column sortingColumn READ sortingColumn WRITE setSortingColumn NOTIFY sortingChanged)
     Q_PROPERTY(Qt::SortOrder sortingOrder READ sortingOrder WRITE setSortingOrder NOTIFY sortingChanged)
     Q_PROPERTY(ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
