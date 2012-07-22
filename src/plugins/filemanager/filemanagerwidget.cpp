@@ -371,11 +371,6 @@ void FileManagerWidgetPrivate::paste(bool copy)
         fileSystemManager->move(files, currentPath);
 }
 
-void FileManagerWidgetPrivate::registerAction(QAction *action, const QByteArray &id)
-{
-    GuiSystem::ActionManager::instance()->registerAction(action, id);
-}
-
 bool FileManagerWidgetPrivate::hasFiles(const QStringList &paths)
 {
     // TODO: use model for speedup
@@ -548,453 +543,6 @@ void FileManagerWidgetPrivate::onSortIndicatorChanged(int logicalIndex, Qt::Sort
     emit q->sortingChanged();
 }
 
-static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
-
-FileManagerWidget::FileManagerWidget(QWidget *parent) :
-    QWidget(parent),
-    d_ptr(new FileManagerWidgetPrivate(this))
-{
-    Q_D(FileManagerWidget);
-
-    qRegisterMetaType<ViewMode>("ViewMode");
-
-    d->setupUi();
-
-    d->blockEvents = false;
-    d->model = 0;
-    d->currentView = 0;
-    d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
-    d->fileSystemManager = 0;
-    d->sortingColumn = (FileManagerWidget::Column)-1;
-    d->sortingOrder = (Qt::SortOrder)-1;
-    d->itemsExpandable = true;
-    d->alternatingRowColors = true;
-
-    d->history = new FileManagerHistory(this);
-    connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
-
-    FileSystemModel *model = new FileSystemModel(this);
-    model->setRootPath("/");
-    model->setFilter(mBaseFilters);
-    model->setReadOnly(false);
-    d->setModel(model);
-    d->setFileSystemManager(FileSystemManager::instance());
-
-    FileManagerSettings *settings = FileManagerSettings::globalSettings();
-
-    setViewMode(IconView);
-    setFlow((Flow)settings->flow());
-    setIconSize(IconView, settings->iconSize(FileManagerSettings::IconView));
-    setIconSize(ColumnView, settings->iconSize(FileManagerSettings::ColumnView));
-    setIconSize(TreeView, settings->iconSize(FileManagerSettings::TreeView));
-    setGridSize(settings->gridSize());
-    setItemsExpandable(settings->itemsExpandable());
-    setSorting(NameColumn, Qt::AscendingOrder);
-
-    FileManagerSettings::globalSettings()->d_func()->addWidget(this);
-}
-
-FileManagerWidget::~FileManagerWidget()
-{
-    FileManagerSettings::globalSettings()->d_func()->removeWidget(this);
-
-    delete d_ptr;
-}
-
-QAction * FileManagerWidget::action(Action action) const
-{
-    Q_D(const FileManagerWidget);
-
-    if (action <= NoAction || action >= ActionCount)
-        return 0;
-
-    return d->actions[action];
-}
-
-bool FileManagerWidget::alternatingRowColors() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->alternatingRowColors;
-}
-
-void FileManagerWidget::setAlternatingRowColors(bool enable)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->alternatingRowColors == enable)
-        return;
-
-    QTreeView *view = qobject_cast<QTreeView*>(d->currentView);
-    if (view)
-        view->setAlternatingRowColors(enable);
-}
-
-bool FileManagerWidget::canRedo() const
-{
-    return fileSystemManager()->canRedo();
-}
-
-bool FileManagerWidget::canUndo() const
-{
-    return fileSystemManager()->canUndo();
-}
-
-QString FileManagerWidget::currentPath() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->currentPath;
-}
-
-void FileManagerWidget::setCurrentPath(const QString &path)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->currentPath != path) {
-        d->currentPath = path;
-        QModelIndex index = d->model->index(path);
-        if (d->model->isDir(index)) {
-            d->currentView->selectionModel()->clear(); // to prevent bug with selecting dir we enter in
-            d->currentView->setRootIndex(index);
-
-            FileManagerHistoryItemData item;
-            item.path = path;
-            item.title = QFileInfo(path).fileName();
-            item.lastVisited = QDateTime::currentDateTime();
-            d->history->d_func()->appendItem(FileManagerHistoryItem(item));
-
-            emit currentPathChanged(path);
-        }
-    }
-}
-
-FileManagerWidget::Flow FileManagerWidget::flow() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->flow;
-}
-
-void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->flow == flow)
-        return;
-
-    d->flow = flow;
-
-    QListView *view = qobject_cast<QListView*>(d->currentView);
-    if (view)
-        d->updateListViewFlow(view);
-}
-
-QSize FileManagerWidget::gridSize() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->gridSize;
-}
-
-void FileManagerWidget::setGridSize(QSize s)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->gridSize == s)
-        return;
-
-    d->gridSize = s;
-
-    QListView *view = qobject_cast<QListView*>(d->currentView);
-    if (view) {
-        if (d->flow == TopToBottom)
-            s.setWidth(256);
-        view->setGridSize(s);
-    }
-}
-
-QSize FileManagerWidget::iconSize(FileManagerWidget::ViewMode mode) const
-{
-    Q_D(const FileManagerWidget);
-
-    if (mode < 0 || mode >= FileManagerWidget::MaxViews)
-        return QSize();
-
-    return d->iconSizes[mode];
-}
-
-void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size)
-{
-    Q_D(FileManagerWidget);
-
-    if (mode < 0 && mode >= FileManagerWidget::MaxViews)
-        return;
-
-    if (d->iconSizes[mode] == size)
-        return;
-
-    d->iconSizes[mode] = size;
-
-    QAbstractItemView *view = d->testCurrentView(mode);
-    if (view)
-        view->setIconSize(size);
-}
-
-bool FileManagerWidget::itemsExpandable() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->itemsExpandable;
-}
-
-void FileManagerWidget::setItemsExpandable(bool expandable)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->itemsExpandable == expandable)
-        return;
-
-    d->itemsExpandable = expandable;
-
-    QTreeView *view = qobject_cast<QTreeView *>(d->currentView);
-    if (view) {
-        if (!expandable) {
-            view->collapseAll();
-            view->setRootIsDecorated(false);
-            view->setItemsExpandable(false);
-        } else {
-            view->setRootIsDecorated(true);
-            view->setItemsExpandable(true);
-        }
-    }
-}
-
-QStringList FileManagerWidget::selectedPaths() const
-{
-    Q_D(const FileManagerWidget);
-
-    QStringList result;
-    foreach (const QModelIndex &index, d->selectedIndexes()) {
-        result.append(d->model->filePath(index));
-    }
-    return QStringList(result);
-}
-
-FileManagerWidget::Column FileManagerWidget::sortingColumn() const
-{
-    return d_func()->sortingColumn;
-}
-
-void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->sortingColumn == column)
-        return;
-
-    d->sortingColumn = column;
-    d->updateSorting();
-
-    for (int i = NameColumn; i < ColumnCount; i++) {
-        d->actions[SortByName + i]->setChecked(column == NameColumn + i);
-    }
-
-    emit sortingChanged();
-}
-
-Qt::SortOrder FileManagerWidget::sortingOrder() const
-{
-    return d_func()->sortingOrder;
-}
-
-void FileManagerWidget::setSortingOrder(Qt::SortOrder order)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->sortingOrder == order)
-        return;
-
-    d->sortingOrder = order;
-    d->updateSorting();
-
-    d->actions[SortDescendingOrder]->setChecked(order == Qt::DescendingOrder);
-
-    emit sortingChanged();
-}
-
-void FileManagerWidget::setSorting(FileManagerWidget::Column column, Qt::SortOrder order)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->sortingColumn == column && d->sortingOrder == order)
-        return;
-
-    d->sortingColumn = column;
-    d->sortingOrder = order;
-    d->updateSorting();
-    emit sortingChanged();
-}
-
-FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->viewMode;
-}
-
-void FileManagerWidget::setViewMode(ViewMode mode)
-{
-    Q_D(FileManagerWidget);
-
-    if (d->viewMode != mode) {
-        d->viewMode = mode;
-        bool focus = d->currentView ? d->currentView->hasFocus() : false;
-        d->layout->setCurrentIndex(mode);
-        delete d->currentView;
-        d->currentView = d->createView(mode);
-        d->layout->addWidget(d->currentView);
-        if (focus) {
-            d->currentView->setFocus();
-        }
-
-        QModelIndex index = d->model->index(d->currentPath);
-        d->currentView->setRootIndex(index);
-
-        d->actions[IconMode]->setChecked(mode == IconView);
-        d->actions[ColumnMode]->setChecked(mode == ColumnView);
-        d->actions[TreeMode]->setChecked(mode == TreeView);
-
-        emit viewModeChanged(d->viewMode);
-    }
-}
-
-FileSystemManager * FileManagerWidget::fileSystemManager() const
-{
-    Q_D(const FileManagerWidget);
-
-    if (!d->fileSystemManager) {
-        const_cast<FileManagerWidgetPrivate*>(d)->setFileSystemManager(d->model->fileSystemManager());
-    }
-
-    return d->fileSystemManager;
-}
-
-FileManagerHistory *FileManagerWidget::history() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->history;
-}
-
-FileSystemModel * FileManagerWidget::model() const
-{
-    Q_D(const FileManagerWidget);
-
-    return d->model;
-}
-
-bool FileManagerWidget::restoreState(const QByteArray &arr)
-{
-    if (arr.isEmpty())
-        return false;
-
-    QByteArray state = arr;
-    QDataStream s(&state, QIODevice::ReadOnly);
-
-    quint8 tmp;
-    QSize size;
-    s >> tmp;
-    setFlow((Flow)tmp);
-    s >> size;
-    setGridSize(size);
-    s >> size;
-    setIconSize(IconView, size);
-    s >> tmp;
-    setViewMode((FileManagerWidget::ViewMode)tmp);
-    s >> tmp;
-    setSortingColumn((FileManagerWidget::Column)tmp);
-    s >> tmp;
-    setSortingOrder((Qt::SortOrder)tmp);
-    return true;
-}
-
-QByteArray FileManagerWidget::saveState() const
-{
-    QByteArray state;
-    QDataStream s(&state, QIODevice::WriteOnly);
-
-    s << (quint8)flow();
-    s << gridSize();
-    s << iconSize(IconView);
-    s << (quint8)viewMode();
-    s << (quint8)sortingColumn();
-    s << (quint8)sortingOrder();
-
-    return state;
-}
-
-void FileManagerWidget::clear()
-{
-    Q_D(FileManagerWidget);
-
-    setCurrentPath(QString());
-    d->history->d_func()->items.clear();
-    d->history->d_func()->currentItemIndex = -1;
-}
-
-void FileManagerWidget::newFolder()
-{
-    Q_D(FileManagerWidget);
-    QString dir = currentPath();
-    if (dir == "") {
-//        emit error;
-    } else {
-        QString  folderName = tr("New Folder");
-        QModelIndex index = d->model->mkdir(d->model->index(dir), folderName);
-
-        if (index.isValid())
-            d->currentView->edit(index);
-    }
-}
-
-void FileManagerWidget::open()
-{
-    foreach (const QString path, selectedPaths()) {
-        QFileInfo info(path);
-        if (info.isDir() && !info.isBundle()) {
-            setCurrentPath(path);
-            return;
-        } else {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-        }
-    }
-}
-
-void FileManagerWidget::edit()
-{
-    foreach (const QString path, selectedPaths()) {
-        QFileInfo info(path);
-        if (!info.isDir() || info.isBundle()) {
-            emit editRequested(path);
-        }
-    }
-}
-
-void FileManagerWidget::showFileInfo()
-{
-    QStringList paths = selectedPaths();
-    if (paths.isEmpty())
-        paths.append(currentPath());
-
-    foreach (const QString &path, paths) {
-        FileInfoDialog *dialog = new FileInfoDialog(this);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->setFileInfo(QFileInfo(path));
-        dialog->show();
-    }
-}
-
 void FileManagerWidgetPrivate::openNewTab()
 {
     Q_Q(FileManagerWidget);
@@ -1044,11 +592,6 @@ void FileManagerWidgetPrivate::toggleSortOrder(bool descending)
     q->setSortingOrder(descending ? Qt::DescendingOrder : Qt::AscendingOrder);
 }
 
-/*!
-  \internal
-
-  Updates FileManager actions that depends on selection.
-*/
 void FileManagerWidgetPrivate::onSelectionChanged()
 {
     Q_Q(FileManagerWidget);
@@ -1080,6 +623,736 @@ void FileManagerWidgetPrivate::onSelectionChanged()
     }
 }
 
+static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::AllDirs;
+
+/*!
+    \class FileManager::FileManagerWidget
+    \brief FileManagerWidget is a main widget class for displaying filesystem.
+
+    It provides basic functionality of a file manager - possibility to change
+    view mode, copy/paste and undo/redo support, possbility to change files and
+    folders sort order, etc.
+
+    Also it provides actions for basic file manipulation - creating new folders,
+    removing files, showing file info.
+*/
+
+/*!
+    \enum FileManager::FileManagerWidget::ViewMode
+    This enum describes possible view modes can be used in FileManagerWidget.
+
+    \var FileManager::FileManagerWidget::ViewMode FileManager::FileManagerWidget::IconView
+    Is an icon or a list view, depending on file manager settings.
+
+    \var FileManager::FileManagerWidget::ViewMode FileManager::FileManagerWidget::ColumnView
+    Is a column view - each folder represented using a column.
+
+    \var FileManager::FileManagerWidget::ViewMode FileManager::FileManagerWidget::TreeView
+    Is a tree or a detailed list, depending on file manager settings.
+*/
+
+/*!
+    \enum FileManager::FileManagerWidget::Flow
+    This enum describes possible flow values for a list view mode.
+
+    \var FileManager::FileManagerWidget::ViewMode FileManager::FileManagerWidget::LeftToRight
+    The items are laid out in the view from the left to the right.
+
+    \var FileManager::FileManagerWidget::ViewMode FileManager::FileManagerWidget::TopToBottom
+    The items are laid out in the view from the top to the bottom.
+*/
+
+/*!
+    \enum FileManager::FileManagerWidget::Column
+    This enum describes column currently being sorted.
+
+    \var FileManager::FileManagerWidget::Column FileManager::FileManagerWidget::NameColumn
+    Name column.
+
+    \var FileManager::FileManagerWidget::Column FileManager::FileManagerWidget::SizeColumn
+    Size column.
+
+    \var FileManager::FileManagerWidget::Column FileManager::FileManagerWidget::TypeColumn
+    Type column.
+
+    \var FileManager::FileManagerWidget::Column FileManager::FileManagerWidget::DateColumn
+    Date column.
+*/
+
+/*!
+    \enum FileManager::FileManagerWidget::Action
+    This enum describes the types of actions which can be triggered in a file
+    manager widget.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::NoAction
+    Refers to an invalid action.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Open
+    Open current file in an external editor or folder in current widget.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::OpenInTab
+    Open current file or folder in new tab.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::OpenInWindow
+    Open current file or folder in new window.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::NewFolder
+    Create new folder in current dir.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Rename
+    Rename selected file or folder.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::MoveToTrash
+    Move selected files and/or folders to the trash.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Remove
+    Permanently remove selected paths from filesystem.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::ShowFileInfo
+    Show FileManager::FileInfoDialog for each selected path.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Redo
+    Redo next operation.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Undo
+    Undo previous operation.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Copy
+    Copy selected paths to a clipboard.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Paste
+    Copy files and folders located at paths in a clipboard to a current folder.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::MoveHere
+    Move files and folders located at paths in a clipboard to a current folder.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::SelectAll
+    Select all paths at a current location.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::ShowHiddenFiles
+    Toggle showing of hidden files.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::IconMode
+    Toggle icon view mode.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::ColumnMode
+    Toggle column view mode.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::TreeMode
+    Toggle tree view mode.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::SortByName
+    Toggle sorting by name.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::SortBySize
+    Toggle sorting by size.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::SortByType
+    Toggle sorting by type.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::SortByDate
+    Toggle sorting by date.
+
+    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::SortDescendingOrder
+    Toggle sort order.
+*/
+
+/*!
+    Creates FileManagerWidget with the given \a parent.
+*/
+FileManagerWidget::FileManagerWidget(QWidget *parent) :
+    QWidget(parent),
+    d_ptr(new FileManagerWidgetPrivate(this))
+{
+    Q_D(FileManagerWidget);
+
+    qRegisterMetaType<ViewMode>("ViewMode");
+
+    d->setupUi();
+
+    d->blockEvents = false;
+    d->model = 0;
+    d->currentView = 0;
+    d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
+    d->fileSystemManager = 0;
+    d->sortingColumn = (FileManagerWidget::Column)-1;
+    d->sortingOrder = (Qt::SortOrder)-1;
+    d->itemsExpandable = true;
+    d->alternatingRowColors = true;
+
+    d->history = new FileManagerHistory(this);
+    connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
+
+    FileSystemModel *model = new FileSystemModel(this);
+    model->setRootPath("/");
+    model->setFilter(mBaseFilters);
+    model->setReadOnly(false);
+    d->setModel(model);
+    d->setFileSystemManager(FileSystemManager::instance());
+
+    FileManagerSettings *settings = FileManagerSettings::globalSettings();
+
+    setViewMode(IconView);
+    setFlow((Flow)settings->flow());
+    setIconSize(IconView, settings->iconSize(FileManagerSettings::IconView));
+    setIconSize(ColumnView, settings->iconSize(FileManagerSettings::ColumnView));
+    setIconSize(TreeView, settings->iconSize(FileManagerSettings::TreeView));
+    setGridSize(settings->gridSize());
+    setItemsExpandable(settings->itemsExpandable());
+    setSorting(NameColumn, Qt::AscendingOrder);
+
+    FileManagerSettings::globalSettings()->d_func()->addWidget(this);
+}
+
+/*!
+    Destroys FileManagerWidget.
+*/
+FileManagerWidget::~FileManagerWidget()
+{
+    FileManagerSettings::globalSettings()->d_func()->removeWidget(this);
+
+    delete d_ptr;
+}
+
+/*!
+    Returns action specified by \a action enum.
+*/
+QAction * FileManagerWidget::action(Action action) const
+{
+    Q_D(const FileManagerWidget);
+
+    if (action <= NoAction || action >= ActionCount)
+        return 0;
+
+    return d->actions[action];
+}
+
+/*!
+    \property FileManagerWidget::alternatingRowColors
+    Holds if view should use alternatingRowColors.  It only affects tree view
+    mode.
+
+    Default value is true.
+*/
+bool FileManagerWidget::alternatingRowColors() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->alternatingRowColors;
+}
+
+void FileManagerWidget::setAlternatingRowColors(bool enable)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->alternatingRowColors == enable)
+        return;
+
+    QTreeView *view = qobject_cast<QTreeView*>(d->currentView);
+    if (view)
+        view->setAlternatingRowColors(enable);
+}
+
+/*!
+    \property FileManagerWidget::canRedo
+    Holds wheter widget can redo next operation.
+*/
+bool FileManagerWidget::canRedo() const
+{
+    return fileSystemManager()->canRedo();
+}
+
+/*!
+    \fn void FileManagerWidget::canRedoChanged(bool canRedo)
+    This signal is emited when FileManagerWidget::canRedo property is changed.
+*/
+
+/*!
+    \property FileManagerWidget::canUndo
+    Holds wheter widget can redo previsous operation.
+*/
+bool FileManagerWidget::canUndo() const
+{
+    return fileSystemManager()->canUndo();
+}
+
+/*!
+    \fn void FileManagerWidget::canUndoChanged(bool canUndo)
+    This signal is emited when FileManagerWidget::canUndo property is changed.
+*/
+
+/*!
+    \property FileManagerWidget::currentPath
+    This property holds current folder displayed it the widget.
+*/
+QString FileManagerWidget::currentPath() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->currentPath;
+}
+
+void FileManagerWidget::setCurrentPath(const QString &path)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->currentPath != path) {
+        d->currentPath = path;
+        QModelIndex index = d->model->index(path);
+        if (d->model->isDir(index)) {
+            d->currentView->selectionModel()->clear(); // to prevent bug with selecting dir we enter in
+            d->currentView->setRootIndex(index);
+
+            FileManagerHistoryItemData item;
+            item.path = path;
+            item.title = QFileInfo(path).fileName();
+            item.lastVisited = QDateTime::currentDateTime();
+            d->history->d_func()->appendItem(FileManagerHistoryItem(item));
+
+            emit currentPathChanged(path);
+        }
+    }
+}
+
+/*!
+    \fn void FileManagerWidget::currentPathChanged(const QString &path)
+    This signal is emmited when currently displayed folder changes.
+*/
+
+/*!
+    \property FileManagerWidget::flow
+    This property holds which direction the items layout should flow. It only
+    affects icon view mode.
+
+    Default value is FileManagerWidget::LeftToRight.
+*/
+FileManagerWidget::Flow FileManagerWidget::flow() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->flow;
+}
+
+void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->flow == flow)
+        return;
+
+    d->flow = flow;
+
+    QListView *view = qobject_cast<QListView*>(d->currentView);
+    if (view)
+        d->updateListViewFlow(view);
+}
+
+/*!
+    \property FileManagerWidget::gridSize
+    This property holds the size of the layout grid. It only affects icon view
+    mode.
+*/
+QSize FileManagerWidget::gridSize() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->gridSize;
+}
+
+void FileManagerWidget::setGridSize(QSize s)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->gridSize == s)
+        return;
+
+    d->gridSize = s;
+
+    QListView *view = qobject_cast<QListView*>(d->currentView);
+    if (view) {
+        if (d->flow == TopToBottom)
+            s.setWidth(256);
+        view->setGridSize(s);
+    }
+}
+
+/*!
+    Returns icon fixe for the view mode \a mode. Each view has indepentent icon
+    size; that size is usually controlled by FileManagerSettings, i.e. when you
+    change icon size using settings, it is changed in all views simultaneously.
+*/
+QSize FileManagerWidget::iconSize(FileManagerWidget::ViewMode mode) const
+{
+    Q_D(const FileManagerWidget);
+
+    if (mode < 0 || mode >= FileManagerWidget::MaxViews)
+        return QSize();
+
+    return d->iconSizes[mode];
+}
+
+/*!
+    Sets icon fixe for the view mode \a mode.
+*/
+void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size)
+{
+    Q_D(FileManagerWidget);
+
+    if (mode < 0 && mode >= FileManagerWidget::MaxViews)
+        return;
+
+    if (d->iconSizes[mode] == size)
+        return;
+
+    d->iconSizes[mode] = size;
+
+    QAbstractItemView *view = d->testCurrentView(mode);
+    if (view)
+        view->setIconSize(size);
+}
+
+/*!
+    \property FileManagerWidget::itemsExpandable
+    This property holds whether the items are expandable by the user. It only
+    affects tree view mode.
+
+    Default value is true.
+*/
+bool FileManagerWidget::itemsExpandable() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->itemsExpandable;
+}
+
+void FileManagerWidget::setItemsExpandable(bool expandable)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->itemsExpandable == expandable)
+        return;
+
+    d->itemsExpandable = expandable;
+
+    QTreeView *view = qobject_cast<QTreeView *>(d->currentView);
+    if (view) {
+        if (!expandable) {
+            view->collapseAll();
+            view->setRootIsDecorated(false);
+            view->setItemsExpandable(false);
+        } else {
+            view->setRootIsDecorated(true);
+            view->setItemsExpandable(true);
+        }
+    }
+}
+
+/*!
+    \property FileManagerWidget::selectedPaths
+    This property holds list of path (files or folders) currently selected by a user.
+*/
+QStringList FileManagerWidget::selectedPaths() const
+{
+    Q_D(const FileManagerWidget);
+
+    QStringList result;
+    foreach (const QModelIndex &index, d->selectedIndexes()) {
+        result.append(d->model->filePath(index));
+    }
+    return QStringList(result);
+}
+
+/*!
+    \fn void FileManagerWidget::selectedPathsChanged()
+    This signal is emitted when user changes the selection in a view.
+*/
+
+/*!
+    \property FileManagerWidget::sortingColumn
+    This property holds the column which are currently sorted.
+    Default value is FileManagerWidget::NameColumn.
+*/
+FileManagerWidget::Column FileManagerWidget::sortingColumn() const
+{
+    return d_func()->sortingColumn;
+}
+
+void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingColumn == column)
+        return;
+
+    d->sortingColumn = column;
+    d->updateSorting();
+
+    for (int i = NameColumn; i < ColumnCount; i++) {
+        d->actions[SortByName + i]->setChecked(column == NameColumn + i);
+    }
+
+    emit sortingChanged();
+}
+
+/*!
+    \fn void FileManagerWidget::sortingChanged()
+    This signal is emmited when FileManagerWidget::sortingColumn or
+    FileManagerWidget::sortingOrder properties are changed.
+*/
+
+/*!
+    \property FileManagerWidget::sortingOrder
+    This property holds the order in which FileManagerWidget::sortingColumn is
+    sorted.
+
+    Default value is Qt::AscendingOrder.
+*/
+Qt::SortOrder FileManagerWidget::sortingOrder() const
+{
+    return d_func()->sortingOrder;
+}
+
+void FileManagerWidget::setSortingOrder(Qt::SortOrder order)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingOrder == order)
+        return;
+
+    d->sortingOrder = order;
+    d->updateSorting();
+
+    d->actions[SortDescendingOrder]->setChecked(order == Qt::DescendingOrder);
+
+    emit sortingChanged();
+}
+
+/*!
+    Sets both sort \a column and sort \a order.
+*/
+void FileManagerWidget::setSorting(FileManagerWidget::Column column, Qt::SortOrder order)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->sortingColumn == column && d->sortingOrder == order)
+        return;
+
+    d->sortingColumn = column;
+    d->sortingOrder = order;
+    d->updateSorting();
+    emit sortingChanged();
+}
+
+/*!
+    \property FileManagerWidget::viewMode
+    This property holds current view mode.
+
+    Default value is FileManagerWidget::IconView.
+
+    \sa FileManagerWidget::ViewMode
+*/
+FileManagerWidget::ViewMode FileManagerWidget::viewMode() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->viewMode;
+}
+
+void FileManagerWidget::setViewMode(ViewMode mode)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->viewMode != mode) {
+        d->viewMode = mode;
+        bool focus = d->currentView ? d->currentView->hasFocus() : false;
+        d->layout->setCurrentIndex(mode);
+        delete d->currentView;
+        d->currentView = d->createView(mode);
+        d->layout->addWidget(d->currentView);
+        if (focus) {
+            d->currentView->setFocus();
+        }
+
+        QModelIndex index = d->model->index(d->currentPath);
+        d->currentView->setRootIndex(index);
+
+        d->actions[IconMode]->setChecked(mode == IconView);
+        d->actions[ColumnMode]->setChecked(mode == ColumnView);
+        d->actions[TreeMode]->setChecked(mode == TreeView);
+
+        emit viewModeChanged(d->viewMode);
+    }
+}
+
+/*!
+    \fn void FileManagerWidget::viewModeChanged(FileManagerWidget::ViewMode mode)
+    This signal is emmited when FileManagerWidget::viewMode property is changed;
+    \a mode is a new view mode.
+*/
+
+/*!
+    Returns pointer to a FileManager::FileSystemManager assotiated with this
+    widget.
+*/
+FileSystemManager * FileManagerWidget::fileSystemManager() const
+{
+    Q_D(const FileManagerWidget);
+
+    if (!d->fileSystemManager) {
+        const_cast<FileManagerWidgetPrivate*>(d)->setFileSystemManager(d->model->fileSystemManager());
+    }
+
+    return d->fileSystemManager;
+}
+
+/*!
+    Returns pointer to the FileManager::FileManagerHistory. Can be usefule if
+    you need some specific history data (like list of items to display).
+*/
+FileManagerHistory *FileManagerWidget::history() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->history;
+}
+
+/*!
+    Returns pointer to a FileManager::FileSystemModel assotiated with this
+    widget.
+*/
+FileSystemModel * FileManagerWidget::model() const
+{
+    Q_D(const FileManagerWidget);
+
+    return d->model;
+}
+
+/*!
+    Restores widget's \a state. Returns true on success.
+    \sa saveState()
+*/
+bool FileManagerWidget::restoreState(const QByteArray &state)
+{
+    if (state.isEmpty())
+        return false;
+
+    QByteArray tmpState = state;
+    QDataStream s(&tmpState, QIODevice::ReadOnly);
+
+    quint8 tmp;
+    QSize size;
+    s >> tmp;
+    setFlow((Flow)tmp);
+    s >> size;
+    setGridSize(size);
+    s >> size;
+    setIconSize(IconView, size);
+    s >> tmp;
+    setViewMode((FileManagerWidget::ViewMode)tmp);
+    s >> tmp;
+    setSortingColumn((FileManagerWidget::Column)tmp);
+    s >> tmp;
+    setSortingOrder((Qt::SortOrder)tmp);
+    return true;
+}
+
+/*!
+    Stores widget's state to a byte array.
+    \sa restoreState()
+*/
+QByteArray FileManagerWidget::saveState() const
+{
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
+
+    s << (quint8)flow();
+    s << gridSize();
+    s << iconSize(IconView);
+    s << (quint8)viewMode();
+    s << (quint8)sortingColumn();
+    s << (quint8)sortingOrder();
+
+    return state;
+}
+
+/*!
+    Clears current path and history.
+*/
+void FileManagerWidget::clear()
+{
+    Q_D(FileManagerWidget);
+
+    setCurrentPath(QString());
+    d->history->d_func()->items.clear();
+    d->history->d_func()->currentItemIndex = -1;
+}
+
+/*!
+    Creates new folder at the current folder.
+*/
+void FileManagerWidget::newFolder()
+{
+    Q_D(FileManagerWidget);
+    QString dir = currentPath();
+    if (dir == "") {
+//        emit error;
+    } else {
+        QString  folderName = tr("New Folder");
+        QModelIndex index = d->model->mkdir(d->model->index(dir), folderName);
+
+        if (index.isValid())
+            d->currentView->edit(index);
+    }
+}
+
+/*!
+    Opens currently selected paths. For a folders, opens first selected folder,
+    for files, opens each file in standard applications for that file.
+*/
+void FileManagerWidget::open()
+{
+    foreach (const QString path, selectedPaths()) {
+        // TODO: open all folders in windows/tabs
+        QFileInfo info(path);
+        if (info.isDir() && !info.isBundle()) {
+            setCurrentPath(path);
+            return;
+        } else {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        }
+    }
+}
+
+void FileManagerWidget::edit()
+{
+    foreach (const QString path, selectedPaths()) {
+        QFileInfo info(path);
+        if (!info.isDir() || info.isBundle()) {
+            emit editRequested(path);
+        }
+    }
+}
+
+/*!
+    Shows FileManager::FileInfoDialog for each selected path.
+*/
+void FileManagerWidget::showFileInfo()
+{
+    QStringList paths = selectedPaths();
+    if (paths.isEmpty())
+        paths.append(currentPath());
+
+    foreach (const QString &path, paths) {
+        FileInfoDialog *dialog = new FileInfoDialog(this);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->setFileInfo(QFileInfo(path));
+        dialog->show();
+    }
+}
+
+/*!
+    Permanently removes selected paths from filesystem. Also shows warning dialog.
+*/
 void FileManagerWidget::remove()
 {
     if (FileManagerSettings::globalSettings()->warnOnFileRemove()) {
@@ -1097,6 +1370,10 @@ void FileManagerWidget::remove()
     fileSystemManager()->remove(selectedPaths());
 }
 
+/*!
+    Starts editing of the selected path. Editing of multiple paths are not
+    supported.
+*/
 void FileManagerWidget::rename()
 {
     Q_D(FileManagerWidget);
@@ -1109,21 +1386,33 @@ void FileManagerWidget::rename()
     }
 }
 
+/*!
+    Moves selected path to the trash.
+*/
 void FileManagerWidget::moveToTrash()
 {
     fileSystemManager()->moveToTrash(selectedPaths());
 }
 
+/*!
+    Undoes last operation. Remove operation can't be undone.
+*/
 void FileManagerWidget::undo()
 {
     fileSystemManager()->undo();
 }
 
+/*!
+    Redoes next operation.
+*/
 void FileManagerWidget::redo()
 {
     fileSystemManager()->redo();
 }
 
+/*!
+    Copies selected paths to a clipboard.
+*/
 void FileManagerWidget::copy()
 {
     QClipboard * clipboard = QApplication::clipboard();
@@ -1139,6 +1428,9 @@ void FileManagerWidget::copy()
     clipboard->setMimeData(data);
 }
 
+/*!
+    Copies files and folders located at paths in a clipboard to a current folder.
+*/
 void FileManagerWidget::paste()
 {
     Q_D(FileManagerWidget);
@@ -1146,6 +1438,9 @@ void FileManagerWidget::paste()
     d->paste(true);
 }
 
+/*!
+    Moves files and folders located at paths in a clipboard to a current folder.
+*/
 void FileManagerWidget::moveHere()
 {
     Q_D(FileManagerWidget);
@@ -1153,6 +1448,9 @@ void FileManagerWidget::moveHere()
     d->paste(false);
 }
 
+/*!
+    Selects all paths at a current location.
+*/
 void FileManagerWidget::selectAll()
 {
     Q_D(FileManagerWidget);
@@ -1160,16 +1458,25 @@ void FileManagerWidget::selectAll()
     d->currentView->selectAll();
 }
 
+/*!
+    Goes one step back in the history.
+*/
 void FileManagerWidget::back()
 {
     history()->back();
 }
 
+/*!
+    Goes one step forward in the history.
+*/
 void FileManagerWidget::forward()
 {
     history()->forward();
 }
 
+/*!
+    Goes one level up from the current folder.
+*/
 void FileManagerWidget::up()
 {
     Q_D(FileManagerWidget);
@@ -1179,6 +1486,9 @@ void FileManagerWidget::up()
     setCurrentPath(dir.path());
 }
 
+/*!
+    Enables or disables showing of hidden files.
+*/
 void FileManagerWidget::showHiddenFiles(bool show)
 {
     Q_D(FileManagerWidget);
@@ -1190,7 +1500,7 @@ void FileManagerWidget::showHiddenFiles(bool show)
 }
 
 /*!
-  \brief Shows FileManagerWidget's context menu.
+    Shows FileManagerWidget's context menu.
 */
 void FileManagerWidget::showContextMenu(QPoint pos)
 {
@@ -1242,11 +1552,29 @@ void FileManagerWidget::showContextMenu(QPoint pos)
     delete menu;
 }
 
+/*!
+    \fn void FileManagerWidget::openNewTabRequested(const QStringList &paths)
+    This signal is emmited when user triggers OpenInTab action; \a paths is the
+    list of currently selected files and/or folders.
+*/
+
+/*!
+    \fn void FileManagerWidget::openNewWindowRequested(const QStringList &paths)
+    This signal is emmited when user triggers OpenInWindow action; \a paths is the
+    list of currently selected files and/or folders.
+*/
+
+/*!
+    \reimp
+*/
 void FileManagerWidget::contextMenuEvent(QContextMenuEvent *e)
 {
     showContextMenu(e->pos());
 }
 
+/*!
+    \reimp
+*/
 void FileManagerWidget::keyPressEvent(QKeyEvent *event)
 {
     Q_D(FileManagerWidget);
@@ -1265,6 +1593,9 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
     }
 }
 
+/*!
+    \reimp
+*/
 void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
 {
     Q_D(FileManagerWidget);
