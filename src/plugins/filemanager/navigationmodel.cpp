@@ -130,6 +130,15 @@ NavigationModel::StandardLocation pathToLocation(const QString &path)
     return NavigationModel::NoLocation;
 }
 
+/*!
+    \class FileManager::NavigationModel
+    NavigationModel is a class for displaying a tree-like list of devices,
+    standard and user folders.
+*/
+
+/*!
+    Creates NavigationModel with the given \a parent.
+*/
 NavigationModel::NavigationModel(QObject *parent) :
     QAbstractItemModel(parent),
     d_ptr(new NavigationModelPrivate(this))
@@ -176,6 +185,9 @@ NavigationModel::NavigationModel(QObject *parent) :
     }
 }
 
+/*!
+    Destroys NavigationModel.
+*/
 NavigationModel::~NavigationModel()
 {
     Q_D(NavigationModel);
@@ -195,11 +207,17 @@ NavigationModel::~NavigationModel()
     delete d_ptr;
 }
 
+/*!
+    \reimp
+*/
 int NavigationModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return 1;
 }
 
+/*!
+    \reimp
+*/
 QVariant NavigationModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -217,11 +235,17 @@ QVariant NavigationModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+/*!
+    \reimp
+*/
 QStringList NavigationModel::mimeTypes() const
 {
     return QStringList() << "text/uri-list";
 }
 
+/*!
+    \reimp
+*/
 bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                                    int row, int column, const QModelIndex &parent)
 {
@@ -303,6 +327,9 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     return true;
 }
 
+/*!
+    \reimp
+*/
 QMimeData *NavigationModel::mimeData(const QModelIndexList &indexes) const
 {
     Q_D(const NavigationModel);
@@ -320,6 +347,9 @@ QMimeData *NavigationModel::mimeData(const QModelIndexList &indexes) const
     return data;
 }
 
+/*!
+    \reimp
+*/
 Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -340,6 +370,9 @@ Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled;
 }
 
+/*!
+    \reimp
+*/
 QModelIndex NavigationModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_D(const NavigationModel);
@@ -361,6 +394,9 @@ QModelIndex NavigationModel::index(int row, int column, const QModelIndex &paren
         return QModelIndex();
 }
 
+/*!
+    \reimp
+*/
 QModelIndex NavigationModel::parent(const QModelIndex &index) const
 {
     Q_D(const NavigationModel);
@@ -377,6 +413,9 @@ QModelIndex NavigationModel::parent(const QModelIndex &index) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
+/*!
+    \reimp
+*/
 int NavigationModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const NavigationModel);
@@ -391,11 +430,18 @@ int NavigationModel::rowCount(const QModelIndex &parent) const
     return parentItem->childCount();
 }
 
+/*!
+    \reimp
+*/
 Qt::DropActions NavigationModel::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction;
 }
 
+/*!
+    Returns index for the specified \a path or an invalid index, if there's no
+    such path in a model.
+*/
 QModelIndex NavigationModel::index(const QString &path) const
 {
     Q_D(const NavigationModel);
@@ -407,24 +453,31 @@ QModelIndex NavigationModel::index(const QString &path) const
         return createIndex(item->row(), 0, item);
 }
 
+/*!
+    Returns path for the specified \a index or an empty string for an invalid
+    or not leaf index.
+*/
 QString NavigationModel::path(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return "";
+        return QString();
 
     NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
     if (item->type == NavigationModelItem::ChildItem)
         return item->path;
     else
-        return "";
+        return QString();
 }
 
+/*!
+    Adds specified \a path to the list of user and standard paths.
+*/
 void NavigationModel::addFolder(const QString &path)
 {
     Q_D(NavigationModel);
 
     QFileInfo info(path);
-    if (/*!info.isDir() ||*/ !info.exists())
+    if (/* !info.isDir() ||*/ !info.exists())
         return;
 
     QString canonicalPath = info.canonicalFilePath();
@@ -442,6 +495,9 @@ void NavigationModel::addFolder(const QString &path)
     }
 }
 
+/*!
+    Femoves specified \a path from the list of user and standard paths.
+*/
 void NavigationModel::removeFolder(const QString &path)
 {
     Q_D(NavigationModel);
@@ -456,6 +512,9 @@ void NavigationModel::removeFolder(const QString &path)
 
 }
 
+/*!
+    Returns flags specifying standard locations added to the model.
+*/
 NavigationModel::StandardLocations NavigationModel::standardLocations() const
 {
     Q_D(const NavigationModel);
@@ -463,6 +522,9 @@ NavigationModel::StandardLocations NavigationModel::standardLocations() const
     return d->locations;
 }
 
+/*!
+    Adds or removes standard location \a loc, depending on \a on parameter.
+*/
 void NavigationModel::setStandardLocation(StandardLocation loc, bool on)
 {
     QString path = locationToString(loc);
@@ -473,6 +535,9 @@ void NavigationModel::setStandardLocation(StandardLocation loc, bool on)
     emit standardLocationsChanged(standardLocations());
 }
 
+/*!
+    Adds standard locations to the model specified by \a location flags.
+*/
 void NavigationModel::setStandardLocations(StandardLocations locations)
 {
     Q_D(NavigationModel);
@@ -496,6 +561,10 @@ void NavigationModel::setStandardLocations(StandardLocations locations)
     emit standardLocationsChanged(d->locations);
 }
 
+/*!
+    Returns QDriveInfo object for the specified \a index. Works only for child
+    indexes of a Drives branch.
+*/
 QDriveInfo NavigationModel::driveInfo(const QModelIndex& index) const
 {
     NavigationModelItem *item = static_cast<NavigationModelItem*>(index.internalPointer());
