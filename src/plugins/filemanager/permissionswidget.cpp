@@ -3,6 +3,17 @@
 
 #include <QtGui/QRegExpValidator>
 
+using namespace FileManager;
+
+/*!
+    \class FileManager::PermissionsWidget
+
+    PermissionsWidget is a simple widget for editing file permissions.
+*/
+
+/*!
+    Creates PermissionsWidget with the given \a parent.
+*/
 PermissionsWidget::PermissionsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PermissionsWidget)
@@ -28,11 +39,18 @@ PermissionsWidget::PermissionsWidget(QWidget *parent) :
     connect(ui->numericPermissions, SIGNAL(returnPressed()), SLOT(numericChanged()));
 }
 
+/*!
+    Destroys PermissionsWidget.
+*/
 PermissionsWidget::~PermissionsWidget()
 {
     delete ui;
 }
 
+/*!
+    \property PermissionsWidget::fileInfo
+    This property holds current file or folder displayed in the PermissionsWidget.
+*/
 QFileInfo PermissionsWidget::fileInfo() const
 {
     return m_fileInfo;
@@ -46,6 +64,7 @@ void PermissionsWidget::setFileInfo(const QFileInfo &info)
     m_fileInfo = info;
 
     updateWidget();
+    emit fileInfoChanged(info);
 }
 
 static uint unixPermissions(QFile::Permissions permissions)
