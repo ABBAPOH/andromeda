@@ -14,15 +14,15 @@ class NavigationPanelSettings
 public:
     static NavigationPanelSettings *globalSettings();
 
-    void addModel(NavigationModel *model);
-    void removeModel(NavigationModel *model);
-
     NavigationModel::StandardLocations standardLocations() const;
     void setStandardLocations(NavigationModel::StandardLocations locations);
 
 protected:
     NavigationPanelSettings();
     ~NavigationPanelSettings();
+
+    void addModel(NavigationModel *model);
+    void removeModel(NavigationModel *model);
 
 protected:
     NavigationPanelSettingsPrivate *d_ptr;
