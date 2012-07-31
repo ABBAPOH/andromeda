@@ -101,6 +101,19 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 #endif
 }
 
+/*!
+    \class FileManager::NavigationPanel
+
+    NavigationPanel is a widget for representing system devices and folders in
+    a tree-like structure.
+
+    This widget simply displays NavigationModel and provides some convenience
+    methods.
+*/
+
+/*!
+    Creates NavigationPanel with the given \a parent.
+*/
 NavigationPanel::NavigationPanel(QWidget *parent) :
     QWidget(parent),
     d_ptr(new NavigationPanelPrivate)
@@ -138,24 +151,41 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     setMinimumSize(100, 200);
 }
 
+/*!
+    Destroys NavigationPanel.
+*/
 NavigationPanel::~NavigationPanel()
 {
     delete d_ptr;
 }
 
+/*!
+    Adds new \a path to the model. Path is appended to the end of list.
+*/
 void NavigationPanel::addFolder(const QString & path)
 {
     Q_D(NavigationPanel);
 
-    d->model->addFolder(path);
+    if (d->model)
+        d->model->addFolder(path);
 }
 
+/*!
+    Removes new \a path from the model.
+*/
 void NavigationPanel::removeFolder(const QString &path)
 {
     Q_D(NavigationPanel);
 
-    d->model->removeFolder(path);
+    if (d->model)
+        d->model->removeFolder(path);
 }
+
+/*!
+    \property NavigationPanel::currentPath
+
+    This property holds current selected path.
+*/
 
 QString NavigationPanel::currentPath() const
 {
@@ -181,6 +211,9 @@ void NavigationPanel::setModel(NavigationModel *model)
     }
 }
 
+/*!
+    \reimp
+*/
 void NavigationPanel::resizeEvent(QResizeEvent * event)
 {
     Q_D(NavigationPanel);
@@ -189,6 +222,22 @@ void NavigationPanel::resizeEvent(QResizeEvent * event)
     QWidget::resizeEvent(event);
 }
 
+/*!
+    \fn void NavigationPanel::currentPathChanged(const QString & path)
+
+    This signal is emitted when NavigationPanel::currentPath property is changed.
+*/
+
+/*!
+    \fn void triggered(const QString & path)
+
+    This signal is emitted when user requests to open file or folder by
+    clicking on it or toggling action in a popup menu.
+*/
+
+/*!
+    \internal
+*/
 void NavigationPanel::onClick(const QModelIndex &index)
 {
     Q_D(NavigationPanel);
@@ -204,6 +253,9 @@ void NavigationPanel::onClick(const QModelIndex &index)
     }
 }
 
+/*!
+    \internal
+*/
 void NavigationPanel::onCustomContextMenuRequested(QPoint p)
 {
     Q_D(NavigationPanel);
@@ -217,6 +269,9 @@ void NavigationPanel::onCustomContextMenuRequested(QPoint p)
     d->contextMenu->exec(mapToGlobal(p));
 }
 
+/*!
+    \internal
+*/
 void NavigationPanel::onOpenTriggered()
 {
     Q_D(NavigationPanel);
@@ -224,12 +279,12 @@ void NavigationPanel::onOpenTriggered()
     emit triggered(d->model->path(d->selectedRow()));
 }
 
+/*!
+    \internal
+*/
 void NavigationPanel::onRemoveTriggered()
 {
     Q_D(NavigationPanel);
 
     d->model->removeFolder(d->model->path(d->selectedRow()));
 }
-
-
-
