@@ -12,6 +12,17 @@
 
 using namespace FileManager;
 
+/*!
+    \class FileManager::GlobalSettingsWidget
+
+    GlobalSettingsWidget is a widget for representing global settings for file
+    manager. That includes settings for enabling or disabling confirmations
+    when removing files and changing file extensions.
+*/
+
+/*!
+    Creates GlobalSettingsWidget with the given \a parent.
+*/
 GlobalSettingsWidget::GlobalSettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GlobalSettingsWidget),
@@ -29,6 +40,9 @@ GlobalSettingsWidget::GlobalSettingsWidget(QWidget *parent) :
     connect(ui->extensionChangeCheckBox, SIGNAL(toggled(bool)), this, SLOT(onExtensionChangeToggled(bool)));
 }
 
+/*!
+    Destroys GlobalSettingsWidget.
+*/
 GlobalSettingsWidget::~GlobalSettingsWidget()
 {
     delete ui;
@@ -44,13 +58,26 @@ void GlobalSettingsWidget::onExtensionChangeToggled(bool state)
 {
     m_settings->setValue(QLatin1String("warnOnExtensionChange"), state);
     m_fileManagerSettings->setWarnOnExtensionChange(state);
-} 
+}
 
+/*!
+    \class FileManager::GlobalSettingsPage
+
+    GlobalSettingsPage is an implementation of the GuiSystem::SettingsPage
+    interface for the GlobalSettingsWidget.
+*/
+
+/*!
+    Creates GlobalSettingsPage with the given \a parent.
+*/
 GlobalSettingsPage::GlobalSettingsPage(QObject *parent) :
     SettingsPage("Global", "FileManager", parent)
 {
 }
 
+/*!
+    \reimp
+*/
 QString GlobalSettingsPage::name() const
 {
     return tr("Global");
@@ -61,17 +88,26 @@ QString GlobalSettingsPage::categoryName() const
     return tr("File manager");
 }
 
+/*!
+    \reimp
+*/
 QIcon GlobalSettingsPage::icon() const
 {
     return QFileIconProvider().icon(QFileIconProvider::Folder);
 }
 
-QWidget *GlobalSettingsPage::createPage(QWidget *parent)
-{
-    return new GlobalSettingsWidget(parent);
-}
-
+/*!
+    \reimp
+*/
 QIcon GlobalSettingsPage::categoryIcon() const
 {
     return icon();
+}
+
+/*!
+    \reimp
+*/
+QWidget *GlobalSettingsPage::createPage(QWidget *parent)
+{
+    return new GlobalSettingsWidget(parent);
 }
