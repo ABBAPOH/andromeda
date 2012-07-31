@@ -30,8 +30,6 @@ private slots:
     void onExtensionChangeToggled(bool);
 
 private:
-
-private:
     Ui::GlobalSettingsWidget *ui;
 
     QSettings *m_settings;
