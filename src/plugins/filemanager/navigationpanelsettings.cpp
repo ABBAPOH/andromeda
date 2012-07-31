@@ -14,6 +14,16 @@ public:
 
 using namespace FileManager;
 
+/*!
+    \class FileManager::NavigationPanelSettings
+
+    NavigationPanelSettings is a class for changing global settings for all
+    NavigationModels.
+*/
+
+/*!
+    Returns pointer to the static NavigationPanelSettings instance.
+*/
 NavigationPanelSettings * NavigationPanelSettings::globalSettings()
 {
     static NavigationPanelSettings *instance = 0;
@@ -22,6 +32,38 @@ NavigationPanelSettings * NavigationPanelSettings::globalSettings()
     return instance;
 }
 
+/*!
+    Returns flags that specify standard locations added to a model.
+*/
+NavigationModel::StandardLocations NavigationPanelSettings::standardLocations() const
+{
+    Q_D(const NavigationPanelSettings);
+
+    return d->locations;
+}
+
+/*!
+    Set flags that specify standard locations added to a model.
+*/
+void NavigationPanelSettings::setStandardLocations(NavigationModel::StandardLocations locations)
+{
+    Q_D(NavigationPanelSettings);
+
+    if (d->locations == locations)
+        return;
+
+    d->locations = locations;
+
+    foreach (NavigationModel *model, d->models) {
+        model->setStandardLocations(locations);
+    }
+}
+
+/*!
+    \internal
+
+    Creates NavigationPanelSettings.
+*/
 NavigationPanelSettings::NavigationPanelSettings() :
     d_ptr(new NavigationPanelSettingsPrivate)
 {
@@ -33,6 +75,11 @@ NavigationPanelSettings::NavigationPanelSettings() :
                                                       NavigationModel::ApplicationsLocation);
 }
 
+/*!
+    \internal
+
+    Destroys NavigationPanelSettings.
+*/
 NavigationPanelSettings::~NavigationPanelSettings()
 {
     delete d_ptr;
@@ -51,25 +98,4 @@ void NavigationPanelSettings::removeModel(NavigationModel *model)
     Q_D(NavigationPanelSettings);
 
     d->models.removeOne(model);
-}
-
-NavigationModel::StandardLocations NavigationPanelSettings::standardLocations() const
-{
-    Q_D(const NavigationPanelSettings);
-
-    return d->locations;
-}
-
-void NavigationPanelSettings::setStandardLocations(NavigationModel::StandardLocations locations)
-{
-    Q_D(NavigationPanelSettings);
-
-    if (d->locations == locations)
-        return;
-
-    d->locations = locations;
-
-    foreach (NavigationModel *model, d->models) {
-        model->setStandardLocations(locations);
-    }
 }
