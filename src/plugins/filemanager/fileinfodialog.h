@@ -17,6 +17,7 @@ class FileInfoDialogPrivate;
 class FileInfoDialog : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QFileInfo fileInfo READ fileInfo WRITE setFileInfo NOTIFY fileInfoChanged)
 
 public:
     explicit FileInfoDialog(QWidget *parent = 0);
@@ -24,6 +25,9 @@ public:
 
     QFileInfo fileInfo() const;
     void setFileInfo(const QFileInfo &info);
+
+signals:
+    void fileInfoChanged(const QFileInfo &info);
 
 private slots:
     void onActivatedUser(int);
