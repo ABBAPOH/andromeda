@@ -305,6 +305,15 @@ void FileInfoDialogPrivate::retranslateUi()
     widget->setText(2, FileInfoDialog::tr("Permissions"));
 }
 
+/*!
+    \class FileManager::FileInfoDialog
+
+    FileInfoDialog is a widget for displaying file info.
+*/
+
+/*!
+    Creates FileInfoDialog with the given \a parent.
+*/
 FileInfoDialog::FileInfoDialog(QWidget *parent) :
     QWidget(parent),
     d(new FileInfoDialogPrivate(this))
@@ -319,6 +328,9 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
     setMaximumWidth(400);
 }
 
+/*!
+    Destroys FileInfoDialog.
+*/
 FileInfoDialog::~FileInfoDialog()
 {
     if (d->directoryDetails) {
@@ -331,6 +343,10 @@ FileInfoDialog::~FileInfoDialog()
     delete d;
 }
 
+/*!
+    \property FileInfoDialog::fileInfo
+    This property hold QFileInfo currently displayed in the FileInfoDialog.
+*/
 QFileInfo FileInfoDialog::fileInfo() const
 {
     return d->fileInfo;
@@ -338,6 +354,9 @@ QFileInfo FileInfoDialog::fileInfo() const
 
 void FileInfoDialog::setFileInfo(const QFileInfo &info)
 {
+    if (d->fileInfo == fileInfo())
+        return;
+
     d->fileInfo = info;
     d->driveInfo = QDriveInfo(d->fileInfo.absoluteFilePath());
 
@@ -353,7 +372,15 @@ void FileInfoDialog::setFileInfo(const QFileInfo &info)
     }
 
     d->updateUi();
+
+    emit fileInfoChanged();
 }
+
+/*!
+    \fn void FileInfoDialog::fileInfoChanged(const QFileInfo &info)
+
+    This signal is emitted when FileInfoDialog::fileInfo property is changed.
+*/
 
 void FileInfoDialog::onActivatedUser(int i)
 {
