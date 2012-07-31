@@ -14,6 +14,18 @@
 
 using namespace FileManager;
 
+/*!
+    \class FileManager::ViewModesSettingsWidget
+
+    ViewModesSettingsWidget is a widget for representing settings for file
+    manager view modes. That includes standard location settings, icon and grid
+    size settings, flow settings for icon mode and setting that holds wheter
+    items are expandable in a tree view mode, or not.
+*/
+
+/*!
+    Creates ViewModesSettingsWidget with the given \a parent.
+*/
 ViewModesSettingsWidget::ViewModesSettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ViewModesSettingsWidget),
@@ -32,6 +44,9 @@ ViewModesSettingsWidget::ViewModesSettingsWidget(QWidget *parent) :
     setupTreeView();
 }
 
+/*!
+    Destroys ViewModesSettingsWidget.
+*/
 ViewModesSettingsWidget::~ViewModesSettingsWidget()
 {
     delete ui;
@@ -199,33 +214,57 @@ void ViewModesSettingsWidget::setupTreeView()
     connect(ui->itemsExpandable, SIGNAL(toggled(bool)), SLOT(onItemsExpandableChecked(bool)));
 }
 
+/*!
+    \class FileManager::ViewModesSettingsPage
 
+    ViewModesSettingsPage is an implementation of the GuiSystem::SettingsPage
+    interface for the ViewModesSettingsWidget.
+*/
+
+/*!
+    Creates ViewModesSettingsPage with the given \a parent.
+*/
 ViewModesSettingsPage::ViewModesSettingsPage(QObject *parent) :
     SettingsPage("View Modes", "FileManager", parent)
 {
 }
 
+/*!
+    \reimp
+*/
 QString ViewModesSettingsPage::name() const
 {
     return tr("View Modes");
 }
 
+/*!
+    \reimp
+*/
 QString ViewModesSettingsPage::categoryName() const
 {
     return tr("File manager");
 }
 
+/*!
+    \reimp
+*/
 QIcon ViewModesSettingsPage::icon() const
 {
     return QFileIconProvider().icon(QFileIconProvider::Folder);
 }
 
-QWidget *ViewModesSettingsPage::createPage(QWidget *parent)
-{
-    return new ViewModesSettingsWidget(parent);
-}
-
+/*!
+    \reimp
+*/
 QIcon ViewModesSettingsPage::categoryIcon() const
 {
     return icon();
+}
+
+/*!
+    \reimp
+*/
+QWidget *ViewModesSettingsPage::createPage(QWidget *parent)
+{
+    return new ViewModesSettingsWidget(parent);
 }
