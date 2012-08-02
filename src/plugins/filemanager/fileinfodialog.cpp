@@ -373,7 +373,7 @@ void FileInfoDialog::setFileInfo(const QFileInfo &info)
 
     d->updateUi();
 
-    emit fileInfoChanged();
+    emit fileInfoChanged(d->fileInfo);
 }
 
 /*!
