@@ -216,10 +216,11 @@ void WindowsMenu::toggleFullscreen()
         return;
 
     QWidget *w = d->widgets[d->currentIndex];
-    if (w->windowState() & Qt::WindowFullScreen)
-        w->showNormal();
+    Qt::WindowStates state = w->windowState();
+    if (state & Qt::WindowFullScreen)
+        w->setWindowState(state & ~Qt::WindowFullScreen);
     else
-        w->showFullScreen();
+        w->setWindowState(state | Qt::WindowFullScreen);
 }
 
 void WindowsMenu::nextWindow()
