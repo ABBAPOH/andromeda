@@ -135,7 +135,7 @@ WindowsMenu::WindowsMenu(QWidget *parent) :
     connect(d->minimizeWindowAction, SIGNAL(triggered()), SLOT(minimizeWindow()));
 
     d->fullscreenAction = new QAction(this);
-    d->fullscreenAction->setShortcut(QKeySequence("Ctrl+F"));
+    d->fullscreenAction->setShortcut(QKeySequence("Ctrl+Shift+F"));
     addAction(d->fullscreenAction);
     connect(d->fullscreenAction, SIGNAL(triggered()), SLOT(toggleFullscreen()));
 
