@@ -122,7 +122,8 @@ QByteArray FileManagerEditorHistory::store() const
     s << m_currentItemIndex;
     s << m_indexes;
     s << *(m_widget->leftWidget()->history());
-    s << *(m_widget->rightWidget()->history());
+    if (m_widget->rightWidget())
+        s << *(m_widget->rightWidget()->history());
 
     return history;
 }
@@ -135,7 +136,8 @@ void FileManagerEditorHistory::restore(const QByteArray &arr)
     s >> m_currentItemIndex;
     s >> m_indexes;
     s >> *(m_widget->leftWidget()->history());
-    s >> *(m_widget->rightWidget()->history());
+    if (m_widget->rightWidget())
+        s >> *(m_widget->rightWidget()->history());
 
     emit currentItemIndexChanged(m_currentItemIndex);
 }
