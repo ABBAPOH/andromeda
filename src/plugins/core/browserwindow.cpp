@@ -85,7 +85,7 @@ void BrowserWindowPrivate::setupToolBar()
 
     q->addToolBar(toolBar);
     // TODO: fix Qt bugs
-//    q->setUnifiedTitleAndToolBarOnMac(true);
+    q->setUnifiedTitleAndToolBarOnMac(true);
 }
 
 void BrowserWindowPrivate::setupAlternateToolBar()
