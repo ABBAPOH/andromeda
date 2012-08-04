@@ -41,7 +41,8 @@ void WindowsMenuPrivate::addWindow(QWidget *w)
     if (flags.testFlag(Qt::ToolTip) ||
             flags.testFlag(Qt::Desktop) ||
             flags.testFlag(Qt::Popup) ||
-            flags.testFlag(Qt::Drawer))
+            flags.testFlag(Qt::Drawer) ||
+            flags.testFlag(Qt::FramelessWindowHint)) // it's likely not an normal window (like tray icon), don't add it.
         return;
 
     if (widgets.contains(w))
