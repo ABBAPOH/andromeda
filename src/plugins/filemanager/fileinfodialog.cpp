@@ -168,7 +168,7 @@ void FileInfoDialogPrivate::setupUi()
     widget = new OutlineWidget(q);
     layout->addWidget(widget);
 
-    widget_1 = new QWidget;
+    widget_1 = new QWidget(widget);
     widget_1->setObjectName(QLatin1String("widget_1"));
     widget->addWidget(widget_1, FileInfoDialog::tr("General Info"));
 
@@ -233,7 +233,7 @@ void FileInfoDialogPrivate::setupUi()
     accecced->setTextInteractionFlags(Qt::TextBrowserInteraction);
     layout_1->addRow(acceccedLabel, accecced);
 
-    widget_2 = new QWidget;
+    widget_2 = new QWidget(widget);
     widget_2->setObjectName(QLatin1String("widget_2"));
     widget->addWidget(widget_2, FileInfoDialog::tr("Drive Info"));
 

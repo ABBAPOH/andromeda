@@ -32,7 +32,7 @@ public:
         // We need this spacer to have space in bottom of list
         layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 
-        widget = new QWidget;
+        widget = new QWidget(dialog);
         widget->setLayout(layout);
 
         scrollArea = new QScrollArea(dialog);
