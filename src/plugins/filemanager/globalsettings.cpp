@@ -18,6 +18,8 @@ using namespace FileManager;
     GlobalSettingsWidget is a widget for representing global settings for file
     manager. That includes settings for enabling or disabling confirmations
     when removing files and changing file extensions.
+
+    \image html filemanager_globalsettings.png
 */
 
 /*!

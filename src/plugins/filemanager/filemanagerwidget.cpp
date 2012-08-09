@@ -635,6 +635,8 @@ static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QD
 
     Also it provides actions for basic file manipulation - creating new folders,
     removing files, showing file info.
+
+    \image html filemanagerwidget.png
 */
 
 /*!

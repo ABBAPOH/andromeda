@@ -123,6 +123,8 @@ void FileExplorerWidgetPrivate::retranslateUi()
 
     This class consists of a file browser (which can be in a single or dual
     pane mode) and a navigation panel.
+
+    \image html fileexplorerwidget.png
 */
 
 /*!

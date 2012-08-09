@@ -21,6 +21,8 @@ using namespace FileManager;
     manager view modes. That includes standard location settings, icon and grid
     size settings, flow settings for icon mode and setting that holds wheter
     items are expandable in a tree view mode, or not.
+
+    \image html viewmodesettings.png
 */
 
 /*!

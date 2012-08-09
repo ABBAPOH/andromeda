@@ -3,6 +3,11 @@
 
 #include "settingsmodel.h"
 
+/*!
+    \class SettingsWidget
+
+    \image html settingswidget.png
+*/
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingsWidget),

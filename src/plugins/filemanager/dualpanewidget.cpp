@@ -198,6 +198,12 @@ void DualPaneWidgetPrivate::onSelectionChanged()
 //{
 //}
 
+/*!
+    \class FileManager::DualPaneWidget
+
+    \image html dualpanewidget.png
+*/
+
 DualPaneWidget::DualPaneWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new DualPaneWidgetPrivate(this))

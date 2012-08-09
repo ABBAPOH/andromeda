@@ -10,6 +10,8 @@ using namespace ExtensionSystem;
 /*!
     \class ExtensionSystem::FullPluginView
     \brief FullPluginView provides detalied view of a single plugin.
+
+    \image html fullpluginview.png
 */
 
 /*!

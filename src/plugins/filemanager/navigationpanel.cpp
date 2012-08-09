@@ -109,6 +109,8 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     This widget simply displays NavigationModel and provides some convenience
     methods.
+
+    \image html navigationpanel.png
 */
 
 /*!

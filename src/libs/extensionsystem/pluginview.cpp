@@ -13,6 +13,8 @@ using namespace ExtensionSystem;
 
     This class shows list of available plugins in a tree structure and allows
     to view specified plugin in a detailed form using ExtensionSystem::FullPluginView.
+
+    \image html pluginview.png
 */
 
 /*!
