@@ -91,6 +91,11 @@ void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
     edit->setKeySequence(index.data().toString());
 }
 
+/*!
+    \class GuiSystem::CommandsSettingsWidget
+
+    \image html commandsettingswidget.png
+*/
 CommandsSettingsWidget::CommandsSettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CommandsSettingsWidget),
