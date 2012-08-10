@@ -14,7 +14,9 @@ Worker::Worker(QObject *parent) :
 void Worker::getThumbnails(const QStringList &paths)
 {
     foreach(const QString &path, paths) {
-        emit done(path, getThumb(path));
+        QImage image = getThumb(path);
+        if (!image.isNull())
+            emit done(path, image);
     }
 }
 
@@ -27,6 +29,9 @@ QImage Worker::getThumb(const QString &path)
     QImageReader reader(path);
     int w = reader.size().width();
     int h = reader.size().height();
+
+    if (w == 0 || h == 0)
+        return QImage();
 
     if (w > h) {
         int newHeight = h * imageExtent / w;
