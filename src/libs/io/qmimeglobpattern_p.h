@@ -120,6 +120,7 @@ public:
 };
 
 /*!
+    \internal
     Result of the globs parsing, as data structures ready for efficient MIME type matching.
     This contains:
     1) a map of fast regular patterns (e.g. *.txt is stored as "txt" in a qhash's key)
