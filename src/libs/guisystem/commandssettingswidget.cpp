@@ -94,7 +94,17 @@ void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
 /*!
     \class GuiSystem::CommandsSettingsWidget
 
+    \brief CommandsSettingsWidget is a widget for displaying and editing available Commands.
+
+    This widget displays CommandsModel and allows user to change/reset and
+    import/export shortcuts. Also this widget provides filter line edit to
+    simplify searching for a shortcut.
+
     \image html commandsettingswidget.png
+*/
+
+/*!
+    Creates CommandsSettingsWidget with the given \a parent.
 */
 CommandsSettingsWidget::CommandsSettingsWidget(QWidget *parent) :
     QWidget(parent),
@@ -125,6 +135,9 @@ CommandsSettingsWidget::CommandsSettingsWidget(QWidget *parent) :
     connect(ui->exportButton, SIGNAL(clicked()), SLOT(exportShortcuts()));
 }
 
+/*!
+    Destroys CommandsSettingsWidget.
+*/
 CommandsSettingsWidget::~CommandsSettingsWidget()
 {
     delete ui;
