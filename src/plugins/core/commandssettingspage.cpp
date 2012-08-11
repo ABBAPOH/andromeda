@@ -3,6 +3,7 @@
 #include <guisystem/commandssettingswidget.h>
 
 using namespace GuiSystem;
+using namespace Core;
 
 CommandsSettingsPage::CommandsSettingsPage(QObject *parent) :
     SettingsPage(QLatin1String("CommandSettings"), QLatin1String(" General"), parent)

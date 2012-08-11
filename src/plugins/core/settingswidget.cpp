@@ -3,8 +3,10 @@
 
 #include "settingsmodel.h"
 
+using namespace Core;
+
 /*!
-    \class SettingsWidget
+    \class Core::SettingsWidget
 
     \image html settingswidget.png
 */

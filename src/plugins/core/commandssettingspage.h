@@ -3,6 +3,8 @@
 
 #include <guisystem/settingspage.h>
 
+namespace Core {
+
 class CommandsSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
@@ -18,5 +20,7 @@ public:
 
     QWidget *createPage(QWidget *parent);
 };
+
+} // namespace Core
 
 #endif // COMMANDSSETTINGSPAGE_H
