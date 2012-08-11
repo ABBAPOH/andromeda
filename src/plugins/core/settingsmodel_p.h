@@ -5,6 +5,8 @@
 
 #include <QtGui/QIcon>
 
+namespace Core {
+
 struct SettingsModelItem
 {
     enum Type { Root = 0, Folder, Leaf };
@@ -84,5 +86,7 @@ public:
     QIcon keyIcon;
     QStringList keysToRemove;
 };
+
+} // namespace Core
 
 #endif // SETTINGSMODEL_P_H

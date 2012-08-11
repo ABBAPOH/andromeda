@@ -6,6 +6,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QStyle>
 
+using namespace Core;
+
 QModelIndex SettingsModelPrivate::index(SettingsModelItem *item) const
 {
     return q_func()->createIndex(item->row(), 0, item);

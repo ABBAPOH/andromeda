@@ -5,6 +5,8 @@
 
 class QSettings;
 
+namespace Core {
+
 class SettingsModelPrivate;
 class SettingsModel : public QAbstractItemModel
 {
@@ -49,5 +51,7 @@ public slots:
 protected:
     SettingsModelPrivate *d_ptr;
 };
+
+} // namespace Core
 
 #endif // SETTINGSSMODEL_H

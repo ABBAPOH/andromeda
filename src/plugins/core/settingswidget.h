@@ -7,8 +7,11 @@ namespace Ui {
 class SettingsWidget;
 }
 
-class SettingsModel;
 class QModelIndex;
+
+namespace Core {
+
+class SettingsModel;
 
 class SettingsWidget : public QWidget
 {
@@ -34,5 +37,7 @@ private:
     SettingsModel *m_model;
     QAction *m_closeAction;
 };
+
+} // namespace Core
 
 #endif // SETTINGSWIDGET_H
