@@ -354,7 +354,7 @@ QFileInfo FileInfoDialog::fileInfo() const
 
 void FileInfoDialog::setFileInfo(const QFileInfo &info)
 {
-    if (d->fileInfo == fileInfo())
+    if (d->fileInfo == info)
         return;
 
     d->fileInfo = info;
