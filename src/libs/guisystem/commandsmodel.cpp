@@ -69,6 +69,18 @@ void CommandsModelPrivate::build()
     q->endResetModel();
 }
 
+/*!
+    \class GuiSystem::CommandsModel
+
+    \brief CommandsModel is a model used to display available Commands.
+
+    CommandsModel shows available Commands as tree, grouping Commands by their
+    container. Also this model allows to change Commands' shortcuts.
+*/
+
+/*!
+    Creates CommandsModel with the given \a parent.
+*/
 CommandsModel::CommandsModel(QObject *parent) :
     QAbstractItemModel(parent),
     d_ptr(new CommandsModelPrivate(this))
@@ -82,17 +94,26 @@ CommandsModel::CommandsModel(QObject *parent) :
     d->build();
 }
 
+/*!
+    Destroys CommandsModel.
+*/
 CommandsModel::~CommandsModel()
 {
   delete d_ptr->rootItem;
   delete d_ptr;
 }
 
+/*!
+    \reimp
+*/
 int CommandsModel::columnCount(const QModelIndex &parent) const
 {
     return 2;
 }
 
+/*!
+    \reimp
+*/
 QVariant CommandsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -136,6 +157,9 @@ QVariant CommandsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+/*!
+    \reimp
+*/
 Qt::ItemFlags CommandsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -153,12 +177,18 @@ Qt::ItemFlags CommandsModel::flags(const QModelIndex &index) const
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 
+/*!
+    \reimp
+*/
 bool CommandsModel::hasChildren(const QModelIndex &parent) const
 {
     CommandsModelItem::Type type = d_func()->item(parent)->type();
     return type == CommandsModelItem::Folder || type == CommandsModelItem::Root;
 }
 
+/*!
+    \reimp
+*/
 QVariant CommandsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -170,6 +200,9 @@ QVariant CommandsModel::headerData(int section, Qt::Orientation orientation, int
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+/*!
+    \reimp
+*/
 QModelIndex CommandsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -183,6 +216,9 @@ QModelIndex CommandsModel::index(int row, int column, const QModelIndex &parent)
     return QModelIndex();
 }
 
+/*!
+    \reimp
+*/
 QModelIndex CommandsModel::parent(const QModelIndex &index) const
 {
     Q_D(const CommandsModel);
@@ -199,12 +235,17 @@ QModelIndex CommandsModel::parent(const QModelIndex &index) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
+/*!
+    \reimp
+*/
 int CommandsModel::rowCount(const QModelIndex &parent) const
 {
     return d_func()->item(parent)->childCount();
 }
 
-#include <QDebug>
+/*!
+    \reimp
+*/
 bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_D(CommandsModel);
@@ -239,6 +280,9 @@ bool CommandsModel::setData(const QModelIndex &index, const QVariant &value, int
     return true;
 }
 
+/*!
+    Returns true if Command's shortcut differs from the default one.
+*/
 bool CommandsModel::isModified(const QModelIndex &index) const
 {
     Q_D(const CommandsModel);
@@ -250,6 +294,9 @@ bool CommandsModel::isModified(const QModelIndex &index) const
     return item->cmd->shortcut() != item->cmd->defaultShortcut();
 }
 
+/*!
+    Resets Command's shortcut to the default one.
+*/
 void CommandsModel::resetShortcut(const QModelIndex &index)
 {
     Q_D(CommandsModel);
@@ -275,11 +322,17 @@ void CommandsModel::resetShortcut(const QModelIndex &index)
     }
 }
 
+/*!
+    Exports all shortcuts to a Keyboard mappings scheme (*.kms) file.
+*/
 bool CommandsModel::exportShortcuts(QIODevice *device) const
 {
     return ActionManager::instance()->exportShortcuts(device);
 }
 
+/*!
+    Imports all shortcuts from a Keyboard mappings scheme (*.kms) file.
+*/
 bool CommandsModel::importShortcuts(QIODevice *device)
 {
     bool ok = ActionManager::instance()->importShortcuts(device);
