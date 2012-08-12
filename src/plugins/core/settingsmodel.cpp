@@ -148,6 +148,27 @@ void SettingsModelPrivate::submit(SettingsModelItem *item)
     }
 }
 
+/*!
+    \class Core::SettingsModel
+
+    \brief SettingsModel provides an item model for displaying application
+    settings.
+*/
+
+/*!
+    \enum Core::SettingsModel::EditStrategy
+    \brief This enum describes how data is applied from model to the settings.
+
+     \var Core::SettingsModel::EditStrategy Core::SettingsModel::OnFieldChange
+     Value is applied immidiately to the settings in setData() method.
+
+     \var Core::SettingsModel::EditStrategy Core::SettingsModel::OnManualSubmit
+     Values are cached in the model and only applied to the settings in submitAll().
+*/
+
+/*!
+    Creates SettingsModel with the given \a parent.
+*/
 SettingsModel::SettingsModel(QObject *parent) :
     QAbstractItemModel(parent),
     d_ptr(new SettingsModelPrivate(this))
@@ -162,6 +183,9 @@ SettingsModel::SettingsModel(QObject *parent) :
     d->keyIcon.addPixmap(qApp->style()->standardPixmap(QStyle::SP_FileIcon));
 }
 
+/*!
+    Destroys SettingsModel.
+*/
 SettingsModel::~SettingsModel()
 {
     submitAll();
@@ -170,11 +194,17 @@ SettingsModel::~SettingsModel()
     delete d_ptr;
 }
 
+/*!
+    \reimp
+*/
 int SettingsModel::columnCount(const QModelIndex &parent) const
 {
     return 3;
 }
 
+/*!
+    \reimp
+*/
 QVariant SettingsModel::data(const QModelIndex &index, int role) const
 {
     Q_D(const SettingsModel);
@@ -204,6 +234,9 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+/*!
+    \reimp
+*/
 Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -222,12 +255,18 @@ Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
     return flags;
 }
 
+/*!
+    \reimp
+*/
 bool SettingsModel::hasChildren(const QModelIndex &parent) const
 {
     SettingsModelItem::Type type = d_func()->item(parent)->type();
     return type == SettingsModelItem::Folder || type == SettingsModelItem::Root;
 }
 
+/*!
+    \reimp
+*/
 QVariant SettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -240,6 +279,9 @@ QVariant SettingsModel::headerData(int section, Qt::Orientation orientation, int
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+/*!
+    \reimp
+*/
 QModelIndex SettingsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -253,6 +295,9 @@ QModelIndex SettingsModel::index(int row, int column, const QModelIndex &parent)
     return QModelIndex();
 }
 
+/*!
+    \reimp
+*/
 QModelIndex SettingsModel::parent(const QModelIndex &index) const
 {
     Q_D(const SettingsModel);
@@ -269,6 +314,9 @@ QModelIndex SettingsModel::parent(const QModelIndex &index) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
+/*!
+    \reimp
+*/
 bool SettingsModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Q_D(SettingsModel);
@@ -298,11 +346,17 @@ bool SettingsModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
+/*!
+    \reimp
+*/
 int SettingsModel::rowCount(const QModelIndex &parent) const
 {
     return d_func()->item(parent)->childCount();
 }
 
+/*!
+    \reimp
+*/
 bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_D(SettingsModel);
@@ -330,11 +384,17 @@ bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int
     return true;
 }
 
+/*!
+    Returns currently set QSettings object. By default, no settings is set.
+*/
 QSettings *SettingsModel::settings() const
 {
     return d_func()->settings;
 }
 
+/*!
+    Sets current QSettings object and rebuilds model.
+*/
 void SettingsModel::setSettings(QSettings *settings)
 {
     Q_D(SettingsModel);
@@ -347,6 +407,10 @@ void SettingsModel::setSettings(QSettings *settings)
     d->rebuild();
 }
 
+/*!
+    \property SettingsModel::editStrategy
+    This property holds current EditStrategy.
+*/
 SettingsModel::EditStrategy SettingsModel::editStrategy() const
 {
     return d_func()->editStrategy;
@@ -362,6 +426,11 @@ void SettingsModel::setEditStrategy(SettingsModel::EditStrategy strategy)
     d->editStrategy = strategy;
 }
 
+/*!
+    \property SettingsModel::readOnly
+    This property holds whether model is read only or not. Model data can't be
+    changed if this property is true.
+*/
 bool SettingsModel::readOnly() const
 {
     return d_func()->readOnly;
@@ -372,6 +441,9 @@ void SettingsModel::setReadOnly(bool readOnly)
     d_func()->readOnly = readOnly;
 }
 
+/*!
+    Clears current settings.
+*/
 void SettingsModel::clear()
 {
     Q_D(SettingsModel);
@@ -379,9 +451,14 @@ void SettingsModel::clear()
     if (!d->settings)
         return;
 
+    // FIXME: this metod is not finished (it doesn't clear cached data)
+    d->settings->clear();
     d->rebuild();
 }
 
+/*!
+    If editStrategy is OnManualSubmit, submits all cached data to the settings.
+*/
 void SettingsModel::submitAll()
 {
     Q_D(SettingsModel);
@@ -397,8 +474,12 @@ void SettingsModel::submitAll()
     }
 
     d->submit(d->rootItem);
+    d->keysToRemove.clear();
 }
 
+/*!
+    Clears all cached data and resets model to the original state.
+*/
 void SettingsModel::revertAll()
 {
     Q_D(SettingsModel);
@@ -410,6 +491,9 @@ void SettingsModel::revertAll()
     refresh();
 }
 
+/*!
+    Refreshes model, syncing it with settings.
+*/
 void SettingsModel::refresh()
 {
     Q_D(SettingsModel);
