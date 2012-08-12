@@ -8,7 +8,14 @@ using namespace Core;
 /*!
     \class Core::SettingsWidget
 
+    \brief SettingsWidget is a widget that displays applications settings in an
+    item view.
+
     \image html settingswidget.png
+*/
+
+/*!
+    Creates SettingsWidget with the given \a parent.
 */
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent),
@@ -27,16 +34,25 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     connect(m_closeAction, SIGNAL(triggered()), SLOT(close()));
 }
 
+/*!
+    Destroys SettingsWidget.
+*/
 SettingsWidget::~SettingsWidget()
 {
     delete ui;
 }
 
+/*!
+    Returns currently set model. By default, no model is set.
+*/
 SettingsModel * SettingsWidget::model() const
 {
     return m_model;
 }
 
+/*!
+    Sets current model.
+*/
 void SettingsWidget::setModel(SettingsModel *model)
 {
     if (m_model == model)

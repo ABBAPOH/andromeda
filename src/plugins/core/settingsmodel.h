@@ -15,6 +15,7 @@ class SettingsModel : public QAbstractItemModel
     Q_DISABLE_COPY(SettingsModel)
 
     Q_PROPERTY(bool readOnly READ readOnly WRITE setReadOnly)
+    Q_PROPERTY(EditStrategy editStrategy READ editStrategy WRITE setEditStrategy)
 public:
     enum EditStrategy { OnFieldChange = 0, OnManualSubmit = 1 };
     Q_ENUMS(EditStrategy)
