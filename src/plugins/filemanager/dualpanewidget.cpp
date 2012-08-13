@@ -201,9 +201,58 @@ void DualPaneWidgetPrivate::onSelectionChanged()
 /*!
     \class FileManager::DualPaneWidget
 
+    \brief DualPaneWidget represents a two-panel file widget.
+
+    DualPaneWidget consists of two FileManagerWidget widgets layouted in a
+    splitter. Widgets can be placed both vertically or horizontaly or right
+    widget can be hidden, turning this widget into a usual single pane file
+    manager widget. Also, DualPaneWidget provides some convenience actions,
+    like copying/moving files to another pane, syncing current folder in both
+    panes and so on.
+
     \image html dualpanewidget.png
 */
 
+/*!
+    \enum FileManager::DualPaneWidget::Pane
+    This enum describes pane.
+
+    \var FileManager::DualPaneWidget::Pane FileManager::DualPaneWidget::LeftPane
+    Left (or top) pane.
+
+    \var FileManager::DualPaneWidget::Pane FileManager::DualPaneWidget::RightPane
+    Right (or bottom) pane.
+*/
+
+/*!
+    \enum FileManager::DualPaneWidget::Action
+    This enum describes actions available for DualPaneWidget.
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::EnableDualPane
+    Toggle right pane's visibility.
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::VerticalPanels
+    Toggle panes direction (vertical or horizontal).
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::ToggleActivePane
+    Toggle active pane.
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::SyncPanes
+    Synchronize current folder in both panes.
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::SwapPanes
+    Swap current folders in both panes.
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::CopyFiles
+    Copy files from active pane to the other.
+
+    \var FileManager::DualPaneWidget::Action FileManager::DualPaneWidget::MoveFiles
+    Move files from active pane to the other.
+*/
+
+/*!
+    Creates DualPaneWidget with the given \a parent.
+*/
 DualPaneWidget::DualPaneWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new DualPaneWidgetPrivate(this))
@@ -231,11 +280,17 @@ DualPaneWidget::DualPaneWidget(QWidget *parent) :
     setObjectName(QLatin1String("DualPaneWidget"));
 }
 
+/*!
+    Destroys DualPaneWidget.
+*/
 DualPaneWidget::~DualPaneWidget()
 {
     delete d_ptr;
 }
 
+/*!
+    Returns action specified by \a action enum.
+*/
 QAction * DualPaneWidget::action(FileManager::DualPaneWidget::Action action) const
 {
     Q_D(const DualPaneWidget);
@@ -246,11 +301,18 @@ QAction * DualPaneWidget::action(FileManager::DualPaneWidget::Action action) con
     return d->actions[action];
 }
 
+/*!
+    Returns active pane's history.
+*/
 FileManagerHistory * DualPaneWidget::history() const
 {
     return activeWidget()->history();
 }
 
+/*!
+    \property DualPaneWidget::activePane.
+    This property holds which pane is active at the current moment.
+*/
 DualPaneWidget::Pane DualPaneWidget::activePane() const
 {
     return d_func()->activePane;
@@ -269,6 +331,9 @@ void DualPaneWidget::setActivePane(DualPaneWidget::Pane pane)
     d->updateState();
 }
 
+/*!
+    Returns pointer to the currently active widget.
+*/
 FileManagerWidget * DualPaneWidget::activeWidget() const
 {
     Q_D(const DualPaneWidget);
@@ -276,17 +341,32 @@ FileManagerWidget * DualPaneWidget::activeWidget() const
     return d->panes[d->activePane];
 }
 
+/*!
+    Returns pointer to the left (or top, if orientation is Qt::Vertical) widget.
+*/
 FileManagerWidget * DualPaneWidget::leftWidget() const
 {
     return d_func()->panes[LeftPane];
 }
 
+/*!
+    Returns pointer to the right (or bottom, if orientation is Qt::Vertical) widget.
+
+    \note If DualPaneWidget::dualPaneModeEnabled is false, this function will
+    return zero pointer.
+*/
 FileManagerWidget * DualPaneWidget::rightWidget() const
 {
     Q_D(const DualPaneWidget);
     return d->panes[RightPane];
 }
 
+/*!
+    \property DualPaneWidget::currentPath
+    This property holds active widget's path.
+
+    \sa FileManagerWidget::currentPath
+*/
 QString DualPaneWidget::currentPath() const
 {
     return activeWidget()->currentPath();
@@ -302,6 +382,18 @@ void DualPaneWidget::setCurrentPath(const QString &path)
         d->panes[RightPane]->setCurrentPath(path);
 }
 
+/*!
+    \fn void DualPaneWidget::currentPathChanged(const QString &path)
+    This signal is emitted when DualPaneWidget::currentPath property is changed.
+*/
+
+/*!
+    \property DualPaneWidget::dualPaneModeEnabled
+    This property holds if right widget is visible, or not.
+
+    \note To save memory, right widget only exists if this property is set to
+    true. If not, only state of the widget is stored in memory.
+*/
 bool DualPaneWidget::dualPaneModeEnabled() const
 {
     return d_func()->dualPaneModeEnabled;
@@ -345,11 +437,15 @@ void DualPaneWidget::setDualPaneModeEnabled(bool on)
     emit dualPaneModeChanged(on);
 }
 
-FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
-{
-    return activeWidget()->viewMode();
-}
+/*!
+    \fn void DualPaneWidget::dualPaneModeChanged(bool enabled)
+    This signal is emitted when DualPaneWidget::dualPaneModeEnabled property is changed.
+*/
 
+/*!
+    \property DualPaneWidget::orientation
+    This property holds panes' orientation. Default value is Qt::Horizontal.
+*/
 Qt::Orientation DualPaneWidget::orientation() const
 {
     Q_D(const DualPaneWidget);
@@ -372,21 +468,33 @@ void DualPaneWidget::setOrientation(Qt::Orientation orientation)
     emit orientationChanged(orientation);
 }
 
-void DualPaneWidget::toggleActivePane()
-{
-    setActivePane(activePane() == LeftPane ? RightPane : LeftPane);
-}
+/*!
+    \fn void DualPaneWidget::orientationChanged(Qt::Orientation orientation)
+    This signal is emitted when DualPaneWidget::orientation property is changed.
+*/
 
-void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
-{
-    activeWidget()->setViewMode(mode);
-}
+/*!
+    \property DualPaneWidget::selectedPaths
+    This property holds active widget's selected paths.
 
+    \sa FileManagerWidget::selectedPaths
+*/
 QStringList DualPaneWidget::selectedPaths() const
 {
     return activeWidget()->selectedPaths();
 }
 
+/*!
+    \fn void DualPaneWidget::selectedPathsChanged()
+    This signal is emitted when DualPaneWidget::selectedPaths property is changed.
+*/
+
+/*!
+    \property DualPaneWidget::sortingColumn
+    This property holds active widget's sorting column.
+
+    \sa FileManagerWidget::sortingColumn
+*/
 FileManagerWidget::Column DualPaneWidget::sortingColumn() const
 {
     return activeWidget()->sortingColumn();
@@ -397,6 +505,12 @@ void DualPaneWidget::setSortingColumn(FileManagerWidget::Column column)
     activeWidget()->setSortingColumn(column);
 }
 
+/*!
+    \property DualPaneWidget::sortingOrder
+    This property holds active widget's sorting order.
+
+    \sa FileManagerWidget::sortingColumn
+*/
 Qt::SortOrder DualPaneWidget::sortingOrder() const
 {
     return activeWidget()->sortingOrder();
@@ -407,15 +521,53 @@ void DualPaneWidget::setSortingOrder(Qt::SortOrder order)
     activeWidget()->setSortingOrder(order);
 }
 
-bool DualPaneWidget::restoreState(const QByteArray &arr)
+/*!
+    \fn void DualPaneWidget::sortingChanged()
+    This signal is emitted when DualPaneWidget::sortingColumn or
+    DualPaneWidget::sortingOrder properties are changed.
+*/
+
+/*!
+    \property DualPaneWidget::viewMode
+    This property holds active widget's view mode.
+
+    \sa FileManagerWidget::viewMode
+*/
+FileManagerWidget::ViewMode DualPaneWidget::viewMode() const
+{
+    return activeWidget()->viewMode();
+}
+
+void DualPaneWidget::setViewMode(FileManagerWidget::ViewMode mode)
+{
+    activeWidget()->setViewMode(mode);
+}
+
+/*!
+    \fn void DualPaneWidget::viewModeChanged(FileManagerWidget::ViewMode mode)
+    This signal is emitted when DualPaneWidget::viewMode property is changed.
+*/
+
+/*!
+    Toggles active pane.
+*/
+void DualPaneWidget::toggleActivePane()
+{
+    setActivePane(activePane() == LeftPane ? RightPane : LeftPane);
+}
+
+/*!
+    Restores widget from \a state byte array.
+*/
+bool DualPaneWidget::restoreState(const QByteArray &state)
 {
     Q_D(DualPaneWidget);
 
-    if (arr.isEmpty())
+    if (state.isEmpty())
         return false;
 
-    QByteArray state = arr;
-    QDataStream s(&state, QIODevice::ReadOnly);
+    QByteArray tmp = state;
+    QDataStream s(&tmp, QIODevice::ReadOnly);
 
     bool b;
     QByteArray splitterState;
@@ -433,6 +585,9 @@ bool DualPaneWidget::restoreState(const QByteArray &arr)
     return true;
 }
 
+/*!
+    Stores widget to a byte array.
+*/
 QByteArray DualPaneWidget::saveState() const
 {
     Q_D(const DualPaneWidget);
@@ -449,6 +604,11 @@ QByteArray DualPaneWidget::saveState() const
     return state;
 }
 
+/*!
+    Clears both panes and sets focus to the left pane.
+
+    \sa FileManagerWidget::clear()
+*/
 void DualPaneWidget::clear()
 {
     Q_D(DualPaneWidget);
@@ -460,6 +620,10 @@ void DualPaneWidget::clear()
         d->panes[RightPane]->clear();
 }
 
+/*!
+    Synchronizes both panes, i.e. sets current folder same in both panes (inactive
+    widget's current folder is set to active widget's folder).
+*/
 void DualPaneWidget::syncPanes()
 {
     Q_D(DualPaneWidget);
@@ -476,6 +640,9 @@ void DualPaneWidget::syncPanes()
     // TODO: sync selection too
 }
 
+/*!
+    Swaps panes' current folders (exchanges current folder in both panes).
+*/
 void DualPaneWidget::swapPanes()
 {
     Pane pane = activePane();
@@ -494,41 +661,9 @@ void DualPaneWidget::swapPanes()
     setActivePane(pane == LeftPane ? RightPane : LeftPane);
 }
 
-void DualPaneWidget::newFolder()
-{
-    activeWidget()->newFolder();
-}
-
-void DualPaneWidget::open()
-{
-    activeWidget()->open();
-}
-
-void DualPaneWidget::edit()
-{
-    activeWidget()->edit();
-}
-
-void DualPaneWidget::showFileInfo()
-{
-    activeWidget()->showFileInfo();
-}
-
-void DualPaneWidget::remove()
-{
-    activeWidget()->remove();
-}
-
-void DualPaneWidget::rename()
-{
-    activeWidget()->rename();
-}
-
-void DualPaneWidget::moveToTrash()
-{
-    activeWidget()->moveToTrash();
-}
-
+/*!
+    Copies files selected in an active pane to the other pane.
+*/
 void DualPaneWidget::copyFiles()
 {
     Q_D(DualPaneWidget);
@@ -543,6 +678,9 @@ void DualPaneWidget::copyFiles()
     source->fileSystemManager()->copy(files, target->currentPath());
 }
 
+/*!
+    Moves files selected in an active pane to the other pane.
+*/
 void DualPaneWidget::moveFiles()
 {
     Q_D(DualPaneWidget);
@@ -555,63 +693,6 @@ void DualPaneWidget::moveFiles()
 
     QStringList files = source->selectedPaths();
     source->fileSystemManager()->move(files, target->currentPath());
-}
-
-void DualPaneWidget::undo()
-{
-    activeWidget()->undo();
-}
-
-void DualPaneWidget::redo()
-{
-    activeWidget()->redo();
-}
-
-void DualPaneWidget::cut()
-{
-}
-
-void DualPaneWidget::copy()
-{
-    activeWidget()->copy();
-}
-
-void DualPaneWidget::paste()
-{
-    activeWidget()->paste();
-}
-
-void DualPaneWidget::moveHere()
-{
-    activeWidget()->moveHere();
-}
-
-void DualPaneWidget::selectAll()
-{
-    activeWidget()->selectAll();
-}
-
-void DualPaneWidget::back()
-{
-    activeWidget()->back();
-}
-
-void DualPaneWidget::forward()
-{
-    activeWidget()->forward();
-}
-
-void DualPaneWidget::up()
-{
-    activeWidget()->up();
-}
-
-void DualPaneWidget::showHiddenFiles(bool show)
-{
-    Q_D(DualPaneWidget);
-    d->panes[LeftPane]->showHiddenFiles(show);
-    if (d->panes[RightPane])
-        d->panes[RightPane]->showHiddenFiles(show);
 }
 
 void DualPaneWidgetPrivate::updateState()
