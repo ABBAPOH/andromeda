@@ -1,0 +1,6 @@
+/*!
+    \namespace FileManager
+
+    \brief The FileManager namespace contains classes that provides common file
+    manager functionality.
+*/
