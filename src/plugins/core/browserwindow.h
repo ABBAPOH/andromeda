@@ -27,7 +27,6 @@ public:
 
     static BrowserWindow *currentWindow();
     static QList<BrowserWindow*> windows();
-    static BrowserWindow *createWindow();
 
     static QByteArray windowGeometry();
     static void setWindowGeometry(const QByteArray &geometry);
@@ -44,8 +43,8 @@ public slots:
     void newTab();
     static void newWindow();
 
-    void nextEditor();
-    void previousEditor();
+    void nextTab();
+    void previousTab();
 
     void onUrlChanged(const QUrl &url);
 

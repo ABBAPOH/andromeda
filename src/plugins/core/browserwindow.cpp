@@ -51,7 +51,7 @@ void BrowserWindowPrivate::setupActions()
 #else
     nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
 #endif
-    connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextEditor()));
+    connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextTab()));
     q->addAction(nextTabAction);
 
     prevTabAction = new QAction(q);
@@ -60,7 +60,7 @@ void BrowserWindowPrivate::setupActions()
 #else
     prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
 #endif
-    connect(prevTabAction, SIGNAL(triggered()), q, SLOT(previousEditor()));
+    connect(prevTabAction, SIGNAL(triggered()), q, SLOT(previousTab()));
     q->addAction(prevTabAction);
 }
 
@@ -215,6 +215,17 @@ void BrowserWindowFactory::openFlag(EditorWindowFactory::OpenFlag cap, QList<QUr
     }
 }
 
+/*!
+    \class Core::BrowserWindow
+
+    \brief BrowserWindow is an Andromeda's main window.
+
+    \image html browserwindow.png
+*/
+
+/*!
+    Creates BrowserWindow with the given \a parent.
+*/
 BrowserWindow::BrowserWindow(QWidget *parent) :
     EditorWindow(parent),
     d_ptr(new BrowserWindowPrivate(this))
@@ -238,16 +249,25 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
 //    }
 }
 
+/*!
+    Destroys BrowserWindow.
+*/
 BrowserWindow::~BrowserWindow()
 {
     delete d_ptr;
 }
 
+/*!
+    Returns currently active BrowserWindow, or 0 if there's no active window.
+*/
 BrowserWindow * BrowserWindow::currentWindow()
 {
     return qobject_cast<BrowserWindow*>(qApp->activeWindow());
 }
 
+/*!
+    Returns list of all windows.
+*/
 QList<BrowserWindow *> BrowserWindow::windows()
 {
     QList<BrowserWindow*> result;
@@ -259,11 +279,9 @@ QList<BrowserWindow *> BrowserWindow::windows()
     return result;
 }
 
-BrowserWindow * BrowserWindow::createWindow()
-{
-    return new BrowserWindow();
-}
-
+/*!
+    Goes one level up in the filesystem.
+*/
 void BrowserWindow::up()
 {
     Q_D(BrowserWindow);
@@ -281,6 +299,9 @@ void BrowserWindow::up()
     open(url);
 }
 
+/*!
+    \reimp
+*/
 void BrowserWindow::open(const QUrl &url)
 {
     Q_D(BrowserWindow);
@@ -291,6 +312,9 @@ void BrowserWindow::open(const QUrl &url)
         EditorWindow::open(url);
 }
 
+/*!
+    Opens \a url in a new tab.
+*/
 void BrowserWindow::openNewTab(const QUrl &url)
 {
     Q_D(BrowserWindow);
@@ -298,6 +322,9 @@ void BrowserWindow::openNewTab(const QUrl &url)
     d->container->newTab(url);
 }
 
+/*!
+    Opens \a urls list in new tabs.
+*/
 void BrowserWindow::openNewTabs(const QList<QUrl> &urls)
 {
     foreach (const QUrl &url, urls) {
@@ -305,6 +332,9 @@ void BrowserWindow::openNewTabs(const QList<QUrl> &urls)
     }
 }
 
+/*!
+    \reimp
+*/
 void BrowserWindow::close()
 {
     Q_D(BrowserWindow);
@@ -317,6 +347,9 @@ void BrowserWindow::close()
     }
 }
 
+/*!
+    Creates new tab and opens default location.
+*/
 void BrowserWindow::newTab()
 {
     Q_D(BrowserWindow);
@@ -324,13 +357,19 @@ void BrowserWindow::newTab()
     d->container->newTab();
 }
 
+/*!
+    Creates new window and opens default location.
+*/
 void BrowserWindow::newWindow()
 {
     QUrl url = QUrl::fromLocalFile(QDesktopServices::storageLocation(QDesktopServices::HomeLocation));
     EditorWindow::openNewWindow(url);
 }
 
-void BrowserWindow::nextEditor()
+/*!
+    Switches tab bar to the next tab.
+*/
+void BrowserWindow::nextTab()
 {
     Q_D(BrowserWindow);
 
@@ -340,7 +379,10 @@ void BrowserWindow::nextEditor()
     }
 }
 
-void BrowserWindow::previousEditor()
+/*!
+    Switches tab bar to the previous tab.
+*/
+void BrowserWindow::previousTab()
 {
     Q_D(BrowserWindow);
 
@@ -350,6 +392,9 @@ void BrowserWindow::previousEditor()
     }
 }
 
+/*!
+    \reimp
+*/
 void BrowserWindow::onUrlChanged(const QUrl &url)
 {
     Q_D(BrowserWindow);
@@ -359,6 +404,9 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
     EditorWindow::onUrlChanged(url);
 }
 
+/*!
+    \reimp
+*/
 void BrowserWindow::startLoad()
 {
     Q_D(BrowserWindow);
@@ -366,6 +414,9 @@ void BrowserWindow::startLoad()
     EditorWindow::startLoad();
 }
 
+/*!
+    \reimp
+*/
 void BrowserWindow::setLoadProgress(int progress)
 {
     Q_D(BrowserWindow);
@@ -373,6 +424,9 @@ void BrowserWindow::setLoadProgress(int progress)
     EditorWindow::setLoadProgress(progress);
 }
 
+/*!
+    \reimp
+*/
 void BrowserWindow::finishLoad(bool ok)
 {
     Q_D(BrowserWindow);
