@@ -18,6 +18,9 @@ class FILEMANAGER_EXPORT DualPaneWidget : public QWidget
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
     Q_PROPERTY(bool dualPaneModeEnabled READ dualPaneModeEnabled WRITE setDualPaneModeEnabled NOTIFY dualPaneModeChanged)
     Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
+    Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY selectedPathsChanged)
+    Q_PROPERTY(FileManager::FileManagerWidget::Column sortingColumn READ sortingColumn NOTIFY sortingChanged)
+    Q_PROPERTY(Qt::SortOrder sortingOrder READ sortingOrder NOTIFY sortingChanged)
     Q_PROPERTY(FileManager::FileManagerWidget::ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
 
 public:
@@ -52,7 +55,6 @@ public:
     QString currentPath() const;
 
     bool dualPaneModeEnabled() const;
-    FileManagerWidget::ViewMode viewMode() const;
 
     Qt::Orientation orientation() const;
 
@@ -63,6 +65,8 @@ public:
 
     Qt::SortOrder sortingOrder() const;
     void setSortingOrder(Qt::SortOrder order);
+
+    FileManagerWidget::ViewMode viewMode() const;
 
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
@@ -95,29 +99,8 @@ public slots:
     void syncPanes();
     void swapPanes();
 
-    void newFolder();
-    void open();
-    void edit();
-    void showFileInfo();
-    void remove();
-    void rename();
-    void moveToTrash();
     void copyFiles();
     void moveFiles();
-
-    void undo();
-    void redo();
-    void cut();
-    void copy();
-    void paste();
-    void moveHere();
-    void selectAll();
-
-    void back();
-    void forward();
-    void up();
-
-    void showHiddenFiles(bool show);
 
 protected:
     bool eventFilter(QObject *, QEvent *);
