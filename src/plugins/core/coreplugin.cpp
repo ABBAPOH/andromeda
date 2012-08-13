@@ -257,7 +257,7 @@ void CorePlugin::showSettings()
     widget->show();
 }
 
-void CorePlugin::prefenrences()
+void CorePlugin::preferences()
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
@@ -500,7 +500,7 @@ void CorePlugin::registerAtions()
     createAction(Constants::Actions::Quit, SLOT(quit()));
     createAction(Constants::Actions::Plugins, SLOT(showPluginView()));
     createAction(Constants::Actions::Settings, SLOT(showSettings()));
-    createAction(Constants::Actions::Preferences, SLOT(prefenrences()));
+    createAction(Constants::Actions::Preferences, SLOT(preferences()));
     createAction(Constants::Actions::About, SLOT(about()));
     createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
 }

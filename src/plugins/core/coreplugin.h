@@ -32,7 +32,7 @@ public slots:
     void newWindow();
     void showPluginView();
     void showSettings();
-    void prefenrences();
+    void preferences();
 
     void restoreSession();
     void saveSession();
