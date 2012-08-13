@@ -24,7 +24,7 @@ using namespace ExtensionSystem;
 */
 
 /*!
-    \brief Constructs null Version object (0.0.0.0 version).
+    Constructs null Version object (0.0.0.0 version).
 
     \sa isNull
 */
@@ -37,7 +37,7 @@ Version::Version() :
 }
 
 /*!
-    \brief Constructs Version object with the given \a version string.
+    Constructs Version object with the given \a version string.
 */
 Version::Version(const QString &version) :
     build(0),
@@ -57,8 +57,7 @@ Version::Version(const QString &version) :
 }
 
 /*!
-    \brief Returns true if Version object represents null version, i.e.
-    version 0.0.0.0.
+    Returns true if Version object represents null version, i.e. version 0.0.0.0.
 */
 bool Version::isNull() const
 {
@@ -66,7 +65,7 @@ bool Version::isNull() const
 }
 
 /*!
-    \brief Converts Version object to string.
+    Converts Version object to string.
 */
 QString Version::toString() const
 {
@@ -74,7 +73,7 @@ QString Version::toString() const
 }
 
 /*!
-    \brief Creates and returns Version object with the given \a version string.
+    Creates and returns Version object with the given \a version string.
 */
 Version Version::fromString(const QString &version)
 {
@@ -82,7 +81,7 @@ Version Version::fromString(const QString &version)
 }
 
 /*!
-    \brief Compares one Version object to an other.
+    Compares one Version object to an other.
 */
 bool Version::operator==(const Version &other) const
 {
@@ -98,7 +97,7 @@ bool Version::operator==(const Version &other) const
 */
 
 /*!
-    \brief Constructs PluginDependency class with given \a name and \a version.
+    Constructs PluginDependency class with given \a name and \a version.
 */
 PluginDependency::PluginDependency(const QString &name, const QString &version)
 {
@@ -107,7 +106,7 @@ PluginDependency::PluginDependency(const QString &name, const QString &version)
 }
 
 /*!
-    \brief Constructs PluginDependency class with given \a name and \a version.
+    Constructs PluginDependency class with given \a name and \a version.
 */
 PluginDependency::PluginDependency(const QString &name, const Version &version)
 {
@@ -117,16 +116,16 @@ PluginDependency::PluginDependency(const QString &name, const Version &version)
 
 /*!
     \fn QString PluginDependency::name() const
-    \brief Returns name of dependency library.
+    Returns name of dependency library.
 */
 
 /*!
     \fn QString PluginDependency::version() const
-    \brief Returns version of dependency library.
+    Returns version of dependency library.
 */
 
 /*!
-    \brief Compares one PluginDependency to an other.
+    Compares one PluginDependency to an other.
 */
 bool PluginDependency::operator==(const PluginDependency &other)
 {
