@@ -918,7 +918,7 @@ void FileManagerWidget::setCurrentPath(const QString &path)
 
 /*!
     \fn void FileManagerWidget::currentPathChanged(const QString &path)
-    This signal is emmited when currently displayed folder changes.
+    This signal is emitted when currently displayed folder changes.
 */
 
 /*!
@@ -1098,7 +1098,7 @@ void FileManagerWidget::setSortingColumn(FileManagerWidget::Column column)
 
 /*!
     \fn void FileManagerWidget::sortingChanged()
-    This signal is emmited when FileManagerWidget::sortingColumn or
+    This signal is emitted when FileManagerWidget::sortingColumn or
     FileManagerWidget::sortingOrder properties are changed.
 */
 
@@ -1188,7 +1188,7 @@ void FileManagerWidget::setViewMode(ViewMode mode)
 
 /*!
     \fn void FileManagerWidget::viewModeChanged(FileManagerWidget::ViewMode mode)
-    This signal is emmited when FileManagerWidget::viewMode property is changed;
+    This signal is emitted when FileManagerWidget::viewMode property is changed;
     \a mode is a new view mode.
 */
 
@@ -1556,13 +1556,13 @@ void FileManagerWidget::showContextMenu(QPoint pos)
 
 /*!
     \fn void FileManagerWidget::openNewTabRequested(const QStringList &paths)
-    This signal is emmited when user triggers OpenInTab action; \a paths is the
+    This signal is emitted when user triggers OpenInTab action; \a paths is the
     list of currently selected files and/or folders.
 */
 
 /*!
     \fn void FileManagerWidget::openNewWindowRequested(const QStringList &paths)
-    This signal is emmited when user triggers OpenInWindow action; \a paths is the
+    This signal is emitted when user triggers OpenInWindow action; \a paths is the
     list of currently selected files and/or folders.
 */
 
