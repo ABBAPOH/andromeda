@@ -314,13 +314,16 @@ void EditorWindow::save()
 {
     Q_D(EditorWindow);
 
-    if (d->editor)
+    if (!d->editor)
         return;
 
     if (!d->editor->file())
         return;
 
-    d->editor->file()->save();
+    if (d->editor->url().isEmpty() || !d->editor->url().isValid())
+        return;
+
+    d->editor->file()->save(d->editor->url());
 }
 
 void EditorWindow::saveAs()

@@ -26,7 +26,7 @@ public slots:
     virtual void setModified(bool modified = true);
     virtual void setReadOnly(bool readOnly = true);
 
-    virtual void save(const QUrl &url = QUrl());
+    virtual void save(const QUrl &url);
 
 signals:
     void modificationChanged(bool modified);
