@@ -17,8 +17,10 @@ using namespace FileManager;
 /*!
     \class FileManager::ViewModesSettingsWidget
 
-    ViewModesSettingsWidget is a widget for representing settings for file
-    manager view modes. That includes standard location settings, icon and grid
+    \brief ViewModesSettingsWidget is a widget for representing settings for file
+    manager view modes.
+
+    That includes standard location settings, icon and grid
     size settings, flow settings for icon mode and setting that holds wheter
     items are expandable in a tree view mode, or not.
 
@@ -219,8 +221,7 @@ void ViewModesSettingsWidget::setupTreeView()
 /*!
     \class FileManager::ViewModesSettingsPage
 
-    ViewModesSettingsPage is an implementation of the GuiSystem::SettingsPage
-    interface for the ViewModesSettingsWidget.
+    \brief This class is a GuiSystem::SettingsPage implementation for the ViewModesSettingsWidget.
 */
 
 /*!

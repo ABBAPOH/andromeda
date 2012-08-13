@@ -8,7 +8,7 @@ using namespace FileManager;
 /*!
     \class FileManager::PermissionsWidget
 
-    PermissionsWidget is a simple widget for editing file permissions.
+    \brief PermissionsWidget is a simple widget for editing file permissions.
 
     \image html permissionswidget.png
 */

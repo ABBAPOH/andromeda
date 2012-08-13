@@ -15,9 +15,11 @@ using namespace FileManager;
 /*!
     \class FileManager::GlobalSettingsWidget
 
-    GlobalSettingsWidget is a widget for representing global settings for file
-    manager. That includes settings for enabling or disabling confirmations
-    when removing files and changing file extensions.
+    \brief GlobalSettingsWidget is a widget for representing global settings
+    for a file manager.
+
+    That includes settings for enabling or disabling confirmations when
+    removing files and changing file extensions.
 
     \image html filemanager_globalsettings.png
 */
@@ -65,8 +67,7 @@ void GlobalSettingsWidget::onExtensionChangeToggled(bool state)
 /*!
     \class FileManager::GlobalSettingsPage
 
-    GlobalSettingsPage is an implementation of the GuiSystem::SettingsPage
-    interface for the GlobalSettingsWidget.
+    \brief This class is a GuiSystem::SettingsPage implementation for the GlobalSettingsWidget.
 */
 
 /*!
