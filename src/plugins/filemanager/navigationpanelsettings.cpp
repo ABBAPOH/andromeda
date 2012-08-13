@@ -17,8 +17,11 @@ using namespace FileManager;
 /*!
     \class FileManager::NavigationPanelSettings
 
-    NavigationPanelSettings is a class for changing global settings for all
-    NavigationModels.
+    \brief NavigationPanelSettings is a class for changing default folders
+    contained in NavigationModels.
+
+    This class holds all NavigationModels in an application and changes default
+    folders in all of them.
 */
 
 /*!

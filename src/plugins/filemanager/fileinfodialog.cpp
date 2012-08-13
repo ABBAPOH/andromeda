@@ -308,7 +308,7 @@ void FileInfoDialogPrivate::retranslateUi()
 /*!
     \class FileManager::FileInfoDialog
 
-    FileInfoDialog is a widget for displaying file info.
+    \brief FileInfoDialog is a widget for displaying file info.
 
     \image html fileinfodialog.png
 */

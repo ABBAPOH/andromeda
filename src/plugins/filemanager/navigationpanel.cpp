@@ -104,8 +104,7 @@ void NavigationPanelDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 /*!
     \class FileManager::NavigationPanel
 
-    NavigationPanel is a widget for representing system devices and folders in
-    a tree-like structure.
+    \brief NavigationPanel is a widget for displaying NavigationModel.
 
     This widget simply displays NavigationModel and provides some convenience
     methods.

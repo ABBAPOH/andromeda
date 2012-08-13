@@ -132,7 +132,7 @@ NavigationModel::StandardLocation pathToLocation(const QString &path)
 
 /*!
     \class FileManager::NavigationModel
-    NavigationModel is a class for displaying a tree-like list of devices,
+    \brief NavigationModel is a class for displaying a tree-like list of devices,
     standard and user folders.
 */
 
