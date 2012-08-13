@@ -12,9 +12,9 @@ class QSignalMapper;
 class QSettings;
 
 namespace FileManager {
-    class FileManagerSettings;
-    class NavigationPanelSettings;
-} // namespace FileManager
+
+class FileManagerSettings;
+class NavigationPanelSettings;
 
 class FileManagerPlugin : public ExtensionSystem::IPlugin
 {
@@ -53,5 +53,7 @@ private:
     FileManager::FileManagerSettings *m_fileManagerSettings;
     FileManager::NavigationPanelSettings *m_panelSettings;
 };
+
+} // namespace FileManager
 
 #endif // FILEMANAGERPLUGIN_H

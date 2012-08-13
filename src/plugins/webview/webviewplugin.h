@@ -9,6 +9,8 @@ class CookieJar;
 class QSettings;
 class QWebSettings;
 
+namespace WebView {
+
 class WebViewPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
@@ -61,5 +63,7 @@ public:
 signals:
     void itemAdded();
 };
+
+} // namespace WebView
 
 #endif // WEBVIEWPLUGINIMPL_H
