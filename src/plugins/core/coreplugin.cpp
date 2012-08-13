@@ -117,16 +117,35 @@ QMenu * WindowsContainer::createMenu(QWidget *parent) const
     return m_menu;
 }
 
+/*!
+    \class Core::CorePlugin
+
+    \brief Andromeda's main plugin.
+
+    This plugin creates main objects, common Commands, reads/writes settings
+    and session. Also it creates BrowserWindows, preferences window and provides
+    "about" and "about Qt" dialogs.
+*/
+
+/*!
+    Creates CorePlugin.
+*/
 CorePlugin::CorePlugin() :
     IPlugin(),
     m_firstStart(true)
 {
 }
 
+/*!
+    Destroys CorePlugin.
+*/
 CorePlugin::~CorePlugin()
 {
 }
 
+/*!
+    \reimp
+*/
 bool CorePlugin::initialize()
 {
     EditorWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
@@ -143,6 +162,9 @@ bool CorePlugin::initialize()
     return true;
 }
 
+/*!
+    \reimp
+*/
 void CorePlugin::postInitialize(const QVariantMap &options)
 {
     QStringList urls = options.value("files").toStringList();
@@ -162,6 +184,9 @@ void CorePlugin::postInitialize(const QVariantMap &options)
     m_firstStart = false;
 }
 
+/*!
+    \reimp
+*/
 void CorePlugin::shutdown()
 {
     delete dockMenu;
@@ -233,17 +258,26 @@ QByteArray CorePlugin::saveState() const
     return state;
 }
 
+/*!
+    Creates new BrowserWindow.
+*/
 void CorePlugin::newWindow()
 {
     BrowserWindow::newWindow();
 }
 
+/*!
+    Shows plugins list.
+*/
 void CorePlugin::showPluginView()
 {
     PluginView *view = object<PluginView>(QLatin1String("pluginView"));
     view->exec();
 }
 
+/*!
+    Shows all settings.
+*/
 void CorePlugin::showSettings()
 {
     SettingsWidget *widget = new SettingsWidget;
@@ -257,6 +291,9 @@ void CorePlugin::showSettings()
     widget->show();
 }
 
+/*!
+    Shows preferences window.
+*/
 void CorePlugin::preferences()
 {
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
@@ -339,6 +376,9 @@ void CorePlugin::saveSettings()
     m_settings->setValue(QLatin1String("geometry"), BrowserWindow::windowGeometry());
 }
 
+/*!
+    Saves session and exits application.
+*/
 void CorePlugin::quit()
 {
     saveSession();
@@ -349,6 +389,9 @@ void CorePlugin::quit()
     QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
 }
 
+/*!
+    Shows "about" dialog.
+*/
 void CorePlugin::about()
 {
     QString text = tr("<h3>Andromeda %1</h3><br/>"
@@ -375,6 +418,9 @@ void CorePlugin::about()
     msgBox.exec();
 }
 
+/*!
+    Shows "about Qt" dialog.
+*/
 void CorePlugin::aboutQt()
 {
     QMessageBox::aboutQt(0);
