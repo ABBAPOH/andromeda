@@ -3,6 +3,8 @@
 
 #include <extensionsystem/iplugin.h>
 
+namespace BINEditor {
+
 class BinEditorPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
@@ -12,5 +14,7 @@ public:
 
     bool initialize();
 };
+
+} // namespace BINEditor
 
 #endif // BINEDITORPLUGIN_H

@@ -12,6 +12,8 @@ namespace GuiSystem {
 class SettingsWindow;
 }
 
+namespace Core {
+
 class CorePlugin : public IPlugin
 {
     Q_OBJECT
@@ -66,5 +68,7 @@ private:
     QMenuBar *menuBar;
 #endif
 };
+
+} // namespace Core
 
 #endif // COREPLUGIN_H

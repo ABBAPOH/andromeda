@@ -3,6 +3,8 @@
 
 #include <extensionsystem/iplugin.h>
 
+namespace HelloWorld {
+
 class HelloWorldPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
@@ -12,5 +14,7 @@ public:
 
     bool initialize();
 };
+
+} // namespace HelloWorld
 
 #endif // HELLOWORLPLUGIN_H

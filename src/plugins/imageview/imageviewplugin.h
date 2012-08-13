@@ -7,8 +7,8 @@ class QByteArray;
 class QKeySequence;
 
 namespace GuiSystem {
+
 class CommandContainer;
-} // namespace GuiSystem
 
 class ImageViewPlugin : public ExtensionSystem::IPlugin
 {
@@ -26,5 +26,7 @@ private:
 private:
     GuiSystem::CommandContainer *imageViewMenu;
 };
+
+} // namespace GuiSystem
 
 #endif // HELLOWORLPLUGIN_H

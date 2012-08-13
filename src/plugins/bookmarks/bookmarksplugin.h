@@ -9,8 +9,8 @@ class QModelIndex;
 class QUrl;
 
 namespace Bookmarks {
+
 class BookmarksModel;
-}
 
 class BookmarksPlugin : public ExtensionSystem::IPlugin
 {
@@ -71,5 +71,7 @@ private slots:
 private:
     QList<QObject *> toolBars;
 };
+
+} // namespace Bookmarks
 
 #endif // HELLOWORLPLUGIN_H

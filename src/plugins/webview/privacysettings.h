@@ -53,6 +53,8 @@ private:
 
 #include "webviewplugin.h"
 
+namespace WebView {
+
 class PrivacySettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
@@ -75,5 +77,7 @@ public:
         return widget;
     }
 };
+
+} // namespace WebView
 
 #endif // PRIVACYSETTINGS_H
