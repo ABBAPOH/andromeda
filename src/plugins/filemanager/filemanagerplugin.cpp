@@ -127,7 +127,7 @@ void FileManagerPlugin::createFileMenu()
 #endif
     container->addCommand(cmd, "015");
 
-    cmd = new Command(Constants::Actions::Edit, tr("Edit"), this);
+    cmd = new Command(Constants::Actions::OpenEditor, tr("Open in internal editor"), this);
 #ifdef Q_OS_MAC
     cmd->setDefaultShortcut(QKeySequence("Ctrl+E"));
 #else

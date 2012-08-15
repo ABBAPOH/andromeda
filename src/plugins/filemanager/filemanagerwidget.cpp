@@ -134,10 +134,6 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::Open]->setEnabled(false);
     connect(actions[FileManagerWidget::Open], SIGNAL(triggered()), q, SLOT(open()));
 
-    actions[FileManagerWidget::Edit] = new QAction(this);
-    actions[FileManagerWidget::Edit]->setEnabled(false);
-    connect(actions[FileManagerWidget::Edit], SIGNAL(triggered()), q, SLOT(edit()));
-
     actions[FileManagerWidget::OpenInTab] = new QAction(this);
     actions[FileManagerWidget::OpenInTab]->setEnabled(false);
     connect(actions[FileManagerWidget::OpenInTab], SIGNAL(triggered()), this, SLOT(openNewTab()));
@@ -248,7 +244,6 @@ void FileManagerWidgetPrivate::createActions()
 void FileManagerWidgetPrivate::retranslateUi()
 {
     actions[FileManagerWidget::Open]->setText(tr("Open"));
-    actions[FileManagerWidget::Edit]->setText(tr("Edit"));
     actions[FileManagerWidget::OpenInTab]->setText(tr("Open in new tab"));
     actions[FileManagerWidget::OpenInWindow]->setText(tr("Open in new window"));
 
@@ -605,7 +600,6 @@ void FileManagerWidgetPrivate::onSelectionChanged()
     bool enabled = !paths.empty();
 
     actions[FileManagerWidget::Open]->setEnabled(enabled);
-    actions[FileManagerWidget::Edit]->setEnabled(enabled && hasFiles(paths));
     actions[FileManagerWidget::OpenInTab]->setEnabled(enabled);
     actions[FileManagerWidget::OpenInWindow]->setEnabled(enabled);
     actions[FileManagerWidget::Rename]->setEnabled(enabled);
@@ -1294,6 +1288,52 @@ void FileManagerWidget::clear()
     d->history->d_func()->currentItemIndex = -1;
 }
 
+QMenu * FileManagerWidget::createStandardMenu(const QStringList &paths)
+{
+    Q_D(FileManagerWidget);
+
+    QMenu *menu = new QMenu;
+    if (paths.isEmpty()) {
+        menu->addAction(d->actions[NewFolder]);
+        menu->addSeparator();
+        menu->addAction(d->actions[ShowFileInfo]);
+        menu->addSeparator();
+        menu->addAction(d->actions[Paste]);
+        menu->addAction(d->actions[MoveHere]);
+        menu->addAction(d->actions[SelectAll]);
+        menu->addSeparator();
+        QMenu * viewModeMenu = menu->addMenu(tr("View Mode"));
+        viewModeMenu->addAction(d->actions[IconMode]);
+        viewModeMenu->addAction(d->actions[ColumnMode]);
+        viewModeMenu->addAction(d->actions[TreeMode]);
+        QMenu * sortByMenu = menu->addMenu(tr("Sort by"));
+        sortByMenu->addAction(d->actions[SortByName]);
+        sortByMenu->addAction(d->actions[SortByType]);
+        sortByMenu->addAction(d->actions[SortBySize]);
+        sortByMenu->addAction(d->actions[SortByDate]);
+        sortByMenu->addSeparator();
+        sortByMenu->addAction(d->actions[SortDescendingOrder]);
+    } else {
+        menu->addAction(d->actions[Open]);
+        menu->addAction(d->actions[OpenInTab]);
+        menu->addAction(d->actions[OpenInWindow]);
+
+        OpenWithMenu *openWithMenu = new OpenWithMenu(menu);
+        openWithMenu->setPaths(paths);
+        menu->addMenu(openWithMenu);
+
+        menu->addSeparator();
+        menu->addAction(d->actions[ShowFileInfo]);
+        menu->addSeparator();
+        menu->addAction(d->actions[Rename]);
+        menu->addAction(d->actions[MoveToTrash]);
+        menu->addAction(d->actions[Remove]);
+        menu->addSeparator();
+        menu->addAction(d->actions[Copy]);
+    }
+    return menu;
+}
+
 /*!
     Creates new folder at the current folder.
 */
@@ -1326,16 +1366,6 @@ void FileManagerWidget::open()
             return;
         } else {
             QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-        }
-    }
-}
-
-void FileManagerWidget::edit()
-{
-    foreach (const QString path, selectedPaths()) {
-        QFileInfo info(path);
-        if (!info.isDir() || info.isBundle()) {
-            emit editRequested(path);
         }
     }
 }
@@ -1511,50 +1541,8 @@ void FileManagerWidget::showHiddenFiles(bool show)
 */
 void FileManagerWidget::showContextMenu(QPoint pos)
 {
-    Q_D(FileManagerWidget);
     QStringList paths = selectedPaths();
-
-    QMenu *menu = new QMenu;
-    if (paths.isEmpty()) {
-        menu->addAction(d->actions[NewFolder]);
-        menu->addSeparator();
-        menu->addAction(d->actions[ShowFileInfo]);
-        menu->addSeparator();
-        menu->addAction(d->actions[Paste]);
-        menu->addAction(d->actions[MoveHere]);
-        menu->addAction(d->actions[SelectAll]);
-        menu->addSeparator();
-        QMenu * viewModeMenu = menu->addMenu(tr("View Mode"));
-        viewModeMenu->addAction(d->actions[IconMode]);
-        viewModeMenu->addAction(d->actions[ColumnMode]);
-        viewModeMenu->addAction(d->actions[TreeMode]);
-        QMenu * sortByMenu = menu->addMenu(tr("Sort by"));
-        sortByMenu->addAction(d->actions[SortByName]);
-        sortByMenu->addAction(d->actions[SortByType]);
-        sortByMenu->addAction(d->actions[SortBySize]);
-        sortByMenu->addAction(d->actions[SortByDate]);
-        sortByMenu->addSeparator();
-        sortByMenu->addAction(d->actions[SortDescendingOrder]);
-    } else {
-        menu->addAction(d->actions[Open]);
-        if (d->hasFiles(paths))
-            menu->addAction(d->actions[Edit]);
-        menu->addAction(d->actions[OpenInTab]);
-        menu->addAction(d->actions[OpenInWindow]);
-
-        OpenWithMenu *openWithMenu = new OpenWithMenu(menu);
-        openWithMenu->setPaths(paths);
-        menu->addMenu(openWithMenu);
-
-        menu->addSeparator();
-        menu->addAction(d->actions[ShowFileInfo]);
-        menu->addSeparator();
-        menu->addAction(d->actions[Rename]);
-        menu->addAction(d->actions[MoveToTrash]);
-        menu->addAction(d->actions[Remove]);
-        menu->addSeparator();
-        menu->addAction(d->actions[Copy]);
-    }
+    QMenu *menu = createStandardMenu(paths);
     menu->exec(mapToGlobal(pos));
     delete menu;
 }

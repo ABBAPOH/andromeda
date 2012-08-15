@@ -6,8 +6,9 @@
 #include <QtCore/QDir>
 #include <QtGui/QWidget>
 
-class QFileSystemModel;
 class QAbstractItemView;
+class QFileSystemModel;
+class QMenu;
 
 namespace FileManager {
 
@@ -40,7 +41,6 @@ public:
     enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateColumn, ColumnCount };
     enum Action { NoAction = -1,
                   Open,
-                  Edit,
                   OpenInTab,
                   OpenInWindow,
                   NewFolder,
@@ -125,6 +125,8 @@ public:
 
     void clear();
 
+    QMenu *createStandardMenu(const QStringList &paths);
+
 signals:
     void canRedoChanged(bool);
     void canUndoChanged(bool);
@@ -133,7 +135,6 @@ signals:
     void sortingChanged();
     void viewModeChanged(FileManagerWidget::ViewMode mode);
 
-    void editRequested(const QString &path);
     void openNewTabRequested(const QStringList &paths);
     void openNewWindowRequested(const QStringList &paths);
 
@@ -142,7 +143,6 @@ public slots:
 
     void newFolder();
     void open();
-    void edit();
     void showFileInfo();
     void remove();
     void rename();
