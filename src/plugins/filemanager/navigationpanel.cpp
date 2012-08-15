@@ -131,6 +131,8 @@ NavigationPanel::NavigationPanel(QWidget *parent) :
     d->treeView->setDropIndicatorShown(true);
     d->treeView->setDragEnabled(true);
     d->treeView->setDragDropMode(QAbstractItemView::DragDrop);
+    d->treeView->setRootIsDecorated(false);
+    d->treeView->setItemsExpandable(false);
     d->treeView->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 
     QPalette pal = d->treeView->palette();
