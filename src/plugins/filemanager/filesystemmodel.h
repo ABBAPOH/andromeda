@@ -17,6 +17,7 @@ public:
     FileSystemManager *fileSystemManager() const;
     void setFileSystemManager(FileSystemManager *manager);
 
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QVariant data(const QModelIndex &index, int role) const;
     bool dropMimeData(const QMimeData *data,
                       Qt::DropAction action,
