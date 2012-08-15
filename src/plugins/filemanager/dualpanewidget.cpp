@@ -84,7 +84,6 @@ FileManagerWidget * DualPaneWidgetPrivate::createPane()
     pane->installEventFilter(q);
 
     QObject::connect(pane, SIGNAL(currentPathChanged(QString)), q, SIGNAL(currentPathChanged(QString)));
-    QObject::connect(pane, SIGNAL(editRequested(QString)), q, SIGNAL(editRequested(QString)));
     QObject::connect(pane, SIGNAL(openNewTabRequested(QStringList)), q, SIGNAL(openNewTabRequested(QStringList)));
     QObject::connect(pane, SIGNAL(openNewWindowRequested(QStringList)), q, SIGNAL(openNewWindowRequested(QStringList)));
     QObject::connect(pane, SIGNAL(canRedoChanged(bool)), q, SIGNAL(canRedoChanged(bool)));

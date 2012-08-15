@@ -1,6 +1,7 @@
 #include "filemanagereditor.h"
 #include "filemanagereditor_p.h"
 
+#include <QtGui/QMenu>
 #include <QtGui/QToolBar>
 
 #include "fileexplorerwidget.h"
@@ -193,6 +194,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     setupUi();
     setupConnections();
     createActions();
+    retranslateUi();
 
     m_history = new FileManagerEditorHistory(this);
     m_history->setDualPaneWidget(m_widget->dualPane());
@@ -380,14 +382,12 @@ void FileManagerEditor::onCurrentPathChanged(const QString &path)
     emit windowTitleChanged(windowTitle());
 }
 
-/*!
-  \internal
-
-  Opens file in current tab
-*/
-void FileManagerEditor::onEditRequested(const QString &path)
+void FileManagerEditor::onSelectedPathsChanged()
 {
-    emit openTriggered(QUrl::fromLocalFile(path));
+    QStringList paths = m_widget->dualPane()->selectedPaths();;
+    bool enabled = !paths.empty();
+
+    m_openEditorAction->setEnabled(enabled);
 }
 
 void FileManagerEditor::onViewModeChanged(FileManagerWidget::ViewMode mode)
@@ -489,6 +489,28 @@ void FileManagerEditor::openNewWindow(const QStringList &paths)
         factory->openNewWindow(urls);
 }
 
+void FileManagerEditor::openEditor()
+{
+    QStringList paths = m_widget->dualPane()->selectedPaths();
+    if (paths.isEmpty())
+        return;
+
+    emit openTriggered(QUrl::fromLocalFile(paths.first()));
+}
+
+void FileManagerEditor::showContextMenu(const QPoint &pos)
+{
+    FileManagerWidget *widget = qobject_cast<FileManagerWidget *>(sender());
+    Q_ASSERT(widget);
+    QStringList paths = widget->selectedPaths();
+    QMenu *menu = widget->createStandardMenu(paths);
+    QList<QAction *> actions = menu->actions();
+    menu->insertSeparator(actions.at(4));
+    menu->insertAction(actions.at(4), m_openEditorAction);
+    menu->exec(widget->mapToGlobal(pos));
+    delete menu;
+}
+
 /*!
     \internal
 */
@@ -507,7 +529,7 @@ void FileManagerEditor::setupConnections()
 {
     DualPaneWidget *widget = m_widget->dualPane();
     connect(widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
-    connect(widget, SIGNAL(editRequested(QString)), SLOT(onEditRequested(QString)));
+    connect(widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
     connect(widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
     connect(widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
     connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
@@ -529,6 +551,11 @@ void FileManagerEditor::setupConnections()
 */
 void FileManagerEditor::createActions()
 {
+    m_openEditorAction = new QAction(this);
+    m_openEditorAction->setEnabled(false);
+    connect(m_openEditorAction, SIGNAL(triggered()), SLOT(openEditor()));
+    addAction(m_openEditorAction, Constants::Actions::OpenEditor);
+
     DualPaneWidget *widget = m_widget->dualPane();
     // TODO: register panes when created
     registerWidgetActions(widget->leftWidget());
@@ -545,10 +572,18 @@ void FileManagerEditor::createActions()
     registerAction(m_widget->showStatusBarAction(), Constants::Actions::ShowStatusBar);
 }
 
+void FileManagerEditor::retranslateUi()
+{
+    m_openEditorAction->setText(tr("Open in internal editor"));
+    m_openEditorAction->setToolTip(tr("Opens selected files in an internal editor"));
+}
+
 void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)
 {
+    widget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
+
     registerAction(widget->action(FileManagerWidget::Open), Constants::Actions::Open);
-    registerAction(widget->action(FileManagerWidget::Edit), Constants::Actions::Edit);
 //    registerAction(widget->action(FileManagerWidget::OpenInTab), Constants::Actions::Open);
 //    registerAction(widget->action(FileManagerWidget::OpenInWindow), Constants::Actions::Open);
 //    registerAction(widget->action(FileManagerWidget::SelectProgram), Constants::Actions::Open);

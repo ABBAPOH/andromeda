@@ -52,7 +52,7 @@ protected:
 
 private slots:
     void onCurrentPathChanged(const QString &path);
-    void onEditRequested(const QString &path);
+    void onSelectedPathsChanged();
     void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
     void onOrientationChanged(Qt::Orientation orientation);
@@ -63,11 +63,14 @@ private slots:
     void onSplitterMoved(int,int);
     void openNewTab(const QStringList &paths);
     void openNewWindow(const QStringList &paths);
+    void openEditor();
+    void showContextMenu(const QPoint &pos);
 
 private:
     void setupUi();
     void setupConnections();
     void createActions();
+    void retranslateUi();
     void registerWidgetActions(FileManagerWidget *widget);
 
 private:
@@ -75,6 +78,7 @@ private:
     FileManagerEditorHistory *m_history;
 
     QSettings *m_settings;
+    QAction *m_openEditorAction;
 
     bool ignoreSignals;
 };

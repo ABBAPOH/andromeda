@@ -26,7 +26,7 @@ const char * const Locations = "GotoMenu 1";
 namespace Actions {
 
 const char * const Open = "Open";
-const char * const Edit = "Edit";
+const char * const OpenEditor = "Edit";
 const char * const SyncPanes = "SyncPanes";
 const char * const SwapPanes = "SwapPanes";
 
