@@ -297,9 +297,9 @@ void FileManagerEditor::restoreDefaults()
     int viewModeLeft = m_settings->value(QLatin1String("fileManager/viewModeLeft"), FileManagerWidget::IconView).toInt();
     bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled"), false).toInt();
     int orientation = m_settings->value(QLatin1String("fileManager/orientation"), Qt::Horizontal).toInt();
+    widget->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
     widget->setSortingOrder((Qt::SortOrder)sortOrder);
     widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
-    widget->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
     widget->setDualPaneModeEnabled(dualPaneModeEnabled);
     widget->setOrientation((Qt::Orientation)orientation);
     widget->blockSignals(false);
