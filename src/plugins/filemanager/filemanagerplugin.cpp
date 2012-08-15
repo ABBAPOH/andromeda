@@ -204,19 +204,16 @@ void FileManagerPlugin::createViewMenu()
     cmd = new Command(Constants::Actions::ShowHiddenFiles, this);
     cmd->setDefaultText(tr("Show Hidden Files"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+.")));
-    cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::ShowLeftPanel, this);
     cmd->setDefaultText(tr("Show left panel"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+L")));
-    cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::ShowStatusBar, this);
     cmd->setDefaultText(tr("Show status bar"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+B")));
-    cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
 
     container->addCommand(new Separator(this));
@@ -225,21 +222,18 @@ void FileManagerPlugin::createViewMenu()
     cmd = new Command(Constants::Actions::IconMode, this);
     cmd->setDefaultText(tr("Icon View"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+1")));
-    cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
     viewGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::ColumnMode, this);
     cmd->setDefaultText(tr("Column View"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+2")));
-    cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
     viewGroup->addAction(cmd->commandAction());
 
     cmd = new Command(Constants::Actions::TreeMode, this);
     cmd->setDefaultText(tr("Tree View"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+3")));
-    cmd->setContext(Command::WindowCommand);
     container->addCommand(cmd);
     viewGroup->addAction(cmd->commandAction());
 
