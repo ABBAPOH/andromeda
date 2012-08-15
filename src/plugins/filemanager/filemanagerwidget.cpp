@@ -464,6 +464,7 @@ QTreeView * FileManagerWidgetPrivate::createTreeView()
     treeView->setAlternatingRowColors(alternatingRowColors);
     treeView->setExpandsOnDoubleClick(false);
     treeView->setItemsExpandable(itemsExpandable);
+    treeView->setRootIsDecorated(itemsExpandable);
     treeView->setSortingEnabled(true);
 
     connect(treeView->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
