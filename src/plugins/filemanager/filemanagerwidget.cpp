@@ -329,8 +329,10 @@ void FileManagerWidgetPrivate::setModel(FileSystemModel *m)
     if (currentView) {
         currentView->setModel(model);
         QTreeView *view = qobject_cast<QTreeView *>(currentView);
-        if (view)
+        if (view) {
             view->setColumnWidth(0, 250);
+            view->sortByColumn(sortingColumn, sortingOrder);
+        }
         connect(currentView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SIGNAL(selectedPathsChanged()));
     }
@@ -417,8 +419,10 @@ QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::View
     if (model) {
         view->setModel(model);
         QTreeView *treeView = qobject_cast<QTreeView *>(view);
-        if (treeView)
+        if (treeView) {
             treeView->setColumnWidth(0, 250);
+            treeView->sortByColumn(sortingColumn, sortingOrder);
+        }
         connect(view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SIGNAL(selectedPathsChanged()));
     }
