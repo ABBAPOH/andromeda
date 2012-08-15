@@ -46,6 +46,14 @@ void FileSystemModel::setFileSystemManager(FileSystemManager *manager)
     m_manager = manager;
 }
 
+QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DecorationRole)
+        return QVariant();
+
+    return QFileSystemModel::headerData(section, orientation, role);
+}
+
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && index.column() == 0) {
