@@ -91,11 +91,7 @@ QUrl TextEditor::url() const
 
 QIcon TextEditor::icon() const
 {
-#ifdef Q_OS_LINUX
     return QIcon::fromTheme("accessories-text-editor", QIcon(":/icons/texteditor.png"));
-#else
-    return QIcon(":/icons/texteditor.png");
-#endif
 }
 
 QString TextEditor::title() const
