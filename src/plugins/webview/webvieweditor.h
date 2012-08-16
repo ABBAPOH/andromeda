@@ -85,6 +85,8 @@ public:
     ~WebViewEditorFactory() {}
 
     QByteArray id() const { return "WebView"; }
+    QString name() const;
+    QIcon icon() const;
     QStringList mimeTypes() const { return QStringList() << "text/html"; }
     QStringList urlSchemes() const { return QStringList() << "http" << "https"; }
 

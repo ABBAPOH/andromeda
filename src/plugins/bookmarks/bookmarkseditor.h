@@ -58,6 +58,8 @@ public:
     explicit BookmarksEditorFactory(QObject *parent = 0);
 
     QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
 
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);

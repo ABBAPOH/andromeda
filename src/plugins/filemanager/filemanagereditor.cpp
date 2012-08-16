@@ -624,6 +624,16 @@ QByteArray FileManagerEditorFactory::id() const
     return "FileManager";
 }
 
+QString FileManagerEditorFactory::name() const
+{
+    return tr("File manager");
+}
+
+QIcon FileManagerEditorFactory::icon() const
+{
+    return QFileIconProvider().icon(QFileIconProvider::Folder);
+}
+
 QStringList FileManagerEditorFactory::mimeTypes() const
 {
     return QStringList() << QLatin1String("inode/directory");

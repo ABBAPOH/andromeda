@@ -56,7 +56,10 @@ public:
     explicit BinEditorFactory(QObject *parent = 0);
 
     QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
     QStringList mimeTypes() const;
+    int weight() const;
 
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);

@@ -7,6 +7,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+#include <QtGui/QIcon>
 
 class QWidget;
 
@@ -26,8 +27,11 @@ public:
     AbstractEditor *editor(QWidget *parent);
 
     virtual QByteArray id() const = 0;
+    virtual QString name() const = 0;
+    virtual QIcon icon() const = 0;
     virtual QStringList mimeTypes() const { return QStringList(); }
     virtual QStringList urlSchemes() const { return QStringList(); }
+    virtual int weight() const { return 50; }
 
 protected:
     virtual AbstractEditor *createEditor(QWidget *parent) = 0;
