@@ -321,6 +321,16 @@ void WebViewEditor::createActions()
     addAction(m_showWebInspectorAction, Constants::Actions::ShowWebInspector);
 }
 
+QString WebViewEditorFactory::name() const
+{
+    return tr("Web view");
+}
+
+QIcon WebViewEditorFactory::icon() const
+{
+    return QIcon();
+}
+
 AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)
 {
     return new WebViewEditor(parent);

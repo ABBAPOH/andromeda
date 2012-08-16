@@ -146,6 +146,16 @@ QByteArray ImageViewEditorFactory::id() const
     return "imageview";
 }
 
+QString ImageViewEditorFactory::name() const
+{
+    return tr("Image viewer");
+}
+
+QIcon ImageViewEditorFactory::icon() const
+{
+    return QIcon(":/icons/imageview.png");
+}
+
 QStringList ImageViewEditorFactory::mimeTypes() const
 {
     return QStringList() << "image/jpeg" << "image/png";

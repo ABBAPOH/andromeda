@@ -105,9 +105,24 @@ QStringList BinEditorFactory::mimeTypes() const
     return QStringList() << "application/octet-stream";
 }
 
+int BinEditorFactory::weight() const
+{
+    return 20;
+}
+
 QByteArray BinEditorFactory::id() const
 {
     return "bineditor";
+}
+
+QString BinEditorFactory::name() const
+{
+    return tr("Binary editor");
+}
+
+QIcon BinEditorFactory::icon() const
+{
+    return QIcon();
 }
 
 AbstractEditor * BinEditorFactory::createEditor(QWidget *parent)

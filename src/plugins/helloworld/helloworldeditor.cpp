@@ -53,6 +53,16 @@ QByteArray HelloWorldEditorFactory::id() const
     return "helloworld";
 }
 
+QString HelloWorldEditorFactory::name() const
+{
+    return tr("Hello world editor");
+}
+
+QIcon HelloWorldEditorFactory::icon() const
+{
+    return QIcon(":/icons/helloWorld.png");
+}
+
 AbstractEditor * HelloWorldEditorFactory::createEditor(QWidget *parent)
 {
     return new HelloWorldEditor(parent);

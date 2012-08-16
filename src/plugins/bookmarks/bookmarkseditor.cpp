@@ -131,6 +131,16 @@ QByteArray BookmarksEditorFactory::id() const
     return Constants::Editors::Bookmarks;
 }
 
+QString BookmarksEditorFactory::name() const
+{
+    return tr("Bookmarks editor");
+}
+
+QIcon BookmarksEditorFactory::icon() const
+{
+    return QIcon(":/icons/bookmarks.png");
+}
+
 AbstractEditor * BookmarksEditorFactory::createEditor(QWidget *parent)
 {
     return new BookmarksEditor(parent);

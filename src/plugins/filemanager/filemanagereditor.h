@@ -89,6 +89,8 @@ public:
     explicit FileManagerEditorFactory(QObject *parent = 0);
 
     QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
     QStringList mimeTypes() const;
 
 protected:
