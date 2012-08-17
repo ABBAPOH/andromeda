@@ -112,13 +112,8 @@ void TextEdit::newFile()
 void TextEdit::saveFile(QIODevice *device)
 {
     QTextStream out(device);
-#ifndef QT_NO_CURSOR
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
+
     out << toPlainText();
-#ifndef QT_NO_CURSOR
-    QApplication::restoreOverrideCursor();
-#endif
 }
 
 QAction * TextEdit::action(TextEdit::Action action) const
@@ -151,13 +146,9 @@ void TextEdit::open(const QString &filePath)
     }
     clear();
     QTextStream in(&file);
-#ifndef QT_NO_CURSOR
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
+
     setPlainText(in.readAll());
-#ifndef QT_NO_CURSOR
-    QApplication::restoreOverrideCursor();
-#endif
+
     curFile = filePath;
     document()->setModified(false);
 }
