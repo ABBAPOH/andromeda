@@ -112,7 +112,7 @@ void StackedContainer::open(const QUrl &dirtyUrl)
         QString id = factory->id();
         AbstractEditor *editor = d->editorHash.value(id);
         if (!editor) {
-            editor = manager->editorForUrl(url, this);
+            editor = factory->editor(this);
             editor->restoreDefaults();
             int index = d->layout->addWidget(editor);
             d->layout->setCurrentIndex(index);
@@ -151,17 +151,20 @@ bool StackedContainer::restoreState(const QByteArray &arr)
     QByteArray id, editorState;
     s >> id;
     s >> editorState;
-    AbstractEditor *e = EditorManager::instance()->editorForId(id, this);
-    if (e) {
-        setSourceEditor(e);
-        d->layout->addWidget(e);
-        d->editorHash.insert(id, e);
-        d->stackedHistory->open(QUrl());
-        return e->restoreState(editorState);
-    }
 
+    AbstractEditorFactory *factory = EditorManager::instance()->factoryForId(id);
+    if (!factory)
+        return false;
 
-    return true;
+    AbstractEditor *editor = factory->editor(this);
+    if (!editor)
+        return false;
+
+    setSourceEditor(editor);
+    d->layout->addWidget(editor);
+    d->editorHash.insert(id, editor);
+    d->stackedHistory->open(QUrl());
+    return editor->restoreState(editorState);
 }
 
 /*!

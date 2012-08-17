@@ -21,25 +21,23 @@ class GUISYSTEM_EXPORT EditorManager : public QObject
     Q_DISABLE_COPY(EditorManager)
 
 public:
+    typedef QList<AbstractEditorFactory *> FactoryList;
+
     explicit EditorManager(QObject *parent = 0);
     ~EditorManager();
 
     static EditorManager *instance();
-
-    AbstractEditor *editorForId(const QString &id, QWidget *parent = 0);
-    AbstractEditor *editorForMimeType(const QString &mimeType, QWidget *parent = 0);
-    AbstractEditor *editorForScheme(const QString &scheme, QWidget *parent = 0);
-    AbstractEditor *editorForUrl(const QUrl &url, QWidget *parent = 0);
 
     AbstractEditorFactory *factoryForId(const QString &id) const;
     AbstractEditorFactory *factoryForMimeType(const QString &mimeType) const;
     AbstractEditorFactory *factoryForScheme(const QString &scheme) const;
     AbstractEditorFactory *factoryForUrl(const QUrl &url) const;
 
-    QList<AbstractEditorFactory *> factories() const;
-    QList<AbstractEditorFactory *> factoriesForMimeType(const QString &mimeType) const;
-    QList<AbstractEditorFactory *> factoriesForScheme(const QString &scheme) const;
-    QList<AbstractEditorFactory *> factoriesForUrl(const QUrl &url) const;
+    FactoryList factories() const;
+    FactoryList factoriesForMimeType(const QString &mimeType) const;
+    FactoryList factoriesForScheme(const QString &scheme) const;
+    FactoryList factoriesForUrl(const QUrl &url) const;
+    FactoryList factoriesForUrls(const QList<QUrl> &urls) const;
 
     void addFactory(AbstractEditorFactory *factory);
     void removeFactory(AbstractEditorFactory *factory);

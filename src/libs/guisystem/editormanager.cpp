@@ -17,13 +17,18 @@ public:
     QHash<QString, AbstractViewFactory *> viewFactories;
 
     QHash<QString, AbstractEditorFactory *> factoriesForId;
-    QMultiHash<QString, AbstractEditorFactory *> factoriesForMimeType;
-    QMultiHash<QString, AbstractEditorFactory *> factoriesForScheme;
+    QHash<QString, EditorManager::FactoryList> factoriesForMimeType;
+    QHash<QString, EditorManager::FactoryList> factoriesForScheme;
 };
 
 } // namespace Core
 
 using namespace GuiSystem;
+
+static inline bool editorFactoryLessThan(AbstractEditorFactory *first, AbstractEditorFactory *second)
+{
+    return first->weight() > second->weight();
+}
 
 /*!
   \class GuiSystem::EditorManager
@@ -59,54 +64,6 @@ EditorManager * EditorManager::instance()
 }
 
 /*!
-  \brief Creates new editor with given \a id and \a parent.
-*/
-AbstractEditor * EditorManager::editorForId(const QString &id, QWidget *parent)
-{
-    AbstractEditorFactory *f = factoryForId(id);
-    if (f)
-        return f->editor(parent);
-
-    return 0;
-}
-
-/*!
-  \brief Creates new editor with \a parent that can handle given \a mimeType.
-*/
-AbstractEditor * EditorManager::editorForMimeType(const QString &mimeType, QWidget *parent)
-{
-    AbstractEditorFactory *f = factoryForMimeType(mimeType);
-    if (f)
-        return f->editor(parent);
-
-    return 0;
-}
-
-/*!
-  \brief Creates new editor with \a parent that can handle given \a scheme.
-*/
-AbstractEditor *EditorManager::editorForScheme(const QString &scheme, QWidget *parent)
-{
-    AbstractEditorFactory *f = factoryForScheme(scheme);
-    if (f)
-        return f->editor(parent);
-
-    return 0;
-}
-
-/*!
-  \brief Creates new editor with \a parent that can handle given \a url.
-*/
-AbstractEditor * EditorManager::editorForUrl(const QUrl &url, QWidget *parent)
-{
-    AbstractEditorFactory *f = factoryForUrl(url);
-    if (f)
-        return f->editor(parent);
-
-    return 0;
-}
-
-/*!
   \brief Returns factory with given \a id.
 */
 AbstractEditorFactory * EditorManager::factoryForId(const QString &id) const
@@ -119,29 +76,23 @@ AbstractEditorFactory * EditorManager::factoryForId(const QString &id) const
 */
 AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeType) const
 {
-    QMimeDatabase db;
-    QMimeType mt = db.mimeTypeForName(mimeType);
-    QStringList mimeTypes;
-    mimeTypes.append(mimeType);
-    mimeTypes.append(mt.parentMimeTypes());
-    foreach (const QString &mimeType, mimeTypes) {
-        AbstractEditorFactory * f = d_func()->factoriesForMimeType.value(mimeType);
-        if (f)
-        return f;
-    }
-    return 0;
+    const FactoryList &factories = factoriesForMimeType(mimeType);
+    if (factories.isEmpty())
+        return 0;
+
+    return factories.first();
 }
 
 /*!
   \brief Returns factory that can handle given \a scheme.
 */
-AbstractEditorFactory *EditorManager::factoryForScheme(const QString &scheme) const
+AbstractEditorFactory * EditorManager::factoryForScheme(const QString &scheme) const
 {
-    AbstractEditorFactory * f = d_func()->factoriesForScheme.value(scheme);
-    if (f)
-        return f;
+    const FactoryList &factories = factoriesForScheme(scheme);
+    if (factories.isEmpty())
+        return 0;
 
-    return 0;
+    return factories.first();
 }
 
 /*!
@@ -149,24 +100,17 @@ AbstractEditorFactory *EditorManager::factoryForScheme(const QString &scheme) co
 */
 AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
 {
-    if (url.scheme() == qApp->applicationName()) {
-        return factoryForId(url.host());
-    } else {
-        AbstractEditorFactory *f = factoryForScheme(url.scheme());
-        if (f)
-            return f;
+    const FactoryList &factories = this->factoriesForUrl(url);
+    if (factories.isEmpty())
+        return 0;
 
-        QMimeDatabase db;
-        QString mimeType = db.mimeTypeForUrl(url).name();
-        return factoryForMimeType(mimeType);
-    }
-    return 0;
+    return factories.first();
 }
 
 /*!
   \brief Returns list of all factories.
 */
-QList<AbstractEditorFactory *> EditorManager::factories() const
+EditorManager::FactoryList EditorManager::factories() const
 {
     return d_func()->factoriesForId.values();
 }
@@ -174,23 +118,40 @@ QList<AbstractEditorFactory *> EditorManager::factories() const
 /*!
   \brief Returns list of factories that can handle given \a mimeType.
 */
-QList<AbstractEditorFactory *> EditorManager::factoriesForMimeType(const QString &mimeType) const
+EditorManager::FactoryList EditorManager::factoriesForMimeType(const QString &mimeType) const
 {
-    return d_func()->factoriesForMimeType.values(mimeType);
+    FactoryList result;
+
+    QMimeDatabase db;
+    QMimeType mt = db.mimeTypeForName(mimeType);
+    QStringList mimeTypes;
+    mimeTypes.append(mimeType);
+    mimeTypes.append(mt.parentMimeTypes());
+    foreach (const QString &mimeType, mimeTypes) {
+        const FactoryList &factories = d_func()->factoriesForMimeType.value(mimeType);
+        foreach (AbstractEditorFactory *f, factories) {
+            if (!result.contains(f))
+                result.append(f);
+        }
+    }
+
+    qSort(result.begin(), result.end(), editorFactoryLessThan);
+
+    return result;
 }
 
 /*!
   \brief Returns list of factories that can handle given \a scheme.
 */
-QList<AbstractEditorFactory *> EditorManager::factoriesForScheme(const QString &scheme) const
+EditorManager::FactoryList EditorManager::factoriesForScheme(const QString &scheme) const
 {
-    return d_func()->factoriesForScheme.values(scheme);
+    return d_func()->factoriesForScheme.value(scheme);
 }
 
 /*!
   \brief Returns list of factories that can handle given \a url.
 */
-QList<AbstractEditorFactory *> EditorManager::factoriesForUrl(const QUrl &url) const
+EditorManager::FactoryList EditorManager::factoriesForUrl(const QUrl &url) const
 {
     QList<AbstractEditorFactory *> result;
 
@@ -205,6 +166,27 @@ QList<AbstractEditorFactory *> EditorManager::factoriesForUrl(const QUrl &url) c
     }
 
     return result;
+}
+
+EditorManager::FactoryList EditorManager::factoriesForUrls(const QList<QUrl> &urls) const
+{
+    if (urls.isEmpty())
+        return FactoryList();
+
+    FactoryList factories = this->factoriesForUrl(urls.first());
+
+    foreach (const QUrl &url, urls.mid(1)) {
+        if (factories.isEmpty())
+            break;
+
+        FactoryList list = this->factoriesForUrl(url);
+        foreach (AbstractEditorFactory *f, factories) {
+            if (!list.contains(f))
+                factories.removeOne(f);
+        }
+    }
+
+    return factories;
 }
 
 /*!
@@ -225,17 +207,29 @@ void EditorManager::addFactory(AbstractEditorFactory *factory)
         return;
     }
 
+    d->factoriesForId.insert(factory->id(), factory);
+
     foreach (const QString &mimeType, factory->mimeTypes()) {
-        d->factoriesForMimeType.insert(mimeType, factory);
+        d->factoriesForMimeType[mimeType].append(factory);
     }
 
     foreach (const QString &scheme, factory->urlSchemes()) {
-        d->factoriesForScheme.insert(scheme, factory);
+        d->factoriesForScheme[scheme].append(factory);
     }
 
-    d->factoriesForId.insert(factory->id(), factory);
-
     connect(factory, SIGNAL(destroyed(QObject *)), this, SLOT(onDestroyed1(QObject*)));
+}
+
+static void removeFactory(QHash<QString, EditorManager::FactoryList> &hash, AbstractEditorFactory *factory)
+{
+    QMutableHashIterator<QString, EditorManager::FactoryList> i(hash);
+    while (i.hasNext()) {
+        i.next();
+        EditorManager::FactoryList &factories = i.value();
+        factories.removeAll(factory);
+        if (factories.isEmpty())
+            i.remove();
+    }
 }
 
 /*!
@@ -248,13 +242,8 @@ void EditorManager::removeFactory(AbstractEditorFactory *factory)
     if (!factory)
         return;
 
-    foreach (const QString &mimeType, d->factoriesForMimeType.keys(factory)) {
-        d->factoriesForMimeType.remove(mimeType, factory);
-    }
-
-    foreach (const QString &scheme, d->factoriesForScheme.keys(factory)) {
-        d->factoriesForScheme.remove(scheme, factory);
-    }
+    ::removeFactory(d->factoriesForMimeType, factory);
+    ::removeFactory(d->factoriesForScheme, factory);
 
     d->factoriesForId.remove(d->factoriesForId.key(factory));
 
