@@ -189,30 +189,38 @@ EditorWindow *BrowserWindowFactory::create()
     return new BrowserWindow;
 }
 
-void BrowserWindowFactory::openFlag(EditorWindowFactory::OpenFlag cap, QList<QUrl> urls)
+void BrowserWindowFactory::open(const QList<QUrl> &urls)
 {
-    if (urls.isEmpty())
-        return;
-
-    switch (cap) {
-    case OpenNewEditor : {
-        BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
-        if (window)
-            window->openNewTabs(urls);
+    BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
+    if (window) {
+        if (urls.count() == 1)
+            window->open(urls.first());
         else
-            openFlag(OpenNewWindow, urls);
-        break;
+            window->openNewTabs(urls); // TODO: setting to open in windows instead
+    } else {
+        BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
+        window->openNewTabs(urls); // TODO: setting to open in windows instead
+        window->show();
     }
-    case OpenNewWindow : {
+}
+
+void BrowserWindowFactory::openNewEditor(const QList<QUrl> &urls)
+{
+    BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
+    if (window) {
+        window->openNewTabs(urls);
+    } else {
         BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
         window->openNewTabs(urls);
         window->show();
-        break;
     }
-    default:
-        EditorWindowFactory::openFlag(cap, urls);
-        break;
-    }
+}
+
+void BrowserWindowFactory::openNewWindow(const QList<QUrl> &urls)
+{
+    BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
+    window->openNewTabs(urls); // TODO: setting to open in windows instead
+    window->show();
 }
 
 /*!

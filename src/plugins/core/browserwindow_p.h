@@ -51,7 +51,10 @@ public:
     explicit BrowserWindowFactory(QObject *parent = 0);
 
     GuiSystem::EditorWindow *create();
-    void openFlag(OpenFlag cap, QList<QUrl> urls);
+
+    void open(const QList<QUrl> &urls);
+    void openNewEditor(const QList<QUrl> &urls);
+    void openNewWindow(const QList<QUrl> &urls);
 };
 
 } // namespace Core
