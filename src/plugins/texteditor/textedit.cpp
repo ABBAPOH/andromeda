@@ -103,12 +103,6 @@ void TextEdit::shrinkFont()
     this->setFont(font);
 }
 
-void TextEdit::newFile()
-{
-    clear();
-    curFile.clear();
-}
-
 void TextEdit::saveFile(QIODevice *device)
 {
     QTextStream out(device);
