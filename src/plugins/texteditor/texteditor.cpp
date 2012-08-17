@@ -3,7 +3,7 @@
 #include <QtCore/QUrl>
 #include <QtGui/QLabel>
 #include <QtGui/QResizeEvent>
-#include <QDebug>
+#include <QFileInfo>
 
 using namespace GuiSystem;
 using namespace TEXTEditor;
@@ -75,7 +75,8 @@ void TextEditor::open(const QUrl &url)
         return;
     }
 
-    m_editor->open(url.toLocalFile());
+    m_editor->open(path);
+    m_currentFile = path;
 
     emit urlChanged(url);
     emit iconChanged(icon());
@@ -96,17 +97,22 @@ QIcon TextEditor::icon() const
 
 QString TextEditor::title() const
 {
-    return m_editor->currentFileName();
+    return currentFileName();
 }
 
 QString TextEditor::windowTitle() const
 {
-    return m_editor->currentFileName();
+    return currentFileName();
 }
 
 IFile *TextEditor::file() const
 {
     return m_file;
+}
+
+QString TextEditor::currentFileName() const
+{
+    return QFileInfo(m_currentFile).fileName();
 }
 
 TextEditorFactory::TextEditorFactory(QObject *parent) :

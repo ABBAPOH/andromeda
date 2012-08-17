@@ -55,11 +55,9 @@ public slots:
 
 private:
     void createActions();
-    QString strippedName(const QString &fullFileName);
 
 private:
     QAction *actions[ActionsCount];
-    QString curFile;
 };
 
 #endif // TEXTEDIT_H

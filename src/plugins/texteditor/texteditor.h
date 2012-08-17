@@ -36,11 +36,15 @@ protected:
     void setupUi();
 
 private:
+    QString currentFileName() const;
+
+private:
     QUrl m_url;
     QVBoxLayout *m_layout;
     TextEdit *m_editor;
     QToolBar *m_toolBar;
     TextEditorFile *m_file;
+    QString m_currentFile;
 
     friend class TextEditorFile;
 

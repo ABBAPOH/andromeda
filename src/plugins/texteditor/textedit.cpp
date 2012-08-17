@@ -118,16 +118,6 @@ QAction * TextEdit::action(TextEdit::Action action) const
     return actions[action];
 }
 
-QString TextEdit::strippedName(const QString &fullFileName)
-{
-    return QFileInfo(fullFileName).fileName();
-}
-
-QString TextEdit::currentFileName()
-{
-    return strippedName(curFile);
-}
-
 void TextEdit::open(const QString &filePath)
 {
     QFile file(filePath);
@@ -143,7 +133,6 @@ void TextEdit::open(const QString &filePath)
 
     setPlainText(in.readAll());
 
-    curFile = filePath;
     document()->setModified(false);
 }
 
