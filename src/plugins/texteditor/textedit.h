@@ -51,7 +51,6 @@ private slots:
 public slots:
     void enlargeFont();
     void shrinkFont();
-    void newFile();
     void loadSettings();
 
 private:

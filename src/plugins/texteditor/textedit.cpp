@@ -17,7 +17,7 @@ void TextEdit::createActions()
     actions[TextEdit::New]->setShortcut(QKeySequence::New);
     actions[TextEdit::New]->setText(tr("New"));
     actions[TextEdit::New]->setIcon(QIcon::fromTheme("document-new"));
-    connect(actions[TextEdit::New], SIGNAL(triggered()), this, SLOT(newFile()));
+    connect(actions[TextEdit::New], SIGNAL(triggered()), this, SLOT(clear()));
 
     actions[TextEdit::Save] = new QAction(this);
     actions[TextEdit::Save]->setObjectName("actionSave");
