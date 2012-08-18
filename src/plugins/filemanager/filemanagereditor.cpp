@@ -19,6 +19,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 #include <QtGui/QAction>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFileIconProvider>
 #include <QtGui/QResizeEvent>
@@ -464,6 +465,33 @@ void FileManagerEditor::onSplitterMoved(int, int)
 /*!
     \internal
 */
+void FileManagerEditor::openPaths(const QStringList &paths)
+{
+    QStringList folders;
+    foreach (const QString &path, paths) {
+        QFileInfo info(path);
+        if (info.isDir() && !info.isBundle())
+            folders.append(path);
+        else
+            // TODO: allow to open default editor instead
+            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    }
+
+    if (folders.isEmpty())
+        return;
+
+    QList<QUrl> urls;
+    foreach (const QString &path, folders) {
+        urls.append(QUrl::fromLocalFile(path));
+    }
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
+    if (factory)
+        factory->open(urls);
+}
+
+/*!
+    \internal
+*/
 void FileManagerEditor::openNewTab(const QStringList &paths)
 {
     QList<QUrl> urls;
@@ -552,6 +580,7 @@ void FileManagerEditor::setupConnections()
     DualPaneWidget *widget = m_widget->dualPane();
     connect(widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
     connect(widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
+    connect(widget, SIGNAL(openRequested(QStringList)), SLOT(openPaths(QStringList)));
     connect(widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
     connect(widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
     connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));

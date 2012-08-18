@@ -135,6 +135,7 @@ signals:
     void sortingChanged();
     void viewModeChanged(FileManagerWidget::ViewMode mode);
 
+    void openRequested(const QStringList &paths);
     void openNewTabRequested(const QStringList &paths);
     void openNewWindowRequested(const QStringList &paths);
 
