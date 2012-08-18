@@ -64,6 +64,7 @@ private slots:
     void openNewTab(const QStringList &paths);
     void openNewWindow(const QStringList &paths);
     void openEditor();
+    void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
     void showContextMenu(const QPoint &pos);
 
 private:

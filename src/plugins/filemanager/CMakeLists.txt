@@ -32,6 +32,7 @@ set( HEADERS
     navigationpanel_p.h
     navigationpanelsettings.h
     openwithmenu.h
+    openwitheditormenu.h
     permissionswidget.h
    )
 set( SOURCES
@@ -57,6 +58,7 @@ set( SOURCES
     navigationpanel.cpp
     navigationpanelsettings.cpp
     openwithmenu.cpp
+    openwitheditormenu.cpp
     permissionswidget.cpp
    )
 set( FORMS
