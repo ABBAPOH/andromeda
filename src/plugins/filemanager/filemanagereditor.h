@@ -61,6 +61,7 @@ private slots:
     void onPanelVisibleChanged(bool);
     void onStatusBarVisibleChanged(bool);
     void onSplitterMoved(int,int);
+    void openPaths(const QStringList &paths);
     void openNewTab(const QStringList &paths);
     void openNewWindow(const QStringList &paths);
     void openEditor();

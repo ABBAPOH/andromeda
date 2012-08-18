@@ -1353,21 +1353,33 @@ void FileManagerWidget::newFolder()
 }
 
 /*!
-    Opens currently selected paths. For a folders, opens first selected folder,
-    for files, opens each file in standard applications for that file.
+    Opens currently selected paths. If selected only one folder, opens it;
+    otherwise emits openRequested() signal.
 */
 void FileManagerWidget::open()
 {
-    foreach (const QString path, selectedPaths()) {
-        // TODO: open all folders in windows/tabs
+    QStringList paths = selectedPaths();
+
+    if (paths.count() == 1) {
+        const QString &path = paths.first();
         QFileInfo info(path);
         if (info.isDir() && !info.isBundle()) {
             setCurrentPath(path);
             return;
-        } else {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
         }
     }
+    emit openRequested(paths);
+
+//    foreach (const QString path, selectedPaths()) {
+//        // TODO: open all folders in windows/tabs
+//        QFileInfo info(path);
+//        if (info.isDir() && !info.isBundle()) {
+//            setCurrentPath(path);
+//            return;
+//        } else {
+//            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+//        }
+//    }
 }
 
 /*!

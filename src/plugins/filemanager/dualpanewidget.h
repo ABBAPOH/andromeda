@@ -77,6 +77,7 @@ signals:
     void activePaneChanged(DualPaneWidget::Pane pane);
     void currentPathChanged(const QString &path);
 
+    void openRequested(const QStringList &paths);
     void openNewTabRequested(const QStringList &paths);
     void openNewWindowRequested(const QStringList &paths);
 
