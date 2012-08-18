@@ -35,6 +35,7 @@ public:
 
 public slots:
     void open(const QUrl &url = QUrl());
+    void openEditor(const QUrl &url, const QByteArray &editor);
 
 private slots:
     void onUrlChanged(const QUrl &url);

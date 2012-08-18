@@ -18,6 +18,8 @@ class StackedContainerPrivate
 public:
     StackedContainerPrivate(StackedContainer *qq) : q_ptr(qq) {}
 
+    void openEditor(const QUrl &url, AbstractEditorFactory *factory);
+
     QStackedLayout *layout;
     QUrl currentUrl;
     AbstractEditor *editor;

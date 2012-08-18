@@ -82,14 +82,6 @@ void TabContainer::setCurrentIndex(int index)
 }
 
 /*!
-  \brief Opens stacked editor in tab new.
-*/
-void TabContainer::newTab()
-{
-    newTab(m_defaultUrl);
-}
-
-/*!
   \brief Url to be opened in new tab.
 */
 QUrl TabContainer::defaultUrl() const
@@ -184,27 +176,36 @@ QByteArray TabContainer::saveState() const
     return state;
 }
 
+/*!
+  \brief Opens stacked editor in tab new.
+*/
+void TabContainer::newTab()
+{
+    newTab(m_defaultUrl);
+}
+
 void TabContainer::newTab(const QUrl &url)
 {
     AbstractEditor *container = createEditor();
     container->open(url);
-    QString title = container->title();
 
-    int index;
-#ifdef Q_OS_MAC
-    index = m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
-#else
-    index = m_tabWidget->addTab(container, container->icon(), title.isEmpty() ? tr("New tab") : title);
-#endif
+    addTab(container);
+}
 
-    if (index != m_tabWidget->currentIndex())
-        m_tabWidget->setCurrentIndex(index);
-    else
-        setSourceEditor(container);
+void TabContainer::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
+{
+    // open single url in a current tab
+    if (urls.count() == 1) {
+        StackedContainer *container = qobject_cast<StackedContainer *>(sourceEditor());
+        container->openEditor(urls.first(), editor);
+        return;
+    }
 
-    if (m_tabWidget->count() > 1) {
-        m_tabWidget->setTabsClosable(true);
-        m_tabWidget->setTabBarVisible(true);
+    foreach (const QUrl &url, urls) {
+        StackedContainer *container = qobject_cast<StackedContainer *>(createEditor());
+        container->openEditor(url, editor);
+
+        addTab(container, false);
     }
 }
 
@@ -234,6 +235,30 @@ void TabContainer::closeTab(int index)
 void TabContainer::close()
 {
     closeTab(-1);
+}
+
+void TabContainer::addTab(AbstractEditor *container, bool changeTab)
+{
+    QString title = container->title();
+
+    int index;
+#ifdef Q_OS_MAC
+    index = m_tabWidget->addTab(container, title.isEmpty() ? tr("New tab") : title);
+#else
+    index = m_tabWidget->addTab(container, container->icon(), title.isEmpty() ? tr("New tab") : title);
+#endif
+
+    if (changeTab) {
+        if (index != m_tabWidget->currentIndex())
+            m_tabWidget->setCurrentIndex(index);
+        else
+            setSourceEditor(container);
+    }
+
+    if (m_tabWidget->count() > 1) {
+        m_tabWidget->setTabsClosable(true);
+        m_tabWidget->setTabBarVisible(true);
+    }
 }
 
 /*!

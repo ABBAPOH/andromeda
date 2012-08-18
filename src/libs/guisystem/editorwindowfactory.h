@@ -34,6 +34,7 @@ public:
 
     void open(const QUrl &url);
     virtual void open(const QList<QUrl> &urls);
+    virtual void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
 
     void openNewEditor(const QUrl &url);
     virtual void openNewEditor(const QList<QUrl> &urls);

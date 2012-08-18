@@ -37,6 +37,7 @@ public slots:
     void open(const QUrl &url);
     void openNewTab(const QUrl &url);
     void openNewTabs(const QList<QUrl> &urls);
+    void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
 
     void close();
 

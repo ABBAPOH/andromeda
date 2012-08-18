@@ -223,6 +223,13 @@ void BrowserWindowFactory::openNewWindow(const QList<QUrl> &urls)
     window->show();
 }
 
+void BrowserWindowFactory::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
+{
+    BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
+    if (window)
+        window->openEditor(urls, editor);
+}
+
 /*!
     \class Core::BrowserWindow
 
@@ -338,6 +345,14 @@ void BrowserWindow::openNewTabs(const QList<QUrl> &urls)
     foreach (const QUrl &url, urls) {
         openNewTab(url);
     }
+}
+
+void BrowserWindow::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
+{
+    Q_D(BrowserWindow);
+
+    // TODO: add setting to open urls in new windows instead
+    d->container->openEditor(urls, editor);
 }
 
 /*!
