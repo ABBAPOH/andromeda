@@ -70,6 +70,10 @@ void EditorWindowFactory::open(const QList<QUrl> &urls)
     }
 }
 
+void EditorWindowFactory::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
+{
+}
+
 void EditorWindowFactory::openNewEditor(const QUrl &url)
 {
     openNewEditor(QList<QUrl>() << url);

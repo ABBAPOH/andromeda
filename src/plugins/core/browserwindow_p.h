@@ -53,6 +53,7 @@ public:
     GuiSystem::EditorWindow *create();
 
     void open(const QList<QUrl> &urls);
+    void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
     void openNewEditor(const QList<QUrl> &urls);
     void openNewWindow(const QList<QUrl> &urls);
 };

@@ -37,16 +37,17 @@ public:
     QByteArray saveState() const;
 
 public slots:
+    void newTab();
     void newTab(const QUrl &url);
+    void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
 
     void closeTab(int index);
     void close();
 
     void setCurrentIndex(int index);
 
-    void newTab();
-
 protected:
+    void addTab(AbstractEditor *editor, bool changeTab = true);
     void resizeEvent(QResizeEvent *);
 
 private slots:

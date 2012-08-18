@@ -12,6 +12,31 @@
 
 using namespace GuiSystem;
 
+void StackedContainerPrivate::openEditor(const QUrl &url, AbstractEditorFactory *factory)
+{
+    Q_Q(StackedContainer);
+
+    if (factory) {
+        QString id = factory->id();
+        AbstractEditor *editor = editorHash.value(id);
+        if (!editor) {
+            editor = factory->editor(q);
+            editor->restoreDefaults();
+            int index = layout->addWidget(editor);
+            layout->setCurrentIndex(index);
+            editorHash.insert(id, editor);
+        } else {
+            layout->setCurrentWidget(editor);
+        }
+        q->setSourceEditor(editor);
+        stackedHistory->open(url);
+        editor->open(url);
+    } else {
+        QDesktopServices::openUrl(url);
+        return;
+    }
+}
+
 /*!
   \class GuiSystem::StackedEditor
 
@@ -108,25 +133,28 @@ void StackedContainer::open(const QUrl &dirtyUrl)
 
     EditorManager *manager = EditorManager::instance();
     AbstractEditorFactory *factory = manager->factoryForUrl(url);
-    if (factory) {
-        QString id = factory->id();
-        AbstractEditor *editor = d->editorHash.value(id);
-        if (!editor) {
-            editor = factory->editor(this);
-            editor->restoreDefaults();
-            int index = d->layout->addWidget(editor);
-            d->layout->setCurrentIndex(index);
-            d->editorHash.insert(id, editor);
-        } else {
-            d->layout->setCurrentWidget(editor);
-        }
-        setSourceEditor(editor);
-        d->stackedHistory->open(url);
-        editor->open(url);
-    } else {
-        QDesktopServices::openUrl(url);
+    d->openEditor(url, factory);
+
+    // todo: remove?
+    emit urlChanged(d->currentUrl);
+}
+
+void StackedContainer::openEditor(const QUrl &dirtyUrl, const QByteArray &editor)
+{
+    QUrl url = dirtyUrl;
+    url.setPath(QDir::cleanPath(url.path()));
+
+    if (url.isEmpty())
         return;
-    }
+
+    if (d->currentUrl == url)
+        return;
+
+    d->currentUrl = url;
+
+    EditorManager *manager = EditorManager::instance();
+    AbstractEditorFactory *factory = manager->factoryForId(editor);
+    d->openEditor(url, factory);
 
     // todo: remove?
     emit urlChanged(d->currentUrl);
