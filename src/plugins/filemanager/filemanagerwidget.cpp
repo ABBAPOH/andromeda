@@ -507,11 +507,21 @@ void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
     Q_Q(FileManagerWidget);
 
     QString path = model->filePath(index);
+
+    Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
+    if (modifiers & Qt::ControlModifier) {
+        emit q->openNewTabRequested(QStringList() << path);
+        return;
+    } else if (modifiers & Qt::AltModifier) {
+        emit q->openNewWindowRequested(QStringList() << path);
+        return;
+    }
+
     QFileInfo info(path);
     if (info.isDir() && !info.isBundle()) {
         q->setCurrentPath(info.absoluteFilePath());
-    }  else {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    } else {
+        emit q->openRequested(QStringList() << path);
     }
 }
 
