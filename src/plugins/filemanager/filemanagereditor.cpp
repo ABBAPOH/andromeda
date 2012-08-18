@@ -13,6 +13,7 @@
 #include "dualpanewidget.h"
 #include "navigationmodel.h"
 #include "navigationpanel.h"
+#include "openwitheditormenu.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
@@ -498,15 +499,36 @@ void FileManagerEditor::openEditor()
     emit openTriggered(QUrl::fromLocalFile(paths.first()));
 }
 
+void FileManagerEditor::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
+{
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
+    if (!factory)
+        return;
+
+    factory->openEditor(urls, editor);
+}
+
 void FileManagerEditor::showContextMenu(const QPoint &pos)
 {
     FileManagerWidget *widget = qobject_cast<FileManagerWidget *>(sender());
     Q_ASSERT(widget);
+
     QStringList paths = widget->selectedPaths();
     QMenu *menu = widget->createStandardMenu(paths);
     QList<QAction *> actions = menu->actions();
-    menu->insertSeparator(actions.at(4));
-    menu->insertAction(actions.at(4), m_openEditorAction);
+
+    OpenWithEditorMenu *openWithMenu = new OpenWithEditorMenu(menu);
+    openWithMenu->setPaths(paths);
+    connect(openWithMenu, SIGNAL(openRequested(QList<QUrl>,QByteArray)), SLOT(openEditor(QList<QUrl>,QByteArray)));
+
+    if (!openWithMenu->isEmpty()) {
+        QAction *actionBefore = actions.at(4);
+        menu->insertSeparator(actionBefore);
+        menu->insertAction(actionBefore, m_openEditorAction);
+        if (openWithMenu->actions().count() > 1)
+            menu->insertMenu(actionBefore, openWithMenu);
+    }
+
     menu->exec(widget->mapToGlobal(pos));
     delete menu;
 }
