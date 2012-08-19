@@ -13,6 +13,7 @@
 #include <io/QDriveController>
 
 #include "navigationpanelsettings.h"
+#include <QFontMetrics>
 
 using namespace FileManager;
 
@@ -147,9 +148,9 @@ NavigationModel::NavigationModel(QObject *parent) :
 
     d->rootItem = new NavigationModelItem();
 
-    d->drivesItem = new NavigationModelItem(d->rootItem, tr("Devices"));
+    d->foldersItem = new NavigationModelItem(d->rootItem, tr("Favorites"));
     d->networkItem = new NavigationModelItem(d->rootItem, tr("Network"));
-    d->foldersItem = new NavigationModelItem(d->rootItem, tr("Folders"));
+    d->drivesItem = new NavigationModelItem(d->rootItem, tr("Devices"));
 
     d->driveController = new QDriveController(this);
     connect(d->driveController, SIGNAL(driveMounted(QString)), d, SLOT(onDriveAdded(QString)));
@@ -231,6 +232,13 @@ QVariant NavigationModel::data(const QModelIndex &index, int role) const
             return item->icon;
         else
             return QVariant();
+    } else if (role == Qt::SizeHintRole) {
+        if (item->type == NavigationModelItem::GroupItem) {
+            QFontMetrics fm = qApp->fontMetrics();
+            int h = fm.height();
+            int w = fm.width(item->name);
+            return QSize(w, 1.5*h);
+        }
     }
     return QVariant();
 }
@@ -362,12 +370,12 @@ Qt::ItemFlags NavigationModel::flags(const QModelIndex &index) const
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
     if (item == d->foldersItem)
-        return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
+        return Qt::ItemIsDropEnabled;
 
     if (item->type == NavigationModelItem::ChildItem)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 
-    return Qt::ItemIsEnabled;
+    return Qt::NoItemFlags;
 }
 
 /*!
