@@ -16,6 +16,7 @@ public:
 
     bool isReadOnly() const { return false; }
 
+    void open(const QUrl &url);
     void save(const QUrl &url);
     
 private:

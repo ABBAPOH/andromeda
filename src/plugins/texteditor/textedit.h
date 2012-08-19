@@ -19,8 +19,6 @@ class TextEdit : public QPlainTextEdit
 public:
     TextEdit(QWidget *parent = 0);
 
-    void open(const QString &filePath);
-
     enum Action {
         New,
         Save,
@@ -40,7 +38,6 @@ public:
 
     QAction *action(Action action) const;
     QString currentFileName();
-    void saveFile(QIODevice *device);
 
 protected:
     void resizeEvent(QResizeEvent *event);

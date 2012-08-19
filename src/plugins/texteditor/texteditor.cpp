@@ -4,9 +4,33 @@
 #include <QtGui/QLabel>
 #include <QtGui/QResizeEvent>
 #include <QFileInfo>
+#include <QTextStream>
 
 using namespace GuiSystem;
 using namespace TEXTEditor;
+
+void TextEditorFile::open(const QUrl &url)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 0))
+    if (!url.isLocalFile())
+#else
+    if (url.scheme() != QLatin1String("file"))
+#endif
+        return;
+
+    QString path = url.toLocalFile();
+
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        return;
+    }
+    editor->m_editor->clear();
+    QTextStream in(&file);
+
+    editor->m_editor->setPlainText(in.readAll());
+
+    editor->m_editor->document()->setModified(false);
+}
 
 void TextEditorFile::save(const QUrl &url)
 {
@@ -22,7 +46,11 @@ void TextEditorFile::save(const QUrl &url)
     if (!file.open(QFile::WriteOnly))
         return;
 
-    editor->m_editor->saveFile(&file);
+    QTextStream out(&file);
+
+    out << editor->m_editor->toPlainText();
+
+    editor->m_editor->document()->setModified(false);
 }
 
 TextEditor::TextEditor(QWidget *parent) :
@@ -75,7 +103,7 @@ void TextEditor::open(const QUrl &url)
         return;
     }
 
-    m_editor->open(path);
+    m_file->open(url);
     m_currentFile = path;
 
     emit urlChanged(url);

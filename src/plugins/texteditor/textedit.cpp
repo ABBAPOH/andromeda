@@ -103,37 +103,12 @@ void TextEdit::shrinkFont()
     this->setFont(font);
 }
 
-void TextEdit::saveFile(QIODevice *device)
-{
-    QTextStream out(device);
-
-    out << toPlainText();
-}
-
 QAction * TextEdit::action(TextEdit::Action action) const
 {
     if (action < 0 || action >= ActionsCount)
         return 0;
 
     return actions[action];
-}
-
-void TextEdit::open(const QString &filePath)
-{
-    QFile file(filePath);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("Editor"),
-                             tr("Cannot read file %1:\n%2.")
-                             .arg(filePath)
-                             .arg(file.errorString()));
-        return;
-    }
-    clear();
-    QTextStream in(&file);
-
-    setPlainText(in.readAll());
-
-    document()->setModified(false);
 }
 
 void TextEdit::resizeEvent(QResizeEvent *e)
