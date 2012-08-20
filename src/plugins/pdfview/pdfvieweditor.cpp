@@ -292,6 +292,16 @@ QByteArray PdfViewEditorFactory::id() const
     return "PdfView";
 }
 
+QString PdfViewEditorFactory::name() const
+{
+    return tr("PDF Viewer");
+}
+
+QIcon PdfViewEditorFactory::icon() const
+{
+    return QIcon(":/icons/pdfview.png");
+}
+
 QStringList PdfViewEditorFactory::mimeTypes() const
 {
     return QStringList() << "application/pdf";
