@@ -107,9 +107,11 @@ void SettingsWindowPrivate::setupUi()
     actionGroup->setExclusive(true);
 
     toolbar = new QToolBar;
+    toolbar->setFloatable(false);
+    toolbar->setMovable(false);
     toolbar->setIconSize(QSize(categoryIconSize, categoryIconSize));
     toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    q->addToolBar(toolbar);
+    q->addToolBar(Qt::TopToolBarArea, toolbar);
     q->setUnifiedTitleAndToolBarOnMac(true);
 
     q->setCentralWidget(new QWidget);
