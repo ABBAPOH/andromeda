@@ -31,6 +31,8 @@ set( HEADERS
     settingspage.h
     settingspagemanager.h
     settingswindow.h
+    sharedproperties.h
+    sharedproperties_p.h
     stackedcontainer.h
     stackedcontainer_p.h
     stackedhistory.h
@@ -65,6 +67,7 @@ set( SOURCES
     settingspage.cpp
     settingspagemanager.cpp
     settingswindow.cpp
+    sharedproperties.cpp
     stackedcontainer.cpp
     stackedhistory.cpp
    )
