@@ -12,5 +12,6 @@ function( qt4_wrap_single_cpp SOURCE )
     set_source_files_properties( ${SOURCE}  OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${SOURCENAME}.moc )
 endfunction( qt4_wrap_single_cpp )
 
-add_subdirectory( pluginspec )
 add_subdirectory( kdesettings )
+add_subdirectory( pluginspec )
+add_subdirectory( sharedproperties )
