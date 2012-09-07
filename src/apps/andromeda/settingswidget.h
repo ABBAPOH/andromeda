@@ -9,7 +9,7 @@ class SettingsWidget;
 
 class QModelIndex;
 
-namespace Core {
+namespace Andromeda {
 
 class SettingsModel;
 
@@ -38,6 +38,6 @@ private:
     QAction *m_closeAction;
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // SETTINGSWIDGET_H

@@ -5,8 +5,47 @@ else()
     add_definitions( -DQT_WEBKIT_NOT_FOUND )
 endif()
 
-set( HEADERS application.h )
-set( SOURCES application.cpp main.cpp )
+set( HEADERS
+    addressbar.h
+    application.h
+    browserwindow.h
+    browserwindow_p.h
+    commandssettingspage.h
+    settingsmodel.h
+    settingsmodel_p.h
+    settingswidget.h
+    tabbar.h
+    tabcontainer.h
+    tabwidget.h
+)
+
+set( SOURCES
+    addressbar.cpp
+    application.cpp
+    browserwindow.cpp
+    commandssettingspage.cpp
+    main.cpp
+    settingsmodel.cpp
+    settingswidget.cpp
+    tabbar.cpp
+    tabcontainer.cpp
+    tabwidget.cpp
+)
+
+set( FORMS
+    settingswidget.ui
+   )
+
+set( RESOURCES resources.qrc )
+
+set( TS_FILES translations/coreplugin_ru.ts translations/coreplugin_pt.ts )
+
+qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
+qt4_wrap_ui( UI_HEADERS ${FORMS} )
+qt4_add_resources( QRC_SOURCES ${RESOURCES} )
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
+
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
@@ -32,10 +71,9 @@ else()
     set( EXECUTABLE_OUTPUT_PATH ${APP_BINARY_PATH} )
 endif()
 
-qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 
-add_executable( andromeda MACOSX_BUNDLE WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${GUI_RESOURCES} )
-target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem )
+add_executable( andromeda MACOSX_BUNDLE WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} ${GUI_RESOURCES} )
+target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem guisystem widgets )
 
 if( APPLE )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/andromeda.icns ${APP_DATA_PATH}/andromeda.icns COPYONLY)

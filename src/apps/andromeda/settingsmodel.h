@@ -5,7 +5,7 @@
 
 class QSettings;
 
-namespace Core {
+namespace Andromeda {
 
 class SettingsModelPrivate;
 class SettingsModel : public QAbstractItemModel
@@ -53,6 +53,6 @@ protected:
     SettingsModelPrivate *d_ptr;
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // SETTINGSSMODEL_H

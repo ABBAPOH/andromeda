@@ -3,7 +3,7 @@
 
 #include <guisystem/settingspage.h>
 
-namespace Core {
+namespace Andromeda {
 
 class CommandsSettingsPage : public GuiSystem::SettingsPage
 {
@@ -21,6 +21,6 @@ public:
     QWidget *createPage(QWidget *parent);
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // COMMANDSSETTINGSPAGE_H

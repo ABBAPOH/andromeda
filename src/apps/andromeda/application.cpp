@@ -1,42 +1,74 @@
-#include "coreplugin.h"
+#include "application.h"
 
+#include <QtCore/QStringList>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
+#include <QtCore/QLocale>
 #include <QtCore/QSettings>
-#include <QtCore/QTimer>
-#include <QtCore/QtPlugin>
-#include <QtCore/QUrl>
+#include <QtCore/QTranslator>
 
-#include <QtGui/QApplication>
+#include <QtGui/QIcon>
 #include <QtGui/QDesktopServices>
-#include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMessageBox>
-#include <QtGui/QSystemTrayIcon>
 
-#include "commandssettingspage.h"
-#include "constants.h"
-#include "settingsmodel.h"
-
+#include <extensionsystem/errorsdialog.h>
 #include <extensionsystem/pluginmanager.h>
 #include <extensionsystem/pluginview.h>
+
 #include <guisystem/action.h>
-#include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+#include <guisystem/constants.h>
+#include <guisystem/editorwindowfactory.h>
 #include <guisystem/menubarcontainer.h>
-#include <guisystem/settingswindow.h>
 #include <guisystem/settingspagemanager.h>
+#include <guisystem/settingswindow.h>
 
 #include <widgets/windowsmenu.h>
 
-#include "settingswidget.h"
+#include "browserwindow.h"
 #include "browserwindow_p.h"
+#include "commandssettingspage.h"
+#include "settingsmodel.h"
+#include "settingswidget.h"
 
-using namespace Core;
+using namespace ExtensionSystem;
 using namespace GuiSystem;
+using namespace Andromeda;
+
+// returns root path of the application
+static QString getRootPath()
+{
+    // Figure out root:  Up one from 'bin' or 'MacOs'
+    QDir rootDir = QApplication::applicationDirPath();
+    rootDir.cdUp();
+    return rootDir.canonicalPath();
+}
+
+static inline QString getPluginPath()
+{
+    const QString rootDirPath = getRootPath();
+    // Build path
+    QString pluginPath = rootDirPath;
+#if defined Q_OS_MACX
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("PlugIns");
+#elif defined Q_OS_WIN
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("plugins");
+#elif defined Q_OS_UNIX
+    // not Mac UNIXes
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("lib");
+    pluginPath += QLatin1String(LIB_SUFFIX);
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("andromeda");
+    pluginPath += QLatin1Char('/');
+    pluginPath += QLatin1String("plugins");
+#endif
+    return pluginPath;
+}
 
 static const qint32 corePluginMagic = 0x6330386e; // "c08n"
 static const qint8 corePluginVersion = 1;
@@ -117,62 +149,248 @@ QMenu * WindowsContainer::createMenu(QWidget *parent) const
     return m_menu;
 }
 
-/*!
-    \class Core::CorePlugin
-
-    \brief Andromeda's main plugin.
-
-    This plugin creates main objects, common Commands, reads/writes settings
-    and session. Also it creates BrowserWindows, preferences window and provides
-    "about" and "about Qt" dialogs.
-*/
-
-/*!
-    Creates CorePlugin.
-*/
-CorePlugin::CorePlugin() :
-    IPlugin(),
+Application::Application(int &argc, char **argv) :
+    QtSingleApplication("Andromeda", argc, argv),
+    m_pluginManager(0),
     m_firstStart(true)
 {
-}
+    setOrganizationName("arch");
+    setApplicationName("andromeda");
 
-/*!
-    Destroys CorePlugin.
-*/
-CorePlugin::~CorePlugin()
-{
-}
+#ifdef ICON_LOCATION
+    setWindowIcon(QIcon(ICON_LOCATION + QString("/andromeda.png")));
+#endif
 
-/*!
-    \reimp
-*/
-bool CorePlugin::initialize()
-{
+    setQuitOnLastWindowClosed(false);
+    addLibraryPath(getPluginPath());
+
+    m_pluginManager = new PluginManager(this);
+    m_pluginManager->setPluginsFolder("andromeda");
+    m_pluginManager->setTranslations(QStringList() << "extensionsystem" << "guisystem" << "widgets");
+    connect(m_pluginManager, SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
+
     EditorWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
 
-    SettingsPageManager *pageManager = new SettingsPageManager;
-    pageManager->setObjectName(QLatin1String("settingsPageManager"));
-    addObject(pageManager);
-
-    pageManager->addPage(new CommandsSettingsPage(this));
+    m_settingsPageManager = new SettingsPageManager(this);
+    m_settingsPageManager->setObjectName("settingsPageManager");
+    m_settingsPageManager->addPage(new CommandsSettingsPage(this));
+    m_pluginManager->addObject(m_settingsPageManager);
 
     createActions();
-    connect(PluginManager::instance(), SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
+
+    connect(this, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
+}
+
+Application::~Application()
+{
+    delete dockMenu;
+#ifdef Q_OS_MAC
+    delete menuBar;
+#endif
+}
+
+bool Application::activateApplication()
+{
+    QStringList arguments = this->arguments();
+    arguments.prepend(QDir::currentPath());
+    return sendMessage(arguments.join("\n"));
+}
+
+bool Application::loadPlugins()
+{
+    m_pluginManager->loadPlugins();
+
+    QStringList args = arguments().mid(1);
+    args.prepend(QDir::currentPath());
+    handleArguments(args);
+    m_pluginManager->postInitialize(arguments().mid(1));
+
+    if (m_pluginManager->hasErrors()) {
+        ErrorsDialog dlg;
+        dlg.setMessage(QObject::tr("Errors occured during loading plugins."));
+        dlg.setErrors(m_pluginManager->errors());
+        dlg.exec();
+    }
+
+    if (m_pluginManager->plugins().isEmpty())
+        return false;
 
     return true;
 }
 
 /*!
-    \reimp
+    Creates new BrowserWindow.
 */
-void CorePlugin::postInitialize(const QVariantMap &options)
+void Application::newWindow()
 {
-    QStringList urls = options.value("files").toStringList();
+    BrowserWindow::newWindow();
+}
+
+/*!
+    Shows plugins list.
+*/
+void Application::showPluginView()
+{
+    PluginView view;
+    view.exec();
+}
+
+/*!
+    Shows all settings.
+*/
+void Application::showSettings()
+{
+    SettingsWidget *widget = new SettingsWidget;
+    widget->setAttribute(Qt::WA_DeleteOnClose);
+
+    SettingsModel *settingsModel = new SettingsModel(widget);
+    QSettings *settings = new QSettings(settingsModel);
+    settingsModel->setSettings(settings);
+    widget->setModel(settingsModel);
+
+    widget->show();
+}
+
+/*!
+    Shows preferences window.
+*/
+void Application::preferences()
+{
+    // TODO: test unloading pages while dialog is running
+    if (!settingsWindow) {
+        settingsWindow = new SettingsWindow();
+        settingsWindow->setAttribute(Qt::WA_DeleteOnClose);
+        settingsWindow->setSettingsPageManager(m_settingsPageManager);
+        settingsWindow->restoreState(settingsWindowState);
+        settingsWindow->installEventFilter(this);
+        settingsWindow->show();
+    } else {
+        settingsWindow->raise();
+        settingsWindow->activateWindow();
+    }
+}
+
+void Application::restoreSession()
+{
+#ifdef Q_OS_MAC
+    // Create menu bar now
+    menuBar = MenuBarContainer::instance()->menuBar();
+#endif
+
+    loadSettings();
+
+    bool ok = true;
+    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QString filePath = dataPath + QLatin1Char('/') + QLatin1String("session");
+    QFile f(filePath);
+    if (ok)
+        ok = f.open(QFile::ReadOnly);
+
+    if (ok) {
+        QByteArray state = f.readAll();
+        ok = restoreApplicationState(state);
+        if (!ok)
+            qWarning() << tr("Couldn't restore session (located at %1)").arg(filePath);
+    }
+
+    // We couldn't load session, fallback to creating window and opening default path
+    if (!ok)
+        newWindow();
+}
+
+void Application::saveSession()
+{
+    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
+
+    saveSettings();
+
+    if (!f.open(QFile::WriteOnly))
+        return;
+
+    f.write(saveApplicationState());
+}
+
+/*!
+    Saves session and exits application.
+*/
+void Application::exit()
+{
+    saveSession();
+
+    qDeleteAll(BrowserWindow::windows());
+
+    QMetaObject::invokeMethod(PluginManager::instance(), "unloadPlugins", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
+}
+
+/*!
+    Shows "about" dialog.
+*/
+void Application::about()
+{
+    QString text = tr("<h3>Andromeda %1</h3><br/>"
+                      "Revision %2<br/>"
+                      "<br/>"
+                      "Copyright 2010-2011 %3<br/>"
+                      "Bugreports send to %4<br/>"
+                      "<br/>"
+                      "This is alpha version.<br/>"
+                      "<br/>"
+                      "The program is provided as is with no warranty of any kind, "
+                      "including the warranty of design, merchantability "
+                      "and fitness for a particular purpose.").
+            arg(QLatin1String(PROJECT_VERSION)).
+            arg(QString(QLatin1String(GIT_REVISION)).left(10)).
+            arg(QLatin1String("ABBAPOH")).
+            arg(QLatin1String("ABBAPOH@nextmail.ru"));
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("About Andromeda"));
+    msgBox.setText(text);
+    msgBox.setIconPixmap(QPixmap(":/images/icons/andromeda.png"));
+    msgBox.exec();
+}
+
+/*!
+    Shows "about Qt" dialog.
+*/
+void Application::aboutQt()
+{
+    QMessageBox::aboutQt(0);
+}
+
+bool Application::eventFilter(QObject *object, QEvent *event)
+{
+    if (object == settingsWindow) {
+        if (event->type() == QEvent::Close) {
+            settingsWindowState = settingsWindow->saveState();
+        }
+    }
+    return false;
+}
+
+void Application::handleMessage(const QString &message)
+{
+    QStringList arguments = message.split("\n");
+    if (arguments.isEmpty())
+        return;
+
+    handleArguments(arguments);
+    m_pluginManager->postInitialize(arguments.mid(1));
+}
+
+void Application::handleArguments(const QStringList &arguments)
+{
+    Q_ASSERT(arguments.count() > 0);
+
+    QStringList urls = arguments.mid(1);
+    QString currentDir = arguments.first();
 
     if (!urls.isEmpty()) {
         BrowserWindow *window = new BrowserWindow();
         foreach (const QString &url, urls)
-            window->openNewTab(urlFromUserInput(qApp->property("currentPath").toString(), url));
+            window->openNewTab(urlFromUserInput(currentDir, url));
         window->show();
         return;
     }
@@ -184,18 +402,7 @@ void CorePlugin::postInitialize(const QVariantMap &options)
     m_firstStart = false;
 }
 
-/*!
-    \reimp
-*/
-void CorePlugin::shutdown()
-{
-    delete dockMenu;
-#ifdef Q_OS_MAC
-    delete menuBar;
-#endif
-}
-
-bool CorePlugin::restoreState(const QByteArray &arr)
+bool Application::restoreApplicationState(const QByteArray &arr)
 {
     QByteArray state = arr;
     QDataStream s(&state, QIODevice::ReadOnly);
@@ -234,7 +441,7 @@ bool CorePlugin::restoreState(const QByteArray &arr)
     return true;
 }
 
-QByteArray CorePlugin::saveState() const
+QByteArray Application::saveApplicationState() const
 {
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
@@ -258,185 +465,22 @@ QByteArray CorePlugin::saveState() const
     return state;
 }
 
-/*!
-    Creates new BrowserWindow.
-*/
-void CorePlugin::newWindow()
-{
-    BrowserWindow::newWindow();
-}
-
-/*!
-    Shows plugins list.
-*/
-void CorePlugin::showPluginView()
-{
-    PluginView *view = object<PluginView>(QLatin1String("pluginView"));
-    view->exec();
-}
-
-/*!
-    Shows all settings.
-*/
-void CorePlugin::showSettings()
-{
-    SettingsWidget *widget = new SettingsWidget;
-    widget->setAttribute(Qt::WA_DeleteOnClose);
-
-    SettingsModel *settingsModel = new SettingsModel(widget);
-    QSettings *settings = new QSettings(settingsModel);
-    settingsModel->setSettings(settings);
-    widget->setModel(settingsModel);
-
-    widget->show();
-}
-
-/*!
-    Shows preferences window.
-*/
-void CorePlugin::preferences()
-{
-    SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
-
-    // TODO: test unloading pages while dialog is running
-    if (!settingsWindow) {
-        settingsWindow = new SettingsWindow();
-        settingsWindow->setAttribute(Qt::WA_DeleteOnClose);
-        settingsWindow->setSettingsPageManager(pageManager);
-        settingsWindow->restoreState(settingsWindowState);
-        settingsWindow->installEventFilter(this);
-        settingsWindow->show();
-    } else {
-        settingsWindow->raise();
-        settingsWindow->activateWindow();
-    }
-}
-
-void CorePlugin::restoreSession()
-{
-#ifdef Q_OS_MAC
-    // Create menu bar now
-    menuBar = MenuBarContainer::instance()->menuBar();
-#endif
-
-    loadSettings();
-
-    if (!urls.isEmpty()) {
-        BrowserWindow *window = new BrowserWindow();
-        foreach (const QString &url, urls)
-            window->openNewTab(QUrl::fromUserInput(url));
-        window->show();
-        return;
-    }
-
-    bool ok = true;
-    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    QString filePath = dataPath + QLatin1Char('/') + QLatin1String("session");
-    QFile f(filePath);
-    if (ok)
-        ok = f.open(QFile::ReadOnly);
-
-    if (ok) {
-        QByteArray state = f.readAll();
-        ok = restoreState(state);
-        if (!ok)
-            qWarning() << tr("Couldn't restore session (located at %1)").arg(filePath);
-    }
-
-    // We couldn't load session, fallback to creating window and opening default path
-    if (!ok)
-        newWindow();
-}
-
-void CorePlugin::saveSession()
-{
-    QString dataPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    QFile f(dataPath + QLatin1Char('/') + QLatin1String("session"));
-
-    saveSettings();
-
-    if (!f.open(QFile::WriteOnly))
-        return;
-
-    f.write(saveState());
-}
-
-void CorePlugin::loadSettings()
+void Application::loadSettings()
 {
     m_settings = new QSettings(this);
-    m_settings->beginGroup(QLatin1String("mainWindow"));
-    QByteArray geometry = m_settings->value(QLatin1String("geometry")).toByteArray();
+    m_settings->beginGroup("mainWindow");
+    QByteArray geometry = m_settings->value("geometry").toByteArray();
 
     if (!geometry.isEmpty())
         BrowserWindow::setWindowGeometry(geometry);
 }
 
-void CorePlugin::saveSettings()
+void Application::saveSettings()
 {
-    m_settings->setValue(QLatin1String("geometry"), BrowserWindow::windowGeometry());
+    m_settings->setValue("geometry", BrowserWindow::windowGeometry());
 }
 
-/*!
-    Saves session and exits application.
-*/
-void CorePlugin::quit()
-{
-    saveSession();
-
-    qDeleteAll(BrowserWindow::windows());
-
-    QMetaObject::invokeMethod(PluginManager::instance(), "unloadPlugins", Qt::QueuedConnection);
-    QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
-}
-
-/*!
-    Shows "about" dialog.
-*/
-void CorePlugin::about()
-{
-    QString text = tr("<h3>Andromeda %1</h3><br/>"
-                      "Revision %2<br/>"
-                      "<br/>"
-                      "Copyright 2010-2011 %3<br/>"
-                      "Bugreports send to %4<br/>"
-                      "<br/>"
-                      "This is alpha version.<br/>"
-                      "<br/>"
-                      "The program is provided as is with no warranty of any kind, "
-                      "including the warranty of design, merchantability "
-                      "and fitness for a particular purpose.").
-            arg(QLatin1String(PROJECT_VERSION)).
-            arg(QString(QLatin1String(GIT_REVISION)).left(10)).
-            arg(QLatin1String("ABBAPOH")).
-            arg(QLatin1String("ABBAPOH@nextmail.ru"));
-
-//    QMessageBox::about(0, tr("About Andromeda"), text);
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("About Andromeda"));
-    msgBox.setText(text);
-    msgBox.setIconPixmap(QPixmap(":/images/icons/andromeda.png"));
-    msgBox.exec();
-}
-
-/*!
-    Shows "about Qt" dialog.
-*/
-void CorePlugin::aboutQt()
-{
-    QMessageBox::aboutQt(0);
-}
-
-bool CorePlugin::eventFilter(QObject *o, QEvent *e)
-{
-    if (o == settingsWindow) {
-        if (e->type() == QEvent::Close) {
-            settingsWindowState = settingsWindow->saveState();
-        }
-    }
-    return false;
-}
-
-void CorePlugin::createActions()
+void Application::createActions()
 {
     MenuBarContainer *menuBar = new MenuBarContainer(this);
     menuBar->createMenus();
@@ -448,7 +492,7 @@ void CorePlugin::createActions()
     registerAtions();
 }
 
-void CorePlugin::createGoToMenu()
+void Application::createGoToMenu()
 {
     MenuBarContainer *menuBar = MenuBarContainer::instance();
 
@@ -476,7 +520,7 @@ void CorePlugin::createGoToMenu()
     goToMenu->addCommand(c);
 }
 
-void CorePlugin::createWindowsMenu()
+void Application::createWindowsMenu()
 {
     MenuBarContainer *menuBar = MenuBarContainer::instance();
 
@@ -485,7 +529,7 @@ void CorePlugin::createWindowsMenu()
     menuBar->addContainer(windowsMenu, "035");
 }
 
-void CorePlugin::createToolsMenu()
+void Application::createToolsMenu()
 {
     MenuBarContainer *menuBar = MenuBarContainer::instance();
 
@@ -511,7 +555,7 @@ void CorePlugin::createToolsMenu()
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
 
-void CorePlugin::createDockMenu()
+void Application::createDockMenu()
 {
     MenuBarContainer *menuBar = MenuBarContainer::instance();
 
@@ -540,10 +584,10 @@ void CorePlugin::createDockMenu()
 #endif
 }
 
-void CorePlugin::registerAtions()
+void Application::registerAtions()
 {
     createAction(Constants::Actions::NewWindow, SLOT(newWindow()));
-    createAction(Constants::Actions::Quit, SLOT(quit()));
+    createAction(Constants::Actions::Quit, SLOT(exit()));
     createAction(Constants::Actions::Plugins, SLOT(showPluginView()));
     createAction(Constants::Actions::Settings, SLOT(showSettings()));
     createAction(Constants::Actions::Preferences, SLOT(preferences()));
@@ -551,10 +595,8 @@ void CorePlugin::registerAtions()
     createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
 }
 
-void CorePlugin::createAction(const QByteArray &id, const char *slot)
+void Application::createAction(const QByteArray &id, const char *slot)
 {
     Action *action = new Action(id, this);
     connect(action, SIGNAL(triggered()), slot);
 }
-
-Q_EXPORT_PLUGIN(CorePlugin)

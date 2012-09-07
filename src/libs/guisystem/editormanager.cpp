@@ -21,7 +21,7 @@ public:
     QHash<QString, EditorManager::FactoryList> factoriesForScheme;
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 using namespace GuiSystem;
 

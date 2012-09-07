@@ -11,6 +11,7 @@ set( HEADERS
     commandsmodel.h
     commandsmodel_p.h
     commandssettingswidget.h
+    constants.h
     editormanager.h
     editorwindow.h
     editorwindow_p.h

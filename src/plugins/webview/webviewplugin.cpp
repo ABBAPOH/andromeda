@@ -12,11 +12,10 @@
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
+#include <guisystem/constants.h>
 #include <guisystem/menubarcontainer.h>
 #include <guisystem/editormanager.h>
 #include <guisystem/settingspagemanager.h>
-
-#include <core/constants.h>
 
 #include "appearancesettings.h"
 #include "cookiejar.h"

@@ -6,6 +6,5 @@
     <description>File manager plugin.</description>
     <url></url>
     <dependencyList>
-        <dependency name="Core Plugin" version="0.2.1.0"/>
     </dependencyList>
 </plugin>

@@ -11,7 +11,7 @@
 #include <guisystem/editorwindow.h>
 #include <guisystem/editorwindowfactory.h>
 
-#include <core/constants.h>
+#include <guisystem/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarksmodel.h"

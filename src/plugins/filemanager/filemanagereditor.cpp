@@ -25,10 +25,10 @@
 #include <QtGui/QResizeEvent>
 
 #include <extensionsystem/pluginmanager.h>
+#include <guisystem/constants.h>
 #include <guisystem/editorwindowfactory.h>
 #include <widgets/minisplitter.h>
 
-#include <core/constants.h>
 
 using namespace GuiSystem;
 using namespace FileManager;

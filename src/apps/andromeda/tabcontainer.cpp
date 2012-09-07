@@ -9,7 +9,7 @@
 
 #include <guisystem/stackedcontainer.h>
 
-using namespace Core;
+using namespace Andromeda;
 using namespace GuiSystem;
 
 /*!
@@ -264,7 +264,7 @@ void TabContainer::addTab(AbstractEditor *container, bool changeTab)
 /*!
   \reimp
 */
-void Core::TabContainer::resizeEvent(QResizeEvent *e)
+void Andromeda::TabContainer::resizeEvent(QResizeEvent *e)
 {
     m_tabWidget->resize(e->size());
 }

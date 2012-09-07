@@ -4,7 +4,7 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QFileIconProvider>
 
-#include <core/constants.h>
+#include <guisystem/constants.h>
 
 #include "binedit.h"
 

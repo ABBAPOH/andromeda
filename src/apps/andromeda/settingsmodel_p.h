@@ -5,7 +5,7 @@
 
 #include <QtGui/QIcon>
 
-namespace Core {
+namespace Andromeda {
 
 struct SettingsModelItem
 {
@@ -87,6 +87,6 @@ public:
     QStringList keysToRemove;
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // SETTINGSMODEL_P_H

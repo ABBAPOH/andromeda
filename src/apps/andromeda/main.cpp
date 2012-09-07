@@ -7,6 +7,7 @@
 #endif
 
 using namespace ExtensionSystem;
+using namespace Andromeda;
 
 // we need this to prevent libraries from unloading when they are not used
 void preloadLibraries()

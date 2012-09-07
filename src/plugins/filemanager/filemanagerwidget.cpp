@@ -17,10 +17,9 @@
 #include <QtGui/QMessageBox>
 
 #include <guisystem/actionmanager.h>
+#include <guisystem/constants.h>
 #include <io/QDriveInfo>
 #include <io/qmimedatabase.h>
-
-#include <core/constants.h>
 
 #include "filemanagerhistory_p.h"
 #include "filemanagerhistoryitem_p.h"

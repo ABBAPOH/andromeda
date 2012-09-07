@@ -3,7 +3,7 @@
 #include <guisystem/commandssettingswidget.h>
 
 using namespace GuiSystem;
-using namespace Core;
+using namespace Andromeda;
 
 /*!
     \class Core::CommandsSettingsPage

@@ -23,8 +23,8 @@
 
 #include "constants.h"
 
-using namespace Core;
 using namespace GuiSystem;
+using namespace Andromeda;
 
 static QByteArray m_windowGeometry;
 
