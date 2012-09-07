@@ -3,7 +3,7 @@
 
 #include "settingsmodel.h"
 
-using namespace Core;
+using namespace Andromeda;
 
 /*!
     \class Core::SettingsWidget

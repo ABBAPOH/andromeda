@@ -11,7 +11,6 @@ endif()
 
 add_subdirectory( bineditor )
 add_subdirectory( bookmarks )
-add_subdirectory( core )
 add_subdirectory( filemanager )
 add_subdirectory( helloworld )
 add_subdirectory( imageview )

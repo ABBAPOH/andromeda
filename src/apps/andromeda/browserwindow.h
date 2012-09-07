@@ -1,8 +1,6 @@
 #ifndef BROWSERWINDOW_H
 #define BROWSERWINDOW_H
 
-#include "core_global.h"
-
 #include <guisystem/editorwindow.h>
 
 class QSettings;
@@ -13,10 +11,10 @@ class AbstractEditor;
 class StackedContainer;
 }
 
-namespace Core {
+namespace Andromeda {
 
 class BrowserWindowPrivate;
-class CORE_EXPORT BrowserWindow : public GuiSystem::EditorWindow
+class BrowserWindow : public GuiSystem::EditorWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(BrowserWindow)
@@ -61,6 +59,6 @@ protected:
     BrowserWindowPrivate * d_ptr;
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // BROWSERWINDOW_H

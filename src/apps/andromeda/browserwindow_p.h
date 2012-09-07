@@ -13,7 +13,7 @@
 
 #include "tabcontainer.h"
 
-namespace Core {
+namespace Andromeda {
 
 class BrowserWindowPrivate : public QObject
 {
@@ -58,6 +58,6 @@ public:
     void openNewWindow(const QList<QUrl> &urls);
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // BROWSERWINDOW_P_H

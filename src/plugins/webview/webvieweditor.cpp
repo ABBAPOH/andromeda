@@ -14,11 +14,10 @@
 #include <QtWebKit/QWebHistory>
 #include <QtWebKit/QWebInspector>
 
+#include <guisystem/constants.h>
 #include <guisystem/findtoolbar.h>
 
 #include <widgets/minisplitter.h>
-
-#include <core/constants.h>
 
 #include "cookiejar.h"
 #include "webviewconstants.h"

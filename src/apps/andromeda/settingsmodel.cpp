@@ -6,7 +6,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QStyle>
 
-using namespace Core;
+using namespace Andromeda;
 
 QModelIndex SettingsModelPrivate::index(SettingsModelItem *item) const
 {

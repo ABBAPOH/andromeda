@@ -10,7 +10,7 @@
 class MyTabWidget;
 class TabBarButton;
 
-namespace Core {
+namespace Andromeda {
 
 class TabContainer : public GuiSystem::ProxyEditor
 {
@@ -66,6 +66,6 @@ private:
     QUrl m_defaultUrl;
 };
 
-} // namespace Core
+} // namespace Andromeda
 
 #endif // TABCONTAINER_H

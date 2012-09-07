@@ -12,14 +12,13 @@
 #include <extensionsystem/pluginmanager.h>
 
 #include <guisystem/actionmanager.h>
+#include <guisystem/constants.h>
 #include <guisystem/editorwindow.h>
 #include <guisystem/editorwindowfactory.h>
 #include <guisystem/menubarcontainer.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
 #include <guisystem/proxyeditor.h>
-
-#include <core/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarkdialog.h"

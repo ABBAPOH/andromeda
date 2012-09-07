@@ -61,12 +61,6 @@ const char * const Preferences = "Preferences";
 
 } // namespace Actions
 
-namespace Perspectives {
-
-const char * const FileManagerPerspective = "FileManagerPerspective";
-
-}
-
 } // namespace Constants
 
 #endif // CONSTANTS_H

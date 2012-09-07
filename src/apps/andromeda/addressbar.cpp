@@ -5,7 +5,7 @@
 
 #include "constants.h"
 
-using namespace Core;
+using namespace Andromeda;
 using namespace GuiSystem;
 
 MyAddressBar::MyAddressBar(QWidget *parent) :

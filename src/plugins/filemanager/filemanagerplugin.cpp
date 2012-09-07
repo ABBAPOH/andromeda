@@ -18,11 +18,10 @@
 #include <guisystem/commandcontainer.h>
 #include <guisystem/editorwindow.h>
 
+#include <guisystem/constants.h>
 #include <guisystem/editormanager.h>
 #include <guisystem/menubarcontainer.h>
 #include <guisystem/settingspagemanager.h>
-
-#include <core/constants.h>
 
 #include "filemanagerconstants.h"
 #include "filecopydialog.h"
