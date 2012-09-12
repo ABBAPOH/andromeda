@@ -72,7 +72,12 @@ void SharedPropertiesPrivate::disconnectNotifier(const Notifier &notifierKey)
 
 void SharedPropertiesPrivate::setDefaultValue(const QString &key, const QVariant &value)
 {
-    values.insert(key, value);
+    Q_Q(SharedProperties);
+
+    if (values.value(key) != value) {
+        values.insert(key, value);
+        emit q->valueChanged(key, value);
+    }
 }
 
 void SharedPropertiesPrivate::notifyValueChanged(const QString &key, const QVariant &value)
@@ -194,8 +199,10 @@ void SharedProperties::setValue(const QString &key, const QVariant &value)
         changed = true;
     }
 
-    if (changed)
+    if (changed) {
         d->notifyValueChanged(longKey, value);
+        emit valueChanged(longKey, value);
+    }
 }
 
 void SharedProperties::clear()
