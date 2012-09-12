@@ -19,6 +19,7 @@ public:
     bool addObject(const QString &key, QObject *object);
     bool addObject(const QString &key, QObject *object, const QByteArray &propertyName);
     void removeObject(QObject *object);
+    void removeAll();
 
     QVariant value(const QString &key, const QVariant &defaulValue = QVariant()) const;
     void setValue(const QString &key, const QVariant &value);

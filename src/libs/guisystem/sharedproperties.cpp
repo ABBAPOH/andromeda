@@ -35,6 +35,41 @@ SharedPropertiesPrivate::SharedPropertiesPrivate(SharedProperties *qq) :
 {
 }
 
+/*!
+    \internal
+
+    Removes object from map. Object can already be deleted.
+*/
+void SharedPropertiesPrivate::removeObject(QObject *object)
+{
+    QMutableMapIterator<QString, Property> it1(mapKeyToProperty);
+    while (it1.hasNext()) {
+        it1.next();
+        if (it1.value().object == object)
+            it1.remove();
+    }
+
+    QMutableMapIterator<Notifier, QString> it2(mapNotifierToKey);
+    while (it2.hasNext()) {
+        it2.next();
+        if (it2.key().object == object)
+            it2.remove();
+    }
+}
+
+void SharedPropertiesPrivate::disconnectNotifier(const Notifier &notifierKey)
+{
+    Q_Q(SharedProperties);
+
+    QObject *object = notifierKey.object;
+    int notifierId = notifierKey.id;
+
+    const QMetaObject *metaObject = object->metaObject();
+    QMetaMethod notifier = metaObject->method(notifierId);
+    QMetaMethod handler = handlerMethod();
+    QObject::disconnect(object, notifier, q, handler);
+}
+
 void SharedPropertiesPrivate::setDefaultValue(const QString &key, const QVariant &value)
 {
     values.insert(key, value);
@@ -47,6 +82,15 @@ void SharedPropertiesPrivate::notifyValueChanged(const QString &key, const QVari
         QMetaProperty property = metaObject->property(prop.id);
         property.write(prop.object, value);
     }
+}
+
+QMetaMethod SharedPropertiesPrivate::handlerMethod()
+{
+    Q_Q(SharedProperties);
+
+    const QMetaObject *metaObject = q->metaObject();
+    int handlerId = metaObject->indexOfSlot(OnValueChangedSlot);
+    return metaObject->method(handlerId);
 }
 
 SharedProperties::SharedProperties(QObject *parent) :
@@ -95,9 +139,7 @@ bool SharedProperties::addObject(const QString &key, QObject *object, const QByt
     d->mapNotifierToKey.insert(notifierKey, longKey);
     QMetaMethod notifierMethod = metaObject->method(notifierId);
 
-    const QMetaObject *thisMetaObject = this->metaObject();
-    int handlerId = thisMetaObject->indexOfSlot(OnValueChangedSlot);
-    QMetaMethod handlerMethod = thisMetaObject->method(handlerId);
+    QMetaMethod handlerMethod = d->handlerMethod();
 
     connect(object, notifierMethod, this, handlerMethod);
 
@@ -108,19 +150,28 @@ void SharedProperties::removeObject(QObject *object)
 {
     Q_D(SharedProperties);
 
-    QMutableMapIterator<QString, Property> it1(d->mapKeyToProperty);
-    while (it1.hasNext()) {
-        it1.next();
-        if (it1.value().object == object)
-            it1.remove();
+    d->removeObject(object);
+
+    QMapIterator<Notifier, QString> it(d->mapNotifierToKey);
+    while (it.hasNext()) {
+        it.next();
+        if (it.key().object == object)
+            d->disconnectNotifier(it.key());
+    }
+}
+
+void SharedProperties::removeAll()
+{
+    Q_D(SharedProperties);
+
+    QMapIterator<Notifier, QString> it(d->mapNotifierToKey);
+    while (it.hasNext()) {
+        it.next();
+        d->disconnectNotifier(it.key());
     }
 
-    QMutableMapIterator<Notifier, QString> it2(d->mapNotifierToKey);
-    while (it2.hasNext()) {
-        it2.next();
-        if (it2.key().object == object)
-            it2.remove();
-    }
+    d->mapKeyToProperty.clear();
+    d->mapNotifierToKey.clear();
 }
 
 QVariant SharedProperties::value(const QString &key, const QVariant &defaulValue) const
@@ -190,7 +241,8 @@ void SharedProperties::endGroup()
 
 void SharedProperties::onDestroyed(QObject *object)
 {
-    removeObject(object);
+    Q_D(SharedProperties);
+    d->removeObject(object);
 }
 
 void SharedProperties::onValueChanged()
