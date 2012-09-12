@@ -48,7 +48,6 @@ SharedPropertiesTest::SharedPropertiesTest()
 void SharedPropertiesTest::testSetValue()
 {
     QString key = "property";
-    QString longKey = "group/key";
     QString value = "value";
     SharedProperties props;
     Object o1, o2;
@@ -63,9 +62,6 @@ void SharedPropertiesTest::testSetValue()
 
     props.addObject(key, &o2);
     QCOMPARE(o2.property(), value);
-
-    props.setValue(key, QVariant());
-    props.setValue(longKey, QVariant());
 }
 
 void SharedPropertiesTest::testNotification()
@@ -117,9 +113,6 @@ void SharedPropertiesTest::testGroup()
     QCOMPARE(props.value(key), value);
     props.endGroup();
     QCOMPARE(props.value(longKey), value);
-
-    props.setValue(key, QVariant());
-    props.setValue(longKey, QVariant());
 }
 
 QTEST_APPLESS_MAIN(SharedPropertiesTest)
