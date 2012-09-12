@@ -22,6 +22,7 @@ public:
 
     QVariant value(const QString &key, const QVariant &defaulValue = QVariant()) const;
     void setValue(const QString &key, const QVariant &value);
+    void clear();
 
     QString group() const;
     void beginGroup(const QString &group);

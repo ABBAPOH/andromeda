@@ -147,6 +147,19 @@ void SharedProperties::setValue(const QString &key, const QVariant &value)
         d->notifyValueChanged(longKey, value);
 }
 
+void SharedProperties::clear()
+{
+    Q_D(SharedProperties);
+
+    QStringList keys = d->values.keys();
+    d->values.clear();
+
+    for (int i = 0; i < keys.count(); ++i) {
+        const QString &key = keys.at(i);
+        emit valueChanged(key, QVariant());
+    }
+}
+
 QString SharedProperties::group() const
 {
     Q_D(const SharedProperties);
