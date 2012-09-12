@@ -13,7 +13,6 @@ using namespace GuiSystem;
 typedef SharedPropertiesPrivate::Property Property;
 typedef SharedPropertiesPrivate::Notifier Notifier;
 
-static QEvent::Type sharedPropertiesEventType = QEvent::None;
 static const char * const OnValueChangedSlot = "onValueChanged()";
 
 static QString shortKey(const QString &longKey)
@@ -31,70 +30,14 @@ static QString longKey(const QString &group, const QString &shortKey)
     return group + '/' + shortKey;
 }
 
-StaticSharedProperties::StaticSharedProperties()
-{
-    ::sharedPropertiesEventType = (QEvent::Type)QEvent::registerEventType();
-}
-
-Q_GLOBAL_STATIC(StaticSharedProperties, static_instance)
-StaticSharedProperties * StaticSharedProperties::instance()
-{
-    return static_instance();
-}
-
-void StaticSharedProperties::addProperites(SharedPropertiesPrivate *properties)
-{
-    QMutexLocker l(&mutex);
-    objects.append(properties);
-}
-
-void StaticSharedProperties::removeProperites(SharedPropertiesPrivate *properties)
-{
-    QMutexLocker l(&mutex);
-    objects.removeOne(properties);
-}
-
-QVariant StaticSharedProperties::value(const QString &key, const QVariant &defaulValue) const
-{
-    QMutexLocker l(&mutex);
-    return values.value(key, defaulValue);
-}
-
-void StaticSharedProperties::setValue(const QString &key, const QVariant &value)
-{
-    bool changed = false;
-    {
-        QMutexLocker l(&mutex);
-        if (values.value(key) != value) {
-            values.insert(key, value);
-            changed = true;
-        }
-    }
-    if (changed)
-        notifyValueChanged(key, value);
-}
-
-void StaticSharedProperties::setDefaultValue(const QString &key, const QVariant &value)
-{
-    QMutexLocker l(&mutex);
-    values.insert(key, value);
-}
-
-void StaticSharedProperties::notifyValueChanged(const QString &key, const QVariant &value)
-{
-    QThread *currentThread = QThread::currentThread();
-
-    foreach (SharedPropertiesPrivate *d, objects) {
-        if (d->q_func()->thread() == currentThread)
-            d->notifyValueChanged(key, value);
-        else
-            qApp->postEvent(d->q_func(), new SharedPropertiesEvent(key, value));
-    }
-}
-
 SharedPropertiesPrivate::SharedPropertiesPrivate(SharedProperties *qq) :
     q_ptr(qq)
 {
+}
+
+void SharedPropertiesPrivate::setDefaultValue(const QString &key, const QVariant &value)
+{
+    values.insert(key, value);
 }
 
 void SharedPropertiesPrivate::notifyValueChanged(const QString &key, const QVariant &value)
@@ -106,26 +49,14 @@ void SharedPropertiesPrivate::notifyValueChanged(const QString &key, const QVari
     }
 }
 
-SharedPropertiesEvent::SharedPropertiesEvent(const QString &key, const QVariant &value) :
-    QEvent(::sharedPropertiesEventType),
-    m_key(key),
-    m_value(value)
-{
-}
-
 SharedProperties::SharedProperties(QObject *parent) :
     QObject(parent),
     d_ptr(new SharedPropertiesPrivate(this))
 {
-    Q_D(SharedProperties);
-    d->staticProperties = StaticSharedProperties::instance();
-    d->staticProperties->addProperites(d);
 }
 
 SharedProperties::~SharedProperties()
 {
-    Q_D(SharedProperties);
-    d->staticProperties->removeProperites(d);
     delete d_ptr;
 }
 
@@ -197,7 +128,7 @@ QVariant SharedProperties::value(const QString &key, const QVariant &defaulValue
     Q_D(const SharedProperties);
 
     QString longKey = ::longKey(d->group, key);
-    return d->staticProperties->value(longKey, defaulValue);
+    return d->values.value(longKey, defaulValue);
 }
 
 void SharedProperties::setValue(const QString &key, const QVariant &value)
@@ -205,7 +136,15 @@ void SharedProperties::setValue(const QString &key, const QVariant &value)
     Q_D(SharedProperties);
 
     QString longKey = ::longKey(d->group, key);
-    d->staticProperties->setValue(longKey, value);
+    bool changed = false;
+
+    if (d->values.value(longKey) != value) {
+        d->values.insert(longKey, value);
+        changed = true;
+    }
+
+    if (changed)
+        d->notifyValueChanged(longKey, value);
 }
 
 QString SharedProperties::group() const
@@ -259,18 +198,5 @@ void SharedProperties::onValueChanged()
 
     QMetaProperty metaProperty = metaObject->property(propertyKey.id);
     QVariant value = metaProperty.read(object);
-
-    d->staticProperties->setValue(longKey, value);
-}
-
-bool SharedProperties::event(QEvent *event)
-{
-    if (event->type() == ::sharedPropertiesEventType) {
-        Q_D(SharedProperties);
-        SharedPropertiesEvent *spe = static_cast<SharedPropertiesEvent*>(event);
-        d->notifyValueChanged(spe->key(), spe->value());
-        return true;
-    }
-
-    return QObject::event(event);
+    d->setDefaultValue(longKey, value);
 }

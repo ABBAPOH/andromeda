@@ -34,9 +34,6 @@ protected slots:
     void onDestroyed(QObject *object);
     void onValueChanged();
 
-protected:
-    bool event(QEvent *event);
-
 private:
     SharedPropertiesPrivate *d_ptr;
 };

@@ -9,28 +9,6 @@
 
 namespace GuiSystem {
 
-class StaticSharedProperties
-{
-public:
-    StaticSharedProperties();
-
-    static StaticSharedProperties *instance();
-
-    void addProperites(SharedPropertiesPrivate *properties);
-    void removeProperites(SharedPropertiesPrivate *properties);
-
-    QVariant value(const QString &key, const QVariant &defaulValue = QVariant()) const;
-    void setValue(const QString &key, const QVariant &value);
-    void setDefaultValue(const QString &key, const QVariant &value);
-
-    void notifyValueChanged(const QString &key, const QVariant &value);
-
-public:
-    mutable QMutex mutex;
-    QList<SharedPropertiesPrivate*> objects;
-    QVariantMap values;
-};
-
 class SharedPropertiesPrivate
 {
     Q_DECLARE_PUBLIC(SharedProperties)
@@ -51,10 +29,11 @@ public:
     typedef Key Notifier;
     SharedPropertiesPrivate(SharedProperties *qq);
 
+    void setDefaultValue(const QString &key, const QVariant &value);
     void notifyValueChanged(const QString &key, const QVariant &value);
 
 public:
-    StaticSharedProperties *staticProperties;
+    QVariantMap values;
     QString group;
     QStringList groupStack;
     QMultiMap<QString, Property> mapKeyToProperty;
@@ -78,19 +57,6 @@ bool SharedPropertiesPrivate::Key::operator <(const Key &other) const
 
     return object < other.object;
 }
-
-class SharedPropertiesEvent : public QEvent
-{
-public:
-    SharedPropertiesEvent(const QString &key, const QVariant &value);
-
-    QString key() const { return m_key; }
-    QVariant value() const { return m_value; }
-
-private:
-    QString m_key;
-    QVariant m_value;
-};
 
 } //namespace GuiSystem
 
