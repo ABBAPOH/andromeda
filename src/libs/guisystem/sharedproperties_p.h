@@ -29,8 +29,13 @@ public:
     typedef Key Notifier;
     SharedPropertiesPrivate(SharedProperties *qq);
 
+    void removeObject(QObject *object);
+    void disconnectNotifier(const Notifier &notifierKey);
+
     void setDefaultValue(const QString &key, const QVariant &value);
     void notifyValueChanged(const QString &key, const QVariant &value);
+
+    QMetaMethod handlerMethod();
 
 public:
     QVariantMap values;
