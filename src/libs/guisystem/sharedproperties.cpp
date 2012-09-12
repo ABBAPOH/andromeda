@@ -10,7 +10,11 @@
 
 using namespace GuiSystem;
 
+typedef SharedPropertiesPrivate::Property Property;
+typedef SharedPropertiesPrivate::Notifier Notifier;
+
 static QEvent::Type sharedPropertiesEventType = QEvent::None;
+static const char * const OnValueChangedSlot = "onValueChanged()";
 
 static QString shortKey(const QString &longKey)
 {
@@ -70,6 +74,12 @@ void StaticSharedProperties::setValue(const QString &key, const QVariant &value)
         notifyValueChanged(key, value);
 }
 
+void StaticSharedProperties::setDefaultValue(const QString &key, const QVariant &value)
+{
+    QMutexLocker l(&mutex);
+    values.insert(key, value);
+}
+
 void StaticSharedProperties::notifyValueChanged(const QString &key, const QVariant &value)
 {
     QThread *currentThread = QThread::currentThread();
@@ -89,7 +99,7 @@ SharedPropertiesPrivate::SharedPropertiesPrivate(SharedProperties *qq) :
 
 void SharedPropertiesPrivate::notifyValueChanged(const QString &key, const QVariant &value)
 {
-    foreach (const Property &prop, mapToProperty.values(key)) {
+    foreach (const Property &prop, mapKeyToProperty.values(key)) {
         const QMetaObject *metaObject = prop.object->metaObject();
         QMetaProperty property = metaObject->property(prop.id);
         property.write(prop.object, value);
@@ -138,11 +148,27 @@ bool SharedProperties::addObject(const QString &key, QObject *object, const QByt
         return false;
     }
 
-    SharedPropertiesPrivate::Property prop(object, propertyId);
-    d->mapToProperty.insert(longKey, prop);
+    Property propertyKey(object, propertyId);
+    d->mapKeyToProperty.insert(longKey, propertyKey);
 
-    QMetaProperty property = metaObject->property(propertyId);
-    property.write(object, value(longKey));
+    QMetaProperty metaProperty = metaObject->property(propertyId);
+    metaProperty.write(object, value(longKey));
+
+    int notifierId = metaProperty.notifySignalIndex();
+    if (notifierId == -1) {
+        qWarning() << "SharedProperties::addObject :" << "Property" << propertyName << "doesn't have notifier signal";
+        return false;
+    }
+
+    Notifier notifierKey(object, notifierId);
+    d->mapNotifierToKey.insert(notifierKey, longKey);
+    QMetaMethod notifierMethod = metaObject->method(notifierId);
+
+    const QMetaObject *thisMetaObject = this->metaObject();
+    int handlerId = thisMetaObject->indexOfSlot(OnValueChangedSlot);
+    QMetaMethod handlerMethod = thisMetaObject->method(handlerId);
+
+    connect(object, notifierMethod, this, handlerMethod);
 
     return true;
 }
@@ -151,12 +177,18 @@ void SharedProperties::removeObject(QObject *object)
 {
     Q_D(SharedProperties);
 
-    QMutableMapIterator<QString, SharedPropertiesPrivate::Property> it(d->mapToProperty);
+    QMutableMapIterator<QString, Property> it1(d->mapKeyToProperty);
+    while (it1.hasNext()) {
+        it1.next();
+        if (it1.value().object == object)
+            it1.remove();
+    }
 
-    while (it.hasNext()) {
-        it.next();
-        if (it.value().object == object)
-            it.remove();
+    QMutableMapIterator<Notifier, QString> it2(d->mapNotifierToKey);
+    while (it2.hasNext()) {
+        it2.next();
+        if (it2.key().object == object)
+            it2.remove();
     }
 }
 
@@ -207,6 +239,28 @@ void SharedProperties::endGroup()
 void SharedProperties::onDestroyed(QObject *object)
 {
     removeObject(object);
+}
+
+void SharedProperties::onValueChanged()
+{
+    Q_D(SharedProperties);
+
+    QObject *object = sender();
+    const QMetaObject *metaObject = object->metaObject();
+    int notifierId = senderSignalIndex();
+    Notifier notifierKey(object, notifierId);
+    QString longKey = d->mapNotifierToKey.value(notifierKey);
+
+    Property propertyKey;
+    foreach (propertyKey, d->mapKeyToProperty.values(longKey)) {
+        if (propertyKey.object == object)
+            break;
+    }
+
+    QMetaProperty metaProperty = metaObject->property(propertyKey.id);
+    QVariant value = metaProperty.read(object);
+
+    d->staticProperties->setValue(longKey, value);
 }
 
 bool SharedProperties::event(QEvent *event)

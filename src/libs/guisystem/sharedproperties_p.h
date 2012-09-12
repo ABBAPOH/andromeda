@@ -21,6 +21,7 @@ public:
 
     QVariant value(const QString &key, const QVariant &defaulValue = QVariant()) const;
     void setValue(const QString &key, const QVariant &value);
+    void setDefaultValue(const QString &key, const QVariant &value);
 
     void notifyValueChanged(const QString &key, const QVariant &value);
 
@@ -42,8 +43,12 @@ public:
 
         QObject *object;
         int id;
+
+        bool operator == (const Key &other) const;
+        bool operator < (const Key &other) const;
     };
     typedef Key Property;
+    typedef Key Notifier;
     SharedPropertiesPrivate(SharedProperties *qq);
 
     void notifyValueChanged(const QString &key, const QVariant &value);
@@ -52,13 +57,27 @@ public:
     StaticSharedProperties *staticProperties;
     QString group;
     QStringList groupStack;
-    QMultiMap<QString, Property> mapToProperty;
+    QMultiMap<QString, Property> mapKeyToProperty;
+    QMap<Notifier, QString> mapNotifierToKey;
 
 private:
     SharedProperties *q_ptr;
 
     friend class StaticSharedProperties;
 };
+
+bool SharedPropertiesPrivate::Key::operator ==(const Key &other) const
+{
+    return object == other.object && id == other.id;
+}
+
+bool SharedPropertiesPrivate::Key::operator <(const Key &other) const
+{
+    if (object == other.object)
+        return id < other.id;
+
+    return object < other.object;
+}
 
 class SharedPropertiesEvent : public QEvent
 {
