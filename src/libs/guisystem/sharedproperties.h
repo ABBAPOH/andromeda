@@ -32,6 +32,7 @@ signals:
 
 protected slots:
     void onDestroyed(QObject *object);
+    void onValueChanged();
 
 protected:
     bool event(QEvent *event);
