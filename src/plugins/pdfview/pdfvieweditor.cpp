@@ -20,7 +20,7 @@
 #include "findwidget.h"
 #include "utils/icon.h"
 
-#include <core/constants.h>
+#include <guisystem/constants.h>
 
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
