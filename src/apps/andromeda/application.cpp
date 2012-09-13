@@ -11,6 +11,9 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMessageBox>
+#ifndef Q_OS_MAC
+#include <QtGui/QSystemTrayIcon>
+#endif
 
 #include <extensionsystem/errorsdialog.h>
 #include <extensionsystem/pluginmanager.h>
