@@ -209,6 +209,8 @@ void SharedProperties::clear()
 {
     Q_D(SharedProperties);
 
+    removeAll();
+
     QStringList keys = d->values.keys();
     d->values.clear();
 
