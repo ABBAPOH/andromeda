@@ -39,7 +39,6 @@ public:
 
     QIcon icon() const;
     QString title() const;
-    QString windowTitle() const;
 
     void restoreDefaults();
     bool restoreState(const QByteArray &state);

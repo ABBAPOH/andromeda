@@ -264,14 +264,6 @@ QString FileManagerEditor::title() const
 }
 
 /*!
-  \reimp
-*/
-QString FileManagerEditor::windowTitle() const
-{
-    return title();
-}
-
-/*!
   \internal
 
   Restores FileManagerEditor's default settings.
@@ -381,7 +373,6 @@ void FileManagerEditor::onCurrentPathChanged(const QString &path)
     emit urlChanged(QUrl::fromLocalFile(path));
     emit iconChanged(icon());
     emit titleChanged(title());
-    emit windowTitleChanged(windowTitle());
 }
 
 void FileManagerEditor::onSelectedPathsChanged()

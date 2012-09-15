@@ -231,7 +231,6 @@ bool StackedContainer::setEditor(const QString &id)
     emit urlChanged(d->currentUrl);
     emit iconChanged(d->editor->icon());
     emit titleChanged(d->editor->title());
-    emit windowTitleChanged(d->editor->windowTitle());
 
     return true;
 }

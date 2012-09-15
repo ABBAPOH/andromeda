@@ -61,7 +61,6 @@ void ImageViewEditor::open(const QUrl &url)
     emit urlChanged(m_url);
     emit iconChanged(icon());
     emit titleChanged(title());
-    emit windowTitleChanged(windowTitle());
     emit loadFinished(true);
 }
 
@@ -79,11 +78,6 @@ QString ImageViewEditor::title() const
 {
     QString path = m_url.path();
     return QFileInfo(path).fileName();
-}
-
-QString ImageViewEditor::windowTitle() const
-{
-    return title();
 }
 
 IFile *ImageViewEditor::file() const

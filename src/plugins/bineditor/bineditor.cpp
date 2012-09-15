@@ -30,7 +30,6 @@ void BinEditor::open(const QUrl &url)
     emit urlChanged(url);
     emit iconChanged(icon());
     emit titleChanged(title());
-    emit windowTitleChanged(windowTitle());
 }
 
 QUrl BinEditor::url() const
@@ -44,11 +43,6 @@ QIcon BinEditor::icon() const
 }
 
 QString BinEditor::title() const
-{
-    return QFileInfo(m_url.toLocalFile()).baseName();
-}
-
-QString BinEditor::windowTitle() const
 {
     return QFileInfo(m_url.toLocalFile()).baseName();
 }

@@ -174,23 +174,6 @@ QString AbstractEditor::title() const
 {
     return QString();
 }
-/*!
-  \property AbstractEditor::windowTitle() const
-
-  \brief String that can be displayed as a window title.
-*/
-
-/*!
-  \brief Reimplement to return current editors window title.
-
-  Value returned by this function is used as a main window title.
-
-  Default impelentation returns empty string.
-*/
-QString AbstractEditor::windowTitle() const
-{
-    return QString();
-}
 
 /*!
   \brief Reimplement to return file interface that corresponds to this editor.
@@ -211,12 +194,6 @@ IFind *AbstractEditor::find() const
 {
     return 0;
 }
-
-/*!
-  \fn void AbstractEditor::windowTitleChanged(const QString &title)
-
-  This signal should be emited when window title changes.
-*/
 
 /*!
   \brief Reimplement to return history that corresponds to this editor.
