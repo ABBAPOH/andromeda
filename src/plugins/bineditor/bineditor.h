@@ -33,7 +33,6 @@ public:
 
     QIcon icon() const;
     QString title() const;
-    QString windowTitle() const;
 
 protected:
     void resizeEvent(QResizeEvent *);

@@ -83,7 +83,7 @@ protected slots:
     virtual void onUrlChanged(const QUrl &url);
 
     virtual void onWindowIconChanged(const QIcon &icon);
-    virtual void onWindowTitleChanged(const QString &title);
+    virtual void onTitleChanged(const QString &title);
 
     virtual void startLoad();
     virtual void setLoadProgress(int progress);

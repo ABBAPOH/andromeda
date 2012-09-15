@@ -33,11 +33,6 @@ QString HelloWorldEditor::title() const
     return tr("Hello world");
 }
 
-QString HelloWorldEditor::windowTitle() const
-{
-    return tr("Hello world");
-}
-
 void HelloWorldEditor::resizeEvent(QResizeEvent *e)
 {
     m_label->resize(e->size());

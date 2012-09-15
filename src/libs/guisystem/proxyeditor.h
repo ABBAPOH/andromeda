@@ -24,7 +24,6 @@ public:
     QIcon icon() const;
     QImage preview() const;
     QString title() const;
-    QString windowTitle() const;
 
     void open(const QUrl &url = QUrl());
 

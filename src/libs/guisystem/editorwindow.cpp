@@ -114,12 +114,12 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     d->history->setHistory(editor->history());
 
     onWindowIconChanged(d->editor->icon());
-    onWindowTitleChanged(d->editor->windowTitle());
+    onTitleChanged(d->editor->title());
 
     connect(d->editor, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
     connect(d->editor, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
     connect(d->editor, SIGNAL(iconChanged(QIcon)), SLOT(onWindowIconChanged(QIcon)));
-    connect(d->editor, SIGNAL(windowTitleChanged(QString)), SLOT(onWindowTitleChanged(QString)));
+    connect(d->editor, SIGNAL(titleChanged(QString)), SLOT(onTitleChanged(QString)));
     connect(d->editor, SIGNAL(loadStarted()), SLOT(startLoad()));
     connect(d->editor, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
     connect(d->editor, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
@@ -370,7 +370,7 @@ void EditorWindow::onWindowIconChanged(const QIcon &icon)
     QMainWindow::setWindowIcon(icon);
 }
 
-void EditorWindow::onWindowTitleChanged(const QString &title)
+void EditorWindow::onTitleChanged(const QString &title)
 {
     Q_D(EditorWindow);
 
@@ -398,7 +398,7 @@ void EditorWindow::onModificationChanged(bool modified)
     bool readOnly = file ? file->isReadOnly() : false;
     d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
 
-    onWindowTitleChanged(d->editor->windowTitle());
+    onTitleChanged(d->editor->title());
 }
 
 void EditorWindow::onReadOnlyChanged(bool readOnly)

@@ -54,7 +54,6 @@ void BookmarksEditor::open(const QUrl &)
     emit urlChanged(url());
     emit titleChanged(title());
     emit iconChanged(icon());
-    emit windowTitleChanged(windowTitle());
 }
 
 QUrl BookmarksEditor::url() const
@@ -68,11 +67,6 @@ QIcon BookmarksEditor::icon() const
 }
 
 QString BookmarksEditor::title() const
-{
-    return tr("Bookmarks");
-}
-
-QString BookmarksEditor::windowTitle() const
 {
     return tr("Bookmarks");
 }

@@ -27,7 +27,6 @@ public:
 
     QIcon icon() const;
     QString title() const;
-    QString windowTitle() const;
 
     GuiSystem::IFile *file() const;
 

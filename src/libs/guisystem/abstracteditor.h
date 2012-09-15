@@ -21,7 +21,6 @@ class GUISYSTEM_EXPORT AbstractEditor : public QWidget
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
-    Q_PROPERTY(QString windowTitle READ windowTitle NOTIFY windowTitleChanged)
 
 public:
     explicit AbstractEditor(QWidget *parent = 0);
@@ -34,7 +33,6 @@ public:
     virtual QIcon icon() const;
     virtual QImage preview() const;
     virtual QString title() const;
-    virtual QString windowTitle() const;
 
     virtual IFile *file() const;
     virtual IFind *find() const;
@@ -60,7 +58,6 @@ signals:
 
     void iconChanged(const QIcon &icon);
     void titleChanged(const QString &title);
-    void windowTitleChanged(const QString &title);
 
     void loadStarted();
     void loadFinished(bool ok);

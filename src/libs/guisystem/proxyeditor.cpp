@@ -33,13 +33,11 @@ void ProxyEditor::setSourceEditor(AbstractEditor *editor)
         emit urlChanged(m_editor->url());
         emit iconChanged(m_editor->icon());
         emit titleChanged(m_editor->title());
-        emit windowTitleChanged(m_editor->windowTitle());
         emit loadFinished(true);
     } else {
         emit urlChanged(QUrl());
         emit iconChanged(QIcon());
         emit titleChanged(QString());
-        emit windowTitleChanged(QString());
         emit loadFinished(true);
     }
 }
@@ -132,18 +130,6 @@ QString ProxyEditor::title() const
 }
 
 /*!
-  \reimp
-*/
-QString ProxyEditor::windowTitle() const
-{
-    AbstractEditor *editor = sourceEditor();
-    if (editor)
-        return editor->windowTitle();
-
-    return QString();
-}
-
-/*!
   \internal
 */
 void ProxyEditor::connectEditor(AbstractEditor *editor)
@@ -157,7 +143,6 @@ void ProxyEditor::connectEditor(AbstractEditor *editor)
 
     connect(editor, SIGNAL(iconChanged(QIcon)), this, SIGNAL(iconChanged(QIcon)));
     connect(editor, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged(QString)));
-    connect(editor, SIGNAL(windowTitleChanged(QString)), this, SIGNAL(windowTitleChanged(QString)));
 
     connect(editor, SIGNAL(loadStarted()), this, SIGNAL(loadStarted()));
     connect(editor, SIGNAL(loadProgress(int)), this, SIGNAL(loadProgress(int)));
@@ -180,7 +165,6 @@ void ProxyEditor::disconnectEditor(AbstractEditor *editor)
 
     disconnect(editor, SIGNAL(iconChanged(QIcon)), this, SIGNAL(iconChanged(QIcon)));
     disconnect(editor, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged(QString)));
-    disconnect(editor, SIGNAL(windowTitleChanged(QString)), this, SIGNAL(windowTitleChanged(QString)));
 
     disconnect(editor, SIGNAL(loadStarted()), this, SIGNAL(loadStarted()));
     disconnect(editor, SIGNAL(loadProgress(int)), this, SIGNAL(loadProgress(int)));
