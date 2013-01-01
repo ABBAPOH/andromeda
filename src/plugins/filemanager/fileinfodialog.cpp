@@ -53,7 +53,7 @@ public:
     QLabel *sizeLabel;
     QLabel *size;
     QLabel *locationLabel;
-    QLineEdit *location;
+    QLabel *location;
     QLabel *createdLabel;
     QLabel *created;
     QLabel *modifiedLabel;
@@ -68,7 +68,7 @@ public:
     QLabel *availableSizeLabel;
     QLabel *availableSize;
     QLabel *mountPointLabel;
-    QLineEdit *mountPoint;
+    QLabel *mountPoint;
     QLabel *fileSystemLabel;
     QLabel *fileSystem;
 
@@ -101,6 +101,14 @@ static QString sizeToString(qint64 size)
     return FileInfoDialog::tr("%1 b").arg(size);
 }
 
+static QString pathToWrappedString(const QString &path)
+{
+    QString result = path;
+    result.replace(QString("/"), QString("/") + QChar(0x200B));
+    result = result.trimmed();
+    return result;
+}
+
 LabelLineEdit::LabelLineEdit(QWidget *parent) :
     QLineEdit(parent)
 {
@@ -121,7 +129,7 @@ void FileInfoDialogPrivate::updateUi()
     iconLabel->setPixmap(icon.pixmap(32));
 
     QMimeDatabase db;
-    mimeType->setText(db.mimeTypeForFile(fileInfo).name());
+    mimeType->setText(pathToWrappedString(db.mimeTypeForFile(fileInfo).name()));
 
     nameLabel->setText(fileInfo.fileName());
 
@@ -130,13 +138,13 @@ void FileInfoDialogPrivate::updateUi()
     else
         size->setText(sizeToString(fileInfo.size()));
 
-    location->setText(fileInfo.path());
+    location->setText(pathToWrappedString(fileInfo.path()));
     created->setText(fileInfo.created().toString(Qt::SystemLocaleShortDate));
     modified->setText(fileInfo.lastModified().toString(Qt::SystemLocaleShortDate));
     accecced->setText(fileInfo.lastRead().toString(Qt::SystemLocaleShortDate));
 
     drive->setText(driveInfo.name());
-    mountPoint->setText(driveInfo.rootPath());
+    mountPoint->setText(pathToWrappedString(driveInfo.rootPath()));
     fileSystem->setText(driveInfo.fileSystemName());
     totalSize->setText(sizeToString(driveInfo.bytesTotal()));
     availableSize->setText(sizeToString(driveInfo.bytesAvailable()));
@@ -184,17 +192,21 @@ void FileInfoDialogPrivate::setupUi()
     layout_1 = new QFormLayout(widget_1);
     layout_1->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layout_1->setSizeConstraint(QLayout::SetMinimumSize);
+    layout_1->setVerticalSpacing(0);
 
     mimeTypeLabel = new QLabel(widget_1);
     mimeTypeLabel->setObjectName(QLatin1String("mimeTypeLabel"));
+    mimeTypeLabel->setAlignment(Qt::AlignTop);
 
     mimeType = new QLabel(widget_1);
     mimeType->setObjectName(QLatin1String("mimeType"));
     mimeType->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    mimeType->setWordWrap(true);
     layout_1->addRow(mimeTypeLabel, mimeType);
 
     sizeLabel = new QLabel(widget_1);
     sizeLabel->setObjectName(QLatin1String("sizeLabel"));
+    sizeLabel->setAlignment(Qt::AlignTop);
 
     size = new QLabel(widget_1);
     size->setObjectName(QLatin1String("size"));
@@ -203,13 +215,17 @@ void FileInfoDialogPrivate::setupUi()
 
     locationLabel = new QLabel(widget_1);
     locationLabel->setObjectName(QLatin1String("locationLabel"));
+    locationLabel->setAlignment(Qt::AlignTop);
 
-    location = new LabelLineEdit(widget_1);
+    location = new QLabel(widget_1);
     location->setObjectName(QLatin1String("location"));
+    location->setWordWrap(true);
+    location->setTextInteractionFlags(Qt::TextBrowserInteraction);
     layout_1->addRow(locationLabel, location);
 
     createdLabel = new QLabel(widget_1);
     createdLabel->setObjectName(QLatin1String("createdLabel"));
+    createdLabel->setAlignment(Qt::AlignTop);
 
     created = new QLabel(widget_1);
     created->setObjectName(QLatin1String("created"));
@@ -218,6 +234,7 @@ void FileInfoDialogPrivate::setupUi()
 
     modifiedLabel = new QLabel(widget_1);
     modifiedLabel->setObjectName(QLatin1String("modifiedLabel"));
+    modifiedLabel->setAlignment(Qt::AlignTop);
 
     modified = new QLabel(widget_1);
     modified->setObjectName(QLatin1String("modified"));
@@ -226,6 +243,7 @@ void FileInfoDialogPrivate::setupUi()
 
     acceccedLabel = new QLabel(widget_1);
     acceccedLabel->setObjectName(QLatin1String("acceccedLabel"));
+    acceccedLabel->setAlignment(Qt::AlignTop);
 
     accecced = new QLabel(widget_1);
     accecced->setObjectName(QLatin1String("accecced"));
@@ -239,9 +257,11 @@ void FileInfoDialogPrivate::setupUi()
     layout_2 = new QFormLayout(widget_2);
     layout_2->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layout_2->setSizeConstraint(QLayout::SetMinimumSize);
+    layout_2->setVerticalSpacing(0);
 
     driveLabel = new QLabel(widget_2);
     driveLabel->setObjectName(QLatin1String("driveLabel"));
+    driveLabel->setAlignment(Qt::AlignTop);
 
     drive = new QLabel(widget_2);
     drive->setObjectName(QLatin1String("drive"));
@@ -250,13 +270,17 @@ void FileInfoDialogPrivate::setupUi()
 
     mountPointLabel = new QLabel(widget_2);
     mountPointLabel->setObjectName(QLatin1String("mountPointLabel"));
+    mountPointLabel->setAlignment(Qt::AlignTop);
 
-    mountPoint = new LabelLineEdit(widget_2);
+    mountPoint = new QLabel(widget_2);
     mountPoint->setObjectName(QLatin1String("mountPoint"));
+    mountPoint->setWordWrap(true);
+    mountPoint->setTextInteractionFlags(Qt::TextBrowserInteraction);
     layout_2->addRow(mountPointLabel, mountPoint);
 
     fileSystemLabel = new QLabel(widget_2);
     fileSystemLabel->setObjectName(QLatin1String("fileSystemLabel"));
+    fileSystemLabel->setAlignment(Qt::AlignTop);
 
     fileSystem = new QLabel(widget_2);
     fileSystem->setObjectName(QLatin1String("fileSystem"));
@@ -265,6 +289,7 @@ void FileInfoDialogPrivate::setupUi()
 
     totalSizeLabel = new QLabel(widget_2);
     totalSizeLabel->setObjectName(QLatin1String("totalSizeLabel"));
+    totalSizeLabel->setAlignment(Qt::AlignTop);
 
     totalSize = new QLabel(widget_2);
     totalSize->setObjectName(QLatin1String("availableSize"));
@@ -273,6 +298,7 @@ void FileInfoDialogPrivate::setupUi()
 
     availableSizeLabel = new QLabel(widget_2);
     availableSizeLabel->setObjectName(QLatin1String("availableSizeLabel"));
+    availableSizeLabel->setAlignment(Qt::AlignTop);
 
     availableSize = new QLabel(widget_2);
     availableSize->setObjectName(QLatin1String("availableSize"));
@@ -289,16 +315,16 @@ void FileInfoDialogPrivate::retranslateUi()
 {
     mimeTypeLabel->setText(FileInfoDialog::tr("Mime type:"));
     sizeLabel->setText(FileInfoDialog::tr("Size:"));
-    locationLabel->setText(FileInfoDialog::tr("Location:"));
+    locationLabel->setText(FileInfoDialog::tr("Where:"));
     createdLabel->setText(FileInfoDialog::tr("Created:"));
     modifiedLabel->setText(FileInfoDialog::tr("Modified:"));
     acceccedLabel->setText(FileInfoDialog::tr("Accessed:"));
 
     driveLabel->setText(FileInfoDialog::tr("Drive:"));
-    totalSizeLabel->setText(FileInfoDialog::tr("Total size:"));
-    availableSizeLabel->setText(FileInfoDialog::tr("Available size:"));
-    mountPointLabel->setText(FileInfoDialog::tr("Mount point:"));
-    fileSystemLabel->setText(FileInfoDialog::tr("File system:"));
+    totalSizeLabel->setText(FileInfoDialog::tr("Total:"));
+    availableSizeLabel->setText(FileInfoDialog::tr("Available:"));
+    mountPointLabel->setText(FileInfoDialog::tr("Mounted:"));
+    fileSystemLabel->setText(FileInfoDialog::tr("Format:"));
 
     widget->setText(0, FileInfoDialog::tr("General Info"));
     widget->setText(1, FileInfoDialog::tr("Drive Info"));
@@ -326,8 +352,8 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose, true);
     setWindowFlags(Qt::Window);
 
-    setMinimumSize(200, 400);
-    setMaximumWidth(400);
+    setMinimumSize(300, 400);
+    setMaximumWidth(300);
 }
 
 /*!
