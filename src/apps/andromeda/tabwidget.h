@@ -6,14 +6,14 @@
 
 #include "tabbar.h"
 
-class MyTabWidget : public QTabWidget
+class TabWidget : public QTabWidget
 {
     Q_OBJECT
-    Q_DISABLE_COPY(MyTabWidget)
+    Q_DISABLE_COPY(TabWidget)
 
     Q_PROPERTY(bool tabBarVisible READ isTabBarVisible WRITE setTabBarVisible NOTIFY tabBarVisibleChanged)
 public:
-    explicit MyTabWidget(QWidget *parent = 0);
+    explicit TabWidget(QWidget *parent = 0);
 
     bool isTabBarVisible() const;
     void setTabBarVisible(bool visible);

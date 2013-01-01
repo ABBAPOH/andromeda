@@ -26,7 +26,7 @@ using namespace GuiSystem;
 */
 TabContainer::TabContainer(QWidget *parent) :
     ProxyEditor(parent),
-    m_tabWidget(new MyTabWidget(this)),
+    m_tabWidget(new TabWidget(this)),
     m_newTabButton(new TabBarButton),
     m_proxyHistory(new ProxyHistory(this)),
     m_proxyFile(new ProxyFile(this))
@@ -115,7 +115,7 @@ IHistory * TabContainer::history() const
 /*!
   \brief Returns inner tab widget.
 */
-MyTabWidget * TabContainer::tabWidget() const
+TabWidget * TabContainer::tabWidget() const
 {
     return m_tabWidget;
 }

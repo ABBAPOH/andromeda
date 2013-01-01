@@ -7,7 +7,7 @@
 
 #include <QtCore/QPointer>
 
-class MyTabWidget;
+class TabWidget;
 class TabBarButton;
 
 namespace Andromeda {
@@ -31,7 +31,7 @@ public:
     GuiSystem::IFile *file() const;
     GuiSystem::IHistory *history() const;
 
-    MyTabWidget *tabWidget() const;
+    TabWidget *tabWidget() const;
 
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
@@ -59,7 +59,7 @@ private:
     AbstractEditor *createEditor();
 
 private:
-    MyTabWidget *m_tabWidget;
+    TabWidget *m_tabWidget;
     TabBarButton *m_newTabButton;
     GuiSystem::ProxyHistory *m_proxyHistory;
     GuiSystem::ProxyFile *m_proxyFile;

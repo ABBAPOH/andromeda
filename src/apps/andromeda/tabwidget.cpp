@@ -2,7 +2,7 @@
 
 #include <QtGui/QMouseEvent>
 
-MyTabWidget::MyTabWidget(QWidget *parent) :
+TabWidget::TabWidget(QWidget *parent) :
     QTabWidget(parent)
 {
     TabBar *tabBar = new TabBar;
@@ -11,17 +11,17 @@ MyTabWidget::MyTabWidget(QWidget *parent) :
     setTabBar(tabBar);
 }
 
-bool MyTabWidget::isTabBarVisible() const
+bool TabWidget::isTabBarVisible() const
 {
     return tabBar()->isVisible();
 }
 
-void MyTabWidget::setTabBarVisible(bool visible)
+void TabWidget::setTabBarVisible(bool visible)
 {
     tabBar()->setVisible(visible);
 }
 
-bool MyTabWidget::eventFilter(QObject *o, QEvent *e)
+bool TabWidget::eventFilter(QObject *o, QEvent *e)
 {
     if (o != tabBar())
         return false;
