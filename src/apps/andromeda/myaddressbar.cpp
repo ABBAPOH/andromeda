@@ -1,4 +1,4 @@
-#include "addressbar.h"
+#include "myaddressbar.h"
 
 #include <QtGui/QAction>
 #include <guisystem/actionmanager.h>

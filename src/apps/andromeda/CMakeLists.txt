@@ -6,11 +6,11 @@ else()
 endif()
 
 set( HEADERS
-    addressbar.h
     application.h
     browserwindow.h
     browserwindow_p.h
     commandssettingspage.h
+    myaddressbar.h
     settingsmodel.h
     settingsmodel_p.h
     settingswidget.h
@@ -21,11 +21,11 @@ set( HEADERS
 )
 
 set( SOURCES
-    addressbar.cpp
     application.cpp
     browserwindow.cpp
     commandssettingspage.cpp
     main.cpp
+    myaddressbar.cpp
     settingsmodel.cpp
     settingswidget.cpp
     tabbar.cpp

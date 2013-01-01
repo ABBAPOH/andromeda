@@ -3,7 +3,7 @@
 
 #include "browserwindow.h"
 
-#include "addressbar.h"
+#include "myaddressbar.h"
 #include "tabbar.h"
 
 #include <QtCore/QEvent>
