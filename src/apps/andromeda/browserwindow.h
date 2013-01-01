@@ -18,7 +18,7 @@ class BrowserWindow : public GuiSystem::EditorWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(BrowserWindow)
-
+    Q_DISABLE_COPY(BrowserWindow)
 public:
     explicit BrowserWindow(QWidget *parent = 0);
     ~BrowserWindow();

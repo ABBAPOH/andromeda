@@ -7,10 +7,11 @@ class QTimer;
 class TabBar : public QTabBar
 {
     Q_OBJECT
+    Q_DISABLE_COPY(TabBar)
+
     Q_PROPERTY(bool switchTabsOnDrag READ switchTabsOnDrag WRITE setSwitchTabsOnDrag)
     Q_PROPERTY(bool switchOnHover READ switchOnHover WRITE setSwitchOnHover)
     Q_PROPERTY(int switchTimeout READ switchTimeout WRITE setSwitchTimeout)
-
 public:
     explicit TabBar(QWidget *parent = 0);
 
@@ -22,8 +23,6 @@ public:
 
     int switchTimeout();
     void setSwitchTimeout(int milliseconds);
-
-signals:
 
 private slots:
     void changeTab();

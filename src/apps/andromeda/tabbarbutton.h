@@ -8,6 +8,8 @@ class QStyleOption;
 
 class TabBarButton : public QAbstractButton
 {
+    Q_OBJECT
+    Q_DISABLE_COPY(TabBarButton)
 public:
     explicit TabBarButton(QWidget *parent = 0);
 

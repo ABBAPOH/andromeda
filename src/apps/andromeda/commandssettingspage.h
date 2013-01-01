@@ -8,7 +8,7 @@ namespace Andromeda {
 class CommandsSettingsPage : public GuiSystem::SettingsPage
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(CommandsSettingsPage)
 public:
     explicit CommandsSettingsPage(QObject *parent = 0);
 

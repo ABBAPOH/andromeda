@@ -8,7 +8,7 @@ namespace Andromeda {
 class MyAddressBar : public AddressBar
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(MyAddressBar)
 public:
     enum Action { NoAction = -1,
                 Redo,

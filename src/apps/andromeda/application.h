@@ -23,7 +23,7 @@ namespace Andromeda {
 class Application : public QtSingleApplication
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(Application)
 public:
     explicit Application(int &argc, char **argv);
     ~Application();

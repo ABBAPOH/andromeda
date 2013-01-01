@@ -9,6 +9,8 @@
 class MyTabWidget : public QTabWidget
 {
     Q_OBJECT
+    Q_DISABLE_COPY(MyTabWidget)
+
     Q_PROPERTY(bool tabBarVisible READ isTabBarVisible WRITE setTabBarVisible NOTIFY tabBarVisibleChanged)
 public:
     explicit MyTabWidget(QWidget *parent = 0);
