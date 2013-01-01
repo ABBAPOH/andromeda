@@ -2,26 +2,26 @@
 #define TABBARBUTTON_H
 
 #include <QAbstractButton>
+#include <QTabBar>
+
+class QStyleOption;
 
 class TabBarButton : public QAbstractButton
 {
 public:
     explicit TabBarButton(QWidget *parent = 0);
 
+    QTabBar::Shape shape() const;
+    void setShape(QTabBar::Shape shape);
+
     QSize sizeHint() const;
 
 protected:
-    void paintEvent(QPaintEvent *e);
-
-    void enterEvent(QEvent *);
-    void leaveEvent(QEvent *);
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
+    bool event(QEvent *event);
+    void paintEvent(QPaintEvent *event);
 
 private:
-    // TODO: use style option to discover state
-    bool hovered;
-    bool pressed;
+    QTabBar::Shape m_shape;
 };
 
 #endif // TABBARBUTTON_H
