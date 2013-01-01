@@ -57,6 +57,15 @@ void OutlineTreeView::drawBranches(QPainter *painter, const QRect &rect, const Q
     style()->drawPrimitive(QStyle::PE_IndicatorBranch, &option, painter, this);
 }
 
+QRect OutlineTreeView::visualRect(const QModelIndex &index) const
+{
+    QRect result = QTreeView::visualRect(index);
+    if (index.parent().isValid()) {
+        result.setX(0);
+    }
+    return result;
+}
+
 /*!
     \class OutlineWidget
 

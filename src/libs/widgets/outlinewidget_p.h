@@ -20,6 +20,8 @@ public:
 
     void drawRow(QPainter *painter, const QStyleOptionViewItem &options, const QModelIndex &index) const;
     void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const;
+
+    QRect visualRect(const QModelIndex &index) const;
 };
 
 #endif // OUTLINEWIDGET_P_H
