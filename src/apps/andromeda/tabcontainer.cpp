@@ -9,6 +9,8 @@
 
 #include <guisystem/stackedcontainer.h>
 
+#include "tabbarbutton.h"
+
 using namespace Andromeda;
 using namespace GuiSystem;
 
