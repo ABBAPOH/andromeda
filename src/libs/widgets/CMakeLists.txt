@@ -14,6 +14,9 @@ set( HEADERS
     outlinewidget.h
     outlinewidget_p.h
     shortcutedit.h
+    tabbar.h
+    tabbarbutton.h
+    tabwidget.h
     windowsmenu.h
    )
 set( SOURCES
@@ -26,6 +29,9 @@ set( SOURCES
     outlinewidget.cpp
     qcolorbutton.cpp
     shortcutedit.cpp
+    tabbar.cpp
+    tabbarbutton.cpp
+    tabwidget.cpp
     windowsmenu.cpp
    )
 set( FORMS

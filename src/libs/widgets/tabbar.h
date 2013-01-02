@@ -1,10 +1,12 @@
 #ifndef QTABBAREX_H
 #define QTABBAREX_H
 
+#include "widgets_global.h"
+
 #include <QTabBar>
 
 class QTimer;
-class TabBar : public QTabBar
+class WIDGETS_EXPORT TabBar : public QTabBar
 {
     Q_OBJECT
     Q_DISABLE_COPY(TabBar)

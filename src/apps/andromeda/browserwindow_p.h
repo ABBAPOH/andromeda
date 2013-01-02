@@ -3,14 +3,13 @@
 
 #include "browserwindow.h"
 
-#include "myaddressbar.h"
-#include "tabbar.h"
-
 #include <QtCore/QEvent>
 #include <QtGui/QToolBar>
 #include <guisystem/editorwindowfactory.h>
 #include <guisystem/stackedcontainer.h>
+#include <widgets/tabbar.h>
 
+#include "myaddressbar.h"
 #include "tabcontainer.h"
 
 namespace Andromeda {

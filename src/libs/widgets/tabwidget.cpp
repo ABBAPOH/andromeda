@@ -2,6 +2,8 @@
 
 #include <QtGui/QMouseEvent>
 
+#include "tabbar.h"
+
 TabWidget::TabWidget(QWidget *parent) :
     QTabWidget(parent)
 {
@@ -21,14 +23,14 @@ void TabWidget::setTabBarVisible(bool visible)
     tabBar()->setVisible(visible);
 }
 
-bool TabWidget::eventFilter(QObject *o, QEvent *e)
+bool TabWidget::eventFilter(QObject *object, QEvent *event)
 {
-    if (o != tabBar())
+    if (object != tabBar())
         return false;
 
-    switch (e->type()) {
+    switch (event->type()) {
     case QEvent::MouseButtonDblClick : {
-        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        QMouseEvent *me = static_cast<QMouseEvent *>(event);
 
         if (tabBar()->tabAt(me->pos()) == -1)
             emit tabBarDoubleClicked();

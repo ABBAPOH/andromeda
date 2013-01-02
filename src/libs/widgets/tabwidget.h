@@ -1,12 +1,12 @@
 #ifndef TABCONTAINER_P_H
 #define TABCONTAINER_P_H
 
+#include "widgets_global.h"
+
 #include <QtGui/QTabWidget>
 #include <QtGui/QAbstractButton>
 
-#include "tabbar.h"
-
-class TabWidget : public QTabWidget
+class WIDGETS_EXPORT TabWidget : public QTabWidget
 {
     Q_OBJECT
     Q_DISABLE_COPY(TabWidget)
@@ -23,7 +23,7 @@ signals:
     void tabBarVisibleChanged(bool visible);
 
 protected:
-    bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *event);
 };
 
 #endif // TABCONTAINER_P_H

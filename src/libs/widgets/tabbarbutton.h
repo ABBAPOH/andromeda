@@ -1,12 +1,14 @@
 #ifndef TABBARBUTTON_H
 #define TABBARBUTTON_H
 
+#include "widgets_global.h"
+
 #include <QAbstractButton>
 #include <QTabBar>
 
 class QStyleOption;
 
-class TabBarButton : public QAbstractButton
+class WIDGETS_EXPORT TabBarButton : public QAbstractButton
 {
     Q_OBJECT
     Q_DISABLE_COPY(TabBarButton)

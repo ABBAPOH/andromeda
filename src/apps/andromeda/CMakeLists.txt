@@ -14,10 +14,7 @@ set( HEADERS
     settingsmodel.h
     settingsmodel_p.h
     settingswidget.h
-    tabbar.h
-    tabbarbutton.h
     tabcontainer.h
-    tabwidget.h
 )
 
 set( SOURCES
@@ -28,10 +25,7 @@ set( SOURCES
     myaddressbar.cpp
     settingsmodel.cpp
     settingswidget.cpp
-    tabbar.cpp
-    tabbarbutton.cpp
     tabcontainer.cpp
-    tabwidget.cpp
 )
 
 set( FORMS

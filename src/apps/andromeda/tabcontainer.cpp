@@ -1,15 +1,13 @@
 #include "tabcontainer.h"
 
-#include "tabwidget.h"
-
 #include <QtCore/QDataStream>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QTabWidget>
 
 #include <guisystem/stackedcontainer.h>
-
-#include "tabbarbutton.h"
+#include <widgets/tabbarbutton.h>
+#include <widgets/tabwidget.h>
 
 using namespace Andromeda;
 using namespace GuiSystem;
