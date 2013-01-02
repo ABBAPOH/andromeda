@@ -19,12 +19,6 @@
 
 namespace FileManager {
 
-class LabelLineEdit : public QLineEdit
-{
-public:
-    explicit LabelLineEdit(QWidget *parent = 0);
-};
-
 class FileInfoDialogPrivate
 {
 public:
@@ -107,17 +101,6 @@ static QString pathToWrappedString(const QString &path)
     result.replace(QString("/"), QString("/") + QChar(0x200B));
     result = result.trimmed();
     return result;
-}
-
-LabelLineEdit::LabelLineEdit(QWidget *parent) :
-    QLineEdit(parent)
-{
-    QPalette p = palette();
-    p.setColor(QPalette::Base, p.color(QPalette::Window));
-    setPalette(p);
-
-    setFrame(false);
-    setReadOnly(true);
 }
 
 void FileInfoDialogPrivate::updateUi()
