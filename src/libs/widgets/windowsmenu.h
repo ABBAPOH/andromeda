@@ -10,7 +10,7 @@ class WIDGETS_EXPORT WindowsMenu : public QMenu
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(WindowsMenu)
-
+    Q_DISABLE_COPY(WindowsMenu)
 public:
     explicit WindowsMenu(QWidget *parent = 0);
     ~WindowsMenu();

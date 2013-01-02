@@ -40,7 +40,7 @@ class QSplitterHandle;
 class WIDGETS_EXPORT MiniSplitter : public QSplitter
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(MiniSplitter)
 public:
     explicit MiniSplitter(QWidget *parent = 0);
     explicit MiniSplitter(Qt::Orientation orientation, QWidget *parent = 0);

@@ -8,7 +8,7 @@
 class WIDGETS_EXPORT FilterLineEdit : public FancyLineEdit
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(FilterLineEdit)
 public:
     explicit FilterLineEdit(QWidget *parent = 0);
 

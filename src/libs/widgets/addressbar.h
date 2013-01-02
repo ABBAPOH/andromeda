@@ -8,6 +8,7 @@
 class WIDGETS_EXPORT AddressBar : public FancyLineEdit
 {
     Q_OBJECT
+    Q_DISABLE_COPY(AddressBar)
 public:
     explicit AddressBar(QWidget *parent = 0);
 

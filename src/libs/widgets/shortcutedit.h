@@ -9,7 +9,9 @@ class ShortcutEditPrivate;
 class WIDGETS_EXPORT ShortcutEdit : public QWidget
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(ShortcutEdit);
+    Q_DISABLE_COPY(ShortcutEdit)
+    Q_DECLARE_PRIVATE(ShortcutEdit)
+
     Q_PROPERTY(QKeySequence keySequence READ keySequence WRITE setKeySequence USER true)
 public:
     explicit ShortcutEdit(QWidget *parent = 0);

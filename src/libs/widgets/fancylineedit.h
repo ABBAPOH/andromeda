@@ -11,7 +11,6 @@ class WIDGETS_EXPORT FancyLineEdit : public QLineEdit
 {
     Q_OBJECT
     Q_DISABLE_COPY(FancyLineEdit)
-
 public:
     enum Side { Left = 0, Right = 1 };
     Q_ENUMS(Side)

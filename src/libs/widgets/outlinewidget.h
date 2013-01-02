@@ -13,7 +13,6 @@ class WIDGETS_EXPORT OutlineWidget : public QFrame
     Q_DISABLE_COPY(OutlineWidget)
 
     Q_PROPERTY(bool animated READ isAnimated WRITE setAnimated)
-
 public:
     explicit OutlineWidget(QWidget *parent = 0);
     ~OutlineWidget();

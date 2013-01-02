@@ -15,7 +15,6 @@ class WIDGETS_EXPORT ModelToolBar : public QToolBar
 {
     Q_OBJECT
     Q_DISABLE_COPY(ModelToolBar)
-
 public:
     explicit ModelToolBar(QWidget *parent = 0);
     explicit ModelToolBar(const QString &title, QWidget *parent = 0);

@@ -14,7 +14,6 @@ class WIDGETS_EXPORT ModelMenu : public QMenu
 {
     Q_OBJECT
     Q_DISABLE_COPY(ModelMenu)
-
 public:
     explicit ModelMenu(QWidget *parent = 0);
     ~ModelMenu();
