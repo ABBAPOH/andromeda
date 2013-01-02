@@ -66,6 +66,27 @@ QRect OutlineTreeView::visualRect(const QModelIndex &index) const
     return result;
 }
 
+OutlineDelegate::OutlineDelegate(QObject *parent) :
+    QStyledItemDelegate(parent)
+{
+}
+
+void OutlineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (const QStyleOptionViewItemV4 *optionV4 = qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option)) {
+        QStyleOptionViewItemV4 opt(*optionV4);
+        const QAbstractItemView *view = qobject_cast<const QAbstractItemView *>(opt.widget);
+        // remove indentation:
+        if (view)
+            opt.rect = view->visualRect(index);
+        else if (index.column() == 0 && index.parent().isValid())
+            opt.rect.setX(0);
+        QStyledItemDelegate::paint(painter, opt, index);
+    } else {
+        QStyledItemDelegate::paint(painter, option, index);
+    }
+}
+
 /*!
     \class OutlineWidget
 
@@ -78,6 +99,7 @@ OutlineWidget::OutlineWidget(QWidget *parent) :
     Q_D(OutlineWidget);
 
     d->treeView = new OutlineTreeView(this);
+    d->treeView->setItemDelegate(new OutlineDelegate(d->treeView));
     d->treeView->setFocusPolicy(Qt::NoFocus);
     d->treeView->header()->hide();
     d->treeView->setExpandsOnDoubleClick(false);

@@ -2,6 +2,7 @@
 #define OUTLINEWIDGET_P_H
 
 #include <QtGui/QTreeView>
+#include <QtGui/QStyledItemDelegate>
 
 class QStandardItemModel;
 
@@ -22,6 +23,14 @@ public:
     void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const;
 
     QRect visualRect(const QModelIndex &index) const;
+};
+
+class OutlineDelegate : public QStyledItemDelegate
+{
+public:
+    explicit OutlineDelegate(QObject *parent = 0);
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 #endif // OUTLINEWIDGET_P_H
