@@ -1,13 +1,15 @@
 #ifndef QIMAGEVIEWPREFERENCESWIDGET_H
 #define QIMAGEVIEWPREFERENCESWIDGET_H
 
+#include "qimageview_global.h"
+
 #include <QWidget>
 
 namespace Ui {
 class QImageViewPreferencesWidget;
 }
 
-class QImageViewPreferencesWidget : public QWidget
+class QIMAGEVIEW_EXPORT QImageViewPreferencesWidget : public QWidget
 {
     Q_OBJECT
 
