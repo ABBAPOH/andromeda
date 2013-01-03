@@ -6,8 +6,8 @@
 #include <QDesktopServices>
 #include <QMenuBar>
 
-#include <filemanager/navigationpanel.h>
-#include <filemanager/dualpanewidget.h>
+#include <FileManager/NavigationPanel>
+#include <FileManager/DualPaneWidget>
 
 using namespace FileManager;
 

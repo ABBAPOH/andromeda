@@ -11,7 +11,7 @@ endif()
 
 add_subdirectory( bineditor )
 add_subdirectory( bookmarks )
-add_subdirectory( filemanager )
+add_subdirectory( filemanagerplugin )
 add_subdirectory( helloworld )
 add_subdirectory( imageviewerplugin )
 add_subdirectory( pdfview )
