@@ -1,9 +1,11 @@
 #ifndef COLORBUTTON_H
 #define COLORBUTTON_H
 
+#include "widgets_global.h"
+
 #include <QtGui/QToolButton>
 
-class QColorButton : public QToolButton
+class WIDGETS_EXPORT QColorButton : public QToolButton
 {
     Q_OBJECT
     Q_DISABLE_COPY(QColorButton)
