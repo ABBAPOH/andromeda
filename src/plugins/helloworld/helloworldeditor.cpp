@@ -1,6 +1,7 @@
 #include "helloworldeditor.h"
 
 #include <QtCore/QUrl>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QResizeEvent>
 
@@ -12,6 +13,11 @@ HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     m_label(new QLabel(tr("Hello World!"), this))
 {
     m_label->setAlignment(Qt::AlignCenter);
+
+    QLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addWidget(m_label);
 }
 
 void HelloWorldEditor::open(const QUrl &)
@@ -31,11 +37,6 @@ QIcon HelloWorldEditor::icon() const
 QString HelloWorldEditor::title() const
 {
     return tr("Hello world");
-}
-
-void HelloWorldEditor::resizeEvent(QResizeEvent *e)
-{
-    m_label->resize(e->size());
 }
 
 HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :

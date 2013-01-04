@@ -24,9 +24,6 @@ public:
     QIcon icon() const;
     QString title() const;
 
-protected:
-    void resizeEvent(QResizeEvent *);
-
 private:
     QLabel *m_label;
 };
