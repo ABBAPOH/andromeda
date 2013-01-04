@@ -205,7 +205,7 @@ QByteArray StackedContainer::saveState() const
 
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
-    s << d->editor->id();
+    s << d->editor->property("id");
     s << d->editor->saveState();
     return state;
 }

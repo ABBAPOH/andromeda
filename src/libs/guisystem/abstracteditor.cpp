@@ -1,5 +1,4 @@
 #include "abstracteditor.h"
-#include "abstracteditorfactory.h"
 
 #include "actionmanager.h"
 
@@ -18,8 +17,7 @@ using namespace GuiSystem;
   \brief Creates a AbstractEditor with the given \a parent.
 */
 AbstractEditor::AbstractEditor(QWidget *parent) :
-    QWidget(parent),
-    m_factory(0)
+    QWidget(parent)
 {
 }
 
@@ -28,22 +26,6 @@ AbstractEditor::AbstractEditor(QWidget *parent) :
 */
 AbstractEditor::~AbstractEditor()
 {
-    if (m_factory)
-        m_factory->m_editors.removeAll(this);
-}
-
-/*!
-  \property AbstractEditor::id
-
-  \brief This property contains id of a factory that created this view, or
-  empty byte array, if view was created using public constructor.
-*/
-QByteArray AbstractEditor::id() const
-{
-    if (m_factory)
-        return m_factory->id();
-
-    return QByteArray();
 }
 
 /*!
@@ -244,19 +226,6 @@ QByteArray AbstractEditor::saveState() const
   This signal should be emited when editor stops loading time consuming data.
   \a ok will indicate whether the opening was successful or any error occurred.
 */
-
-/*!
-  \brief Returns factory that created this editor.
-*/
-AbstractEditorFactory * AbstractEditor::factory() const
-{
-    return m_factory;
-}
-
-void AbstractEditor::setFactory(AbstractEditorFactory *factory)
-{
-    m_factory = factory;
-}
 
 /*!
   \brief Returns action manager instance.

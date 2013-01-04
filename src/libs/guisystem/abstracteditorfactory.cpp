@@ -1,6 +1,8 @@
 #include "abstracteditorfactory.h"
 #include "abstracteditor.h"
 
+#include <QtCore/QVariant>
+
 using namespace GuiSystem;
 
 /*!
@@ -32,7 +34,14 @@ AbstractEditorFactory::~AbstractEditorFactory()
 AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
 {
     AbstractEditor *editor = createEditor(parent);
-    editor->setFactory(this);
+    editor->setProperty("id", id());
+    connect(editor, SIGNAL(destroyed(QObject*)), SLOT(onEditorDestroyed(QObject*)));
     m_editors.append(editor);
     return editor;
+}
+
+void AbstractEditorFactory::onEditorDestroyed(QObject *object)
+{
+    AbstractEditor *editor = static_cast<AbstractEditor *>(object);
+    m_editors.removeOne(editor);
 }

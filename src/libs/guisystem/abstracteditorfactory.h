@@ -33,6 +33,9 @@ public:
     virtual QStringList urlSchemes() const { return QStringList(); }
     virtual int weight() const { return 50; }
 
+protected slots:
+    void onEditorDestroyed(QObject *object);
+
 protected:
     virtual AbstractEditor *createEditor(QWidget *parent) = 0;
 

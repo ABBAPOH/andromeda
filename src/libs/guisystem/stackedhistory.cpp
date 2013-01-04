@@ -44,7 +44,7 @@ void StackedHistory::open(const QUrl &url)
     if (d->items.count() >= d->currentIndex + 1)
         d->items.erase(d->items.begin() + d->currentIndex + 1, d->items.end());
 
-    if (d->currentEditor != editor->id()) {
+    if (d->currentEditor != editor->property("id").toByteArray()) {
         // erase forward stashed history
         d->stashedHistory.erase(d->stashedHistory.begin() + d->currentStashedIndex + 1, d->stashedHistory.end());
         d->stashedHistory.append(QByteArray());
@@ -54,7 +54,7 @@ void StackedHistory::open(const QUrl &url)
             AbstractEditor *oldEditor = d->m_container->editor(d->currentEditor);
             d->stashEditor(oldEditor);
         }
-        d->currentEditor = editor->id();
+        d->currentEditor = editor->property("id").toByteArray();
         d->currentStashedIndex++;
 
         IHistory *history = editor->history();

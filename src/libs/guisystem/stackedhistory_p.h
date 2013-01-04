@@ -17,7 +17,7 @@ struct StackedHistoryItem
     }
 
     QUrl url;
-    QString editor;
+    QByteArray editor;
     int localIndex;
     int stashedIndex;
 };
@@ -47,7 +47,7 @@ public:
     QList<StackedHistoryItem> items;
     int currentIndex;
 
-    QString currentEditor;
+    QByteArray currentEditor;
 
     QList<QByteArray> stashedHistory;
     int currentStashedIndex;
