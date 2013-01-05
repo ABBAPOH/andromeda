@@ -20,7 +20,7 @@
 #define PDFVIEWER_FINDWIDGET_H
 
 #include "ui_findwidget.h"
-#include "pdfview.h"
+#include "lib/pdfview.h"
 
 class FindWidget : public QWidget
 {

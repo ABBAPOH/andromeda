@@ -19,7 +19,7 @@
 #define PDFVIEWEDITOR_H
 
 #include "pdfview_global.h"
-#include "pdfview.h"
+#include "lib/pdfview.h"
 
 #include <guisystem/abstracteditor.h>
 #include <guisystem/abstracteditorfactory.h>
@@ -55,8 +55,11 @@ private Q_SLOTS:
     void slotFindPrevious();
 
 private:
+	void registerActions();
     void readSettings();
     void selectMouseTool(int which);
+
+	QUrl m_url;
 
     PdfView *m_pdfView;
     QAction *m_mouseBrowseAction;
@@ -77,6 +80,7 @@ public:
     QString name() const;
     QIcon icon() const;
     QStringList mimeTypes() const;
+	int weight() const;
 
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);

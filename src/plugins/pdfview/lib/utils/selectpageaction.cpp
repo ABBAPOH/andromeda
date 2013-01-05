@@ -16,35 +16,42 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef PDFVIEWER_PAGEITEM_H
-#define PDFVIEWER_PAGEITEM_H
+#include "selectpageaction.h"
 
-#include <QtCore/QObject>
-#include <poppler-qt4.h>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QSpinBox>
 
-struct Link
+SelectPageAction::SelectPageAction(QObject *parent, const QString &name)
+	: SelectAction(parent)
 {
-	QRectF linkArea;
-	double pageNumber;
-	QString pageLabel;
-	QString url;
-	Poppler::LinkAction::ActionType actionType;
-};
-//Q_DECLARE_TYPEINFO(Link, Q_PRIMITIVE_TYPE);
+	if (!name.isEmpty())
+		setObjectName(name);
 
-class PageItem : public QObject
+	connect(this, SIGNAL(triggered(QString)), this, SLOT(slotGoToPage(QString)));
+}
+
+SelectPageAction::~SelectPageAction()
 {
-	Q_OBJECT
+}
 
-public:
-	PageItem(QObject *parent = 0);
+void SelectPageAction::setPageLabels(const QStringList &labels)
+{
+	disconnect(this, SIGNAL(triggered(QString)), this, SLOT(slotGoToPage(QString)));
+	clear();
 
-	void generateLinks(Poppler::Page *popplerPage, const QStringList &popplerPageLabels);
-	QList<Link> links() const;
-	static QString toolTipText(const Link &link);
+	const int pageCount = labels.size();
+	QStringList pageLabelTexts;
+	pageLabelTexts.reserve(pageCount);
+	for (int i = 0; i < pageCount; ++i)
+		pageLabelTexts << labels.at(i) + QLatin1String(" (") + QString::number(i+1) + QLatin1String(" / ") + QString::number(pageCount) + QLatin1Char(')');
+	setItems(pageLabelTexts);
+	connect(this, SIGNAL(triggered(QString)), this, SLOT(slotGoToPage(QString)));
+}
 
-private:
-	QList<Link> m_links;
-};
-
-#endif // PDFVIEWER_PAGEITEM_H
+void SelectPageAction::slotGoToPage(const QString &pageLabelText)
+{
+	const int start = pageLabelText.indexOf(QLatin1Char('(')) + 1; // pageLabelText is of the form "iv (4 / 316)", so we extract the "4"
+	const int pageNumber = pageLabelText.mid(start, pageLabelText.indexOf(QLatin1Char('/')) - start).toInt() - 1;
+	Q_EMIT pageSelected(pageNumber);
+}

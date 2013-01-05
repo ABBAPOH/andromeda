@@ -13,12 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
- *
- * The functions synctexLoadData(), synctexRemoveData(), synctexClick() and
- * syncFromSource() are inspired from similar functions in TeXworks which is
- * Copyright (C) 2007-2011 Jonathan Kew, Stefan Löffler
- * licensed under the GPL version 2 or later,
- * see <http://www.tug.org/texworks/>.
  */
 
 #include <QDebug>
@@ -26,7 +20,11 @@
 #include "pdfview_p.h"
 
 #include "pageitem.h"
-//#include "shortcuthandler/shortcuthandler.h"
+#include "actionhandler.h"
+#include "printhandler.h"
+#ifdef USE_SYNCTEX
+#include "synctexhandler.h"
+#endif // USE_SYNCTEX
 #include "utils/bookmarkshandler.h"
 #include "utils/filesettings.h"
 //#include "utils/icon.h"
@@ -34,9 +32,11 @@
 #include "utils/zoomaction.h"
 
 #include <poppler-qt4.h>
+#include <poppler-form.h>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPointer>
+#include <QtCore/QProcess>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/qmath.h>
@@ -44,16 +44,21 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QImage>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QLineEdit>
 #include <QtGui/QPixmap>
+#include <QtGui/QPrintDialog>
+#include <QtGui/QPrinter>
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFileDialog>
 #include <QtGui/QGraphicsPixmapItem>
+#include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QScrollBar>
 #include <QtGui/QStyle>
+#include <QtGui/QTextEdit>
 #ifndef QT_NO_TOOLTIP
 #include <QtGui/QToolTip>
 #endif // QT_NO_TOOLTIP
@@ -64,14 +69,10 @@ static const qreal s_maxZoomFactor = 6;
 
 PdfViewPrivate::PdfViewPrivate(PdfView *pdfView)
 	: q(pdfView)
+	, m_actionHandler(0)
 	, m_zoomInAction(0)
 	, m_zoomOutAction(0)
 	, m_zoomAction(0)
-	, m_goToStartAction(0)
-	, m_goToEndAction(0)
-	, m_goToPreviousPageAction(0)
-	, m_goToNextPageAction(0)
-	, m_goToPageAction(0)
 	, m_maxFileSettingsCacheSize(0)
 	, m_bookmarksHandler(0)
 	, m_popplerDocument(0)
@@ -79,7 +80,6 @@ PdfViewPrivate::PdfViewPrivate(PdfView *pdfView)
     , m_dpiX(QApplication::desktop()->physicalDpiX())
     , m_dpiY(QApplication::desktop()->physicalDpiY())
 	, m_pageNumber(-1)
-	, m_isLinkHovered(false)
 	, m_realPageNumber(-1)
 	, m_findHighlightRect(0)
 	, m_mouseTool(PdfView::Magnifying)
@@ -87,9 +87,15 @@ PdfViewPrivate::PdfViewPrivate(PdfView *pdfView)
 	, m_magnifiedPageRect(0)
 	, m_magnifiedPageItem(0)
 	, m_selectionRect(0)
+	, m_showForms(false)
 	, m_verticalPositionTimer(0)
-	, m_synctexScanner(0)
+#ifdef USE_SYNCTEX
+	, m_synctexHandler(new SynctexHandler(this))
+#endif // USE_SYNCTEX
 {
+#ifdef USE_SYNCTEX
+	connect(m_synctexHandler, SIGNAL(openTexDocument(QString,int)), this, SIGNAL(openTexDocument(QString,int)));
+#endif // USE_SYNCTEX
 }
 
 PdfViewPrivate::~PdfViewPrivate()
@@ -104,6 +110,8 @@ void PdfViewPrivate::init()
 	q->setMouseTracking(true);
 	const QColor backgroundColor = QApplication::style()->standardPalette().color(QPalette::Normal, QPalette::Window);
 	m_pageScene->setBackgroundBrush(backgroundColor); // use window color for the background behind the pages
+
+	m_printHandler = new PrintHandler(q);
 }
 
 /*******************************************************************/
@@ -132,6 +140,7 @@ PdfView::PdfView(QWidget *parent)
 	setRenderBackend(Poppler::Document::RenderBackend(0));
 	connect(d, SIGNAL(scrollPositionChanged(qreal,int)), this, SIGNAL(scrollPositionChanged(qreal,int)));
 	connect(d, SIGNAL(openTexDocument(QString,int)), this, SIGNAL(openTexDocument(QString,int)));
+	connect(d, SIGNAL(mouseToolChanged(PdfView::MouseTool)), this, SIGNAL(mouseToolChanged(PdfView::MouseTool)));
 }
 
 PdfView::~PdfView()
@@ -145,6 +154,17 @@ void PdfView::setMouseTool(MouseTool mouseTool)
 	d->m_mouseTool = mouseTool;
 }
 
+void PdfViewPrivate::slotSelectMouseTool()
+{
+	QAction *action = qobject_cast<QAction*>(sender());
+	if (action)
+	{
+		PdfView::MouseTool which = action->data().value<PdfView::MouseTool>();
+		q->setMouseTool(which);
+		Q_EMIT mouseToolChanged(which);
+	}
+}
+
 void PdfView::setMaximumFileSettingsCacheSize(int size)
 {
 	d->m_maxFileSettingsCacheSize = size;
@@ -155,102 +175,73 @@ void PdfView::setMaximumFileSettingsCacheSize(int size)
 
 QAction *PdfView::action(PdfViewAction action)
 {
+	if (!d->m_actionHandler)
+		d->m_actionHandler = new ActionHandler(this);
+
 	switch (action)
 	{
 		case ZoomIn:
-			if (!d->m_zoomInAction)
-			{
-				d->m_zoomInAction = new QAction(tr("Zoom &In", "Action"), this);
-#ifndef QT_NO_SHORTCUT
-				d->m_zoomInAction->setShortcut(QKeySequence::ZoomIn);
-#endif
-				d->m_zoomInAction->setObjectName("pdfview_zoom_in");
-				connect(d->m_zoomInAction, SIGNAL(triggered()), this, SLOT(slotZoomIn()));
-			}
+			d->m_zoomInAction = d->m_actionHandler->action(action, this, SLOT(slotZoomIn()));
 			return d->m_zoomInAction;
 			break;
 
 		case ZoomOut:
-			if (!d->m_zoomOutAction)
-			{
-				d->m_zoomOutAction = new QAction(tr("Zoom &Out", "Action"), this);
-#ifndef QT_NO_SHORTCUT
-				d->m_zoomOutAction->setShortcut(QKeySequence::ZoomOut);
-#endif
-				d->m_zoomOutAction->setObjectName("pdfview_zoom_out");
-				connect(d->m_zoomOutAction, SIGNAL(triggered()), this, SLOT(slotZoomOut()));
-			}
+			d->m_zoomOutAction = d->m_actionHandler->action(action, this, SLOT(slotZoomOut()));
 			return d->m_zoomOutAction;
 			break;
 
 		case Zoom:
-			if (!d->m_zoomAction)
-			{
-				d->m_zoomAction = new ZoomAction(tr("&Zoom", "Action"), this);
-				d->m_zoomAction->setMinZoomFactor(s_minZoomFactor);
-				d->m_zoomAction->setMaxZoomFactor(s_maxZoomFactor);
-				connect(d->m_zoomAction, SIGNAL(zoomFactorAdded(qreal)), d, SLOT(slotSetZoomFactor(qreal)));
-			}
+			d->m_zoomAction = qobject_cast<ZoomAction*>(d->m_actionHandler->action(action, d, SLOT(slotSetZoomFactor(qreal))));
+			d->m_zoomAction->setMinZoomFactor(s_minZoomFactor);
+			d->m_zoomAction->setMaxZoomFactor(s_maxZoomFactor);
 			return d->m_zoomAction;
 			break;
 
 		case GoToStartOfDocument:
-			if (!d->m_goToStartAction)
-			{
-				d->m_goToStartAction = new QAction(tr("&Beginning of the Document", "Action"), this);
-				d->m_goToStartAction->setIconText(tr("Start", "Action icon text: go to start of document"));
-#ifndef QT_NO_SHORTCUT
-				d->m_goToStartAction->setShortcut(QKeySequence::MoveToStartOfDocument);
-#endif
-				d->m_goToStartAction->setObjectName("pdfview_go_start_document");
-				connect(d->m_goToStartAction, SIGNAL(triggered()), this, SLOT(slotGoToStartOfDocument()));
-			}
-			return d->m_goToStartAction;
+		{
+			QAction *goToStartAction = d->m_actionHandler->action(action, this, SLOT(slotGoToStartOfDocument()));
+			if (!d->m_popplerDocument)
+				goToStartAction->setEnabled(false);
+			return goToStartAction;
 			break;
+		}
 
 		case GoToEndOfDocument:
-			if (!d->m_goToEndAction)
-			{
-				d->m_goToEndAction = new QAction(tr("&End of the Document", "Action"), this);
-				d->m_goToEndAction->setIconText(tr("End", "Action icon text: go to end of document"));
-#ifndef QT_NO_SHORTCUT
-				d->m_goToEndAction->setShortcut(QKeySequence::MoveToEndOfDocument);
-#endif
-				d->m_goToEndAction->setObjectName("pdfview_go_end_document");
-				connect(d->m_goToEndAction, SIGNAL(triggered()), this, SLOT(slotGoToEndOfDocument()));
-			}
-			return d->m_goToEndAction;
+		{
+			QAction *goToEndAction = d->m_actionHandler->action(action, this, SLOT(slotGoToEndOfDocument()));
+			if (!d->m_popplerDocument)
+				goToEndAction->setEnabled(false);
+			return goToEndAction;
 			break;
+		}
 
 		case GoToPreviousPage:
-			if (!d->m_goToPreviousPageAction)
-			{
-				d->m_goToPreviousPageAction = new QAction(tr("&Previous Page", "Action"), this);
-				d->m_goToPreviousPageAction->setIconText(tr("Previous", "Action icon text: go to previous page"));
-				d->m_goToPreviousPageAction->setObjectName("pdfview_go_previous_page");
-				connect(d->m_goToPreviousPageAction, SIGNAL(triggered()), this, SLOT(slotGoToPreviousPage()));
-			}
-			return d->m_goToPreviousPageAction;
+		{
+			QAction *goToPreviousPageAction = d->m_actionHandler->action(action, this, SLOT(slotGoToPreviousPage()));
+			if (!d->m_popplerDocument)
+				goToPreviousPageAction->setEnabled(false);
+			return goToPreviousPageAction;
 			break;
+		}
 
 		case GoToNextPage:
-			if (!d->m_goToNextPageAction)
-			{
-				d->m_goToNextPageAction = new QAction(tr("&Next Page", "Action"), this);
-				d->m_goToNextPageAction->setIconText(tr("Next", "Action icon text: go to next page"));
-				d->m_goToNextPageAction->setObjectName("pdfview_go_next_page");
-				connect(d->m_goToNextPageAction, SIGNAL(triggered()), this, SLOT(slotGoToNextPage()));
-			}
-			return d->m_goToNextPageAction;
+		{
+			QAction *goToNextPageAction = d->m_actionHandler->action(action, this, SLOT(slotGoToNextPage()));
+			if (!d->m_popplerDocument)
+				goToNextPageAction->setEnabled(false);
+			return goToNextPageAction;
 			break;
+		}
+
 		case GoToPage:
-			if (!d->m_goToPageAction)
-			{
-				d->m_goToPageAction = new SelectPageAction(this);
-//				connect(d->m_goToPageAction, SIGNAL(pageSelected(int)), d, SLOT(slotSetPage(int)));
-			}
-			return d->m_goToPageAction;
+		{
+			QAction *goToPageAction = qobject_cast<SelectPageAction*>(d->m_actionHandler->action(action, d, SLOT(slotSetPage(int))));
+			if (!d->m_popplerDocument)
+				goToPageAction->setEnabled(false);
+			return goToPageAction;
 			break;
+		}
+
 		case Bookmarks:
 		case SetBookmark:
 		case PreviousBookmark:
@@ -259,6 +250,8 @@ QAction *PdfView::action(PdfViewAction action)
 			{
 				d->m_bookmarksHandler = new BookmarksHandler(d);
 				connect(d->m_bookmarksHandler, SIGNAL(goToPosition(double)), d, SLOT(slotSetPage(double)));
+				if (!d->m_popplerDocument)
+					d->m_bookmarksHandler->action(0)->setEnabled(false);
 			}
 			if (action == Bookmarks)
 				return d->m_bookmarksHandler->menuAction();
@@ -269,6 +262,41 @@ QAction *PdfView::action(PdfViewAction action)
 			else if (action == NextBookmark)
 				return d->m_bookmarksHandler->action(2);
 			break;
+
+		case Print:
+		{
+			QAction *printAction = d->m_actionHandler->action(action, this, SLOT(slotPrint()));
+			if (!d->m_popplerDocument)
+				printAction->setEnabled(false);
+			return printAction;
+			break;
+		}
+
+		case MouseToolBrowse:
+			return d->m_actionHandler->action(action, d, SLOT(slotSelectMouseTool()));
+			break;
+
+		case MouseToolMagnify:
+			return d->m_actionHandler->action(action, d, SLOT(slotSelectMouseTool()));
+			break;
+
+		case MouseToolSelection:
+			return d->m_actionHandler->action(action, d, SLOT(slotSelectMouseTool()));
+			break;
+
+		case MouseToolTextSelection:
+			return d->m_actionHandler->action(action, d, SLOT(slotSelectMouseTool()));
+			break;
+
+		case ShowForms:
+		{
+			QAction *showFormsAction = d->m_actionHandler->action(action, this, SLOT(slotToggleShowForms(bool)));
+			if (!d->m_popplerDocument)
+				showFormsAction->setEnabled(false);
+			return showFormsAction;
+			break;
+		}
+
 		case NoPdfViewAction:
 		default:
 			return 0;
@@ -288,40 +316,56 @@ double PdfViewPrivate::scaleFactorY() const
 	return m_zoomFactor * m_dpiY / 72.0;
 }
 
-QPointF PdfView::mapFromPage(int pageNumber, const QPointF &point) const
+QPointF PdfView::mapFromPage(int pageNumber, const QPointF &pagePos) const
 {
 //	Q_D(const PdfView);
-	const double pointX = (point.x() + s_interPageSpace / 2) * d->scaleFactorX();
-	const double pointY = (point.y() + d->m_popplerPageTopPositions.at(pageNumber)) * d->scaleFactorY();
-	return QPointF(pointX, pointY);
+	if (pageNumber < 0 || pageNumber >= d->m_popplerDocument->numPages())
+		return QPointF();
+	const double scenePosX = (pagePos.x() + s_interPageSpace / 2) * d->scaleFactorX();
+	const double scenePosY = (pagePos.y() + d->m_popplerPageTopPositions.at(pageNumber)) * d->scaleFactorY();
+	return QPointF(scenePosX, scenePosY);
 }
 
-QRectF PdfView::mapFromPage(int pageNumber, const QRectF &rect) const
+QRectF PdfView::mapFromPage(int pageNumber, const QRectF &pageRect) const
 {
 //	Q_D(const PdfView);
-	const double rectX = (rect.x() + s_interPageSpace / 2) * d->scaleFactorX();
-	const double rectY = (rect.y() + d->m_popplerPageTopPositions.at(pageNumber)) * d->scaleFactorY();
-	const double rectWidth = rect.width() * d->scaleFactorX();
-	const double rectHeight = rect.height() * d->scaleFactorY();
-	return QRectF(rectX, rectY, rectWidth, rectHeight);
+	if (pageNumber < 0 || pageNumber >= d->m_popplerDocument->numPages())
+		return QRectF();
+	const double sceneRectX = (pageRect.x() + s_interPageSpace / 2) * d->scaleFactorX();
+	const double sceneRectY = (pageRect.y() + d->m_popplerPageTopPositions.at(pageNumber)) * d->scaleFactorY();
+	const double sceneRectWidth = pageRect.width() * d->scaleFactorX();
+	const double sceneRectHeight = pageRect.height() * d->scaleFactorY();
+	return QRectF(sceneRectX, sceneRectY, sceneRectWidth, sceneRectHeight);
 }
 
-QPointF PdfView::mapToPage(int pageNumber, const QPointF &point) const
+QPointF PdfView::mapToPage(int pageNumber, const QPointF &scenePos) const
 {
 //	Q_D(const PdfView);
-	const double pointX = point.x() / d->scaleFactorX() - s_interPageSpace / 2;
-	const double pointY = point.y() / d->scaleFactorY() - d->m_popplerPageTopPositions.at(pageNumber);
-	return QPointF(pointX, pointY);
+	if (pageNumber < 0 || pageNumber >= d->m_popplerDocument->numPages())
+		return QPointF();
+	const double pagePosX = scenePos.x() / d->scaleFactorX() - s_interPageSpace / 2;
+	const double pagePosY = scenePos.y() / d->scaleFactorY() - d->m_popplerPageTopPositions.at(pageNumber);
+	return QPointF(pagePosX, pagePosY);
 }
 
-QRectF PdfView::mapToPage(int pageNumber, const QRectF &rect) const
+QRectF PdfView::mapToPage(int pageNumber, const QRectF &sceneRect) const
 {
 //	Q_D(const PdfView);
-	const double rectX = rect.x() / d->scaleFactorX() - s_interPageSpace / 2;
-	const double rectY = rect.y() / d->scaleFactorY() - d->m_popplerPageTopPositions.at(pageNumber);
-	const double rectWidth = rect.width() / d->scaleFactorX();
-	const double rectHeight = rect.height() / d->scaleFactorY();
-	return QRectF(rectX, rectY, rectWidth, rectHeight);
+	if (pageNumber < 0 || pageNumber >= d->m_popplerDocument->numPages())
+		return QRectF();
+	const double pageRectX = sceneRect.x() / d->scaleFactorX() - s_interPageSpace / 2;
+	const double pageRectY = sceneRect.y() / d->scaleFactorY() - d->m_popplerPageTopPositions.at(pageNumber);
+	const double pageRectWidth = sceneRect.width() / d->scaleFactorX();
+	const double pageRectHeight = sceneRect.height() / d->scaleFactorY();
+	return QRectF(pageRectX, pageRectY, pageRectWidth, pageRectHeight);
+}
+
+QPointF PdfView::mapToCurrentPage(const QPointF &scenePos) const
+{
+	const int pageNumber = d->pageNumberAtPosition(scenePos);
+	if (pageNumber < 0 || pageNumber >= d->m_popplerDocument->numPages())
+		return QPointF();
+	return mapToPage(pageNumber, scenePos);
 }
 
 /*******************************************************************/
@@ -372,6 +416,49 @@ Poppler::Document::RenderHints PdfView::renderHints() const
 }
 
 /*******************************************************************/
+// Toggle show forms
+
+void PdfViewPrivate::showForms(PageItem *pageItem, int pageNumber)
+{
+	if (!m_showForms)
+		return;
+
+	pageItem->generateFormFields();
+	QList<FormField> formFields = pageItem->formFields();
+	QList<QWidget*> formWidgets = pageItem->formWidgets();
+	for (int i = 0; i < formFields.size(); ++i)
+	{
+		const QRectF formFieldRect = q->mapFromPage(pageNumber, formFields.at(i).rect);
+		QGraphicsProxyWidget *formFieldWidget = m_pageScene->addWidget(formWidgets.at(i));
+		// make sure that multiline text fields are not too large
+		formFieldWidget->setMinimumSize(QSizeF(10, 10));
+		QTextEdit *textEdit = qobject_cast<QTextEdit*>(formWidgets.at(i));
+		if (textEdit && formFieldRect.width() <= textEdit->verticalScrollBar()->width() + 10) // ensure small text fields are editable
+		{
+			textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+			textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+		}
+		// resize widget to its allocated size
+		formFieldWidget->setGeometry(formFieldRect);
+//		formFieldWidget->setData(0, i);
+		formFieldWidget->setZValue(1);
+	}
+}
+
+void PdfView::slotToggleShowForms(bool visible)
+{
+	d->m_showForms = visible;
+	if (d->m_popplerDocument)
+	{
+		const double pageNumber = pageNumberWithPosition();
+		const QString file = fileName();
+		close();
+		load(file);
+		setPage(pageNumber);
+	}
+}
+
+/*******************************************************************/
 // Load and close document
 
 bool PdfView::load(const QString &fileName)
@@ -383,7 +470,12 @@ bool PdfView::load(const QString &fileName)
 
 	// set the zoom factor before actually loading the document (otherwise changing the zoom factor causes the file to be reloaded)
 	FileSettings fileSettings(d->m_fileName);
-	setZoomFactor(fileSettings.value("ZoomFactor", d->m_zoomFactor).toDouble());
+	setZoomFactor(fileSettings.value(QLatin1String("ZoomFactor"), d->m_zoomFactor).toDouble());
+
+	// set show forms hints before loading the document and before setting d->m_popplerDocument
+	d->m_showForms = fileSettings.value(QLatin1String("ShowForms"), false).toBool();
+	if (d->m_actionHandler && d->m_actionHandler->action(ShowForms))
+		d->m_actionHandler->action(ShowForms)->setChecked(d->m_showForms);
 
 	// set d->m_popplerDocument here so that setZoomFactor() above doesn't cause a crash
 	d->m_popplerDocument = popplerDocument;
@@ -396,19 +488,16 @@ bool PdfView::load(const QString &fileName)
 	d->loadDocument();
 
 	// set this after loading the document (otherwise there is a crash)
-	horizontalScrollBar()->setValue(fileSettings.value("HorizontalScrollBarValue", 0).toInt());
-	verticalScrollBar()->setValue(fileSettings.value("VerticalScrollBarValue", 0).toInt());
-	setPage(fileSettings.value("Page", 0).toDouble());
-qCritical() << verticalScrollBar()->value() << pageNumberWithPosition();
+	horizontalScrollBar()->setValue(fileSettings.value(QLatin1String("HorizontalScrollBarValue"), 0).toInt());
+	verticalScrollBar()->setValue(fileSettings.value(QLatin1String("VerticalScrollBarValue"), 0).toInt());
+	setPage(fileSettings.value(QLatin1String("Page"), 0).toDouble());
+//qCritical() << verticalScrollBar()->value() << pageNumberWithPosition();
 
 	// enable actions
-	if (d->m_goToPageAction)
+	if (d->m_actionHandler)
 	{
-		d->m_goToPageAction->setPageLabels(d->m_popplerPageLabels);
-		d->m_goToPageAction->setEnabled(true);
-		disconnect(d->m_goToPageAction, SIGNAL(pageSelected(int)), d, SLOT(slotSetPage(int)));
-		d->m_goToPageAction->setCurrentIndex(d->m_pageNumber);
-		connect(d->m_goToPageAction, SIGNAL(pageSelected(int)), d, SLOT(slotSetPage(int)));
+		d->m_actionHandler->setPageLabels(d->m_popplerPageLabels);
+		d->m_actionHandler->toggleFileDependentActionsEnabled(true);
 	}
 
 	// load bookmarks
@@ -416,6 +505,7 @@ qCritical() << verticalScrollBar()->value() << pageNumberWithPosition();
 	{
 		d->m_bookmarksHandler->setPageLabels(d->m_popplerPageLabels); // must be done before loadBookmarks()
 		d->m_bookmarksHandler->loadBookmarks(d->m_fileName);
+		action(PdfView::SetBookmark)->setEnabled(true);
 	}
 
 	return true;
@@ -449,42 +539,44 @@ void PdfViewPrivate::loadDocument()
 	for (int i = 0; i < pageCount; ++i)
 	{
 		m_popplerPages << m_popplerDocument->page(i);
-		m_popplerPageLabels << m_popplerPages.at(i)->label();
+		m_pageItems << new PageItem(m_popplerPages.at(i), q);
+		m_popplerPageLabels << m_pageItems.at(i)->label();
 		if (i == 0)
 			m_popplerPageTopPositions << s_interPageSpace / 2;
 		else
 		{
-			const QSizeF oldPopplerPageSizeF = m_popplerPages.at(i-1)->pageSizeF();
+			const QSizeF oldPopplerPageSizeF = m_pageItems.at(i-1)->pageSizeF();
 			m_popplerPageTopPositions << m_popplerPageTopPositions.at(i-1) + oldPopplerPageSizeF.height() + s_interPageSpace;
 			maximumPageWidth = qMax(oldPopplerPageSizeF.width(), maximumPageWidth);
 		}
 
 		// draw and fill page rectangles
-		const QRectF pageRect = q->mapFromPage(i, QRectF(QPointF(0, 0), m_popplerPages.at(i)->pageSizeF()));
+		const QRectF pageRect = q->mapFromPage(i, QRectF(QPointF(0, 0), m_pageItems.at(i)->pageSizeF()));
 		QGraphicsRectItem *rect = m_pageScene->addRect(pageRect, QPen(QBrush(Qt::black), 1)); // black border
 		m_pageScene->addRect(pageRect, QPen(), QBrush(Qt::white)); // white background
 		rect->setZValue(1);
 		rect->setData(0, i); // since rect has a higher z-value than the actual pageItem containing the pixmap, we set the data of rect to the page number here instead of setting the data of pageItem in loadPage()
 		m_pageLoaded << false;
-		m_pageItems << new PageItem(q);
 	}
-	const QSizeF lastPopplerPageSizeF = m_popplerPages.at(pageCount-1)->pageSizeF();
+	const QSizeF lastPopplerPageSizeF = m_pageItems.at(pageCount-1)->pageSizeF();
 	maximumPageWidth = qMax(lastPopplerPageSizeF.width(), maximumPageWidth);
 	// add the total height of the PDF (+ s_interPageSpace) to the list
-	m_popplerPageTopPositions << m_popplerPageTopPositions.at(pageCount-1) + m_popplerPages.at(pageCount-1)->pageSizeF().height() + s_interPageSpace / 2;
+	m_popplerPageTopPositions << m_popplerPageTopPositions.at(pageCount-1) + m_pageItems.at(pageCount-1)->pageSizeF().height() + s_interPageSpace / 2;
 	m_pageScene->setSceneRect(0, 0, (maximumPageWidth + s_interPageSpace) * scaleFactorX() + 2, m_popplerPageTopPositions.at(pageCount) * scaleFactorY() + 2);
 
 	// avoid calling setPage() when closing a document, so we connect the following signals here instead of in the constructor and disconnect them in documentClosed()
 	connect(q->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(slotVerticalPositionChanged(int)));
 
 //qCritical() << t.msecsTo(QTime::currentTime());
-	synctexLoadData();
+#ifdef USE_SYNCTEX
+	m_synctexHandler->loadData(m_fileName);
+#endif // USE_SYNCTEX
 //qCritical() << "documentLoaded" << t.msecsTo(QTime::currentTime());
 }
 
 void PdfView::close()
 {
-qCritical() << verticalScrollBar()->value() << pageNumberWithPosition();
+//qCritical() << verticalScrollBar()->value() << pageNumberWithPosition();
 	if (!d->m_popplerDocument)
 		return;
 	d->closeDocument();
@@ -493,16 +585,19 @@ qCritical() << verticalScrollBar()->value() << pageNumberWithPosition();
 	d->m_fileName.clear();
 
 	// disable actions
-	if (d->m_goToPageAction)
+	if (d->m_actionHandler)
 	{
-		disconnect(d->m_goToPageAction, SIGNAL(pageSelected(int)), d, SLOT(slotSetPage(int)));
-		d->m_goToPageAction->clear();
-		d->m_goToPageAction->setEnabled(false);
+		d->m_actionHandler->toggleGoToActionsEnabled(false);
+		d->m_actionHandler->toggleFileDependentActionsEnabled(false);
 	}
 
 	// save bookmarks
 	if (d->m_bookmarksHandler)
+	{
 		d->m_bookmarksHandler->saveBookmarks();
+		d->m_bookmarksHandler->clear();
+		action(PdfView::SetBookmark)->setEnabled(false);
+	}
 }
 
 void PdfViewPrivate::closeDocument()
@@ -512,10 +607,11 @@ void PdfViewPrivate::closeDocument()
 
 	// store settings
 	FileSettings fileSettings(m_fileName);
-	fileSettings.setValue("HorizontalScrollBarValue", q->horizontalScrollBar()->value());
-	fileSettings.setValue("VerticalScrollBarValue", q->verticalScrollBar()->value());
-	fileSettings.setValue("ZoomFactor", q->zoomFactor());
-	fileSettings.setValue("Page", q->pageNumberWithPosition());
+	fileSettings.setValue(QLatin1String("HorizontalScrollBarValue"), q->horizontalScrollBar()->value());
+	fileSettings.setValue(QLatin1String("VerticalScrollBarValue"), q->verticalScrollBar()->value());
+	fileSettings.setValue(QLatin1String("ZoomFactor"), q->zoomFactor());
+	fileSettings.setValue(QLatin1String("Page"), q->pageNumberWithPosition());
+	fileSettings.setValue(QLatin1String("ShowForms"), m_showForms);
 	FileSettings::constrainCacheToMaxSize(m_maxFileSettingsCacheSize);
 
 	// clean up
@@ -534,7 +630,9 @@ void PdfViewPrivate::closeDocument()
 	removeTextSelection(); // this must also happen here, otherwise the sequence "sync from source + rebuild tex file + sync from source" causes a crash
 	m_pageScene->clear();
 
-	synctexRemoveData();
+#ifdef USE_SYNCTEX
+	m_synctexHandler->removeData();
+#endif // USE_SYNCTEX
 }
 
 QList<Poppler::Page*> PdfView::popplerPages()
@@ -558,13 +656,16 @@ void PdfViewPrivate::loadPage(int pageNumber)
 
     const double resX = m_dpiX * m_zoomFactor;
     const double resY = m_dpiY * m_zoomFactor;
-	const QImage image = m_popplerPages.at(pageNumber)->renderToImage(resX, resY); // this is slow
+	const QImage image = m_pageItems.at(pageNumber)->renderToImage(resX, resY); // this is slow
 
 	if (!image.isNull())
 	{
 		QGraphicsPixmapItem *pageItem = m_pageScene->addPixmap(QPixmap::fromImage(image));
 		if (!m_pageLoaded.at(pageNumber))
-			m_pageItems.at(pageNumber)->generateLinks(m_popplerPages.at(pageNumber), m_popplerPageLabels); // this is very slow if there are many links
+		{
+			m_pageItems.at(pageNumber)->generateLinks(m_popplerPageLabels); // this is very slow if there are many links
+			showForms(m_pageItems.at(pageNumber), pageNumber);
+		}
 		pageItem->setOffset(q->mapFromPage(pageNumber, QPointF(0, 0)));
 		pageItem->setData(1, pageNumber);
 		m_pageLoaded[pageNumber] = true;
@@ -720,10 +821,11 @@ void PdfView::search(const QString &text, const FindFlags &flags)
 	if (d->m_findPositionTop < 0 && searchDirection == Poppler::Page::PreviousResult)
 	{
 		// set start positions to their maximal values
-		d->m_findPositionTop = d->m_findPositionBottom = d->m_popplerPageTopPositions.at(d->m_realPageNumber+1);
-		d->m_findPositionLeft = d->m_findPositionRight = d->m_popplerPages.at(d->m_realPageNumber)->pageSizeF().width();
+		QSizeF popplerPageSize = d->m_pageItems.at(d->m_realPageNumber)->pageSizeF();
+		d->m_findPositionTop = d->m_findPositionBottom = popplerPageSize.height();
+		d->m_findPositionLeft = d->m_findPositionRight = popplerPageSize.width();
 	}
-	if (d->m_popplerPages.at(d->m_realPageNumber)->search(text, d->m_findPositionLeft, d->m_findPositionTop, d->m_findPositionRight, d->m_findPositionBottom, searchDirection, searchMode))
+	if (d->m_pageItems.at(d->m_realPageNumber)->search(text, d->m_findPositionLeft, d->m_findPositionTop, d->m_findPositionRight, d->m_findPositionBottom, searchDirection, searchMode))
 	{
 		// scroll to the found word (the page number is updated automatically)
 		const int newValue = qMax(qreal(0.0), mapFromPage(d->m_realPageNumber, QPointF(0, d->m_findPositionTop)).y() - 3);
@@ -763,11 +865,11 @@ void PdfView::search(const QString &text, const FindFlags &flags)
 			msgBox->exec();
 			if (msgBox->clickedButton() == yesButton)
 			{
-				d->m_realPageNumber = (flags & FindBackward) ? document()->numPages() - 1 : 0;
+				d->m_realPageNumber = (flags & FindBackward) ? d->m_popplerDocument->numPages() - 1 : 0;
 				search(text, flags);
 			}
 			else
-				emit closeFindWidget();
+				Q_EMIT closeFindWidget();
 			delete msgBox;
 		}
 	}
@@ -784,18 +886,10 @@ void PdfView::setZoomFactor(qreal value)
 	d->m_zoomFactor = qBound(s_minZoomFactor, value, s_maxZoomFactor);
 
 	// enable/disable and update zoom actions
-	if (d->m_zoomInAction)
-		d->m_zoomInAction->setEnabled(d->m_zoomFactor < s_maxZoomFactor);
-	if (d->m_zoomOutAction)
-		d->m_zoomOutAction->setEnabled(d->m_zoomFactor > s_minZoomFactor);
-	if (d->m_zoomAction)
-	{
-		disconnect(d->m_zoomAction, SIGNAL(zoomFactorAdded(qreal)), d, SLOT(slotSetZoomFactor(qreal)));
-		d->m_zoomAction->setZoomFactor(d->m_zoomFactor);
-		connect(d->m_zoomAction, SIGNAL(zoomFactorAdded(qreal)), d, SLOT(slotSetZoomFactor(qreal)));
-    }
+	if (d->m_actionHandler)
+		d->m_actionHandler->updateZoomActions(d->m_zoomFactor, s_minZoomFactor, s_maxZoomFactor);
 
-	emit zoomFactorChanged(d->m_zoomFactor);
+	Q_EMIT zoomFactorChanged(d->m_zoomFactor);
 
 	// if no document is loaded, then we are done
 	if (!d->m_popplerDocument)
@@ -817,7 +911,7 @@ void PdfView::setZoomFactor(qreal value)
 	qreal maximumPageWidth = 0;
 	for (int i = 0; i < pageCount; ++i)
 	{
-		const QSizeF popplerPageSizeF = d->m_popplerPages.at(i)->pageSizeF();
+		const QSizeF popplerPageSizeF = d->m_pageItems.at(i)->pageSizeF();
 		maximumPageWidth = qMax(popplerPageSizeF.width(), maximumPageWidth);
 		const QRectF pageRect = mapFromPage(i, QRectF(QPointF(0, 0), popplerPageSizeF));
 		QGraphicsRectItem *rect = d->m_pageScene->addRect(pageRect, QPen(QBrush(Qt::black), 1)); // black border
@@ -905,27 +999,15 @@ void PdfViewPrivate::slotVerticalPositionChanged()
 
 void PdfViewPrivate::scrollPositionChanged()
 {
-qCritical() << q->verticalScrollBar()->value() << q->pageNumberWithPosition();
+//qCritical() << q->verticalScrollBar()->value() << q->pageNumberWithPosition();
 	QScrollBar *vbar = q->verticalScrollBar();
 	// enable/disable page switching actions
-	if (m_goToPreviousPageAction)
-		m_goToPreviousPageAction->setEnabled(m_pageNumber > 0);
-	if (m_goToNextPageAction)
-		m_goToNextPageAction->setEnabled(m_pageNumber < m_popplerDocument->numPages() - 1);
-	if (m_goToStartAction)
-		m_goToStartAction->setEnabled(vbar->value() > 0);
-	if (m_goToEndAction)
-		m_goToEndAction->setEnabled(vbar->value() < vbar->maximum());
-	if (m_goToPageAction)
-	{
-		disconnect(m_goToPageAction, SIGNAL(pageSelected(int)), this, SLOT(slotSetPage(int)));
-		m_goToPageAction->setCurrentIndex(m_pageNumber);
-		connect(m_goToPageAction, SIGNAL(pageSelected(int)), this, SLOT(slotSetPage(int)));
-	}
+	if (m_actionHandler)
+		m_actionHandler->toggleGoToActionsEnabled(true, m_pageNumber, 0, m_popplerDocument->numPages() - 1, vbar->value(), 0, vbar->maximum());
 	// enable/disable bookmark switching actions
 	if (m_bookmarksHandler)
 		m_bookmarksHandler->updateActions();
-	emit scrollPositionChanged(qreal(vbar->value()) / vbar->maximum(), m_pageNumber);
+	Q_EMIT scrollPositionChanged(qreal(vbar->value()) / vbar->maximum(), m_pageNumber);
 }
 
 /*******************************************************************/
@@ -945,7 +1027,7 @@ void PdfViewPrivate::magnify(const QPointF &scenePos)
 	const int magnifyWidth = 200;
 	const int magnifyHeight = 100;
 	const QPointF pageTopLeft = q->mapFromPage(pageNumber, QPointF(0, 0));
-	const QImage image = m_popplerPages.at(pageNumber)->renderToImage(resX, resY,
+	const QImage image = m_pageItems.at(pageNumber)->renderToImage(resX, resY,
 	    magnifyZoom * (scenePos.x() - pageTopLeft.x() - magnifyWidth / 2),
 	    magnifyZoom * (scenePos.y() - pageTopLeft.y() - magnifyHeight / 2),
 	    magnifyZoom * magnifyWidth, magnifyZoom * magnifyHeight);
@@ -961,9 +1043,9 @@ void PdfViewPrivate::magnify(const QPointF &scenePos)
 
 	// move magnification window to the correct place
 	m_magnifiedPageRect->setPos(scenePos.x() - magnifyZoom * magnifyWidth / 2, scenePos.y() - magnifyZoom * magnifyHeight / 2);
-	m_magnifiedPageRect->setZValue(2);
+	m_magnifiedPageRect->setZValue(3);
 	m_magnifiedPageItem->setOffset(scenePos.x() - magnifyZoom * magnifyWidth / 2, scenePos.y() - magnifyZoom * magnifyHeight / 2);
-	m_magnifiedPageItem->setZValue(1);
+	m_magnifiedPageItem->setZValue(2); // must be above synctex highlight
 }
 
 void PdfViewPrivate::endMagnify()
@@ -987,23 +1069,8 @@ void PdfViewPrivate::findLinkAtPosition(const QPointF &scenePos)
 		return;
 
 	// translate scenePos to page and rescale scenePos to [0,1]
-	const QSizeF popplerPageSizeF = m_popplerPages.at(pageNumber)->pageSizeF();
 	QPointF pagePos = q->mapToPage(pageNumber, scenePos);
-	pagePos.setX(pagePos.x() / popplerPageSizeF.width());
-	pagePos.setY(pagePos.y() / popplerPageSizeF.height());
-
-	// search link that is hovered
-	QList<Link> links = m_pageItems.at(pageNumber)->links();
-	m_isLinkHovered = false;
-	for (int i = 0; i < links.size(); ++i)
-	{
-		if (links.at(i).linkArea.contains(pagePos))
-		{
-			m_hoveredLink = links[i];
-			m_isLinkHovered = true;
-			break;
-		}
-	}
+	m_pageItems.at(pageNumber)->findLinkAtPosition(pagePos);
 }
 
 /*******************************************************************/
@@ -1054,7 +1121,7 @@ void PdfViewPrivate::handleSelection(const QPoint &popupMenuPos)
 		{
 			const double resX = m_dpiX * m_zoomFactor;
 			const double resY = m_dpiY * m_zoomFactor;
-			const QImage image = m_popplerPages.at(pageNumber)->renderToImage(resX, resY, selectionRect.left() * scaleFactorX(), selectionRect.top() * scaleFactorY(), selectionRect.width() * scaleFactorX(), selectionRect.height() * scaleFactorY());
+			const QImage image = m_pageItems.at(pageNumber)->renderToImage(resX, resY, selectionRect.left() * scaleFactorX(), selectionRect.top() * scaleFactorY(), selectionRect.width() * scaleFactorX(), selectionRect.height() * scaleFactorY());
 			if (choice == copyImageAction)
 			{
 				QClipboard *clipboard = QApplication::clipboard();
@@ -1070,7 +1137,7 @@ void PdfViewPrivate::handleSelection(const QPoint &popupMenuPos)
 				imageFileName = QFileDialog::getSaveFileName(q,
 				    tr("Save image as", "Save file dialog title"),
 				    imageFileName,
-				    QString("%1 (*.png *.bmp *.gif *.jpg *.jpeg *.tiff *.xpm)").arg(tr("Supported image files", "Mimetype")));
+				    QString(QLatin1String("%1 (*.png *.bmp *.gif *.jpg *.jpeg *.tiff *.xpm)")).arg(tr("Supported image files", "Mimetype")));
 				if (!imageFileName.isEmpty())
 				{
 					if (!image.save(imageFileName))
@@ -1086,7 +1153,7 @@ void PdfViewPrivate::handleSelection(const QPoint &popupMenuPos)
 		}
 		else if (choice == copyTextAction)
 		{
-			const QString text = m_popplerPages.at(pageNumber)->text(selectionRect);
+			const QString text = m_pageItems.at(pageNumber)->text(selectionRect);
 			QClipboard *clipboard = QApplication::clipboard();
 			clipboard->setText(text, QClipboard::Clipboard);
 			if (clipboard->supportsSelection())
@@ -1133,7 +1200,7 @@ void PdfViewPrivate::getTextSelection(const QPointF &scenePos)
 	removeTextSelection();
 
 	// get text boxes which are inside the selection and highlight them
-	QList<Poppler::TextBox*> popplerTextList = m_popplerPages.at(pageNumber)->textList();
+	QList<Poppler::TextBox*> popplerTextList = m_pageItems.at(pageNumber)->textList();
 	bool isSelected = false;
 	for (int i = 0; i < popplerTextList.size(); ++i)
 	{
@@ -1193,96 +1260,41 @@ void PdfViewPrivate::removeTextSelection()
 /*******************************************************************/
 // Synctex
 
-void PdfViewPrivate::synctexLoadData()
-{
-	synctexRemoveData();
-	m_synctexScanner = synctex_scanner_new_with_output_file(m_fileName.toUtf8().data(), 0, 1);
-}
-
-void PdfViewPrivate::synctexRemoveData()
-{
-	if (m_synctexScanner)
-	{
-		synctex_scanner_free(m_synctexScanner);
-		m_synctexScanner = 0;
-	}
-}
-
-void PdfViewPrivate::synctexClick(const QPointF &scenePos)
-{
-	if (!m_synctexScanner)
-		return;
-
-	const int pageNumber = pageNumberAtPosition(scenePos);
-	const QPointF pagePos = q->mapToPage(pageNumber, scenePos);
-	if (synctex_edit_query(m_synctexScanner, pageNumber + 1, pagePos.x(), pagePos.y()) > 0)
-	{
-		synctex_node_t synctexNode;
-		while ((synctexNode = synctex_next_result(m_synctexScanner)) != 0)
-		{
-			const QString texFileName = QString::fromUtf8(synctex_scanner_get_name(m_synctexScanner, synctex_node_tag(synctexNode)));
-			const QDir currentDir(QFileInfo(m_fileName).canonicalPath());
-			emit openTexDocument(QFileInfo(currentDir, texFileName).canonicalFilePath(), synctex_node_line(synctexNode));
-		}
-	}
-}
-
 void PdfView::syncFromSource(const QString &sourceFile, int lineNumber)
 {
-	if (!d->m_synctexScanner)
-		return;
-
-	// find the name synctex is using for this file
-	const QFileInfo sourceFileInfo(sourceFile);
-	const QDir currentDir(QFileInfo(d->m_fileName).canonicalPath());
-	synctex_node_t synctexNode = synctex_scanner_input(d->m_synctexScanner);
-	QString texFileName;
-	bool found = false;
-	while (synctexNode)
-	{
-		texFileName = QString::fromUtf8(synctex_scanner_get_name(d->m_synctexScanner, synctex_node_tag(synctexNode)));
-		if (QFileInfo(currentDir, texFileName) == sourceFileInfo)
-		{
-			found = true;
-			break;
-		}
-		synctexNode = synctex_node_sibling(synctexNode);
-	}
-	if (!found)
+#ifdef USE_SYNCTEX
+	if (!d->m_synctexHandler)
 		return;
 
 	d->removeTextSelection(); // dirty hack: we use m_textSelectionRects below
+	QList<SynctexTextBox> textBoxList = d->m_synctexHandler->syncFromSource(sourceFile, lineNumber);
 
-	if (synctex_display_query(d->m_synctexScanner, texFileName.toUtf8().data(), lineNumber, 0) > 0)
+	for (int i = 0; i < textBoxList.size(); ++i)
 	{
-		int pageNumber = -1;
-		while ((synctexNode = synctex_next_result(d->m_synctexScanner)) != 0)
-		{
-			if (pageNumber < 0)
-				pageNumber = synctex_node_page(synctexNode);
-			if (synctex_node_page(synctexNode) != pageNumber)
-				continue;
-			const QRectF textBox(synctex_node_box_visible_h(synctexNode),
-			    synctex_node_box_visible_v(synctexNode) - synctex_node_box_visible_height(synctexNode),
-			    synctex_node_box_visible_width(synctexNode),
-			    synctex_node_box_visible_height(synctexNode));
-			// dirty hack: since syncing from source and selecting text don't happen at the same time, we use m_textSelectionRects to highlight the lines in the PDF which correspond to lineNumber in the source
-			d->m_textSelectionRects << d->m_pageScene->addRect(mapFromPage(pageNumber - 1, textBox), QPen(QBrush(), 0), QBrush(QColor(100, 160, 255, 100))); // blue background
-			d->m_textSelectionRects.last()->setZValue(2);
-			ensureVisible(d->m_textSelectionRects.last()->boundingRect(), 3, 3);
-		}
+		// dirty hack: since syncing from source and selecting text don't happen at the same time, we use m_textSelectionRects to highlight the lines in the PDF which correspond to lineNumber in the source
+		d->m_textSelectionRects << d->m_pageScene->addRect(mapFromPage(textBoxList.at(i).pageNumber - 1, textBoxList.at(i).textBox), QPen(QBrush(), 0), QBrush(QColor(100, 160, 255, 100))); // blue background
+		d->m_textSelectionRects.last()->setZValue(2);
+		ensureVisible(d->m_textSelectionRects.last()->boundingRect(), 3, 3);
 	}
+#else
+	Q_UNUSED(sourceFile);
+	Q_UNUSED(lineNumber);
+#endif // USE_SYNCTEX
 }
 
+#ifdef USE_SYNCTEX
 void PdfViewPrivate::slotSynctexJumpToSource()
 {
 	QAction *action = qobject_cast<QAction*>(sender());
 	if (action)
 	{
-		const QPoint pos = action->data().toPoint();
-		synctexClick(q->mapToScene(pos));
+		const QPointF scenePos = q->mapToScene(action->data().toPoint());
+		const int pageNumber = pageNumberAtPosition(scenePos);
+		const QPointF pagePos = q->mapToPage(pageNumber, scenePos);
+		m_synctexHandler->synctexClick(pagePos, pageNumber);
 	}
 }
+#endif // USE_SYNCTEX
 
 /*******************************************************************/
 // Page switching
@@ -1315,8 +1327,18 @@ void PdfView::slotGoToPreviousPage()
 
 void PdfView::slotGoToNextPage()
 {
-	if (d->m_pageNumber < d->m_popplerDocument->numPages() - 1)
+	if (d->m_popplerDocument && d->m_pageNumber < d->m_popplerDocument->numPages() - 1)
 		setPage(d->m_pageNumber + 1);
+}
+
+/*******************************************************************/
+// Print
+
+void PdfView::slotPrint()
+{
+	if (!d->m_popplerDocument)
+		return;
+	d->m_printHandler->print(d->m_popplerDocument, d->m_popplerPages, d->m_fileName, d->m_pageNumber);
 }
 
 /*******************************************************************/
@@ -1338,14 +1360,16 @@ void PdfView::removeContextMenuAction(QAction *action)
 void PdfView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QMenu menu(this);
-	if (d->m_synctexScanner)
+#ifdef USE_SYNCTEX
+	if (d->m_synctexHandler)
 	{
-		QAction *action = new QAction(tr("Jump to &Source"), &menu);
+		QAction *action = new QAction(tr("Jump to &Source", "Action"), this);
 		action->setData(event->pos());
 		connect(action, SIGNAL(triggered()), d, SLOT(slotSynctexJumpToSource()));
 		menu.addAction(action);
 		menu.addSeparator();
 	}
+#endif // USE_SYNCTEX
 	if (d->m_zoomInAction)
 		menu.addAction(d->m_zoomInAction);
 	if (d->m_zoomOutAction)
@@ -1362,6 +1386,13 @@ void PdfView::contextMenuEvent(QContextMenuEvent *event)
 
 void PdfView::keyPressEvent(QKeyEvent *event)
 {
+	// make sure Space and Backspace don't scroll the page when a text field or checkbox has the focus
+	if (d->m_pageScene->focusItem() && d->m_pageScene->focusItem()->isWidget())
+	{
+		QGraphicsView::keyPressEvent(event);
+		return;
+	}
+
 	if (event->key() == Qt::Key_Space)
 		verticalScrollBar()->triggerAction(QAbstractSlider::SliderPageStepAdd);
 	else if (event->key() == Qt::Key_Backspace)
@@ -1377,14 +1408,23 @@ void PdfView::keyPressEvent(QKeyEvent *event)
 
 void PdfView::mousePressEvent(QMouseEvent *event)
 {
-	if (event->button() != Qt::LeftButton || d->m_isLinkHovered)
+	if (event->button() != Qt::LeftButton || PageItem::isLinkHovered())
 	{
 		QGraphicsView::mousePressEvent(event);
 		return;
 	}
+	// remove focus from form fields (useful for letting Space and Backspace work again for page scrolling)
+	d->m_pageScene->setFocusItem(0);
 	// synctex
 	if (event->modifiers() == Qt::ControlModifier)
 		return; // don't catch any of the following events
+	// click in forms
+	if (itemAt(event->pos()) && itemAt(event->pos())->isWidget())
+	{
+		static_cast<QGraphicsProxyWidget*>(itemAt(event->pos()))->widget()->setFocus();
+		QGraphicsView::mousePressEvent(event);
+		return;
+	}
 	// start magnifying
 	if (d->m_mouseTool == Magnifying)
 	{
@@ -1480,13 +1520,13 @@ void PdfView::mouseMoveEvent(QMouseEvent *event)
 #endif // QT_NO_CURSOR
 	d->findLinkAtPosition(mapToScene(event->pos()));
 	// show tooltip
-	if (d->m_isLinkHovered)
+	if (PageItem::isLinkHovered())
 	{
 #ifndef QT_NO_CURSOR
 		QApplication::setOverrideCursor(Qt::PointingHandCursor);
 #endif // QT_NO_CURSOR
 #ifndef QT_NO_TOOLTIP
-		QToolTip::showText(mapToGlobal(event->pos()), PageItem::toolTipText(d->m_hoveredLink), this);
+		QToolTip::showText(mapToGlobal(event->pos()), PageItem::toolTipText(), this);
 #endif // QT_NO_TOOLTIP
 	}
 #ifndef QT_NO_TOOLTIP
@@ -1505,15 +1545,27 @@ void PdfView::mouseReleaseEvent(QMouseEvent *event)
 	// synctex
 	if (event->modifiers() == Qt::ControlModifier)
 	{
-		d->synctexClick(mapToScene(event->pos()));
+#ifdef USE_SYNCTEX
+		const QPointF scenePos = mapToScene(event->pos());
+		const int pageNumber = d->pageNumberAtPosition(scenePos);
+		const QPointF pagePos = mapToPage(pageNumber, scenePos);
+		d->m_synctexHandler->synctexClick(pagePos, pageNumber);
+#endif // USE_SYNCTEX
 		return;
 	}
-	if (d->m_isLinkHovered) // click on link
+	// click in forms
+	if (itemAt(event->pos()) && itemAt(event->pos())->isWidget())
 	{
-		if (!d->m_hoveredLink.url.isEmpty()) // we have a Browse link
-			QDesktopServices::openUrl(QUrl(d->m_hoveredLink.url));
-		else if (d->m_hoveredLink.pageNumber >= 0) // we have a Goto link
-			setPage(d->m_hoveredLink.pageNumber);
+		QGraphicsView::mouseReleaseEvent(event);
+		return;
+	}
+	if (PageItem::isLinkHovered()) // click on link
+	{
+		Link hoveredLink = PageItem::hoveredLink();
+		if (!hoveredLink.url.isEmpty()) // we have a Browse link
+			QDesktopServices::openUrl(QUrl(hoveredLink.url));
+		else if (hoveredLink.pageNumber >= 0) // we have a Goto link
+			setPage(hoveredLink.pageNumber);
 	}
 	else if (d->m_mouseTool == Magnifying && d->m_isDragging) // stop magnifying
 	{

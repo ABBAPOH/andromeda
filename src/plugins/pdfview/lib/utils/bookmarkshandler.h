@@ -85,6 +85,13 @@ public:
 	 */
 	void removeBookmarkAtPosition(double pos);
 	/**
+	 * Empties the list of bookmarks. This function does <em>not</em> store
+	 * the empty bookmarks list to the file specific settings on disk.
+	 * In order to store the empty bookmarks list to the file specific
+	 * settings on disk, you must call saveBookmarks() after calling clear().
+	 */
+	void clear();
+	/**
 	 * When lines are added or removed in the editor (if the BookmarksWidget
 	 * object is an editor), this functions allows to recalculate the line
 	 * numbers of the bookmarks and remove the bookmarks which were on

@@ -33,7 +33,7 @@ BookmarksHandler::BookmarksHandler(BookmarksWidget *parent)
 
 //	QAction *setBookmarkAction = new QAction(Icon("bookmark-new"), tr("Set &Bookmark", "Action"), m_bookmarksMenu);
 	QAction *setBookmarkAction = new QAction(tr("Set &Bookmark", "Action"), m_bookmarksMenu);
-	setBookmarkAction->setObjectName("pdfview_bookmarks_set");
+	setBookmarkAction->setObjectName(QLatin1String("pdfview_bookmarks_set"));
 #ifndef QT_NO_SHORTCUT
 	setBookmarkAction->setShortcut(tr("Ctrl+B", "Bookmarks|Set"));
 #endif // QT_NO_SHORTCUT
@@ -51,7 +51,7 @@ BookmarksHandler::BookmarksHandler(BookmarksWidget *parent)
 
 //	QAction *previousBookmarkAction = new QAction(Icon("go-up"), tr("&Previous Bookmark", "Action"), m_bookmarksMenu);
 	QAction *previousBookmarkAction = new QAction(tr("&Previous Bookmark", "Action"), m_bookmarksMenu);
-	previousBookmarkAction->setObjectName("pdfview_bookmarks_prev");
+	previousBookmarkAction->setObjectName(QLatin1String("pdfview_bookmarks_prev"));
 #ifndef QT_NO_SHORTCUT
 	previousBookmarkAction->setShortcut(tr("Alt+Up", "Bookmarks|Previous"));
 #endif // QT_NO_SHORTCUT
@@ -70,7 +70,7 @@ BookmarksHandler::BookmarksHandler(BookmarksWidget *parent)
 
 //	QAction *nextBookmarkAction = new QAction(Icon("go-down"), tr("&Next Bookmark", "Action"), m_bookmarksMenu);
 	QAction *nextBookmarkAction = new QAction(tr("&Next Bookmark", "Action"), m_bookmarksMenu);
-	nextBookmarkAction->setObjectName("pdfview_bookmarks_next");
+	nextBookmarkAction->setObjectName(QLatin1String("pdfview_bookmarks_next"));
 #ifndef QT_NO_SHORTCUT
 	nextBookmarkAction->setShortcut(tr("Alt+Down", "Bookmarks|Next"));
 #endif // QT_NO_SHORTCUT
@@ -176,7 +176,7 @@ void BookmarksHandler::insertBookmark(int index, double pos)
 		m_bookmarksMenu->addAction(action);
 	}
 	updateActions();
-	emit bookmarkUpdated(pos);
+	Q_EMIT bookmarkUpdated(pos);
 }
 
 void BookmarksHandler::appendBookmark(double pos)
@@ -194,7 +194,7 @@ void BookmarksHandler::removeBookmark(int index)
 		m_bookmarks.removeAt(index);
 		m_bookmarksMenu->removeAction(m_bookmarksMenu->actions().at(index+4)); // 4 is the number of actions defined in the constructor
 		updateActions();
-		emit bookmarkUpdated(pos);
+		Q_EMIT bookmarkUpdated(pos);
 	}
 }
 
@@ -222,13 +222,19 @@ void BookmarksHandler::toggleBookmark()
 	appendBookmark(pos); // if pos is larger than any number in the list, then we insert pos at the end of the list
 }
 
+void BookmarksHandler::clear()
+{
+	while (!m_bookmarks.isEmpty())
+		removeBookmark(0);
+}
+
 /***************************************************************************/
 // Going to a bookmark
 
 void BookmarksHandler::goToActionBookmark()
 {
 	QAction *action = qobject_cast<QAction*>(sender());
-	emit goToPosition(action->data().toDouble());
+	Q_EMIT goToPosition(action->data().toDouble());
 }
 
 void BookmarksHandler::goToPreviousBookmark()
@@ -238,12 +244,12 @@ void BookmarksHandler::goToPreviousBookmark()
 	{
 		if (qFuzzyCompare(pos, m_bookmarks.at(i)) && i > 0) // when the bookmarks are saved and reloaded on the next startup, they are not exact anymore, so we must use qFuzzyCompare() to test whether we are on a bookmark; this must happen before the else-part to avoid staying on the current bookmark
 		{
-			emit goToPosition(m_bookmarks.at(i-1));
+			Q_EMIT goToPosition(m_bookmarks.at(i-1));
 			return;
 		}
 		else if (pos > m_bookmarks.at(i))
 		{
-			emit goToPosition(m_bookmarks.at(i));
+			Q_EMIT goToPosition(m_bookmarks.at(i));
 			return;
 		}
 	}
@@ -256,12 +262,12 @@ void BookmarksHandler::goToNextBookmark()
 	{
 		if (qFuzzyCompare(pos, m_bookmarks.at(i)) && i < m_bookmarks.size() - 1) // when the bookmarks are saved and reloaded on the next startup, they are not exact anymore, so we must use qFuzzyCompare() to test whether we are on a bookmark; this must happen before the else-part to avoid staying on the current bookmark
 		{
-			emit goToPosition(m_bookmarks.at(i+1));
+			Q_EMIT goToPosition(m_bookmarks.at(i+1));
 			return;
 		}
 		else if (pos < m_bookmarks.at(i))
 		{
-			emit goToPosition(m_bookmarks.at(i));
+			Q_EMIT goToPosition(m_bookmarks.at(i));
 			return;
 		}
 	}
@@ -299,7 +305,7 @@ void BookmarksHandler::loadBookmarks(const QString &fileName)
 
 	// Load file specific bookmarks
 	FileSettings fileSettings(m_fileName);
-	QList<QVariant> bookmarksVariantList = fileSettings.value("Bookmarks").toList();
+	QList<QVariant> bookmarksVariantList = fileSettings.value(QLatin1String("Bookmarks")).toList();
 	for (int i = 0; i < bookmarksVariantList.size(); ++i)
 		appendBookmark(bookmarksVariantList.at(i).toDouble());
 }
@@ -319,8 +325,8 @@ void BookmarksHandler::saveBookmarks()
 		QList<QVariant> bookmarksVariantList; // cannot use QStringList because QString::number() loses precision, QVariant() also loses precision :( but less
 		for (int i = 0; i < bookmarksList.size(); ++i)
 			bookmarksVariantList << QVariant(bookmarksList.at(i));
-		fileSettings.setValue("Bookmarks", bookmarksVariantList);
+		fileSettings.setValue(QLatin1String("Bookmarks"), bookmarksVariantList);
 	}
 	else
-		fileSettings.remove("Bookmarks");
+		fileSettings.remove(QLatin1String("Bookmarks"));
 }

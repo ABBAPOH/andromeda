@@ -21,13 +21,14 @@
 #include "pdfview.h"
 #include "pageitem.h"
 #include "utils/bookmarkshandler.h"
-#include "synctex/synctex_parser.h"
 #include <poppler-qt4.h>
 
 //class PdfView;
 //class PageItem;
 //class BookmarksHandler;
-class SelectPageAction;
+class ActionHandler;
+class PrintHandler;
+class SynctexHandler;
 class ZoomAction;
 class QAction;
 class QGraphicsRectItem;
@@ -50,6 +51,7 @@ public:
 //	void createActions();
 	double scaleFactorX() const;
 	double scaleFactorY() const;
+	void showForms(PageItem *pageItem, int pageNumber);
 	void loadDocument();
 	void closeDocument();
 	void loadPage(int pageNumber);
@@ -68,34 +70,37 @@ public:
 	void getTextSelection(const QPointF &scenePos);
 	void handleTextSelection(const QPoint &popupMenuPos);
 	void removeTextSelection();
-	void synctexLoadData();
-	void synctexRemoveData();
+#ifdef USE_SYNCTEX
 	void synctexClick(const QPointF &scenePos);
+#endif // USE_SYNCTEX
 	void scroll(int delta);
 
 public Q_SLOTS:
+	void slotSelectMouseTool();
 	void slotSetPage(int pageNumber);
 	void slotSetPage(double pageNumber);
 	void slotSetZoomFactor(qreal value);
 	void slotVerticalPositionChanged(int value);
 	void slotVerticalPositionChanged();
+#ifdef USE_SYNCTEX
 	void slotSynctexJumpToSource();
+#endif // USE_SYNCTEX
 
 Q_SIGNALS:
 	void scrollPositionChanged(qreal fraction, int pageNumber);
 	void openTexDocument(const QString &fileName, int lineNumber);
+	void mouseToolChanged(PdfView::MouseTool tool);
 
 public:
 	PdfView *q;
 	QGraphicsScene *m_pageScene;
+	QList<PageItem*> m_pageItems;
+
+	ActionHandler *m_actionHandler;
+
 	QAction *m_zoomInAction;
 	QAction *m_zoomOutAction;
 	ZoomAction *m_zoomAction;
-	QAction *m_goToStartAction;
-	QAction *m_goToEndAction;
-	QAction *m_goToPreviousPageAction;
-	QAction *m_goToNextPageAction;
-	SelectPageAction *m_goToPageAction;
 	int m_maxFileSettingsCacheSize;
 	BookmarksHandler *m_bookmarksHandler;
 	QList<QAction*> m_contextMenuActions;
@@ -112,10 +117,6 @@ public:
 	int m_pageNumber;
 	Poppler::Document::RenderBackend m_renderBackend;
 	int m_renderHints;
-
-	QList<PageItem*> m_pageItems;
-	Link m_hoveredLink;
-	bool m_isLinkHovered;
 
 	double m_findPositionTop;
 	double m_findPositionLeft;
@@ -134,9 +135,15 @@ public:
 	QList<QGraphicsRectItem*> m_textSelectionRects;
 	QStringList m_textSelectionWords;
 
+	bool m_showForms;
+
 	QTimer *m_verticalPositionTimer;
 
-	synctex_scanner_t m_synctexScanner;
+#ifdef USE_SYNCTEX
+	SynctexHandler *m_synctexHandler;
+#endif // USE_SYNCTEX
+
+	PrintHandler *m_printHandler;
 };
 
 #endif // PDFVIEWER_PDFVIEW_P_H

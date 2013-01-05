@@ -69,7 +69,7 @@ void SelectAction::setEditable(bool editable)
 void SelectAction::selectCurrentItem()
 {
 	const QString text = m_selectCombo->currentText();
-	emit triggered(text);
+	Q_EMIT triggered(text);
 }
 
 void SelectAction::clear()
@@ -82,7 +82,7 @@ void SelectAction::setItems(const QStringList &items)
 	m_selectCombo->clear();
 	m_selectCombo->addItems(items);
 	const QFontMetrics fm = m_selectCombo->fontMetrics();
-	m_selectCombo->setMinimumWidth(fm.width(items.at(items.size()-1) + "aaaaa"));
+	m_selectCombo->setMinimumWidth(fm.width(items.at(items.size()-1) + QLatin1String("aaaaa")));
 }
 
 void SelectAction::setCurrentIndex(int index)
