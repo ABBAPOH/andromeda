@@ -47,8 +47,6 @@ protected:
 
 private:
     QExplicitlySharedDataPointer<QDefaultProgramData> d;
-
-    friend class QDefaultProgram;
 };
 
 #ifndef QT_NO_DEBUG_STREAM
