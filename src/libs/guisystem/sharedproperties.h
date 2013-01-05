@@ -1,13 +1,15 @@
 #ifndef SHAREDPROPERTIES_H
 #define SHAREDPROPERTIES_H
 
+#include "guisystem_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
 namespace GuiSystem {
 
 class SharedPropertiesPrivate;
-class SharedProperties : public QObject
+class GUISYSTEM_EXPORT SharedProperties : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SharedProperties)
