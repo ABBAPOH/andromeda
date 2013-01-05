@@ -21,6 +21,7 @@
 
 #include "cookiejar.h"
 #include "webviewconstants.h"
+#include "webviewdocument.h"
 #include "webviewplugin.h"
 
 using namespace GuiSystem;
@@ -186,9 +187,10 @@ void WebViewHistory::updateCurrentItemIndex()
 }
 
 WebViewEditor::WebViewEditor(QWidget *parent) :
-    AbstractEditor(parent),
+    AbstractEditor(*new WebViewDocument, parent),
     m_webInspector(0)
 {
+    document()->setParent(this);
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(0, 0, 0, 0);
     m_layout->setSpacing(0);
@@ -244,6 +246,7 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     addAction(m_webView->pageAction(QWebPage::SelectAll), Constants::Actions::SelectAll);
 
     createActions();
+    connectDocument(qobject_cast<WebViewDocument *>(document()));
 }
 
 WebViewEditor::~WebViewEditor()
@@ -251,14 +254,15 @@ WebViewEditor::~WebViewEditor()
     delete m_webView;
 }
 
-void WebViewEditor::open(const QUrl &url)
+void WebViewEditor::setDocument(AbstractDocument *document)
 {
-    m_webView->load(url);
-}
+    WebViewDocument *webDocument = qobject_cast<WebViewDocument*>(document);
+    if (!webDocument)
+        return;
 
-QUrl WebViewEditor::url() const
-{
-    return m_webView->url();
+    connectDocument(webDocument);
+
+    AbstractEditor::setDocument(document);
 }
 
 IFind *WebViewEditor::find() const
@@ -271,32 +275,9 @@ IHistory *WebViewEditor::history() const
     return m_history;
 }
 
-void WebViewEditor::refresh()
-{
-    m_webView->reload();
-}
-
-void WebViewEditor::cancel()
-{
-    m_webView->stop();
-}
-
-void WebViewEditor::clear()
-{
-    m_webView->setPage(new QWebPage(m_webView));
-    m_history->setHistory(m_webView->page()->history());
-    if (m_webInspector)
-        m_webInspector->setPage(m_webView->page());
-}
-
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
-    m_webView->load(url);
-}
-
-void WebViewEditor::onIconChanged()
-{
-    emit iconChanged(m_webView->icon());
+    document()->setUrl(url);
 }
 
 void WebViewEditor::showWebInspector(bool show)
@@ -310,6 +291,17 @@ void WebViewEditor::showWebInspector(bool show)
     m_webInspector->setVisible(show);
 }
 
+void WebViewEditor::onPageChanged()
+{
+    WebViewDocument *document = qobject_cast<WebViewDocument *>(sender());
+    Q_ASSERT(document);
+
+    m_webView->setPage(document->page());
+    m_history->setHistory(m_webView->page()->history());
+    if (m_webInspector)
+        m_webInspector->setPage(m_webView->page());
+}
+
 void WebViewEditor::createActions()
 {
     m_showWebInspectorAction = new QAction(this);
@@ -317,6 +309,13 @@ void WebViewEditor::createActions()
     connect(m_showWebInspectorAction, SIGNAL(triggered(bool)), SLOT(showWebInspector(bool)));
 
     addAction(m_showWebInspectorAction, Constants::Actions::ShowWebInspector);
+}
+
+void WebViewEditor::connectDocument(WebViewDocument *document)
+{
+    Q_ASSERT(document);
+    m_webView->setPage(document->page());
+    connect(document, SIGNAL(pageChanged()), SLOT(onPageChanged()));
 }
 
 QString WebViewEditorFactory::name() const
@@ -327,6 +326,11 @@ QString WebViewEditorFactory::name() const
 QIcon WebViewEditorFactory::icon() const
 {
     return QIcon();
+}
+
+AbstractDocument * WebViewEditorFactory::createDocument(QObject *parent)
+{
+    return new WebViewDocument(parent);
 }
 
 AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)

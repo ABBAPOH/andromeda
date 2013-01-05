@@ -1,27 +1,26 @@
-#ifndef STACKEDCONTAINER_H
-#define STACKEDCONTAINER_H
+#ifndef EDITORVIEW_H
+#define EDITORVIEW_H
 
 #include "guisystem_global.h"
 
-#include "proxyeditor.h"
+#include <QtGui/QWidget>
+#include "abstracteditor.h"
 
 namespace GuiSystem {
 
-class StackedContainerPrivate;
-class GUISYSTEM_EXPORT StackedContainer : public ProxyEditor
+class EditorViewPrivate;
+class GUISYSTEM_EXPORT EditorView : public QWidget
 {
     Q_OBJECT
-    Q_DISABLE_COPY(StackedContainer)
+    Q_DISABLE_COPY(EditorView)
 
 public:
-    explicit StackedContainer(QWidget *parent = 0);
-    ~StackedContainer();
+    explicit EditorView(QWidget *parent = 0);
+    ~EditorView();
 
     void setSourceEditor(AbstractEditor *editor);
 
     AbstractEditor *currentEditor() const;
-
-    IFile *file() const;
 
     QUrl url() const;
 
@@ -30,23 +29,26 @@ public:
     virtual bool restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
-    AbstractEditor *editor(const QString &id) const;
-    bool setEditor(const QString &id);
+    AbstractDocument *document() const;
+    AbstractEditor *editor() const;
 
 public slots:
     void open(const QUrl &url = QUrl());
     void openEditor(const QUrl &url, const QByteArray &editor);
+    void openEditor(const QByteArray &editorId);
+
+signals:
+    void editorChanged();
 
 private slots:
     void onUrlChanged(const QUrl &url);
-    void onDestroy(QObject*);
 
 private:
-    StackedContainerPrivate *d;
+    EditorViewPrivate *d;
 
-    friend class StackedContainerPrivate;
+    friend class EditorViewPrivate;
 };
 
 } // namespace GuiSystem
 
-#endif // STACKEDCONTAINER_H
+#endif // EDITORVIEW_H

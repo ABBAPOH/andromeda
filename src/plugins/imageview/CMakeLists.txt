@@ -1,9 +1,11 @@
 set( HEADERS
     imageview_global.h
+    imageviewdocument.h
     imagevieweditor.h
     imageviewplugin.h
    )
 set( SOURCES
+    imageviewdocument.cpp
     imagevieweditor.cpp
     imageviewplugin.cpp
    )

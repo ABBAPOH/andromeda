@@ -2,10 +2,10 @@ set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     action.h
     actionmanager.h
+    abstractdocument.h
+    abstractdocument_p.h
     abstracteditor.h
     abstracteditorfactory.h
-    abstractview.h
-    abstractviewfactory.h
     command.h
     commandcontainer.h
     commandsmodel.h
@@ -13,6 +13,10 @@ set( HEADERS
     commandssettingswidget.h
     constants.h
     editormanager.h
+    editorviewhistory.h
+    editorviewhistory_p.h
+    editorview.h
+    editorview_p.h
     editorwindow.h
     editorwindow_p.h
     editorwindowfactory.h
@@ -20,57 +24,46 @@ set( HEADERS
     history.h
     historybutton.h
     historyitem.h
-    ifile.h
     ifind.h
     ihistory.h
     menubarcontainer.h
     menubarcontainer_p.h
     proxyaction.h
-    proxyeditor.h
-    proxyfile.h
     proxyhistory.h
     settingspage.h
     settingspagemanager.h
     settingswindow.h
     sharedproperties.h
     sharedproperties_p.h
-    stackedcontainer.h
-    stackedcontainer_p.h
-    stackedhistory.h
-    stackedhistory_p.h
    )
 set( SOURCES
     action.cpp
     actionmanager.cpp
+    abstractdocument.cpp
     abstracteditor.cpp
     abstracteditorfactory.cpp
-    abstractview.cpp
-    abstractviewfactory.cpp
     command.cpp
     commandcontainer.cpp
     commandsmodel.cpp
     commandssettingswidget.cpp
     editormanager.cpp
+    editorviewhistory.cpp
+    editorview.cpp
     editorwindow.cpp
     editorwindowfactory.cpp
     findtoolbar.cpp
     history.cpp
     historybutton.cpp
     historyitem.cpp
-    ifile.cpp
     ifind.cpp
     ihistory.cpp
     menubarcontainer.cpp
     proxyaction.cpp
-    proxyeditor.cpp
-    proxyfile.cpp
     proxyhistory.cpp
     settingspage.cpp
     settingspagemanager.cpp
     settingswindow.cpp
     sharedproperties.cpp
-    stackedcontainer.cpp
-    stackedhistory.cpp
    )
 set( FORMS
     commandssettingswidget.ui

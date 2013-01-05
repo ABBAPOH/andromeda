@@ -23,6 +23,7 @@ if( POPPLER_QT4_FOUND )
         utils/lineedit.h
         findwidget.h
         pdfview_global.h
+        pdfviewdocument.h
         pdfvieweditor.h
         pdfviewplugin.h
     )
@@ -42,6 +43,7 @@ if( POPPLER_QT4_FOUND )
         lib/synctexhandler.cpp
         utils/lineedit.cpp
         findwidget.cpp
+        pdfviewdocument.cpp
         pdfvieweditor.cpp
         pdfviewplugin.cpp
     )

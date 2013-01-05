@@ -3,6 +3,8 @@
 
 #include <QtCore/QVariant>
 
+#include "abstractdocument.h"
+
 using namespace GuiSystem;
 
 /*!
@@ -26,6 +28,18 @@ AbstractEditorFactory::~AbstractEditorFactory()
 {
     QList<AbstractEditor *> editors = m_editors;
     qDeleteAll(editors);
+
+    QList<AbstractDocument *> documents = m_documents;
+    qDeleteAll(documents);
+}
+
+AbstractDocument * AbstractEditorFactory::document(QObject *parent)
+{
+    AbstractDocument *editor = createDocument(parent);
+    editor->setProperty("id", id());
+    connect(editor, SIGNAL(destroyed(QObject*)), SLOT(onDocumentDestroyed(QObject*)));
+    m_documents.append(editor);
+    return editor;
 }
 
 /*!
@@ -38,6 +52,12 @@ AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
     connect(editor, SIGNAL(destroyed(QObject*)), SLOT(onEditorDestroyed(QObject*)));
     m_editors.append(editor);
     return editor;
+}
+
+void AbstractEditorFactory::onDocumentDestroyed(QObject *object)
+{
+    AbstractDocument *document = static_cast<AbstractDocument *>(object);
+    m_documents.removeOne(document);
 }
 
 void AbstractEditorFactory::onEditorDestroyed(QObject *object)

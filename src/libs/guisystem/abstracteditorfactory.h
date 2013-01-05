@@ -3,8 +3,6 @@
 
 #include "guisystem_global.h"
 
-#include "abstractviewfactory.h"
-
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtGui/QIcon>
@@ -13,6 +11,7 @@ class QWidget;
 
 namespace GuiSystem {
 
+class AbstractDocument;
 class AbstractEditor;
 
 class GUISYSTEM_EXPORT AbstractEditorFactory : public QObject
@@ -24,6 +23,7 @@ public:
     explicit AbstractEditorFactory(QObject *parent = 0);
     ~AbstractEditorFactory();
 
+    AbstractDocument *document(QObject *parent);
     AbstractEditor *editor(QWidget *parent);
 
     virtual QByteArray id() const = 0;
@@ -34,11 +34,14 @@ public:
     virtual int weight() const { return 50; }
 
 protected slots:
+    void onDocumentDestroyed(QObject *object);
     void onEditorDestroyed(QObject *object);
 
 protected:
+    virtual AbstractDocument *createDocument(QObject *parent) = 0;
     virtual AbstractEditor *createEditor(QWidget *parent) = 0;
 
+    QList<AbstractDocument *> m_documents;
     QList<AbstractEditor *> m_editors;
 
     friend class AbstractEditor;

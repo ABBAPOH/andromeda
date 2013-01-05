@@ -1,25 +1,25 @@
-#ifndef STACKEDHISTORY_H
-#define STACKEDHISTORY_H
+#ifndef EDITORVIEWHISTORY_H
+#define EDITORVIEWHISTORY_H
 
 #include "ihistory.h"
-#include "proxyeditor.h"
 
 namespace GuiSystem {
 
-class StackedContainer;
+class AbstractEditor;
+class EditorView;
 
-class StackedHistoryPrivate;
-class StackedHistory : public IHistory
+class EditorViewHistoryPrivate;
+class EditorViewHistory : public IHistory
 {
     Q_OBJECT
 
 public:
-    explicit StackedHistory(QObject *parent = 0);
-    ~StackedHistory();
+    explicit EditorViewHistory(QObject *parent = 0);
+    ~EditorViewHistory();
 
-    void setContainer(StackedContainer *container);
+    void setContainer(EditorView *container);
 
-    void open(const QUrl &url);
+    void open(const QUrl &url, GuiSystem::AbstractEditor *oldEditor);
 
     int count() const;
 
@@ -39,9 +39,9 @@ private slots:
     void onUrlChanged(const QUrl &url);
 
 private:
-    StackedHistoryPrivate *d;
+    EditorViewHistoryPrivate *d;
 };
 
 } // namespace GuiSystem
 
-#endif // STACKEDHISTORY_H
+#endif // EDITORVIEWHISTORY_H

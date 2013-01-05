@@ -11,6 +11,7 @@
 
 #include <extensionsystem/pluginmanager.h>
 
+#include <guisystem/abstractdocument.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/constants.h>
 #include <guisystem/editorwindow.h>
@@ -18,7 +19,6 @@
 #include <guisystem/menubarcontainer.h>
 #include <guisystem/command.h>
 #include <guisystem/editormanager.h>
-#include <guisystem/proxyeditor.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarkdialog.h"
@@ -238,16 +238,18 @@ void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder
 
     BookmarksModel *model = object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
 
+    AbstractDocument *document = editor->document();
+
     BookmarkDialog dialog;
     dialog.setModel(model);
     dialog.setFolder(isFolder);
     dialog.showUrl(false);
     dialog.setCurrentIndex(index);
     if (!isFolder) {
-        dialog.setTitle(editor->title());
-        dialog.setUrl(editor->url().toString());
-        dialog.setIcon(editor->icon());
-        dialog.setPreview(editor->preview());
+        dialog.setTitle(document->title());
+        dialog.setUrl(document->url().toString());
+        dialog.setIcon(document->icon());
+//        dialog.setPreview(document->preview());
     } else {
         dialog.setTitle(tr("New folder"));
     }

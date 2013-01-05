@@ -1,11 +1,13 @@
-#include "stackedhistory.h"
-#include "stackedhistory_p.h"
+#include "editorviewhistory.h"
+#include "editorviewhistory_p.h"
 
 #include <QtCore/QDebug>
 
+#include "abstractdocument.h"
+
 using namespace GuiSystem;
 
-StackedHistoryPrivate::StackedHistoryPrivate(StackedHistory *qq) :
+EditorViewHistoryPrivate::EditorViewHistoryPrivate(EditorViewHistory *qq) :
     m_container(0),
     currentIndex(-1),
     currentStashedIndex(-1),
@@ -15,23 +17,23 @@ StackedHistoryPrivate::StackedHistoryPrivate(StackedHistory *qq) :
 {
 }
 
-StackedHistory::StackedHistory(QObject *parent) :
+EditorViewHistory::EditorViewHistory(QObject *parent) :
     IHistory(parent),
-    d(new StackedHistoryPrivate(this))
+    d(new EditorViewHistoryPrivate(this))
 {
 }
 
-StackedHistory::~StackedHistory()
+EditorViewHistory::~EditorViewHistory()
 {
     delete d;
 }
 
-void StackedHistory::setContainer(GuiSystem::StackedContainer *container)
+void EditorViewHistory::setContainer(GuiSystem::EditorView *container)
 {
     d->m_container = container;
 }
 
-void StackedHistory::open(const QUrl &url)
+void EditorViewHistory::open(const QUrl &url, AbstractEditor *oldEditor)
 {
     Q_ASSERT(d->m_container);
 
@@ -50,8 +52,7 @@ void StackedHistory::open(const QUrl &url)
         d->stashedHistory.append(QByteArray());
 
         d->currentLocalIndex = -1;
-        if (!d->currentEditor.isEmpty()) {
-            AbstractEditor *oldEditor = d->m_container->editor(d->currentEditor);
+        if (oldEditor) {
             d->stashEditor(oldEditor);
         }
         d->currentEditor = editor->property("id").toByteArray();
@@ -94,17 +95,17 @@ void StackedHistory::open(const QUrl &url)
     emit currentItemIndexChanged(d->currentIndex);
 }
 
-int StackedHistory::count() const
+int EditorViewHistory::count() const
 {
     return d->items.count();
 }
 
-int StackedHistory::currentItemIndex() const
+int EditorViewHistory::currentItemIndex() const
 {
     return d->currentIndex;
 }
 
-void StackedHistory::setCurrentItemIndex(int index)
+void EditorViewHistory::setCurrentItemIndex(int index)
 {
     if (d->currentIndex == index)
         return;
@@ -116,23 +117,20 @@ void StackedHistory::setCurrentItemIndex(int index)
 
     StackedHistoryItem &item = d->items[index];
 
-    AbstractEditor *oldEditor = d->m_container->editor(d->currentEditor);
+    AbstractEditor *oldEditor = d->m_container->editor();
     if (d->currentEditor != item.editor || d->currentStashedIndex != item.stashedIndex) {
         d->stashEditor(oldEditor);
 
-        if (!d->m_container->setEditor(item.editor)) {
-            qWarning() << "Can't open editor with id" << item.editor;
-            return/* false*/;
-        }
+        d->m_container->openEditor(item.editor);
 
         d->currentEditor = item.editor;
         d->currentStashedIndex = item.stashedIndex;
 
-        AbstractEditor *newEditor = d->m_container->editor(item.editor);
+        AbstractEditor *newEditor = d->m_container->editor();
         d->unstashEditor(newEditor);
     }
 
-    AbstractEditor *newEditor = d->m_container->editor(item.editor);
+    AbstractEditor *newEditor = d->m_container->editor();
     d->currentIndex = index;
     d->currentLocalIndex = item.localIndex;
 
@@ -144,7 +142,7 @@ void StackedHistory::setCurrentItemIndex(int index)
         history->setCurrentItemIndex(item.localIndex);
     } else {
         // TODO: stash editor state to current item
-        newEditor->open(item.url);
+        newEditor->document()->setUrl(item.url);
     }
 
 #ifdef STACKED_HISTORY_DEBUG
@@ -162,7 +160,7 @@ void StackedHistory::setCurrentItemIndex(int index)
     emit currentItemIndexChanged(d->currentIndex);
 }
 
-HistoryItem StackedHistory::itemAt(int index) const
+HistoryItem EditorViewHistory::itemAt(int index) const
 {
     if (index < 0 || index >= count())
         return HistoryItem();
@@ -173,28 +171,28 @@ HistoryItem StackedHistory::itemAt(int index) const
     return item;
 }
 
-QByteArray StackedHistory::store() const
+QByteArray EditorViewHistory::store() const
 {
     return QByteArray();
 }
 
-void StackedHistory::restore(const QByteArray &)
+void EditorViewHistory::restore(const QByteArray &)
 {
 }
 
-void StackedHistory::clear()
+void EditorViewHistory::clear()
 {
     // TODO: implement
 }
 
-void StackedHistoryPrivate::stashEditor(AbstractEditor *editor)
+void EditorViewHistoryPrivate::stashEditor(AbstractEditor *editor)
 {
 #ifdef STACKED_HISTORY_DEBUG
     qDebug() << "StackedHistoryPrivate::stashEditor" << editor->id() << currentStashedIndex << stashedHistory.count();
 #endif
 
     IHistory *history = editor->history();
-    editor->cancel();
+    editor->document()->stop();
 
     QByteArray stored;
     if (history) {
@@ -208,10 +206,10 @@ void StackedHistoryPrivate::stashEditor(AbstractEditor *editor)
     }
 
     stashedHistory[currentStashedIndex] = stored;
-    editor->clear();
+    editor->document()->clear();
 }
 
-void StackedHistoryPrivate::unstashEditor(AbstractEditor *editor)
+void EditorViewHistoryPrivate::unstashEditor(AbstractEditor *editor)
 {
 #ifdef STACKED_HISTORY_DEBUG
     qDebug() << "StackedHistoryPrivate::unstashEditor" << editor->id() << currentStashedIndex << stashedHistory.count();
@@ -231,7 +229,7 @@ void StackedHistoryPrivate::unstashEditor(AbstractEditor *editor)
     }
 }
 
-void StackedHistory::localHistoryIndexChanged(int index)
+void EditorViewHistory::localHistoryIndexChanged(int index)
 {
     if (d->blockHistrory) {
         // we've came here as a result of setCurrentIndex
@@ -280,7 +278,7 @@ void StackedHistory::localHistoryIndexChanged(int index)
     emit currentItemIndexChanged(d->currentIndex);
 }
 
-void StackedHistory::onUrlChanged(const QUrl &url)
+void EditorViewHistory::onUrlChanged(const QUrl &url)
 {
 #ifdef STACKED_HISTORY_DEBUG
     qDebug() << "StackedHistory::onUrlChanged" << url;

@@ -6,11 +6,12 @@
 #include <QtCore/QEvent>
 #include <QtGui/QToolBar>
 #include <guisystem/editorwindowfactory.h>
-#include <guisystem/stackedcontainer.h>
+#include <guisystem/editorview.h>
+#include <guisystem/historybutton.h>
 #include <widgets/tabbar.h>
 
+#include "browsertabwidget.h"
 #include "myaddressbar.h"
-#include "tabcontainer.h"
 
 namespace Andromeda {
 
@@ -25,18 +26,18 @@ public:
 
     MyAddressBar *lineEdit;
     QToolBar *toolBar;
-    TabContainer *container;
+    BrowserTabWidget *tabWidget;
+    GuiSystem::History *history;
 
-    QAction *upAction;
-    QAction *newTabAction;
-    QAction *prevTabAction;
-    QAction *nextTabAction;
-    QAction *menuBarAction;
+    GuiSystem::HistoryButton *backButton;
+    GuiSystem::HistoryButton *forwardButton;
+    QAction *actions[BrowserWindow::ActionCount];
 
     void setupActions();
     void setupToolBar();
     void setupAlternateToolBar();
     void setupUi();
+    void retranslateUi();
 
 public slots:
     void onMenuVisibleChanged(bool visible);

@@ -10,6 +10,7 @@ class BinEdit;
 
 namespace BINEditor {
 
+class BinEditorDocument;
 class BINEDITOR_EXPORT BinEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
@@ -28,11 +29,7 @@ public:
 
     explicit BinEditor(QWidget *parent = 0);
 
-    void open(const QUrl &);
-    QUrl url() const;
-
-    QIcon icon() const;
-    QString title() const;
+    void setDocument(GuiSystem::AbstractDocument *document);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -42,8 +39,10 @@ private:
     void retranslateUi();
     void registerActions();
 
+private slots:
+    void open(const QUrl &url);
+
 private:
-    QUrl m_url;
     BinEdit *m_editor;
 
     QAction *actions[ActionCount];
@@ -61,6 +60,7 @@ public:
     int weight() const;
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

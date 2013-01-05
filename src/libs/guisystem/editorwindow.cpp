@@ -1,12 +1,11 @@
 #include "editorwindow.h"
 #include "editorwindow_p.h"
 
+#include "abstractdocument.h"
 #include "abstracteditor.h"
 #include "actionmanager.h"
-#include "ifile.h"
 #include "ihistory.h"
 #include "commandcontainer.h"
-#include "stackedcontainer.h"
 #include "history.h"
 #include "historybutton.h"
 #include "editorwindowfactory.h"
@@ -41,8 +40,8 @@ EditorWindow::EditorWindow(QWidget *parent) :
 {
     Q_D(EditorWindow);
 
+    d->document = 0;
     d->editor = 0;
-    d->history = new History(this);
     d->createActions();
     d->retranslateUi();
     d->registerActions();
@@ -50,9 +49,6 @@ EditorWindow::EditorWindow(QWidget *parent) :
 #ifndef Q_OS_MAC
     setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
 #endif
-
-    connect(d->history, SIGNAL(canGoBackChanged(bool)), d->actions[Back], SLOT(setEnabled(bool)));
-    connect(d->history, SIGNAL(canGoForwardChanged(bool)), d->actions[Forward], SLOT(setEnabled(bool)));
 
     d->menuBarButton = new QToolButton(this);
     d->menuBarButton->setMenu(MenuBarContainer::instance()->menu(d->menuBarButton));
@@ -85,6 +81,12 @@ QAction * EditorWindow::action(Action action) const
     return d->actions[action];
 }
 
+AbstractDocument * EditorWindow::document() const
+{
+    Q_D(const EditorWindow);
+    return d->document;
+}
+
 GuiSystem::AbstractEditor *EditorWindow::editor() const
 {
     Q_D(const EditorWindow);
@@ -102,39 +104,41 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     if (d->editor == editor)
         return;
 
-    if (d->editor) {
+    if (d->document)
+        disconnect(d->document, 0, this, 0);
+    if (d->editor)
         disconnect(d->editor, 0, this, 0);
 
-        if (d->editor->file()) {
-            disconnect(d->editor->file(), 0, this, 0);
-        }
-    }
-
     d->editor = editor;
-    d->history->setHistory(editor->history());
+    d->document = editor ? editor->document() : 0;
 
-    onWindowIconChanged(d->editor->icon());
-    onTitleChanged(d->editor->title());
+    if (d->document) {
+        onUrlChanged(d->document->url());
+        onReadOnlyChanged(d->document->isReadOnly());
+        onModificationChanged(d->document->isModified());
 
-    connect(d->editor, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
-    connect(d->editor, SIGNAL(openTriggered(QUrl)), SLOT(open(QUrl)));
-    connect(d->editor, SIGNAL(iconChanged(QIcon)), SLOT(onWindowIconChanged(QIcon)));
-    connect(d->editor, SIGNAL(titleChanged(QString)), SLOT(onTitleChanged(QString)));
-    connect(d->editor, SIGNAL(loadStarted()), SLOT(startLoad()));
-    connect(d->editor, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
-    connect(d->editor, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
+        onWindowIconChanged(d->document->icon());
+        onTitleChanged(d->document->title());
 
-    if (d->editor->file()) {
-        onReadOnlyChanged(d->editor->file()->isReadOnly());
-        onModificationChanged(d->editor->file()->isModified());
-        connect(d->editor->file(), SIGNAL(modificationChanged(bool)), SLOT(onModificationChanged(bool)));
-        connect(d->editor->file(), SIGNAL(readOnlyChanged(bool)), SLOT(onReadOnlyChanged(bool)));
+        connect(d->document, SIGNAL(urlChanged(QUrl)), SLOT(onUrlChanged(QUrl)));
+
+        connect(d->document, SIGNAL(iconChanged(QIcon)), SLOT(onWindowIconChanged(QIcon)));
+        connect(d->document, SIGNAL(titleChanged(QString)), SLOT(onTitleChanged(QString)));
+
+        connect(d->document, SIGNAL(modificationChanged(bool)), SLOT(onModificationChanged(bool)));
+        connect(d->document, SIGNAL(readOnlyChanged(bool)), SLOT(onReadOnlyChanged(bool)));
+
+        connect(d->document, SIGNAL(loadStarted()), SLOT(startLoad()));
+        connect(d->document, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
+        connect(d->document, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
+    } else {
+        onUrlChanged(QUrl());
+        onReadOnlyChanged(true);
+        onModificationChanged(false);
+
+        onWindowIconChanged(QIcon());
+        onTitleChanged(QString());
     }
-
-//    bool saveAsEnabled = d->editor->file();
-//    bool saveEnabled = saveAsEnabled && !d->editor->file()->isReadOnly() && d->editor->file()->isModified();
-//    d->actions[SaveAs]->setEnabled(saveAsEnabled);
-//    d->actions[Save]->setEnabled(saveEnabled);
 }
 
 bool EditorWindow::menuVisible() const
@@ -170,8 +174,8 @@ QUrl EditorWindow::url() const
 {
     Q_D(const EditorWindow);
 
-    if (d->editor)
-        return d->editor->url();
+    if (d->document)
+        return d->document->url();
 
     return QUrl();
 }
@@ -212,8 +216,6 @@ EditorWindow * EditorWindow::createWindow()
 
 bool EditorWindow::restoreState(const QByteArray &arr)
 {
-    Q_D(EditorWindow);
-
     QByteArray state = arr;
 
     QDataStream s(&state, QIODevice::ReadOnly);
@@ -238,16 +240,11 @@ bool EditorWindow::restoreState(const QByteArray &arr)
     restoreGeometry(geometry);
     QMainWindow::restoreState(mainWindowState);
 
-    if (d->editor)
-        return d->editor->restoreState(containerState);
-
     return true;
 }
 
 QByteArray EditorWindow::saveState() const
 {
-    Q_D(const EditorWindow);
-
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
 
@@ -255,34 +252,16 @@ QByteArray EditorWindow::saveState() const
     s << mainWindowVersion;
     s << saveGeometry();
     s << QMainWindow::saveState();
-    if (d->editor)
-        s << d->editor->saveState();
 
     return state;
-}
-
-void EditorWindow::back()
-{
-    Q_D(EditorWindow);
-
-    if (d->editor)
-        d->history->back();
-}
-
-void EditorWindow::forward()
-{
-    Q_D(EditorWindow);
-
-    if (d->editor)
-        d->history->forward();
 }
 
 void EditorWindow::open(const QUrl &url)
 {
     Q_D(const EditorWindow);
 
-    if (d->editor)
-        d->editor->open(url);
+    if (d->document)
+        d->document->setUrl(url);
 }
 
 void EditorWindow::close()
@@ -317,13 +296,13 @@ void EditorWindow::save()
     if (!d->editor)
         return;
 
-    if (!d->editor->file())
+    if (!d->editor->document())
         return;
 
-    if (d->editor->url().isEmpty() || !d->editor->url().isValid())
+    if (d->document->url().isEmpty() || !d->document->url().isValid())
         return;
 
-    d->editor->file()->save(d->editor->url());
+    d->document->save(d->document->url());
 }
 
 void EditorWindow::saveAs()
@@ -339,26 +318,26 @@ void EditorWindow::saveAs()
     if (path.isEmpty())
         return;
 
-    if (!d->editor->file())
+    if (!d->editor->document())
         return;
 
-    d->editor->file()->save(QUrl::fromLocalFile(path));
+    d->editor->document()->save(QUrl::fromLocalFile(path));
 }
 
-void EditorWindow::refresh()
+void EditorWindow::reload()
 {
     Q_D(EditorWindow);
 
-    if (d->editor)
-        d->editor->refresh();
+    if (d->document)
+        d->document->reload();
 }
 
-void EditorWindow::cancel()
+void EditorWindow::stop()
 {
     Q_D(EditorWindow);
 
-    if (d->editor)
-        d->editor->cancel();
+    if (d->document)
+        d->document->stop();
 }
 
 void EditorWindow::onUrlChanged(const QUrl &/*url*/)
@@ -374,7 +353,7 @@ void EditorWindow::onTitleChanged(const QString &title)
 {
     Q_D(EditorWindow);
 
-    bool modified = d->editor->file()->isModified();
+    bool modified = d->document ? d->document->isModified() : false;
     setWindowTitle(QString("%1%2 - %3").arg(title).arg(modified ? "*" : "").arg(qApp->applicationName()));
 }
 
@@ -394,11 +373,10 @@ void EditorWindow::onModificationChanged(bool modified)
 {
     Q_D(EditorWindow);
 
-    IFile *file = d->editor ? d->editor->file() : 0;
-    bool readOnly = file ? file->isReadOnly() : false;
+    bool readOnly = d->document ? d->document->isReadOnly() : false;
     d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
 
-    onTitleChanged(d->editor->title());
+    onTitleChanged(d->document ? d->document->title() : QString());
 }
 
 void EditorWindow::onReadOnlyChanged(bool readOnly)
@@ -423,35 +401,11 @@ void EditorWindowPrivate::createActions()
     actions[EditorWindow::SaveAs] = new QAction(q);
     QObject::connect(actions[EditorWindow::SaveAs], SIGNAL(triggered()), q, SLOT(saveAs()));
 
-    actions[EditorWindow::Refresh] = new QAction(q);
-    QObject::connect(actions[EditorWindow::Refresh], SIGNAL(triggered()), q, SLOT(refresh()));
+    actions[EditorWindow::Reload] = new QAction(q);
+    QObject::connect(actions[EditorWindow::Reload], SIGNAL(triggered()), q, SLOT(reload()));
 
-    actions[EditorWindow::Cancel] = new QAction(q);
-    QObject::connect(actions[EditorWindow::Cancel], SIGNAL(triggered()), q, SLOT(cancel()));
-
-    backButton = new HistoryButton;
-    backButton->setHistory(history);
-    backButton->setDirection(HistoryButton::Back);
-    backButton->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")));
-
-    forwardButton = new HistoryButton;
-    forwardButton->setHistory(history);
-    forwardButton->setDirection(HistoryButton::Forward);
-    forwardButton->setIcon(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")));
-
-    QWidgetAction *wa;
-
-    wa = new QWidgetAction(q);
-    wa->setDefaultWidget(backButton);
-    actions[EditorWindow::Back] = wa;
-    actions[EditorWindow::Back]->setEnabled(false);
-    QObject::connect(actions[EditorWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
-
-    wa = new QWidgetAction(q);
-    wa->setDefaultWidget(forwardButton);
-    actions[EditorWindow::Forward] = wa;
-    actions[EditorWindow::Forward]->setEnabled(false);
-    QObject::connect(actions[EditorWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
+    actions[EditorWindow::Stop] = new QAction(q);
+    QObject::connect(actions[EditorWindow::Stop], SIGNAL(triggered()), q, SLOT(stop()));
 
     actions[EditorWindow::ShowMenu] = new QAction(q);
     actions[EditorWindow::ShowMenu]->setCheckable(true);
@@ -467,11 +421,8 @@ void EditorWindowPrivate::retranslateUi()
 {
     actions[EditorWindow::Save]->setText(EditorWindow::tr("Save"));
     actions[EditorWindow::SaveAs]->setText(EditorWindow::tr("Save as..."));
-    actions[EditorWindow::Refresh]->setText(EditorWindow::tr("Refresh"));
-    actions[EditorWindow::Cancel]->setText(EditorWindow::tr("Cancel"));
-
-    backButton->setText(EditorWindow::tr("Back"));
-    forwardButton->setText(EditorWindow::tr("Forward"));
+    actions[EditorWindow::Reload]->setText(EditorWindow::tr("Refresh"));
+    actions[EditorWindow::Stop]->setText(EditorWindow::tr("Cancel"));
 }
 
 void EditorWindowPrivate::registerActions()
@@ -480,9 +431,6 @@ void EditorWindowPrivate::registerActions()
     manager->registerAction(actions[EditorWindow::Close], MenuBarContainer::standardCommandName(MenuBarContainer::Close));
     manager->registerAction(actions[EditorWindow::Save], MenuBarContainer::standardCommandName(MenuBarContainer::Save));
     manager->registerAction(actions[EditorWindow::SaveAs], MenuBarContainer::standardCommandName(MenuBarContainer::SaveAs));
-
-    manager->registerAction(actions[EditorWindow::Back], "Back");
-    manager->registerAction(actions[EditorWindow::Forward], "Forward");
 
 #ifndef Q_OS_MAC
     manager->registerAction(actions[EditorWindow::ShowMenu], MenuBarContainer::standardCommandName(MenuBarContainer::ShowMenu));

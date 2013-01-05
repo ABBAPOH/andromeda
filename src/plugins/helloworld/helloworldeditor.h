@@ -10,6 +10,7 @@ class QLabel;
 
 namespace HelloWorld {
 
+class HelloWorldDocument;
 class HELLOWORLD_EXPORT HelloWorldEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
@@ -17,12 +18,6 @@ class HELLOWORLD_EXPORT HelloWorldEditor : public GuiSystem::AbstractEditor
 
 public:
     explicit HelloWorldEditor(QWidget *parent = 0);
-
-    void open(const QUrl &);
-    QUrl url() const;
-
-    QIcon icon() const;
-    QString title() const;
 
 private:
     QLabel *m_label;
@@ -38,6 +33,7 @@ public:
     QIcon icon() const;
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

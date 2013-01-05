@@ -15,6 +15,7 @@ class BookmarksWidget;
 
 namespace Bookmarks {
 
+class BookmarksDocument;
 class BOOKMARKS_EXPORT BookmarksEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
@@ -22,12 +23,6 @@ class BOOKMARKS_EXPORT BookmarksEditor : public GuiSystem::AbstractEditor
 
 public:
     explicit BookmarksEditor(QWidget *parent = 0);
-
-    void open(const QUrl &);
-    QUrl url() const;
-
-    QIcon icon() const;
-    QString title() const;
 
     QByteArray saveState() const;
     bool restoreState(const QByteArray &state);
@@ -61,6 +56,7 @@ public:
     QIcon icon() const;
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

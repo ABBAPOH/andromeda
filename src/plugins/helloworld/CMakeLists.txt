@@ -1,9 +1,11 @@
 set( HEADERS
     helloworld_global.h
+    helloworlddocument.h
     helloworldeditor.h
     helloworldplugin.h
    )
 set( SOURCES
+    helloworlddocument.cpp
     helloworldeditor.cpp
     helloworldplugin.cpp
    )

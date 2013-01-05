@@ -1,7 +1,6 @@
 #include "bookmarkseditor.h"
 
 #include <QtCore/QSettings>
-#include <QtCore/QUrl>
 
 #include <QtGui/QResizeEvent>
 #include <QtGui/QUndoStack>
@@ -14,6 +13,7 @@
 #include <guisystem/constants.h>
 
 #include "bookmarksconstants.h"
+#include "bookmarksdocument.h"
 #include "bookmarksmodel.h"
 #include "bookmarkswidget.h"
 
@@ -22,9 +22,10 @@ using namespace GuiSystem;
 using namespace ExtensionSystem;
 
 BookmarksEditor::BookmarksEditor(QWidget *parent) :
-    AbstractEditor(parent),
+    AbstractEditor(*new BookmarksDocument, parent),
     m_widget(new BookmarksWidget(this))
 {
+    document()->setParent(this);
     PluginManager *pluginManager = PluginManager::instance();
     m_model = pluginManager->object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
     m_widget->setModel(m_model);
@@ -49,28 +50,6 @@ BookmarksEditor::BookmarksEditor(QWidget *parent) :
     actionManager->registerAction(undoAction, Constants::Actions::Undo);
 }
 
-void BookmarksEditor::open(const QUrl &)
-{
-    emit urlChanged(url());
-    emit titleChanged(title());
-    emit iconChanged(icon());
-}
-
-QUrl BookmarksEditor::url() const
-{
-    return QUrl(QLatin1String("andromeda://bookmarks"));
-}
-
-QIcon BookmarksEditor::icon() const
-{
-    return QIcon(":/icons/bookmarks.png");
-}
-
-QString BookmarksEditor::title() const
-{
-    return tr("Bookmarks");
-}
-
 QByteArray BookmarksEditor::saveState() const
 {
     return m_widget->saveState();
@@ -79,7 +58,6 @@ QByteArray BookmarksEditor::saveState() const
 bool BookmarksEditor::restoreState(const QByteArray &state)
 {
     m_widget->restoreState(state);
-    open(url());
     return true;
 }
 
@@ -133,6 +111,11 @@ QString BookmarksEditorFactory::name() const
 QIcon BookmarksEditorFactory::icon() const
 {
     return QIcon(":/icons/bookmarks.png");
+}
+
+AbstractDocument *BookmarksEditorFactory::createDocument(QObject *parent)
+{
+    return new BookmarksDocument(parent);
 }
 
 AbstractEditor * BookmarksEditorFactory::createEditor(QWidget *parent)

@@ -1,5 +1,4 @@
 #include "imagevieweditor.h"
-#include "imagevieweditor_p.h"
 
 #include <QtCore/QUrl>
 #include <QtCore/QFileInfo>
@@ -9,80 +8,34 @@
 
 #include <qimageview/qimageview.h>
 
+#include "imageviewdocument.h"
+
 using namespace GuiSystem;
 using namespace ImageView;
 
-void ImageViewFile::save(const QUrl &url)
-{
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 0))
-    if (!url.isLocalFile())
-#else
-    if (url.scheme() != QLatin1String("file"))
-#endif
-        return;
-
-    QString path = url.toLocalFile();
-    QFile file(path);
-    if (!file.open(QFile::WriteOnly))
-        return;
-
-    editor->m_view->write(&file, QFileInfo(path).suffix().toUtf8());
-}
-
 ImageViewEditor::ImageViewEditor(QWidget *parent) :
-    AbstractEditor(parent),
-    m_file(new ImageViewFile(this))
+    AbstractEditor(*new ImageViewDocument, parent)
 {
+    document()->setParent(this);
     setupUi();
     registerActions();
+
+    connect(m_view, SIGNAL(modifiedChanged(bool)), document(), SLOT(setModified(bool)));
+    connect(document(), SIGNAL(modifiedChanged(bool)), m_view, SLOT(setModified(bool)));
+
+    ImageViewDocument *doc = static_cast<ImageViewDocument *>(document());
+    doc->setEditor(this);
 }
 
-void ImageViewEditor::open(const QUrl &url)
+void ImageViewEditor::setDocument(AbstractDocument *document)
 {
-    if (m_url == url)
+    ImageViewDocument *imageDocument = qobject_cast<ImageViewDocument*>(document);
+    if (!imageDocument)
         return;
 
-    m_url = url;
-//    m_view->clear();
-    QString path = url.toLocalFile();
-    if (path.isEmpty()) {
-        emit loadFinished(false);
-        return;
-    }
+    imageDocument->setEditor(this);
 
-    QFile file(path);
-    if (!file.open(QFile::ReadOnly)) {
-        emit loadFinished(false);
-        return;
-    }
-
-    m_view->read(&file, QFileInfo(path).suffix().toUtf8());
-
-    emit urlChanged(m_url);
-    emit iconChanged(icon());
-    emit titleChanged(title());
-    emit loadFinished(true);
-}
-
-QUrl ImageViewEditor::url() const
-{
-    return m_url;
-}
-
-QIcon ImageViewEditor::icon() const
-{
-    return QIcon(":/icons/imageview.png");
-}
-
-QString ImageViewEditor::title() const
-{
-    QString path = m_url.path();
-    return QFileInfo(path).fileName();
-}
-
-IFile *ImageViewEditor::file() const
-{
-    return m_file;
+    AbstractEditor::setDocument(document);
 }
 
 void ImageViewEditor::setupUi()
@@ -90,7 +43,7 @@ void ImageViewEditor::setupUi()
     m_view = new QImageView(this);
     m_view->setFocusPolicy(Qt::StrongFocus);
 
-    connect(m_view, SIGNAL(modifiedChanged(bool)), m_file, SIGNAL(modificationChanged(bool)));
+    connect(m_view, SIGNAL(modifiedChanged(bool)), document(), SIGNAL(modificationChanged(bool)));
 
     m_toolBar = new QToolBar(this);
     m_toolBar->addAction(m_view->action(QImageView::ZoomIn));
@@ -153,6 +106,11 @@ QIcon ImageViewEditorFactory::icon() const
 QStringList ImageViewEditorFactory::mimeTypes() const
 {
     return QStringList() << "image/jpeg" << "image/png";
+}
+
+AbstractDocument * ImageViewEditorFactory::createDocument(QObject *parent)
+{
+    return new ImageViewDocument(parent);
 }
 
 AbstractEditor * ImageViewEditorFactory::createEditor(QWidget *parent)

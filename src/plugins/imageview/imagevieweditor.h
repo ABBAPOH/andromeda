@@ -12,7 +12,7 @@ class QVBoxLayout;
 
 namespace ImageView {
 
-class ImageViewFile;
+class ImageViewDocument;
 
 class IMAGEVIEW_EXPORT ImageViewEditor : public GuiSystem::AbstractEditor
 {
@@ -22,13 +22,7 @@ class IMAGEVIEW_EXPORT ImageViewEditor : public GuiSystem::AbstractEditor
 public:
     explicit ImageViewEditor(QWidget *parent = 0);
 
-    void open(const QUrl &url);
-    QUrl url() const;
-
-    QIcon icon() const;
-    QString title() const;
-
-    GuiSystem::IFile *file() const;
+    void setDocument(GuiSystem::AbstractDocument *document);
 
 protected:
     void setupUi();
@@ -38,10 +32,8 @@ private:
     QVBoxLayout *m_layout;
     QToolBar *m_toolBar;
     QImageView *m_view;
-    QUrl m_url;
-    ImageViewFile *m_file;
 
-    friend class ImageViewFile;
+    friend class ImageViewDocument;
 };
 
 class ImageViewEditorFactory : public GuiSystem::AbstractEditorFactory
@@ -55,6 +47,7 @@ public:
     QStringList mimeTypes() const;
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

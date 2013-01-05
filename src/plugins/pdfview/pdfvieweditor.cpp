@@ -15,6 +15,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pdfviewdocument.h"
 #include "pdfvieweditor.h"
 #include "lib/pdfview.h"
 #include "findwidget.h"
@@ -37,9 +38,12 @@ using namespace GuiSystem;
 //using namespace PdfView;
 
 PdfViewEditor::PdfViewEditor(QWidget *parent) :
-    AbstractEditor(parent)
-    , m_findWidget(0)
+    AbstractEditor(*new PdfViewDocument, parent),
+    m_findWidget(0)
 {
+    document()->setParent(this);
+    connect(document(), SIGNAL(urlChanged(QUrl)), SLOT(open(QUrl)));
+
     m_pdfView = new PdfView(this);
     m_pdfView->setZoomFactor(1);
     m_pdfView->setMaximumFileSettingsCacheSize(50e6);
@@ -49,20 +53,20 @@ PdfViewEditor::PdfViewEditor(QWidget *parent) :
     m_pdfView->action(PdfView::ZoomOut)->setIcon(Icon("zoom-out"));
 
     // Tools
-	m_mouseBrowseAction = m_pdfView->action(PdfView::MouseToolBrowse);
-	m_mouseBrowseAction->setIcon(Icon("input-mouse"));
+    m_mouseBrowseAction = m_pdfView->action(PdfView::MouseToolBrowse);
+    m_mouseBrowseAction->setIcon(Icon("input-mouse"));
     m_mouseBrowseAction->setShortcut(tr("Ctrl+1"));
 
-	m_mouseMagnifyAction = m_pdfView->action(PdfView::MouseToolMagnify);
-	m_mouseMagnifyAction->setIcon(Icon("page-zoom"));
+    m_mouseMagnifyAction = m_pdfView->action(PdfView::MouseToolMagnify);
+    m_mouseMagnifyAction->setIcon(Icon("page-zoom"));
     m_mouseMagnifyAction->setShortcut(tr("Ctrl+2"));
 
-	m_mouseSelectionAction = m_pdfView->action(PdfView::MouseToolSelection);
-	m_mouseSelectionAction->setIcon(Icon("select-rectangular"));
+    m_mouseSelectionAction = m_pdfView->action(PdfView::MouseToolSelection);
+    m_mouseSelectionAction->setIcon(Icon("select-rectangular"));
     m_mouseSelectionAction->setShortcut(tr("Ctrl+3"));
 
-	m_mouseTextSelectionAction = m_pdfView->action(PdfView::MouseToolTextSelection);
-	m_mouseTextSelectionAction->setIcon(Icon("draw-text"));
+    m_mouseTextSelectionAction = m_pdfView->action(PdfView::MouseToolTextSelection);
+    m_mouseTextSelectionAction->setIcon(Icon("draw-text"));
     m_mouseTextSelectionAction->setShortcut(tr("Ctrl+4"));
 
     m_pdfView->addContextMenuAction(m_mouseBrowseAction);
@@ -88,30 +92,30 @@ PdfViewEditor::PdfViewEditor(QWidget *parent) :
     connect(findPreviousAction, SIGNAL(triggered()), this, SLOT(slotFindPrevious()));
     addAction(findPreviousAction, Constants::Actions::FindPrevious);
 
-	QToolBar *toolBar = new QToolBar(this);
-	toolBar->addAction(m_pdfView->action(PdfView::ZoomIn));
-	toolBar->addAction(m_pdfView->action(PdfView::ZoomOut));
-	toolBar->addSeparator();
-	toolBar->addAction(m_pdfView->action(PdfView::MouseToolBrowse));
-	toolBar->addAction(m_pdfView->action(PdfView::MouseToolMagnify));
-	toolBar->addAction(m_pdfView->action(PdfView::MouseToolSelection));
-	toolBar->addAction(m_pdfView->action(PdfView::MouseToolTextSelection));
-	toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    QToolBar *toolBar = new QToolBar(this);
+    toolBar->addAction(m_pdfView->action(PdfView::ZoomIn));
+    toolBar->addAction(m_pdfView->action(PdfView::ZoomOut));
+    toolBar->addSeparator();
+    toolBar->addAction(m_pdfView->action(PdfView::MouseToolBrowse));
+    toolBar->addAction(m_pdfView->action(PdfView::MouseToolMagnify));
+    toolBar->addAction(m_pdfView->action(PdfView::MouseToolSelection));
+    toolBar->addAction(m_pdfView->action(PdfView::MouseToolTextSelection));
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-	layout->setSpacing(0);
-	layout->addWidget(toolBar);
+    layout->setSpacing(0);
+    layout->addWidget(toolBar);
     layout->addWidget(m_pdfView);
 
     readSettings();
-	registerActions();
+    registerActions();
 }
 
 void PdfViewEditor::registerActions()
 {
-	registerAction(m_pdfView->action(PdfView::ZoomIn), "ZoomIn");
-	registerAction(m_pdfView->action(PdfView::ZoomOut), "ZoomOut");
+    registerAction(m_pdfView->action(PdfView::ZoomIn), "ZoomIn");
+    registerAction(m_pdfView->action(PdfView::ZoomOut), "ZoomOut");
 
 //	registerAction(m_pdfView->action(PdfView::MouseToolBrowse), "MouseToolBrowse");
 //	registerAction(m_pdfView->action(PdfView::MouseToolMagnify), "MouseToolMagnify");
@@ -126,19 +130,6 @@ PdfViewEditor::~PdfViewEditor()
     m_pdfView = 0;
 }
 
-void PdfViewEditor::open(const QUrl &url)
-{
-	if (m_url == url)
-		return;
-
-	m_url = url;
-    m_pdfView->load(m_url.toLocalFile());
-
-    emit urlChanged(m_url);
-    emit iconChanged(icon());
-    emit titleChanged(title());
-}
-
 void PdfViewEditor::close()
 {
     m_pdfView->close();
@@ -148,7 +139,7 @@ QUrl PdfViewEditor::url() const
 {
 //    const QString fileName = m_pdfView->fileName();
 //    return QUrl::fromLocalFile(fileName);
-	return m_url;
+    return m_url;
 }
 
 QIcon PdfViewEditor::icon() const
@@ -206,6 +197,11 @@ void PdfViewEditor::selectMouseTool(int which)
         case 2: m_pdfView->setMouseTool(PdfView::Selection); break;
         case 3: m_pdfView->setMouseTool(PdfView::TextSelection); break;
     }
+}
+
+void PdfViewEditor::open(const QUrl &url)
+{
+    m_pdfView->load(url.toLocalFile());
 }
 
 void PdfViewEditor::slotSelectMouseTool()
@@ -324,7 +320,12 @@ QStringList PdfViewEditorFactory::mimeTypes() const
 
 int PdfViewEditorFactory::weight() const
 {
-	return 21;
+    return 21;
+}
+
+AbstractDocument * PdfViewEditorFactory::createDocument(QObject *parent)
+{
+    return new PdfViewDocument(parent);
 }
 
 AbstractEditor * PdfViewEditorFactory::createEditor(QWidget *parent)

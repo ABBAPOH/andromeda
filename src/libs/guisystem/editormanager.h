@@ -11,7 +11,6 @@ namespace GuiSystem {
 
 class AbstractEditor;
 class AbstractEditorFactory;
-class AbstractViewFactory;
 
 class EditorManagerPrivate;
 class GUISYSTEM_EXPORT EditorManager : public QObject
@@ -42,13 +41,8 @@ public:
     void addFactory(AbstractEditorFactory *factory);
     void removeFactory(AbstractEditorFactory *factory);
 
-    AbstractViewFactory *viewfactory(const QString &id) const;
-    void addViewFactory(AbstractViewFactory *factory);
-    void removeViewFactory(AbstractViewFactory *factory);
-
 private slots:
     void onDestroyed1(QObject *o);
-    void onDestroyed2(QObject *o);
 
 protected:
     QString getMimeType(const QUrl &url) const;

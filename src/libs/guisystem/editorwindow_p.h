@@ -9,7 +9,7 @@ class QToolButton;
 
 namespace GuiSystem {
 
-class ProxyEditor;
+class AbstractDocument;
 class History;
 class HistoryButton;
 
@@ -27,10 +27,8 @@ public:
 
 public:
     QPointer<AbstractEditor> editor;
-    History *history;
+    QPointer<AbstractDocument> document;
 
-    HistoryButton *backButton;
-    HistoryButton *forwardButton;
     QAction *actions[EditorWindow::ActionCount];
 
     bool menuVisible;

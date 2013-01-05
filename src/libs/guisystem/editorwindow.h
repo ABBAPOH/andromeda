@@ -11,6 +11,7 @@ class QUrl;
 
 namespace GuiSystem {
 
+class AbstractDocument;
 class AbstractEditor;
 
 class EditorWindowPrivate;
@@ -26,10 +27,8 @@ public:
                   Close,
                   Save,
                   SaveAs,
-                  Refresh,
-                  Cancel,
-                  Back,
-                  Forward,
+                  Reload,
+                  Stop,
 
                   ShowMenu,
 
@@ -41,6 +40,7 @@ public:
 
     QAction *action(Action action) const;
 
+    AbstractDocument *document() const;
     AbstractEditor *editor() const;
     virtual void setEditor(AbstractEditor *editor);
 
@@ -58,9 +58,6 @@ public:
     virtual QByteArray saveState() const;
 
 public slots:
-    void back();
-    void forward();
-
     virtual void open(const QUrl &url);
 
     virtual void close();
@@ -71,8 +68,8 @@ public slots:
     void save();
     void saveAs();
 
-    void refresh();
-    void cancel();
+    void reload();
+    void stop();
 
     void setMenuVisible(bool visible);
 

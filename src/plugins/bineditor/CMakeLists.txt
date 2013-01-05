@@ -2,10 +2,12 @@ set( HEADERS
     bineditor_global.h
     binedit.h
     bineditor.h
+    bineditordocument.h
     bineditorplugin.h
    )
 set( SOURCES
     bineditor.cpp
+    bineditordocument.cpp
     binedit.cpp
     bineditorplugin.cpp
    )

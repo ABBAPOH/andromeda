@@ -21,6 +21,7 @@ class FindToolBar;
 
 namespace WebView {
 
+class WebViewDocument;
 class WebViewHistory;
 class WebViewFind;
 
@@ -33,9 +34,7 @@ public:
     explicit WebViewEditor(QWidget *parent = 0);
     ~WebViewEditor();
 
-    void close() {}
-
-    QUrl url() const;
+    void setDocument(GuiSystem::AbstractDocument *document);
 
     GuiSystem::IFind *find() const;
     GuiSystem::IHistory *history() const;
@@ -44,24 +43,14 @@ public:
 
     QWebView *webView() const { return m_webView; }
 
-    QIcon icon() const { return m_webView->icon(); }
-    QString title() const { return m_webView->title(); }
-
-public slots:
-    void open(const QUrl &url);
-
-    void refresh();
-    void cancel();
-
-    void clear();
-
 private slots:
     void onUrlClicked(const QUrl &url);
-    void onIconChanged();
     void showWebInspector(bool show);
+    void onPageChanged();
 
 private:
     void createActions();
+    void connectDocument(WebViewDocument *document);
 
 private:
     QVBoxLayout *m_layout;
@@ -90,6 +79,7 @@ public:
     QStringList urlSchemes() const { return QStringList() << "http" << "https"; }
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

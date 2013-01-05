@@ -5,182 +5,81 @@
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 
+#include "abstractdocument.h"
+
 using namespace GuiSystem;
 
 /*!
-  \class GuiSystem::AbstractEditor
-
-  \brief AbstractEditor is a base class for opening content located at url.
+    \class GuiSystem::AbstractEditor
 */
 
 /*!
-  \brief Creates a AbstractEditor with the given \a parent.
+    \brief Creates a AbstractEditor with the given \a document and \a parent.
 */
-AbstractEditor::AbstractEditor(QWidget *parent) :
-    QWidget(parent)
+AbstractEditor::AbstractEditor(AbstractDocument &document, QWidget *parent) :
+    QWidget(parent),
+    m_document(&document)
 {
 }
 
 /*!
-  \brief Destroys AbstractEditor.
+    \brief Destroys AbstractEditor.
 */
 AbstractEditor::~AbstractEditor()
 {
 }
 
 /*!
-  \property AbstractEditor::url
-
-  \brief Contains current url opened in this editor.
+    Returns current document, or 0, if no document is set.
 */
-
-/*!
-  \fn QUrl AbstractEditor::url() const
-
-  \brief Reimplement this function to return currently opened url.
-*/
-
-/*!
-  \fn void AbstractEditor::open(const QUrl &url)
-
-  \brief Reimplement this function to do initialization when opening new \a url.
-
-  You need to emit urlChanged signal in this function if new url differs from the old one.
-*/
-
-/*!
-  \brief Convenience method. Same as AbstractEditor::open.
-*/
-void AbstractEditor::setUrl(const QUrl &url)
+AbstractDocument * AbstractEditor::document() const
 {
-    open(url);
+    return m_document;
 }
 
 /*!
-  \fn void AbstractEditor::urlChanged(const QUrl &url)
+    Sets current document and emits documentChanged() signal.
 
-  This signal should be emited every time current url becomes changed.
+    Document can't be 0.
+
+    Old document is deleted if editor is it's parent. Reparent old document
+    before setting the new one if you don't need to delete old document.
 */
-
-/*!
-  \brief Reimplement to cancel loading url.
-
-  Default implementation emits loadingFinished(false) signal.
-*/
-void AbstractEditor::cancel()
+void AbstractEditor::setDocument(AbstractDocument *document)
 {
-    emit loadFinished(false);
+    if (!document)
+        return;
+
+    if (m_document == document)
+        return;
+
+    if (m_document && m_document->parent() == this)
+        m_document->deleteLater();
+
+    m_document = document;
+    emit documentChanged();
 }
 
 /*!
-  \brief Reimplement to perform cleanup actions when closing current document.
+    \fn void AbstractEditor::documentChanged();
 
-  This function should always be called before destroying editor and also should
-  be called when user requests closing of current editor.
-*/
-void AbstractEditor::close()
-{
-}
-
-/*!
-  \brief Reimplement to reload currently opened url.
-
-  Default implementation does nothing.
-*/
-void AbstractEditor::refresh()
-{
-}
-
-/*!
-  \brief Reimplement to reset editor to initial state.
-
-  This method should load empty or default page into an editor and completely clear history.
-
-  Default implementation does nothing.
-*/
-void AbstractEditor::clear()
-{
-}
-
-/*!
-  \fn void openTriggered(const QUrl &url)
-
-  \brief Emit this signal when user triggers opening url in current window and
-  tab.
+    This signal is emited when current document is changed.
 */
 
 /*!
-  \property AbstractEditor::icon
+    \brief Reimplement to return find interface that corresponds to this editor.
 
-  \brief Icon that can be shown on toolbars, menus and so on.
+    Default imlementation returns 0.
 */
-
-/*!
-  \brief Reimplement to return current view's icon.
-*/
-QIcon AbstractEditor::icon() const
-{
-    return QIcon();
-}
-
-/*!
-  \fn void iconChanged(const QIcon &icon)
-
-  \brief Emit this signal when view's icon is changed.
-*/
-
-/*!
-  \brief Reimplement to return current preview image for this editor.
-
-  This image can be used in bookmarks or persistent history.
-
-  Default impelentation returns empty image.
-*/
-QImage AbstractEditor::preview() const
-{
-    return QImage();
-}
-
-/*!
-  \property AbstractEditor::title
-
-  \brief Title that can be show to user.
-*/
-
-/*!
-  \brief Reimplement to return current view's title.
-
-  Value returned by this function usually used as tab title.
-*/
-QString AbstractEditor::title() const
-{
-    return QString();
-}
-
-/*!
-  \brief Reimplement to return file interface that corresponds to this editor.
-
-  Default imlementation returns 0.
-*/
-IFile * AbstractEditor::file() const
+IFind * AbstractEditor::find() const
 {
     return 0;
 }
 
 /*!
-  \brief Reimplement to return find interface that corresponds to this editor.
+    \brief Reimplement to return history that corresponds to this editor.
 
-  Default imlementation returns 0.
-*/
-IFind *AbstractEditor::find() const
-{
-    return 0;
-}
-
-/*!
-  \brief Reimplement to return history that corresponds to this editor.
-
-  Default imlementation returns 0.
+    Default imlementation returns 0.
 */
 IHistory * AbstractEditor::history() const
 {
@@ -188,47 +87,28 @@ IHistory * AbstractEditor::history() const
 }
 
 /*!
-  \reimp
+    \brief Reimplement to restore editor's state.
 
-  Restored url from byte array and calls AbstractEditor::open.
+    Default implementation restores url from byte array and calls AbstractDocument::setUrl.
 */
 bool AbstractEditor::restoreState(const QByteArray &state)
 {
-    open(QUrl::fromEncoded(state));
+    document()->setUrl(QUrl::fromEncoded(state));
     return true;
 }
 
 /*!
-  \reimp
+    \brief Reimplement to store editor's state.
 
-  Stores url.
+    Default implementation stores current url.
 */
 QByteArray AbstractEditor::saveState() const
 {
-    return url().toEncoded();
+    return document()->url().toEncoded();
 }
 
 /*!
-  \fn void AbstractEditor::loadStarted()
-
-  This signal should be emited when editor starts loading time consuming data.
-*/
-
-/*!
-  \fn void AbstractEditor::loadProgress(int)
-
-  This signal should be emited to notify about loading progress.
-*/
-
-/*!
-  \fn void AbstractEditor::loadFinished(bool)
-
-  This signal should be emited when editor stops loading time consuming data.
-  \a ok will indicate whether the opening was successful or any error occurred.
-*/
-
-/*!
-  \brief Returns action manager instance.
+    \brief Returns action manager instance.
 */
 ActionManager * AbstractEditor::actionManager() const
 {
@@ -236,8 +116,8 @@ ActionManager * AbstractEditor::actionManager() const
 }
 
 /*!
-  \brief Adds \a action to this widget and registers it in ActionManager
-  using an \a id.
+    \brief Adds \a action to this widget and registers it in ActionManager
+    using an \a id.
 */
 void AbstractEditor::addAction(QAction *action, const QByteArray &id)
 {
@@ -246,7 +126,7 @@ void AbstractEditor::addAction(QAction *action, const QByteArray &id)
 }
 
 /*!
-  \brief Registers action in ActionManager.
+    \brief Registers action in ActionManager.
 */
 void AbstractEditor::registerAction(QAction *action, const QByteArray &id)
 {

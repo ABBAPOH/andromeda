@@ -11,6 +11,7 @@ class QSettings;
 
 namespace FileManager {
 
+class FileManagerDocument;
 class FileManagerWidget;
 class DualPaneWidget;
 class NavigationPanel;
@@ -28,29 +29,21 @@ public:
 
     explicit FileManagerEditor(QWidget *parent = 0);
 
-    // from AbstractEditor
-    QUrl url() const;
-    void open(const QUrl &url);
-
     GuiSystem::IHistory *history() const;
 
     int currentIndex() const;
     void setCurrentIndex(int index);
 
-    QIcon icon() const;
-    QString title() const;
+    void setDocument(GuiSystem::AbstractDocument *document);
 
     void restoreDefaults();
     bool restoreState(const QByteArray &state);
     QByteArray saveState() const;
 
-    void clear();
-
 protected:
     void resizeEvent(QResizeEvent *);
 
 private slots:
-    void onCurrentPathChanged(const QString &path);
     void onSelectedPathsChanged();
     void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
@@ -73,6 +66,7 @@ private:
     void createActions();
     void retranslateUi();
     void registerWidgetActions(FileManagerWidget *widget);
+    void connectDocument(FileManagerDocument *document);
 
 private:
     FileExplorerWidget *m_widget;
@@ -95,6 +89,7 @@ public:
     QStringList mimeTypes() const;
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

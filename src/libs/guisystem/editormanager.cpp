@@ -14,8 +14,6 @@ namespace GuiSystem {
 class EditorManagerPrivate
 {
 public:
-    QHash<QString, AbstractViewFactory *> viewFactories;
-
     QHash<QString, AbstractEditorFactory *> factoriesForId;
     QHash<QString, EditorManager::FactoryList> factoriesForMimeType;
     QHash<QString, EditorManager::FactoryList> factoriesForScheme;
@@ -250,61 +248,12 @@ void EditorManager::removeFactory(AbstractEditorFactory *factory)
     disconnect(factory, 0, this, 0);
 }
 
-AbstractViewFactory * EditorManager::viewfactory(const QString &id) const
-{
-    return d_func()->viewFactories.value(id);
-}
-
-/*!
-  \brief Adds \a factory to EditorManager.
-
-  If you need to add EditorFactory, use EditorManager::addFactory instead.
-
-  Factories automatically removed when being destroyed.
-*/
-void EditorManager::addViewFactory(AbstractViewFactory *factory)
-{
-    Q_D(EditorManager);
-
-    if (!factory)
-        return;
-
-    d->viewFactories.insert(factory->id(), factory);
-
-    connect(factory, SIGNAL(destroyed(QObject *)), this, SLOT(onDestroyed2(QObject*)));
-}
-
-/*!
-  \brief Removes \a factory from EditorManager.
-
-  To remove EditorFactory, use EditorManager::removeFactory instead.
-*/
-void EditorManager::removeViewFactory(AbstractViewFactory *factory)
-{
-    Q_D(EditorManager);
-
-    if (!factory)
-        return;
-
-    d->viewFactories.remove(d->viewFactories.key(factory));
-
-    disconnect(factory, 0, this, 0);
-}
-
 /*!
   \internal
 */
 void EditorManager::onDestroyed1(QObject *o)
 {
     removeFactory(static_cast<AbstractEditorFactory *>(o));
-}
-
-/*!
-  \internal
-*/
-void EditorManager::onDestroyed2(QObject *o)
-{
-    removeViewFactory(static_cast<AbstractViewFactory *>(o));
 }
 
 /*!

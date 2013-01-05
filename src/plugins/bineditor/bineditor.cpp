@@ -7,44 +7,40 @@
 #include <guisystem/constants.h>
 
 #include "binedit.h"
+#include "bineditordocument.h"
 
 using namespace GuiSystem;
 using namespace BINEditor;
 
 BinEditor::BinEditor(QWidget *parent) :
-    AbstractEditor(parent),
+    AbstractEditor(*new BinEditorDocument, parent),
     m_editor(new BinEdit(this))
 {
+    document()->setParent(this);
     createActions();
     retranslateUi();
     registerActions();
+
+    connect(document(), SIGNAL(urlChanged(QUrl)), this, SLOT(open(QUrl)));
+}
+
+void BinEditor::setDocument(AbstractDocument *document)
+{
+    if (this->document() == document)
+        return;
+
+    BinEditorDocument *binDocument = qobject_cast<BinEditorDocument *>(document);
+    if (!binDocument)
+        return;
+
+    connect(document, SIGNAL(urlChanged(QUrl)), this, SLOT(open(QUrl)));
+
+    AbstractEditor::setDocument(document);
 }
 
 void BinEditor::open(const QUrl &url)
 {
-    if (m_url == url)
-        return;
-
-    m_url = url;
     m_editor->open(url.toLocalFile());
-    emit urlChanged(url);
-    emit iconChanged(icon());
-    emit titleChanged(title());
-}
-
-QUrl BinEditor::url() const
-{
-    return m_url;
-}
-
-QIcon BinEditor::icon() const
-{
-    return QFileIconProvider().icon(QFileInfo(m_url.toLocalFile()));
-}
-
-QString BinEditor::title() const
-{
-    return QFileInfo(m_url.toLocalFile()).baseName();
 }
 
 void BinEditor::resizeEvent(QResizeEvent *e)
@@ -117,6 +113,11 @@ QString BinEditorFactory::name() const
 QIcon BinEditorFactory::icon() const
 {
     return QIcon();
+}
+
+AbstractDocument * BinEditorFactory::createDocument(QObject *parent)
+{
+    return new BinEditorDocument(parent);
 }
 
 AbstractEditor * BinEditorFactory::createEditor(QWidget *parent)

@@ -4,6 +4,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QToolBar>
 
+#include "filemanagerdocument.h"
 #include "fileexplorerwidget.h"
 #include "filemanagerhistory.h"
 #include "filemanagerconstants.h"
@@ -189,10 +190,11 @@ void FileManagerEditorHistory::onActivePaneChanged(DualPaneWidget::Pane pane)
   \class FileManagerEditor
 */
 FileManagerEditor::FileManagerEditor(QWidget *parent) :
-    AbstractEditor(parent),
+    AbstractEditor(*new FileManagerDocument, parent),
     m_settings(new QSettings(this)),
     ignoreSignals(false)
 {
+    document()->setParent(this);
     setupUi();
     setupConnections();
     createActions();
@@ -200,29 +202,8 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
 
     m_history = new FileManagerEditorHistory(this);
     m_history->setDualPaneWidget(m_widget->dualPane());
-}
 
-/*!
-  \reimp
-*/
-QUrl FileManagerEditor::url() const
-{
-    return QUrl::fromLocalFile(m_widget->dualPane()->currentPath());
-}
-
-/*!
-  \reimp
-*/
-void FileManagerEditor::open(const QUrl &url)
-{
-    emit loadStarted();
-    QString path = url.toLocalFile();
-#ifdef Q_OS_WIN
-    if (path == QLatin1String("/"))
-        path.clear();
-#endif
-    m_widget->dualPane()->setCurrentPath(path);
-    emit loadFinished(true);
+    connectDocument(qobject_cast<FileManagerDocument *>(document()));
 }
 
 /*!
@@ -233,34 +214,18 @@ IHistory * FileManagerEditor::history() const
     return m_history;
 }
 
-/*!
-  \reimp
-*/
-QIcon FileManagerEditor::icon() const
+void FileManagerEditor::setDocument(AbstractDocument *document)
 {
-    return QFileIconProvider().icon(QFileInfo(m_widget->dualPane()->currentPath()));
-}
+    if (this->document() == document)
+        return;
 
-/*!
-  \reimp
-*/
-QString FileManagerEditor::title() const
-{
-    QString path = m_widget->dualPane()->currentPath();
-    if (path.endsWith(QLatin1Char('/')))
-        path = path.left(path.length() - 1);
+    FileManagerDocument *fmDocument = qobject_cast<FileManagerDocument *>(document);
+    if (!fmDocument)
+        return;
 
-    if (path.isEmpty())
-        return QLatin1String("/");
+    connectDocument(fmDocument);
 
-    QFileInfo fi(path);
-    if (fi.exists()) {
-        QString result = fi.fileName();
-        if (result.isEmpty())
-            result = fi.filePath();
-        return result;
-    }
-    return QString();
+    AbstractEditor::setDocument(document);
 }
 
 /*!
@@ -349,30 +314,9 @@ QByteArray FileManagerEditor::saveState() const
 /*!
   \reimp
 */
-void FileManagerEditor::clear()
-{
-    m_widget->dualPane()->clear();
-    m_history->erase();
-}
-
-/*!
-  \reimp
-*/
 void FileManagerEditor::resizeEvent(QResizeEvent *e)
 {
     m_widget->resize(e->size());
-}
-
-/*!
-  \internal
-
-  Reemits DualPaneWidget::currentPathChanged() signal as an QUrl
-*/
-void FileManagerEditor::onCurrentPathChanged(const QString &path)
-{
-    emit urlChanged(QUrl::fromLocalFile(path));
-    emit iconChanged(icon());
-    emit titleChanged(title());
 }
 
 void FileManagerEditor::onSelectedPathsChanged()
@@ -515,7 +459,14 @@ void FileManagerEditor::openEditor()
     if (paths.isEmpty())
         return;
 
-    emit openTriggered(QUrl::fromLocalFile(paths.first()));
+    QList<QUrl> urls;
+    foreach (const QString &path, paths) {
+        urls.append(QUrl::fromLocalFile(path));
+    }
+
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
+    if (factory)
+        factory->open(urls);
 }
 
 void FileManagerEditor::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
@@ -569,7 +520,6 @@ void FileManagerEditor::setupUi()
 void FileManagerEditor::setupConnections()
 {
     DualPaneWidget *widget = m_widget->dualPane();
-    connect(widget, SIGNAL(currentPathChanged(QString)), SLOT(onCurrentPathChanged(QString)));
     connect(widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
     connect(widget, SIGNAL(openRequested(QStringList)), SLOT(openPaths(QStringList)));
     connect(widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
@@ -656,6 +606,15 @@ void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)
     registerAction(widget->action(FileManagerWidget::SortDescendingOrder), Constants::Actions::SortByDescendingOrder);
 }
 
+void FileManagerEditor::connectDocument(FileManagerDocument *document)
+{
+    Q_ASSERT(document);
+    connect(document, SIGNAL(currentPathChanged(QString)),
+            m_widget->dualPane(), SLOT(setCurrentPath(QString)));
+    connect(m_widget->dualPane(), SIGNAL(currentPathChanged(QString)),
+            document, SLOT(setCurrentPath(QString)));
+}
+
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
@@ -681,8 +640,12 @@ QStringList FileManagerEditorFactory::mimeTypes() const
     return QStringList() << QLatin1String("inode/directory");
 }
 
+AbstractDocument * FileManagerEditorFactory::createDocument(QObject *parent)
+{
+    return new FileManagerDocument(parent);
+}
+
 AbstractEditor * FileManagerEditorFactory::createEditor(QWidget *parent)
 {
     return new FileManagerEditor(parent);
 }
-

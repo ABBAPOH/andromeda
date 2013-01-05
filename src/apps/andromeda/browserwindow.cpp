@@ -14,11 +14,14 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QMenuBar>
 #include <QtGui/QToolButton>
+#include <QtGui/QWidgetAction>
 
+#include <guisystem/abstractdocument.h>
 #include <guisystem/actionmanager.h>
 #include <guisystem/command.h>
 #include <guisystem/commandcontainer.h>
 #include <guisystem/ihistory.h>
+#include <guisystem/history.h>
 #include <guisystem/menubarcontainer.h>
 
 #include "constants.h"
@@ -34,34 +37,65 @@ void BrowserWindowPrivate::setupActions()
 
     ActionManager *actionManager = ActionManager::instance();
 
-    newTabAction = new QAction(q);
-    connect(newTabAction, SIGNAL(triggered()), q, SLOT(newTab()));
-    q->addAction(newTabAction);
-    actionManager->registerAction(newTabAction, Constants::Actions::NewTab);
+    actions[BrowserWindow::NewTab] = new QAction(q);
+    connect(actions[BrowserWindow::NewTab], SIGNAL(triggered()), q, SLOT(newTab()));
+    q->addAction(actions[BrowserWindow::NewTab]);
+    actionManager->registerAction(actions[BrowserWindow::NewTab], Constants::Actions::NewTab);
 
     // ToolBar
-    upAction = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), q);
-    connect(upAction, SIGNAL(triggered()), q, SLOT(up()));
-    q->addAction(upAction);
-    actionManager->registerAction(upAction, Constants::Actions::Up);
+    actions[BrowserWindow::Up] = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), q);
+    connect(actions[BrowserWindow::Up], SIGNAL(triggered()), q, SLOT(up()));
+    q->addAction(actions[BrowserWindow::Up]);
+    actionManager->registerAction(actions[BrowserWindow::Up], Constants::Actions::Up);
 
-    nextTabAction = new QAction(q);
+    actions[BrowserWindow::NextTab] = new QAction(q);
 #ifdef Q_OS_MAC
-    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Right")));
+    actions[BrowserWindow::NextTab]->setShortcut(QKeySequence(QLatin1String("Ctrl+Right")));
 #else
-    nextTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
+    actions[BrowserWindow::NextTab]->setShortcut(QKeySequence(QLatin1String("Ctrl+Tab")));
 #endif
-    connect(nextTabAction, SIGNAL(triggered()), q, SLOT(nextTab()));
-    q->addAction(nextTabAction);
+    connect(actions[BrowserWindow::NextTab], SIGNAL(triggered()), q, SLOT(nextTab()));
+    q->addAction(actions[BrowserWindow::NextTab]);
 
-    prevTabAction = new QAction(q);
+    actions[BrowserWindow::PrevTab] = new QAction(q);
 #ifdef Q_OS_MAC
-    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Left")));
+    actions[BrowserWindow::PrevTab]->setShortcut(QKeySequence(QLatin1String("Ctrl+Left")));
 #else
-    prevTabAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
+    actions[BrowserWindow::PrevTab]->setShortcut(QKeySequence(QLatin1String("Ctrl+Shift+Tab")));
 #endif
-    connect(prevTabAction, SIGNAL(triggered()), q, SLOT(previousTab()));
-    q->addAction(prevTabAction);
+    connect(actions[BrowserWindow::PrevTab], SIGNAL(triggered()), q, SLOT(previousTab()));
+    q->addAction(actions[BrowserWindow::PrevTab]);
+
+    backButton = new HistoryButton;
+    backButton->setHistory(history);
+    backButton->setDirection(HistoryButton::Back);
+    backButton->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")));
+
+    forwardButton = new HistoryButton;
+    forwardButton->setHistory(history);
+    forwardButton->setDirection(HistoryButton::Forward);
+    forwardButton->setIcon(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")));
+
+    QWidgetAction *wa;
+
+    wa = new QWidgetAction(q);
+    wa->setDefaultWidget(backButton);
+    actions[BrowserWindow::Back] = wa;
+    actions[BrowserWindow::Back]->setEnabled(false);
+    QObject::connect(actions[BrowserWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
+    actionManager->registerAction(actions[BrowserWindow::Back], "Back");
+
+    wa = new QWidgetAction(q);
+    wa->setDefaultWidget(forwardButton);
+    actions[BrowserWindow::Forward] = wa;
+    actions[BrowserWindow::Forward]->setEnabled(false);
+    QObject::connect(actions[BrowserWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
+    actionManager->registerAction(actions[BrowserWindow::Forward], "Forward");
+
+    QObject::connect(history, SIGNAL(canGoBackChanged(bool)),
+                     actions[BrowserWindow::Back], SLOT(setEnabled(bool)));
+    QObject::connect(history, SIGNAL(canGoForwardChanged(bool)),
+                     actions[BrowserWindow::Forward], SLOT(setEnabled(bool)));
 }
 
 void BrowserWindowPrivate::setupToolBar()
@@ -73,19 +107,23 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar->setMovable(false);
     toolBar->setObjectName("toolBar");
 
-    toolBar->addAction(q->action(EditorWindow::Back));
-    toolBar->addAction(q->action(EditorWindow::Forward));
-    toolBar->addAction(upAction);
+    toolBar->addAction(q->action(BrowserWindow::Back));
+    toolBar->addAction(q->action(BrowserWindow::Forward));
+    toolBar->addAction(actions[BrowserWindow::Up]);
 
     toolBar->addSeparator();
     toolBar->addWidget(lineEdit);
 
-    menuBarAction = toolBar->addWidget(q->menuBarButton());
+    actions[BrowserWindow::MenuBar] = toolBar->addWidget(q->menuBarButton());
     connect(q, SIGNAL(menuVisibleChanged(bool)), this, SLOT(onMenuVisibleChanged(bool)));
 
     q->addToolBar(toolBar);
     // TODO: fix Qt bugs
     q->setUnifiedTitleAndToolBarOnMac(true);
+
+    for (int i = 0; i < BrowserWindow::ActionCount; i++) {
+        q->addAction(actions[i]);
+    }
 }
 
 void BrowserWindowPrivate::setupAlternateToolBar()
@@ -133,7 +171,7 @@ void BrowserWindowPrivate::setupAlternateToolBar()
 
     layout->addWidget(frame);
     layout->addWidget(toolBar);
-    layout->addWidget(container);
+    layout->addWidget(tabWidget);
 //    layout->addWidget(tabWidget);
     q->setCentralWidget(centralWidget);
 #else
@@ -152,12 +190,15 @@ void BrowserWindowPrivate::setupUi()
     lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
 //    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
     connect(lineEdit, SIGNAL(open(QUrl)), q, SLOT(open(QUrl)));
-    connect(lineEdit, SIGNAL(refresh()), q, SLOT(refresh()));
-    connect(lineEdit, SIGNAL(canceled()), q, SLOT(cancel()));
+    connect(lineEdit, SIGNAL(refresh()), q, SLOT(reload()));
+    connect(lineEdit, SIGNAL(canceled()), q, SLOT(stop()));
 
-    container = new TabContainer(/*q*/);
-    q->setEditor(container);
-    q->setCentralWidget(container);
+    tabWidget = new BrowserTabWidget(/*q*/);
+    connect(tabWidget, SIGNAL(editorChanged()), q, SLOT(onEditorChanged()));
+    connect(tabWidget, SIGNAL(currentChanged(int)), q, SLOT(onTabChanged()));
+//    q->setEditor(container);
+//    q->onEditorChanged();
+    q->setCentralWidget(tabWidget);
 
 // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
 // This is an example how to use completers to help directory listing.
@@ -174,9 +215,15 @@ void BrowserWindowPrivate::setupUi()
     q->resize(800, 600);
 }
 
+void BrowserWindowPrivate::retranslateUi()
+{
+    backButton->setText(EditorWindow::tr("Back"));
+    forwardButton->setText(EditorWindow::tr("Forward"));
+}
+
 void BrowserWindowPrivate::onMenuVisibleChanged(bool visible)
 {
-    menuBarAction->setVisible(!visible);
+    actions[BrowserWindow::MenuBar]->setVisible(!visible);
 }
 
 BrowserWindowFactory::BrowserWindowFactory(QObject *parent) :
@@ -247,10 +294,13 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
 {
     Q_D(BrowserWindow);
 
+    d->history = new History(this);
+
     d->setupUi();
     d->setupActions();
     d->setupToolBar();
     d->setupAlternateToolBar();
+    d->retranslateUi();
 
 #ifndef Q_OS_MAC
     setMenuBar(MenuBarContainer::instance()->menuBar());
@@ -270,6 +320,20 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
 BrowserWindow::~BrowserWindow()
 {
     delete d_ptr;
+}
+
+QAction * BrowserWindow::action(Action action) const
+{
+    if (action < 0 || action >= ActionCount)
+        return 0;
+
+    Q_D(const BrowserWindow);
+    return d->actions[action];
+}
+
+void BrowserWindow::setEditor(AbstractEditor *editor)
+{
+    EditorWindow::setEditor(editor);
 }
 
 /*!
@@ -294,14 +358,60 @@ QList<BrowserWindow *> BrowserWindow::windows()
     return result;
 }
 
+bool BrowserWindow::restoreState(const QByteArray &state)
+{
+    Q_D(const BrowserWindow);
+
+    QByteArray buffer(state);
+    QDataStream s(&buffer, QIODevice::ReadOnly);
+
+    QByteArray windowState, tabState;
+
+    s >> windowState;
+    s >> tabState;
+    if (!EditorWindow::restoreState(windowState))
+        return false;
+
+    if (!d->tabWidget->restoreState(tabState))
+        return false;
+    return true;
+}
+
+QByteArray BrowserWindow::saveState() const
+{
+    Q_D(const BrowserWindow);
+
+    QByteArray state;
+    QDataStream s(&state, QIODevice::WriteOnly);
+
+    s << EditorWindow::saveState();
+    s << d->tabWidget->saveState();
+
+    return state;
+}
+
+void BrowserWindow::back()
+{
+    Q_D(BrowserWindow);
+
+    if (editor())
+        d->history->back();
+}
+
+void BrowserWindow::forward()
+{
+    Q_D(BrowserWindow);
+
+    if (editor())
+        d->history->forward();
+}
+
 /*!
     Goes one level up in the filesystem.
 */
 void BrowserWindow::up()
 {
-    Q_D(BrowserWindow);
-
-    QUrl url = d->container->url();
+    QUrl url = document()->url();
     QString path = url.path();
     // we can't use QDir::cleanPath because it breaks urls
     // remove / at end of path
@@ -320,11 +430,7 @@ void BrowserWindow::up()
 void BrowserWindow::open(const QUrl &url)
 {
     Q_D(BrowserWindow);
-
-    if (d->container->count() == 0)
-        d->container->newTab(url);
-    else
-        EditorWindow::open(url);
+    d->tabWidget->open(url);
 }
 
 /*!
@@ -334,7 +440,7 @@ void BrowserWindow::openNewTab(const QUrl &url)
 {
     Q_D(BrowserWindow);
 
-    d->container->newTab(url);
+    d->tabWidget->newTab(url);
 }
 
 /*!
@@ -352,7 +458,7 @@ void BrowserWindow::openEditor(const QList<QUrl> &urls, const QByteArray &editor
     Q_D(BrowserWindow);
 
     // TODO: add setting to open urls in new windows instead
-    d->container->openEditor(urls, editor);
+    d->tabWidget->openEditor(urls, editor);
 }
 
 /*!
@@ -362,9 +468,9 @@ void BrowserWindow::close()
 {
     Q_D(BrowserWindow);
 
-    if (d->container) {
-        if (d->container->count() > 1)
-            d->container->close();
+    if (d->tabWidget) {
+        if (d->tabWidget->count() > 1)
+            d->tabWidget->close();
         else
             EditorWindow::close();
     }
@@ -377,7 +483,7 @@ void BrowserWindow::newTab()
 {
     Q_D(BrowserWindow);
 
-    d->container->newTab();
+    d->tabWidget->newTab();
 }
 
 /*!
@@ -396,9 +502,9 @@ void BrowserWindow::nextTab()
 {
     Q_D(BrowserWindow);
 
-    if (d->container) {
-        int index = d->container->currentIndex();
-        d->container->setCurrentIndex(index == d->container->count() - 1 ? 0 : index + 1);
+    if (d->tabWidget) {
+        int index = d->tabWidget->currentIndex();
+        d->tabWidget->setCurrentIndex(index == d->tabWidget->count() - 1 ? 0 : index + 1);
     }
 }
 
@@ -409,9 +515,9 @@ void BrowserWindow::previousTab()
 {
     Q_D(BrowserWindow);
 
-    if (d->container) {
-        int index = d->container->currentIndex();
-        d->container->setCurrentIndex(index ? index - 1 : d->container->count() - 1);
+    if (d->tabWidget) {
+        int index = d->tabWidget->currentIndex();
+        d->tabWidget->setCurrentIndex(index ? index - 1 : d->tabWidget->count() - 1);
     }
 }
 
@@ -422,7 +528,7 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
 {
     Q_D(BrowserWindow);
 
-    d->upAction->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
+    d->actions[BrowserWindow::Up]->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
     d->lineEdit->setUrl(url);
     EditorWindow::onUrlChanged(url);
 }
@@ -465,6 +571,20 @@ void BrowserWindow::moveEvent(QMoveEvent*)
 void BrowserWindow::resizeEvent(QResizeEvent*)
 {
     m_windowGeometry = saveGeometry();
+}
+
+void BrowserWindow::onEditorChanged()
+{
+    Q_D(BrowserWindow);
+    setEditor(d->tabWidget->currentEditor());
+}
+
+void BrowserWindow::onTabChanged()
+{
+    Q_D(BrowserWindow);
+
+    EditorView * view = d->tabWidget->currentView();
+    d->history->setHistory(view->history());
 }
 
 QByteArray BrowserWindow::windowGeometry()

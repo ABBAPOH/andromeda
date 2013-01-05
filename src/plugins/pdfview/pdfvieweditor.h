@@ -29,6 +29,8 @@ class FindWidget;
 
 //namespace PdfView {
 
+class PdfViewDocument;
+
 class PDFVIEW_EXPORT PdfViewEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
@@ -38,7 +40,8 @@ public:
     explicit PdfViewEditor(QWidget *parent = 0);
     ~PdfViewEditor();
 
-    void open(const QUrl &url);
+    GuiSystem::AbstractDocument *document() const;
+
     void close();
     QUrl url() const;
 
@@ -47,6 +50,7 @@ public:
     QString windowTitle() const;
 
 private Q_SLOTS:
+    void open(const QUrl &url);
     void slotSelectMouseTool();
     void slotSaveCopy();
     void slotSearch(const QString &text, const PdfView::FindFlags &flags);
@@ -55,11 +59,11 @@ private Q_SLOTS:
     void slotFindPrevious();
 
 private:
-	void registerActions();
+    void registerActions();
     void readSettings();
     void selectMouseTool(int which);
 
-	QUrl m_url;
+    QUrl m_url;
 
     PdfView *m_pdfView;
     QAction *m_mouseBrowseAction;
@@ -80,9 +84,10 @@ public:
     QString name() const;
     QIcon icon() const;
     QStringList mimeTypes() const;
-	int weight() const;
+    int weight() const;
 
 protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

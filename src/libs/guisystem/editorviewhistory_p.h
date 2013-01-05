@@ -1,10 +1,10 @@
-#ifndef STACKEDHISTORY_P_H
-#define STACKEDHISTORY_P_H
+#ifndef EDITORVIEWHISTORY_P_H
+#define EDITORVIEWHISTORY_P_H
 
 //#define STACKED_HISTORY_DEBUG
 
-#include "stackedhistory.h"
-#include "stackedcontainer.h"
+#include "editorviewhistory.h"
+#include "editorview.h"
 
 namespace GuiSystem {
 
@@ -22,10 +22,10 @@ struct StackedHistoryItem
     int stashedIndex;
 };
 
-class StackedHistoryPrivate
+class EditorViewHistoryPrivate
 {
 public:
-    explicit StackedHistoryPrivate(StackedHistory *qq);
+    explicit EditorViewHistoryPrivate(EditorViewHistory *qq);
 
     void stashEditor(AbstractEditor *editor);
     void unstashEditor(AbstractEditor *editor);
@@ -42,7 +42,7 @@ public:
 #endif
 
 public:
-    StackedContainer *m_container;
+    EditorView *m_container;
 
     QList<StackedHistoryItem> items;
     int currentIndex;
@@ -56,9 +56,9 @@ public:
     bool blockHistrory;
 
 private:
-    StackedHistory *q;
+    EditorViewHistory *q;
 };
 
 } // namespace GuiSystem
 
-#endif // STACKEDHISTORY_P_H
+#endif // EDITORVIEWHISTORY_P_H

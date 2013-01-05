@@ -7,6 +7,7 @@ endif()
 
 set( HEADERS
     application.h
+    browsertabwidget.h
     browserwindow.h
     browserwindow_p.h
     commandssettingspage.h
@@ -14,18 +15,17 @@ set( HEADERS
     settingsmodel.h
     settingsmodel_p.h
     settingswidget.h
-    tabcontainer.h
 )
 
 set( SOURCES
     application.cpp
+    browsertabwidget.cpp
     browserwindow.cpp
     commandssettingspage.cpp
     main.cpp
     myaddressbar.cpp
     settingsmodel.cpp
     settingswidget.cpp
-    tabcontainer.cpp
 )
 
 set( FORMS

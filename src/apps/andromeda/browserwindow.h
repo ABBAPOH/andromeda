@@ -8,7 +8,7 @@ class QUrl;
 
 namespace GuiSystem {
 class AbstractEditor;
-class StackedContainer;
+class EditorView;
 }
 
 namespace Andromeda {
@@ -20,8 +20,23 @@ class BrowserWindow : public GuiSystem::EditorWindow
     Q_DECLARE_PRIVATE(BrowserWindow)
     Q_DISABLE_COPY(BrowserWindow)
 public:
+    enum Action { NoAction = -1,
+                  Back,
+                  Forward,
+                  Up,
+                  NewTab,
+                  PrevTab,
+                  NextTab,
+                  MenuBar,
+                  ActionCount
+                };
+
     explicit BrowserWindow(QWidget *parent = 0);
     ~BrowserWindow();
+
+    QAction *action(Action action) const;
+
+    void setEditor(GuiSystem::AbstractEditor *editor);
 
     static BrowserWindow *currentWindow();
     static QList<BrowserWindow*> windows();
@@ -29,7 +44,12 @@ public:
     static QByteArray windowGeometry();
     static void setWindowGeometry(const QByteArray &geometry);
 
+    bool restoreState(const QByteArray &state);
+    QByteArray saveState() const;
+
 public slots:
+    void back();
+    void forward();
     void up();
 
     void open(const QUrl &url);
@@ -54,6 +74,10 @@ public slots:
 protected:
     void moveEvent(QMoveEvent *);
     void resizeEvent(QResizeEvent *);
+
+protected slots:
+    void onEditorChanged();
+    void onTabChanged();
 
 protected:
     BrowserWindowPrivate * d_ptr;

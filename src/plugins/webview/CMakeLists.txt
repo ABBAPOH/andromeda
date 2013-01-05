@@ -14,6 +14,7 @@ set( HEADERS
     proxysettings.h
     webview_global.h
     webviewconstants.h
+    webviewdocument.h
     webvieweditor.h
     webvieweditor_p.h
     webviewplugin.h
@@ -27,6 +28,7 @@ set( SOURCES
     cookieexceptionsmodel.cpp
     privacysettings.cpp
     proxysettings.cpp
+    webviewdocument.cpp
     webvieweditor.cpp
     webviewplugin.cpp
    )

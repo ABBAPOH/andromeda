@@ -5,38 +5,22 @@
 #include <QtGui/QLabel>
 #include <QtGui/QResizeEvent>
 
+#include "helloworlddocument.h"
+
 using namespace GuiSystem;
 using namespace HelloWorld;
 
 HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
-    AbstractEditor(parent),
+    AbstractEditor(*new HelloWorldDocument, parent),
     m_label(new QLabel(tr("Hello World!"), this))
 {
+    document()->setParent(this);
     m_label->setAlignment(Qt::AlignCenter);
 
     QLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     layout->addWidget(m_label);
-}
-
-void HelloWorldEditor::open(const QUrl &)
-{
-}
-
-QUrl HelloWorldEditor::url() const
-{
-    return QUrl(QLatin1String("andromeda://helloworld"));
-}
-
-QIcon HelloWorldEditor::icon() const
-{
-    return QIcon(":/icons/helloWorld.png");
-}
-
-QString HelloWorldEditor::title() const
-{
-    return tr("Hello world");
 }
 
 HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :
@@ -57,6 +41,11 @@ QString HelloWorldEditorFactory::name() const
 QIcon HelloWorldEditorFactory::icon() const
 {
     return QIcon(":/icons/helloWorld.png");
+}
+
+AbstractDocument * HelloWorldEditorFactory::createDocument(QObject *parent)
+{
+    return new HelloWorldDocument(parent);
 }
 
 AbstractEditor * HelloWorldEditorFactory::createEditor(QWidget *parent)
