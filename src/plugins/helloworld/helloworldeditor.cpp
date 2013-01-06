@@ -69,7 +69,7 @@ void HelloWorldEditor::setDocument(AbstractDocument *document)
 void HelloWorldEditor::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu;
-    menu.addAction(tr("Change text"), this, SLOT(changeText()));
+    menu.addAction(tr("Change text..."), this, SLOT(changeText()));
     menu.exec(event->globalPos());
 }
 
@@ -97,7 +97,6 @@ void HelloWorldEditor::changeText()
 void HelloWorldEditor::init()
 {
     m_label->setAlignment(Qt::AlignCenter);
-    m_label->setContextMenuPolicy(Qt::NoContextMenu);
 
     QLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);

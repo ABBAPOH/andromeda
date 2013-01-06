@@ -38,7 +38,7 @@ void HelloWorldDocument::setTitle(const QString &title)
 /*!
     \reimp
 */
-bool HelloWorldDocument::openUrl(const QUrl &url)
+bool HelloWorldDocument::openUrl(const QUrl &/*url*/)
 {
     return true;
 }

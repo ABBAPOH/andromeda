@@ -41,6 +41,7 @@ AbstractDocument::~AbstractDocument()
     \property AbstractDocument::icon
     \brief This property holds document's icon.
 */
+
 QIcon AbstractDocument::icon() const
 {
     Q_D(const AbstractDocument);
@@ -49,8 +50,9 @@ QIcon AbstractDocument::icon() const
 
 /*!
     \brief Sets current document's icon.
+
     This function should be called by AbstractDocument implementations when
-    they open an url.
+    they need to update icon.
 */
 void AbstractDocument::setIcon(const QIcon &icon)
 {
@@ -60,12 +62,19 @@ void AbstractDocument::setIcon(const QIcon &icon)
 }
 
 /*!
+    \fn void AbstractDocument::iconChanged(const QIcon &icon)
+
+    \brief This signal is emitted when document's icon is changed.
+*/
+
+/*!
     \property AbstractDocument::modified
 
     \brief This property holds whether the document has been modified by the user.
 
     Default value is false.
 */
+
 bool AbstractDocument::isModified() const
 {
     Q_D(const AbstractDocument);
@@ -85,14 +94,15 @@ void AbstractDocument::setModified(bool modified)
 /*!
     \fn void AbstractDocument::modificationChanged(bool modified)
 
-    \brief Emit this signal whenever document changes it's modification state (i.e. modified by user).
+    \brief This signal is emitted when modified property is changed.
 */
 
 /*!
     \property AbstractDocument::readOnly
 
-    \brief This property holds whether the document is read only
-    (i.e. can be saved with same url) or not.
+    \brief This property holds whether the document is read only or not.
+
+    Read only documents still can be saved, but only to a different location.
 
     Default value is true.
 */
@@ -116,7 +126,7 @@ void AbstractDocument::setReadOnly(bool readOnly)
 /*!
     \fn void AbstractDocument::readOnlyChanged(bool readOnly)
 
-    \brief Emit this signal whenever document changes it's modification state (i.e. modified by user).
+    \brief This signal is emitted when readOnly property is changed.
 */
 
 /*!
@@ -124,8 +134,9 @@ void AbstractDocument::setReadOnly(bool readOnly)
 
     \brief Title that is shown to user.
 
-    For exapmple, title can be displayed in a tab or in a window title.
+    Title is usually displayed in a tab or in a window title.
 */
+
 QString AbstractDocument::title() const
 {
     Q_D(const AbstractDocument);
@@ -134,8 +145,9 @@ QString AbstractDocument::title() const
 
 /*!
     \brief Sets current document's title.
+
     This function should be called by AbstractDocument implementations when
-    they open an url.
+    they need to update title.
 */
 void AbstractDocument::setTitle(const QString &title)
 {
@@ -147,17 +159,23 @@ void AbstractDocument::setTitle(const QString &title)
 }
 
 /*!
-    Returns current url.
+    \fn void AbstractDocument::titleChanged(const QString &icon)
+
+    \brief This signal is emitted when document's title is changed.
 */
+
+/*!
+    \property AbstractDocument::url
+
+    \brief This property holds currently opened url.
+*/
+
 QUrl AbstractDocument::url() const
 {
     Q_D(const AbstractDocument);
     return d->url;
 }
 
-/*!
-    Sets current url and emits urlChanged() signal if nececcary.
-*/
 void AbstractDocument::setUrl(const QUrl &url)
 {
     Q_D(AbstractDocument);
@@ -171,6 +189,12 @@ void AbstractDocument::setUrl(const QUrl &url)
     d->url = url;
     emit urlChanged(url);
 }
+
+/*!
+    \fn void AbstractDocument::urlChanged(const QUrl &url)
+
+    \brief This signal is emitted when current url is changed.
+*/
 
 /*!
     \brief Reimplement to reset document to initial state.
@@ -191,9 +215,11 @@ void AbstractDocument::reload()
 }
 
 /*!
-  \brief Reimplement to save currently opened document to \a url.
+    \brief Reimplement to save currently opened document to an \a url.
 
-  Empty url is passed when user requests to save document to current url.
+    Is empty url is passed then document should save data to current url.
+
+    Default implementation does nothing.
 */
 void AbstractDocument::save(const QUrl &url)
 {
@@ -230,6 +256,8 @@ void AbstractDocument::stop()
 /*!
     \fn bool AbstractDocument::openUrl(const QUrl &url)
     \brief Reipmlement this function to open data located at \a url in a document.
+
+    This funciton is called from setUrl() method when new url should be opened.
 
     \note This function is called before changing AbstractDocument::url property, so you can
     retreive an old url via url() method.

@@ -22,7 +22,7 @@ AbstractEditorFactory::AbstractEditorFactory(QObject *parent) :
 }
 
 /*!
-    \brief Destroys factory and all editors created with it.
+    \brief Destroys factory and all editors and documents created with it.
 */
 AbstractEditorFactory::~AbstractEditorFactory()
 {
@@ -33,6 +33,9 @@ AbstractEditorFactory::~AbstractEditorFactory()
     qDeleteAll(documents);
 }
 
+/*!
+    \brief Creates and returns new document.
+*/
 AbstractDocument * AbstractEditorFactory::document(QObject *parent)
 {
     AbstractDocument *editor = createDocument(parent);
@@ -43,7 +46,7 @@ AbstractDocument * AbstractEditorFactory::document(QObject *parent)
 }
 
 /*!
-    \brief Creates new editor and appends it to list of editors.
+    \brief Creates and returns new editor.
 */
 AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
 {
@@ -54,14 +57,32 @@ AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
     return editor;
 }
 
+/*!
+    \internal
+*/
 void AbstractEditorFactory::onDocumentDestroyed(QObject *object)
 {
     AbstractDocument *document = static_cast<AbstractDocument *>(object);
     m_documents.removeOne(document);
 }
 
+/*!
+    \internal
+*/
 void AbstractEditorFactory::onEditorDestroyed(QObject *object)
 {
     AbstractEditor *editor = static_cast<AbstractEditor *>(object);
     m_editors.removeOne(editor);
 }
+
+/*!
+    \fn AbstractDocument * AbstractEditorFactory::createDocument(QObject *parent)
+
+    \brief Reipmlement this function to create new document.
+*/
+
+/*!
+    \fn AbstractDocument * AbstractEditorFactory::createEditor(QWidget *parent)
+
+    \brief Reipmlement this function to create new editor.
+*/

@@ -11,6 +11,7 @@ class HelloWorldPlugin : public ExtensionSystem::IPlugin
     Q_DISABLE_COPY(HelloWorldPlugin)
 public:
     HelloWorldPlugin();
+    ~HelloWorldPlugin();
 
     bool initialize();
 };

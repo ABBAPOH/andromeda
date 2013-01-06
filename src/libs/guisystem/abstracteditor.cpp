@@ -1,11 +1,10 @@
 #include "abstracteditor.h"
 
-#include "actionmanager.h"
-
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
 
 #include "abstractdocument.h"
+#include "actionmanager.h"
 
 using namespace GuiSystem;
 
@@ -46,6 +45,8 @@ AbstractDocument * AbstractEditor::document() const
 
     Old document is deleted if editor is it's parent. Reparent old document
     before setting the new one if you don't need to delete old document.
+
+    Editor does not takes ownership of a \a document.
 */
 void AbstractEditor::setDocument(AbstractDocument *document)
 {
@@ -63,9 +64,9 @@ void AbstractEditor::setDocument(AbstractDocument *document)
 }
 
 /*!
-    \fn void AbstractEditor::documentChanged();
+    \fn void AbstractEditor::documentChanged()
 
-    This signal is emited when current document is changed.
+    This signal is emitted when current document is changed.
 */
 
 /*!
