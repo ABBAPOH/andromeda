@@ -205,24 +205,17 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_splitter = new MiniSplitter(Qt::Vertical, this);
     m_layout->addWidget(m_splitter);
 
-    CookieJar *jar = WebViewPlugin::instance()->cookieJar();
-
     m_history = new WebViewHistory(this);
     m_webView = new QWebView(this);
 
     QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
-    m_history->setHistory(m_webView->page()->history());
-
-    m_webView->page()->networkAccessManager()->setCookieJar(jar);
-    jar->setParent(WebViewPlugin::instance());
     m_splitter->addWidget(m_webView);
 
     connect(WebHistoryInterface::instance(), SIGNAL(itemAdded()), m_history, SLOT(updateCurrentItemIndex()));
 
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
-    m_webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(m_webView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
 
@@ -315,6 +308,7 @@ void WebViewEditor::connectDocument(WebViewDocument *document)
 {
     Q_ASSERT(document);
     m_webView->setPage(document->page());
+    m_history->setHistory(m_webView->page()->history());
     connect(document, SIGNAL(pageChanged()), SLOT(onPageChanged()));
 }
 

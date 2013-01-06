@@ -3,12 +3,21 @@
 #include <QWebFrame>
 #include <QWebPage>
 
+#include "cookiejar.h"
+#include "webviewplugin.h"
+
 using namespace GuiSystem;
 using namespace WebView;
 
 static QWebPage * createPage(WebViewDocument *document)
 {
+    WebViewPlugin *plugin = WebViewPlugin::instance();
+    CookieJar *jar = plugin->cookieJar();
     QWebPage *page = new QWebPage(document);
+    page->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+    page->networkAccessManager()->setCookieJar(jar);
+    jar->setParent(plugin); // QNAM reparents jar, fix it here
 
     QObject::connect(page->mainFrame(), SIGNAL(urlChanged(QUrl)),
                      document, SLOT(setUrl(QUrl)));
