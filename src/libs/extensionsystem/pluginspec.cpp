@@ -61,7 +61,7 @@ Version::Version(const QString &version) :
 */
 bool Version::isNull() const
 {
-    return build == revision == major == minor == 0;
+    return build == 0 && revision == 0 && major == 0 && minor == 0;
 }
 
 /*!
