@@ -155,7 +155,7 @@ void AddressBar::paintEvent(QPaintEvent *event)
 
 void AddressBar::updateUrl()
 {
-    QUrl url;
+    QUrl url = QUrl::fromUserInput(text());
     if (m_url.scheme() == QLatin1String("file")) {
         // we try to resolve local paths
         QFileInfo info(text());
@@ -169,8 +169,6 @@ void AddressBar::updateUrl()
             if (info.exists())
                 url = QUrl::fromLocalFile(path);
         }
-    } else {
-        url = QUrl::fromUserInput(text());
     }
 
     if (m_url != url) {
