@@ -36,19 +36,20 @@
     check type of a passed document (normally, each editor supports only
     documents of a specific type). You should update editor state in this
     method too (state is updated in setupDocument() function) and disconnect
-    all signals from old document:
+    all signals from the old document:
 
     \snippet helloworld.cpp 3
 
     In an init() function we set default parameters for a label and put it into
-    layout. Also we set initial state and connect editor to a document
+    layout. Also we set label text and connect editor to the document
     in setupDocument() function:
 
     \snippet helloworld.cpp 4
 
-    Lets us add some useful functionality to our editor - we will allow user
-    to change label's text. We reimplement contextMenuEvent method and add
-    slot that shows QInputDialog for a user so he could type a new text:
+    Let us add some useful functionality to our editor - we will allow user
+    to change label's text. To do this, we reimplement contextMenuEvent method
+    and add slot that shows QInputDialog for a user so he could type a new
+    text:
 
     \snippet helloworld.cpp 5
 
@@ -63,4 +64,8 @@
     GuiSystem::EditorManager.
 
     \snippet helloworld.cpp 7
+
+    That's all. Plugin will be loaded automatically if placed into the
+    correct location ("plugins/andromeda"). HelloWorldEditor can be opened by
+    typing "andromeda://helloworld" in the address bar.
 */
