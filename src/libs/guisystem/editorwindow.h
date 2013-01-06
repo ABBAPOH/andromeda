@@ -6,12 +6,12 @@
 #include <QtCore/QUrl>
 #include <QtGui/QMainWindow>
 
+#include <guisystem/abstractdocument.h>
+
 class QToolButton;
 class QUrl;
 
 namespace GuiSystem {
-
-class AbstractDocument;
 class AbstractEditor;
 
 class EditorWindowPrivate;
@@ -82,9 +82,8 @@ protected slots:
     virtual void onWindowIconChanged(const QIcon &icon);
     virtual void onTitleChanged(const QString &title);
 
-    virtual void startLoad();
-    virtual void setLoadProgress(int progress);
-    virtual void finishLoad(bool ok);
+    virtual void onProgressChanged(int progress);
+    virtual void onStateChanged(AbstractDocument::State state);
 
     virtual void onModificationChanged(bool modified);
     virtual void onReadOnlyChanged(bool readOnly);

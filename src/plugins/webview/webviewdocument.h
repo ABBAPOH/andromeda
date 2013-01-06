@@ -32,6 +32,8 @@ protected:
 protected slots:
     void onIconChanged();
     void onTitleChanged(const QString &title);
+    void onLoadStarted();
+    void onLoadFinished();
 
 private:
     QWebPage *m_page;

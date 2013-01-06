@@ -128,9 +128,8 @@ void EditorWindow::setEditor(AbstractEditor *editor)
         connect(d->document, SIGNAL(modificationChanged(bool)), SLOT(onModificationChanged(bool)));
         connect(d->document, SIGNAL(readOnlyChanged(bool)), SLOT(onReadOnlyChanged(bool)));
 
-        connect(d->document, SIGNAL(loadStarted()), SLOT(startLoad()));
-        connect(d->document, SIGNAL(loadProgress(int)), SLOT(setLoadProgress(int)));
-        connect(d->document, SIGNAL(loadFinished(bool)), SLOT(finishLoad(bool)));
+        connect(d->document, SIGNAL(stateChanged(AbstractDocument::State)), SLOT(onStateChanged(AbstractDocument::State)));
+        connect(d->document, SIGNAL(progressChanged(int)), SLOT(onProgressChanged(int)));
     } else {
         onUrlChanged(QUrl());
         onReadOnlyChanged(true);
@@ -357,15 +356,11 @@ void EditorWindow::onTitleChanged(const QString &title)
     setWindowTitle(QString("%1%2 - %3").arg(title).arg(modified ? "*" : "").arg(qApp->applicationName()));
 }
 
-void EditorWindow::startLoad()
+void EditorWindow::onProgressChanged(int /*progress*/)
 {
 }
 
-void EditorWindow::setLoadProgress(int /*progress*/)
-{
-}
-
-void EditorWindow::finishLoad(bool /*ok*/)
+void EditorWindow::onStateChanged(AbstractDocument::State /*state*/)
 {
 }
 

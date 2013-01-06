@@ -67,9 +67,8 @@ public slots:
 
     void onUrlChanged(const QUrl &url);
 
-    void startLoad();
-    void setLoadProgress(int progress);
-    void finishLoad(bool ok);
+    void onProgressChanged(int progress);
+    void onStateChanged(GuiSystem::AbstractDocument::State state);
 
 protected:
     void moveEvent(QMoveEvent *);

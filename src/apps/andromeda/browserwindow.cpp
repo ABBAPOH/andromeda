@@ -536,31 +536,25 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
 /*!
     \reimp
 */
-void BrowserWindow::startLoad()
-{
-    Q_D(BrowserWindow);
-    d->lineEdit->startLoad();
-    EditorWindow::startLoad();
-}
-
-/*!
-    \reimp
-*/
-void BrowserWindow::setLoadProgress(int progress)
+void BrowserWindow::onProgressChanged(int progress)
 {
     Q_D(BrowserWindow);
     d->lineEdit->setLoadProgress(progress);
-    EditorWindow::setLoadProgress(progress);
+    EditorWindow::onProgressChanged(progress);
 }
 
 /*!
     \reimp
 */
-void BrowserWindow::finishLoad(bool ok)
+void BrowserWindow::onStateChanged(AbstractDocument::State state)
 {
     Q_D(BrowserWindow);
-    d->lineEdit->finishLoad();
-    EditorWindow::finishLoad(ok);
+    if (state == AbstractDocument::OpenningState) {
+        d->lineEdit->startLoad();
+    } else if (state == AbstractDocument::OpenningState) {
+        d->lineEdit->finishLoad();
+    }
+    EditorWindow::onStateChanged(state);
 }
 
 void BrowserWindow::moveEvent(QMoveEvent*)

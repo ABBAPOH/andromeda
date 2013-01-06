@@ -1,9 +1,19 @@
 #include "abstractdocument.h"
 #include "abstractdocument_p.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
+#include <QtCore/QMetaEnum>
 
 using namespace GuiSystem;
+
+static QString stateToString(AbstractDocument::State state)
+{
+    const QMetaObject &mo = AbstractDocument::staticMetaObject;
+    int index = mo.indexOfEnumerator("State");
+    Q_ASSERT(index != -1);
+    const QMetaEnum &me = mo.enumerator(index);
+    return me.valueToKey(state);
+}
 
 /*!
     \class GuiSystem::AbstractDocument
@@ -98,6 +108,48 @@ void AbstractDocument::setModified(bool modified)
 */
 
 /*!
+    \property AbstractDocument::progress
+
+    \brief This property holds progress of current operation.
+*/
+
+int AbstractDocument::progress() const
+{
+    Q_D(const AbstractDocument);
+    return d->progress;
+}
+
+/*!
+    Sets the progress of current operation.
+
+    Progress can be changed only when document is in one of the following states:
+    AbstractDocument::OpenningState or AbstractDocument::SavingState. Attempt to
+    change progress in any other state will lead to warning and progress won't
+    be changed.
+*/
+void AbstractDocument::setProgress(int progress)
+{
+    Q_D(AbstractDocument);
+
+    if (d->state != OpenningState && d->state != SavingState)
+        qWarning() << "AbstractDocument::setProgress"
+                   << "attempt to set progress in incorrect state :"
+                   << stateToString(d->state);
+
+    if (d->progress == progress)
+        return;
+
+    d->progress = progress;
+    emit progressChanged(d->progress);
+}
+
+/*!
+    \fn void AbstractDocument::progressChanged(int progress)
+
+    \brief This signal is emitted when progress property is changed.
+*/
+
+/*!
     \property AbstractDocument::readOnly
 
     \brief This property holds whether the document is read only or not.
@@ -127,6 +179,47 @@ void AbstractDocument::setReadOnly(bool readOnly)
     \fn void AbstractDocument::readOnlyChanged(bool readOnly)
 
     \brief This signal is emitted when readOnly property is changed.
+*/
+
+/*!
+    \property AbstractDocument::state
+
+    \brief This property holds current state.
+
+    Default value is AbstractDocument::NoState.
+*/
+
+AbstractDocument::State AbstractDocument::state() const
+{
+    Q_D(const AbstractDocument);
+    return d->state;
+}
+
+/*!
+    \brief Sets current state.
+
+    This function should be called by AbstractDocument implementations when
+    they need to change state, for example during long opening or save operation.
+*/
+void AbstractDocument::setState(State state)
+{
+    Q_D(AbstractDocument);
+    if (d->state == state)
+        return;
+
+    d->state = state;
+    emit stateChanged(d->state);
+
+    if (d->progress != 0) {
+        d->progress = 0;
+        emit progressChanged(0);
+    }
+}
+
+/*!
+    \fn void AbstractDocument::stateChanged(State state)
+
+    \brief This signal is emitted when document's state is changed.
 */
 
 /*!
