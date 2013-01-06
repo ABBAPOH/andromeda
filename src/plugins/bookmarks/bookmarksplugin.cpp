@@ -23,6 +23,7 @@
 #include "bookmarksconstants.h"
 #include "bookmarkdialog.h"
 #include "bookmarksmenu.h"
+#include "bookmarksdocument.h"
 #include "bookmarksmodel.h"
 #include "bookmarkstoolbar.h"
 #include "bookmarkswidget.h"
@@ -58,8 +59,7 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
 {
     ActionManager *am = ActionManager::instance();
 
-    PluginManager *manager = PluginManager::instance();
-    BookmarksModel *model = manager->object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
+    BookmarksModel *model = BookmarksPlugin::instance()->sharedDocument()->model();
 
     BookmarksToolBar *toolBar = new BookmarksToolBar(parent);
     toolBar->setObjectName(QLatin1String("bookmarksToolbar"));
@@ -107,15 +107,24 @@ void BookmarksToolBarContainer::onDestroy(QObject *o)
     toolBars.removeAll(o);
 }
 
+static BookmarksPlugin *m_instance = 0;
 BookmarksPlugin::BookmarksPlugin() :
     ExtensionSystem::IPlugin()
 {
+    m_instance = this;
+}
+
+BookmarksPlugin * BookmarksPlugin::instance()
+{
+    return m_instance;
 }
 
 bool BookmarksPlugin::initialize()
 {
-    model = new BookmarksModel(this);
-    addObject(model, QLatin1String(Constants::Objects::BookmarksModel));
+    m_document = new BookmarksDocument(this);
+
+    model = m_document->model();
+//    addObject(model, QLatin1String(Constants::Objects::BookmarksModel));
 
     if (!model->loadBookmarks()) {
         addDefaultBookmarks();
@@ -133,6 +142,11 @@ bool BookmarksPlugin::initialize()
 void BookmarksPlugin::shutdown()
 {
     model->saveBookmarks();
+}
+
+BookmarksDocument * BookmarksPlugin::sharedDocument() const
+{
+    return m_document;
 }
 
 void BookmarksPlugin::open(const QUrl &url)
@@ -179,8 +193,6 @@ void BookmarksPlugin::addFolder()
 
 void BookmarksPlugin::createActions()
 {
-    BookmarksModel *model = object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
-
     MenuBarContainer *menuBarContainer = MenuBarContainer::instance();
 
     addBookmarkAction = new QAction(tr("Add bookmark"), this);

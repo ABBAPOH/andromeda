@@ -7,14 +7,21 @@
 
 namespace Bookmarks {
 
+class BookmarksModel;
+
 class BOOKMARKS_EXPORT BookmarksDocument : public GuiSystem::AbstractDocument
 {
     Q_OBJECT
 public:
     explicit BookmarksDocument(QObject *parent = 0);
 
+    BookmarksModel *model() const;
+
 protected:
-    bool openUrl(const QUrl &url) { return true; }
+    bool openUrl(const QUrl &url);
+
+protected:
+    BookmarksModel *m_model;
 };
 
 } // namespace Bookmarks

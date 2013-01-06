@@ -15,6 +15,7 @@
 #include "bookmarksconstants.h"
 #include "bookmarksdocument.h"
 #include "bookmarksmodel.h"
+#include "bookmarksplugin.h"
 #include "bookmarkswidget.h"
 
 using namespace Bookmarks;
@@ -26,28 +27,14 @@ BookmarksEditor::BookmarksEditor(QWidget *parent) :
     m_widget(new BookmarksWidget(this))
 {
     document()->setParent(this);
-    PluginManager *pluginManager = PluginManager::instance();
-    m_model = pluginManager->object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
-    m_widget->setModel(m_model);
+    init();
+}
 
-    m_settings = new QSettings(this);
-    QVariant value = m_settings->value(QLatin1String("bookmarksEditor/lastState"));
-    if (value.isValid())
-        m_widget->restoreState(value.toByteArray());
-
-    connect(m_widget, SIGNAL(open(QUrl)), SLOT(openTriggered(QUrl)));
-    connect(m_widget, SIGNAL(openInTab(QUrl)), SLOT(openInTabTriggered(QUrl)));
-    connect(m_widget, SIGNAL(openInWindow(QUrl)), SLOT(openInWindowTriggered(QUrl)));
-    connect(m_widget, SIGNAL(stateChanged()), SLOT(onStateChanged()));
-
-    ActionManager *actionManager = ActionManager::instance();
-    redoAction = m_widget->model()->undoStack()->createRedoAction(m_widget);
-    m_widget->addAction(redoAction);
-    actionManager->registerAction(redoAction, Constants::Actions::Redo);
-
-    undoAction = m_widget->model()->undoStack()->createUndoAction(m_widget);
-    m_widget->addAction(undoAction);
-    actionManager->registerAction(undoAction, Constants::Actions::Undo);
+BookmarksEditor::BookmarksEditor(BookmarksDocument &document, QWidget *parent) :
+    AbstractEditor(document, parent),
+    m_widget(new BookmarksWidget(this))
+{
+    init();
 }
 
 QByteArray BookmarksEditor::saveState() const
@@ -93,6 +80,32 @@ void BookmarksEditor::resizeEvent(QResizeEvent *e)
     m_widget->resize(e->size());
 }
 
+void BookmarksEditor::init()
+{
+    BookmarksDocument *doc = qobject_cast<BookmarksDocument *>(document());
+    Q_ASSERT(doc);
+    m_widget->setModel(doc->model());
+
+    m_settings = new QSettings(this);
+    QVariant value = m_settings->value(QLatin1String("bookmarksEditor/lastState"));
+    if (value.isValid())
+        m_widget->restoreState(value.toByteArray());
+
+    connect(m_widget, SIGNAL(open(QUrl)), SLOT(openTriggered(QUrl)));
+    connect(m_widget, SIGNAL(openInTab(QUrl)), SLOT(openInTabTriggered(QUrl)));
+    connect(m_widget, SIGNAL(openInWindow(QUrl)), SLOT(openInWindowTriggered(QUrl)));
+    connect(m_widget, SIGNAL(stateChanged()), SLOT(onStateChanged()));
+
+    ActionManager *actionManager = ActionManager::instance();
+    redoAction = m_widget->model()->undoStack()->createRedoAction(m_widget);
+    m_widget->addAction(redoAction);
+    actionManager->registerAction(redoAction, Constants::Actions::Redo);
+
+    undoAction = m_widget->model()->undoStack()->createUndoAction(m_widget);
+    m_widget->addAction(undoAction);
+    actionManager->registerAction(undoAction, Constants::Actions::Undo);
+}
+
 BookmarksEditorFactory::BookmarksEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
@@ -113,12 +126,12 @@ QIcon BookmarksEditorFactory::icon() const
     return QIcon(":/icons/bookmarks.png");
 }
 
-AbstractDocument *BookmarksEditorFactory::createDocument(QObject *parent)
+AbstractDocument * BookmarksEditorFactory::createDocument(QObject *parent)
 {
-    return new BookmarksDocument(parent);
+    return BookmarksPlugin::instance()->sharedDocument();
 }
 
 AbstractEditor * BookmarksEditorFactory::createEditor(QWidget *parent)
 {
-    return new BookmarksEditor(parent);
+    return new BookmarksEditor(*BookmarksPlugin::instance()->sharedDocument(), parent);
 }

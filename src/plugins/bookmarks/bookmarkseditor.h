@@ -16,6 +16,7 @@ class BookmarksWidget;
 namespace Bookmarks {
 
 class BookmarksDocument;
+
 class BOOKMARKS_EXPORT BookmarksEditor : public GuiSystem::AbstractEditor
 {
     Q_OBJECT
@@ -23,6 +24,7 @@ class BOOKMARKS_EXPORT BookmarksEditor : public GuiSystem::AbstractEditor
 
 public:
     explicit BookmarksEditor(QWidget *parent = 0);
+    explicit BookmarksEditor(BookmarksDocument &document, QWidget *parent = 0);
 
     QByteArray saveState() const;
     bool restoreState(const QByteArray &state);
@@ -38,8 +40,10 @@ protected:
     void resizeEvent(QResizeEvent *);
 
 private:
+    void init();
+
+private:
     Bookmarks::BookmarksWidget *m_widget;
-    Bookmarks::BookmarksModel *m_model;
     QSettings *m_settings;
 
     QAction *redoAction;

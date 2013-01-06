@@ -11,6 +11,7 @@ class QUrl;
 namespace Bookmarks {
 
 class BookmarksModel;
+class BookmarksDocument;
 
 class BookmarksPlugin : public ExtensionSystem::IPlugin
 {
@@ -19,8 +20,12 @@ class BookmarksPlugin : public ExtensionSystem::IPlugin
 public:
     explicit BookmarksPlugin();
 
+    static BookmarksPlugin *instance();
+
     bool initialize();
     void shutdown();
+
+    BookmarksDocument *sharedDocument() const;
 
 private slots:
     void open(const QUrl &url);
@@ -38,6 +43,7 @@ private:
 
 private:
     Bookmarks::BookmarksModel *model;
+    BookmarksDocument *m_document;
 
     QAction *addBookmarkAction;
     QAction *addFolderAction;
