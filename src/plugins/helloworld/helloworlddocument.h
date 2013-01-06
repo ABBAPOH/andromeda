@@ -10,6 +10,7 @@ namespace HelloWorld {
 class HELLOWORLD_EXPORT HelloWorldDocument : public GuiSystem::AbstractDocument
 {
     Q_OBJECT
+    Q_DISABLE_COPY(HelloWorldDocument)
 public:
     explicit HelloWorldDocument(QObject *parent = 0);
 

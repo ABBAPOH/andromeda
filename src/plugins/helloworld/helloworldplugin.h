@@ -8,9 +8,9 @@ namespace HelloWorld {
 class HelloWorldPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(HelloWorldPlugin)
 public:
-    explicit HelloWorldPlugin();
+    HelloWorldPlugin();
 
     bool initialize();
 };
