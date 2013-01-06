@@ -13,12 +13,13 @@ class HELLOWORLD_EXPORT HelloWorldDocument : public GuiSystem::AbstractDocument
     Q_DISABLE_COPY(HelloWorldDocument)
 public:
     explicit HelloWorldDocument(QObject *parent = 0);
+    ~HelloWorldDocument();
 
 public slots:
     void setTitle(const QString &title);
 
 protected:
-    bool openUrl(const QUrl &url) { return true; }
+    bool openUrl(const QUrl &url);
 };
 
 } // namespace HelloWorld
