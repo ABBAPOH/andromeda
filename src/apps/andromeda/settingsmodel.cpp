@@ -149,20 +149,20 @@ void SettingsModelPrivate::submit(SettingsModelItem *item)
 }
 
 /*!
-    \class Core::SettingsModel
+    \class Andromeda::SettingsModel
 
     \brief SettingsModel provides an item model for displaying application
     settings.
 */
 
 /*!
-    \enum Core::SettingsModel::EditStrategy
+    \enum Andromeda::SettingsModel::EditStrategy
     \brief This enum describes how data is applied from model to the settings.
 
-     \var Core::SettingsModel::EditStrategy Core::SettingsModel::OnFieldChange
+     \var Andromeda::SettingsModel::EditStrategy Andromeda::SettingsModel::OnFieldChange
      Value is applied immidiately to the settings in setData() method.
 
-     \var Core::SettingsModel::EditStrategy Core::SettingsModel::OnManualSubmit
+     \var Andromeda::SettingsModel::EditStrategy Andromeda::SettingsModel::OnManualSubmit
      Values are cached in the model and only applied to the settings in submitAll().
 */
 

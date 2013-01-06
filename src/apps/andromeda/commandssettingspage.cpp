@@ -6,7 +6,7 @@ using namespace GuiSystem;
 using namespace Andromeda;
 
 /*!
-    \class Core::CommandsSettingsPage
+    \class Andromeda::CommandsSettingsPage
 
     \brief Settings page for editing shortcuts.
 

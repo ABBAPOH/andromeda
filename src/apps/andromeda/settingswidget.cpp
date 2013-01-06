@@ -6,7 +6,7 @@
 using namespace Andromeda;
 
 /*!
-    \class Core::SettingsWidget
+    \class Andromeda::SettingsWidget
 
     \brief SettingsWidget is a widget that displays applications settings in an
     item view.

@@ -46,7 +46,7 @@ FileManagerPlugin::FileManagerPlugin(QObject *parent) :
 bool FileManagerPlugin::initialize()
 {
     FileManagerEditorFactory *f = new FileManagerEditorFactory(this);
-//    Core::instance()->editorManager()->addFactory(f);
+//    Andromeda::instance()->editorManager()->addFactory(f);
     EditorManager::instance()->addFactory(f);
 
     NavigationModel *navigationModel = new NavigationModel;

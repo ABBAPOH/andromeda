@@ -1,8 +1,5 @@
 /*!
-    \namespace Core
+    \namespace Andromeda
 
-    \brief The Core namespace contains main Andromeda classes.
-
-    This namespace includes main window, common actions and a core plugin
-    implementation.
+    \brief The Andromeda namespace contains main application classes.
 */

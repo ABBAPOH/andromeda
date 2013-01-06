@@ -278,7 +278,7 @@ void BrowserWindowFactory::openEditor(const QList<QUrl> &urls, const QByteArray 
 }
 
 /*!
-    \class Core::BrowserWindow
+    \class Andromeda::BrowserWindow
 
     \brief BrowserWindow is an Andromeda's main window.
 
