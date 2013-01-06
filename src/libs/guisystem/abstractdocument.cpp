@@ -26,11 +26,11 @@ static QString stateToString(AbstractDocument::State state)
     \brief This enum describes document state.
 
     \var GuiSystem::AbstractDocument::State GuiSystem::AbstractDocument::NoState
-    Default state, means that editor doen's perform any operations and ready
+    Default state, means that editor doesn's perform any operations and ready
     to work
 
     \var GuiSystem::AbstractDocument::State GuiSystem::AbstractDocument::OpenningState
-    Means that editor performs long open operation, i.e. it opens huge file or
+    Means that editor performs long open operation, e.g. it opens huge file or
     downloads data that should be opened.
 
     \var GuiSystem::AbstractDocument::State GuiSystem::AbstractDocument::SavingState
