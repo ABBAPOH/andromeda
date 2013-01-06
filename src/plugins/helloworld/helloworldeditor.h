@@ -38,6 +38,8 @@ private:
 
 class HelloWorldEditorFactory : public GuiSystem::AbstractEditorFactory
 {
+    Q_OBJECT
+    Q_DISABLE_COPY(HelloWorldEditorFactory)
 public:
     explicit HelloWorldEditorFactory(QObject *parent = 0);
 
