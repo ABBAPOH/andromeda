@@ -432,11 +432,10 @@ bool Application::restoreApplicationState(const QByteArray &arr)
         s >> windowState;
 
         BrowserWindow *window = new BrowserWindow();
+        window->show();
         bool ok = window->restoreState(windowState);
         if (!ok)
             return false;
-
-        window->show();
     }
 
     s >> settingsWindowState;

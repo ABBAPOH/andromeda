@@ -183,7 +183,7 @@ bool EditorView::restoreState(const QByteArray &arr)
     setSourceEditor(editor);
     d->layout->addWidget(editor);
 //    d->editorHash.insert(id, editor);
-    d->stackedHistory->open(QUrl(), d->editor);
+    d->stackedHistory->open(QUrl(), 0);
     return editor->restoreState(editorState);
 }
 
@@ -197,7 +197,7 @@ QByteArray EditorView::saveState() const
 
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
-    s << d->editor->property("id");
+    s << d->editor->property("id").toByteArray();
     s << d->editor->saveState();
     return state;
 }

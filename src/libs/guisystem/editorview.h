@@ -26,8 +26,8 @@ public:
 
     IHistory *history() const;
 
-    virtual bool restoreState(const QByteArray &state);
-    virtual QByteArray saveState() const;
+    bool restoreState(const QByteArray &state);
+    QByteArray saveState() const;
 
     AbstractDocument *document() const;
     AbstractEditor *editor() const;
