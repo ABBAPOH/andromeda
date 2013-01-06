@@ -18,6 +18,10 @@ class HELLOWORLD_EXPORT HelloWorldEditor : public GuiSystem::AbstractEditor
 
 public:
     explicit HelloWorldEditor(QWidget *parent = 0);
+    explicit HelloWorldEditor(HelloWorldDocument &document, QWidget *parent = 0);
+
+private:
+    void init();
 
 private:
     QLabel *m_label;

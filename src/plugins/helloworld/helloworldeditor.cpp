@@ -15,6 +15,18 @@ HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     m_label(new QLabel(tr("Hello World!"), this))
 {
     document()->setParent(this);
+    init();
+}
+
+HelloWorldEditor::HelloWorldEditor(HelloWorldDocument &document, QWidget *parent) :
+    AbstractEditor(document, parent),
+    m_label(new QLabel(tr("Hello World!"), this))
+{
+    init();
+}
+
+void HelloWorldEditor::init()
+{
     m_label->setAlignment(Qt::AlignCenter);
 
     QLayout *layout = new QVBoxLayout(this);
