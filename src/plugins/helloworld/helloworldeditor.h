@@ -20,8 +20,17 @@ public:
     explicit HelloWorldEditor(QWidget *parent = 0);
     explicit HelloWorldEditor(HelloWorldDocument &document, QWidget *parent = 0);
 
+    void setDocument(GuiSystem::AbstractDocument *document);
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
+
+private slots:
+    void changeText();
+
 private:
     void init();
+    void setupDocument(HelloWorldDocument *document);
 
 private:
     QLabel *m_label;

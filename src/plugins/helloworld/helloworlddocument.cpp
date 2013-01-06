@@ -9,3 +9,8 @@ HelloWorldDocument::HelloWorldDocument(QObject *parent) :
     setIcon(QIcon(":/icons/helloWorld.png"));
     setTitle(tr("Hello world"));
 }
+
+void HelloWorldDocument::setTitle(const QString &title)
+{
+    AbstractDocument::setTitle(title);
+}

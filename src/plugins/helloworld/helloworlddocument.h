@@ -13,6 +13,9 @@ class HELLOWORLD_EXPORT HelloWorldDocument : public GuiSystem::AbstractDocument
 public:
     explicit HelloWorldDocument(QObject *parent = 0);
 
+public slots:
+    void setTitle(const QString &title);
+
 protected:
     bool openUrl(const QUrl &url) { return true; }
 };
