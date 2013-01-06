@@ -197,7 +197,11 @@ QByteArray EditorView::saveState() const
 
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
-    s << d->editor->property("id").toByteArray();
+
+    QByteArray id = d->editor->property("id").toByteArray();
+    Q_ASSERT_X(!id.isEmpty(), "EditorView::saveState",
+               "Editor has no id, that may mean it was created without factory");
+    s << id;
     s << d->editor->saveState();
     return state;
 }

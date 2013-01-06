@@ -46,7 +46,11 @@ void EditorViewHistory::open(const QUrl &url, AbstractEditor *oldEditor)
     if (d->items.count() >= d->currentIndex + 1)
         d->items.erase(d->items.begin() + d->currentIndex + 1, d->items.end());
 
-    if (d->currentEditor != editor->property("id").toByteArray()) {
+    QByteArray id = editor->property("id").toByteArray();
+    Q_ASSERT_X(!id.isEmpty(), "EditorViewHistory::open",
+               "Editor has no id, that may mean it was created without factory");
+
+    if (d->currentEditor != id) {
         // erase forward stashed history
         d->stashedHistory.erase(d->stashedHistory.begin() + d->currentStashedIndex + 1, d->stashedHistory.end());
         d->stashedHistory.append(QByteArray());
@@ -55,7 +59,7 @@ void EditorViewHistory::open(const QUrl &url, AbstractEditor *oldEditor)
         if (oldEditor) {
             d->stashEditor(oldEditor);
         }
-        d->currentEditor = editor->property("id").toByteArray();
+        d->currentEditor = id;
         d->currentStashedIndex++;
 
         IHistory *history = editor->history();
