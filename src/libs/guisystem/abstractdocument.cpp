@@ -22,6 +22,22 @@ static QString stateToString(AbstractDocument::State state)
 */
 
 /*!
+    \enum GuiSystem::AbstractDocument::State
+    \brief This enum describes document state.
+
+    \var GuiSystem::AbstractDocument::State GuiSystem::AbstractDocument::NoState
+    Default state, means that editor doen's perform any operations and ready
+    to work
+
+    \var GuiSystem::AbstractDocument::State GuiSystem::AbstractDocument::OpenningState
+    Means that editor performs long open operation, i.e. it opens huge file or
+    downloads data that should be opened.
+
+    \var GuiSystem::AbstractDocument::State GuiSystem::AbstractDocument::SavingState
+    Means that editor performs long save operation.
+*/
+
+/*!
     \brief Constructs an AbstractDocument with the given \a parent.
 */
 AbstractDocument::AbstractDocument(QObject *parent) :
@@ -111,6 +127,8 @@ void AbstractDocument::setModified(bool modified)
     \property AbstractDocument::progress
 
     \brief This property holds progress of current operation.
+
+    \sa AbstractDocument::state
 */
 
 int AbstractDocument::progress() const
@@ -200,6 +218,8 @@ AbstractDocument::State AbstractDocument::state() const
 
     This function should be called by AbstractDocument implementations when
     they need to change state, for example during long opening or save operation.
+
+    \note Changing state will lead to resetting progress property to 0.
 */
 void AbstractDocument::setState(State state)
 {
