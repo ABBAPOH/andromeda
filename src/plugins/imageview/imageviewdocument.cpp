@@ -35,6 +35,11 @@ void ImageViewDocument::save(const QUrl &url)
 
 bool ImageViewDocument::openUrl(const QUrl &url)
 {
+    if (url.isEmpty()) {
+        editor->m_view->setImage(QImage());
+        return true;
+    }
+
     QString path = url.path();
     if (path.isEmpty())
         return false;

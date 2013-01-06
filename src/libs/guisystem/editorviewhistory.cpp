@@ -140,9 +140,6 @@ void EditorViewHistory::setCurrentItemIndex(int index)
         Q_ASSERT(item.localIndex < history->count());
 
         history->setCurrentItemIndex(item.localIndex);
-    } else {
-        // TODO: stash editor state to current item
-        newEditor->document()->setUrl(item.url);
     }
 
 #ifdef STACKED_HISTORY_DEBUG
@@ -204,6 +201,7 @@ void EditorViewHistoryPrivate::stashEditor(AbstractEditor *editor)
 
         stored = editor->saveState();
     }
+    Q_ASSERT(!stored.isEmpty());
 
     stashedHistory[currentStashedIndex] = stored;
     editor->document()->clear();
