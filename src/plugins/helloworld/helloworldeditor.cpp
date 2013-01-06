@@ -12,6 +12,15 @@
 using namespace GuiSystem;
 using namespace HelloWorld;
 
+/*!
+    \class HelloWorld::HelloWorldEditor
+
+    This class is an example of Document-Editor architecture.
+*/
+
+/*!
+    Creates HelloWorldEditor with the given \a parent.
+*/
 HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     AbstractEditor(*new HelloWorldDocument, parent),
     m_label(new QLabel(this))
@@ -20,6 +29,9 @@ HelloWorldEditor::HelloWorldEditor(QWidget *parent) :
     init();
 }
 
+/*!
+    Creates HelloWorldEditor with the given \a document and \a parent.
+*/
 HelloWorldEditor::HelloWorldEditor(HelloWorldDocument &document, QWidget *parent) :
     AbstractEditor(document, parent),
     m_label(new QLabel(this))
@@ -27,6 +39,16 @@ HelloWorldEditor::HelloWorldEditor(HelloWorldDocument &document, QWidget *parent
     init();
 }
 
+/*!
+    Destroys HelloWorldEditor.
+*/
+HelloWorldEditor::~HelloWorldEditor()
+{
+}
+
+/*!
+    \reimp
+*/
 void HelloWorldEditor::setDocument(AbstractDocument *document)
 {
     HelloWorldDocument *helloDocument = qobject_cast<HelloWorldDocument *>(document);
@@ -41,6 +63,9 @@ void HelloWorldEditor::setDocument(AbstractDocument *document)
     AbstractEditor::setDocument(document);
 }
 
+/*!
+    \reimp
+*/
 void HelloWorldEditor::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu;
@@ -48,6 +73,9 @@ void HelloWorldEditor::contextMenuEvent(QContextMenuEvent *event)
     menu.exec(event->globalPos());
 }
 
+/*!
+    \internal
+*/
 void HelloWorldEditor::changeText()
 {
     HelloWorldDocument *helloDocument = qobject_cast<HelloWorldDocument *>(document());
@@ -63,6 +91,9 @@ void HelloWorldEditor::changeText()
     helloDocument->setTitle(dialog.textValue());
 }
 
+/*!
+    \internal
+*/
 void HelloWorldEditor::init()
 {
     m_label->setAlignment(Qt::AlignCenter);
@@ -78,6 +109,9 @@ void HelloWorldEditor::init()
     setupDocument(qobject_cast<HelloWorldDocument *>(document()));
 }
 
+/*!
+    \internal
+*/
 void HelloWorldEditor::setupDocument(HelloWorldDocument *document)
 {
     Q_ASSERT(document);
@@ -87,31 +121,51 @@ void HelloWorldEditor::setupDocument(HelloWorldDocument *document)
     connect(document, SIGNAL(titleChanged(QString)), m_label, SLOT(setText(QString)));
 }
 
+/*!
+    \class HelloWorld::HelloWorldEditorFactory
+
+    Implementation of AbstractEditorFactory interface for a HelloWorldEditor.
+*/
 HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
 }
 
+/*!
+    \reimp
+*/
 QByteArray HelloWorldEditorFactory::id() const
 {
     return "helloworld";
 }
 
+/*!
+    \reimp
+*/
 QString HelloWorldEditorFactory::name() const
 {
     return tr("Hello world editor");
 }
 
+/*!
+    \reimp
+*/
 QIcon HelloWorldEditorFactory::icon() const
 {
     return QIcon(":/icons/helloWorld.png");
 }
 
+/*!
+    \reimp
+*/
 AbstractDocument * HelloWorldEditorFactory::createDocument(QObject *parent)
 {
     return new HelloWorldDocument(parent);
 }
 
+/*!
+    \reimp
+*/
 AbstractEditor * HelloWorldEditorFactory::createEditor(QWidget *parent)
 {
     return new HelloWorldEditor(parent);

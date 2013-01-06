@@ -19,6 +19,7 @@ class HELLOWORLD_EXPORT HelloWorldEditor : public GuiSystem::AbstractEditor
 public:
     explicit HelloWorldEditor(QWidget *parent = 0);
     explicit HelloWorldEditor(HelloWorldDocument &document, QWidget *parent = 0);
+    ~HelloWorldEditor();
 
     void setDocument(GuiSystem::AbstractDocument *document);
 
