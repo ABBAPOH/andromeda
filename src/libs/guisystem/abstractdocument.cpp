@@ -6,13 +6,13 @@
 using namespace GuiSystem;
 
 /*!
-  \class GuiSystem::AbstractDocument
+    \class GuiSystem::AbstractDocument
 
-  \brief AbstractDocument is an interface for file saving API.
+    \brief AbstractDocument is a base class that represents data located at specific URL.
 */
 
 /*!
-  \brief Constructs an AbstractDocument with the given \a parent.
+    \brief Constructs an AbstractDocument with the given \a parent.
 */
 AbstractDocument::AbstractDocument(QObject *parent) :
     QObject(parent),
@@ -114,9 +114,9 @@ void AbstractDocument::setReadOnly(bool readOnly)
 }
 
 /*!
-  \fn void AbstractDocument::readOnlyChanged(bool readOnly)
+    \fn void AbstractDocument::readOnlyChanged(bool readOnly)
 
-  \brief Emit this signal whenever document changes it's modification state (i.e. modified by user).
+    \brief Emit this signal whenever document changes it's modification state (i.e. modified by user).
 */
 
 /*!

@@ -11,6 +11,8 @@ using namespace GuiSystem;
 
 /*!
     \class GuiSystem::AbstractEditor
+
+    This is base class for displaying AbstractDocuments.
 */
 
 /*!
@@ -30,7 +32,7 @@ AbstractEditor::~AbstractEditor()
 }
 
 /*!
-    Returns current document, or 0, if no document is set.
+    Returns current document.
 */
 AbstractDocument * AbstractEditor::document() const
 {
