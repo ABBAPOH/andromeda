@@ -21,7 +21,7 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
     registerActions();
 
     connect(m_view, SIGNAL(modifiedChanged(bool)), document(), SLOT(setModified(bool)));
-    connect(document(), SIGNAL(modifiedChanged(bool)), m_view, SLOT(setModified(bool)));
+    connect(document(), SIGNAL(modificationChanged(bool)), m_view, SLOT(setModified(bool)));
 
     ImageViewDocument *doc = static_cast<ImageViewDocument *>(document());
     doc->setEditor(this);

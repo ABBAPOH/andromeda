@@ -80,7 +80,6 @@ public:
     int imageCount() const;
 
     bool isModified() const;
-    void setModified(bool modified);
 
     MouseMode mouseMode() const;
     void setMouseMode(MouseMode mode);
@@ -104,6 +103,8 @@ signals:
     void modifiedChanged(bool modified);
 
 public slots:
+    void setModified(bool modified);
+
     void zoomIn();
     void zoomOut();
     void bestFit();

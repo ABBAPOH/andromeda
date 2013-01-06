@@ -216,15 +216,7 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
 
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
-    connect(m_webView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
-
-    connect(m_webView, SIGNAL(titleChanged(QString)), SIGNAL(titleChanged(QString)));
-    connect(m_webView, SIGNAL(iconChanged()), SLOT(onIconChanged()));
-
-    connect(m_webView, SIGNAL(loadStarted()), SIGNAL(loadStarted()));
-    connect(m_webView, SIGNAL(loadProgress(int)), SIGNAL(loadProgress(int)));
-    connect(m_webView, SIGNAL(loadFinished(bool)), SIGNAL(loadFinished(bool)));
 
     QAction *findAction = new QAction(tr("Find"), this);
     connect(findAction, SIGNAL(triggered()), m_findToolBar, SLOT(openFind()));

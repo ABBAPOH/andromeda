@@ -69,7 +69,7 @@ void EditorViewHistory::open(const QUrl &url, AbstractEditor *oldEditor)
     #ifdef STACKED_HISTORY_DEBUG
             qDebug() << "  connected to editor without history";
     #endif
-            connect(editor, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
+            connect(editor->document(), SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
         }
     }
 
@@ -197,7 +197,7 @@ void EditorViewHistoryPrivate::stashEditor(AbstractEditor *editor)
 
         stored = history->store();
     } else {
-        QObject::disconnect(editor, SIGNAL(urlChanged(QUrl)), q, SLOT(onUrlChanged(QUrl)));
+        QObject::disconnect(editor->document(), SIGNAL(urlChanged(QUrl)), q, SLOT(onUrlChanged(QUrl)));
 
         stored = editor->saveState();
     }
@@ -222,7 +222,7 @@ void EditorViewHistoryPrivate::unstashEditor(AbstractEditor *editor)
         QObject::connect(history, SIGNAL(currentItemIndexChanged(int)), q, SLOT(localHistoryIndexChanged(int)));
         history->restore(stored);
     } else {
-        QObject::connect(editor, SIGNAL(urlChanged(QUrl)), q, SLOT(onUrlChanged(QUrl)));
+        QObject::connect(editor->document(), SIGNAL(urlChanged(QUrl)), q, SLOT(onUrlChanged(QUrl)));
         editor->restoreState(stored);
     }
 }

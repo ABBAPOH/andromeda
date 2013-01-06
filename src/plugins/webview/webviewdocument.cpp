@@ -26,6 +26,11 @@ static QWebPage * createPage(WebViewDocument *document)
     QObject::connect(page->mainFrame(), SIGNAL(titleChanged(QString)),
                      document, SLOT(onTitleChanged(QString)));
 
+    QObject::connect(page, SIGNAL(loadStarted()), document, SIGNAL(loadStarted()));
+    QObject::connect(page, SIGNAL(loadProgress(int)), document, SIGNAL(loadProgress(int)));
+    QObject::connect(page, SIGNAL(loadFinished(bool)), document, SIGNAL(loadFinished(bool)));
+
+
     return page;
 }
 
