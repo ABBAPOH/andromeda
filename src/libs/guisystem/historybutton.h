@@ -10,7 +10,7 @@ namespace GuiSystem {
 class History;
 
 class HistoryButtonPrivate;
-class HistoryButton : public QToolButton
+class GUISYSTEM_EXPORT HistoryButton : public QToolButton
 {
     Q_OBJECT
 
