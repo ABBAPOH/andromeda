@@ -1,32 +1,34 @@
 /*!
     \namespace HelloWorld
 
-    \brief The HelloWorld namespace contains example of a Document-Editor architecture.
+    \brief This namespace contains example of a Document-Editor architecture.
 
     \image html helloworld.png
 
     To create a new GuiSystem plugin, at least 4 classes should be implemented:
     document, editor, factory and plugin class.
 
-    First, you need to implement document class. This class serves as a model for an editor.
-    Here's a simple example of document that has no additional properties, but uses
-    AbstractEditor::title property to contain text, displayed in an editor.
+    First, you need to implement document class. This class serves as a model
+    for an editor. Here's a simple example of document that has no additional
+    properties, but uses AbstractEditor::title property to contain text,
+    displayed in an editor.
 
     \snippet helloworld.cpp 0
 
-    This class has a constructor that setups default text and icon. Also it has trivial
-    destructor. HelloWorldDocument class overrides AbstractDocument::setTitle
-    function to make it public and implements AbstractDocument::openUrl function.
+    This class has a constructor that setups default text and icon. Also it
+    has trivial destructor. HelloWorldDocument class overrides
+    AbstractDocument::setTitle function to make it public and implements
+    AbstractDocument::openUrl function.
 
     Next step is to implement editor itself:
 
     \snippet helloworld.cpp 1
 
     Basically, each editor should have 2 constructors - first with no arguments
-    (except parent) and second with document as an argument. You can't create
-    editor without a document, so first constructor should create default
-    document. Don't forget to set document's parent in firts constructor,
-    or document may leak:
+    (except parent) and second constructor with document as an argument. You
+    can't create editor without a document, so first constructor should create
+    default document. Don't forget to set document's parent in firts
+    constructor, or document may leak:
 
     \snippet helloworld.cpp 2
 
@@ -57,7 +59,8 @@
 
     Plugin implementation is simple too - plugin has trivial constructor and
     destructor. The only method it implements is an initialize() function -
-    plugin creates HelloWorldEditorFactory and registers in in GuiSystem::EditorManager.
+    plugin creates HelloWorldEditorFactory and registers in
+    GuiSystem::EditorManager.
 
     \snippet helloworld.cpp 7
 */
