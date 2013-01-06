@@ -1327,9 +1327,11 @@ QMenu * FileManagerWidget::createStandardMenu(const QStringList &paths)
         menu->addAction(d->actions[OpenInTab]);
         menu->addAction(d->actions[OpenInWindow]);
 
+#ifdef QT_DEBUG
         OpenWithMenu *openWithMenu = new OpenWithMenu(menu);
         openWithMenu->setPaths(paths);
         menu->addMenu(openWithMenu);
+#endif
 
         menu->addSeparator();
         menu->addAction(d->actions[ShowFileInfo]);
