@@ -7,6 +7,7 @@
 class QMenu;
 class QMenuBar;
 class QSettings;
+class QSystemTrayIcon;
 
 namespace ExtensionSystem {
 class PluginManager;
@@ -75,6 +76,7 @@ private:
     QPointer<GuiSystem::SettingsWindow> settingsWindow;
     QByteArray settingsWindowState;
     QMenu *dockMenu;
+    QSystemTrayIcon *trayIcon;
     QSettings *m_settings;
     bool m_firstStart;
 #ifdef Q_OS_MAC

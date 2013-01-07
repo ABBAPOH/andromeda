@@ -187,6 +187,7 @@ Application::Application(int &argc, char **argv) :
 Application::~Application()
 {
     delete dockMenu;
+    delete trayIcon;
 #ifdef Q_OS_MAC
     delete menuBar;
 #endif
@@ -579,10 +580,10 @@ void Application::createDockMenu()
 #ifdef Q_OS_MAC
     qt_mac_set_dock_menu(dockMenu);
 #else
-    QSystemTrayIcon *tray = new QSystemTrayIcon(this);
-    tray->setIcon(QIcon(":/images/icons/andromeda.png"));
-    tray->setContextMenu(dockMenu);
-    tray->show();
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/images/icons/andromeda.png"));
+    trayIcon->setContextMenu(dockMenu);
+    trayIcon->show();
 #endif
 }
 
