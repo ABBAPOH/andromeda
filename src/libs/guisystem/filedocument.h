@@ -1,12 +1,14 @@
 #ifndef FILEDOCUMENT_H
 #define FILEDOCUMENT_H
 
+#include "guisystem_global.h"
+
 #include "abstractdocument.h"
 
 namespace GuiSystem {
 
 class FileDocumentPrivate;
-class FileDocument : public AbstractDocument
+class GUISYSTEM_EXPORT FileDocument : public AbstractDocument
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileDocument)
