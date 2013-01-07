@@ -59,7 +59,6 @@ private Q_SLOTS:
     void slotFindPrevious();
 
 private:
-    void registerActions();
     void readSettings();
     void selectMouseTool(int which);
 

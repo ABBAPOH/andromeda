@@ -76,21 +76,28 @@ PdfViewEditor::PdfViewEditor(QWidget *parent) :
 
     // save
     QAction *saveAsAction = new QAction(tr("Save &As...", "Action"), this);
+    saveAsAction->setObjectName(Constants::Actions::SaveAs);
     connect(saveAsAction, SIGNAL(triggered()), this, SLOT(slotSaveCopy()));
-    addAction(saveAsAction, Constants::Actions::SaveAs);
+    addAction(saveAsAction);
 
     // find
     QAction *findAction = new QAction(tr("&Find...", "Action"), this);
+    findAction->setObjectName(Constants::Actions::Find);
     connect(findAction, SIGNAL(triggered()), this, SLOT(slotOpenFind()));
-    addAction(findAction, Constants::Actions::Find);
+    addAction(findAction);
 
     QAction *findNextAction = new QAction(tr("Find &Next", "Action"), this);
+    findNextAction->setObjectName(Constants::Actions::FindNext);
     connect(findNextAction, SIGNAL(triggered()), this, SLOT(slotFindNext()));
-    addAction(findNextAction, Constants::Actions::FindNext);
+    addAction(findNextAction);
 
     QAction *findPreviousAction = new QAction(tr("Find &Previous", "Action"), this);
+    findPreviousAction->setObjectName(Constants::Actions::FindPrevious);
     connect(findPreviousAction, SIGNAL(triggered()), this, SLOT(slotFindPrevious()));
-    addAction(findPreviousAction, Constants::Actions::FindPrevious);
+    addAction(findPreviousAction);
+
+    m_pdfView->action(PdfView::ZoomIn)->setObjectName(Constants::Actions::ZoomIn);
+    m_pdfView->action(PdfView::ZoomOut)->setObjectName(Constants::Actions::ZoomOut);
 
     QToolBar *toolBar = new QToolBar(this);
     toolBar->addAction(m_pdfView->action(PdfView::ZoomIn));
@@ -109,18 +116,6 @@ PdfViewEditor::PdfViewEditor(QWidget *parent) :
     layout->addWidget(m_pdfView);
 
     readSettings();
-    registerActions();
-}
-
-void PdfViewEditor::registerActions()
-{
-    registerAction(m_pdfView->action(PdfView::ZoomIn), "ZoomIn");
-    registerAction(m_pdfView->action(PdfView::ZoomOut), "ZoomOut");
-
-//	registerAction(m_pdfView->action(PdfView::MouseToolBrowse), "MouseToolBrowse");
-//	registerAction(m_pdfView->action(PdfView::MouseToolMagnify), "MouseToolMagnify");
-//	registerAction(m_pdfView->action(PdfView::MouseToolSelection), "MouseToolSelection");
-//	registerAction(m_pdfView->action(PdfView::MouseToolTextSelection), "MouseToolTextSelection");
 }
 
 PdfViewEditor::~PdfViewEditor()
