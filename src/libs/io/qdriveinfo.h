@@ -58,7 +58,7 @@ protected:
     QDriveInfoPrivate *d_ptr;
 
 private:
-    Q_DECLARE_PRIVATE(QDriveInfo);
+    Q_DECLARE_PRIVATE(QDriveInfo)
 };
 
 inline bool QDriveInfo::operator!=(const QDriveInfo &other) const
