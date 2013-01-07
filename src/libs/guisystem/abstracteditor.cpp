@@ -118,6 +118,11 @@ ActionManager * AbstractEditor::actionManager() const
     return ActionManager::instance();
 }
 
+void AbstractEditor::addAction(QAction *action)
+{
+    QWidget::addAction(action);
+}
+
 /*!
     \brief Adds \a action to this widget and registers it in ActionManager
     using an \a id.

@@ -545,23 +545,13 @@ void FileManagerEditor::createActions()
 {
     m_openEditorAction = new QAction(this);
     m_openEditorAction->setEnabled(false);
+    m_openEditorAction->setObjectName(Constants::Actions::OpenEditor);
     connect(m_openEditorAction, SIGNAL(triggered()), SLOT(openEditor()));
-    addAction(m_openEditorAction, Constants::Actions::OpenEditor);
+    addAction(m_openEditorAction);
 
     DualPaneWidget *widget = m_widget->dualPane();
     // TODO: register panes when created
     registerWidgetActions(widget->leftWidget());
-
-    registerAction(widget->action(DualPaneWidget::EnableDualPane), Constants::Actions::DualPane);
-    registerAction(widget->action(DualPaneWidget::VerticalPanels), Constants::Actions::VerticalPanels);
-    registerAction(widget->action(DualPaneWidget::ToggleActivePane), Constants::Actions::ToggleActivePane);
-    registerAction(widget->action(DualPaneWidget::SyncPanes), Constants::Actions::SyncPanes);
-    registerAction(widget->action(DualPaneWidget::SwapPanes), Constants::Actions::SwapPanes);
-    registerAction(widget->action(DualPaneWidget::CopyFiles), Constants::Actions::CopyFiles);
-    registerAction(widget->action(DualPaneWidget::MoveFiles), Constants::Actions::MoveFiles);
-
-    registerAction(m_widget->showLeftPanelAction(), Constants::Actions::ShowLeftPanel);
-    registerAction(m_widget->showStatusBarAction(), Constants::Actions::ShowStatusBar);
 }
 
 void FileManagerEditor::retranslateUi()
@@ -574,36 +564,6 @@ void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)
 {
     widget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(widget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
-
-    registerAction(widget->action(FileManagerWidget::Open), Constants::Actions::Open);
-//    registerAction(widget->action(FileManagerWidget::OpenInTab), Constants::Actions::Open);
-//    registerAction(widget->action(FileManagerWidget::OpenInWindow), Constants::Actions::Open);
-//    registerAction(widget->action(FileManagerWidget::SelectProgram), Constants::Actions::Open);
-    registerAction(widget->action(FileManagerWidget::NewFolder), Constants::Actions::NewFolder);
-    registerAction(widget->action(FileManagerWidget::Rename), Constants::Actions::Rename);
-    registerAction(widget->action(FileManagerWidget::MoveToTrash), Constants::Actions::MoveToTrash);
-    registerAction(widget->action(FileManagerWidget::Remove), Constants::Actions::Remove);
-    registerAction(widget->action(FileManagerWidget::ShowFileInfo), Constants::Actions::FileInfo);
-
-    registerAction(widget->action(FileManagerWidget::Redo), Constants::Actions::Redo);
-    registerAction(widget->action(FileManagerWidget::Undo), Constants::Actions::Undo);
-    registerAction(widget->action(FileManagerWidget::Cut), Constants::Actions::Cut);
-    registerAction(widget->action(FileManagerWidget::Copy), Constants::Actions::Copy);
-    registerAction(widget->action(FileManagerWidget::Paste), Constants::Actions::Paste);
-    registerAction(widget->action(FileManagerWidget::MoveHere), Constants::Actions::MoveHere);
-    registerAction(widget->action(FileManagerWidget::SelectAll), Constants::Actions::SelectAll);
-
-    registerAction(widget->action(FileManagerWidget::ShowHiddenFiles), Constants::Actions::ShowHiddenFiles);
-
-    registerAction(widget->action(FileManagerWidget::IconMode), Constants::Actions::IconMode);
-    registerAction(widget->action(FileManagerWidget::ColumnMode), Constants::Actions::ColumnMode);
-    registerAction(widget->action(FileManagerWidget::TreeMode), Constants::Actions::TreeMode);
-
-    registerAction(widget->action(FileManagerWidget::SortByName), Constants::Actions::SortByName);
-    registerAction(widget->action(FileManagerWidget::SortBySize), Constants::Actions::SortBySize);
-    registerAction(widget->action(FileManagerWidget::SortByType), Constants::Actions::SortByType);
-    registerAction(widget->action(FileManagerWidget::SortByDate), Constants::Actions::SortByDate);
-    registerAction(widget->action(FileManagerWidget::SortDescendingOrder), Constants::Actions::SortByDescendingOrder);
 }
 
 void FileManagerEditor::connectDocument(FileManagerDocument *document)

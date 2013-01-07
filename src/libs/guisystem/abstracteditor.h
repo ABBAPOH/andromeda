@@ -37,6 +37,7 @@ signals:
 
 protected:
     ActionManager *actionManager() const;
+    void addAction(QAction *action);
     void addAction(QAction *action, const QByteArray &id);
     void registerAction(QAction *action, const QByteArray &id);
 

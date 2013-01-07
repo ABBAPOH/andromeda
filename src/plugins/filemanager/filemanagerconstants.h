@@ -25,12 +25,11 @@ const char * const Locations = "GotoMenu 1";
 
 namespace Actions {
 
-const char * const Open = "Open";
 const char * const OpenEditor = "Edit";
 const char * const SyncPanes = "SyncPanes";
 const char * const SwapPanes = "SwapPanes";
 
-const char * const FileInfo = "FileInfo";
+const char * const ShowFileInfo = "ShowFileInfo";
 
 const char * const NewFolder = "NewFolder";
 const char * const CopyFiles = "CopyFiles";

@@ -7,6 +7,7 @@
 
 #include <widgets/minisplitter.h>
 
+#include <guisystem/constants.h>
 #include "dualpanewidget.h"
 #include "navigationmodel.h"
 #include "navigationpanel.h"
@@ -53,6 +54,7 @@ void FileExplorerWidgetPrivate::init()
     showLeftPanelAction = new QAction(q);
     showLeftPanelAction->setCheckable(true);
     showLeftPanelAction->setChecked(true);
+    showLeftPanelAction->setObjectName(Constants::Actions::ShowLeftPanel);
 
     q->connect(showLeftPanelAction, SIGNAL(triggered(bool)), q, SLOT(setPanelVisible(bool)));
     q->addAction(showLeftPanelAction);
@@ -60,6 +62,7 @@ void FileExplorerWidgetPrivate::init()
     showStatusBarAction = new QAction(q);
     showStatusBarAction->setCheckable(true);
     showStatusBarAction->setChecked(true);
+    showStatusBarAction->setObjectName(Constants::Actions::ShowStatusBar);
 
     q->connect(showStatusBarAction, SIGNAL(triggered(bool)), q, SLOT(setStatusBarVisible(bool)));
     q->addAction(showStatusBarAction);

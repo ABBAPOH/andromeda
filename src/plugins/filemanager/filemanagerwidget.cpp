@@ -21,6 +21,7 @@
 #include <io/QDriveInfo>
 #include <io/qmimedatabase.h>
 
+#include "filemanagerconstants.h"
 #include "filemanagerhistory_p.h"
 #include "filemanagerhistoryitem_p.h"
 #include "filemanagersettings.h"
@@ -131,62 +132,78 @@ void FileManagerWidgetPrivate::createActions()
 
     actions[FileManagerWidget::Open] = new QAction(this);
     actions[FileManagerWidget::Open]->setEnabled(false);
+    actions[FileManagerWidget::Open]->setObjectName(Constants::Actions::Open);
     connect(actions[FileManagerWidget::Open], SIGNAL(triggered()), q, SLOT(open()));
 
     actions[FileManagerWidget::OpenInTab] = new QAction(this);
     actions[FileManagerWidget::OpenInTab]->setEnabled(false);
+    actions[FileManagerWidget::OpenInTab]->setObjectName(Constants::Actions::OpenInTab);
     connect(actions[FileManagerWidget::OpenInTab], SIGNAL(triggered()), this, SLOT(openNewTab()));
 
     actions[FileManagerWidget::OpenInWindow] = new QAction(this);
     actions[FileManagerWidget::OpenInWindow]->setEnabled(false);
+    actions[FileManagerWidget::OpenInWindow]->setObjectName(Constants::Actions::OpenInWindow);
     connect(actions[FileManagerWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
 
     actions[FileManagerWidget::NewFolder] = new QAction(this);
+    actions[FileManagerWidget::NewFolder]->setObjectName(Constants::Actions::NewFolder);
     connect(actions[FileManagerWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
 
     actions[FileManagerWidget::Rename] = new QAction(this);
     actions[FileManagerWidget::Rename]->setEnabled(false);
+    actions[FileManagerWidget::Rename]->setObjectName(Constants::Actions::Rename);
     connect(actions[FileManagerWidget::Rename], SIGNAL(triggered()), q, SLOT(rename()));
 
     actions[FileManagerWidget::MoveToTrash] = new QAction(this);
     actions[FileManagerWidget::MoveToTrash]->setEnabled(false);
+    actions[FileManagerWidget::MoveToTrash]->setObjectName(Constants::Actions::MoveToTrash);
     connect(actions[FileManagerWidget::MoveToTrash], SIGNAL(triggered()), q, SLOT(moveToTrash()));
 
     actions[FileManagerWidget::Remove] = new QAction(this);
     actions[FileManagerWidget::Remove]->setEnabled(false);
+    actions[FileManagerWidget::Remove]->setObjectName(Constants::Actions::Remove);
     connect(actions[FileManagerWidget::Remove], SIGNAL(triggered()), q, SLOT(remove()));
 
     actions[FileManagerWidget::ShowFileInfo] = new QAction(this);
+    actions[FileManagerWidget::ShowFileInfo]->setObjectName(Constants::Actions::ShowFileInfo);
     connect(actions[FileManagerWidget::ShowFileInfo], SIGNAL(triggered()), q, SLOT(showFileInfo()));
 
     actions[FileManagerWidget::Redo] = new QAction(this);
     actions[FileManagerWidget::Redo]->setEnabled(false);
+    actions[FileManagerWidget::Redo]->setObjectName(Constants::Actions::Redo);
     connect(actions[FileManagerWidget::Redo], SIGNAL(triggered()), q, SLOT(redo()));
     connect(q, SIGNAL(canRedoChanged(bool)), actions[FileManagerWidget::Redo], SLOT(setEnabled(bool)));
 
     actions[FileManagerWidget::Undo] = new QAction(this);
     actions[FileManagerWidget::Undo]->setEnabled(false);
+    actions[FileManagerWidget::Undo]->setObjectName(Constants::Actions::Undo);
     connect(actions[FileManagerWidget::Undo], SIGNAL(triggered()), q, SLOT(undo()));
     connect(q, SIGNAL(canUndoChanged(bool)), actions[FileManagerWidget::Undo], SLOT(setEnabled(bool)));
 
     actions[FileManagerWidget::Cut] = new QAction(this);
     actions[FileManagerWidget::Cut]->setEnabled(false);
+    actions[FileManagerWidget::Cut]->setObjectName(Constants::Actions::Cut);
 //    connect(actions[FileManagerWidget::Cut], SIGNAL(triggered()), q, SLOT(cut()));
 
     actions[FileManagerWidget::Copy] = new QAction(this);
+    actions[FileManagerWidget::Copy]->setObjectName(Constants::Actions::Copy);
     connect(actions[FileManagerWidget::Copy], SIGNAL(triggered()), q, SLOT(copy()));
 
     actions[FileManagerWidget::Paste] = new QAction(this);
+    actions[FileManagerWidget::Paste]->setObjectName(Constants::Actions::Paste);
     connect(actions[FileManagerWidget::Paste], SIGNAL(triggered()), q, SLOT(paste()));
 
     actions[FileManagerWidget::MoveHere] = new QAction(this);
+    actions[FileManagerWidget::MoveHere]->setObjectName(Constants::Actions::MoveHere);
     connect(actions[FileManagerWidget::MoveHere], SIGNAL(triggered()), q, SLOT(moveHere()));
 
     actions[FileManagerWidget::SelectAll] = new QAction(this);
+    actions[FileManagerWidget::SelectAll]->setObjectName(Constants::Actions::SelectAll);
     connect(actions[FileManagerWidget::SelectAll], SIGNAL(triggered()), q, SLOT(selectAll()));
 
     actions[FileManagerWidget::ShowHiddenFiles] = new QAction(this);
     actions[FileManagerWidget::ShowHiddenFiles]->setCheckable(true);
+    actions[FileManagerWidget::ShowHiddenFiles]->setObjectName(Constants::Actions::ShowHiddenFiles);
     connect(actions[FileManagerWidget::ShowHiddenFiles], SIGNAL(triggered(bool)), q, SLOT(showHiddenFiles(bool)));
 
     viewModeGroup = new QActionGroup(this);
@@ -203,6 +220,10 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::IconMode]->setData(FileManagerWidget::IconView);
     actions[FileManagerWidget::ColumnMode]->setData(FileManagerWidget::ColumnView);
     actions[FileManagerWidget::TreeMode]->setData(FileManagerWidget::TreeView);
+
+    actions[FileManagerWidget::IconMode]->setObjectName(Constants::Actions::IconMode);
+    actions[FileManagerWidget::ColumnMode]->setObjectName(Constants::Actions::ColumnMode);
+    actions[FileManagerWidget::TreeMode]->setObjectName(Constants::Actions::TreeMode);
 
     connect(actions[FileManagerWidget::IconMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
     connect(actions[FileManagerWidget::ColumnMode], SIGNAL(triggered(bool)), SLOT(toggleViewMode(bool)));
@@ -228,6 +249,11 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::SortBySize]->setData(FileManagerWidget::SizeColumn);
     actions[FileManagerWidget::SortByType]->setData(FileManagerWidget::TypeColumn);
     actions[FileManagerWidget::SortByDate]->setData(FileManagerWidget::DateColumn);
+
+    actions[FileManagerWidget::SortByName]->setObjectName(Constants::Actions::SortByName);
+    actions[FileManagerWidget::SortBySize]->setObjectName(Constants::Actions::SortBySize);
+    actions[FileManagerWidget::SortByType]->setObjectName(Constants::Actions::SortByType);
+    actions[FileManagerWidget::SortByDate]->setObjectName(Constants::Actions::SortByDate);
 
     connect(actions[FileManagerWidget::SortByName], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
     connect(actions[FileManagerWidget::SortBySize], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));

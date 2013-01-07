@@ -1,5 +1,7 @@
 #include "webviewdocument.h"
 
+#include <QDebug>
+#include <QAction>
 #include <QWebFrame>
 #include <QWebPage>
 
@@ -29,7 +31,6 @@ static QWebPage * createPage(WebViewDocument *document)
     QObject::connect(page, SIGNAL(loadStarted()), document, SLOT(onLoadStarted()));
     QObject::connect(page, SIGNAL(loadProgress(int)), document, SLOT(setProgress(int)));
     QObject::connect(page, SIGNAL(loadFinished(bool)), document, SLOT(onLoadFinished()));
-
 
     return page;
 }

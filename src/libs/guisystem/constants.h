@@ -29,6 +29,9 @@ namespace Actions {
 const char * const NewWindow = "NewWindow";
 const char * const NewTab = "NewTab";
 const char * const CloseTab = "CloseTab";
+const char * const Open = "Open";
+const char * const OpenInTab = "OpenInTab";
+const char * const OpenInWindow = "OpenInWindow";
 const char * const Quit = "Quit";
 
 const char * const Save = "Save";

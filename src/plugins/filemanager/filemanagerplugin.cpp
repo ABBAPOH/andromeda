@@ -137,7 +137,7 @@ void FileManagerPlugin::createFileMenu()
     // ================ File Menu (Info) ================
     container->addCommand(new Separator(this), "55");
 
-    cmd = new Command(Constants::Actions::FileInfo, this);
+    cmd = new Command(Constants::Actions::ShowFileInfo, this);
     cmd->setDefaultText(tr("File info"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+I")));
     container->addCommand(cmd, "575");

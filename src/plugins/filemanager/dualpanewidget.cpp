@@ -9,6 +9,7 @@
 #include <QtGui/QSplitter>
 #include <QtGui/QVBoxLayout>
 
+#include "filemanagerconstants.h"
 #include "filemanagerwidget.h"
 #include "filemanagerwidget_p.h"
 #include "filesystemmanager.h"
@@ -30,33 +31,40 @@ void DualPaneWidgetPrivate::createActions()
 
     actions[DualPaneWidget::EnableDualPane] = new QAction(q);
     actions[DualPaneWidget::EnableDualPane]->setCheckable(true);
+    actions[DualPaneWidget::EnableDualPane]->setObjectName(Constants::Actions::DualPane);
     connect(actions[DualPaneWidget::EnableDualPane], SIGNAL(triggered(bool)), q, SLOT(setDualPaneModeEnabled(bool)));
 
     actions[DualPaneWidget::VerticalPanels] = new QAction(q);
     actions[DualPaneWidget::VerticalPanels]->setCheckable(true);
     actions[DualPaneWidget::VerticalPanels]->setEnabled(false);
+    actions[DualPaneWidget::VerticalPanels]->setObjectName(Constants::Actions::VerticalPanels);
     connect(actions[DualPaneWidget::VerticalPanels], SIGNAL(triggered(bool)), SLOT(toggleOrientation(bool)));
 
     actions[DualPaneWidget::ToggleActivePane] = new QAction(this);
     actions[DualPaneWidget::ToggleActivePane]->setEnabled(false);
+    actions[DualPaneWidget::ToggleActivePane]->setObjectName(Constants::Actions::ToggleActivePane);
     connect(actions[DualPaneWidget::ToggleActivePane], SIGNAL(triggered()), q, SLOT(toggleActivePane()));
 
     actions[DualPaneWidget::SyncPanes] = new QAction(this);
     actions[DualPaneWidget::SyncPanes]->setEnabled(false);
+    actions[DualPaneWidget::SyncPanes]->setObjectName(Constants::Actions::SyncPanes);
     connect(actions[DualPaneWidget::SyncPanes], SIGNAL(triggered()), q, SLOT(syncPanes()));
 
     actions[DualPaneWidget::SwapPanes] = new QAction(this);
     actions[DualPaneWidget::SwapPanes]->setEnabled(false);
+    actions[DualPaneWidget::SwapPanes]->setObjectName(Constants::Actions::SwapPanes);
     connect(actions[DualPaneWidget::SwapPanes], SIGNAL(triggered()), q, SLOT(swapPanes()));
 
     actions[DualPaneWidget::CopyFiles] = new QAction(this);
     actions[DualPaneWidget::CopyFiles]->setShortcut(QKeySequence("F5"));
     actions[DualPaneWidget::CopyFiles]->setEnabled(false);
+    actions[DualPaneWidget::CopyFiles]->setObjectName(Constants::Actions::CopyFiles);
     connect(actions[DualPaneWidget::CopyFiles], SIGNAL(triggered()), q, SLOT(copyFiles()));
 
     actions[DualPaneWidget::MoveFiles] = new QAction(this);
     actions[DualPaneWidget::MoveFiles]->setShortcut(QKeySequence("F6"));
     actions[DualPaneWidget::MoveFiles]->setEnabled(false);
+    actions[DualPaneWidget::MoveFiles]->setObjectName(Constants::Actions::MoveFiles);
     connect(actions[DualPaneWidget::MoveFiles], SIGNAL(triggered()), q, SLOT(moveFiles()));
 
     for (int i = 0; i < DualPaneWidget::ActionCount; i++) {
