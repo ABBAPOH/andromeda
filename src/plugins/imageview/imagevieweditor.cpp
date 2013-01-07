@@ -18,7 +18,6 @@ ImageViewEditor::ImageViewEditor(QWidget *parent) :
 {
     document()->setParent(this);
     setupUi();
-    registerActions();
 
     connect(m_view, SIGNAL(modifiedChanged(bool)), document(), SLOT(setModified(bool)));
     connect(document(), SIGNAL(modificationChanged(bool)), m_view, SLOT(setModified(bool)));
@@ -60,27 +59,6 @@ void ImageViewEditor::setupUi()
     m_layout->setContentsMargins(0, 0, 0, 0);
     m_layout->addWidget(m_toolBar);
     m_layout->addWidget(m_view);
-}
-
-void ImageViewEditor::registerActions()
-{
-    registerAction(m_view->action(QImageView::Redo), "Redo");
-    registerAction(m_view->action(QImageView::Undo), "Undo");
-    registerAction(m_view->action(QImageView::Copy), "Copy");
-//    registerAction(m_view->action(QImageView::Paste), "Paste");
-    registerAction(m_view->action(QImageView::MoveTool), "MoveTool");
-    registerAction(m_view->action(QImageView::SelectionTool), "SelectionTool");
-
-    registerAction(m_view->action(QImageView::ZoomIn), "ZoomIn");
-    registerAction(m_view->action(QImageView::ZoomOut), "ZoomOut");
-    registerAction(m_view->action(QImageView::FitInView), "FitInView");
-    registerAction(m_view->action(QImageView::NormalSize), "NormalSize");
-
-    registerAction(m_view->action(QImageView::RotateLeft), "RotateLeft");
-    registerAction(m_view->action(QImageView::RotateRight), "RotateRight");
-    registerAction(m_view->action(QImageView::FlipHorizontally), "FlipHorizontally");
-    registerAction(m_view->action(QImageView::FlipVertically), "FlipVertically");
-    registerAction(m_view->action(QImageView::ResetOriginal), "ResetOriginal");
 }
 
 ImageViewEditorFactory::ImageViewEditorFactory(QObject *parent) :

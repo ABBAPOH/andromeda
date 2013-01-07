@@ -26,7 +26,6 @@ public:
 
 protected:
     void setupUi();
-    void registerActions();
 
 private:
     QVBoxLayout *m_layout;

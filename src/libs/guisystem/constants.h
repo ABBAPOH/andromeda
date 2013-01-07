@@ -62,6 +62,11 @@ const char * const Settings = "Settings";
 
 const char * const Preferences = "Preferences";
 
+const char * const ZoomIn = "ZoomIn";
+const char * const ZoomOut = "ZoomOut";
+const char * const FitInView = "FitInView";
+const char * const NormalSize = "NormalSize";
+
 } // namespace Actions
 
 } // namespace Constants
