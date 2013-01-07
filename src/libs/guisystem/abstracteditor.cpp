@@ -109,34 +109,3 @@ QByteArray AbstractEditor::saveState() const
 {
     return document()->url().toEncoded();
 }
-
-/*!
-    \brief Returns action manager instance.
-*/
-ActionManager * AbstractEditor::actionManager() const
-{
-    return ActionManager::instance();
-}
-
-void AbstractEditor::addAction(QAction *action)
-{
-    QWidget::addAction(action);
-}
-
-/*!
-    \brief Adds \a action to this widget and registers it in ActionManager
-    using an \a id.
-*/
-void AbstractEditor::addAction(QAction *action, const QByteArray &id)
-{
-    QWidget::addAction(action);
-    registerAction(action, id);
-}
-
-/*!
-    \brief Registers action in ActionManager.
-*/
-void AbstractEditor::registerAction(QAction *action, const QByteArray &id)
-{
-    actionManager()->registerAction(action, id);
-}
