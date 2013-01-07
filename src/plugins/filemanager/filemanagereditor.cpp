@@ -30,7 +30,6 @@
 #include <guisystem/editorwindowfactory.h>
 #include <widgets/minisplitter.h>
 
-
 using namespace GuiSystem;
 using namespace FileManager;
 
@@ -200,18 +199,7 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     createActions();
     retranslateUi();
 
-    m_history = new FileManagerEditorHistory(this);
-    m_history->setDualPaneWidget(m_widget->dualPane());
-
     connectDocument(qobject_cast<FileManagerDocument *>(document()));
-}
-
-/*!
-  \reimp
-*/
-IHistory * FileManagerEditor::history() const
-{
-    return m_history;
 }
 
 void FileManagerEditor::setDocument(AbstractDocument *document)
@@ -367,7 +355,7 @@ void FileManagerEditor::initRightPane(bool enabled)
         FileManagerWidget *widget = m_widget->dualPane()->rightWidget();
         registerWidgetActions(widget);
         connect(widget->history(), SIGNAL(currentItemIndexChanged(int)),
-                history(), SLOT(onLocalIndexChanged(int)));
+                document()->history(), SLOT(onLocalIndexChanged(int)));
         int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight"), FileManagerWidget::IconView).toInt();
         widget->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
     }
@@ -569,6 +557,9 @@ void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)
 void FileManagerEditor::connectDocument(FileManagerDocument *document)
 {
     Q_ASSERT(document);
+
+    document->fmhistory()->setDualPaneWidget(m_widget->dualPane());
+
     connect(document, SIGNAL(currentPathChanged(QString)),
             m_widget->dualPane(), SLOT(setCurrentPath(QString)));
     connect(m_widget->dualPane(), SIGNAL(currentPathChanged(QString)),

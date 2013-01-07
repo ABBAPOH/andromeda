@@ -8,6 +8,8 @@
 
 namespace GuiSystem {
 
+class IHistory;
+
 class EditorViewPrivate;
 class GUISYSTEM_EXPORT EditorView : public QWidget
 {

@@ -310,6 +310,16 @@ void AbstractDocument::setUrl(const QUrl &url)
 */
 
 /*!
+    \brief Reimplement to return history that corresponds to this document.
+
+    Default imlementation returns 0.
+*/
+IHistory * AbstractDocument::history() const
+{
+    return 0;
+}
+
+/*!
     \brief Reimplement to reset document to initial state.
 
     Default implementation does nothing.

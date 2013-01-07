@@ -15,7 +15,6 @@ class FileManagerDocument;
 class FileManagerWidget;
 class DualPaneWidget;
 class NavigationPanel;
-class FileManagerEditorHistory;
 class FileExplorerWidget;
 
 class FileManagerEditor : public GuiSystem::AbstractEditor
@@ -28,8 +27,6 @@ public:
     };
 
     explicit FileManagerEditor(QWidget *parent = 0);
-
-    GuiSystem::IHistory *history() const;
 
     int currentIndex() const;
     void setCurrentIndex(int index);
@@ -70,7 +67,6 @@ private:
 
 private:
     FileExplorerWidget *m_widget;
-    FileManagerEditorHistory *m_history;
 
     QSettings *m_settings;
     QAction *m_openEditorAction;

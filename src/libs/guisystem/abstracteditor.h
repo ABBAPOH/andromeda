@@ -12,7 +12,6 @@ namespace GuiSystem {
 
 class AbstractDocument;
 class IFind;
-class IHistory;
 
 class GUISYSTEM_EXPORT AbstractEditor : public QWidget
 {
@@ -26,7 +25,6 @@ public:
     virtual void setDocument(AbstractDocument *document);
 
     virtual IFind *find() const;
-    virtual IHistory *history() const;
 
     virtual void restoreDefaults() {}
     virtual bool restoreState(const QByteArray &state);

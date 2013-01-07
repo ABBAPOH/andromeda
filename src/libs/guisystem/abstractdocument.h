@@ -10,6 +10,8 @@
 
 namespace GuiSystem {
 
+class IHistory;
+
 class AbstractDocumentPrivate;
 class GUISYSTEM_EXPORT AbstractDocument : public QObject
 {
@@ -43,6 +45,8 @@ public:
     State state() const;
     QString title() const;
     QUrl url() const;
+
+    virtual IHistory *history() const;
 
 public slots:
     virtual void clear();

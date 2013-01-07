@@ -17,7 +17,6 @@ class QSplitter;
 namespace WebView {
 
 class WebViewDocument;
-class WebViewHistory;
 class WebViewFind;
 
 class WEBVIEW_EXPORT WebViewEditor : public GuiSystem::AbstractEditor
@@ -32,7 +31,6 @@ public:
     void setDocument(GuiSystem::AbstractDocument *document);
 
     GuiSystem::IFind *find() const;
-    GuiSystem::IHistory *history() const;
 
     QWidget *widget() const { return m_webView; }
 
@@ -51,7 +49,6 @@ private:
     QVBoxLayout *m_layout;
     QSplitter *m_splitter;
     QWebView *m_webView;
-    WebViewHistory *m_history;
     WebViewFind *m_find;
     QWebInspector *m_webInspector;
     QAction *m_showWebInspectorAction;

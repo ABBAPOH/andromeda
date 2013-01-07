@@ -200,14 +200,11 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     m_splitter = new MiniSplitter(Qt::Vertical, this);
     m_layout->addWidget(m_splitter);
 
-    m_history = new WebViewHistory(this);
     m_webView = new QWebView(this);
 
     QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
     m_splitter->addWidget(m_webView);
-
-    connect(WebHistoryInterface::instance(), SIGNAL(itemAdded()), m_history, SLOT(updateCurrentItemIndex()));
 
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
@@ -238,11 +235,6 @@ IFind *WebViewEditor::find() const
     return m_find;
 }
 
-IHistory *WebViewEditor::history() const
-{
-    return m_history;
-}
-
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
     document()->setUrl(url);
@@ -264,10 +256,10 @@ void WebViewEditor::onPageChanged()
     WebViewDocument *document = qobject_cast<WebViewDocument *>(sender());
     Q_ASSERT(document);
 
-    m_webView->setPage(document->page());
-    m_history->setHistory(m_webView->page()->history());
+    QWebPage *page = document->page();
+    m_webView->setPage(page);
     if (m_webInspector)
-        m_webInspector->setPage(m_webView->page());
+        m_webInspector->setPage(page);
 }
 
 void WebViewEditor::createActions()
@@ -285,7 +277,6 @@ void WebViewEditor::connectDocument(WebViewDocument *document)
 
     QWebPage *page = document->page();
     m_webView->setPage(page);
-    m_history->setHistory(page->history());
     connect(document, SIGNAL(pageChanged()), SLOT(onPageChanged()));
 
     addAction(m_webView->pageAction(QWebPage::Redo));
@@ -295,6 +286,9 @@ void WebViewEditor::connectDocument(WebViewDocument *document)
     addAction(page->action(QWebPage::Copy));
     addAction(page->action(QWebPage::Paste));
     addAction(page->action(QWebPage::SelectAll));
+
+    connect(WebHistoryInterface::instance(), SIGNAL(itemAdded()),
+            document->history(), SLOT(updateCurrentItemIndex()));
 }
 
 QString WebViewEditorFactory::name() const

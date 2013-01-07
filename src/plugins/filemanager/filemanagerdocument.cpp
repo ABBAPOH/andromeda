@@ -3,12 +3,23 @@
 #include <QtCore/QDir>
 #include <QtGui/QFileIconProvider>
 
+#include "filemanagereditor_p.h"
+
 using namespace GuiSystem;
 using namespace FileManager;
 
 FileManagerDocument::FileManagerDocument(QObject *parent) :
-    AbstractDocument(parent)
+    AbstractDocument(parent),
+    m_history(new FileManagerEditorHistory(this))
 {
+}
+
+/*!
+  \reimp
+*/
+IHistory * FileManagerDocument::history() const
+{
+    return m_history;
 }
 
 QString FileManagerDocument::currentPath() const

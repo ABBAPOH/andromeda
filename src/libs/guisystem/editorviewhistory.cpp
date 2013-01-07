@@ -62,7 +62,7 @@ void EditorViewHistory::open(const QUrl &url, AbstractEditor *oldEditor)
         d->currentEditor = id;
         d->currentStashedIndex++;
 
-        IHistory *history = editor->history();
+        IHistory *history = editor->document()->history();
         if (history) {
     #ifdef STACKED_HISTORY_DEBUG
             qDebug() << "  connected to editor with history";
@@ -138,7 +138,7 @@ void EditorViewHistory::setCurrentItemIndex(int index)
     d->currentIndex = index;
     d->currentLocalIndex = item.localIndex;
 
-    IHistory *history = newEditor->history();
+    IHistory *history = newEditor->document()->history();
     if (history) {
         Q_ASSERT(item.localIndex >= 0);
         Q_ASSERT(item.localIndex < history->count());
@@ -192,7 +192,7 @@ void EditorViewHistoryPrivate::stashEditor(AbstractEditor *editor)
     qDebug() << "StackedHistoryPrivate::stashEditor" << editor->id() << currentStashedIndex << stashedHistory.count();
 #endif
 
-    IHistory *history = editor->history();
+    IHistory *history = editor->document()->history();
     editor->document()->stop();
 
     QByteArray stored;
@@ -217,7 +217,7 @@ void EditorViewHistoryPrivate::unstashEditor(AbstractEditor *editor)
     qDebug() << "StackedHistoryPrivate::unstashEditor" << editor->id() << currentStashedIndex << stashedHistory.count();
 #endif
 
-    IHistory *history = editor->history();
+    IHistory *history = editor->document()->history();
 
     QByteArray stored = stashedHistory[currentStashedIndex];
     Q_ASSERT(!stored.isEmpty());

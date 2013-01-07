@@ -9,11 +9,15 @@ class QWebPage;
 
 namespace WebView {
 
+class WebViewHistory;
+
 class WEBVIEW_EXPORT WebViewDocument : public GuiSystem::AbstractDocument
 {
     Q_OBJECT
 public:
     explicit WebViewDocument(QObject *parent = 0);
+
+    GuiSystem::IHistory *history() const;
 
     QWebPage *page() const;
     void recreatePage();
@@ -28,6 +32,7 @@ signals:
 
 protected:
     bool openUrl(const QUrl &url);
+    QWebPage *createPage(WebViewDocument *document);
 
 protected slots:
     void onIconChanged();
@@ -36,6 +41,7 @@ protected slots:
     void onLoadFinished();
 
 private:
+    WebViewHistory *m_history;
     QWebPage *m_page;
 };
 

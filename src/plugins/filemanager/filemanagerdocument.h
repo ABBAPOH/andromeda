@@ -5,12 +5,17 @@
 
 namespace FileManager {
 
+class FileManagerEditorHistory;
+
 class FileManagerDocument : public GuiSystem::AbstractDocument
 {
     Q_OBJECT
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
 public:
     explicit FileManagerDocument(QObject *parent = 0);
+
+    GuiSystem::IHistory *history() const;
+    FileManagerEditorHistory *fmhistory() const { return m_history; }
 
     QString currentPath() const;
 
@@ -25,6 +30,7 @@ protected:
 
 private:
     QString m_currentPath;
+    FileManagerEditorHistory *m_history;
 };
 
 } // namespace FileManager

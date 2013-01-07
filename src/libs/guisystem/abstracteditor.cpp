@@ -80,16 +80,6 @@ IFind * AbstractEditor::find() const
 }
 
 /*!
-    \brief Reimplement to return history that corresponds to this editor.
-
-    Default imlementation returns 0.
-*/
-IHistory * AbstractEditor::history() const
-{
-    return 0;
-}
-
-/*!
     \brief Reimplement to restore editor's state.
 
     Default implementation restores url from byte array and calls AbstractDocument::setUrl.
