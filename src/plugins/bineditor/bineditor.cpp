@@ -19,7 +19,6 @@ BinEditor::BinEditor(QWidget *parent) :
     document()->setParent(this);
     createActions();
     retranslateUi();
-    registerActions();
 
     connect(document(), SIGNAL(urlChanged(QUrl)), this, SLOT(open(QUrl)));
 }
@@ -52,20 +51,28 @@ void BinEditor::createActions()
 {
     actions[BinEditor::Redo] = new QAction(this);
     actions[BinEditor::Redo]->setEnabled(false);
+    actions[BinEditor::Redo]->setObjectName(Constants::Actions::Redo);
+    addAction(actions[BinEditor::Redo]);
     connect(m_editor, SIGNAL(redoAvailable(bool)), actions[BinEditor::Redo], SLOT(setEnabled(bool)));
     connect(actions[BinEditor::Redo], SIGNAL(triggered()), m_editor, SLOT(redo()));
 
     actions[BinEditor::Undo] = new QAction(this);
     actions[BinEditor::Undo]->setEnabled(false);
+    actions[BinEditor::Undo]->setObjectName(Constants::Actions::Undo);
+    addAction(actions[BinEditor::Undo]);
     connect(m_editor, SIGNAL(undoAvailable(bool)), actions[BinEditor::Undo], SLOT(setEnabled(bool)));
     connect(actions[BinEditor::Undo], SIGNAL(triggered()), m_editor, SLOT(undo()));
 
     actions[BinEditor::Copy] = new QAction(this);
     actions[BinEditor::Copy]->setEnabled(false);
+    actions[BinEditor::Copy]->setObjectName(Constants::Actions::Copy);
+    addAction(actions[BinEditor::Copy]);
     connect(m_editor, SIGNAL(copyAvailable(bool)), actions[BinEditor::Copy], SLOT(setEnabled(bool)));
     connect(actions[BinEditor::Copy], SIGNAL(triggered()), m_editor, SLOT(copy()));
 
     actions[BinEditor::SelectAll] = new QAction(this);
+    actions[BinEditor::SelectAll]->setObjectName(Constants::Actions::SelectAll);
+    addAction(actions[BinEditor::SelectAll]);
     connect(actions[BinEditor::SelectAll], SIGNAL(triggered()), m_editor, SLOT(selectAll()));
 }
 
@@ -75,14 +82,6 @@ void BinEditor::retranslateUi()
     actions[BinEditor::Undo]->setText(tr("Undo"));
     actions[BinEditor::Copy]->setText(tr("Copy"));
     actions[BinEditor::SelectAll]->setText(tr("Select all"));
-}
-
-void BinEditor::registerActions()
-{
-    addAction(actions[BinEditor::Redo], Constants::Actions::Redo);
-    addAction(actions[BinEditor::Undo], Constants::Actions::Undo);
-    addAction(actions[BinEditor::Copy], Constants::Actions::Copy);
-    addAction(actions[BinEditor::SelectAll], Constants::Actions::SelectAll);
 }
 
 BinEditorFactory::BinEditorFactory(QObject *parent) :

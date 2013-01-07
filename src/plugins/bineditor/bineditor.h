@@ -37,7 +37,6 @@ protected:
 private:
     void createActions();
     void retranslateUi();
-    void registerActions();
 
 private slots:
     void open(const QUrl &url);
