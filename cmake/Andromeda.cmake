@@ -73,6 +73,5 @@ copy_qt_qm()
 
 # compiler options
 if( NOT MSVC )
-    add_definitions( -Wall -pedantic )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -pedantic" )
 endif( NOT MSVC )
