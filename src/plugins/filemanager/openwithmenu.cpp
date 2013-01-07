@@ -143,11 +143,7 @@ void OpenWithMenu::selectProgram()
     QStringList failedPaths;
     foreach (const QUrl &url, m_urls) {
         QString path;
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 0))
         if (url.isLocalFile())
-#else
-        if (url.scheme() == QLatin1String("file"))
-#endif
             path = url.toLocalFile();
         else
             path = url.toString();
