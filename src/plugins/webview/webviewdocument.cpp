@@ -1,9 +1,9 @@
 #include "webviewdocument.h"
 
-#include <QDebug>
-#include <QAction>
-#include <QWebFrame>
-#include <QWebPage>
+#include <QtGui/QAction>
+#include <QtWebKit/QWebFrame>
+#include <QtWebKit/QWebPage>
+#include <guisystem/constants.h>
 
 #include "cookiejar.h"
 #include "webviewplugin.h"
@@ -31,6 +31,14 @@ static QWebPage * createPage(WebViewDocument *document)
     QObject::connect(page, SIGNAL(loadStarted()), document, SLOT(onLoadStarted()));
     QObject::connect(page, SIGNAL(loadProgress(int)), document, SLOT(setProgress(int)));
     QObject::connect(page, SIGNAL(loadFinished(bool)), document, SLOT(onLoadFinished()));
+
+    page->action(QWebPage::Redo)->setObjectName(Constants::Actions::Redo);
+    page->action(QWebPage::Undo)->setObjectName(Constants::Actions::Undo);
+
+    page->action(QWebPage::Cut)->setObjectName(Constants::Actions::Cut);
+    page->action(QWebPage::Copy)->setObjectName(Constants::Actions::Copy);
+    page->action(QWebPage::Paste)->setObjectName(Constants::Actions::Paste);
+    page->action(QWebPage::SelectAll)->setObjectName(Constants::Actions::SelectAll);
 
     return page;
 }

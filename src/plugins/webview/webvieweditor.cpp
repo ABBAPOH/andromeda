@@ -219,16 +219,9 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
 
     QAction *findAction = new QAction(tr("Find"), this);
+    findAction->setObjectName(Constants::Actions::Find);
     connect(findAction, SIGNAL(triggered()), m_findToolBar, SLOT(openFind()));
-    addAction(findAction, "Find");
-
-    addAction(m_webView->pageAction(QWebPage::Redo), Constants::Actions::Redo);
-    addAction(m_webView->pageAction(QWebPage::Undo), Constants::Actions::Undo);
-
-    addAction(m_webView->pageAction(QWebPage::Cut), Constants::Actions::Cut);
-    addAction(m_webView->pageAction(QWebPage::Copy), Constants::Actions::Copy);
-    addAction(m_webView->pageAction(QWebPage::Paste), Constants::Actions::Paste);
-    addAction(m_webView->pageAction(QWebPage::SelectAll), Constants::Actions::SelectAll);
+    addAction(findAction);
 
     createActions();
     connectDocument(qobject_cast<WebViewDocument *>(document()));
@@ -290,18 +283,28 @@ void WebViewEditor::onPageChanged()
 void WebViewEditor::createActions()
 {
     m_showWebInspectorAction = new QAction(this);
+    m_showWebInspectorAction->setObjectName(Constants::Actions::ShowWebInspector);
     m_showWebInspectorAction->setCheckable(true);
+    addAction(m_showWebInspectorAction);
     connect(m_showWebInspectorAction, SIGNAL(triggered(bool)), SLOT(showWebInspector(bool)));
-
-    addAction(m_showWebInspectorAction, Constants::Actions::ShowWebInspector);
 }
 
 void WebViewEditor::connectDocument(WebViewDocument *document)
 {
     Q_ASSERT(document);
-    m_webView->setPage(document->page());
-    m_history->setHistory(m_webView->page()->history());
+
+    QWebPage *page = document->page();
+    m_webView->setPage(page);
+    m_history->setHistory(page->history());
     connect(document, SIGNAL(pageChanged()), SLOT(onPageChanged()));
+
+    addAction(m_webView->pageAction(QWebPage::Redo));
+    addAction(m_webView->pageAction(QWebPage::Undo));
+
+    addAction(page->action(QWebPage::Cut));
+    addAction(page->action(QWebPage::Copy));
+    addAction(page->action(QWebPage::Paste));
+    addAction(page->action(QWebPage::SelectAll));
 }
 
 QString WebViewEditorFactory::name() const
