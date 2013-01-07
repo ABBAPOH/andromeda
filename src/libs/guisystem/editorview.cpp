@@ -5,13 +5,44 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 
+#include <QtGui/QAction>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QStackedLayout>
 
 #include "abstractdocument.h"
+#include "constants.h"
 #include "editorviewhistory.h"
+#include "findtoolbar.h"
 
 using namespace GuiSystem;
+
+void EditorViewPrivate::init()
+{
+    Q_Q(EditorView);
+
+    editor = 0;
+
+    mainLayout = new QVBoxLayout(q);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
+
+    findToolBar = new FindToolBar(q);
+    findToolBar->hide();
+    mainLayout->addWidget(findToolBar);
+
+    layout = new QStackedLayout(mainLayout);
+    ignoreSignals = false;
+
+    stackedHistory = new EditorViewHistory(q);
+    stackedHistory->setContainer(q);
+
+    QObject::connect(layout, SIGNAL(currentChanged(int)), q, SIGNAL(editorChanged()));
+
+    findAction = new QAction(EditorView::tr("Find"), q);
+    findAction->setObjectName(Constants::Actions::Find);
+    QObject::connect(findAction, SIGNAL(triggered()), findToolBar, SLOT(openFind()));
+    q->addAction(findAction);
+}
 
 void EditorViewPrivate::openEditor(const QUrl &url, AbstractEditorFactory *factory)
 {
@@ -46,16 +77,7 @@ EditorView::EditorView(QWidget *parent) :
     QWidget(parent),
     d(new EditorViewPrivate(this))
 {
-    d->editor = 0;
-    d->layout = new QStackedLayout(this);
-    d->ignoreSignals = false;
-
-    d->stackedHistory = new EditorViewHistory(this);
-    d->stackedHistory->setContainer(this);
-
-    connect(d->layout, SIGNAL(currentChanged(int)), SIGNAL(editorChanged()));
-
-    new EditorViewHistory;
+    d->init();
 }
 
 /*!
@@ -78,6 +100,12 @@ void EditorView::setSourceEditor(AbstractEditor *editor)
 
     d->editor = editor;
     d->document = editor ? editor->document() : 0;
+
+    d->findToolBar->hide();
+    IFind *find = editor ? editor->find() : 0;
+    d->findToolBar->setFind(find);
+    d->findAction->setEnabled(find);
+
     if (d->document) {
         connect(d->document, SIGNAL(urlChanged(QUrl)),
                 this, SLOT(onUrlChanged(QUrl)));

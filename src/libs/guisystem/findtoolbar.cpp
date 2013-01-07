@@ -71,6 +71,9 @@ IFind *FindToolBar::find() const
 
 void FindToolBar::setFind(IFind *find)
 {
+    if (d->find == find)
+        return;
+
     d->find = find;
 
     updateUi();
@@ -314,7 +317,7 @@ void FindToolBar::setupConnections()
 
 void FindToolBar::updateUi()
 {
-    bool visible = d->find->supportsReplace();
+    bool visible = d->find ? d->find->supportsReplace() : false;
 
     d->replaceLineEdit->setVisible(visible);
     d->replaceButton->setVisible(visible);

@@ -13,11 +13,6 @@ class QVBoxLayout;
 class QWebView;
 class QWebInspector;
 class QSplitter;
-//class IFind;
-
-namespace GuiSystem {
-class FindToolBar;
-} // namespace GuiSystem
 
 namespace WebView {
 
@@ -58,7 +53,6 @@ private:
     QWebView *m_webView;
     WebViewHistory *m_history;
     WebViewFind *m_find;
-    GuiSystem::FindToolBar *m_findToolBar;
     QWebInspector *m_webInspector;
     QAction *m_showWebInspectorAction;
 };

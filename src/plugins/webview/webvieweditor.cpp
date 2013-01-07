@@ -197,11 +197,6 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
 
     m_find = new WebViewFind(this);
 
-    m_findToolBar = new FindToolBar(this);
-    m_findToolBar->setFind(m_find);
-    m_findToolBar->hide();
-    m_layout->addWidget(m_findToolBar);
-
     m_splitter = new MiniSplitter(Qt::Vertical, this);
     m_layout->addWidget(m_splitter);
 
@@ -217,11 +212,6 @@ WebViewEditor::WebViewEditor(QWidget *parent) :
     QWebSettings::setIconDatabasePath(getCacheDirectory());
 
     connect(m_webView, SIGNAL(linkClicked(QUrl)), SLOT(onUrlClicked(QUrl)));
-
-    QAction *findAction = new QAction(tr("Find"), this);
-    findAction->setObjectName(Constants::Actions::Find);
-    connect(findAction, SIGNAL(triggered()), m_findToolBar, SLOT(openFind()));
-    addAction(findAction);
 
     createActions();
     connectDocument(qobject_cast<WebViewDocument *>(document()));
