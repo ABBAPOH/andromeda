@@ -106,6 +106,7 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar->setFloatable(false);
     toolBar->setMovable(false);
     toolBar->setObjectName("toolBar");
+    toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
 
     toolBar->addAction(q->action(BrowserWindow::Back));
     toolBar->addAction(q->action(BrowserWindow::Forward));
