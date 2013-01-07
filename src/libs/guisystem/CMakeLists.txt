@@ -1,3 +1,6 @@
+set( QT_USE_QTNETWORK TRUE )
+include( ${QT_USE_FILE} )
+
 set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
 set( HEADERS
     action.h
@@ -20,6 +23,7 @@ set( HEADERS
     editorwindow.h
     editorwindow_p.h
     editorwindowfactory.h
+    filedocument.h
     findtoolbar.h
     history.h
     historybutton.h
@@ -51,6 +55,7 @@ set( SOURCES
     editorview.cpp
     editorwindow.cpp
     editorwindowfactory.cpp
+    filedocument.cpp
     findtoolbar.cpp
     history.cpp
     historybutton.cpp

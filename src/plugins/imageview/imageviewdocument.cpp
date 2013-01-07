@@ -11,46 +11,19 @@ using namespace GuiSystem;
 using namespace ImageView;
 
 ImageViewDocument::ImageViewDocument(QObject *parent) :
-    AbstractDocument(parent)
+    FileDocument(parent)
 {
     setIcon(QIcon(":/icons/imageview.png"));
 }
 
-void ImageViewDocument::save(const QUrl &url)
+bool ImageViewDocument::read(QIODevice *device, const QString &fileName)
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 0))
-    if (!url.isLocalFile())
-#else
-    if (url.scheme() != QLatin1String("file"))
-#endif
-        return;
-
-    QString path = url.toLocalFile();
-    QFile file(path);
-    if (!file.open(QFile::WriteOnly))
-        return;
-
-    editor->m_view->write(&file, QFileInfo(path).suffix().toUtf8());
+    editor->m_view->read(device, QFileInfo(fileName).suffix().toUtf8());
+    return true;
 }
 
-bool ImageViewDocument::openUrl(const QUrl &url)
+bool ImageViewDocument::write(QIODevice *device, const QString &fileName)
 {
-    if (url.isEmpty()) {
-        editor->m_view->setImage(QImage());
-        return true;
-    }
-
-    QString path = url.path();
-    if (path.isEmpty())
-        return false;
-
-    QFileInfo info(path);
-    setTitle(info.fileName());
-
-    QFile file(path);
-    if (!file.open(QFile::ReadOnly))
-        return false;
-
-    editor->m_view->read(&file, QFileInfo(path).suffix().toUtf8());
+    editor->m_view->write(device, QFileInfo(fileName).suffix().toUtf8());
     return true;
 }

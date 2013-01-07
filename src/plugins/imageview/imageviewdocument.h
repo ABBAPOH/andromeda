@@ -4,12 +4,12 @@
 #include "imageview_global.h"
 #include "imagevieweditor.h"
 
-#include <guisystem/abstractdocument.h>
+#include <guisystem/filedocument.h>
 #include <qimageview/qimageview.h>
 
 namespace ImageView {
 
-class IMAGEVIEW_EXPORT ImageViewDocument : public GuiSystem::AbstractDocument
+class IMAGEVIEW_EXPORT ImageViewDocument : public GuiSystem::FileDocument
 {
     Q_OBJECT
 public:
@@ -17,10 +17,9 @@ public:
 
     void setEditor(ImageViewEditor *editor) { this->editor = editor; }
 
-    void save(const QUrl &url);
-
 protected:
-    bool openUrl(const QUrl &url);
+    bool read(QIODevice *device, const QString &fileName);
+    bool write(QIODevice *device, const QString &fileName);
 
 private:
     ImageViewEditor *editor;

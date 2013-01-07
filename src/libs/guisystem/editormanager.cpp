@@ -133,7 +133,7 @@ EditorManager::FactoryList EditorManager::factoriesForMimeType(const QString &mi
         }
     }
 
-    qSort(result.begin(), result.end(), editorFactoryLessThan);
+    qStableSort(result.begin(), result.end(), editorFactoryLessThan);
 
     return result;
 }
@@ -156,12 +156,24 @@ EditorManager::FactoryList EditorManager::factoriesForUrl(const QUrl &url) const
     if (url.scheme() == qApp->applicationName()) {
         result.append(factoryForId(url.host()));
     } else {
-        result.append(factoriesForScheme(url.scheme()));
-
         QMimeDatabase db;
-        QString mimeType = db.mimeTypeForUrl(url).name();
-        result.append(factoriesForMimeType(mimeType));
+        QList<QMimeType> mimeTypes;
+
+        mimeTypes.append(db.mimeTypesForFileName(QFileInfo(url.path()).fileName()));
+        mimeTypes.append(db.mimeTypeForUrl(url));
+        foreach (const QMimeType &mimeType, mimeTypes) {
+            QString mimeTypeName = mimeType.name();
+            result.append(factoriesForMimeType(mimeTypeName));
+        }
+
+        // add scheme factory last to maximize chance to
+        // get "mime type editor" with same weight instead of
+        // "scheme editor"
+        result.append(factoriesForScheme(url.scheme()));
     }
+
+    result.erase(std::unique(result.begin(), result.end()), result.end());
+    qStableSort(result.begin(), result.end(), editorFactoryLessThan);
 
     return result;
 }

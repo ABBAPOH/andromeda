@@ -26,7 +26,7 @@ public:
     QString title;
     QUrl url;
 
-private:
+protected:
     AbstractDocument *q_ptr;
 };
 
