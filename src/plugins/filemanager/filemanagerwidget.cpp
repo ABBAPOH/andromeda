@@ -142,6 +142,8 @@ void FileItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
             cursor.movePosition(QTextCursor::StartOfBlock);
             cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, selectionLength);
             textEdit->setTextCursor(cursor);
+        } else {
+            textEdit->selectAll();
         }
     }
 }
