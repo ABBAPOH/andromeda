@@ -115,6 +115,11 @@ QWidget * FileItemDelegate::createEditor(QWidget *parent, const QStyleOptionView
         textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         textEdit->setAcceptRichText(false);
         textEdit->setAlignment(option.displayAlignment);
+        const QStyleOptionViewItemV2 *optionV2 = qstyleoption_cast<const QStyleOptionViewItemV2 *>(&option);
+        if (optionV2) {
+            bool wrap = optionV2->features.testFlag(QStyleOptionViewItemV2::WrapText);
+            textEdit->setWordWrapMode(wrap ? QTextOption::WrapAtWordBoundaryOrAnywhere : QTextOption::NoWrap);
+        }
     }
 
     return textEdit;
