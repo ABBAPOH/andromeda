@@ -62,6 +62,7 @@ private:
 
     void createActions();
     void createGoToMenu();
+    void retranslateGoToMenu();
     void createWindowsMenu();
     void createToolsMenu();
     void createDockMenu();

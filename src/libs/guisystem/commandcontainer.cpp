@@ -12,7 +12,7 @@ namespace GuiSystem {
 class CommandContainerPrivate
 {
 public:
-    explicit CommandContainerPrivate(CommandContainer *qq) : q(qq) {}
+    explicit CommandContainerPrivate(CommandContainer *qq) : menu(0), q(qq) {}
 
     void addObject(QObject *o, const QByteArray &weight);
 
@@ -22,6 +22,7 @@ public:
 
     QObjectList objects;
     QList<QByteArray> weights;
+    mutable QMenu *menu;
 
 private:
     CommandContainer *q;
@@ -249,7 +250,11 @@ QString CommandContainer::title() const
 
 void CommandContainer::setTitle(const QString &title)
 {
-    d_func()->title = title;
+    Q_D(CommandContainer);
+
+    d->title = title;
+    if (d->menu)
+        d->menu->setTitle(title);
 }
 
 void CommandContainer::onDestroy(QObject *o)
@@ -263,7 +268,12 @@ void CommandContainer::onDestroy(QObject *o)
 
 QMenu * CommandContainer::createMenu(QWidget *parent) const
 {
-    return new QMenu(parent);
+    Q_D(const CommandContainer);
+
+    if (!d->menu)
+        d->menu = new QMenu;
+
+    return d->menu;
 }
 
 QToolBar * CommandContainer::createToolBar(QWidget *parent) const

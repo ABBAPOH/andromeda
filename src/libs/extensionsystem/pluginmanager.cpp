@@ -460,8 +460,15 @@ void PluginManagerPrivate::loadTranslations(const QStringList &translations)
         QTranslator *translator = new QTranslator();
         translators.append(translator);
 
-        translator->load(QString(QLatin1String("%1_%2")).arg(translation).arg(locale), translationsDir);
-        qApp->installTranslator(translator);
+        QString path = QString("%1_%2").arg(translation).arg(locale);
+        bool ok = translator->load(path, translationsDir);
+        if (!ok) {
+            qWarning() << "PluginManagerPrivate::loadTranslations"
+                       << "Failed to load translation file"
+                       << path;
+        } else {
+            qApp->installTranslator(translator);
+        }
     }
 }
 

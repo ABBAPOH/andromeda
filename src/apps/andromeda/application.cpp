@@ -11,9 +11,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMessageBox>
-#ifndef Q_OS_MAC
 #include <QtGui/QSystemTrayIcon>
-#endif
 
 #include <extensionsystem/errorsdialog.h>
 #include <extensionsystem/pluginmanager.h>
@@ -203,6 +201,9 @@ bool Application::activateApplication()
 bool Application::loadPlugins()
 {
     m_pluginManager->loadPlugins();
+
+    MenuBarContainer::instance()->retranslateUi();
+    retranslateGoToMenu();
 
     QStringList args = arguments().mid(1);
     args.prepend(QDir::currentPath());
@@ -503,15 +504,14 @@ void Application::createGoToMenu()
 
     // ================ GoTo Menu ================
     CommandContainer *goToMenu = new CommandContainer(Constants::Menus::GoTo, this);
-    goToMenu->setTitle(tr("Go to"));
     menuBar->addContainer(goToMenu, "025");
 
     // ================ GoTo Menu (default) ================
-    c = new Command(Constants::Actions::Back, tr("Back"), this);
+    c = new Command(Constants::Actions::Back, this);
     c->setDefaultShortcut(QKeySequence::Back);
     goToMenu->addCommand(c);
 
-    c = new Command(Constants::Actions::Forward, tr("Forward"), this);
+    c = new Command(Constants::Actions::Forward, this);
     c->setDefaultShortcut(QKeySequence::Forward);
     goToMenu->addCommand(c);
 
@@ -521,6 +521,18 @@ void Application::createGoToMenu()
     c = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Alt+Up")), tr("Up one level"), this);
 #endif
     goToMenu->addCommand(c);
+    retranslateGoToMenu();
+}
+
+void Application::retranslateGoToMenu()
+{
+    ActionManager *manager = ActionManager::instance();
+    CommandContainer *goToMenu = manager->container(Constants::Menus::GoTo);
+    goToMenu->setTitle(tr("Go to"));
+
+    manager->command(Constants::Actions::Back)->setDefaultText(tr("Back"));
+    manager->command(Constants::Actions::Forward)->setDefaultText(tr("Forward"));
+    manager->command(Constants::Actions::Up)->setDefaultText(tr("Up one level"));
 }
 
 void Application::createWindowsMenu()
