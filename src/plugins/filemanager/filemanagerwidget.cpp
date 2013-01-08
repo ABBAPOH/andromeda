@@ -190,7 +190,7 @@ void FileItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionV
         const QStyleOptionViewItemV3 *optionV3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option);
         const QWidget *widget = optionV3 ? optionV3->widget : 0;
         const QStyle *style = widget ? widget->style() : qApp->style();
-        const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, &option, widget);
+        const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, &option, widget) + 1;
 
         r.adjust(-frameWidth - textMargin, -frameWidth, frameWidth + textMargin, frameWidth);
         editor->setGeometry(r);
