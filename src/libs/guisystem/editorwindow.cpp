@@ -378,7 +378,10 @@ void EditorWindow::onReadOnlyChanged(bool readOnly)
 {
     Q_D(EditorWindow);
 
-    d->actions[EditorWindow::SaveAs]->setEnabled(!readOnly);
+    bool modified = d->document ? d->document->isModified() : false;
+    d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
+
+//    d->actions[EditorWindow::SaveAs]->setEnabled(!readOnly);
 }
 
 void EditorWindowPrivate::createActions()

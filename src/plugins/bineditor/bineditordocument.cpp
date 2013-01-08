@@ -9,6 +9,7 @@ using namespace BINEditor;
 BinEditorDocument::BinEditorDocument(QObject *parent) :
     AbstractDocument(parent)
 {
+    setReadOnly(false);
 }
 
 bool BinEditorDocument::openUrl(const QUrl &url)

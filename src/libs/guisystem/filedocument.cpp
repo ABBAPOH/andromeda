@@ -73,6 +73,8 @@ void FileDocument::save(const QUrl &url)
     file->close();
     delete d->file;
     d->file = file;
+
+    setReadOnly(false);
 }
 
 /*!
@@ -131,9 +133,10 @@ bool FileDocument::openUrl(const QUrl &url)
         if (!d->file)
             return false;
 
+        setReadOnly(false);
         return read(d->file, QFileInfo(url.path()).fileName());
     } else if (url.scheme() == "http") {
-//        setReadOnly(true);
+        setReadOnly(true);
         setState(OpenningState);
         QNetworkAccessManager *qNAM = new QNetworkAccessManager(this);
         QNetworkReply *reply = qNAM->get(QNetworkRequest(url));
