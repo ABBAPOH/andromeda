@@ -176,19 +176,6 @@
     </message>
 </context>
 <context>
-    <name>PrivacySettingsPage</name>
-    <message>
-        <location filename="../privacysettings.h" line="65"/>
-        <source>Privacy</source>
-        <translation>Конфиденциальность</translation>
-    </message>
-    <message>
-        <location filename="../privacysettings.h" line="68"/>
-        <source>Web View</source>
-        <translation>Веб браузер</translation>
-    </message>
-</context>
-<context>
     <name>PrivacySettingsWidget</name>
     <message>
         <location filename="../privacysettings.ui" line="14"/>
@@ -388,17 +375,30 @@
     </message>
 </context>
 <context>
-    <name>WebView::WebViewEditor</name>
+    <name>WebView::PrivacySettingsPage</name>
     <message>
-        <location filename="../webvieweditor.cpp" line="262"/>
-        <source>Find</source>
-        <translation>Найти</translation>
+        <location filename="../privacysettings.h" line="67"/>
+        <source>Privacy</source>
+        <translation>Конфиденциальность</translation>
+    </message>
+    <message>
+        <location filename="../privacysettings.h" line="70"/>
+        <source>Web View</source>
+        <translation>Веб браузер</translation>
     </message>
 </context>
 <context>
-    <name>WebViewPlugin</name>
+    <name>WebView::WebViewEditorFactory</name>
     <message>
-        <location filename="../webviewplugin.cpp" line="257"/>
+        <location filename="../webvieweditor.cpp" line="296"/>
+        <source>Web view</source>
+        <translation>Веб браузер</translation>
+    </message>
+</context>
+<context>
+    <name>WebView::WebViewPlugin</name>
+    <message>
+        <location filename="../webviewplugin.cpp" line="261"/>
         <source>Show web inspector</source>
         <translation>Показать веб инспектор</translation>
     </message>

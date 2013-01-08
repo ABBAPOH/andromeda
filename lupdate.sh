@@ -17,6 +17,9 @@ function main {
     for plugin in src/plugins/* ; do
         update_plugin $plugin $1 $2
     done
+    for app in src/apps/* ; do
+        update_lib $app $1 $2
+    done
 }
 
 if [ -z "$1" ]; then

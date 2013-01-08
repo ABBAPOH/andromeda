@@ -230,7 +230,7 @@ void MenuBarContainerPrivate::retranslateCommands()
     retranslateCommand(MenuBarContainer::Cut, MenuBarContainer::tr("Cut"));
     retranslateCommand(MenuBarContainer::Copy, MenuBarContainer::tr("Copy"));
     retranslateCommand(MenuBarContainer::Paste, MenuBarContainer::tr("Paste"));
-    retranslateCommand(MenuBarContainer::SelectAll, MenuBarContainer::tr("SelectAll"));
+    retranslateCommand(MenuBarContainer::SelectAll, MenuBarContainer::tr("Select All"));
 
     retranslateCommand(MenuBarContainer::Find, MenuBarContainer::tr("Find"));
     retranslateCommand(MenuBarContainer::FindNext, MenuBarContainer::tr("Find next"));

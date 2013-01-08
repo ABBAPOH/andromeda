@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Permissions</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="sizeConstraint">
@@ -52,7 +52,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>arch (501)</string>
+      <string notr="true">arch (501)</string>
      </property>
     </widget>
    </item>
@@ -259,7 +259,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>644</string>
+         <string notr="true">644</string>
         </property>
        </widget>
       </item>
@@ -323,7 +323,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>rw-r--r--</string>
+         <string notr="true">rw-r--r--</string>
         </property>
        </widget>
       </item>
@@ -339,7 +339,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>admin (80)</string>
+      <string notr="true">admin (80)</string>
      </property>
     </widget>
    </item>

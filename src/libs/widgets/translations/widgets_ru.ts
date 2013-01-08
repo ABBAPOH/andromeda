@@ -15,24 +15,38 @@
     </message>
 </context>
 <context>
+    <name>ShortcutEdit</name>
+    <message>
+        <location filename="../shortcutedit.cpp" line="26"/>
+        <location filename="../shortcutedit.cpp" line="176"/>
+        <source>Press shortcut</source>
+        <translation>Нажмите сочетание клавиш</translation>
+    </message>
+</context>
+<context>
     <name>WindowsMenu</name>
     <message>
-        <location filename="../windowsmenu.cpp" line="107"/>
+        <location filename="../windowsmenu.cpp" line="119"/>
         <source>Minimize</source>
         <translation>Свернуть</translation>
     </message>
     <message>
-        <location filename="../windowsmenu.cpp" line="108"/>
+        <location filename="../windowsmenu.cpp" line="120"/>
+        <source>Toggle fullsreen</source>
+        <translation>Полноэкранный режим</translation>
+    </message>
+    <message>
+        <location filename="../windowsmenu.cpp" line="121"/>
         <source>Next window</source>
         <translation>Следующее окно</translation>
     </message>
     <message>
-        <location filename="../windowsmenu.cpp" line="109"/>
+        <location filename="../windowsmenu.cpp" line="122"/>
         <source>Previous window</source>
         <translation>Предыдущее окно</translation>
     </message>
     <message>
-        <location filename="../windowsmenu.cpp" line="111"/>
+        <location filename="../windowsmenu.cpp" line="124"/>
         <source>Windows</source>
         <translation>Окна</translation>
     </message>

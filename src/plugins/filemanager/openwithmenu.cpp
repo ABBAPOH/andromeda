@@ -166,7 +166,7 @@ void OpenWithMenu::selectProgram()
     if (!result) {
         QMessageBox::warning(this,
                              tr("Can't open files"),
-                             tr("Andromeda failed to open some files :%1").
+                             tr("Andromeda failed to open some files: %1").
                              arg(failedPaths.join(QLatin1String("\n"))));
     }
 }

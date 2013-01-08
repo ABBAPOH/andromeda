@@ -169,7 +169,7 @@ Application::Application(int &argc, char **argv) :
 
     m_pluginManager = new PluginManager(this);
     m_pluginManager->setPluginsFolder("andromeda");
-    m_pluginManager->setTranslations(QStringList() << "extensionsystem" << "guisystem" << "widgets");
+    m_pluginManager->setTranslations(QStringList() << "andromeda" << "extensionsystem" << "guisystem" << "widgets");
     connect(m_pluginManager, SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
 
     EditorWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
@@ -211,7 +211,7 @@ bool Application::loadPlugins()
 
     if (m_pluginManager->hasErrors()) {
         ErrorsDialog dlg;
-        dlg.setMessage(QObject::tr("Errors occured during loading plugins."));
+        dlg.setMessage(tr("Errors occured during loading plugins."));
         dlg.setErrors(m_pluginManager->errors());
         dlg.exec();
     }

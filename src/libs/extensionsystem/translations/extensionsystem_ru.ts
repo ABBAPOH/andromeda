@@ -4,17 +4,17 @@
 <context>
     <name>ExtensionSystem::PluginManager</name>
     <message>
-        <location filename="../pluginmanager.cpp" line="293"/>
+        <location filename="../pluginmanager.cpp" line="372"/>
         <source>No plugins found in (%1)</source>
         <translation>Плагины не найдены в %1</translation>
     </message>
     <message>
-        <location filename="../pluginmanager.cpp" line="299"/>
+        <location filename="../pluginmanager.cpp" line="155"/>
         <source>Error parsing options : &apos;%1&apos;</source>
         <translation>Ошибка при разборе параметров : &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../pluginmanager.cpp" line="333"/>
+        <location filename="../pluginmanager.cpp" line="407"/>
         <source>Failed to read spec file %1 : &apos;%2&apos;</source>
         <translation>Невозможно прочитать файл спецификации %1 : &apos;%2&apos;</translation>
     </message>
@@ -22,59 +22,59 @@
 <context>
     <name>ExtensionSystem::PluginSpec</name>
     <message>
-        <location filename="../pluginspec.cpp" line="107"/>
+        <location filename="../pluginspec.cpp" line="182"/>
         <source>Failed to initialize plugin %1</source>
         <translation>Невозможно инициализировать плагин %1</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="131"/>
+        <location filename="../pluginspec.cpp" line="206"/>
         <source>Can&apos;t load plugin: </source>
         <translation>Невозможно загрузить плагин:</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="137"/>
+        <location filename="../pluginspec.cpp" line="212"/>
         <source>Can&apos;t load plugin: not a valid plugin</source>
         <translation>Невозможно загрузить плагин: плагин не является валидным</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="157"/>
+        <location filename="../pluginspec.cpp" line="232"/>
         <source>Can&apos;t unload plugin: %1 is not loaded</source>
         <translation>Невозможно выгрузить плагин: %1 не загружен</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="186"/>
+        <location filename="../pluginspec.cpp" line="261"/>
         <source>Can&apos;t unload plugin library: %1</source>
         <translation>Невозможно выгрузить библиотеку: %1</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="217"/>
+        <location filename="../pluginspec.cpp" line="292"/>
         <source>Can&apos;t resolve dependency &apos;%1(%2)&apos;</source>
         <translation>Невозможно разрешить зависимость &apos;%1(%2)&apos;</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="559"/>
+        <location filename="../pluginspec.cpp" line="617"/>
         <source>No error</source>
         <comment>PluginSpec</comment>
         <translation>Нет ошибки</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="590"/>
-        <location filename="../pluginspec.cpp" line="648"/>
+        <location filename="../pluginspec.cpp" line="651"/>
+        <location filename="../pluginspec.cpp" line="716"/>
         <source>Failed to open file %1 : &apos;%2&apos;</source>
         <translation>Невозможно открыть файл %1 : &apos;%2&apos;</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="599"/>
+        <location filename="../pluginspec.cpp" line="660"/>
         <source>Cannot read file %1 : &apos;%2&apos;</source>
         <translation>Невозможно прочесть файл %1 : &apos;%2&apos;</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="618"/>
+        <location filename="../pluginspec.cpp" line="679"/>
         <source>Failed to add option %1 : &apos;%2&apos;</source>
         <translation>Невозможно добавить параметр %1 : &apos;%2&apos;</translation>
     </message>
     <message>
-        <location filename="../pluginspec.cpp" line="655"/>
+        <location filename="../pluginspec.cpp" line="723"/>
         <source>Failed to write file %1 : &apos;%2&apos;</source>
         <translation>Невозможно записать файл %1 : &apos;%2&apos;</translation>
     </message>
@@ -82,62 +82,62 @@
 <context>
     <name>ExtensionSystem::PluginViewModel</name>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="98"/>
+        <location filename="../pluginviewmodel.cpp" line="158"/>
         <source>Name</source>
         <translation>Имя</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="99"/>
+        <location filename="../pluginviewmodel.cpp" line="159"/>
         <source>Loads on Startup</source>
         <translation>Загружать на старте</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="100"/>
+        <location filename="../pluginviewmodel.cpp" line="160"/>
         <source>Enabled</source>
         <translation>Включён</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="101"/>
+        <location filename="../pluginviewmodel.cpp" line="161"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="102"/>
+        <location filename="../pluginviewmodel.cpp" line="162"/>
         <source>Compatibility Version</source>
         <translation>Совместимая версия</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="103"/>
+        <location filename="../pluginviewmodel.cpp" line="163"/>
         <source>Vendor</source>
         <translation>Поставщик</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="104"/>
+        <location filename="../pluginviewmodel.cpp" line="164"/>
         <source>Url</source>
         <translation>Адрес</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="105"/>
+        <location filename="../pluginviewmodel.cpp" line="165"/>
         <source>Library Path</source>
         <translation>Путь к библиотеке</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="106"/>
+        <location filename="../pluginviewmodel.cpp" line="166"/>
         <source>Description</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="107"/>
+        <location filename="../pluginviewmodel.cpp" line="167"/>
         <source>Copyright</source>
         <translation>Авторское право</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="108"/>
+        <location filename="../pluginviewmodel.cpp" line="168"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../pluginviewmodel.cpp" line="109"/>
+        <location filename="../pluginviewmodel.cpp" line="169"/>
         <source>Dependencies</source>
         <translation>Зависимости</translation>
     </message>
@@ -354,40 +354,40 @@
         <translation>Нет ошибки</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="171"/>
-        <location filename="../options.cpp" line="268"/>
-        <location filename="../options.cpp" line="285"/>
+        <location filename="../options.cpp" line="172"/>
+        <location filename="../options.cpp" line="269"/>
+        <location filename="../options.cpp" line="286"/>
         <source>Redeclaration of option %1</source>
         <translation>Повторное определение параметра %1</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="180"/>
-        <location filename="../options.cpp" line="293"/>
+        <location filename="../options.cpp" line="181"/>
+        <location filename="../options.cpp" line="294"/>
         <source>Not enough arguments for option %1</source>
         <translation>Недостаточно аргументов для параметра %1</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="188"/>
+        <location filename="../options.cpp" line="189"/>
         <source>Unknown option %1</source>
         <translation>Неизвестный параметр %1</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="207"/>
+        <location filename="../options.cpp" line="208"/>
         <source>Too many arguments for option %1</source>
         <translation>Слишком много аргументов для параметра %1</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="234"/>
+        <location filename="../options.cpp" line="235"/>
         <source>Unknown type</source>
         <translation>Неизвестный тип</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="236"/>
+        <location filename="../options.cpp" line="237"/>
         <source>Unsupported type %1</source>
         <translation>Тип %1 не поддерживается</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="242"/>
+        <location filename="../options.cpp" line="243"/>
         <source>Type mismatch for argument %1 (expected %2)</source>
         <translation>Несовпадение типов для аргумента %1 (ожидается %2)</translation>
     </message>

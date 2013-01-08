@@ -11,6 +11,8 @@ set( SOURCES
 )
 set( RESOURCES resources.qrc )
 
+set( TS_FILES translations/qimageviewer_ru.ts )
+
 include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
@@ -37,8 +39,9 @@ endif()
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_add_resources( QRC_SOURCES ${RESOURCES} )
+qt4_wrap_ts( QM_FILES ${TS_FILES} )
 
-add_executable( qimageviewer MACOSX_BUNDLE WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${QRC_SOURCES} ${GUI_RESOURCES} )
+add_executable( qimageviewer MACOSX_BUNDLE WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${QRC_SOURCES} ${QM_FILES} ${GUI_RESOURCES} )
 target_link_libraries( qimageviewer ${QT_LIBRARIES} qtsingleapplication qimageview widgets )
 
 if( APPLE )

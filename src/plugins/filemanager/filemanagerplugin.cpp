@@ -130,7 +130,7 @@ void FileManagerPlugin::createFileMenu()
 #ifdef Q_OS_MAC
     cmd->setDefaultShortcut(QKeySequence("Ctrl+E"));
 #else
-    cmd->setDefaultShortcut(tr("F4"));
+    cmd->setDefaultShortcut(QKeySequence("F4"));
 #endif
     container->addCommand(cmd, "016");
 

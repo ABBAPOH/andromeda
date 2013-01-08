@@ -353,5 +353,7 @@ void FileExplorerWidget::onSelectedPathsChanged()
     Q_D(FileExplorerWidget);
 
     QStringList paths = d->dualPane->selectedPaths();
-    d->statusLabel->setText(tr("Selected %1 objects").arg(paths.count()));
+    int count = paths.count();
+    QString text = count == 1 ? tr("Selected 1 object") : tr("Selected %1 objects").arg(count);
+    d->statusLabel->setText(text);
 }
