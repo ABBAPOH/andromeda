@@ -129,7 +129,7 @@ void FileItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
 {
     QTextEdit *textEdit = qobject_cast<QTextEdit*>(editor);
     if (textEdit) {
-        QString text = index.data().toString();
+        QString text = index.data(Qt::EditRole).toString();
         textEdit->insertPlainText(text);
 
         QString suffix = getSuffix(text);
