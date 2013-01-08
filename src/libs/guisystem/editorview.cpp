@@ -168,6 +168,13 @@ void EditorView::openEditor(const QUrl &dirtyUrl, const QByteArray &editor)
 
 void EditorView::openEditor(const QByteArray &editorId)
 {
+    if (d->editor) {
+        QByteArray oldId = d->editor->property("id").toByteArray();
+        Q_ASSERT(!oldId.isEmpty());
+        if (oldId == editorId) // ok, we're already opened
+            return;
+    }
+
     EditorManager *manager = EditorManager::instance();
     AbstractEditorFactory *factory = manager->factoryForId(editorId);
     AbstractEditor *oldEditor = d->editor;
