@@ -183,20 +183,18 @@ void FileItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionV
 {
     QStyledItemDelegate::updateEditorGeometry(editor, option, index);
     QTextEdit *edit = qobject_cast<QTextEdit*>(editor);
-    int frameWidth = edit->frameWidth();
+    if (edit) {
+        QRect r = editor->geometry();
+        const int frameWidth = edit->frameWidth();
 
-    QTextFrameFormat format = edit->document()->rootFrame()->frameFormat();
-    int top = format.topMargin();
-    int left = format.leftMargin();
-    int right = format.rightMargin();
-    int bottom = format.bottomMargin();
+        const QStyleOptionViewItemV3 *optionV3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option);
+        const QWidget *widget = optionV3 ? optionV3->widget : 0;
+        const QStyle *style = widget ? widget->style() : qApp->style();
+        const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, &option, widget);
 
-    QRect r = editor->geometry();
-    r.setX(r.x() - frameWidth - left);
-    r.setWidth(r.width() + frameWidth*2 + right);
-    r.setY(r.y() - frameWidth - top);
-    r.setBottom(r.bottom() + frameWidth + bottom);
-    editor->setGeometry(r);
+        r.adjust(-frameWidth - textMargin, -frameWidth, frameWidth + textMargin, frameWidth);
+        editor->setGeometry(r);
+    }
 }
 
 bool FileItemDelegate::eventFilter(QObject *object, QEvent *event)
