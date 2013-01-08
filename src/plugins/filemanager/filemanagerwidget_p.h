@@ -16,6 +16,7 @@
 #include <QtGui/QStackedLayout>
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTableView>
+#include <QtGui/QTextEdit>
 #include <QtGui/QTreeView>
 #include <QtGui/QUndoCommand>
 #include <QtGui/QUndoStack>
@@ -25,28 +26,41 @@
 
 namespace FileManager {
 
-class FileDelegate : public QStyledItemDelegate
+class FileTextEdit : public QTextEdit
 {
     Q_OBJECT
-
+    Q_DISABLE_COPY(FileTextEdit)
 public:
-    explicit FileDelegate(QObject *parent = 0);
+    explicit FileTextEdit(QWidget *parent = 0);
+
+protected:
+    void resizeEvent(QResizeEvent *e);
+    void showEvent(QShowEvent *e);
+
+    void realignVCenter(QTextEdit *pTextEdit);
+};
+
+class FileItemDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(FileItemDelegate)
+public:
+    explicit FileItemDelegate(QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-public slots:
-    void selectFileName();
-
-private:
-    mutable QPointer<QLineEdit> m_editor;
+protected:
+    bool eventFilter(QObject *object, QEvent *event);
 };
 
 class FileManagerWidgetPrivate : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PUBLIC(FileManagerWidget)
-
+    Q_DISABLE_COPY(FileManagerWidgetPrivate)
 public:
     FileManagerWidgetPrivate(FileManagerWidget *qq) : QObject(), q_ptr(qq) {}
 

@@ -15,6 +15,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QMenu>
 #include <QtGui/QMessageBox>
+#include <QtGui/QTextFrame>
 
 #include <guisystem/actionmanager.h>
 #include <guisystem/constants.h>
@@ -44,32 +45,110 @@ static QString getSuffix(const QString &fileName)
     return suffix;
 }
 
-FileDelegate::FileDelegate(QObject *parent) :
+/*!
+    \class FileTextEdit
+    \internal
+*/
+FileTextEdit::FileTextEdit(QWidget *parent) :
+    QTextEdit(parent)
+{
+}
+
+void FileTextEdit::resizeEvent(QResizeEvent *e)
+{
+    QTextEdit::resizeEvent(e);
+    if (alignment().testFlag(Qt::AlignVCenter))
+        realignVCenter(this);
+}
+
+void FileTextEdit::showEvent(QShowEvent *e)
+{
+    QTextEdit::showEvent(e);
+    if (alignment().testFlag(Qt::AlignVCenter))
+        realignVCenter(this);
+}
+
+void FileTextEdit::realignVCenter(QTextEdit * pTextEdit)
+{
+    // retrieve total text document height and widget height
+    int nDocHeight = (int)pTextEdit->document()->size().height();
+    if(nDocHeight == 0)									// if no document, do nothing
+        return;
+    int nCtrlHeight= pTextEdit->height();				// the TextEdit control height
+
+    // access the document top frame and its format
+    QTextFrame * pFrame = pTextEdit->document()->rootFrame();
+    QTextFrameFormat frameFmt = pFrame->frameFormat();
+
+    // get current top margin and compute the 'black' height of the document
+    qreal nTopMargin = (int)frameFmt.topMargin();			// the frame top margin
+    qreal nBBDocH = nDocHeight - nTopMargin;				// the height of the document 'bounding box'
+
+    // compute and set appropriate frame top margin
+    if(nCtrlHeight <= nBBDocH)			// if the control is shorter than the document
+        nTopMargin = 2;									// set a nominal top margin
+    else								// if the control is taller than the document
+        nTopMargin = (nCtrlHeight - nBBDocH)/2 + 2;		// set half of the excess as top margin
+    frameFmt.setTopMargin(nTopMargin);
+
+    // SET A BORDER!! (using the same colour as the background)
+    frameFmt.setBorder(0.1);
+    frameFmt.setBorderBrush(QColor(0xFFFFFF));
+    pFrame->setFrameFormat(frameFmt);					// apply the new format
+}
+
+/*!
+    \class FileDelegate
+    \internal
+*/
+FileItemDelegate::FileItemDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
 }
 
-QWidget * FileDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget * FileItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
 {
-    QWidget *editor = QStyledItemDelegate::createEditor(parent, option, index);
-
-    QLineEdit *le = qobject_cast<QLineEdit*>(editor);
-    if (le) {
-        m_editor = le;
-        le->setAlignment(option.displayAlignment);
-        QTimer::singleShot(0, const_cast<FileDelegate*>(this), SLOT(selectFileName()));
+    QTextEdit *textEdit = new FileTextEdit(parent);
+    if (textEdit) {
+        textEdit->setAttribute(Qt::WA_MacShowFocusRect);
+        textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        textEdit->setAcceptRichText(false);
+        textEdit->setAlignment(option.displayAlignment);
     }
 
-    return editor;
+    return textEdit;
 }
 
-void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void FileItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    QLineEdit *le = qobject_cast<QLineEdit *>(editor);
-    if (!le)
+    QTextEdit *textEdit = qobject_cast<QTextEdit*>(editor);
+    if (textEdit) {
+        QString text = index.data().toString();
+        textEdit->insertPlainText(text);
+
+        QString suffix = getSuffix(text);
+
+        if (!suffix.isEmpty()) {
+            // The filename contains an extension. Assure that only the filename
+            // gets selected.
+            const int selectionLength = text.length() - suffix.length() - 1;
+            QTextCursor cursor = textEdit->textCursor();
+            cursor.movePosition(QTextCursor::StartOfBlock);
+            cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, selectionLength);
+            textEdit->setTextCursor(cursor);
+        }
+    }
+}
+
+void FileItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    QTextEdit *textEdit = qobject_cast<QTextEdit *>(editor);
+
+    if (!textEdit)
         return;
 
-    QString text = le->text();
+    QString text = textEdit->toPlainText();
 
     QString oldSuffix = getSuffix(index.data(Qt::EditRole).toString());
     QString newSuffix = getSuffix(text);
@@ -100,15 +179,40 @@ void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
     model->setData(index, text, Qt::EditRole);
 }
 
-void FileDelegate::selectFileName()
+void FileItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QString text = m_editor->text();
-    QString suffix = getSuffix(text);
+    QStyledItemDelegate::updateEditorGeometry(editor, option, index);
+    QTextEdit *edit = qobject_cast<QTextEdit*>(editor);
+    int frameWidth = edit->frameWidth();
 
-    if (suffix.isEmpty())
-        m_editor->setSelection(0, text.length());
-    else
-        m_editor->setSelection(0, text.length() - suffix.length() - 1);
+    QTextFrameFormat format = edit->document()->rootFrame()->frameFormat();
+    int top = format.topMargin();
+    int left = format.leftMargin();
+    int right = format.rightMargin();
+    int bottom = format.bottomMargin();
+
+    QRect r = editor->geometry();
+    r.setX(r.x() - frameWidth - left);
+    r.setWidth(r.width() + frameWidth*2 + right);
+    r.setY(r.y() - frameWidth - top);
+    r.setBottom(r.bottom() + frameWidth + bottom);
+    editor->setGeometry(r);
+}
+
+bool FileItemDelegate::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+        if (ke->key() == Qt::Key_Enter || ke->key() == Qt::Key_Return) {
+            QTextEdit *editor = qobject_cast<QTextEdit *>(object);
+            if (editor) {
+                emit commitData(editor);
+                emit closeEditor(editor, QAbstractItemDelegate::NoHint);
+                return true;
+            }
+        }
+    }
+    return QStyledItemDelegate::eventFilter(object, event);
 }
 
 void FileManagerWidgetPrivate::setupUi()
@@ -431,7 +535,7 @@ QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::View
     view->setDefaultDropAction(Qt::MoveAction);
     view->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
     view->setTextElideMode(Qt::ElideMiddle);
-    view->setItemDelegate(new FileDelegate(view));
+    view->setItemDelegate(new FileItemDelegate(view));
     view->setIconSize(iconSizes[mode]);
     connect(view, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(onDoubleClick(QModelIndex)),
@@ -1652,3 +1756,5 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
         d->blockEvents = false;
     }
 }
+
+
