@@ -24,6 +24,7 @@ set( HEADERS
     editorwindow_p.h
     editorwindowfactory.h
     filedocument.h
+    filedocument_p.h
     findtoolbar.h
     history.h
     historybutton.h
