@@ -69,6 +69,8 @@ void FileDocument::save(const QUrl &url)
     if (!file->open(QFile::WriteOnly))
         return;
 
+    // set title before write, so user can override it using filename
+    setTitle(QFileInfo(filePath).fileName());
     /*bool ok = */write(file, QFileInfo(url.path()).fileName());
     if (d->state == NoState) {
         file->close();
@@ -77,10 +79,10 @@ void FileDocument::save(const QUrl &url)
     } else {
         // TODO: wait for stateChanged() signal (via virtual setter or event?)
         // and reopen file there.
+        // TODO: in async variant, we need to reset title to previous value
         Q_ASSERT_X(false, "FileDocument::save", "Async saving is not supported.");
     }
 
-    setTitle(QFileInfo(filePath).fileName());
     setReadOnly(false);
     AbstractDocument::save(url);
 }
