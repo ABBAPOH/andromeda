@@ -16,7 +16,12 @@ public:
         readOnly(true),
         state(AbstractDocument::NoState),
         q_ptr(qq)
-    {}
+    {
+    }
+
+    virtual ~AbstractDocumentPrivate()
+    {
+    }
 
     QIcon icon;
     bool modified;
