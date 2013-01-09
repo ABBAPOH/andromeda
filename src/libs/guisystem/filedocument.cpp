@@ -70,11 +70,19 @@ void FileDocument::save(const QUrl &url)
         return;
 
     /*bool ok = */write(file, QFileInfo(url.path()).fileName());
-    file->close();
-    delete d->file;
-    d->file = file;
+    if (d->state == NoState) {
+        file->close();
+        delete d->file;
+        d->file = file;
+    } else {
+        // TODO: wait for stateChanged() signal (via virtual setter or event?)
+        // and reopen file there.
+        Q_ASSERT_X(false, "FileDocument::save", "Async saving is not supported.");
+    }
 
+    setTitle(QFileInfo(filePath).fileName());
     setReadOnly(false);
+    AbstractDocument::save(url);
 }
 
 /*!
@@ -125,6 +133,8 @@ bool FileDocument::openUrl(const QUrl &url)
     if (d->file)
         delete d->file;
 
+    QString fileName = QFileInfo(url.path()).fileName();
+
     if (url.scheme() == "file") {
         QString filePath = url.toLocalFile();
         d->file = new QFile(filePath, this);
@@ -134,6 +144,7 @@ bool FileDocument::openUrl(const QUrl &url)
             return false;
 
         setReadOnly(false);
+        setTitle(fileName);
         return read(d->file, QFileInfo(url.path()).fileName());
     } else if (url.scheme() == "http") {
         setReadOnly(true);
@@ -146,6 +157,7 @@ bool FileDocument::openUrl(const QUrl &url)
         connect(reply, SIGNAL(finished()), SLOT(onReplyFinished()));
 
         d->file = new QTemporaryFile(this);
+        setTitle(fileName);
         d->file->open(QFile::WriteOnly);
     }
     return true;
