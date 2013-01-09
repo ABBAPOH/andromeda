@@ -342,10 +342,20 @@ void AbstractDocument::reload()
 
     Is empty url is passed then document should save data to current url.
 
-    Default implementation does nothing.
+    Default implementation updates current url and emits urlChanged() signal
+    if necessary.
+
+    \note You should always call default implemetation, otherwise current url
+    won't be updated.
 */
 void AbstractDocument::save(const QUrl &url)
 {
+    Q_D(AbstractDocument);
+    if (d->url == url || url.isEmpty())
+        return;
+
+    d->url = url;
+    emit urlChanged(d->url);
 }
 
 /*!
