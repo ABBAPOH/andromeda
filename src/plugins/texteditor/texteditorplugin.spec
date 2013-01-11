@@ -3,7 +3,7 @@
     <copyright></copyright>
     <license>GNU Lesser General Public License</license>
     <category>Core</category>
-    <description>This is an example plugin.</description>
+    <description>This is a plugin providing possibilty to edit text files.</description>
     <url></url>
     <dependencyList>
     </dependencyList>
