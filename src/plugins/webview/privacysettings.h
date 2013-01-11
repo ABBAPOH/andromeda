@@ -47,7 +47,7 @@ private:
     CookieJar *m_cookieJar;
 };
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 
 #include <QtGui/QFileIconProvider>
 

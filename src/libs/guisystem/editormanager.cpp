@@ -7,7 +7,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
 
-#include <io/qmimedatabase.h>
+#include <IO/QMimeDatabase>
 
 namespace GuiSystem {
 

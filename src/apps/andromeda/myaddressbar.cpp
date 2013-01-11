@@ -1,9 +1,9 @@
 #include "myaddressbar.h"
 
 #include <QtGui/QAction>
-#include <guisystem/actionmanager.h>
 
-#include "constants.h"
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/constants.h>
 
 using namespace Andromeda;
 using namespace GuiSystem;

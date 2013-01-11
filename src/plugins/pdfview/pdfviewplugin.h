@@ -18,7 +18,7 @@
 #ifndef PDFVIEWPLUGIN_H
 #define PDFVIEWPLUGIN_H
 
-#include <extensionsystem/iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 class PdfViewPlugin : public ExtensionSystem::IPlugin
 {

@@ -13,7 +13,7 @@
 
 #include <QtOpenGL/QGLWidget>
 
-#include <guisystem/constants.h>
+#include <GuiSystem/constants.h>
 
 #include "qimageviewsettings.h"
 #include "qimageviewsettings_p.h"

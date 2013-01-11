@@ -1,7 +1,7 @@
 #ifndef BINEDITORPLUGIN_H
 #define BINEDITORPLUGIN_H
 
-#include <extensionsystem/iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 namespace BINEditor {
 

@@ -3,7 +3,7 @@
 #include <QtGui/QAction>
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebPage>
-#include <guisystem/constants.h>
+#include <GuiSystem/constants.h>
 
 #include "cookiejar.h"
 #include "webvieweditor_p.h"

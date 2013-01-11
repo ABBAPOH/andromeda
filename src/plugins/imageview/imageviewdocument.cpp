@@ -3,7 +3,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include <qimageview/qimageview.h>
+#include <QImageView/QImageView>
 
 #include "imagevieweditor.h"
 

@@ -6,7 +6,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QIcon>
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 
 class QSettings;
 

@@ -21,8 +21,8 @@
 #include "pdfview_global.h"
 #include "lib/pdfview.h"
 
-#include <guisystem/abstracteditor.h>
-#include <guisystem/abstracteditorfactory.h>
+#include <GuiSystem/AbstractEditor>
+#include <GuiSystem/AbstractEditorFactory>
 
 //class PdfView;
 class FindWidget;

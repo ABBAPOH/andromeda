@@ -1,6 +1,6 @@
 #include "commandssettingspage.h"
 
-#include <guisystem/commandssettingswidget.h>
+#include <GuiSystem/CommandsSettingsWidget>
 
 using namespace GuiSystem;
 using namespace Andromeda;

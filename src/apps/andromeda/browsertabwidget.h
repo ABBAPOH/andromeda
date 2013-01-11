@@ -3,10 +3,10 @@
 
 #include <QtCore/QPointer>
 
-#include <guisystem/abstracteditor.h>
-#include <guisystem/editorview.h>
+#include <GuiSystem/AbstractEditor>
+#include <GuiSystem/EditorView>
 
-#include <widgets/tabwidget.h>
+#include <Widgets/TabWidget>
 
 class TabBarButton;
 

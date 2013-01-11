@@ -12,16 +12,16 @@
 #include <QtGui/QClipboard>
 #endif
 
-#include <guisystem/action.h>
-#include <guisystem/actionmanager.h>
-#include <guisystem/command.h>
-#include <guisystem/commandcontainer.h>
-#include <guisystem/editorwindow.h>
+#include <GuiSystem/Action>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/Command>
+#include <GuiSystem/CommandContainer>
+#include <GuiSystem/EditorWindow>
 
-#include <guisystem/constants.h>
-#include <guisystem/editormanager.h>
-#include <guisystem/menubarcontainer.h>
-#include <guisystem/settingspagemanager.h>
+#include <GuiSystem/constants.h>
+#include <GuiSystem/EditorManager>
+#include <GuiSystem/MenuBarContainer>
+#include <GuiSystem/SettingsPageManager>
 
 #include "filemanagerconstants.h"
 #include "filecopydialog.h"

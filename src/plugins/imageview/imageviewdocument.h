@@ -4,8 +4,8 @@
 #include "imageview_global.h"
 #include "imagevieweditor.h"
 
-#include <guisystem/filedocument.h>
-#include <qimageview/qimageview.h>
+#include <GuiSystem/FileDocument>
+#include <QImageView/QImageView>
 
 namespace ImageView {
 

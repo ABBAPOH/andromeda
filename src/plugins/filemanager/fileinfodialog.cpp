@@ -1,8 +1,5 @@
 #include "fileinfodialog.h"
 
-#include <io/directorydetails.h>
-#include <widgets/outlinewidget.h>
-
 #include <QtCore/QDateTime>
 
 #include <QtGui/QComboBox>
@@ -12,8 +9,11 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 
-#include <io/QDriveInfo>
-#include <io/qmimedatabase.h>
+#include <IO/QDriveInfo>
+#include <IO/DirectoryDetails>
+#include <IO/QMimeDatabase>
+
+#include <Widgets/OutlineWidget>
 
 #include "permissionswidget.h"
 

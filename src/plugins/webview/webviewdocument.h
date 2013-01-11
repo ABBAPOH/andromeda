@@ -3,7 +3,7 @@
 
 #include "webview_global.h"
 
-#include <guisystem/abstractdocument.h>
+#include <GuiSystem/AbstractDocument>
 
 class QWebPage;
 

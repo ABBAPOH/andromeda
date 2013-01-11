@@ -5,14 +5,10 @@ function( qt4_wrap_single_cpp SOURCE )
 endfunction( qt4_wrap_single_cpp )
 
 set( GLOBAL_HEADERS
-    IO
-    QDriveInfo
-    QDriveController
-    QFileCopier
+    io_global.h
    )
 set( HEADERS
     inqt5/qstandardpaths.h
-    io_global.h
     info2_p.h
     directorydetails.h
     fileimageprovider.h

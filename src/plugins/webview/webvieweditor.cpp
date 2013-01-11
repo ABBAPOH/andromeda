@@ -14,10 +14,9 @@
 #include <QtWebKit/QWebHistory>
 #include <QtWebKit/QWebInspector>
 
-#include <guisystem/constants.h>
-#include <guisystem/findtoolbar.h>
+#include <GuiSystem/constants.h>
 
-#include <widgets/minisplitter.h>
+#include <Widgets/MiniSplitter>
 
 #include "cookiejar.h"
 #include "webviewconstants.h"

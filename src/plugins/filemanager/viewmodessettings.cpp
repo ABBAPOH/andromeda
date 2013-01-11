@@ -2,7 +2,7 @@
 
 #include "ui_viewmodessettings.h"
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 #include <QtGui/QFileIconProvider>
 #include <QtGui/QLabel>
 #include <QtCore/QSettings>

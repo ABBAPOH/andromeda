@@ -1,7 +1,7 @@
 #ifndef GLOBALSETTINGS_H
 #define GLOBALSETTINGS_H
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 #include <QtCore/QString>
 #include <QtGui/QIcon>
 #include <QtGui/QWidget>

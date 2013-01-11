@@ -2,9 +2,9 @@
 #include "imagevieweditor.h"
 
 #include <QtCore/QtPlugin>
-#include <guisystem/actionmanager.h>
-#include <guisystem/editormanager.h>
-#include <guisystem/menubarcontainer.h>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/EditorManager>
+#include <GuiSystem/MenuBarContainer>
 
 using namespace GuiSystem;
 using namespace ImageView;

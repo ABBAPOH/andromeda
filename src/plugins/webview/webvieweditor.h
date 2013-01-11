@@ -6,8 +6,8 @@
 #include <QtCore/QPointer>
 #include <QtGui/QToolBar>
 #include <QtWebKit/QWebView>
-#include <guisystem/abstracteditor.h>
-#include <guisystem/abstracteditorfactory.h>
+#include <GuiSystem/AbstractEditor>
+#include <GuiSystem/AbstractEditorFactory>
 
 class QVBoxLayout;
 class QWebView;

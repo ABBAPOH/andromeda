@@ -43,7 +43,7 @@ private:
     QList<QByteArray> m_codecNames;
 };
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 
 class AppearanceSettingsPage : public GuiSystem::SettingsPage
 {

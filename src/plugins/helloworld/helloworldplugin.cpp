@@ -2,7 +2,7 @@
 #include "helloworldeditor.h"
 
 #include <QtCore/QtPlugin>
-#include <guisystem/editormanager.h>
+#include <GuiSystem/EditorManager>
 
 using namespace GuiSystem;
 using namespace HelloWorld;

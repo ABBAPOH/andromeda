@@ -5,7 +5,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <io/QDriveInfo>
+#include <IO/QDriveInfo>
 
 namespace FileManager {
 

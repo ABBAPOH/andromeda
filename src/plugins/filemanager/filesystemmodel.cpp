@@ -6,8 +6,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QImageReader>
 
-#include <io/fileimageprovider.h>
-#include <io/qdriveinfo.h>
+#include <IO/FileImageProvider>
+#include <IO/QDriveInfo>
 
 #include "filesystemmanager.h"
 #include "filethumbnails.h"

@@ -6,7 +6,7 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 
-#include <qimageview/qimageview.h>
+#include <QImageView/QImageView>
 
 #include "imageviewdocument.h"
 

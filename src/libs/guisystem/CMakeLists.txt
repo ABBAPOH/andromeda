@@ -1,7 +1,7 @@
 set( QT_USE_QTNETWORK TRUE )
 include( ${QT_USE_FILE} )
 
-set( GLOBAL_HEADERS GuiSystem guisystem_global.h)
+set( GLOBAL_HEADERS guisystem_global.h)
 set( HEADERS
     action.h
     actionmanager.h

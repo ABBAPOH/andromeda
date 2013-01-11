@@ -6,7 +6,7 @@
 #include <QtCore/QUrl>
 #include <QtGui/QMainWindow>
 
-#include <guisystem/abstractdocument.h>
+#include "abstractdocument.h"
 
 class QToolButton;
 class QUrl;

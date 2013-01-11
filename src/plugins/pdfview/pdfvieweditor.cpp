@@ -21,7 +21,7 @@
 #include "findwidget.h"
 #include "utils/icon.h"
 
-#include <guisystem/constants.h>
+#include <GuiSystem/constants.h>
 
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>

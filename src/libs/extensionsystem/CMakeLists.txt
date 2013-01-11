@@ -1,6 +1,6 @@
 add_subdirectory( plugineditor )
 
-set( GLOBAL_HEADERS ExtensionSystem extensionsystem_global.h)
+set( GLOBAL_HEADERS extensionsystem_global.h)
 set( HEADERS
     errorsdialog.h
     fullpluginview.h

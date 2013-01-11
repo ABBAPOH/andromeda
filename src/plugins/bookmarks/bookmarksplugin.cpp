@@ -9,16 +9,16 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QWidgetAction>
 
-#include <extensionsystem/pluginmanager.h>
+#include <ExtensionSystem/PluginManager>
 
-#include <guisystem/abstractdocument.h>
-#include <guisystem/actionmanager.h>
-#include <guisystem/constants.h>
-#include <guisystem/editorwindow.h>
-#include <guisystem/editorwindowfactory.h>
-#include <guisystem/menubarcontainer.h>
-#include <guisystem/command.h>
-#include <guisystem/editormanager.h>
+#include <GuiSystem/AbstractDocument>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/EditorWindow>
+#include <GuiSystem/EditorWindowFactory>
+#include <GuiSystem/MenuBarContainer>
+#include <GuiSystem/Command>
+#include <GuiSystem/EditorManager>
+#include <GuiSystem/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarkdialog.h"

@@ -3,7 +3,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QVBoxLayout>
 
-#include <qimageview/qimageviewpreferenceswidget.h>
+#include <QImageView/QImageViewPreferencesWidget>
 
 PreferencesWindow::PreferencesWindow(QWidget *parent) :
     QWidget(parent)

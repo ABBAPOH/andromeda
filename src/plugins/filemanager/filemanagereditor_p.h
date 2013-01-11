@@ -3,8 +3,8 @@
 
 #include "filemanagereditor.h"
 #include "dualpanewidget.h"
-#include <guisystem/historyitem.h>
-#include <guisystem/ihistory.h>
+#include <GuiSystem/HistoryItem>
+#include <GuiSystem/IHistory>
 
 namespace FileManager {
 

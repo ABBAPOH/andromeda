@@ -11,7 +11,7 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QStyledItemDelegate>
 
-#include <widgets/shortcutedit.h>
+#include <Widgets/ShortcutEdit>
 
 using namespace GuiSystem;
 

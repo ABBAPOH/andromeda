@@ -1,8 +1,8 @@
 #ifndef FILEMANAGEREDITOR_H
 #define FILEMANAGEREDITOR_H
 
-#include <guisystem/abstracteditor.h>
-#include <guisystem/abstracteditorfactory.h>
+#include <GuiSystem/AbstractEditor>
+#include <GuiSystem/AbstractEditorFactory>
 
 #include "filemanagerwidget.h"
 

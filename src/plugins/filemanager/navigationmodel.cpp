@@ -10,7 +10,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QFileIconProvider>
 
-#include <io/QDriveController>
+#include <IO/QDriveController>
 
 #include "navigationpanelsettings.h"
 #include <QFontMetrics>

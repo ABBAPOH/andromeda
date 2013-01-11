@@ -3,9 +3,9 @@
 #include <QtCore/QDataStream>
 #include <QtGui/QDesktopServices>
 
-#include <guisystem/abstractdocument.h>
-#include <guisystem/editorview.h>
-#include <widgets/tabbarbutton.h>
+#include <GuiSystem/AbstractDocument>
+#include <GuiSystem/EditorView>
+#include <Widgets/TabBarButton>
 
 using namespace Andromeda;
 using namespace GuiSystem;

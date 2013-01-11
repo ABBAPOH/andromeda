@@ -9,8 +9,9 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QFileOpenEvent>
 
+#include <QImageView/QImageViewSettings>
+
 #include "mainwindow.h"
-#include <qimageview/qimageviewsettings.h>
 
 static const quint32 m_magic = 0x6130396e; // "a09n"
 static const quint8 m_version = 1;

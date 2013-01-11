@@ -4,8 +4,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
-#include <QDriveInfo>
-#include <QDebug>
+#include <QtCore/QDebug>
+
+#include "qdriveinfo.h"
 
 #define _WIN32_WINNT 0x0500
 #include <qt_windows.h>

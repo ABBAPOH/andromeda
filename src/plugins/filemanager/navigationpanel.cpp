@@ -3,7 +3,7 @@
 
 #include "navigationmodel.h"
 
-#include <io/QDriveController>
+#include <IO/QDriveController>
 
 #include <QtGui/QAction>
 #include <QtGui/QMenu>

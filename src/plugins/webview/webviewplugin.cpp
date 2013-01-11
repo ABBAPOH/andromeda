@@ -9,13 +9,13 @@
 #include <QtNetwork/QNetworkProxy>
 #include <QtWebKit/QWebSettings>
 
-#include <guisystem/actionmanager.h>
-#include <guisystem/command.h>
-#include <guisystem/commandcontainer.h>
-#include <guisystem/constants.h>
-#include <guisystem/menubarcontainer.h>
-#include <guisystem/editormanager.h>
-#include <guisystem/settingspagemanager.h>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/Command>
+#include <GuiSystem/CommandContainer>
+#include <GuiSystem/MenuBarContainer>
+#include <GuiSystem/EditorManager>
+#include <GuiSystem/SettingsPageManager>
+#include <GuiSystem/constants.h>
 
 #include "appearancesettings.h"
 #include "cookiejar.h"

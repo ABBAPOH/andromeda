@@ -3,7 +3,7 @@
 
 #include "pdfview_global.h"
 
-#include <guisystem/abstractdocument.h>
+#include <GuiSystem/AbstractDocument>
 
 //namespace PdfView {
 

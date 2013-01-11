@@ -1,7 +1,7 @@
 #ifndef BROWSERWINDOW_H
 #define BROWSERWINDOW_H
 
-#include <guisystem/editorwindow.h>
+#include <GuiSystem/EditorWindow>
 
 class QSettings;
 class QUrl;

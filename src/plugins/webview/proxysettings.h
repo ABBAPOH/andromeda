@@ -30,7 +30,7 @@ private:
     Ui::ProxySettingsWidget *ui;
 };
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 
 #include <QtGui/QFileIconProvider>
 

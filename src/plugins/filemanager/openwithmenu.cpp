@@ -7,9 +7,9 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
 
-#include <io/QDriveInfo>
-#include <io/qdefaultprogram.h>
-#include <io/qmimedatabase.h>
+#include <IO/QDriveInfo>
+#include <IO/QDefaultProgram>
+#include <IO/QMimeDatabase>
 
 OpenWithMenu::OpenWithMenu(QWidget *parent) :
     QMenu(parent)

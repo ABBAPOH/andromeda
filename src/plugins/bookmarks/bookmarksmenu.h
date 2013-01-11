@@ -2,7 +2,7 @@
 #define BOOKMARKSMENU_H
 
 #include "bookmarks_global.h"
-#include <widgets/modelmenu.h>
+#include <Widgets/ModelMenu>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QList>

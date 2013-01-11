@@ -1,7 +1,7 @@
 #ifndef WEBVIEWPLUGINIMPL_H
 #define WEBVIEWPLUGINIMPL_H
 
-#include <extensionsystem/iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 #include <QtWebKit/QWebHistoryInterface>
 

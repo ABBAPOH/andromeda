@@ -1,7 +1,7 @@
 #ifndef MYADDRESSBAR_H
 #define MYADDRESSBAR_H
 
-#include <widgets/addressbar.h>
+#include <Widgets/AddressBar>
 
 namespace Andromeda {
 

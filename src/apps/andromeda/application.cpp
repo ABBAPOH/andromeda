@@ -13,20 +13,20 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QSystemTrayIcon>
 
-#include <extensionsystem/errorsdialog.h>
-#include <extensionsystem/pluginmanager.h>
-#include <extensionsystem/pluginview.h>
+#include <ExtensionSystem/ErrorsDialog>
+#include <ExtensionSystem/PluginManager>
+#include <ExtensionSystem/PluginView>
 
-#include <guisystem/action.h>
-#include <guisystem/command.h>
-#include <guisystem/commandcontainer.h>
-#include <guisystem/constants.h>
-#include <guisystem/editorwindowfactory.h>
-#include <guisystem/menubarcontainer.h>
-#include <guisystem/settingspagemanager.h>
-#include <guisystem/settingswindow.h>
+#include <GuiSystem/Action>
+#include <GuiSystem/Command>
+#include <GuiSystem/CommandContainer>
+#include <GuiSystem/EditorWindowFactory>
+#include <GuiSystem/MenuBarContainer>
+#include <GuiSystem/SettingsPageManager>
+#include <GuiSystem/SettingsWindow>
+#include <GuiSystem/constants.h>
 
-#include <widgets/windowsmenu.h>
+#include <Widgets/WindowsMenu>
 
 #include "browserwindow.h"
 #include "browserwindow_p.h"

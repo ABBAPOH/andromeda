@@ -1,7 +1,7 @@
 #ifndef FILEMANAGERDOCUMENT_H
 #define FILEMANAGERDOCUMENT_H
 
-#include <guisystem/abstractdocument.h>
+#include <GuiSystem/AbstractDocument>
 
 namespace FileManager {
 

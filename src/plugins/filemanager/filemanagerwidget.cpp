@@ -17,10 +17,10 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QTextFrame>
 
-#include <guisystem/actionmanager.h>
-#include <guisystem/constants.h>
-#include <io/QDriveInfo>
-#include <io/qmimedatabase.h>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/constants.h>
+#include <IO/QDriveInfo>
+#include <IO/QMimeDatabase>
 
 #include "filemanagerconstants.h"
 #include "filemanagerhistory_p.h"

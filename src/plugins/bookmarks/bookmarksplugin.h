@@ -1,8 +1,8 @@
 #ifndef HELLOWORLPLUGIN_H
 #define HELLOWORLPLUGIN_H
 
-#include <extensionsystem/iplugin.h>
-#include <guisystem/commandcontainer.h>
+#include <ExtensionSystem/IPlugin>
+#include <GuiSystem/CommandContainer>
 
 class QAction;
 class QModelIndex;

@@ -1,7 +1,7 @@
 #ifndef FILEMANAGERPLUGIN_H
 #define FILEMANAGERPLUGIN_H
 
-#include <extensionsystem/iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 #include <QtGui/QDesktopServices>
 #include <QtGui/QIcon>

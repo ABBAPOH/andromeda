@@ -1,7 +1,7 @@
 #ifndef COMMANDSSETTINGSPAGE_H
 #define COMMANDSSETTINGSPAGE_H
 
-#include <guisystem/settingspage.h>
+#include <GuiSystem/SettingsPage>
 
 namespace Andromeda {
 

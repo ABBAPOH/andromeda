@@ -5,7 +5,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QMenu>
 #include <QtGui/QToolButton>
-#include <widgets/filterlineedit.h>
+#include <Widgets/FilterLineEdit>
 
 namespace GuiSystem {
 

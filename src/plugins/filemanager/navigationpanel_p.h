@@ -13,8 +13,8 @@
 #include <QtGui/QMenu>
 #include <QtGui/QTreeView>
 
-#include <io/QDriveController>
-#include <io/QDriveInfo>
+#include <IO/QDriveController>
+#include <IO/QDriveInfo>
 
 #define bublic public
 

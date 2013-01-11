@@ -10,10 +10,10 @@
 #include <QMenuBar>
 #include <QToolBar>
 
-#include <qimageview/qimageview.h>
-#include <qimageview/qimageviewresizedialog.h>
+#include <QImageView/QImageView>
+#include <QImageView/QImageViewResizeDialog>
 
-#include <widgets/windowsmenu.h>
+#include <Widgets/WindowsMenu>
 
 #include "preferenceswindow.h"
 

@@ -3,8 +3,8 @@
 
 #include "imageview_global.h"
 
-#include <guisystem/abstracteditor.h>
-#include <guisystem/abstracteditorfactory.h>
+#include <GuiSystem/AbstractEditor>
+#include <GuiSystem/AbstractEditorFactory>
 
 class QImageView;
 class QToolBar;

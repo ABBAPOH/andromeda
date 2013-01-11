@@ -13,7 +13,7 @@ set( RESOURCES resources.qrc )
 
 set( TS_FILES translations/qimageviewer_ru.ts )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
+include_directories( ${PROJECT_SOURCE_DIR}/include )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
 # on macosx the icons has to be part of sources. Bummer.

@@ -5,9 +5,9 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 
-#include <widgets/minisplitter.h>
+#include <Widgets/MiniSplitter>
 
-#include <guisystem/constants.h>
+#include <GuiSystem/constants.h>
 #include "dualpanewidget.h"
 #include "navigationmodel.h"
 #include "navigationpanel.h"

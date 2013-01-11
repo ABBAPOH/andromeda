@@ -87,7 +87,6 @@ qt4_automoc(
 )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
-#include_directories( ${PROJECT_SOURCE_DIR}/src/libs/io )
 
 add_definitions( -DFILEMANAGER_LIBRARY )
 

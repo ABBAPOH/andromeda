@@ -3,8 +3,8 @@
 
 #include "webvieweditor.h"
 
-#include <guisystem/ifind.h>
-#include <guisystem/ihistory.h>
+#include <GuiSystem/IFind>
+#include <GuiSystem/IHistory>
 
 namespace WebView {
 

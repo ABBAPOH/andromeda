@@ -5,10 +5,10 @@
 
 #include <QtCore/QEvent>
 #include <QtGui/QToolBar>
-#include <guisystem/editorwindowfactory.h>
-#include <guisystem/editorview.h>
-#include <guisystem/historybutton.h>
-#include <widgets/tabbar.h>
+#include <GuiSystem/EditorWindowFactory>
+#include <GuiSystem/EditorView>
+#include <GuiSystem/HistoryButton>
+#include <Widgets/TabBar>
 
 #include "browsertabwidget.h"
 #include "myaddressbar.h"

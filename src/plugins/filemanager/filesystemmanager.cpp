@@ -7,9 +7,9 @@
 #include <QtCore/QDir>
 #include <QtGui/QUndoCommand>
 
-#include <io/QDriveInfo>
-#include <io/QFileCopier>
-#include <io/qtrash.h>
+#include <IO/QDriveInfo>
+#include <IO/QFileCopier>
+#include <IO/QTrash>
 
 using namespace FileManager;
 

@@ -5,12 +5,12 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QUndoStack>
 
-#include <extensionsystem/pluginmanager.h>
-#include <guisystem/actionmanager.h>
-#include <guisystem/editorwindow.h>
-#include <guisystem/editorwindowfactory.h>
+#include <ExtensionSystem/PluginManager>
 
-#include <guisystem/constants.h>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/EditorWindow>
+#include <GuiSystem/EditorWindowFactory>
+#include <GuiSystem/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarksdocument.h"

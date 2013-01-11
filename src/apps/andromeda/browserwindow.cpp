@@ -16,15 +16,14 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QWidgetAction>
 
-#include <guisystem/abstractdocument.h>
-#include <guisystem/actionmanager.h>
-#include <guisystem/command.h>
-#include <guisystem/commandcontainer.h>
-#include <guisystem/ihistory.h>
-#include <guisystem/history.h>
-#include <guisystem/menubarcontainer.h>
-
-#include "constants.h"
+#include <GuiSystem/AbstractDocument>
+#include <GuiSystem/ActionManager>
+#include <GuiSystem/Command>
+#include <GuiSystem/CommandContainer>
+#include <GuiSystem/IHistory>
+#include <GuiSystem/History>
+#include <GuiSystem/MenuBarContainer>
+#include <GuiSystem/constants.h>
 
 using namespace GuiSystem;
 using namespace Andromeda;

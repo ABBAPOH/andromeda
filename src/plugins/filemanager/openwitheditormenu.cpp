@@ -1,7 +1,7 @@
 #include "openwitheditormenu.h"
 
-#include <guisystem/abstracteditorfactory.h>
-#include <guisystem/editormanager.h>
+#include <GuiSystem/AbstractEditorFactory>
+#include <GuiSystem/EditorManager>
 
 using namespace GuiSystem;
 

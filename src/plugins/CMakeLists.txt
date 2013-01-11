@@ -1,6 +1,6 @@
 set( LIBRARY_OUTPUT_PATH ${APP_PLUGIN_PATH} )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
+include_directories( ${PROJECT_SOURCE_DIR}/include )
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins)
 
 add_definitions( -DQT_PLUGIN )

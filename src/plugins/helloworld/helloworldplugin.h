@@ -1,7 +1,7 @@
 #ifndef HELLOWORLPLUGIN_H
 #define HELLOWORLPLUGIN_H
 
-#include <extensionsystem/iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 namespace HelloWorld {
 

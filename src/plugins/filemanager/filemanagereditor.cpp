@@ -25,10 +25,10 @@
 #include <QtGui/QFileIconProvider>
 #include <QtGui/QResizeEvent>
 
-#include <extensionsystem/pluginmanager.h>
-#include <guisystem/constants.h>
-#include <guisystem/editorwindowfactory.h>
-#include <widgets/minisplitter.h>
+#include <ExtensionSystem/PluginManager>
+#include <GuiSystem/EditorWindowFactory>
+#include <GuiSystem/constants.h>
+#include <Widgets/MiniSplitter>
 
 using namespace GuiSystem;
 using namespace FileManager;
