@@ -48,7 +48,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 
-add_library( extensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QM_FILES} )
-target_link_libraries( extensionsystem ${QT_LIBRARIES} )
+add_library( libextensionsystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QM_FILES} )
+target_link_libraries( libextensionsystem ${QT_LIBRARIES} )
 
-install_lib( extensionsystem )
+install_lib( libextensionsystem )

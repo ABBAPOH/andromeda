@@ -19,4 +19,4 @@ include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
 include_directories( ${PROJECT_SOURCE_DIR}/src/plugins )
 
 add_executable( filesystemmanager_test ${HEADERS} ${UI_HEADERS} ${SOURCES} ${MOC_SOURCES} )
-target_link_libraries( filesystemmanager_test ${QT_LIBRARIES} extensionsystem filemanagerplugin )
+target_link_libraries( filesystemmanager_test ${QT_LIBRARIES} libextensionsystem filemanagerplugin )

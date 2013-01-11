@@ -69,7 +69,7 @@ endif()
 
 
 add_executable( andromeda MACOSX_BUNDLE WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} ${GUI_RESOURCES} )
-target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication extensionsystem guisystem widgets )
+target_link_libraries( andromeda ${QT_LIBRARIES} qtsingleapplication libextensionsystem libguisystem libwidgets )
 
 if( APPLE )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/andromeda.icns ${APP_DATA_PATH}/andromeda.icns COPYONLY)

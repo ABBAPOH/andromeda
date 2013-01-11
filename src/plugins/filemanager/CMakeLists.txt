@@ -91,6 +91,6 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DFILEMANAGER_LIBRARY )
 
 add_library( filemanagerplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-target_link_libraries( filemanagerplugin ${QT_LIBRARIES} extensionsystem guisystem io widgets )
+target_link_libraries( filemanagerplugin ${QT_LIBRARIES} libextensionsystem libguisystem libio libwidgets )
 add_dependencies( filemanagerplugin plugineditor)
 install_plugin( filemanagerplugin )

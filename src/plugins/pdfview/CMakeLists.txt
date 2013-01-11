@@ -61,7 +61,7 @@ if( POPPLER_QT4_FOUND )
     add_definitions( -DPDFVIEW_LIBRARY )
 
     add_library( pdfviewplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-    target_link_libraries( pdfviewplugin ${QT_LIBRARIES} ${POPPLER_QT4_LIBRARIES} extensionsystem guisystem )
+    target_link_libraries( pdfviewplugin ${QT_LIBRARIES} ${POPPLER_QT4_LIBRARIES} libextensionsystem libguisystem )
     add_dependencies( pdfviewplugin plugineditor)
     install_plugin( pdfviewplugin )
 else( POPPLER_QT4_FOUND )

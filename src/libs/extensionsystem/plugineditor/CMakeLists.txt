@@ -18,7 +18,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #add_definitions( -DEXTENSIONSYSTEM_LIBRARY )
 
 add_executable( plugineditor WIN32 ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} )
-target_link_libraries( plugineditor ${QT_LIBRARIES} extensionsystem )
+target_link_libraries( plugineditor ${QT_LIBRARIES} libextensionsystem )
 
 if( MSVC )
     set_target_properties( plugineditor PROPERTIES LINK_FLAGS /ENTRY:"mainCRTStartup" )

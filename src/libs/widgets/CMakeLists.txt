@@ -49,6 +49,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions( -DWIDGETS_LIBRARY )
 
-add_library( widgets SHARED ${CPP_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-target_link_libraries( widgets ${QT_LIBRARIES} )
-install_lib( widgets )
+add_library( libwidgets SHARED ${CPP_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
+target_link_libraries( libwidgets ${QT_LIBRARIES} )
+install_lib( libwidgets )

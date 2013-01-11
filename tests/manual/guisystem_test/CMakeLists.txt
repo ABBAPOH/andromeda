@@ -16,6 +16,6 @@ qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
 
 add_executable( guisystem_test ${HEADERS} ${UI_HEADERS} ${SOURCES} ${MOC_SOURCES} )
-target_link_libraries( guisystem_test ${QT_LIBRARIES} guisystem )
+target_link_libraries( guisystem_test ${QT_LIBRARIES} libguisystem )
 
 endif( ${QT_QTWEBKIT_FOUND} )

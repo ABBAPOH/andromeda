@@ -86,7 +86,7 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_definitions( -DGUISYSTEM_LIBRARY )
 
-add_library( guisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-target_link_libraries( guisystem ${QT_LIBRARIES} widgets io )
+add_library( libguisystem SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
+target_link_libraries( libguisystem ${QT_LIBRARIES} libwidgets libio )
 
-install_lib( guisystem )
+install_lib( libguisystem )

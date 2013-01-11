@@ -26,5 +26,5 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DHELLOWORLD_LIBRARY )
 
 add_library( helloworldplugin SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} ${QM_FILES} )
-target_link_libraries( helloworldplugin ${QT_LIBRARIES} extensionsystem guisystem )
+target_link_libraries( helloworldplugin ${QT_LIBRARIES} libextensionsystem libguisystem )
 install_plugin( helloworldplugin )

@@ -135,7 +135,7 @@ if( MSVC )
     add_definitions( /Zc:wchar_t- )
 endif( MSVC )
 
-add_library( io SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
-target_link_libraries( io ${QT_LIBRARIES} ${LIBS} )
+add_library( libio SHARED ${GLOBAL_HEADERS} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${UI_HEADERS} ${QRC_SOURCES} )
+target_link_libraries( libio ${QT_LIBRARIES} ${LIBS} )
 
-install_lib( io )
+install_lib( libio )

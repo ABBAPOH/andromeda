@@ -1,2 +1,2 @@
 add_subdirectory( andromeda )
-add_subdirectory( qimageviewer )
+add_subdirectory( imageviewer )
