@@ -77,24 +77,24 @@ void TextEdit::createActions()
     actions[TextEdit::ZoomIn]->setShortcut(QKeySequence::ZoomIn);
     actions[TextEdit::ZoomIn]->setText(tr("Zoom In"));
     actions[TextEdit::ZoomIn]->setIcon(QIcon::fromTheme("zoom-in"));
-    connect(actions[TextEdit::ZoomIn], SIGNAL(triggered()), this, SLOT(enlargeFont()));
+    connect(actions[TextEdit::ZoomIn], SIGNAL(triggered()), this, SLOT(zoomIn()));
 
     actions[TextEdit::ZoomOut] = new QAction(this);
     actions[TextEdit::ZoomOut]->setObjectName("actionZoomOut");
     actions[TextEdit::ZoomOut]->setShortcut(QKeySequence::ZoomOut);
     actions[TextEdit::ZoomOut]->setText(tr("Zoom Out"));
     actions[TextEdit::ZoomOut]->setIcon(QIcon::fromTheme("zoom-out"));
-    connect(actions[TextEdit::ZoomOut], SIGNAL(triggered()), this, SLOT(shrinkFont()));
+    connect(actions[TextEdit::ZoomOut], SIGNAL(triggered()), this, SLOT(zoomOut()));
 }
 
-void TextEdit::enlargeFont()
+void TextEdit::zoomIn()
 {
     QFont font(this->font());
     font.setPointSize(font.pointSize() + 3);
     this->setFont(font);
 }
 
-void TextEdit::shrinkFont()
+void TextEdit::zoomOut()
 {
     QFont font(this->font());
     font.setPointSize(font.pointSize() - 3);

@@ -46,8 +46,8 @@ private slots:
     void highlightCurrentLine();
 
 public slots:
-    void enlargeFont();
-    void shrinkFont();
+    void zoomIn();
+    void zoomOut();
     void loadSettings();
 
 private:
