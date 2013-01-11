@@ -54,7 +54,7 @@ void TextEditorEditor::setDocument(AbstractDocument *document)
         return;
 
     textDocument->setEditor(this);
-    qDebug("ssr");
+
     AbstractEditor::setDocument(document);
 }
 
