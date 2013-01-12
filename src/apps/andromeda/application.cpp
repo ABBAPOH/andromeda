@@ -180,6 +180,9 @@ Application::Application(int &argc, char **argv) :
     createActions();
 
     connect(this, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
+#ifndef Q_OS_MAC
+    connect(this, SIGNAL(lastWindowClosed()), SLOT(exit()));
+#endif
 }
 
 Application::~Application()
