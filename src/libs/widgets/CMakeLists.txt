@@ -14,6 +14,7 @@ set( HEADERS
     outlinewidget.h
     outlinewidget_p.h
     shortcutedit.h
+    shortcutedit_p.h
     tabbar.h
     tabbarbutton.h
     tabwidget.h
