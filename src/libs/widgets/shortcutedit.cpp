@@ -78,9 +78,8 @@ void ShortcutEdit::setKeySequence(const QKeySequence &key)
 
     d->m_keyNum = d->m_key[0] = d->m_key[1] = d->m_key[2] = d->m_key[3] = 0;
     d->m_keyNum = key.count();
-    for (int i = 0; i < d->m_keyNum; ++i) {
+    for (int i = 0; i < d->m_keyNum; ++i)
         d->m_key[i] = key[i];
-    }
 
     d->m_lineEdit->setText(key);
 
@@ -94,20 +93,21 @@ void ShortcutEdit::clearKeySequence()
     d->m_keyNum = d->m_key[0] = d->m_key[1] = d->m_key[2] = d->m_key[3] = 0;
     d->m_keyNum = 0;
     d->m_lineEdit->clear();
+    d->m_keySequence = QKeySequence();
+    emit keySequenceChanged(d->m_keySequence);
 }
 
 bool ShortcutEdit::event(QEvent *e)
 {
     switch (e->type()) {
-    case QEvent::Shortcut : {
+    case QEvent::Shortcut :
         return true;
-    }
-    case QEvent::ShortcutOverride : {
+    case QEvent::ShortcutOverride :
         // for shortcut overrides, we need to accept as well
         e->accept();
         return true;
-    }
-    default : break;
+    default :
+        break;
     }
 
     return QWidget::event(e);
@@ -125,11 +125,11 @@ void ShortcutEdit::keyPressEvent(QKeyEvent *e)
     }
 
     d->m_lineEdit->setPlaceholderText(QString());
-    if ( nextKey == Qt::Key_Control ||
-         nextKey == Qt::Key_Shift ||
-         nextKey == Qt::Key_Meta ||
-         nextKey == Qt::Key_Alt )
-         return;
+    if (nextKey == Qt::Key_Control
+            || nextKey == Qt::Key_Shift
+            || nextKey == Qt::Key_Meta
+            || nextKey == Qt::Key_Alt)
+        return;
 
     QString selectedText = d->m_lineEdit->selectedText();
     if (!selectedText.isEmpty() && selectedText == d->m_lineEdit->text()) {
@@ -138,30 +138,18 @@ void ShortcutEdit::keyPressEvent(QKeyEvent *e)
             return;
     }
 
-    if ( d->m_keyNum > 3)
+    if (d->m_keyNum > 3)
         return;
 
     nextKey |= d->translateModifiers(e->modifiers(), e->text());
-    switch (d->m_keyNum) {
-        case 0:
-            d->m_key[0] = nextKey;
-            break;
-        case 1:
-            d->m_key[1] = nextKey;
-            break;
-        case 2:
-            d->m_key[2] = nextKey;
-            break;
-        case 3:
-            d->m_key[3] = nextKey;
-            break;
-        default:
-            break;
-    }
+
+    if (d->m_keyNum < 4)
+        d->m_key[d->m_keyNum] = nextKey;
     d->m_keyNum++;
-    QKeySequence ks(d->m_key[0], d->m_key[1], d->m_key[2], d->m_key[3]);
-    d->m_keySequence = ks;
-    d->m_lineEdit->setText(ks);
+
+    QKeySequence key(d->m_key[0], d->m_key[1], d->m_key[2], d->m_key[3]);
+    d->m_keySequence = key;
+    d->m_lineEdit->setText(key.toString(QKeySequence::NativeText));
     e->accept();
 }
 

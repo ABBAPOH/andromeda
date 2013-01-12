@@ -1,4 +1,5 @@
 #include "commandssettingswidget.h"
+#include "commandssettingswidget_p.h"
 #include "ui_commandssettingswidget.h"
 
 #include "command.h"
@@ -8,21 +9,10 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMessageBox>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QStyledItemDelegate>
 
 #include <Widgets/ShortcutEdit>
 
 using namespace GuiSystem;
-
-class FolderProxyModel : public QSortFilterProxyModel
-{
-public:
-    explicit FolderProxyModel(QObject *parent = 0);
-
-protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-};
 
 FolderProxyModel::FolderProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent)
@@ -56,16 +46,6 @@ bool FolderProxyModel::filterAcceptsRow(int source_row, const QModelIndex &sourc
     }
 }
 
-class ShortcutDelegate : public QStyledItemDelegate
-{
-public:
-    explicit ShortcutDelegate(QObject *parent = 0);
-
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    bool eventFilter(QObject *object, QEvent *event);
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-};
-
 ShortcutDelegate::ShortcutDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
@@ -73,7 +53,9 @@ ShortcutDelegate::ShortcutDelegate(QObject *parent) :
 
 QWidget * ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    return new ShortcutEdit(parent);
+    ShortcutEdit *editor = new ShortcutEdit(parent);
+    connect(editor, SIGNAL(shortcutFinished()), SLOT(onFinishShortcut()));
+    return editor;
 }
 
 bool ShortcutDelegate::eventFilter(QObject *object, QEvent *event)
@@ -89,6 +71,13 @@ void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
     ShortcutEdit *edit = qobject_cast<ShortcutEdit *>(editor);
     Q_ASSERT(edit);
     edit->setKeySequence(index.data().toString());
+}
+
+void ShortcutDelegate::onFinishShortcut()
+{
+    ShortcutEdit *editor = qobject_cast<ShortcutEdit *>(sender());
+    commitData(editor);
+    closeEditor(editor);
 }
 
 /*!
@@ -232,3 +221,5 @@ void CommandsSettingsWidget::importShortcuts()
     }
     ui->view->expandAll();
 }
+
+
