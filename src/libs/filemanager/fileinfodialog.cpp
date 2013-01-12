@@ -15,6 +15,8 @@
 
 #include <Widgets/OutlineWidget>
 
+#include <qmath.h>
+
 #include "permissionswidget.h"
 
 namespace FileManager {
@@ -84,15 +86,17 @@ using namespace FileManager;
 
 static QString sizeToString(qint64 size)
 {
-    if (size > (qint64)1024*1024*1024*1024)
-        return FileInfoDialog::tr("%1 TB").arg(size/((qint64)1024*1024*1024*1024));
-    if (size > 1024*1024*1024)
-        return FileInfoDialog::tr("%1 GB").arg(size/(1024*1024*1024));
-    if (size > 1024*1024)
-        return FileInfoDialog::tr("%1 MB").arg(size/(1024*1024));
-    if (size > 1024)
-        return FileInfoDialog::tr("%1 kB").arg(size/1024);
-    return FileInfoDialog::tr("%1 b").arg(size);
+    static const char *const strings [] = { "b", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+
+    if (size <= 0)
+        return FileInfoDialog::tr("0 b");
+
+    double power = log(size)/log(1024.0);
+    int intPower = (int)power;
+    intPower = intPower >= 8 ? 8 - 1 : intPower;
+
+    double normSize = size / pow(1024, intPower);
+    return FileInfoDialog::tr("%1 %2").arg(normSize, 0, 'f', intPower > 0 ? 2 : 0).arg(strings[intPower]);
 }
 
 static QString pathToWrappedString(const QString &path)
