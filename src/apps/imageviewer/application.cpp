@@ -13,6 +13,8 @@
 
 #include "mainwindow.h"
 
+using namespace ImageViewer;
+
 static const quint32 m_magic = 0x6130396e; // "a09n"
 static const quint8 m_version = 1;
 

@@ -6,6 +6,8 @@
 #include "imageview.h"
 #include "imageview_p.h"
 
+using namespace ImageViewer;
+
 void ImageViewSettingsPrivate::addView(ImageView *view)
 {
     Q_ASSERT(!views.contains(view));

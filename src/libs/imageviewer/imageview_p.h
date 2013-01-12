@@ -8,6 +8,8 @@
 
 class QListWidget;
 
+namespace ImageViewer {
+
 // Animations
 class ZoomAnimation : public QVariantAnimation
 {
@@ -215,5 +217,7 @@ private:
 
     friend class ResetOriginalCommand;
 };
+
+} // namespace ImageViewer
 
 #endif // QIMAGEVIEW_P_H

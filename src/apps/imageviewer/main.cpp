@@ -7,6 +7,8 @@
 #include "application.h"
 #include "mainwindow.h"
 
+using namespace ImageViewer;
+
 static QString getRootPath()
 {
     // Figure out root:  Up one from 'bin' or 'MacOs'

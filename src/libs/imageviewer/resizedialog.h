@@ -9,6 +9,8 @@ namespace Ui {
 class ResizeDialog;
 }
 
+namespace ImageViewer {
+
 class IMAGEVIEWER_EXPORT ResizeDialog : public QDialog
 {
     Q_OBJECT
@@ -40,5 +42,7 @@ private:
     QSize m_currentSize;
     bool m_ignoreSignals;
 };
+
+} // namespace ImageViewer
 
 #endif // QIMAGEVIEWRESIZEDIALOG_H

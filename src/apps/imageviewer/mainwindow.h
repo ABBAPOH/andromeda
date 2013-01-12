@@ -4,6 +4,9 @@
 #include <QMainWindow>
 
 class QActionGroup;
+
+namespace ImageViewer {
+
 class ImageView;
 
 class MainWindow : public QMainWindow
@@ -82,5 +85,7 @@ private:
     QAction *actionAbout;
     QAction *actionAboutQt;
 };
+
+} // namespace ImageViewer
 
 #endif // MAINWINDOW_H

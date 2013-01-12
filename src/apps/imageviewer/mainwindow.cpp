@@ -17,11 +17,13 @@
 
 #include "preferenceswindow.h"
 
-QSize m_lastSize;
-QList<MainWindow*> m_windows;
+using namespace ImageViewer;
 
 static const qint32 m_magic = 0x6d303877; // "m08w"
 static const qint8 m_version = 1;
+
+QSize m_lastSize;
+QList<MainWindow*> m_windows;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)

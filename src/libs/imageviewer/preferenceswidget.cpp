@@ -3,6 +3,8 @@
 
 #include "imageviewsettings.h"
 
+using namespace ImageViewer;
+
 PreferencesWidget::PreferencesWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PreferencesWidget)

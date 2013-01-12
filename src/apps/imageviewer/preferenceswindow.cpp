@@ -5,6 +5,8 @@
 
 #include <ImageView/PreferencesWidget>
 
+using namespace ImageViewer;
+
 PreferencesWindow::PreferencesWindow(QWidget *parent) :
     QWidget(parent)
 {

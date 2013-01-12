@@ -18,6 +18,8 @@
 #include "imageviewsettings.h"
 #include "imageviewsettings_p.h"
 
+using namespace ImageViewer;
+
 static const qint32 m_magic = 0x71303877; // "q08w"
 static const qint8 m_version = 1;
 

@@ -5,6 +5,8 @@
 
 #include <QtGui/QAbstractScrollArea>
 
+namespace ImageViewer {
+
 class ImageViewPrivate;
 class IMAGEVIEWER_EXPORT ImageView : public QAbstractScrollArea
 {
@@ -154,5 +156,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void onMoveToolTriggered(bool))
     Q_PRIVATE_SLOT(d_func(), void onSelectionToolTriggered(bool))
 };
+
+} //namespace ImageViewer
 
 #endif // IMAGEVIEW_H

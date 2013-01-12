@@ -5,6 +5,8 @@
 
 #include <QColor>
 
+namespace ImageViewer {
+
 class ImageViewSettingsPrivate;
 class IMAGEVIEWER_EXPORT ImageViewSettings
 {
@@ -39,5 +41,7 @@ private:
 
     friend class ImageView;
 };
+
+} // namespace ImageViewer
 
 #endif // IMAGEVIEWSETTINGS_H

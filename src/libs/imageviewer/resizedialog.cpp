@@ -1,6 +1,8 @@
 #include "resizedialog.h"
 #include "ui_resizedialog.h"
 
+using namespace ImageViewer;
+
 ResizeDialog::ResizeDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ResizeDialog),

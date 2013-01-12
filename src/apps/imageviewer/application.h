@@ -3,6 +3,8 @@
 
 #include <qtsingleapplication.h>
 
+namespace ImageViewer {
+
 class Application : public QtSingleApplication
 {
     Q_OBJECT
@@ -27,5 +29,7 @@ protected:
     QByteArray saveSession() const;
     bool restoreSession(const QByteArray &state);
 };
+
+} // namespace ImageViewer
 
 #endif // APPLICATION_H

@@ -6,12 +6,12 @@
 #include <GuiSystem/AbstractEditor>
 #include <GuiSystem/AbstractEditorFactory>
 
-class ImageView;
 class QToolBar;
 class QVBoxLayout;
 
 namespace ImageViewer {
 
+class ImageView;
 class ImageViewerDocument;
 
 class IMAGEVIEWERPLUGIN_EXPORT ImageViewerEditor : public GuiSystem::AbstractEditor

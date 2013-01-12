@@ -3,6 +3,8 @@
 
 #include "imageviewsettings.h"
 
+namespace ImageViewer {
+
 class ImageView;
 
 class ImageViewSettingsPrivate
@@ -24,5 +26,7 @@ private:
 
     friend class ImageViewSettings;
 };
+
+} // namespace ImageViewer
 
 #endif // QIMAGEVIEWSETTINGS_P_H

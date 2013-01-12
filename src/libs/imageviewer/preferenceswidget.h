@@ -9,6 +9,8 @@ namespace Ui {
 class PreferencesWidget;
 }
 
+namespace ImageViewer {
+
 class IMAGEVIEWER_EXPORT PreferencesWidget : public QWidget
 {
     Q_OBJECT
@@ -30,5 +32,7 @@ private slots:
 private:
     Ui::PreferencesWidget *ui;
 };
+
+} // namespace ImageViewer
 
 #endif // PREFERENCESWIDGET_H
