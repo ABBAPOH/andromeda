@@ -4,6 +4,11 @@
 #include <QtSingleApplication>
 #include <QPointer>
 
+#ifdef qApp
+#undef qApp
+#endif
+#define qApp Application::instance()
+
 class QMenu;
 class QMenuBar;
 class QSettings;
@@ -29,8 +34,13 @@ public:
     explicit Application(int &argc, char **argv);
     ~Application();
 
+    static Application *instance();
+
     bool activateApplication();
     bool loadPlugins();
+
+    bool isTrayIconVisible() const;
+    void setTrayIconVisible(bool visible);
 
 public slots:
     void newWindow();

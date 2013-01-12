@@ -11,6 +11,8 @@ set( HEADERS
     browserwindow.h
     browserwindow_p.h
     commandssettingspage.h
+    generalsettingspage.h
+    generalsettingswidget.h
     myaddressbar.h
     settingsmodel.h
     settingsmodel_p.h
@@ -22,6 +24,8 @@ set( SOURCES
     browsertabwidget.cpp
     browserwindow.cpp
     commandssettingspage.cpp
+    generalsettingspage.cpp
+    generalsettingswidget.cpp
     main.cpp
     myaddressbar.cpp
     settingsmodel.cpp
@@ -30,6 +34,7 @@ set( SOURCES
 
 set( FORMS
     settingswidget.ui
+    generalsettingswidget.ui
    )
 
 set( RESOURCES resources.qrc )

@@ -31,6 +31,7 @@
 #include "browserwindow.h"
 #include "browserwindow_p.h"
 #include "commandssettingspage.h"
+#include "generalsettingspage.h"
 #include "settingsmodel.h"
 #include "settingswidget.h"
 
@@ -174,6 +175,7 @@ Application::Application(int &argc, char **argv) :
 
     m_settingsPageManager = new SettingsPageManager(this);
     m_settingsPageManager->setObjectName("settingsPageManager");
+    m_settingsPageManager->addPage(new GeneralSettingsPage(this));
     m_settingsPageManager->addPage(new CommandsSettingsPage(this));
     m_pluginManager->addObject(m_settingsPageManager);
 
@@ -182,6 +184,10 @@ Application::Application(int &argc, char **argv) :
     connect(this, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
 #ifndef Q_OS_MAC
     connect(this, SIGNAL(lastWindowClosed()), SLOT(exit()));
+#endif
+
+#ifdef Q_OS_MAC
+    setTrayIconVisible(false);
 #endif
 }
 
@@ -192,6 +198,11 @@ Application::~Application()
 #ifdef Q_OS_MAC
     delete menuBar;
 #endif
+}
+
+Application *Application::instance()
+{
+    return qobject_cast<Application *>(QApplication::instance());
 }
 
 bool Application::activateApplication()
@@ -224,6 +235,16 @@ bool Application::loadPlugins()
         return false;
 
     return true;
+}
+
+bool Application::isTrayIconVisible() const
+{
+    return trayIcon->isVisible();
+}
+
+void Application::setTrayIconVisible(bool visible)
+{
+    trayIcon->setVisible(visible);
 }
 
 /*!
@@ -419,6 +440,7 @@ bool Application::restoreApplicationState(const QByteArray &arr)
     qint8 version;
     quint32 windowCount;
     QByteArray windowState;
+    bool trayIconVisible;
 
     s >> magic;
     if (magic != corePluginMagic)
@@ -444,6 +466,9 @@ bool Application::restoreApplicationState(const QByteArray &arr)
     }
 
     s >> settingsWindowState;
+    s >> trayIconVisible;
+
+    setTrayIconVisible(trayIconVisible);
 
     return true;
 }
@@ -468,6 +493,7 @@ QByteArray Application::saveApplicationState() const
     }
 
     s << settingsWindowState;
+    s << isTrayIconVisible();
 
     return state;
 }
@@ -594,12 +620,12 @@ void Application::createDockMenu()
 
 #ifdef Q_OS_MAC
     qt_mac_set_dock_menu(dockMenu);
-#else
+#endif
+
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/icons/andromeda.png"));
     trayIcon->setContextMenu(dockMenu);
     trayIcon->show();
-#endif
 }
 
 void Application::registerAtions()
