@@ -18,9 +18,11 @@ public:
     int m_keyNum;
     int m_key[4];
     int m_prevKey;
+    int releaseTimer;
 
     void init();
     int translateModifiers(Qt::KeyboardModifiers state, const QString &text);
+    void finishEditing();
 
 private:
     ShortcutEdit *q_ptr;

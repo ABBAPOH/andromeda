@@ -13,6 +13,7 @@ void ShortcutEditPrivate::init()
     m_lineEdit = new FilterLineEdit(q);
     m_keyNum = 0;
     m_prevKey = -1;
+    releaseTimer = 0;
 
     m_layout = new QVBoxLayout(q);
     m_layout->setContentsMargins(0, 0, 0, 0);
@@ -47,6 +48,17 @@ int ShortcutEditPrivate::translateModifiers(Qt::KeyboardModifiers state, const Q
     if (state & Qt::AltModifier)
         result |= Qt::ALT;
     return result;
+}
+
+void ShortcutEditPrivate::finishEditing()
+{
+    Q_Q(ShortcutEdit);
+
+    m_prevKey = -1;
+    m_lineEdit->setText(m_keySequence.toString(QKeySequence::NativeText));
+    m_lineEdit->setPlaceholderText(ShortcutEdit::tr("Press shortcut"));
+    emit q->keySequenceChanged(m_keySequence);
+    emit q->shortcutFinished();
 }
 
 ShortcutEdit::ShortcutEdit(QWidget *parent) :
@@ -99,8 +111,16 @@ void ShortcutEdit::clearKeySequence()
 
 bool ShortcutEdit::event(QEvent *e)
 {
+    Q_D(ShortcutEdit);
+
     switch (e->type()) {
-    case QEvent::Shortcut :
+    case QEvent::Timer : {
+        QTimerEvent *te = static_cast<QTimerEvent *>(e);
+        if (te->timerId() == d->releaseTimer) {
+            d->finishEditing();
+            return true;
+        }
+    } case QEvent::Shortcut :
         return true;
     case QEvent::ShortcutOverride :
         // for shortcut overrides, we need to accept as well
@@ -149,7 +169,10 @@ void ShortcutEdit::keyPressEvent(QKeyEvent *e)
 
     QKeySequence key(d->m_key[0], d->m_key[1], d->m_key[2], d->m_key[3]);
     d->m_keySequence = key;
-    d->m_lineEdit->setText(key.toString(QKeySequence::NativeText));
+    QString text = key.toString(QKeySequence::NativeText);
+    if (d->m_keyNum < 4)
+        text.append(QLatin1String(", ..."));
+    d->m_lineEdit->setText(text);
     e->accept();
 }
 
@@ -158,9 +181,9 @@ void ShortcutEdit::keyReleaseEvent(QKeyEvent *e)
     Q_D(ShortcutEdit);
 
     if (d->m_prevKey == e->key()) {
-        d->m_prevKey = -1;
-        emit keySequenceChanged(d->m_keySequence);
-        emit shortcutFinished();
-        d->m_lineEdit->setPlaceholderText(tr("Press shortcut"));
+        if (d->m_keyNum < 4)
+            d->releaseTimer = startTimer(1000);
+        else
+            d->finishEditing();
     }
 }
