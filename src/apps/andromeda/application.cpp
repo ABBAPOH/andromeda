@@ -72,8 +72,8 @@ static inline QString getPluginPath()
     return pluginPath;
 }
 
-static const qint32 corePluginMagic = 0x6330386e; // "c08n"
-static const qint8 corePluginVersion = 1;
+static const qint32 andromedaAppMagic = 0x6330386e; // "c08n"
+static const qint8 andromedaAppVersion = 1;
 
 static QUrl urlFromUserInput(const QString &currentPath, const QString &text)
 {
@@ -443,11 +443,11 @@ bool Application::restoreApplicationState(const QByteArray &arr)
     bool trayIconVisible;
 
     s >> magic;
-    if (magic != corePluginMagic)
+    if (magic != andromedaAppMagic)
         return false;
 
     s >> version;
-    if (version != corePluginVersion)
+    if (version != andromedaAppVersion)
         return false;
 
     s >> windowCount;
@@ -478,8 +478,8 @@ QByteArray Application::saveApplicationState() const
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
 
-    s << corePluginMagic;
-    s << corePluginVersion;
+    s << andromedaAppMagic;
+    s << andromedaAppVersion;
 
     QList<BrowserWindow*> windows = BrowserWindow::windows();
     quint32 windowCount = windows.count();
