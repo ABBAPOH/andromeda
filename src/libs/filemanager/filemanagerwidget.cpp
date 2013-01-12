@@ -1736,6 +1736,8 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
         open();
 #endif
+    if (event->key() == Qt::Key_Down && event->modifiers() & Qt::ControlModifier)
+        open();
 
     if (!d->blockEvents) { // prevent endless recursion
         d->blockEvents = true;
