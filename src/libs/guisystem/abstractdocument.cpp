@@ -168,29 +168,27 @@ void AbstractDocument::setProgress(int progress)
 */
 
 /*!
-    \property AbstractDocument::readOnly
+    \property AbstractDocument::writable
 
-    \brief This property holds whether the document is read only or not.
-
-    Read only documents still can be saved, but only to a different location.
+    \brief This property holds whether the document can be saved at current url.
 
     Default value is true.
 */
 
-bool AbstractDocument::isReadOnly() const
+bool AbstractDocument::isWritable() const
 {
     Q_D(const AbstractDocument);
-    return d->readOnly;
+    return d->writable;
 }
 
-void AbstractDocument::setReadOnly(bool readOnly)
+void AbstractDocument::setWritable(bool writable)
 {
     Q_D(AbstractDocument);
-    if (d->readOnly == readOnly)
+    if (d->writable == writable)
         return;
 
-    d->readOnly = readOnly;
-    emit readOnlyChanged(d->readOnly);
+    d->writable = writable;
+    emit writableChanged(d->writable);
 }
 
 /*!

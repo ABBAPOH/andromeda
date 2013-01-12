@@ -56,7 +56,7 @@ void FileDocument::clear()
 */
 void FileDocument::save(const QUrl &url)
 {
-    if (url.isEmpty() && isReadOnly())
+    if (url.isEmpty() && isWritable())
         return;
 
     if (url.scheme() != "file")
@@ -83,7 +83,7 @@ void FileDocument::save(const QUrl &url)
         Q_ASSERT_X(false, "FileDocument::save", "Async saving is not supported.");
     }
 
-    setReadOnly(false);
+    setWritable(false);
     AbstractDocument::save(url);
 }
 
@@ -145,11 +145,11 @@ bool FileDocument::openUrl(const QUrl &url)
         if (!d->file)
             return false;
 
-        setReadOnly(false);
+        setWritable(false);
         setTitle(fileName);
         return read(d->file, QFileInfo(url.path()).fileName());
     } else if (url.scheme() == "http") {
-        setReadOnly(true);
+        setWritable(true);
         setState(OpenningState);
         QNetworkAccessManager *qNAM = new QNetworkAccessManager(this);
         QNetworkReply *reply = qNAM->get(QNetworkRequest(url));

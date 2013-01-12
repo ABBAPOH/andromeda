@@ -114,7 +114,7 @@ void EditorWindow::setEditor(AbstractEditor *editor)
 
     if (d->document) {
         onUrlChanged(d->document->url());
-        onReadOnlyChanged(d->document->isReadOnly());
+        onWritableChanged(d->document->isWritable());
         onModificationChanged(d->document->isModified());
 
         onWindowIconChanged(d->document->icon());
@@ -126,13 +126,13 @@ void EditorWindow::setEditor(AbstractEditor *editor)
         connect(d->document, SIGNAL(titleChanged(QString)), SLOT(onTitleChanged(QString)));
 
         connect(d->document, SIGNAL(modificationChanged(bool)), SLOT(onModificationChanged(bool)));
-        connect(d->document, SIGNAL(readOnlyChanged(bool)), SLOT(onReadOnlyChanged(bool)));
+        connect(d->document, SIGNAL(writableChanged(bool)), SLOT(onWritableChanged(bool)));
 
         connect(d->document, SIGNAL(stateChanged(AbstractDocument::State)), SLOT(onStateChanged(AbstractDocument::State)));
         connect(d->document, SIGNAL(progressChanged(int)), SLOT(onProgressChanged(int)));
     } else {
         onUrlChanged(QUrl());
-        onReadOnlyChanged(true);
+        onWritableChanged(true);
         onModificationChanged(false);
 
         onWindowIconChanged(QIcon());
@@ -368,20 +368,20 @@ void EditorWindow::onModificationChanged(bool modified)
 {
     Q_D(EditorWindow);
 
-    bool readOnly = d->document ? d->document->isReadOnly() : false;
-    d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
+    bool writable = d->document ? d->document->isWritable() : false;
+    d->actions[EditorWindow::Save]->setEnabled(modified && !writable);
 
     onTitleChanged(d->document ? d->document->title() : QString());
 }
 
-void EditorWindow::onReadOnlyChanged(bool readOnly)
+void EditorWindow::onWritableChanged(bool writable)
 {
     Q_D(EditorWindow);
 
     bool modified = d->document ? d->document->isModified() : false;
-    d->actions[EditorWindow::Save]->setEnabled(modified && !readOnly);
+    d->actions[EditorWindow::Save]->setEnabled(modified && !writable);
 
-//    d->actions[EditorWindow::SaveAs]->setEnabled(!readOnly);
+//    d->actions[EditorWindow::SaveAs]->setEnabled(!modified);
 }
 
 void EditorWindowPrivate::createActions()

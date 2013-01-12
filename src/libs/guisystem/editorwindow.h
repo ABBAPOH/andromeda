@@ -86,7 +86,7 @@ protected slots:
     virtual void onStateChanged(AbstractDocument::State state);
 
     virtual void onModificationChanged(bool modified);
-    virtual void onReadOnlyChanged(bool readOnly);
+    virtual void onWritableChanged(bool writable);
 
 protected:
     EditorWindowPrivate *d_ptr;

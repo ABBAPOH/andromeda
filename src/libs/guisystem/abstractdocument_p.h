@@ -13,7 +13,7 @@ public:
     explicit AbstractDocumentPrivate(AbstractDocument *qq) :
         modified(false),
         progress(0),
-        readOnly(true),
+        writable(true),
         state(AbstractDocument::NoState),
         q_ptr(qq)
     {
@@ -26,7 +26,7 @@ public:
     QIcon icon;
     bool modified;
     int progress;
-    bool readOnly;
+    bool writable;
     AbstractDocument::State state;
     QString title;
     QUrl url;

@@ -22,10 +22,10 @@ class GUISYSTEM_EXPORT AbstractDocument : public QObject
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modificationChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
-    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly NOTIFY readOnlyChanged)
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(bool writable READ isWritable WRITE setWritable NOTIFY writableChanged)
 public:
     enum State { NoState = 0,
                  OpenningState,
@@ -40,7 +40,7 @@ public:
 
     bool isModified() const;
     int progress() const;
-    bool isReadOnly() const;
+    bool isWritable() const;
 
     State state() const;
     QString title() const;
@@ -53,7 +53,6 @@ public slots:
     virtual void reload();
 
     virtual void setModified(bool modified = true);
-    virtual void setReadOnly(bool readOnly = true);
 
     void setUrl(const QUrl &url);
 
@@ -65,18 +64,19 @@ signals:
 
     void modificationChanged(bool modified);
     void progressChanged(int progress);
-    void readOnlyChanged(bool readOnly);
 
     void stateChanged(AbstractDocument::State state);
 
     void titleChanged(const QString &title);
     void urlChanged(const QUrl &url);
+    void writableChanged(bool readOnly);
 
 protected slots:
     void setIcon(const QIcon &icon);
     void setProgress(int progress);
     void setState(AbstractDocument::State state);
     void setTitle(const QString &title);
+    void setWritable(bool writable = true);
 
 protected:
     AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent);
