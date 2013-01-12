@@ -221,6 +221,11 @@ void BrowserTabWidget::onEditorChanged()
     if (index == -1)
         return;
 
+#ifndef Q_OS_MAC
+    setTabIcon(index, document->icon());
+#endif
+    setTabText(index, document->title());
+
     connect(document, SIGNAL(iconChanged(QIcon)), SLOT(onIconChanged(QIcon)));
     connect(document, SIGNAL(titleChanged(QString)), SLOT(onTitleChanged(QString)));
 
