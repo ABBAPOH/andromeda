@@ -208,7 +208,8 @@ Application *Application::instance()
 bool Application::activateApplication()
 {
     QStringList arguments = this->arguments();
-    arguments.prepend(QDir::currentPath());
+    Q_ASSERT(!arguments.isEmpty());
+    arguments[0] = QDir::currentPath();
     return sendMessage(arguments.join("\n"));
 }
 
