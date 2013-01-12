@@ -48,9 +48,9 @@ if( APPLE )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Icons/imageviewer.icns ${APP_DATA_PATH}/imageviewer.icns COPYONLY)
     set_target_properties( imageviewer PROPERTIES MACOSX_BUNDLE_ICON_FILE imageviewer.icns
                                                 MACOSX_BUNDLE_BUNDLE_NAME "imageviewerer"
-                                                MACOSX_BUNDLE_LONG_VERSION_STRING "0.2.1.0"
-                                                MACOSX_BUNDLE_INFO_STRING "imageviewerer 0.1.0"
-                                                MACOSX_BUNDLE_INFO_STRING "imageviewerer 0.1.0"
+                                                MACOSX_BUNDLE_LONG_VERSION_STRING "0.3.0.0"
+                                                MACOSX_BUNDLE_INFO_STRING "imageviewerer 0.3.0"
+                                                MACOSX_BUNDLE_INFO_STRING "imageviewerer 0.3.0"
                                                 MACOSX_BUNDLE_GUI_IDENTIFIER "org.imageviewer"
                                                 MACOSX_BUNDLE_COPYRIGHT "ABBAPOH"
                          )

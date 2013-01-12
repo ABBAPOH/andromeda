@@ -1,4 +1,4 @@
-<plugin name="Image Viewer Plugin" version="0.2.1.0" compatVersion="0.2.1.0">
+<plugin name="Image Viewer Plugin" version="0.3.0.0" compatVersion="0.3.0.0">
     <vendor>arch</vendor>
     <copyright></copyright>
     <license>GNU Lesser General Public License</license>
