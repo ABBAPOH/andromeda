@@ -1,0 +1,43 @@
+The Andromeda 0.3.0 release contains bug fixes and new features.
+
+The most important changes are listed in this document. For a complete
+list of changes, see the Git log for the Andromeda sources that
+you can check out from the public Git repository. For example:
+
+git clone git@github.com:ABBAPOH/Andromeda.git
+git log --cherry-pick --pretty=oneline v0.2.1..v0.3
+
+Global
+   * Core plugin doesn't exist anymore - Andromeda core moved to an
+     application itself
+   * Andromeda quits when last window is closed (Windows and Linux)
+   * Allow to hide system tray menu (#33)
+   * Improved shotcut editing (#50)
+   * Fixed mimetype in andromeda.desktop (#54)
+   * Added Image Viewer plugin
+   * Added BinEditor plugin
+   * Added PdfView plugin
+   * FileManager moved to a separate library
+   * Added support for network transparency to allow opening files via http
+     (currently works only for ImageViewer)
+
+BinEditor plugin
+
+Bookmarks plugin
+
+FileManager plugin
+   * Add possibility to move files instead of copying ("Ctrl+Shift+V" for pasting)
+   * Fix calculating of drive/file size (now uses double instead of int)
+   * Added simple status bar
+   * Added "Ctrl+Down" shortcut for opening files
+   * Files are renamed now using QTextEdit instead of a QLineEdit
+   * Improved FileInfo dialog look'n'feel
+
+Image Viewer plugin
+
+PdfView plugin
+
+Hello World plugin
+   * Added possibility to change text via context menu:)
+
+WebView plugin
