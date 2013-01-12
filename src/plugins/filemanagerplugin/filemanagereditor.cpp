@@ -17,7 +17,6 @@
 #include <GuiSystem/AbstractEditor>
 #include <GuiSystem/EditorWindowFactory>
 #include <GuiSystem/constants.h>
-#include <GuiSystem/editorwindowfactory.h>
 #include <Widgets/MiniSplitter>
 
 #include <FileManager/DualPaneWidget>
