@@ -1,5 +1,5 @@
-#ifndef IOPTIONSPAGE_H
-#define IOPTIONSPAGE_H
+#ifndef SETTTINGSPAGE_H
+#define SETTTINGSPAGE_H
 
 #include "guisystem_global.h"
 
@@ -37,4 +37,4 @@ private:
 
 } // namespace GuiSystem
 
-#endif // IOPTIONSPAGE_H
+#endif // SETTTINGSPAGE_H
