@@ -24,13 +24,14 @@ public slots:
     void clearKeySequence();
 
 signals:
-    void shortcutFinished();
+    void keySequenceFinished();
     void keySequenceChanged(const QKeySequence &key);
 
 protected:
     bool event(QEvent *);
     void keyPressEvent(QKeyEvent *);
     void keyReleaseEvent(QKeyEvent *);
+    void timerEvent(QTimerEvent *);
 
 protected:
     ShortcutEditPrivate *d_ptr;

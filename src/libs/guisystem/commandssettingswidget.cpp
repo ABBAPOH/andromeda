@@ -54,7 +54,7 @@ ShortcutDelegate::ShortcutDelegate(QObject *parent) :
 QWidget * ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     ShortcutEdit *editor = new ShortcutEdit(parent);
-    connect(editor, SIGNAL(shortcutFinished()), SLOT(onFinishShortcut()));
+    connect(editor, SIGNAL(keySequenceFinished()), SLOT(onFinishShortcut()));
     return editor;
 }
 

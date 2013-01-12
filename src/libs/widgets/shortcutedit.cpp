@@ -50,15 +50,26 @@ int ShortcutEditPrivate::translateModifiers(Qt::KeyboardModifiers state, const Q
     return result;
 }
 
+void ShortcutEditPrivate::resetState()
+{
+    Q_Q(ShortcutEdit);
+
+    if (releaseTimer) {
+        q->killTimer(releaseTimer);
+        releaseTimer = 0;
+        m_prevKey = -1;
+        m_lineEdit->setText(m_keySequence.toString(QKeySequence::NativeText));
+        m_lineEdit->setPlaceholderText(ShortcutEdit::tr("Press shortcut"));
+    }
+}
+
 void ShortcutEditPrivate::finishEditing()
 {
     Q_Q(ShortcutEdit);
 
-    m_prevKey = -1;
-    m_lineEdit->setText(m_keySequence.toString(QKeySequence::NativeText));
-    m_lineEdit->setPlaceholderText(ShortcutEdit::tr("Press shortcut"));
+    resetState();
     emit q->keySequenceChanged(m_keySequence);
-    emit q->shortcutFinished();
+    emit q->keySequenceFinished();
 }
 
 ShortcutEdit::ShortcutEdit(QWidget *parent) :
@@ -85,6 +96,8 @@ void ShortcutEdit::setKeySequence(const QKeySequence &key)
 {
     Q_D(ShortcutEdit);
 
+    d->resetState();
+
     if (d->m_keySequence == key)
         return;
 
@@ -102,25 +115,19 @@ void ShortcutEdit::clearKeySequence()
 {
     Q_D(ShortcutEdit);
 
-    d->m_keyNum = d->m_key[0] = d->m_key[1] = d->m_key[2] = d->m_key[3] = 0;
-    d->m_keyNum = 0;
+    d->resetState();
+
     d->m_lineEdit->clear();
     d->m_keySequence = QKeySequence();
+    d->m_keyNum = d->m_key[0] = d->m_key[1] = d->m_key[2] = d->m_key[3] = 0;
+    d->m_prevKey = -1;
     emit keySequenceChanged(d->m_keySequence);
 }
 
 bool ShortcutEdit::event(QEvent *e)
 {
-    Q_D(ShortcutEdit);
-
     switch (e->type()) {
-    case QEvent::Timer : {
-        QTimerEvent *te = static_cast<QTimerEvent *>(e);
-        if (te->timerId() == d->releaseTimer) {
-            d->finishEditing();
-            return true;
-        }
-    } case QEvent::Shortcut :
+    case QEvent::Shortcut :
         return true;
     case QEvent::ShortcutOverride :
         // for shortcut overrides, we need to accept as well
@@ -185,5 +192,16 @@ void ShortcutEdit::keyReleaseEvent(QKeyEvent *e)
             d->releaseTimer = startTimer(1000);
         else
             d->finishEditing();
+    }
+}
+
+void ShortcutEdit::timerEvent(QTimerEvent *e)
+{
+    Q_D(ShortcutEdit);
+
+    QTimerEvent *te = static_cast<QTimerEvent *>(e);
+    if (te->timerId() == d->releaseTimer) {
+        d->finishEditing();
+        return;
     }
 }

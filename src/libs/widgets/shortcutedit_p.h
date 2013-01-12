@@ -22,6 +22,7 @@ public:
 
     void init();
     int translateModifiers(Qt::KeyboardModifiers state, const QString &text);
+    void resetState();
     void finishEditing();
 
 private:
