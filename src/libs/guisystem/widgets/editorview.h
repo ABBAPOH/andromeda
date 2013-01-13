@@ -1,10 +1,10 @@
 #ifndef EDITORVIEW_H
 #define EDITORVIEW_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtGui/QWidget>
-#include "abstracteditor.h"
+#include <GuiSystem/AbstractEditor>
 
 namespace GuiSystem {
 

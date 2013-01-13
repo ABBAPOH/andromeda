@@ -1,12 +1,12 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QObject>
 
-#include "ihistory.h"
-#include "historyitem.h"
+#include <GuiSystem/IHistory>
+#include <GuiSystem/HistoryItem>
 
 namespace GuiSystem {
 

@@ -18,6 +18,7 @@
 #include <ExtensionSystem/PluginView>
 
 #include <GuiSystem/Action>
+#include <GuiSystem/ActionManager>
 #include <GuiSystem/Command>
 #include <GuiSystem/CommandContainer>
 #include <GuiSystem/EditorWindowFactory>

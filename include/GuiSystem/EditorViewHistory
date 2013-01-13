@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/editorviewhistory.h"
+#include "../../src/libs/guisystem/widgets/editorviewhistory.h"

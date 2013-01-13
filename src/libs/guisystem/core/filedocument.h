@@ -1,9 +1,9 @@
 #ifndef FILEDOCUMENT_H
 #define FILEDOCUMENT_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
-#include "abstractdocument.h"
+#include <GuiSystem/AbstractDocument>
 
 namespace GuiSystem {
 

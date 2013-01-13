@@ -1,7 +1,7 @@
 #ifndef MAINWINDOWFACTORY_H
 #define MAINWINDOWFACTORY_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>

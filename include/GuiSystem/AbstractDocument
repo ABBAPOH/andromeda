@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/abstractdocument.h"
+#include "../../src/libs/guisystem/core/abstractdocument.h"

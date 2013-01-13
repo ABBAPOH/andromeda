@@ -1,7 +1,7 @@
 #ifndef HISTORYBUTTON_H
 #define HISTORYBUTTON_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtGui/QToolButton>
 

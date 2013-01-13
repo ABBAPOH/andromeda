@@ -1,10 +1,10 @@
 #ifndef FINDTOOLBAR_H
 #define FINDTOOLBAR_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtGui/QToolBar>
-#include "ifind.h"
+#include <GuiSystem/IFind>
 
 namespace GuiSystem {
 

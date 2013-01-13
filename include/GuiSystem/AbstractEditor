@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/abstracteditor.h"
+#include "../../src/libs/guisystem/widgets/abstracteditor.h"

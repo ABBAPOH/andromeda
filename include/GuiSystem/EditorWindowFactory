@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/editorwindowfactory.h"
+#include "../../src/libs/guisystem/widgets/editorwindowfactory.h"

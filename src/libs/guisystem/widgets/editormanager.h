@@ -1,7 +1,7 @@
 #ifndef EDITORMANAGER_H
 #define EDITORMANAGER_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>

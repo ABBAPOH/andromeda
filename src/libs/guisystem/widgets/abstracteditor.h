@@ -1,12 +1,10 @@
 #ifndef ABSTRACTEDITOR_H
 #define ABSTRACTEDITOR_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QUrl>
 #include <QtGui/QWidget>
-
-#include "actionmanager.h"
 
 namespace GuiSystem {
 

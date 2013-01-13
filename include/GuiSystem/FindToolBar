@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/findtoolbar.h"
+#include "../../src/libs/guisystem/widgets/findtoolbar.h"

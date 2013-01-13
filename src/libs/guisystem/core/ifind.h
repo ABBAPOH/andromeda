@@ -1,7 +1,7 @@
 #ifndef IFIND_H
 #define IFIND_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QObject>
 
