@@ -35,7 +35,6 @@ set( HEADERS
     menubarcontainer.h
     menubarcontainer_p.h
     proxyaction.h
-    proxyhistory.h
     settingspage.h
     settingspagemanager.h
     settingswindow.h
@@ -66,7 +65,6 @@ set( SOURCES
     commandssettingswidget.cpp
     menubarcontainer.cpp
     proxyaction.cpp
-    proxyhistory.cpp
     settingspage.cpp
     settingspagemanager.cpp
     settingswindow.cpp
