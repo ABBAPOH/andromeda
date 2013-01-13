@@ -1,4 +1,3 @@
-#include <QtGui>
 #include "textedit.h"
 
 TextEdit::TextEdit(QWidget *parent) : QPlainTextEdit(parent)
@@ -108,38 +107,3 @@ QAction * TextEdit::action(TextEdit::Action action) const
 
     return actions[action];
 }
-
-void TextEdit::resizeEvent(QResizeEvent *e)
-{
-    QPlainTextEdit::resizeEvent(e);
-}
-
-void TextEdit::highlightCurrentLine()
-{
-    QList<QTextEdit::ExtraSelection> extraSelections;
-
-    if (!isReadOnly()) {
-        QTextEdit::ExtraSelection selection;
-        QColor color = QColor(Qt::gray);
-        QColor lineColor = color;
-
-        selection.format.setBackground(lineColor);
-        selection.format.setProperty(QTextFormat::FullWidthSelection, true);
-        selection.cursor = textCursor();
-        selection.cursor.clearSelection();
-        extraSelections.append(selection);
-    }
-
-    setExtraSelections(extraSelections);
-}
-
-//void TextEdit::loadSettings()
-//{
-//    QSettings settings;
-//    QFont font;
-//    font.fromString(settings.value("Font").toString());
-//    setStyleSheet("color:" + settings.value("fontColor").toString());
-//    setFont(font);
-//    //This calls the necessary functions to update TextEdit
-//    highlightCurrentLine();
-//}
