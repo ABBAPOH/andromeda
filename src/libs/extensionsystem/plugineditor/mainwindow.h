@@ -3,8 +3,8 @@
 
 #include <QtGui/QMainWindow>
 
-#include "../mutablepluginspec.h"
-#include "../plugineditor.h"
+#include <ExtensionSystem/MutablePluginSpec>
+#include <ExtensionSystem/PluginEditor>
 
 class QSettings;
 

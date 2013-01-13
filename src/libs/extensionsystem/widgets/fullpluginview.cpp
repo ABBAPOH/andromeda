@@ -3,7 +3,7 @@
 
 #include <QtGui/QDataWidgetMapper>
 
-#include "pluginviewmodel.h"
+#include <ExtensionSystem/PluginViewModel>
 
 using namespace ExtensionSystem;
 

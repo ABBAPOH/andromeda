@@ -1,7 +1,7 @@
 #ifndef PLUGINSPEC_H
 #define PLUGINSPEC_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtCore/QObject>
 

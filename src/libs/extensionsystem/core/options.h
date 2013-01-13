@@ -1,7 +1,7 @@
 #ifndef QOPTIONS_H
 #define QOPTIONS_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtCore/QString>
 #include <QtCore/QPair>

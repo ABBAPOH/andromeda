@@ -1,8 +1,8 @@
 #include "pluginview.h"
 #include "ui_pluginview.h"
 
-#include "fullpluginview.h"
-#include "pluginviewmodel.h"
+#include <ExtensionSystem/FullPluginView>
+#include <ExtensionSystem/PluginViewModel>
 
 using namespace ExtensionSystem;
 

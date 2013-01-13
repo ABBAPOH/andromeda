@@ -1,7 +1,7 @@
 #ifndef PLUGINEDITOR_H
 #define PLUGINEDITOR_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtGui/QWidget>
 
@@ -11,8 +11,7 @@ namespace Ui {
     class PluginEditor;
 }
 
-namespace ExtensionSystem
-{
+namespace ExtensionSystem {
 
 class MutablePluginSpec;
 class PluginSpec;

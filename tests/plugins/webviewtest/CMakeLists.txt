@@ -12,7 +12,7 @@ set( SOURCES
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 
-include_directories( ${PROJECT_SOURCE_DIR}/src/libs/extensionsystem )
+include_directories( ${PROJECT_SOURCE_DIR}/include )
 
 add_library( webviewtest SHARED ${HEADERS} ${SOURCES} ${MOC_SOURCES} )
 target_link_libraries( webviewtest ${QT_LIBRARIES} libextensionsystem )

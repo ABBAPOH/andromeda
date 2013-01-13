@@ -1,8 +1,10 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include "qobjectpool.h"
-#include "pluginspec.h"
+#include "../extensionsystem_global.h"
+
+#include <ExtensionSystem/QObjectPool>
+#include <ExtensionSystem/PluginSpec>
 
 #include <QtCore/QStringList>
 

@@ -1,7 +1,7 @@
 #ifndef FULLPLUGINVIEW_H
 #define FULLPLUGINVIEW_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtGui/QDialog>
 

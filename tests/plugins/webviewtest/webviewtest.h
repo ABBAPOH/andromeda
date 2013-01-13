@@ -2,7 +2,7 @@
 #define TESTPLUGIN_H
 
 #include <QtPlugin>
-#include <iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 class WebViewTest : public ExtensionSystem::IPlugin
 {

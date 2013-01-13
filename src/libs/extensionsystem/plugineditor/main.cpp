@@ -1,8 +1,8 @@
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
 
+#include <ExtensionSystem/PluginSpec>
 #include "mainwindow.h"
-#include "../pluginspec.h"
 
 using namespace ExtensionSystem;
 

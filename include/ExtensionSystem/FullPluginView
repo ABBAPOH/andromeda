@@ -1,1 +1,1 @@
-#include "../../src/libs/extensionsystem/fullpluginview.h"
+#include "../../src/libs/extensionsystem/widgets/fullpluginview.h"

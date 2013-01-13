@@ -1,1 +1,1 @@
-#include "../../src/libs/extensionsystem/pluginspec.h"
+#include "../../src/libs/extensionsystem/core/pluginspec.h"

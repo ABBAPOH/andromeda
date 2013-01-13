@@ -2,7 +2,7 @@
 #define TESTPLUGIN3_H
 
 #include <QtPlugin>
-#include <iplugin.h>
+#include <ExtensionSystem/IPlugin>
 
 class TestPlugin3 : public ExtensionSystem::IPlugin
 {

@@ -1,7 +1,7 @@
 #ifndef ERRORSDIALOG_H
 #define ERRORSDIALOG_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtGui/QDialog>
 

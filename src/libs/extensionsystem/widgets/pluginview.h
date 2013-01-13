@@ -1,7 +1,7 @@
 #ifndef PLUGINVIEW_H
 #define PLUGINVIEW_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtCore/QModelIndex>
 #include <QtGui/QDialog>

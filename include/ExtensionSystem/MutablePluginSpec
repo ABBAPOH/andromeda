@@ -1,1 +1,1 @@
-#include "../../src/libs/extensionsystem/mutablepluginspec.h"
+#include "../../src/libs/extensionsystem/core/mutablepluginspec.h"

@@ -1,7 +1,9 @@
 #ifndef MUTABLEPLUGINSPEC_H
 #define MUTABLEPLUGINSPEC_H
 
-#include "pluginspec.h"
+#include "../extensionsystem_global.h"
+
+#include <ExtensionSystem/PluginSpec>
 
 namespace ExtensionSystem {
 

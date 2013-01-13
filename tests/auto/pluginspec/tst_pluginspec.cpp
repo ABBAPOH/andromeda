@@ -1,9 +1,9 @@
 #include <QtCore/QString>
 #include <QtTest/QtTest>
 
-#include <pluginspec.h>
-#include <pluginmanager.h>
-#include <mutablepluginspec.h>
+#include <ExtensionSystem/PluginSpec>
+#include <ExtensionSystem/PluginManager>
+#include <ExtensionSystem/MutablePluginSpec>
 
 using namespace ExtensionSystem;
 

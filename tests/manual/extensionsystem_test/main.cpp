@@ -1,8 +1,8 @@
 #include <QtGui/QApplication>
 #include <QDebug>
 
-#include <pluginmanager.h>
-#include <pluginview.h>
+#include <ExtensionSystem/PluginManager>
+#include <ExtensionSystem/PluginView>
 
 using namespace ExtensionSystem;
 

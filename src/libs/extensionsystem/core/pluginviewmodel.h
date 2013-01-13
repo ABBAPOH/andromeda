@@ -1,7 +1,7 @@
 #ifndef PLUGINVIEWMODEL_H
 #define PLUGINVIEWMODEL_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtCore/QAbstractItemModel>
 

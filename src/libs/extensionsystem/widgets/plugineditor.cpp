@@ -1,8 +1,8 @@
 #include "plugineditor.h"
 #include "ui_plugineditor.h"
 
-#include "mutablepluginspec.h"
-#include <QStringListModel>
+#include <QtGui/QStringListModel>
+#include <ExtensionSystem/MutablePluginSpec>
 
 using namespace ExtensionSystem;
 

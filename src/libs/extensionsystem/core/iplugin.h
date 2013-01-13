@@ -1,7 +1,7 @@
 #ifndef IPLUGIN_H
 #define IPLUGIN_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QMap>

@@ -2,41 +2,41 @@ add_subdirectory( plugineditor )
 
 set( GLOBAL_HEADERS extensionsystem_global.h)
 set( HEADERS
-    errorsdialog.h
-    fullpluginview.h
-    iplugin.h
-    mutablepluginspec.h
-    options.h
-    plugineditor.h
-    pluginmanager.h
-    pluginmanager_p.h
-    pluginspec.h
-    pluginspec_p.h
-    pluginspecformathandler_p.h
-    pluginview.h
-    pluginviewmodel.h
-    pluginviewmodel_p.h
-    qobjectpool.h
-    qobjectpool_p.h
+    core/iplugin.h
+    core/mutablepluginspec.h
+    core/pluginmanager.h
+    core/pluginmanager_p.h
+    core/pluginspec.h
+    core/pluginspec_p.h
+    core/pluginspecformathandler_p.h
+    core/qobjectpool.h
+    core/qobjectpool_p.h
+    core/options.h
+    core/pluginviewmodel.h
+    core/pluginviewmodel_p.h
+    widgets/errorsdialog.h
+    widgets/fullpluginview.h
+    widgets/plugineditor.h
+    widgets/pluginview.h
    )
 set( SOURCES
-    errorsdialog.cpp
-    fullpluginview.cpp
-    iplugin.cpp
-    mutablepluginspec.cpp
-    options.cpp
-    plugineditor.cpp
-    pluginmanager.cpp
-    pluginspec.cpp
-    pluginspecformathandler.cpp
-    pluginview.cpp
-    pluginviewmodel.cpp
-    qobjectpool.cpp
+    core/iplugin.cpp
+    core/mutablepluginspec.cpp
+    core/options.cpp
+    core/pluginmanager.cpp
+    core/pluginspec.cpp
+    core/pluginspecformathandler.cpp
+    core/pluginviewmodel.cpp
+    core/qobjectpool.cpp
+    widgets/errorsdialog.cpp
+    widgets/fullpluginview.cpp
+    widgets/plugineditor.cpp
+    widgets/pluginview.cpp
    )
 set( FORMS
-    pluginview.ui
-    fullpluginview.ui
-    plugineditor.ui
+    widgets/pluginview.ui
+    widgets/fullpluginview.ui
+    widgets/plugineditor.ui
    )
 set( TS_FILES translations/extensionsystem_ru.ts translations/extensionsystem_pt.ts )
 

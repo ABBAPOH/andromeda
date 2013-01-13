@@ -1,7 +1,7 @@
 #ifndef QOBJECTPOOL_H
 #define QOBJECTPOOL_H
 
-#include "extensionsystem_global.h"
+#include "../extensionsystem_global.h"
 
 #include <QtCore/QObject>
 

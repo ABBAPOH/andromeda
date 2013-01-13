@@ -2,7 +2,7 @@
 #include <QStringList>
 #include <QDebug>
 
-#include <options.h>
+#include <ExtensionSystem/Options>
 
 using namespace ExtensionSystem;
 
