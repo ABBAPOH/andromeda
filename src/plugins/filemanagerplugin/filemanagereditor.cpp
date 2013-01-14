@@ -1,17 +1,18 @@
 #include "filemanagereditor.h"
 #include "filemanagereditor_p.h"
 
-#include <QtGui/QMenu>
-#include <QtGui/QToolBar>
-
 #include <QtCore/QDataStream>
+#include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtCore/QUrl>
+
 #include <QtGui/QAction>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFileIconProvider>
+#include <QtGui/QMenu>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QToolBar>
 
 #include <ExtensionSystem/PluginManager>
 #include <GuiSystem/AbstractEditor>
@@ -395,11 +396,19 @@ void FileManagerEditor::openPaths(const QStringList &paths)
     QStringList folders;
     foreach (const QString &path, paths) {
         QFileInfo info(path);
-        if (info.isDir() && !info.isBundle())
+        if (info.isDir() && !info.isBundle()) {
             folders.append(path);
-        else
+        } else {
+#ifdef Q_OS_LINUX
+            QFileInfo info(path);
+            if (info.isExecutable()) {
+                QProcess::startDetached(path);
+                return;
+            }
+#endif
             // TODO: allow to open default editor instead
             QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        }
     }
 
     if (folders.isEmpty())
