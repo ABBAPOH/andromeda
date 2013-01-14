@@ -580,7 +580,9 @@ void Application::createToolsMenu()
     MenuBarContainer *menuBar = MenuBarContainer::instance();
 
     // ================ Tools Menu ================
+#ifdef QT_DEBUG
     CommandContainer *toolsMenu = menuBar->container(MenuBarContainer::ToolsMenu);
+#endif
 
 #ifdef QT_DEBUG
     Command *plugins = new Command(Constants::Actions::Plugins, this);
