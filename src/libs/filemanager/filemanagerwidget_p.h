@@ -88,7 +88,7 @@ public:
     void updateListViewFlow(QListView *view);
 
 public slots:
-    void onDoubleClick(const QModelIndex &index);
+    void onActivated(const QModelIndex &index);
     void onCurrentItemIndexChanged(int index);
     void onSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 

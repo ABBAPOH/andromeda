@@ -542,10 +542,9 @@ QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::View
     view->setTextElideMode(Qt::ElideMiddle);
     view->setItemDelegate(new FileItemDelegate(view));
     view->setIconSize(iconSizes[mode]);
-    connect(view, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(onDoubleClick(QModelIndex)),
+    connect(view, SIGNAL(activated(QModelIndex)),
+            this, SLOT(onActivated(QModelIndex)),
             Qt::QueuedConnection);
-    connect(view, SIGNAL(activated(QModelIndex)), q, SLOT(open()));
     if (model) {
         view->setModel(model);
         QTreeView *treeView = qobject_cast<QTreeView *>(view);
@@ -637,14 +636,18 @@ void FileManagerWidgetPrivate::updateListViewFlow(QListView *view)
     view->setMouseTracking(true);
 }
 
-void FileManagerWidgetPrivate::onDoubleClick(const QModelIndex &index)
+void FileManagerWidgetPrivate::onActivated(const QModelIndex &index)
 {
     Q_Q(FileManagerWidget);
 
     QString path = model->filePath(index);
 
     Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
+#ifdef Q_OS_MAC
+    if (modifiers & Qt::ShiftModifier) {
+#else
     if (modifiers & Qt::ControlModifier) {
+#endif
         emit q->openNewTabRequested(QStringList() << path);
         return;
     } else if (modifiers & Qt::AltModifier) {
