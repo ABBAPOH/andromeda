@@ -545,6 +545,7 @@ QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::View
     connect(view, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(onDoubleClick(QModelIndex)),
             Qt::QueuedConnection);
+    connect(view, SIGNAL(activated(QModelIndex)), q, SLOT(open()));
     if (model) {
         view->setModel(model);
         QTreeView *treeView = qobject_cast<QTreeView *>(view);
@@ -1736,12 +1737,6 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
         return;
 
     switch (event->key()) {
-#ifndef Q_OS_MAC
-    case Qt::Key_Return:
-    case Qt::Key_Enter:
-        open();
-        break;
-#endif
     case Qt::Key_Down:
         if (event->modifiers() & Qt::ControlModifier)
             open();
