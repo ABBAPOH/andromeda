@@ -644,13 +644,13 @@ void FileManagerWidgetPrivate::onActivated(const QModelIndex &index)
 
     Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
 #ifdef Q_OS_MAC
-    if (modifiers & Qt::ShiftModifier) {
+    if (modifiers & Qt::AltModifier) {
 #else
-    if (modifiers & Qt::ControlModifier) {
+    if (modifiers & Qt::MetaModifier) {
 #endif
         emit q->openNewTabRequested(QStringList() << path);
         return;
-    } else if (modifiers & Qt::AltModifier) {
+    } else if (modifiers & Qt::ControlModifier) {
         emit q->openNewWindowRequested(QStringList() << path);
         return;
     }
