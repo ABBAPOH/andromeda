@@ -1733,17 +1733,23 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
     Q_D(FileManagerWidget);
 
     if (!d->blockEvents) { // prevent endless recursion
-        d->blockEvents = true;
-        qApp->sendEvent(d_func()->currentView, event);
-
+        switch (event->key()) {
 #ifndef Q_OS_MAC
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
-        open();
+        case Qt::Key_Return:
+        case Qt::Key_Enter:
+            open();
+            break;
 #endif
-    if (event->key() == Qt::Key_Down && event->modifiers() & Qt::ControlModifier)
-        open();
-
-        d->blockEvents = false;
+        case Qt::Key_Down:
+            if (event->modifiers() & Qt::ControlModifier)
+                open();
+            break;
+        default:
+            d->blockEvents = true;
+            qApp->sendEvent(d_func()->currentView, event);
+            d->blockEvents = false;
+            break;
+        }
     }
 }
 
