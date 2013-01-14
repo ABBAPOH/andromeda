@@ -915,7 +915,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 
     d->setupUi();
 
-    d->blockEvents = false;
+    d->blockKeyEvent = false;
     d->model = 0;
     d->currentView = 0;
     d->viewMode = (FileManagerWidget::ViewMode)-1; // to skip if in setView()
@@ -1732,24 +1732,25 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
 {
     Q_D(FileManagerWidget);
 
-    if (!d->blockEvents) { // prevent endless recursion
-        switch (event->key()) {
+    if (d->blockKeyEvent) // prevent endless recursion
+        return;
+
+    switch (event->key()) {
 #ifndef Q_OS_MAC
-        case Qt::Key_Return:
-        case Qt::Key_Enter:
-            open();
-            break;
+    case Qt::Key_Return:
+    case Qt::Key_Enter:
+        open();
+        break;
 #endif
-        case Qt::Key_Down:
-            if (event->modifiers() & Qt::ControlModifier)
-                open();
-            break;
-        default:
-            d->blockEvents = true;
-            qApp->sendEvent(d_func()->currentView, event);
-            d->blockEvents = false;
-            break;
-        }
+    case Qt::Key_Down:
+        if (event->modifiers() & Qt::ControlModifier)
+            open();
+        break;
+    default:
+        d->blockKeyEvent = true;
+        qApp->sendEvent(d_func()->currentView, event);
+        d->blockKeyEvent = false;
+        break;
     }
 }
 
@@ -1760,12 +1761,12 @@ void FileManagerWidget::keyReleaseEvent(QKeyEvent *event)
 {
     Q_D(FileManagerWidget);
 
-    if (!d->blockEvents) { // prevent endless recursion
-        d->blockEvents = true;
+    if (!d->blockKeyEvent) { // prevent endless recursion
+        d->blockKeyEvent = true;
         qApp->sendEvent(d_func()->currentView, event);
-        d->blockEvents = false;
+        d->blockKeyEvent = false;
     } else {
-        d->blockEvents = false;
+        d->blockKeyEvent = false;
     }
 }
 

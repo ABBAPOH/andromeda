@@ -112,7 +112,7 @@ public:
 
     FileManagerHistory * history;
 
-    bool blockEvents;
+    bool blockKeyEvent;
     QSize gridSize;
     FileManagerWidget::Flow flow;
 
