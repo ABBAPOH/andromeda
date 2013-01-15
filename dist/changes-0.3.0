@@ -20,6 +20,7 @@ Global
    * FileManager moved to a separate library
    * Added support for network transparency to allow opening files via http
      (currently works only for ImageViewer)
+   * Fix crash with opening in internal editor
 
 BinEditor plugin
 

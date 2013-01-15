@@ -154,15 +154,15 @@ void BrowserTabWidget::openEditor(const QList<QUrl> &urls, const QByteArray &edi
 {
     // open single url in a current tab
     if (urls.count() == 1) {
-        EditorView *container = qobject_cast<EditorView *>(this->currentEditor());
-        container->openEditor(urls.first(), editorId);
+        EditorView *view = currentView();
+        view->openEditor(urls.first(), editorId);
         return;
     }
 
     foreach (const QUrl &url, urls) {
-        EditorView *container = qobject_cast<EditorView *>(createView());
-        addView(container, false);
-        container->openEditor(url, editorId);
+        EditorView *view = createView();
+        addView(view, false);
+        view->openEditor(url, editorId);
     }
 }
 
