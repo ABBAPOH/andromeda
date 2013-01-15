@@ -642,18 +642,18 @@ void FileManagerWidgetPrivate::onActivated(const QModelIndex &index)
 
     QString path = model->filePath(index);
 
-    Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
-#ifdef Q_OS_MAC
-    if (modifiers & Qt::AltModifier) {
-#else
-    if (modifiers & Qt::MetaModifier) {
-#endif
-        emit q->openNewTabRequested(QStringList() << path);
-        return;
-    } else if (modifiers & Qt::ControlModifier) {
-        emit q->openNewWindowRequested(QStringList() << path);
-        return;
-    }
+//    Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
+//#ifdef Q_OS_MAC
+//    if (modifiers & Qt::AltModifier) {
+//#else
+//    if (modifiers & Qt::MetaModifier) {
+//#endif
+//        emit q->openNewTabRequested(QStringList() << path);
+//        return;
+//    } else if (modifiers & Qt::ControlModifier) {
+//        emit q->openNewWindowRequested(QStringList() << path);
+//        return;
+//    }
 
     QFileInfo info(path);
     if (info.isDir() && !info.isBundle()) {

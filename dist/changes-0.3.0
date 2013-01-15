@@ -32,6 +32,7 @@ FileManager plugin
    * Added "Ctrl+Down" shortcut for opening files
    * Files are renamed now using QTextEdit instead of a QLineEdit
    * Improved FileInfo dialog look'n'feel
+   * Temporarily disable open keyboard modifiers.
 
 Image Viewer plugin
 
