@@ -4,6 +4,7 @@
 #include "pdfview_global.h"
 
 #include <GuiSystem/AbstractDocument>
+#include <GuiSystem/AbstractDocumentFactory>
 
 //namespace PdfView {
 
@@ -15,6 +16,21 @@ public:
 
 protected:
     bool openUrl(const QUrl &/*url*/) { return true; }
+};
+
+class PdfViewDocumentFactory : public GuiSystem::AbstractDocumentFactory
+{
+public:
+    explicit PdfViewDocumentFactory(QObject *parent = 0);
+
+    QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
+    QStringList mimeTypes() const;
+    int weight() const;
+
+protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
 };
 
 //} // namespace PdfView

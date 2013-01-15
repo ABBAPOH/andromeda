@@ -2,6 +2,7 @@
 #define FILEMANAGERDOCUMENT_H
 
 #include <GuiSystem/AbstractDocument>
+#include <GuiSystem/AbstractDocumentFactory>
 
 namespace FileManager {
 
@@ -10,7 +11,10 @@ class FileManagerEditorHistory;
 class FileManagerDocument : public GuiSystem::AbstractDocument
 {
     Q_OBJECT
+    Q_DISABLE_COPY(FileManagerDocument)
+
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
+
 public:
     explicit FileManagerDocument(QObject *parent = 0);
 
@@ -31,6 +35,23 @@ protected:
 private:
     QString m_currentPath;
     FileManagerEditorHistory *m_history;
+};
+
+class FileManagerDocumentFactory : public GuiSystem::AbstractDocumentFactory
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(FileManagerDocumentFactory)
+
+public:
+    explicit FileManagerDocumentFactory(QObject *parent = 0);
+
+    QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
+    QStringList mimeTypes() const;
+
+protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
 };
 
 } // namespace FileManager

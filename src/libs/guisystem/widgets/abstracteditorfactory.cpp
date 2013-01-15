@@ -28,21 +28,6 @@ AbstractEditorFactory::~AbstractEditorFactory()
 {
     QList<AbstractEditor *> editors = m_editors;
     qDeleteAll(editors);
-
-    QList<AbstractDocument *> documents = m_documents;
-    qDeleteAll(documents);
-}
-
-/*!
-    \brief Creates and returns new document.
-*/
-AbstractDocument * AbstractEditorFactory::document(QObject *parent)
-{
-    AbstractDocument *editor = createDocument(parent);
-    editor->setProperty("id", id());
-    connect(editor, SIGNAL(destroyed(QObject*)), SLOT(onDocumentDestroyed(QObject*)));
-    m_documents.append(editor);
-    return editor;
 }
 
 /*!
@@ -60,26 +45,11 @@ AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
 /*!
     \internal
 */
-void AbstractEditorFactory::onDocumentDestroyed(QObject *object)
-{
-    AbstractDocument *document = static_cast<AbstractDocument *>(object);
-    m_documents.removeOne(document);
-}
-
-/*!
-    \internal
-*/
 void AbstractEditorFactory::onEditorDestroyed(QObject *object)
 {
     AbstractEditor *editor = static_cast<AbstractEditor *>(object);
     m_editors.removeOne(editor);
 }
-
-/*!
-    \fn AbstractDocument * AbstractEditorFactory::createDocument(QObject *parent)
-
-    \brief Reipmlement this function to create new document.
-*/
 
 /*!
     \fn AbstractDocument * AbstractEditorFactory::createEditor(QWidget *parent)

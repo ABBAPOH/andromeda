@@ -13,6 +13,7 @@
 #include <GuiSystem/Command>
 #include <GuiSystem/CommandContainer>
 #include <GuiSystem/MenuBarContainer>
+#include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/SettingsPageManager>
 #include <GuiSystem/constants.h>
@@ -22,6 +23,7 @@
 #include "privacysettings.h"
 #include "proxysettings.h"
 #include "webviewconstants.h"
+#include "webviewdocument.h"
 #include "webvieweditor.h"
 
 using namespace GuiSystem;
@@ -54,6 +56,7 @@ bool WebViewPlugin::initialize()
     pageManager->addPage(new PrivacySettingsPage);
     pageManager->addPage(new ProxySettingsPage(this));
 
+    DocumentManager::instance()->addFactory(new WebViewDocumentFactory(this));
     EditorManager::instance()->addFactory(new WebViewEditorFactory(this));
 
     m_cookieJar = new CookieJar(this);

@@ -141,30 +141,6 @@ QByteArray HelloWorldEditorFactory::id() const
 /*!
     \reimp
 */
-QString HelloWorldEditorFactory::name() const
-{
-    return tr("Hello world editor");
-}
-
-/*!
-    \reimp
-*/
-QIcon HelloWorldEditorFactory::icon() const
-{
-    return QIcon(":/icons/helloWorld.png");
-}
-
-/*!
-    \reimp
-*/
-AbstractDocument * HelloWorldEditorFactory::createDocument(QObject *parent)
-{
-    return new HelloWorldDocument(parent);
-}
-
-/*!
-    \reimp
-*/
 AbstractEditor * HelloWorldEditorFactory::createEditor(QWidget *parent)
 {
     return new HelloWorldEditor(parent);

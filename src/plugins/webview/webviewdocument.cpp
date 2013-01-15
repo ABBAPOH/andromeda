@@ -111,3 +111,63 @@ void WebViewDocument::onLoadFinished()
 {
     setState(NoState);
 }
+
+/*!
+    \class WebViewDocumentFactory
+*/
+
+/*!
+    Creates WebViewDocumentFactory with the given \a parent.
+*/
+WebViewDocumentFactory::WebViewDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory(parent)
+{
+}
+
+/*!
+    \reimp
+*/
+QByteArray WebViewDocumentFactory::id() const
+{
+    return "WebView";
+}
+
+/*!
+    \reimp
+*/
+QString WebViewDocumentFactory::name() const
+{
+    return tr("Web view");
+}
+
+/*!
+    \reimp
+*/
+QIcon WebViewDocumentFactory::icon() const
+{
+    return QIcon();
+}
+
+/*!
+    \reimp
+*/
+QStringList WebViewDocumentFactory::mimeTypes() const
+{
+    return QStringList() << "text/html";
+}
+
+/*!
+    \reimp
+*/
+QStringList WebViewDocumentFactory::urlSchemes() const
+{
+    return QStringList() << "http" << "https";
+}
+
+/*!
+    \reimp
+*/
+AbstractDocument * WebViewDocumentFactory::createDocument(QObject *parent)
+{
+    return new WebViewDocument(parent);
+}

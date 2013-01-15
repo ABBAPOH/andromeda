@@ -7,3 +7,39 @@ PdfViewDocument::PdfViewDocument(QObject *parent) :
     AbstractDocument(parent)
 {
 }
+
+
+PdfViewDocumentFactory::PdfViewDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory(parent)
+{
+}
+
+QByteArray PdfViewDocumentFactory::id() const
+{
+    return "PdfView";
+}
+
+QString PdfViewDocumentFactory::name() const
+{
+    return tr("PDF Viewer");
+}
+
+QIcon PdfViewDocumentFactory::icon() const
+{
+    return QIcon(":/icons/pdfview.png");
+}
+
+QStringList PdfViewDocumentFactory::mimeTypes() const
+{
+    return QStringList() << "application/pdf";
+}
+
+int PdfViewDocumentFactory::weight() const
+{
+    return 21;
+}
+
+AbstractDocument * PdfViewDocumentFactory::createDocument(QObject *parent)
+{
+    return new PdfViewDocument(parent);
+}

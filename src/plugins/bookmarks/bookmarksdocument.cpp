@@ -1,6 +1,7 @@
 #include "bookmarksdocument.h"
 
 #include "bookmarksmodel.h"
+#include "bookmarksplugin.h"
 
 using namespace GuiSystem;
 using namespace Bookmarks;
@@ -21,4 +22,44 @@ BookmarksModel * BookmarksDocument::model() const
 bool BookmarksDocument::openUrl(const QUrl &/*url*/)
 {
     return true;
+}
+
+/*!
+    \class BookmarksDocumentFactory
+*/
+
+BookmarksDocumentFactory::BookmarksDocumentFactory(QObject *parent)
+{
+}
+
+/*!
+    \reimp
+*/
+QByteArray BookmarksDocumentFactory::id() const
+{
+    return "bookmarks";
+}
+
+/*!
+    \reimp
+*/
+QString BookmarksDocumentFactory::name() const
+{
+    return tr("Bookmarks editor");
+}
+
+/*!
+    \reimp
+*/
+QIcon BookmarksDocumentFactory::icon() const
+{
+    return QIcon(":/icons/bookmarks.png");
+}
+
+/*!
+    \reimp
+*/
+AbstractDocument * BookmarksDocumentFactory::createDocument(QObject *parent)
+{
+    return BookmarksPlugin::instance()->sharedDocument();
 }

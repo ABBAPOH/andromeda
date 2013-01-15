@@ -146,38 +146,56 @@ void HelloWorldEditor::changeText()
 //! [5]
 
 //! [6]
-class HelloWorldEditorFactory : public GuiSystem::AbstractEditorFactory
+class HelloWorldDocumentFactory : public GuiSystem::AbstractDocumentFactory
 {
-public:
-    explicit HelloWorldEditorFactory(QObject *parent = 0);
+    Q_OBJECT
+    Q_DISABLE_COPY(HelloWorldDocumentFactory)
 
-    QByteArray id() const;
+public:
+    explicit HelloWorldDocumentFactory(QObject *parent = 0);
+
     QString name() const;
     QIcon icon() const;
 
 protected:
     GuiSystem::AbstractDocument *createDocument(QObject *parent);
-    GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 
-QByteArray HelloWorldEditorFactory::id() const
+HelloWorldDocumentFactory::HelloWorldDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory("helloworld", parent)
 {
-    return "helloworld";
 }
 
-QString HelloWorldEditorFactory::name() const
+QString HelloWorldDocumentFactory::name() const
 {
     return tr("Hello world editor");
 }
 
-QIcon HelloWorldEditorFactory::icon() const
+QIcon HelloWorldDocumentFactory::icon() const
 {
     return QIcon(":/icons/helloWorld.png");
 }
 
-AbstractDocument * HelloWorldEditorFactory::createDocument(QObject *parent)
+AbstractDocument * HelloWorldDocumentFactory::createDocument(QObject *parent)
 {
     return new HelloWorldDocument(parent);
+}
+
+class HelloWorldEditorFactory : public GuiSystem::AbstractEditorFactory
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(HelloWorldEditorFactory)
+
+public:
+    explicit HelloWorldEditorFactory(QObject *parent = 0);
+
+protected:
+    GuiSystem::AbstractEditor *createEditor(QWidget *parent);
+};
+
+HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :
+    AbstractEditorFactory("helloworld", parent)
+{
 }
 
 AbstractEditor * HelloWorldEditorFactory::createEditor(QWidget *parent)

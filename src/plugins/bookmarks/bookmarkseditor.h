@@ -52,15 +52,15 @@ private:
 
 class BookmarksEditorFactory : public GuiSystem::AbstractEditorFactory
 {
+    Q_OBJECT
+    Q_DISABLE_COPY(BookmarksEditorFactory)
+
 public:
     explicit BookmarksEditorFactory(QObject *parent = 0);
 
     QByteArray id() const;
-    QString name() const;
-    QIcon icon() const;
 
 protected:
-    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

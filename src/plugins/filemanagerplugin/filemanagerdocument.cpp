@@ -77,3 +77,52 @@ bool FileManagerDocument::openUrl(const QUrl &url)
     setCurrentPath(path);
     return true;
 }
+
+/*!
+    \class FileManagerDocumentFactory
+*/
+
+FileManagerDocumentFactory::FileManagerDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory(parent)
+{
+}
+
+/*!
+    \reimp
+*/
+QByteArray FileManagerDocumentFactory::id() const
+{
+    return "FileManager";
+}
+
+/*!
+    \reimp
+*/
+QString FileManagerDocumentFactory::name() const
+{
+    return tr("File manager");
+}
+
+/*!
+    \reimp
+*/
+QIcon FileManagerDocumentFactory::icon() const
+{
+    return QFileIconProvider().icon(QFileIconProvider::Folder);
+}
+
+/*!
+    \reimp
+*/
+QStringList FileManagerDocumentFactory::mimeTypes() const
+{
+    return QStringList() << QLatin1String("inode/directory");
+}
+
+/*!
+    \reimp
+*/
+AbstractDocument * FileManagerDocumentFactory::createDocument(QObject *parent)
+{
+    return new FileManagerDocument(parent);
+}

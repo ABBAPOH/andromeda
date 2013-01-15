@@ -4,6 +4,7 @@
 #include "imageviewerplugin_global.h"
 #include "imageviewereditor.h"
 
+#include <GuiSystem/AbstractDocumentFactory>
 #include <GuiSystem/FileDocument>
 #include <ImageView/ImageView>
 
@@ -13,6 +14,7 @@ class IMAGEVIEWERPLUGIN_EXPORT ImageViewerDocument : public GuiSystem::FileDocum
 {
     Q_OBJECT
     Q_DISABLE_COPY(ImageViewerDocument)
+
 public:
     explicit ImageViewerDocument(QObject *parent = 0);
 
@@ -24,6 +26,23 @@ protected:
 
 private:
     ImageViewerEditor *editor;
+};
+
+class ImageViewerDocumentFactory : public GuiSystem::AbstractDocumentFactory
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(ImageViewerDocumentFactory)
+
+public:
+    explicit ImageViewerDocumentFactory(QObject *parent = 0);
+
+    QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
+    QStringList mimeTypes() const;
+
+protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
 };
 
 } // namespace ImageViewer

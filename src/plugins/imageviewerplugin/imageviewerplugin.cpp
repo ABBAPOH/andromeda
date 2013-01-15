@@ -1,10 +1,13 @@
 #include "imageviewerplugin.h"
-#include "imageviewereditor.h"
 
 #include <QtCore/QtPlugin>
 #include <GuiSystem/ActionManager>
+#include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/MenuBarContainer>
+
+#include "imageviewerdocument.h"
+#include "imageviewereditor.h"
 
 using namespace GuiSystem;
 using namespace ImageViewer;
@@ -16,8 +19,8 @@ ImageViewerPlugin::ImageViewerPlugin() :
 
 bool ImageViewerPlugin::initialize()
 {
-    ImageViewerEditorFactory *f = new ImageViewerEditorFactory(this);
-    EditorManager::instance()->addFactory(f);
+    DocumentManager::instance()->addFactory(new ImageViewerDocumentFactory(this));
+    EditorManager::instance()->addFactory(new ImageViewerEditorFactory(this));
 
     createActions();
 

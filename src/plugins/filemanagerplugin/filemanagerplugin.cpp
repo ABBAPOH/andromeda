@@ -19,6 +19,7 @@
 #include <GuiSystem/EditorWindow>
 
 #include <GuiSystem/constants.h>
+#include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/SettingsPageManager>
@@ -31,6 +32,7 @@
 #include <FileManager/NavigationModel>
 #include <FileManager/NavigationPanelSettings>
 
+#include "filemanagerdocument.h"
 #include "filemanagereditor.h"
 #include "viewmodessettings.h"
 #include "globalsettings.h"
@@ -46,9 +48,8 @@ FileManagerPlugin::FileManagerPlugin(QObject *parent) :
 
 bool FileManagerPlugin::initialize()
 {
-    FileManagerEditorFactory *f = new FileManagerEditorFactory(this);
-//    Andromeda::instance()->editorManager()->addFactory(f);
-    EditorManager::instance()->addFactory(f);
+    DocumentManager::instance()->addFactory(new FileManagerDocumentFactory(this));
+    EditorManager::instance()->addFactory(new FileManagerEditorFactory(this));
 
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");

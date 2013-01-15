@@ -106,31 +106,25 @@ void BookmarksEditor::init()
     actionManager->registerAction(undoAction, Constants::Actions::Undo);
 }
 
+/*!
+    \class BookmarksEditorFactory
+*/
 BookmarksEditorFactory::BookmarksEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
 }
 
+/*!
+    \reimp
+*/
 QByteArray BookmarksEditorFactory::id() const
 {
     return Constants::Editors::Bookmarks;
 }
 
-QString BookmarksEditorFactory::name() const
-{
-    return tr("Bookmarks editor");
-}
-
-QIcon BookmarksEditorFactory::icon() const
-{
-    return QIcon(":/icons/bookmarks.png");
-}
-
-AbstractDocument * BookmarksEditorFactory::createDocument(QObject *parent)
-{
-    return BookmarksPlugin::instance()->sharedDocument();
-}
-
+/*!
+    \reimp
+*/
 AbstractEditor * BookmarksEditorFactory::createEditor(QWidget *parent)
 {
     return new BookmarksEditor(*BookmarksPlugin::instance()->sharedDocument(), parent);

@@ -84,41 +84,26 @@ void BinEditor::retranslateUi()
     actions[BinEditor::SelectAll]->setText(tr("Select all"));
 }
 
+/*!
+    \class BinEditorFactory
+*/
+
 BinEditorFactory::BinEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
 }
 
-QStringList BinEditorFactory::mimeTypes() const
-{
-    return QStringList() << "application/octet-stream";
-}
-
-int BinEditorFactory::weight() const
-{
-    return 20;
-}
-
+/*!
+    \reimp
+*/
 QByteArray BinEditorFactory::id() const
 {
     return "bineditor";
 }
 
-QString BinEditorFactory::name() const
-{
-    return tr("Binary editor");
-}
-
-QIcon BinEditorFactory::icon() const
-{
-    return QIcon();
-}
-
-AbstractDocument * BinEditorFactory::createDocument(QObject *parent)
-{
-    return new BinEditorDocument(parent);
-}
-
+/*!
+    \reimp
+*/
 AbstractEditor * BinEditorFactory::createEditor(QWidget *parent)
 {
     return new BinEditor(parent);

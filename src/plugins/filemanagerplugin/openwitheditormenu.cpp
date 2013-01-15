@@ -1,7 +1,7 @@
 #include "openwitheditormenu.h"
 
-#include <GuiSystem/AbstractEditorFactory>
-#include <GuiSystem/EditorManager>
+#include <GuiSystem/AbstractDocumentFactory>
+#include <GuiSystem/DocumentManager>
 
 using namespace GuiSystem;
 
@@ -18,7 +18,7 @@ QList<QUrl> OpenWithEditorMenu::urls() const
     return m_urls;
 }
 
-static void addAction(OpenWithEditorMenu *menu, AbstractEditorFactory *factory, const QString &text = "%1")
+static void addAction(OpenWithEditorMenu *menu, AbstractDocumentFactory *factory, const QString &text = "%1")
 {
     QAction *action = new QAction(menu);
     action->setText(text.arg(factory->name()));
@@ -36,8 +36,8 @@ void OpenWithEditorMenu::setUrls(const QList<QUrl> &urls)
 
     clear();
 
-    EditorManager *manager = EditorManager::instance();
-    QList<AbstractEditorFactory *> factories = manager->factoriesForUrls(m_urls);
+    DocumentManager *manager = DocumentManager::instance();
+    QList<AbstractDocumentFactory *> factories = manager->factoriesForUrls(m_urls);
     if (factories.isEmpty())
         return;
 
@@ -47,7 +47,7 @@ void OpenWithEditorMenu::setUrls(const QList<QUrl> &urls)
         return;
 
     addSeparator();
-    foreach (AbstractEditorFactory *factory, factories.mid(1)) {
+    foreach (AbstractDocumentFactory *factory, factories.mid(1)) {
         ::addAction(this, factory);
     }
 }

@@ -5,6 +5,8 @@ set( GLOBAL_HEADERS guisystem_global.h)
 set( HEADERS
     core/abstractdocument.h
     core/abstractdocument_p.h
+    core/abstractdocumentfactory.h
+    core/documentmanager.h
     core/filedocument.h
     core/filedocument_p.h
     core/history.h
@@ -43,6 +45,8 @@ set( HEADERS
    )
 set( SOURCES
     core/abstractdocument.cpp
+    core/abstractdocumentfactory.cpp
+    core/documentmanager.cpp
     core/filedocument.cpp
     core/history.cpp
     core/historyitem.cpp

@@ -17,6 +17,7 @@
 #include <GuiSystem/EditorWindowFactory>
 #include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/Command>
+#include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/constants.h>
 
@@ -130,9 +131,8 @@ bool BookmarksPlugin::initialize()
         addDefaultBookmarks();
     }
 
-    BookmarksEditorFactory *f = new BookmarksEditorFactory(this);
-    addObject(f);
-    EditorManager::instance()->addFactory(f);
+    DocumentManager::instance()->addFactory(new BookmarksDocumentFactory(this));
+    EditorManager::instance()->addFactory(new BookmarksEditorFactory(this));
 
     createActions();
 

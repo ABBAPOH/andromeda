@@ -1,37 +1,26 @@
 #include "editormanager.h"
 
-#include "abstracteditorfactory.h"
-
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QStringList>
+#include <QtCore/QMap>
 
-#include <IO/QMimeDatabase>
+#include "abstracteditorfactory.h"
 
 namespace GuiSystem {
 
 class EditorManagerPrivate
 {
 public:
-    QHash<QString, AbstractEditorFactory *> factoriesForId;
-    QHash<QString, EditorManager::FactoryList> factoriesForMimeType;
-    QHash<QString, EditorManager::FactoryList> factoriesForScheme;
+    QMap<QByteArray, AbstractEditorFactory *> factories;
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
 
-static inline bool editorFactoryLessThan(AbstractEditorFactory *first, AbstractEditorFactory *second)
-{
-    return first->weight() > second->weight();
-}
-
 /*!
   \class GuiSystem::EditorManager
 
-  \brief The EditorManager class contains all editors' and views' factories.
+  \brief The DocumentManager class contains all editors' factories.
 */
 
 /*!
@@ -44,7 +33,7 @@ EditorManager::EditorManager(QObject *parent) :
 }
 
 /*!
-  \brief Destroys EditorManager.
+  \brief Destroys DocumentManager.
 */
 EditorManager::~EditorManager()
 {
@@ -61,226 +50,47 @@ EditorManager * EditorManager::instance()
     return staticInstance();
 }
 
-/*!
-  \brief Returns factory with given \a id.
-*/
-AbstractEditorFactory * EditorManager::factoryForId(const QString &id) const
+AbstractEditorFactory *EditorManager::factory(const QByteArray &id) const
 {
-    return d_func()->factoriesForId.value(id);
+    Q_D(const EditorManager);
+    return d->factories.value(id);
 }
 
-/*!
-  \brief Returns factory that can handle given \a mimeType.
-*/
-AbstractEditorFactory * EditorManager::factoryForMimeType(const QString &mimeType) const
+AbstractEditor *EditorManager::createEditor(const QByteArray &id, QWidget *parent) const
 {
-    const FactoryList &factories = factoriesForMimeType(mimeType);
-    if (factories.isEmpty())
+    AbstractEditorFactory *factory = this->factory(id);
+    if (!factory)
         return 0;
 
-    return factories.first();
+    return factory->editor(parent);
 }
 
-/*!
-  \brief Returns factory that can handle given \a scheme.
-*/
-AbstractEditorFactory * EditorManager::factoryForScheme(const QString &scheme) const
-{
-    const FactoryList &factories = factoriesForScheme(scheme);
-    if (factories.isEmpty())
-        return 0;
-
-    return factories.first();
-}
-
-/*!
-  \brief Returns factory that can handle given \a url.
-*/
-AbstractEditorFactory * EditorManager::factoryForUrl(const QUrl &url) const
-{
-    const FactoryList &factories = this->factoriesForUrl(url);
-    if (factories.isEmpty())
-        return 0;
-
-    return factories.first();
-}
-
-/*!
-  \brief Returns list of all factories.
-*/
-EditorManager::FactoryList EditorManager::factories() const
-{
-    return d_func()->factoriesForId.values();
-}
-
-/*!
-  \brief Returns list of factories that can handle given \a mimeType.
-*/
-EditorManager::FactoryList EditorManager::factoriesForMimeType(const QString &mimeType) const
-{
-    FactoryList result;
-
-    QMimeDatabase db;
-    QMimeType mt = db.mimeTypeForName(mimeType);
-    QStringList mimeTypes;
-    mimeTypes.append(mimeType);
-    mimeTypes.append(mt.parentMimeTypes());
-    foreach (const QString &mimeType, mimeTypes) {
-        const FactoryList &factories = d_func()->factoriesForMimeType.value(mimeType);
-        foreach (AbstractEditorFactory *f, factories) {
-            if (!result.contains(f))
-                result.append(f);
-        }
-    }
-
-    qStableSort(result.begin(), result.end(), editorFactoryLessThan);
-
-    return result;
-}
-
-/*!
-  \brief Returns list of factories that can handle given \a scheme.
-*/
-EditorManager::FactoryList EditorManager::factoriesForScheme(const QString &scheme) const
-{
-    return d_func()->factoriesForScheme.value(scheme);
-}
-
-/*!
-  \brief Returns list of factories that can handle given \a url.
-*/
-EditorManager::FactoryList EditorManager::factoriesForUrl(const QUrl &url) const
-{
-    QList<AbstractEditorFactory *> result;
-
-    if (url.scheme() == qApp->applicationName()) {
-        result.append(factoryForId(url.host()));
-    } else {
-        QMimeDatabase db;
-        QList<QMimeType> mimeTypes;
-
-        mimeTypes.append(db.mimeTypesForFileName(QFileInfo(url.path()).fileName()));
-        mimeTypes.append(db.mimeTypeForUrl(url));
-        foreach (const QMimeType &mimeType, mimeTypes) {
-            QString mimeTypeName = mimeType.name();
-            result.append(factoriesForMimeType(mimeTypeName));
-        }
-
-        // add scheme factory last to maximize chance to
-        // get "mime type editor" with same weight instead of
-        // "scheme editor"
-        result.append(factoriesForScheme(url.scheme()));
-    }
-
-    qStableSort(result.begin(), result.end(), editorFactoryLessThan);
-    result.erase(std::unique(result.begin(), result.end()), result.end());
-
-    return result;
-}
-
-EditorManager::FactoryList EditorManager::factoriesForUrls(const QList<QUrl> &urls) const
-{
-    if (urls.isEmpty())
-        return FactoryList();
-
-    FactoryList factories = this->factoriesForUrl(urls.first());
-
-    foreach (const QUrl &url, urls.mid(1)) {
-        if (factories.isEmpty())
-            break;
-
-        FactoryList list = this->factoriesForUrl(url);
-        foreach (AbstractEditorFactory *f, factories) {
-            if (!list.contains(f))
-                factories.removeOne(f);
-        }
-    }
-
-    return factories;
-}
-
-/*!
-  \brief Adds \a factory to EditorManager.
-
-  Factories automatically removed when being destroyed.
-*/
 void EditorManager::addFactory(AbstractEditorFactory *factory)
 {
     Q_D(EditorManager);
-
     if (!factory)
         return;
 
-    if (d->factoriesForId.contains(factory->id())) {
-        qWarning() << "EditorManager::addFactory :"
-                   << QString("Factory with id %1 already exists").arg(QString(factory->id()));
-        return;
-    }
+    QByteArray id = factory->id();
+    if (d->factories.contains(id))
+        qWarning() << "EditorManager::addFactory" << "factory with id" << id << "already added.";
 
-    d->factoriesForId.insert(factory->id(), factory);
-
-    foreach (const QString &mimeType, factory->mimeTypes()) {
-        d->factoriesForMimeType[mimeType].append(factory);
-    }
-
-    foreach (const QString &scheme, factory->urlSchemes()) {
-        d->factoriesForScheme[scheme].append(factory);
-    }
-
-    connect(factory, SIGNAL(destroyed(QObject *)), this, SLOT(onDestroyed1(QObject*)));
+    d->factories.insert(id, factory);
+    connect(factory, SIGNAL(destroyed(QObject*)), SLOT(onFactoryDestroyed(QObject*)));
 }
 
-static void removeFactory(QHash<QString, EditorManager::FactoryList> &hash, AbstractEditorFactory *factory)
-{
-    QMutableHashIterator<QString, EditorManager::FactoryList> i(hash);
-    while (i.hasNext()) {
-        i.next();
-        EditorManager::FactoryList &factories = i.value();
-        factories.removeAll(factory);
-        if (factories.isEmpty())
-            i.remove();
-    }
-}
-
-/*!
-  \brief Removes \a factory from EditorManager.
-*/
 void EditorManager::removeFactory(AbstractEditorFactory *factory)
 {
     Q_D(EditorManager);
-
     if (!factory)
         return;
 
-    ::removeFactory(d->factoriesForMimeType, factory);
-    ::removeFactory(d->factoriesForScheme, factory);
-
-    d->factoriesForId.remove(d->factoriesForId.key(factory));
-
-    disconnect(factory, 0, this, 0);
+    QByteArray id = d->factories.key(factory);
+    d->factories.remove(id);
 }
 
-/*!
-  \internal
-*/
-void EditorManager::onDestroyed1(QObject *o)
+void EditorManager::onFactoryDestroyed(QObject *object)
 {
-    removeFactory(static_cast<AbstractEditorFactory *>(o));
-}
-
-/*!
-  \internal
-*/
-QString EditorManager::getMimeType(const QUrl &url) const
-{
-    if (url.scheme() == QLatin1String("file")) {
-        QFileInfo info(url.toLocalFile());
-        if (info.isDir() && !info.isBundle())
-            return QLatin1String("inode/directory");
-    } else if(url.scheme() == QLatin1String("http") ||
-              url.scheme() == QLatin1String("https")) {
-        return QLatin1String("text/html");
-    }
-    return QString();
+    removeFactory(static_cast<AbstractEditorFactory*>(object));
 }
 

@@ -60,17 +60,11 @@ class WebViewEditorFactory : public GuiSystem::AbstractEditorFactory
     Q_DISABLE_COPY(WebViewEditorFactory)
 
 public:
-    explicit WebViewEditorFactory(QObject * parent = 0) : AbstractEditorFactory(parent) {}
-    ~WebViewEditorFactory() {}
+    explicit WebViewEditorFactory(QObject * parent = 0);
 
-    QByteArray id() const { return "WebView"; }
-    QString name() const;
-    QIcon icon() const;
-    QStringList mimeTypes() const { return QStringList() << "text/html"; }
-    QStringList urlSchemes() const { return QStringList() << "http" << "https"; }
+    QByteArray id() const;
 
 protected:
-    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

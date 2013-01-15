@@ -61,36 +61,29 @@ void ImageViewerEditor::setupUi()
     m_layout->addWidget(m_view);
 }
 
+/*!
+    \class ImageViewerEditorFactory
+*/
+
+/*!
+    Creates ImageViewerEditorFactory with the given \a parent.
+*/
 ImageViewerEditorFactory::ImageViewerEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
 }
 
+/*!
+    \reimp
+*/
 QByteArray ImageViewerEditorFactory::id() const
 {
     return "imageview";
 }
 
-QString ImageViewerEditorFactory::name() const
-{
-    return tr("Image viewer");
-}
-
-QIcon ImageViewerEditorFactory::icon() const
-{
-    return QIcon(":/icons/imageview.png");
-}
-
-QStringList ImageViewerEditorFactory::mimeTypes() const
-{
-    return QStringList() << "image/jpeg" << "image/png";
-}
-
-AbstractDocument * ImageViewerEditorFactory::createDocument(QObject *parent)
-{
-    return new ImageViewerDocument(parent);
-}
-
+/*!
+    \reimp
+*/
 AbstractEditor * ImageViewerEditorFactory::createEditor(QWidget *parent)
 {
     return new ImageViewerEditor(parent);

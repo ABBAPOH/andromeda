@@ -577,36 +577,26 @@ void FileManagerEditor::connectDocument(FileManagerDocument *document)
             document, SLOT(setCurrentPath(QString)));
 }
 
+/*!
+    \class FileManagerEditorFactory
+*/
+
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
     AbstractEditorFactory(parent)
 {
 }
 
+/*!
+    \reimp
+*/
 QByteArray FileManagerEditorFactory::id() const
 {
     return "FileManager";
 }
 
-QString FileManagerEditorFactory::name() const
-{
-    return tr("File manager");
-}
-
-QIcon FileManagerEditorFactory::icon() const
-{
-    return QFileIconProvider().icon(QFileIconProvider::Folder);
-}
-
-QStringList FileManagerEditorFactory::mimeTypes() const
-{
-    return QStringList() << QLatin1String("inode/directory");
-}
-
-AbstractDocument * FileManagerEditorFactory::createDocument(QObject *parent)
-{
-    return new FileManagerDocument(parent);
-}
-
+/*!
+    \reimp
+*/
 AbstractEditor * FileManagerEditorFactory::createEditor(QWidget *parent)
 {
     return new FileManagerEditor(parent);

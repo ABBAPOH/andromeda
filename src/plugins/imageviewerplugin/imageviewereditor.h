@@ -18,6 +18,7 @@ class IMAGEVIEWERPLUGIN_EXPORT ImageViewerEditor : public GuiSystem::AbstractEdi
 {
     Q_OBJECT
     Q_DISABLE_COPY(ImageViewerEditor)
+
 public:
     explicit ImageViewerEditor(QWidget *parent = 0);
 
@@ -36,16 +37,15 @@ private:
 
 class ImageViewerEditorFactory : public GuiSystem::AbstractEditorFactory
 {
+    Q_OBJECT
+    Q_DISABLE_COPY(ImageViewerEditorFactory)
+
 public:
     explicit ImageViewerEditorFactory(QObject *parent = 0);
 
     QByteArray id() const;
-    QString name() const;
-    QIcon icon() const;
-    QStringList mimeTypes() const;
 
 protected:
-    GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };
 

@@ -42,3 +42,43 @@ bool HelloWorldDocument::openUrl(const QUrl &/*url*/)
 {
     return true;
 }
+
+/*!
+    \class HelloWorldDocumentFactory
+*/
+HelloWorldDocumentFactory::HelloWorldDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory(parent)
+{
+}
+
+/*!
+    \reimp
+*/
+QByteArray HelloWorldDocumentFactory::id() const
+{
+    return "helloworld";
+}
+
+/*!
+    \reimp
+*/
+QString HelloWorldDocumentFactory::name() const
+{
+    return tr("Hello world editor");
+}
+
+/*!
+    \reimp
+*/
+QIcon HelloWorldDocumentFactory::icon() const
+{
+    return QIcon(":/icons/helloWorld.png");
+}
+
+/*!
+    \reimp
+*/
+AbstractDocument * HelloWorldDocumentFactory::createDocument(QObject *parent)
+{
+    return new HelloWorldDocument(parent);
+}

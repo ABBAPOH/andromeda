@@ -5,8 +5,8 @@
 
     \image html helloworld.png
 
-    To create a new GuiSystem plugin, at least 4 classes should be implemented:
-    document, editor, factory and plugin class.
+    To create a new GuiSystem plugin, at least 5 classes should be implemented:
+    document, editor, 2 factories and a plugin class.
 
     First, you need to implement document class. This class serves as a model
     for an editor. Here's a simple example of document that has no additional
@@ -53,8 +53,8 @@
 
     \snippet helloworld.cpp 5
 
-    Factory implementation is quite simple - you should reimplement at least 5
-    methods: id, name, icon, createDocument and createEditor.
+    Factories implementation is quite simple too. You need create a factory that
+    create document and a factory that create edtor:
 
     \snippet helloworld.cpp 6
 

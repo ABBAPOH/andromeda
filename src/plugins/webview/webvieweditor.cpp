@@ -290,21 +290,29 @@ void WebViewEditor::connectDocument(WebViewDocument *document)
             document->history(), SLOT(updateCurrentItemIndex()));
 }
 
-QString WebViewEditorFactory::name() const
+/*!
+    \class WebViewEditorFactory
+*/
+
+/*!
+    Creates WebViewEditorFactory with the given \a parent.
+*/
+WebViewEditorFactory::WebViewEditorFactory(QObject *parent) :
+    AbstractEditorFactory(parent)
 {
-    return tr("Web view");
 }
 
-QIcon WebViewEditorFactory::icon() const
+/*!
+    \reimp
+*/
+QByteArray WebViewEditorFactory::id() const
 {
-    return QIcon();
+    return "WebView";
 }
 
-AbstractDocument * WebViewEditorFactory::createDocument(QObject *parent)
-{
-    return new WebViewDocument(parent);
-}
-
+/*!
+    \reimp
+*/
 AbstractEditor * WebViewEditorFactory::createEditor(QWidget *parent)
 {
     return new WebViewEditor(parent);

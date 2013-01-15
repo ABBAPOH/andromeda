@@ -5,7 +5,7 @@
 
 #include "editorview.h"
 
-#include "abstracteditorfactory.h"
+#include "abstractdocumentfactory.h"
 #include "editormanager.h"
 #include "editorviewhistory.h"
 
@@ -22,7 +22,7 @@ public:
     EditorViewPrivate(EditorView *qq) : q_ptr(qq) {}
     void init();
 
-    void openEditor(const QUrl &url, AbstractEditorFactory *factory);
+    void openEditor(const QUrl &url, AbstractDocumentFactory *factory);
 
     FindToolBar *findToolBar;
     QLayout *mainLayout;

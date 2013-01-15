@@ -2,7 +2,10 @@
 #include "bineditor.h"
 
 #include <QtCore/QtPlugin>
+#include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
+
+#include "bineditordocument.h"
 
 using namespace GuiSystem;
 using namespace BINEditor;
@@ -14,8 +17,8 @@ BinEditorPlugin::BinEditorPlugin() :
 
 bool BinEditorPlugin::initialize()
 {
-    BinEditorFactory *f = new BinEditorFactory(this);
-    EditorManager::instance()->addFactory(f);
+    DocumentManager::instance()->addFactory(new BinEditorDocumentFactory(this));
+    EditorManager::instance()->addFactory(new BinEditorFactory(this));
 
     return true;
 }

@@ -16,10 +16,13 @@
  */
 
 #include "pdfviewplugin.h"
-#include "pdfvieweditor.h"
 
 #include <QtCore/QtPlugin>
+#include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
+
+#include "pdfviewdocument.h"
+#include "pdfvieweditor.h"
 
 using namespace GuiSystem;
 //using namespace PdfView;
@@ -31,8 +34,8 @@ PdfViewPlugin::PdfViewPlugin() :
 
 bool PdfViewPlugin::initialize()
 {
-    PdfViewEditorFactory *f = new PdfViewEditorFactory(this);
-    EditorManager::instance()->addFactory(f);
+    DocumentManager::instance()->addFactory(new PdfViewDocumentFactory(this));
+    EditorManager::instance()->addFactory(new PdfViewEditorFactory(this));
 
     return true;
 }

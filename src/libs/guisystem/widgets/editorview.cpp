@@ -10,8 +10,11 @@
 #include <QtGui/QStackedLayout>
 
 #include "abstractdocument.h"
+#include "abstractdocumentfactory.h"
 #include "constants.h"
+#include "documentmanager.h"
 #include "editorviewhistory.h"
+#include "editormanager.h"
 #include "findtoolbar.h"
 
 using namespace GuiSystem;
@@ -44,7 +47,7 @@ void EditorViewPrivate::init()
     q->addAction(findAction);
 }
 
-void EditorViewPrivate::openEditor(const QUrl &url, AbstractEditorFactory *factory)
+void EditorViewPrivate::openEditor(const QUrl &url, AbstractDocumentFactory *factory)
 {
     Q_Q(EditorView);
 
@@ -143,8 +146,8 @@ void EditorView::open(const QUrl &dirtyUrl)
 
     d->currentUrl = url;
 
-    EditorManager *manager = EditorManager::instance();
-    AbstractEditorFactory *factory = manager->factoryForUrl(url);
+    DocumentManager *manager = DocumentManager::instance();
+    AbstractDocumentFactory *factory = manager->factoryForUrl(url);
     d->openEditor(url, factory);
 }
 
@@ -161,8 +164,8 @@ void EditorView::openEditor(const QUrl &dirtyUrl, const QByteArray &editor)
 
     d->currentUrl = url;
 
-    EditorManager *manager = EditorManager::instance();
-    AbstractEditorFactory *factory = manager->factoryForId(editor);
+    DocumentManager *manager = DocumentManager::instance();
+    AbstractDocumentFactory *factory = manager->factoryForId(editor);
     d->openEditor(url, factory);
 }
 
@@ -175,10 +178,8 @@ void EditorView::openEditor(const QByteArray &editorId)
             return;
     }
 
-    EditorManager *manager = EditorManager::instance();
-    AbstractEditorFactory *factory = manager->factoryForId(editorId);
     AbstractEditor *oldEditor = d->editor;
-    AbstractEditor *editor = factory->editor(this);
+    AbstractEditor *editor = EditorManager::instance()->createEditor(editorId, this);
     editor->restoreDefaults();
     int index = d->layout->addWidget(editor);
     d->layout->setCurrentIndex(index);
@@ -207,11 +208,7 @@ bool EditorView::restoreState(const QByteArray &arr)
     s >> id;
     s >> editorState;
 
-    AbstractEditorFactory *factory = EditorManager::instance()->factoryForId(id);
-    if (!factory)
-        return false;
-
-    AbstractEditor *editor = factory->editor(this);
+    AbstractEditor *editor = EditorManager::instance()->createEditor(id, this);
     if (!editor)
         return false;
 

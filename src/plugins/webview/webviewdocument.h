@@ -4,6 +4,7 @@
 #include "webview_global.h"
 
 #include <GuiSystem/AbstractDocument>
+#include <GuiSystem/AbstractDocumentFactory>
 
 class QWebPage;
 
@@ -44,6 +45,25 @@ private:
     WebViewHistory *m_history;
     QWebPage *m_page;
 };
+
+class WebViewDocumentFactory : public GuiSystem::AbstractDocumentFactory
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(WebViewDocumentFactory)
+
+public:
+    explicit WebViewDocumentFactory(QObject * parent = 0);
+
+    QByteArray id() const;
+    QString name() const;
+    QIcon icon() const;
+    QStringList mimeTypes() const;
+    QStringList urlSchemes() const;
+
+protected:
+    GuiSystem::AbstractDocument *createDocument(QObject *parent);
+};
+
 
 } // namespace WebView
 

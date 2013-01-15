@@ -22,3 +22,60 @@ bool BinEditorDocument::openUrl(const QUrl &url)
 
     return true;
 }
+
+/*!
+    \class BinEditorDocumentFactory
+*/
+
+BinEditorDocumentFactory::BinEditorDocumentFactory(QObject *parent):
+    AbstractDocumentFactory(parent)
+{
+}
+
+/*!
+    \reimp
+*/
+QStringList BinEditorDocumentFactory::mimeTypes() const
+{
+    return QStringList() << "application/octet-stream";
+}
+
+/*!
+    \reimp
+*/
+QByteArray BinEditorDocumentFactory::id() const
+{
+    return "bineditor";
+}
+
+/*!
+    \reimp
+*/
+QString BinEditorDocumentFactory::name() const
+{
+    return tr("Binary document");
+}
+
+/*!
+    \reimp
+*/
+QIcon BinEditorDocumentFactory::icon() const
+{
+    return QIcon();
+}
+
+/*!
+    \reimp
+*/
+int BinEditorDocumentFactory::weight() const
+{
+    return 20;
+}
+
+/*!
+    \reimp
+*/
+AbstractDocument * BinEditorDocumentFactory::createDocument(QObject *parent)
+{
+    return new BinEditorDocument(parent);
+}
