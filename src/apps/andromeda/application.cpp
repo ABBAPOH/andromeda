@@ -577,7 +577,9 @@ void Application::createWindowsMenu()
 
 void Application::createToolsMenu()
 {
+#ifdef QT_DEBUG
     MenuBarContainer *menuBar = MenuBarContainer::instance();
+#endif
 
     // ================ Tools Menu ================
 #ifdef QT_DEBUG

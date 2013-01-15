@@ -367,7 +367,7 @@ void QTrash::clearTrash(const QString &trash)
     // On the other hand, we certainly want to remove any file that has no associated
     // .trashinfo file for some reason
 
-    bool ok = true;
+//    bool ok = true;
 
     QSet<QString> unremoveableFiles;
 
@@ -378,7 +378,7 @@ void QTrash::clearTrash(const QString &trash)
         if (d_func()->removePath(filesPath)) {
             QFile::remove(getInfoPath(trash, info.name()));
         } else {
-            ok = false;
+//            ok = false;
             // remember not to remove this file
             unremoveableFiles.insert(filesPath);
         }
