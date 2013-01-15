@@ -33,6 +33,9 @@ FileManager plugin
    * Files are renamed now using QTextEdit instead of a QLineEdit
    * Improved FileInfo dialog look'n'feel
    * Temporarily disable open keyboard modifiers.
+   * Fix opening executable files in Linux.
+   * Fix double opening files via "enter" shortcut.
+   * Move filemanager code to separate library.
 
 Image Viewer plugin
 
