@@ -172,8 +172,8 @@ EditorManager::FactoryList EditorManager::factoriesForUrl(const QUrl &url) const
         result.append(factoriesForScheme(url.scheme()));
     }
 
-    result.erase(std::unique(result.begin(), result.end()), result.end());
     qStableSort(result.begin(), result.end(), editorFactoryLessThan);
+    result.erase(std::unique(result.begin(), result.end()), result.end());
 
     return result;
 }
