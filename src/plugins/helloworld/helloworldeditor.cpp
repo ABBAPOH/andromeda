@@ -126,16 +126,8 @@ void HelloWorldEditor::setupDocument(HelloWorldDocument *document)
     Implementation of AbstractEditorFactory interface for a HelloWorldEditor.
 */
 HelloWorldEditorFactory::HelloWorldEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory("helloworld", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray HelloWorldEditorFactory::id() const
-{
-    return "helloworld";
 }
 
 /*!

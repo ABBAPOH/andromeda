@@ -15,9 +15,13 @@ using namespace GuiSystem;
 /*!
     \brief Creates a AbstractDocumentFactory with the given \a parent.
 */
-AbstractDocumentFactory::AbstractDocumentFactory(QObject *parent) :
-    QObject(parent)
+AbstractDocumentFactory::AbstractDocumentFactory(const QByteArray &id, QObject *parent) :
+    QObject(parent),
+    m_id(id)
 {
+    Q_ASSERT_X(!id.isEmpty(),
+               "AbstractDocumentFactory::AbstractDocumentFactory",
+               "Id can't be empty");
 }
 
 /*!
@@ -39,6 +43,14 @@ AbstractDocument * AbstractDocumentFactory::document(QObject *parent)
     connect(editor, SIGNAL(destroyed(QObject*)), SLOT(onDocumentDestroyed(QObject*)));
     m_documents.append(editor);
     return editor;
+}
+
+/*!
+    Returns factory's id.
+*/
+QByteArray AbstractDocumentFactory::id() const
+{
+    return m_id;
 }
 
 /*!

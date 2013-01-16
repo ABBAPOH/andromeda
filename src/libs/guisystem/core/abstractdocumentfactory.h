@@ -16,12 +16,12 @@ class GUISYSTEM_EXPORT AbstractDocumentFactory : public QObject
     Q_OBJECT
     Q_DISABLE_COPY(AbstractDocumentFactory)
 public:
-    explicit AbstractDocumentFactory(QObject *parent = 0);
+    explicit AbstractDocumentFactory(const QByteArray &id, QObject *parent = 0);
     ~AbstractDocumentFactory();
 
     AbstractDocument *document(QObject *parent);
 
-    virtual QByteArray id() const = 0;
+    QByteArray id() const;
     virtual QString name() const = 0;
     virtual QIcon icon() const = 0;
     virtual QStringList mimeTypes() const { return QStringList(); }
@@ -35,6 +35,7 @@ protected:
     virtual AbstractDocument *createDocument(QObject *parent) = 0;
 
     QList<AbstractDocument *> m_documents;
+    const QByteArray m_id;
 
     friend class AbstractEditor;
 };

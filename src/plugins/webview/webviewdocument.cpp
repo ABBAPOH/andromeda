@@ -120,16 +120,8 @@ void WebViewDocument::onLoadFinished()
     Creates WebViewDocumentFactory with the given \a parent.
 */
 WebViewDocumentFactory::WebViewDocumentFactory(QObject *parent) :
-    AbstractDocumentFactory(parent)
+    AbstractDocumentFactory("WebView", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray WebViewDocumentFactory::id() const
-{
-    return "WebView";
 }
 
 /*!

@@ -582,16 +582,8 @@ void FileManagerEditor::connectDocument(FileManagerDocument *document)
 */
 
 FileManagerEditorFactory::FileManagerEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory("FileManager", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray FileManagerEditorFactory::id() const
-{
-    return "FileManager";
 }
 
 /*!

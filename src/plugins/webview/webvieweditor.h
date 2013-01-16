@@ -62,8 +62,6 @@ class WebViewEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit WebViewEditorFactory(QObject * parent = 0);
 
-    QByteArray id() const;
-
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };

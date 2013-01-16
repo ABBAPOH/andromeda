@@ -28,7 +28,7 @@ bool BinEditorDocument::openUrl(const QUrl &url)
 */
 
 BinEditorDocumentFactory::BinEditorDocumentFactory(QObject *parent):
-    AbstractDocumentFactory(parent)
+    AbstractDocumentFactory("bineditor", parent)
 {
 }
 
@@ -38,14 +38,6 @@ BinEditorDocumentFactory::BinEditorDocumentFactory(QObject *parent):
 QStringList BinEditorDocumentFactory::mimeTypes() const
 {
     return QStringList() << "application/octet-stream";
-}
-
-/*!
-    \reimp
-*/
-QByteArray BinEditorDocumentFactory::id() const
-{
-    return "bineditor";
 }
 
 /*!

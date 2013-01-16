@@ -30,7 +30,6 @@ class HelloWorldDocumentFactory : public GuiSystem::AbstractDocumentFactory
 public:
     explicit HelloWorldDocumentFactory(QObject *parent = 0);
 
-    QByteArray id() const;
     QString name() const;
     QIcon icon() const;
 

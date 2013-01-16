@@ -35,16 +35,9 @@ bool ImageViewerDocument::write(QIODevice *device, const QString &fileName)
 /*!
     Creates ImageViewerDocumentFactory with the given \a parent.
 */
-ImageViewerDocumentFactory::ImageViewerDocumentFactory(QObject *parent)
+ImageViewerDocumentFactory::ImageViewerDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory("imageview", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray ImageViewerDocumentFactory::id() const
-{
-    return "imageview";
 }
 
 /*!

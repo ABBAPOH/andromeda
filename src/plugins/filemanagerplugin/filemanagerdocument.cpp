@@ -83,16 +83,8 @@ bool FileManagerDocument::openUrl(const QUrl &url)
 */
 
 FileManagerDocumentFactory::FileManagerDocumentFactory(QObject *parent) :
-    AbstractDocumentFactory(parent)
+    AbstractDocumentFactory("FileManager", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray FileManagerDocumentFactory::id() const
-{
-    return "FileManager";
 }
 
 /*!

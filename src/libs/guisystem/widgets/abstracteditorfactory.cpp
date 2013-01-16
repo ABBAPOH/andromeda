@@ -16,9 +16,13 @@ using namespace GuiSystem;
 /*!
     \brief Creates a AbstractEditorFactory with the given \a parent.
 */
-AbstractEditorFactory::AbstractEditorFactory(QObject *parent) :
-    QObject(parent)
+AbstractEditorFactory::AbstractEditorFactory(const QByteArray &id, QObject *parent) :
+    QObject(parent),
+    m_id(id)
 {
+    Q_ASSERT_X(!id.isEmpty(),
+               "AbstractEditorFactory::AbstractEditorFactory",
+               "Id can't be empty");
 }
 
 /*!
@@ -40,6 +44,14 @@ AbstractEditor * AbstractEditorFactory::editor(QWidget *parent)
     connect(editor, SIGNAL(destroyed(QObject*)), SLOT(onEditorDestroyed(QObject*)));
     m_editors.append(editor);
     return editor;
+}
+
+/*!
+    Returns factory's id.
+*/
+QByteArray AbstractEditorFactory::id() const
+{
+    return m_id;
 }
 
 /*!

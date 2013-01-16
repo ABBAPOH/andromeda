@@ -43,8 +43,6 @@ class HelloWorldEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit HelloWorldEditorFactory(QObject *parent = 0);
 
-    QByteArray id() const;
-
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };

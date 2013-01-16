@@ -45,7 +45,6 @@ class FileManagerDocumentFactory : public GuiSystem::AbstractDocumentFactory
 public:
     explicit FileManagerDocumentFactory(QObject *parent = 0);
 
-    QByteArray id() const;
     QString name() const;
     QIcon icon() const;
     QStringList mimeTypes() const;

@@ -110,16 +110,8 @@ void BookmarksEditor::init()
     \class BookmarksEditorFactory
 */
 BookmarksEditorFactory::BookmarksEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory(Constants::Editors::Bookmarks, parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray BookmarksEditorFactory::id() const
-{
-    return Constants::Editors::Bookmarks;
 }
 
 /*!

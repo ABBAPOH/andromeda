@@ -298,16 +298,8 @@ void WebViewEditor::connectDocument(WebViewDocument *document)
     Creates WebViewEditorFactory with the given \a parent.
 */
 WebViewEditorFactory::WebViewEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory("WebView", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray WebViewEditorFactory::id() const
-{
-    return "WebView";
 }
 
 /*!

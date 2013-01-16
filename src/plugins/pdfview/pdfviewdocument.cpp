@@ -10,13 +10,8 @@ PdfViewDocument::PdfViewDocument(QObject *parent) :
 
 
 PdfViewDocumentFactory::PdfViewDocumentFactory(QObject *parent) :
-    AbstractDocumentFactory(parent)
+    AbstractDocumentFactory("PdfView", parent)
 {
-}
-
-QByteArray PdfViewDocumentFactory::id() const
-{
-    return "PdfView";
 }
 
 QString PdfViewDocumentFactory::name() const

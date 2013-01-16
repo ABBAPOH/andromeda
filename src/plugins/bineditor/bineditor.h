@@ -52,8 +52,6 @@ class BinEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit BinEditorFactory(QObject *parent = 0);
 
-    QByteArray id() const;
-
 protected:
     GuiSystem::AbstractDocument *createDocument(QObject *parent);
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);

@@ -54,7 +54,6 @@ class WebViewDocumentFactory : public GuiSystem::AbstractDocumentFactory
 public:
     explicit WebViewDocumentFactory(QObject * parent = 0);
 
-    QByteArray id() const;
     QString name() const;
     QIcon icon() const;
     QStringList mimeTypes() const;

@@ -58,8 +58,6 @@ class BookmarksEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit BookmarksEditorFactory(QObject *parent = 0);
 
-    QByteArray id() const;
-
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };

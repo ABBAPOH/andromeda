@@ -35,7 +35,6 @@ class BookmarksDocumentFactory : public GuiSystem::AbstractDocumentFactory
 public:
     explicit BookmarksDocumentFactory(QObject *parent = 0);
 
-    QByteArray id() const;
     QString name() const;
     QIcon icon() const;
 

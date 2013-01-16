@@ -23,7 +23,6 @@ class PdfViewDocumentFactory : public GuiSystem::AbstractDocumentFactory
 public:
     explicit PdfViewDocumentFactory(QObject *parent = 0);
 
-    QByteArray id() const;
     QString name() const;
     QIcon icon() const;
     QStringList mimeTypes() const;

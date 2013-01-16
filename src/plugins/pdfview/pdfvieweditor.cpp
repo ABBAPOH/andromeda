@@ -289,13 +289,8 @@ void PdfViewEditor::slotFindPrevious()
 // Factory
 
 PdfViewEditorFactory::PdfViewEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory("PdfView", parent)
 {
-}
-
-QByteArray PdfViewEditorFactory::id() const
-{
-    return "PdfView";
 }
 
 AbstractEditor * PdfViewEditorFactory::createEditor(QWidget *parent)

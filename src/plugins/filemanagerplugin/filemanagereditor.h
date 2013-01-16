@@ -79,8 +79,6 @@ class FileManagerEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit FileManagerEditorFactory(QObject *parent = 0);
 
-    QByteArray id() const;
-
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };

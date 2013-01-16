@@ -43,8 +43,6 @@ class ImageViewerEditorFactory : public GuiSystem::AbstractEditorFactory
 public:
     explicit ImageViewerEditorFactory(QObject *parent = 0);
 
-    QByteArray id() const;
-
 protected:
     GuiSystem::AbstractEditor *createEditor(QWidget *parent);
 };

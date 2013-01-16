@@ -47,16 +47,8 @@ bool HelloWorldDocument::openUrl(const QUrl &/*url*/)
     \class HelloWorldDocumentFactory
 */
 HelloWorldDocumentFactory::HelloWorldDocumentFactory(QObject *parent) :
-    AbstractDocumentFactory(parent)
+    AbstractDocumentFactory("helloworld", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray HelloWorldDocumentFactory::id() const
-{
-    return "helloworld";
 }
 
 /*!

@@ -2,6 +2,7 @@
 
 #include "bookmarksmodel.h"
 #include "bookmarksplugin.h"
+#include "bookmarksconstants.h"
 
 using namespace GuiSystem;
 using namespace Bookmarks;
@@ -28,16 +29,9 @@ bool BookmarksDocument::openUrl(const QUrl &/*url*/)
     \class BookmarksDocumentFactory
 */
 
-BookmarksDocumentFactory::BookmarksDocumentFactory(QObject *parent)
+BookmarksDocumentFactory::BookmarksDocumentFactory(QObject *parent) :
+    AbstractDocumentFactory(Constants::Editors::Bookmarks, parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray BookmarksDocumentFactory::id() const
-{
-    return "bookmarks";
 }
 
 /*!

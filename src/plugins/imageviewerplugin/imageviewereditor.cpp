@@ -69,16 +69,8 @@ void ImageViewerEditor::setupUi()
     Creates ImageViewerEditorFactory with the given \a parent.
 */
 ImageViewerEditorFactory::ImageViewerEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory("imageview", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray ImageViewerEditorFactory::id() const
-{
-    return "imageview";
 }
 
 /*!

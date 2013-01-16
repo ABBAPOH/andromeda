@@ -89,16 +89,8 @@ void BinEditor::retranslateUi()
 */
 
 BinEditorFactory::BinEditorFactory(QObject *parent) :
-    AbstractEditorFactory(parent)
+    AbstractEditorFactory("bineditor", parent)
 {
-}
-
-/*!
-    \reimp
-*/
-QByteArray BinEditorFactory::id() const
-{
-    return "bineditor";
 }
 
 /*!
