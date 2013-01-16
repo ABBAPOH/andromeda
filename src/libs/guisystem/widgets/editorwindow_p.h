@@ -4,6 +4,8 @@
 #include "editorwindow.h"
 
 #include <QtCore/QPointer>
+#include <QtGui/QDockWidget>
+#include <QtGui/QTabBar>
 
 class QToolButton;
 
@@ -12,6 +14,7 @@ namespace GuiSystem {
 class AbstractDocument;
 class History;
 class HistoryButton;
+class ToolWidgetFactory;
 
 class EditorWindowPrivate
 {
@@ -24,6 +27,8 @@ public:
     void retranslateUi();
     void registerActions();
     void initGeometry();
+    void createTools();
+    QDockWidget *createTool(ToolWidgetFactory *factory);
 
 public:
     QPointer<AbstractEditor> editor;
@@ -36,6 +41,32 @@ public:
 
 private:
     EditorWindow *q_ptr;
+
+    class DockWidget;
+};
+
+class EditorWindowPrivate::DockWidget : public QDockWidget
+{
+    Q_OBJECT
+public:
+    explicit DockWidget(QWidget *parent);
+
+protected:
+    void changeEvent(QEvent *event);
+
+private:
+    class TabBar;
+};
+
+class EditorWindowPrivate::DockWidget::TabBar : public QTabBar
+{
+    Q_OBJECT
+public:
+    explicit TabBar(QWidget *parent);
+
+    QSize minimumSizeHint() const;
+protected:
+    QSize tabSizeHint(int index) const;
 };
 
 } // namespace GuiSystem

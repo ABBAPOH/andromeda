@@ -10,6 +10,10 @@
 #include "historybutton.h"
 #include "editorwindowfactory.h"
 #include "menubarcontainer.h"
+#include "toolmodel.h"
+#include "toolwidget.h"
+#include "toolwidgetfactory.h"
+#include "toolwidgetmanager.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
@@ -64,6 +68,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     d->actions[EditorWindow::ShowMenu]->setChecked(visible);
 
     d->initGeometry();
+    d->createTools();
 }
 
 EditorWindow::~EditorWindow()
@@ -447,4 +452,81 @@ void EditorWindowPrivate::initGeometry()
                    desktopRect.y() + desktopSize.height()*(1.0 - percent)/3.0,
                    desktopSize.width()*percent,
                    desktopSize.height()*percent);
+}
+
+void EditorWindowPrivate::createTools()
+{
+    Q_Q(EditorWindow);
+
+
+    QList<ToolWidgetFactory *> factories = ToolWidgetManager::instance()->factories();
+    auto factoriesLessThan = [=](ToolWidgetFactory *a, ToolWidgetFactory *b)
+    {
+        return a->defaultArea() < b->defaultArea();
+    };
+    qStableSort(factories.begin(), factories.end(), factoriesLessThan);
+
+    for (int i = 0; i < factories.count(); ++i) {
+        ToolWidgetFactory *factory = factories.at(i);
+        QDockWidget *dock = createTool(factory);
+        QAction *action = dock->toggleViewAction();
+        action->setShortcut(QString("Alt+%1").arg(i + 1));
+        q->addAction(action);
+    }
+}
+
+QDockWidget * EditorWindowPrivate::createTool(ToolWidgetFactory *factory)
+{
+    Q_Q(EditorWindow);
+
+    DockWidget *dock = new DockWidget(q);
+    dock->setObjectName(factory->id());
+    ToolWidget *tool = factory->createToolWidget(dock);
+    Q_ASSERT(tool);
+    dock->setWidget(tool);
+    dock->setWindowTitle(tool->model()->title());
+    dock->hide();
+    q->connect(tool->model(), SIGNAL(titleChanged(QString)), dock, SLOT(setWindowTitle(QString)));
+    q->addDockWidget(Qt::DockWidgetArea(factory->defaultArea()), dock);
+    return dock;
+}
+
+EditorWindowPrivate::DockWidget::DockWidget(QWidget *parent) :
+    QDockWidget(parent)
+{
+    TabBar *tabBar = new TabBar(this);
+    tabBar->setDocumentMode(true);
+    tabBar->addTab(windowTitle());
+    tabBar->setTabsClosable(true);
+    connect(tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(close()));
+    setTitleBarWidget(tabBar);
+}
+
+void EditorWindowPrivate::DockWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowTitleChange) {
+        TabBar *tabBar = qobject_cast<TabBar *>(titleBarWidget());
+        tabBar->setTabText(0, windowTitle());
+    }
+    QDockWidget::changeEvent(event);
+}
+
+EditorWindowPrivate::DockWidget::TabBar::TabBar(QWidget *parent) :
+    QTabBar(parent)
+{
+}
+
+QSize EditorWindowPrivate::DockWidget::TabBar::minimumSizeHint() const
+{
+    return QSize();
+}
+
+QSize EditorWindowPrivate::DockWidget::TabBar::tabSizeHint(int index) const
+{
+    QSize s = QTabBar::tabSizeHint(index);
+    if (index == 0)
+        s.setWidth(this->width());
+    else
+        s.setWidth(0);
+    return s;
 }

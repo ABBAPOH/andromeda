@@ -13,6 +13,7 @@ set( HEADERS
     core/historyitem.h
     core/ifind.h
     core/ihistory.h
+    core/toolmodel.h
     widgets/abstracteditor.h
     widgets/abstracteditorfactory.h
     widgets/editormanager.h
@@ -25,6 +26,9 @@ set( HEADERS
     widgets/editorwindowfactory.h
     widgets/findtoolbar.h
     widgets/historybutton.h
+    widgets/toolwidget.h
+    widgets/toolwidgetfactory.h
+    widgets/toolwidgetmanager.h
     action.h
     actionmanager.h
     command.h
@@ -52,6 +56,7 @@ set( SOURCES
     core/historyitem.cpp
     core/ifind.cpp
     core/ihistory.cpp
+    core/toolmodel.cpp
     widgets/abstracteditor.cpp
     widgets/abstracteditorfactory.cpp
     widgets/editormanager.cpp
@@ -61,6 +66,9 @@ set( SOURCES
     widgets/editorwindowfactory.cpp
     widgets/findtoolbar.cpp
     widgets/historybutton.cpp
+    widgets/toolwidget.cpp
+    widgets/toolwidgetfactory.cpp
+    widgets/toolwidgetmanager.cpp
     action.cpp
     actionmanager.cpp
     command.cpp
