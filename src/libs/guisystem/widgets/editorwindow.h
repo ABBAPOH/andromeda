@@ -19,6 +19,8 @@ class GUISYSTEM_EXPORT EditorWindow : public QMainWindow
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(EditorWindow)
+    Q_DISABLE_COPY(EditorWindow)
+
     Q_PROPERTY(bool menuVisible READ menuVisible WRITE setMenuVisible NOTIFY menuVisibleChanged)
 
 public:

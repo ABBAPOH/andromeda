@@ -13,6 +13,7 @@ class GUISYSTEM_EXPORT FileDocument : public AbstractDocument
     Q_OBJECT
     Q_DECLARE_PRIVATE(FileDocument)
     Q_DISABLE_COPY(FileDocument)
+
 public:
     explicit FileDocument(QObject *parent = 0);
     ~FileDocument();

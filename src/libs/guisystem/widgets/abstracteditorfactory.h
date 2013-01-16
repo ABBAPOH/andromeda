@@ -15,6 +15,7 @@ class GUISYSTEM_EXPORT AbstractEditorFactory : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractEditorFactory)
+
 public:
     explicit AbstractEditorFactory(const QByteArray &id, QObject *parent = 0);
     ~AbstractEditorFactory();

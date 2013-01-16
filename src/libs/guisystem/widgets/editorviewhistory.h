@@ -12,6 +12,7 @@ class EditorViewHistoryPrivate;
 class EditorViewHistory : public IHistory
 {
     Q_OBJECT
+    Q_DISABLE_COPY(EditorViewHistory)
 
 public:
     explicit EditorViewHistory(QObject *parent = 0);

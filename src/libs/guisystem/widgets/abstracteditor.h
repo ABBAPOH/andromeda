@@ -15,6 +15,7 @@ class GUISYSTEM_EXPORT AbstractEditor : public QWidget
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractEditor)
+
 public:
     explicit AbstractEditor(AbstractDocument &document, QWidget *parent = 0);
     ~AbstractEditor();

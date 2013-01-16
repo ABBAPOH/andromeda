@@ -19,6 +19,7 @@ class GUISYSTEM_EXPORT EditorManager : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(EditorManager)
     Q_DISABLE_COPY(EditorManager)
+
 public:
     typedef QList<AbstractEditorFactory *> FactoryList;
 

@@ -13,6 +13,7 @@ class HistoryButtonPrivate;
 class GUISYSTEM_EXPORT HistoryButton : public QToolButton
 {
     Q_OBJECT
+    Q_DISABLE_COPY(HistoryButton)
 
 public:
     explicit HistoryButton(QWidget *parent = 0);
