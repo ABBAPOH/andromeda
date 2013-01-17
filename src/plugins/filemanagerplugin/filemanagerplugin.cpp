@@ -23,6 +23,7 @@
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/SettingsPageManager>
+#include <GuiSystem/ToolWidgetManager>
 
 #include <FileManager/constants.h>
 #include <FileManager/FileCopyDialog>
@@ -36,6 +37,7 @@
 #include "filemanagereditor.h"
 #include "viewmodessettings.h"
 #include "globalsettings.h"
+#include "filesystemtoolwidget.h"
 
 using namespace ExtensionSystem;
 using namespace GuiSystem;
@@ -50,6 +52,7 @@ bool FileManagerPlugin::initialize()
 {
     DocumentManager::instance()->addFactory(new FileManagerDocumentFactory(this));
     EditorManager::instance()->addFactory(new FileManagerEditorFactory(this));
+    ToolWidgetManager::instance()->addFactory(new FileSystemToolWidgetFactory(this));
 
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");

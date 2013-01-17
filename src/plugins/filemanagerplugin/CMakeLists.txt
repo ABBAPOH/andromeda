@@ -4,6 +4,9 @@ set( HEADERS
     filemanagereditor_p.h
     filemanagerplugin.h
     filemanagerplugin_global.h
+    filesystemtoolmodel.h
+    filesystemtoolwidget.h
+    filesystemtoolwidget_p.h
     viewmodessettings.h
     globalsettings.h
     openwitheditormenu.h
@@ -12,6 +15,8 @@ set( SOURCES
     filemanagerdocument.cpp
     filemanagereditor.cpp
     filemanagerplugin.cpp
+    filesystemtoolmodel.cpp
+    filesystemtoolwidget.cpp
     viewmodessettings.cpp
     globalsettings.cpp
     openwitheditormenu.cpp
