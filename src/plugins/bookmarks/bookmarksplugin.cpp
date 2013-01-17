@@ -19,6 +19,7 @@
 #include <GuiSystem/Command>
 #include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
+#include <GuiSystem/ToolWidgetManager>
 #include <GuiSystem/constants.h>
 
 #include "bookmarksconstants.h"
@@ -27,6 +28,7 @@
 #include "bookmarksdocument.h"
 #include "bookmarksmodel.h"
 #include "bookmarkstoolbar.h"
+#include "bookmarkstoolwidget.h"
 #include "bookmarkswidget.h"
 
 using namespace ExtensionSystem;
@@ -133,6 +135,7 @@ bool BookmarksPlugin::initialize()
 
     DocumentManager::instance()->addFactory(new BookmarksDocumentFactory(this));
     EditorManager::instance()->addFactory(new BookmarksEditorFactory(this));
+    ToolWidgetManager::instance()->addFactory(new BookmarksToolWidgetFactory(this));
 
     createActions();
 

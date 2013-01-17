@@ -10,6 +10,9 @@ set( HEADERS
     bookmarksmodel_p.h
     bookmarkstoolbar.h
     bookmarksplugin.h
+    bookmarkstoolmodel.h
+    bookmarkstoolwidget.h
+    bookmarkstoolwidget_p.h
     bookmarkswidget.h
     bookmarkswidget_p.h
    )
@@ -22,6 +25,8 @@ set( SOURCES
     bookmarkstoolbar.cpp
     bookmarksmodel.cpp
     bookmarksplugin.cpp
+    bookmarkstoolmodel.cpp
+    bookmarkstoolwidget.cpp
     bookmarkswidget.cpp
    )
 set( FORMS

@@ -117,6 +117,15 @@ void EditorWindow::setEditor(AbstractEditor *editor)
     d->editor = editor;
     d->document = editor ? editor->document() : 0;
 
+    QList<QDockWidget *> docks = findChildren<QDockWidget *>();
+    foreach (QDockWidget *dock, docks) {
+        ToolWidget *tool = qobject_cast<ToolWidget *>(dock->widget());
+        if (!tool)
+            continue;
+
+        tool->setEditor(editor);
+    }
+
     if (d->document) {
         onUrlChanged(d->document->url());
         onWritableChanged(d->document->isWritable());
@@ -470,7 +479,7 @@ void EditorWindowPrivate::createTools()
         ToolWidgetFactory *factory = factories.at(i);
         QDockWidget *dock = createTool(factory);
         QAction *action = dock->toggleViewAction();
-        action->setShortcut(QString("Alt+%1").arg(i + 1));
+        action->setShortcut(QString("Meta+%1").arg(i + 1));
         q->addAction(action);
     }
 }
