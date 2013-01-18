@@ -25,6 +25,8 @@ using namespace GuiSystem;
 
 static inline bool editorFactoryLessThan(AbstractDocumentFactory *first, AbstractDocumentFactory *second)
 {
+    if (first->weight() == second->weight())
+        return first < second;
     return first->weight() > second->weight();
 }
 
