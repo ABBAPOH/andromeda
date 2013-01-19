@@ -260,6 +260,15 @@ void WindowsMenu::onTriggered(bool checked)
     d->activate(index);
 }
 
+void WindowsMenu::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        Q_D(WindowsMenu);
+        d->retranslateUi();
+    }
+    QMenu::changeEvent(event);
+}
+
 bool WindowsMenu::eventFilter(QObject *o, QEvent *e)
 {
     if (o->isWidgetType()) {

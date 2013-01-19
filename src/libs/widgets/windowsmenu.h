@@ -30,6 +30,7 @@ private slots:
     void onTriggered(bool checked);
 
 protected:
+    void changeEvent(QEvent *event);
     bool eventFilter(QObject *o, QEvent *e);
 
 private:
