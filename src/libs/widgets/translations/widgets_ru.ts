@@ -17,8 +17,8 @@
 <context>
     <name>ShortcutEdit</name>
     <message>
-        <location filename="../shortcutedit.cpp" line="26"/>
-        <location filename="../shortcutedit.cpp" line="176"/>
+        <location filename="../shortcutedit.cpp" line="27"/>
+        <location filename="../shortcutedit.cpp" line="62"/>
         <source>Press shortcut</source>
         <translation>Нажмите сочетание клавиш</translation>
     </message>

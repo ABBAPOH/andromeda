@@ -23,7 +23,7 @@ set( FORMS
     resizedialog.ui
    )
 #set( RESOURCES resources.qrc )
-#set( TS_FILES translations/qimageview_ru.ts )
+set( TS_FILES translations/imageviewer_ru.ts )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_automoc( ${SOURCES} )

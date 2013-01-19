@@ -368,6 +368,14 @@ Continue from the end?</source>
     </message>
 </context>
 <context>
+    <name>PdfViewDocumentFactory</name>
+    <message>
+        <location filename="../pdfviewdocument.cpp" line="19"/>
+        <source>PDF Viewer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PdfViewEditor</name>
     <message>
         <location filename="../pdfvieweditor.cpp" line="58"/>
@@ -438,14 +446,6 @@ Continue from the end?</source>
         <location filename="../pdfvieweditor.cpp" line="234"/>
         <source>Cannot export to:
 %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PdfViewEditorFactory</name>
-    <message>
-        <location filename="../pdfvieweditor.cpp" line="303"/>
-        <source>PDF Viewer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

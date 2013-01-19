@@ -10,6 +10,14 @@
     </message>
 </context>
 <context>
+    <name>HelloWorld::HelloWorldDocumentFactory</name>
+    <message>
+        <location filename="../helloworlddocument.cpp" line="59"/>
+        <source>Hello world editor</source>
+        <translation>Редактор &quot;Привет, Мир&quot;</translation>
+    </message>
+</context>
+<context>
     <name>HelloWorld::HelloWorldEditor</name>
     <message>
         <location filename="../helloworldeditor.cpp" line="72"/>
@@ -25,14 +33,6 @@
         <location filename="../helloworldeditor.cpp" line="86"/>
         <source>Type new text:</source>
         <translation>Введите новый текст:</translation>
-    </message>
-</context>
-<context>
-    <name>HelloWorld::HelloWorldEditorFactory</name>
-    <message>
-        <location filename="../helloworldeditor.cpp" line="146"/>
-        <source>Hello world editor</source>
-        <translation>Редактор &quot;Привет, Мир&quot;</translation>
     </message>
 </context>
 </TS>

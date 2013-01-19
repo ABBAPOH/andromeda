@@ -388,9 +388,9 @@
     </message>
 </context>
 <context>
-    <name>WebView::WebViewEditorFactory</name>
+    <name>WebView::WebViewDocumentFactory</name>
     <message>
-        <location filename="../webvieweditor.cpp" line="296"/>
+        <location filename="../webviewdocument.cpp" line="132"/>
         <source>Web view</source>
         <translation>Веб браузер</translation>
     </message>
@@ -398,7 +398,7 @@
 <context>
     <name>WebView::WebViewPlugin</name>
     <message>
-        <location filename="../webviewplugin.cpp" line="261"/>
+        <location filename="../webviewplugin.cpp" line="264"/>
         <source>Show web inspector</source>
         <translation>Показать веб инспектор</translation>
     </message>

@@ -25,11 +25,11 @@
     </message>
 </context>
 <context>
-    <name>BINEditor::BinEditorFactory</name>
+    <name>BINEditor::BinEditorDocumentFactory</name>
     <message>
-        <location filename="../bineditor.cpp" line="109"/>
-        <source>Binary editor</source>
-        <translation>Двоичный редактор</translation>
+        <location filename="../bineditordocument.cpp" line="48"/>
+        <source>Binary document</source>
+        <translation>Двоичный документ</translation>
     </message>
 </context>
 <context>

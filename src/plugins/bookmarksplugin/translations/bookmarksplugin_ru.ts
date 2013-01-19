@@ -38,15 +38,15 @@
 <context>
     <name>Bookmarks::BookmarksDocument</name>
     <message>
-        <location filename="../bookmarksdocument.cpp" line="13"/>
+        <location filename="../bookmarksdocument.cpp" line="15"/>
         <source>Bookmarks</source>
         <translation>Закладки</translation>
     </message>
 </context>
 <context>
-    <name>Bookmarks::BookmarksEditorFactory</name>
+    <name>Bookmarks::BookmarksDocumentFactory</name>
     <message>
-        <location filename="../bookmarkseditor.cpp" line="121"/>
+        <location filename="../bookmarksdocument.cpp" line="42"/>
         <source>Bookmarks editor</source>
         <translation>Редактор закладок</translation>
     </message>
@@ -100,32 +100,32 @@
 <context>
     <name>Bookmarks::BookmarksPlugin</name>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="198"/>
+        <location filename="../bookmarksplugin.cpp" line="201"/>
         <source>Add bookmark</source>
         <translation>Добавить закладку</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="202"/>
+        <location filename="../bookmarksplugin.cpp" line="205"/>
         <source>Add folder</source>
         <translation>Добавить папку закладок</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="206"/>
+        <location filename="../bookmarksplugin.cpp" line="209"/>
         <source>Show bookmarks</source>
         <translation>Показать закладки</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="217"/>
+        <location filename="../bookmarksplugin.cpp" line="220"/>
         <source>Show Bookmarks toolbar</source>
         <translation>Показать панель закладок</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="223"/>
+        <location filename="../bookmarksplugin.cpp" line="226"/>
         <source>Bookmarks</source>
         <translation>Закладки</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="266"/>
+        <location filename="../bookmarksplugin.cpp" line="269"/>
         <source>New folder</source>
         <translation>Новая папка</translation>
     </message>
@@ -161,14 +161,22 @@
 <context>
     <name>Bookmarks::BookmarksToolBarContainer</name>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="75"/>
+        <location filename="../bookmarksplugin.cpp" line="78"/>
         <source>Show bookmarks toolbar</source>
         <translation>Показать панель закладок</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="91"/>
+        <location filename="../bookmarksplugin.cpp" line="94"/>
         <source>Show bookmarks</source>
         <translation>Показать закладки</translation>
+    </message>
+</context>
+<context>
+    <name>Bookmarks::BookmarksToolModel</name>
+    <message>
+        <location filename="../bookmarkstoolmodel.cpp" line="12"/>
+        <source>Bookmarks</source>
+        <translation>Закладки</translation>
     </message>
 </context>
 <context>

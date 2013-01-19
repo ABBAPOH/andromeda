@@ -50,40 +50,40 @@
 <context>
     <name>GuiSystem::CommandsSettingsWidget</name>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="191"/>
+        <location filename="../commandssettingswidget.cpp" line="180"/>
         <source>Export shortcuts</source>
         <translation>Экспорт сочетаний клавиш</translation>
     </message>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="193"/>
-        <location filename="../commandssettingswidget.cpp" line="213"/>
+        <location filename="../commandssettingswidget.cpp" line="182"/>
+        <location filename="../commandssettingswidget.cpp" line="202"/>
         <source>Keyboard mappings scheme (*.kms)</source>
         <translation>Схема сочетаний клавиш (*.kms)</translation>
     </message>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="200"/>
-        <location filename="../commandssettingswidget.cpp" line="220"/>
-        <location filename="../commandssettingswidget.cpp" line="228"/>
+        <location filename="../commandssettingswidget.cpp" line="189"/>
+        <location filename="../commandssettingswidget.cpp" line="209"/>
+        <location filename="../commandssettingswidget.cpp" line="217"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="201"/>
+        <location filename="../commandssettingswidget.cpp" line="190"/>
         <source>Unable to open file %1 for writing.</source>
         <translation>Невозможно открыть файл %1 на запись.</translation>
     </message>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="211"/>
+        <location filename="../commandssettingswidget.cpp" line="200"/>
         <source>Import shortcuts</source>
         <translation>Импорт сочетаний клавиш</translation>
     </message>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="221"/>
+        <location filename="../commandssettingswidget.cpp" line="210"/>
         <source>Unable to open file %1 for reading.</source>
         <translation>Невозможно открыть файл %1 на чтение.</translation>
     </message>
     <message>
-        <location filename="../commandssettingswidget.cpp" line="229"/>
+        <location filename="../commandssettingswidget.cpp" line="218"/>
         <source>Unable to import shortcuts from file %1.</source>
         <translation>Невозможно импортировать сочетания клавиш из файла %1.</translation>
     </message>
@@ -91,7 +91,7 @@
 <context>
     <name>GuiSystem::EditorView</name>
     <message>
-        <location filename="../editorview.cpp" line="41"/>
+        <location filename="../widgets/editorview.cpp" line="44"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
@@ -99,32 +99,32 @@
 <context>
     <name>GuiSystem::EditorWindow</name>
     <message>
-        <location filename="../editorwindow.cpp" line="56"/>
+        <location filename="../widgets/editorwindow.cpp" line="60"/>
         <source>Menu</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../editorwindow.cpp" line="315"/>
+        <location filename="../widgets/editorwindow.cpp" line="329"/>
         <source>Save as</source>
         <translation>Сохранить как</translation>
     </message>
     <message>
-        <location filename="../editorwindow.cpp" line="417"/>
+        <location filename="../widgets/editorwindow.cpp" line="434"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../editorwindow.cpp" line="418"/>
+        <location filename="../widgets/editorwindow.cpp" line="435"/>
         <source>Save as...</source>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../editorwindow.cpp" line="419"/>
+        <location filename="../widgets/editorwindow.cpp" line="436"/>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../editorwindow.cpp" line="420"/>
+        <location filename="../widgets/editorwindow.cpp" line="437"/>
         <source>Cancel</source>
         <translation>Отменить</translation>
     </message>
@@ -132,51 +132,51 @@
 <context>
     <name>GuiSystem::FindToolBar</name>
     <message>
-        <location filename="../findtoolbar.cpp" line="290"/>
+        <location filename="../widgets/findtoolbar.cpp" line="290"/>
         <source>Case Sensitive</source>
         <translation>Учитывать регистр</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="291"/>
+        <location filename="../widgets/findtoolbar.cpp" line="291"/>
         <source>Whole Words Only</source>
         <translation>Только слова целиком</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="292"/>
+        <location filename="../widgets/findtoolbar.cpp" line="292"/>
         <source>Use Regular Expressions</source>
         <translation>Использовать регулярные выражения</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="294"/>
+        <location filename="../widgets/findtoolbar.cpp" line="294"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="295"/>
+        <location filename="../widgets/findtoolbar.cpp" line="295"/>
         <source>Find previous</source>
         <translation>Найти предыдущий</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="296"/>
+        <location filename="../widgets/findtoolbar.cpp" line="296"/>
         <source>Find next</source>
         <translation>Найти следующий</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="298"/>
-        <location filename="../findtoolbar.cpp" line="299"/>
-        <location filename="../findtoolbar.cpp" line="300"/>
+        <location filename="../widgets/findtoolbar.cpp" line="298"/>
+        <location filename="../widgets/findtoolbar.cpp" line="299"/>
+        <location filename="../widgets/findtoolbar.cpp" line="300"/>
         <source>Replace</source>
         <translation>Заменить</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="301"/>
-        <location filename="../findtoolbar.cpp" line="302"/>
+        <location filename="../widgets/findtoolbar.cpp" line="301"/>
+        <location filename="../widgets/findtoolbar.cpp" line="302"/>
         <source>Replace next</source>
         <translation>Заменить следующий</translation>
     </message>
     <message>
-        <location filename="../findtoolbar.cpp" line="304"/>
-        <location filename="../findtoolbar.cpp" line="305"/>
+        <location filename="../widgets/findtoolbar.cpp" line="304"/>
+        <location filename="../widgets/findtoolbar.cpp" line="305"/>
         <source>Replace all</source>
         <translation>Заменить все</translation>
     </message>

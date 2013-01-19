@@ -4,68 +4,69 @@
 <context>
     <name>Andromeda::Application</name>
     <message>
-        <location filename="../application.cpp" line="214"/>
+        <location filename="../application.cpp" line="237"/>
         <source>Errors occured during loading plugins.</source>
         <translation>Произошли ошибки при загрузке плагинов.</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="297"/>
+        <location filename="../application.cpp" line="330"/>
         <source>Couldn&apos;t restore session (located at %1)</source>
         <translation>Невозможно восстановить сессию (расположена в %1)</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="336"/>
+        <location filename="../application.cpp" line="369"/>
         <source>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Revision %2&lt;br/&gt;&lt;br/&gt;Copyright 2010-2011 %3&lt;br/&gt;Bugreports send to %4&lt;br/&gt;&lt;br/&gt;This is alpha version.&lt;br/&gt;&lt;br/&gt;The program is provided as is with no warranty of any kind, including the warranty of design, merchantability and fitness for a particular purpose.</source>
         <translation>&lt;h3&gt;Andromeda %1&lt;/h3&gt;&lt;br/&gt;Ревизия %2&lt;br/&gt;&lt;br/&gt;Права 2010-2011 %3&lt;br/&gt;Отчеты об ошибках присылайте на %4&lt;br/&gt;&lt;br/&gt;Это альфа версия программы.&lt;br/&gt;&lt;br/&gt;Программа предоставляется &quot;как есть&quot;, без каких-либо гарантий, включая гарантию на дизайн, коммерческую ценность и пригодность для конкретных целей.</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="353"/>
+        <location filename="../application.cpp" line="386"/>
         <source>About Andromeda</source>
         <translation>О программе Andromeda</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="506"/>
+        <location filename="../application.cpp" line="568"/>
         <source>Go to</source>
         <translation>Переход</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="510"/>
+        <location filename="../application.cpp" line="570"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="514"/>
+        <location filename="../application.cpp" line="571"/>
         <source>Forward</source>
         <translation>Вперёд</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="519"/>
-        <location filename="../application.cpp" line="521"/>
+        <location filename="../application.cpp" line="556"/>
+        <location filename="../application.cpp" line="558"/>
+        <location filename="../application.cpp" line="572"/>
         <source>Up one level</source>
         <translation>Вверх</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="531"/>
+        <location filename="../application.cpp" line="580"/>
         <source>Windows</source>
         <translation>Окна</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="544"/>
+        <location filename="../application.cpp" line="597"/>
         <source>Plugins...</source>
         <translation>Модули...</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="551"/>
+        <location filename="../application.cpp" line="604"/>
         <source>View all settings...</source>
         <translation>Показать все настройки...</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="567"/>
+        <location filename="../application.cpp" line="620"/>
         <source>Dock menu</source>
         <translation>Меню в Доке</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="569"/>
+        <location filename="../application.cpp" line="622"/>
         <source>Tray menu</source>
         <translation>Меню в системном лотке</translation>
     </message>
@@ -81,7 +82,7 @@
 <context>
     <name>Andromeda::BrowserWindowPrivate</name>
     <message>
-        <location filename="../browserwindow.cpp" line="46"/>
+        <location filename="../browserwindow.cpp" line="45"/>
         <source>Up one level</source>
         <translation>Вверх</translation>
     </message>
@@ -95,6 +96,15 @@
     </message>
     <message>
         <location filename="../commandssettingspage.cpp" line="45"/>
+        <source>General</source>
+        <translation>Основные</translation>
+    </message>
+</context>
+<context>
+    <name>Andromeda::GeneralSettingsPage</name>
+    <message>
+        <location filename="../generalsettingspage.cpp" line="14"/>
+        <location filename="../generalsettingspage.cpp" line="24"/>
         <source>General</source>
         <translation>Основные</translation>
     </message>
@@ -161,14 +171,27 @@
 <context>
     <name>EditorWindow</name>
     <message>
-        <location filename="../browserwindow.cpp" line="221"/>
+        <location filename="../browserwindow.cpp" line="220"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../browserwindow.cpp" line="222"/>
+        <location filename="../browserwindow.cpp" line="221"/>
         <source>Forward</source>
         <translation>Вперёд</translation>
+    </message>
+</context>
+<context>
+    <name>GeneralSettingsWidget</name>
+    <message>
+        <location filename="../generalsettingswidget.ui" line="14"/>
+        <source>General settings</source>
+        <translation>Основные настройки</translation>
+    </message>
+    <message>
+        <location filename="../generalsettingswidget.ui" line="20"/>
+        <source>Show tray icon</source>
+        <translation>Показывать иконку в системном лотке</translation>
     </message>
 </context>
 <context>
