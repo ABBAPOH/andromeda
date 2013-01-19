@@ -11,7 +11,7 @@ set( SOURCES
 )
 set( RESOURCES resources.qrc )
 
-set( TS_FILES translations/imageviewer_ru.ts )
+#set( TS_FILES translations/imageviewer_ru.ts )
 
 include_directories( ${PROJECT_SOURCE_DIR}/include )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
