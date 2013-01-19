@@ -1741,9 +1741,10 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
 
     switch (event->key()) {
     case Qt::Key_Down:
-        if (event->modifiers() & Qt::ControlModifier)
+        if (event->modifiers() & Qt::ControlModifier) {
             open();
-        break;
+            break;
+        }
     default:
         d->blockKeyEvent = true;
         qApp->sendEvent(d_func()->currentView, event);
