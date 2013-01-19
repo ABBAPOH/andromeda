@@ -112,5 +112,5 @@ void TabBar::dragLeaveEvent(QDragLeaveEvent * event)
 QSize TabBar::tabSizeHint(int index) const
 {
     QSize s = QTabBar::tabSizeHint(index);
-    return QSize(200, s.height());
+    return QSize(qBound(100, width()/count(), 200), s.height());
 }
