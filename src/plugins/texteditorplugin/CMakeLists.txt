@@ -17,6 +17,7 @@ set( FORMS
 set( RESOURCES resources.qrc )
 
 set( TS_FILES
+    translations/texteditorplugin_cs.ts
     translations/texteditorplugin_pt.ts
     translations/texteditorplugin_ru.ts
    )

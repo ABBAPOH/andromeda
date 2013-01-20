@@ -17,6 +17,7 @@ set( FORMS
 set( RESOURCES resources.qrc )
 
 set( TS_FILES
+    translations/bineditorplugin_cs.ts
     translations/bineditorplugin_ru.ts
    )
 

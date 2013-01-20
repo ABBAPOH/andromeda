@@ -39,6 +39,7 @@ set( FORMS
     widgets/plugineditor.ui
    )
 set( TS_FILES
+    translations/extensionsystem_cs.ts
     translations/extensionsystem_pt.ts
     translations/extensionsystem_ru.ts
    )

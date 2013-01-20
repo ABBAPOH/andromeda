@@ -39,6 +39,7 @@ set( FORMS
    )
 set( RESOURCES resources.qrc )
 set( TS_FILES
+    translations/widgets_cs.ts
     translations/widgets_pt.ts
     translations/widgets_ru.ts
    )

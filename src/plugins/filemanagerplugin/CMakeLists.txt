@@ -29,6 +29,7 @@ set( FORMS
 set( RESOURCES resources.qrc )
 
 set( TS_FILES
+    translations/filemanagerplugin_cs.ts
     translations/filemanagerplugin_pt.ts
     translations/filemanagerplugin_ru.ts
    )

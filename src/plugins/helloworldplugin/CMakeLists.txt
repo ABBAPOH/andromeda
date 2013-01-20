@@ -15,6 +15,7 @@ set( FORMS
 set( RESOURCES resources.qrc )
 
 set( TS_FILES
+    translations/helloworldplugin_cs.ts
     translations/helloworldplugin_pt.ts
     translations/helloworldplugin_ru.ts
    )

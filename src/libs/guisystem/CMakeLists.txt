@@ -87,6 +87,7 @@ set( FORMS
    )
 set( RESOURCES resources.qrc )
 set( TS_FILES
+    translations/guisystem_cs.ts
     translations/guisystem_pt.ts
     translations/guisystem_ru.ts
    )

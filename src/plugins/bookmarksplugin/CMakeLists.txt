@@ -35,6 +35,7 @@ set( FORMS
 set( RESOURCES resources.qrc )
 
 set( TS_FILES
+    translations/bookmarksplugin_cs.ts
     translations/bookmarksplugin_pt.ts
     translations/bookmarksplugin_ru.ts
    )

@@ -40,6 +40,7 @@ set( FORMS
 set( RESOURCES resources.qrc )
 
 set( TS_FILES
+    translations/andromeda_cs.ts
     translations/andromeda_pt.ts
     translations/andromeda_ru.ts
    )

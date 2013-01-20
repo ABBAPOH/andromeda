@@ -24,6 +24,7 @@ set( FORMS
    )
 #set( RESOURCES resources.qrc )
 set( TS_FILES
+    translations/imageviewer_cs.ts
     translations/imageviewer_ru.ts
    )
 

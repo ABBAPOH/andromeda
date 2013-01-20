@@ -40,6 +40,7 @@ set( FORMS
     proxysettings.ui
    )
 set( TS_FILES
+    translations/webviewplugin_cs.ts
     translations/webviewplugin_pt.ts
     translations/webviewplugin_ru.ts
    )
