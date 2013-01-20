@@ -38,7 +38,10 @@ set( SOURCES
 set( FORMS
    )
 set( RESOURCES resources.qrc )
-set( TS_FILES translations/widgets_ru.ts translations/widgets_pt.ts )
+set( TS_FILES
+    translations/widgets_pt.ts
+    translations/widgets_ru.ts
+   )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_automoc( ${SOURCES} )

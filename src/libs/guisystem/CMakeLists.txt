@@ -86,7 +86,10 @@ set( FORMS
     commandssettingswidget.ui
    )
 set( RESOURCES resources.qrc )
-set( TS_FILES translations/guisystem_ru.ts translations/guisystem_pt.ts )
+set( TS_FILES
+    translations/guisystem_pt.ts
+    translations/guisystem_ru.ts
+   )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )

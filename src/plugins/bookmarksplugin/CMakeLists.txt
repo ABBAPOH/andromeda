@@ -34,7 +34,10 @@ set( FORMS
 
 set( RESOURCES resources.qrc )
 
-set( TS_FILES translations/bookmarksplugin_ru.ts translations/bookmarksplugin_pt.ts )
+set( TS_FILES
+    translations/bookmarksplugin_pt.ts
+    translations/bookmarksplugin_ru.ts
+   )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )

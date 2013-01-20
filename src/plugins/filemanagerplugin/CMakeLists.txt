@@ -28,7 +28,10 @@ set( FORMS
 
 set( RESOURCES resources.qrc )
 
-set( TS_FILES translations/filemanagerplugin_ru.ts translations/filemanagerplugin_pt.ts )
+set( TS_FILES
+    translations/filemanagerplugin_pt.ts
+    translations/filemanagerplugin_ru.ts
+   )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )

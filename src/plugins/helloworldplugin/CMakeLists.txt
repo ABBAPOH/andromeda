@@ -14,7 +14,10 @@ set( FORMS
 
 set( RESOURCES resources.qrc )
 
-set( TS_FILES translations/helloworldplugin_ru.ts translations/helloworldplugin_pt.ts )
+set( TS_FILES
+    translations/helloworldplugin_pt.ts
+    translations/helloworldplugin_ru.ts
+   )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )

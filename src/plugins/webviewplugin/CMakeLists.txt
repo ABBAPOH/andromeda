@@ -39,7 +39,10 @@ set( FORMS
     privacysettings.ui
     proxysettings.ui
    )
-set( TS_FILES translations/webviewplugin_ru.ts translations/webviewplugin_pt.ts )
+set( TS_FILES
+    translations/webviewplugin_pt.ts
+    translations/webviewplugin_ru.ts
+   )
 
 qt4_wrap_cpp( MOC_SOURCES ${HEADERS} )
 qt4_wrap_ui( UI_HEADERS ${FORMS} )
