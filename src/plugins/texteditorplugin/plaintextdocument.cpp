@@ -35,6 +35,7 @@ QTextDocument * PlainTextDocument::textDocument() const
 bool PlainTextDocument::read(QIODevice *device, const QString &/*fileName*/)
 {
     m_textDocument->setPlainText(QString::fromUtf8(device->readAll()));
+    setModified(false);
     return true;
 }
 
