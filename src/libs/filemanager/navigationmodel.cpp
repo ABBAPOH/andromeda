@@ -30,7 +30,7 @@ void NavigationModelPrivate::insertItem(NavigationModelItem *parentItem, const Q
     QModelIndex parent = q->createIndex(parentItem->row(), 0, parentItem);
     q->beginInsertRows(parent, parentItem->childCount(), parentItem->childCount());
     NavigationModelItem *item = new NavigationModelItem(parentItem, name, path);
-    item->icon = iconProvider.icon(QFileInfo(path));
+    item->icon = iconProvider->icon(QFileInfo(path));
     mapToItem.insert(path, item);
     q->endInsertRows();
 }
@@ -136,7 +136,7 @@ NavigationModel::StandardLocation pathToLocation(const QString &path)
     \brief NavigationModel is a class for displaying a tree-like list of devices,
     standard and user folders.
 */
-
+#include "filesystemmodel.h"
 /*!
     Creates NavigationModel with the given \a parent.
 */
@@ -151,6 +151,8 @@ NavigationModel::NavigationModel(QObject *parent) :
     d->foldersItem = new NavigationModelItem(d->rootItem, tr("Favorites"));
     d->networkItem = new NavigationModelItem(d->rootItem, tr("Network"));
     d->drivesItem = new NavigationModelItem(d->rootItem, tr("Devices"));
+
+    d->iconProvider = FileSystemModel::staticProvider();
 
     d->driveController = new QDriveController(this);
     connect(d->driveController, SIGNAL(driveMounted(QString)), d, SLOT(onDriveAdded(QString)));
@@ -168,7 +170,7 @@ NavigationModel::NavigationModel(QObject *parent) :
             item = new NavigationModelItem(d->drivesItem, name, path);
 
         if (item) {
-            item->icon = d->iconProvider.icon(QFileInfo(path));
+            item->icon = d->iconProvider->icon(QFileInfo(path));
             d->mapToItem.insert(path, item);
             item->driveInfo = info;
         }
@@ -288,7 +290,7 @@ bool NavigationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             item->type = NavigationModelItem::ChildItem;
             item->path = path;
             item->name = info.fileName();
-            item->icon = d->iconProvider.icon(info);
+            item->icon = d->iconProvider->icon(info);
 
             d->mapToItem.insert(path, item);
 

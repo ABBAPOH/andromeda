@@ -27,6 +27,9 @@ public:
                       int column,
                       const QModelIndex &parent
                       );
+
+    static QFileIconProvider *staticProvider();
+
 signals:
     void updateIndex(const QModelIndex index);
 

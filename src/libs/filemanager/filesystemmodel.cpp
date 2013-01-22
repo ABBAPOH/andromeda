@@ -22,6 +22,7 @@ FileSystemModel::FileSystemModel(QObject *parent) :
 {
     setObjectName("FileSystemModel");
 
+    setIconProvider(imageProvider());
     thumbnails = new FileThumbnails(this);
     connect(thumbnails,SIGNAL(done(QString,QImage)),this,SLOT(onThumbDone(QString,QImage)));
     connect(this,SIGNAL(directoryLoaded(QString)),this,SLOT(loadThumbs(QString)));
@@ -134,6 +135,11 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
     }
 
     return success;
+}
+
+QFileIconProvider * FileSystemModel::staticProvider()
+{
+    return imageProvider();
 }
 
 void FileSystemModel::onThumbDone(const QString &path, const QImage &thumb)

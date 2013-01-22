@@ -110,7 +110,7 @@ public:
 
     QDriveController *driveController;
 
-    QFileIconProvider iconProvider;
+    QFileIconProvider *iconProvider;
 
     NavigationModel::StandardLocations locations;
 
