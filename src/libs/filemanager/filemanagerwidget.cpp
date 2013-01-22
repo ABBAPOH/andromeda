@@ -590,6 +590,7 @@ QTreeView * FileManagerWidgetPrivate::createTreeView()
 
     QTreeView *treeView = new QTreeView(q);
 
+    treeView->setUniformRowHeights(true); // huge speed up
     treeView->setAlternatingRowColors(alternatingRowColors);
     treeView->setExpandsOnDoubleClick(false);
     treeView->setItemsExpandable(itemsExpandable);
