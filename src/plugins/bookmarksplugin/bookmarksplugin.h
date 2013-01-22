@@ -42,7 +42,7 @@ private:
     void addDefaultBookmarks();
 
 private:
-    Bookmarks::BookmarksModel *model;
+    Bookmarks::BookmarksModel *m_model;
     BookmarksDocument *m_document;
 
     QAction *addBookmarkAction;

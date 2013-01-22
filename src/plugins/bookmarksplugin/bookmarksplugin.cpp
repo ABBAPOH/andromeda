@@ -126,10 +126,10 @@ bool BookmarksPlugin::initialize()
 {
     m_document = new BookmarksDocument(this);
 
-    model = m_document->model();
+    m_model = m_document->model();
 //    addObject(model, QLatin1String(Constants::Objects::BookmarksModel));
 
-    if (!model->loadBookmarks()) {
+    if (!m_model->loadBookmarks()) {
         addDefaultBookmarks();
     }
 
@@ -144,7 +144,7 @@ bool BookmarksPlugin::initialize()
 
 void BookmarksPlugin::shutdown()
 {
-    model->saveBookmarks();
+    m_model->saveBookmarks();
 }
 
 BookmarksDocument * BookmarksPlugin::sharedDocument() const
@@ -225,7 +225,7 @@ void BookmarksPlugin::createActions()
     BookmarksMenuContainer *menu = new BookmarksMenuContainer(Constants::Menus::Bookmarks, this);
     menu->setTitle(tr("Bookmarks"));
     menu->bookmarksMenu()->setInitialActions(actions);
-    menu->bookmarksMenu()->setModel(model);
+    menu->bookmarksMenu()->setModel(m_model);
     connect(menu->bookmarksMenu(), SIGNAL(open(QUrl)), SLOT(open(QUrl)));
     connect(menu->bookmarksMenu(), SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
     connect(menu->bookmarksMenu(), SIGNAL(openInWindow(QList<QUrl>)), SLOT(openInWindow(QList<QUrl>)));
@@ -251,12 +251,10 @@ void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder
     if (!editor) // paranoia
         return;
 
-    BookmarksModel *model = object<BookmarksModel>(QLatin1String(Constants::Objects::BookmarksModel));
-
     AbstractDocument *document = editor->document();
 
     BookmarkDialog dialog;
-    dialog.setModel(model);
+    dialog.setModel(m_model);
     dialog.setFolder(isFolder);
     dialog.showUrl(false);
     dialog.setCurrentIndex(index);
@@ -282,11 +280,11 @@ static Bookmark bookmark(const QString &title, const QUrl &url)
 
 void BookmarksPlugin::addDefaultBookmarks()
 {
-    QModelIndex toolBar = model->toolBar();
-    model->addBookmark(bookmark("Andromeda", QUrl("http://gitorious.org/andromeda/pages/Home")), toolBar);
-    model->addBookmark(bookmark("Google", QUrl("http://google.com")), toolBar);
-    model->addBookmark(bookmark("YouTube", QUrl("http://www.youtube.com/")), toolBar);
-    model->addBookmark(bookmark("Wikipedia", QUrl("http://www.wikipedia.org/")), toolBar);
+    QModelIndex toolBar = m_model->toolBar();
+    m_model->addBookmark(bookmark("Andromeda", QUrl("http://gitorious.org/andromeda/pages/Home")), toolBar);
+    m_model->addBookmark(bookmark("Google", QUrl("http://google.com")), toolBar);
+    m_model->addBookmark(bookmark("YouTube", QUrl("http://www.youtube.com/")), toolBar);
+    m_model->addBookmark(bookmark("Wikipedia", QUrl("http://www.wikipedia.org/")), toolBar);
 }
 
 void BookmarksToolBarContainer::storeVisibility(bool visible)
