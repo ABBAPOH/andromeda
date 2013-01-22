@@ -33,6 +33,7 @@ protected:
      void dragEnterEvent(QDragEnterEvent *event);
      void dragMoveEvent(QDragMoveEvent *event);
      void dragLeaveEvent(QDragLeaveEvent * event);
+     bool event(QEvent *event);
 
      QSize tabSizeHint(int index) const;
 
@@ -42,6 +43,7 @@ private:
      bool m_switchTabsOnDrag;
      bool m_switchOnHover;
      int m_switchTimeout;
+     mutable int cachedHeight;
 };
 
 #endif // QTABBAREX_H

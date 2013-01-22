@@ -5,7 +5,8 @@
 
 TabBar::TabBar(QWidget *parent) :
     QTabBar(parent),
-    m_timer(new QTimer(this))
+    m_timer(new QTimer(this)),
+    cachedHeight(-1)
 {
     m_tabIndex = -1;
     m_switchTabsOnDrag = false;
@@ -106,11 +107,19 @@ void TabBar::dragLeaveEvent(QDragLeaveEvent * event)
     m_timer->stop();
 }
 
+bool TabBar::event(QEvent *event)
+{
+    if (event->type() == QEvent::Polish)
+        cachedHeight = -1;
+    return QTabBar::event(event);
+}
+
 /*!
     \reimp
 */
 QSize TabBar::tabSizeHint(int index) const
 {
-    QSize s = QTabBar::tabSizeHint(index);
-    return QSize(qBound(100, width()/count(), 200), s.height());
+    if (cachedHeight == -1)
+        cachedHeight = QTabBar::tabSizeHint(index).height();
+    return QSize(qBound(100, width()/count(), 200), cachedHeight);
 }
