@@ -25,9 +25,9 @@ class Icon : public QIcon
 {
 public:
 #if USE_DESKTOP_ICONS && QT_VERSION >= 0x040600
-	Icon(const QString &iconName) : QIcon(QIcon::fromTheme(iconName, QIcon(":/icons/" + iconName + ".png"))) {}
+	Icon(const QString &iconName) : QIcon(QIcon::fromTheme(iconName, QIcon(":/pdfview/icons/" + iconName + ".png"))) {}
 #else
-	Icon(const QString &iconName) : QIcon(":/icons/" + iconName + ".png") {} // faster than the above
+	Icon(const QString &iconName) : QIcon(":/pdfview/icons/" + iconName + ".png") {} // faster than the above
 #endif
 	Icon(const QIcon &copy) : QIcon(copy) {}
 	Icon() : QIcon() {}

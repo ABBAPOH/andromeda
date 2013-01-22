@@ -16,7 +16,7 @@ FilterLineEdit::FilterLineEdit(QWidget *parent) :
     QIcon icon = QIcon::fromTheme(layoutDirection() == Qt::LeftToRight ?
                      QLatin1String("edit-clear-locationbar-rtl") :
                      QLatin1String("edit-clear-locationbar-ltr"),
-                     QIcon::fromTheme(QLatin1String("edit-clear"), QIcon(QLatin1String(":/icons/editclear.png"))));
+                     QIcon::fromTheme(QLatin1String("edit-clear"), QIcon(QLatin1String(":/widgets/icons/editclear.png"))));
 
     setButtonPixmap(Right, icon.pixmap(16));
     setButtonVisible(Right, true);

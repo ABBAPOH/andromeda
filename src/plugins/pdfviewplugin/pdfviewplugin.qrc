@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/pdfview">
         <file>icons/pdfview.png</file>
         <!-- find widget -->
         <file>icons/dialog-cancel.png</file>

@@ -16,7 +16,7 @@ QString Andromeda::GeneralSettingsPage::name() const
 
 QIcon GeneralSettingsPage::icon() const
 {
-    return QIcon(":/images/icons/andromeda.png");
+    return QIcon(":/andromeda/icons/andromeda.png");
 }
 
 QString GeneralSettingsPage::categoryName() const
@@ -26,7 +26,7 @@ QString GeneralSettingsPage::categoryName() const
 
 QIcon GeneralSettingsPage::categoryIcon() const
 {
-    return QIcon(":/images/icons/andromeda.png");
+    return QIcon(":/andromeda/icons/andromeda.png");
 }
 
 QWidget * GeneralSettingsPage::createPage(QWidget *parent)

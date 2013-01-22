@@ -85,7 +85,7 @@ set( SOURCES
 set( FORMS
     commandssettingswidget.ui
    )
-set( RESOURCES resources.qrc )
+set( RESOURCES guisystem.qrc )
 set( TS_FILES
     translations/guisystem_cs.ts
     translations/guisystem_pt.ts

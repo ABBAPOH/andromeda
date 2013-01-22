@@ -42,7 +42,7 @@ void BrowserWindowPrivate::setupActions()
     actionManager->registerAction(actions[BrowserWindow::NewTab], Constants::Actions::NewTab);
 
     // ToolBar
-    actions[BrowserWindow::Up] = new QAction(QIcon::fromTheme("go-up", QIcon(":/images/icons/up.png")), tr("Up one level"), q);
+    actions[BrowserWindow::Up] = new QAction(QIcon::fromTheme("go-up", QIcon(":/andromeda/icons/up.png")), tr("Up one level"), q);
     connect(actions[BrowserWindow::Up], SIGNAL(triggered()), q, SLOT(up()));
     q->addAction(actions[BrowserWindow::Up]);
     actionManager->registerAction(actions[BrowserWindow::Up], Constants::Actions::Up);
@@ -68,12 +68,12 @@ void BrowserWindowPrivate::setupActions()
     backButton = new HistoryButton;
     backButton->setHistory(history);
     backButton->setDirection(HistoryButton::Back);
-    backButton->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/icons/back.png")));
+    backButton->setIcon(QIcon::fromTheme("go-previous", QIcon(":/andromeda/icons/back.png")));
 
     forwardButton = new HistoryButton;
     forwardButton->setHistory(history);
     forwardButton->setDirection(HistoryButton::Forward);
-    forwardButton->setIcon(QIcon::fromTheme("go-next", QIcon(":/images/icons/forward.png")));
+    forwardButton->setIcon(QIcon::fromTheme("go-next", QIcon(":/andromeda/icons/forward.png")));
 
     QWidgetAction *wa;
 

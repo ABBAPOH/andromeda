@@ -139,7 +139,7 @@ QUrl PdfViewEditor::url() const
 
 QIcon PdfViewEditor::icon() const
 {
-    return QIcon(":/icons/pdfview.png");
+    return QIcon(":/pdfview/icons/pdfview.png");
 }
 
 QString PdfViewEditor::title() const

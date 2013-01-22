@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/guisystem">
         <file>icons/cancelfind.png</file>
         <file>icons/casesensitively.png</file>
         <file>icons/regexp.png</file>

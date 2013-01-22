@@ -13,7 +13,7 @@ using namespace ImageViewer;
 ImageViewerDocument::ImageViewerDocument(QObject *parent) :
     FileDocument(parent)
 {
-    setIcon(QIcon(":/icons/imageview.png"));
+    setIcon(QIcon(":/imageviewer/icons/imageview.png"));
 }
 
 bool ImageViewerDocument::read(QIODevice *device, const QString &fileName)
@@ -53,7 +53,7 @@ QString ImageViewerDocumentFactory::name() const
 */
 QIcon ImageViewerDocumentFactory::icon() const
 {
-    return QIcon(":/icons/imageview.png");
+    return QIcon(":/imageviewer/icons/imageview.png");
 }
 
 /*!

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/filemanager">
+        <file>icons/eject.png</file>
+        <file>icons/cancelCopy.png</file>
+        <file>icons/copyDetails.png</file>
+    </qresource>
+</RCC>

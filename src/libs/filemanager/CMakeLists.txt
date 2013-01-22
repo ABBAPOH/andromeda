@@ -60,7 +60,7 @@ set( FORMS
     filecopywidget.ui
     permissionswidget.ui
    )
-#set( RESOURCES resources.qrc )
+set( RESOURCES filemanager.qrc )
 set( TS_FILES
     translations/filemanager_cs.ts
     translations/filemanager_ru.ts

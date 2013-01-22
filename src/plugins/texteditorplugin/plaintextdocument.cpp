@@ -17,7 +17,7 @@ PlainTextDocument::PlainTextDocument(QObject *parent) :
     FileDocument(parent),
     m_textDocument(new QTextDocument(this))
 {
-    setIcon(QIcon(":/icons/texteditor.png"));
+    setIcon(QIcon(":/texteditor/icons/texteditor.png"));
     m_textDocument->setDocumentLayout(new QPlainTextDocumentLayout(m_textDocument));
 
     connect(m_textDocument, SIGNAL(modificationChanged(bool)), this, SLOT(setModified(bool)));
@@ -81,7 +81,7 @@ QStringList PlainTextDocumentFactory::mimeTypes() const
 */
 QIcon PlainTextDocumentFactory::icon() const
 {
-    return QIcon(":/icons/texteditor.png");
+    return QIcon(":/texteditor/icons/texteditor.png");
 }
 
 /*!

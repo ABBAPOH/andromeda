@@ -16,7 +16,7 @@ using namespace HelloWorld;
 HelloWorldDocument::HelloWorldDocument(QObject *parent) :
     AbstractDocument(parent)
 {
-    setIcon(QIcon(":/icons/helloWorld.png"));
+    setIcon(QIcon(":/helloworld/icons/helloWorld.png"));
     setTitle(tr("Hello world"));
 }
 
@@ -64,7 +64,7 @@ QString HelloWorldDocumentFactory::name() const
 */
 QIcon HelloWorldDocumentFactory::icon() const
 {
-    return QIcon(":/icons/helloWorld.png");
+    return QIcon(":/helloworld/icons/helloWorld.png");
 }
 
 /*!

@@ -37,7 +37,7 @@ set( FORMS
     generalsettingswidget.ui
    )
 
-set( RESOURCES resources.qrc )
+set( RESOURCES andromeda.qrc )
 
 set( TS_FILES
     translations/andromeda_cs.ts

@@ -26,7 +26,7 @@ set( FORMS
     globalsettings.ui
    )
 
-set( RESOURCES resources.qrc )
+set( RESOURCES filemanagerplugin.qrc )
 
 set( TS_FILES
     translations/filemanagerplugin_cs.ts

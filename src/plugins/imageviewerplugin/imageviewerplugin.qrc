@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/imageviewer">
         <file>icons/imageview.png</file>
     </qresource>
 </RCC>

@@ -90,7 +90,7 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
     connect(toolBar, SIGNAL(addFolderTriggered()), SIGNAL(addFolderTriggered()));
 
     QToolButton *button = new QToolButton(toolBar);
-    button->setIcon(QIcon(":/icons/bookmarks.png"));
+    button->setIcon(QIcon(":/bookmarks/icons/bookmarks.png"));
     button->setToolTip(tr("Show bookmarks"));
     connect(button, SIGNAL(clicked()), SIGNAL(showBookmarksTriggered()));
 

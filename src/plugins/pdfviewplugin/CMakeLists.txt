@@ -48,7 +48,7 @@ if( POPPLER_QT4_FOUND )
         pdfviewplugin.cpp
     )
     set( FORMS findwidget.ui )
-    set( RESOURCES resources.qrc )
+    set( RESOURCES pdfviewplugin.qrc )
     set( TS_FILES
         translations/pdfviewplugin_cs.ts
         translations/pdfviewplugin_fr.ts

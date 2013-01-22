@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/andromeda">
+        <file>icons/back.png</file>
+        <file>icons/forward.png</file>
+        <file>icons/up.png</file>
+        <file>icons/appsFolder.png</file>
+        <file>icons/desktopFolder.png</file>
+        <file>icons/documentsFolder.png</file>
+        <file>icons/downloadsFolder.png</file>
+        <file>icons/homeFolder.png</file>
+        <file>icons/movieFolder.png</file>
+        <file>icons/musicFolder.png</file>
+        <file>icons/picturesFolder.png</file>
+        <file>icons/andromeda.png</file>
+        <file>icons/addtab.png</file>
+    </qresource>
+</RCC>

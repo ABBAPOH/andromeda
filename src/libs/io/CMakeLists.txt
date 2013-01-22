@@ -58,7 +58,7 @@ set( SOURCES
    )
 set( FORMS
    )
-set( RESOURCES resources.qrc )
+set( RESOURCES io.qrc )
 
 if( WIN32 )
 

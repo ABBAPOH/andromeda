@@ -11,7 +11,7 @@ BookmarksDocument::BookmarksDocument(QObject *parent) :
     AbstractDocument(parent),
     m_model(new BookmarksModel(this))
 {
-    setIcon(QIcon(":/icons/bookmarks.png"));
+    setIcon(QIcon(":/bookmarks/icons/bookmarks.png"));
     setTitle(tr("Bookmarks"));
 }
 
@@ -47,7 +47,7 @@ QString BookmarksDocumentFactory::name() const
 */
 QIcon BookmarksDocumentFactory::icon() const
 {
-    return QIcon(":/icons/bookmarks.png");
+    return QIcon(":/bookmarks/icons/bookmarks.png");
 }
 
 /*!

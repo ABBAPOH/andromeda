@@ -24,15 +24,15 @@ AddressBar::AddressBar(QWidget *parent) :
     m_progress(0)
 {
     setButtonVisible(Right, true);
-    setButtonPixmap(Right, QIcon(":/icons/refresh.png").pixmap(16));
+    setButtonPixmap(Right, QIcon(":/widgets/icons/refresh.png").pixmap(16));
 
     connect(this, SIGNAL(rightButtonClicked()), SLOT(onRightButtonClicked()));
 }
 
 void AddressBar::setLoading(bool yes)
 {
-    static QIcon iconCancel = QIcon(":/icons/cancelLoading.png");
-    static QIcon iconRefresh = QIcon(":/icons/refresh.png");
+    static QIcon iconCancel = QIcon(":/widgets/icons/cancelLoading.png");
+    static QIcon iconRefresh = QIcon(":/widgets/icons/refresh.png");
 
     m_loading = yes;
     if (yes)

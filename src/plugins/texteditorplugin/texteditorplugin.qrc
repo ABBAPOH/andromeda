@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/texteditor">
         <file>icons/texteditor.png</file>
     </qresource>
 </RCC>

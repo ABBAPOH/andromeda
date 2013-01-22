@@ -21,7 +21,7 @@ QString PdfViewDocumentFactory::name() const
 
 QIcon PdfViewDocumentFactory::icon() const
 {
-    return QIcon(":/icons/pdfview.png");
+    return QIcon(":/pdfview/icons/pdfview.png");
 }
 
 QStringList PdfViewDocumentFactory::mimeTypes() const

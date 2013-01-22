@@ -32,7 +32,7 @@ set( SOURCES
 set( FORMS
    )
 
-set( RESOURCES resources.qrc )
+set( RESOURCES bookmarksplugin.qrc )
 
 set( TS_FILES
     translations/bookmarksplugin_cs.ts

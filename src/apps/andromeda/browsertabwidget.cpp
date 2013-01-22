@@ -22,7 +22,7 @@ BrowserTabWidget::BrowserTabWidget(QWidget *parent) :
     TabWidget(parent),
     m_newTabButton(new TabBarButton)
 {
-    m_newTabButton->setIcon(QIcon(":/images/icons/addtab.png"));
+    m_newTabButton->setIcon(QIcon(":/andromeda/icons/addtab.png"));
     m_newTabButton->setIconSize(QSize(32, 32));
 
     setDocumentMode(true);

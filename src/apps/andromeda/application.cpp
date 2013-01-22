@@ -385,7 +385,7 @@ void Application::about()
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("About Andromeda"));
     msgBox.setText(text);
-    msgBox.setIconPixmap(QPixmap(":/images/icons/andromeda.png"));
+    msgBox.setIconPixmap(QPixmap(":/andromeda/icons/andromeda.png"));
     msgBox.exec();
 }
 
@@ -635,7 +635,7 @@ void Application::createDockMenu()
 #endif
 
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon(":/images/icons/andromeda.png"));
+    trayIcon->setIcon(QIcon(":/andromeda/icons/andromeda.png"));
     trayIcon->setContextMenu(dockMenu);
     trayIcon->show();
 }

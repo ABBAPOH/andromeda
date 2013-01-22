@@ -12,7 +12,7 @@ set( SOURCES
 set( FORMS
    )
 
-set( RESOURCES resources.qrc )
+set( RESOURCES imageviewerplugin.qrc )
 
 set( TS_FILES
     translations/imageviewerplugin_cs.ts

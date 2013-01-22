@@ -27,7 +27,7 @@ QModelIndex NavigationPanelPrivate::selectedRow() const
 NavigationPanelDelegate::NavigationPanelDelegate(QObject* parent):
     QStyledItemDelegate(parent)
 {
-    m_ejectIcon = QIcon(":/icons/eject.png");
+    m_ejectIcon = QIcon(":/filemanager/icons/eject.png");
 }
 
 bool NavigationPanelDelegate::editorEvent(QEvent *event,

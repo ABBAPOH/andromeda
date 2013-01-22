@@ -50,7 +50,7 @@ QString CommandsSettingsPage::categoryName() const
 */
 QIcon CommandsSettingsPage::categoryIcon() const
 {
-    return QIcon(":/images/icons/andromeda.png");
+    return QIcon(":/andromeda/icons/andromeda.png");
 }
 
 /*!

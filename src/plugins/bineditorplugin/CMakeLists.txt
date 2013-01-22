@@ -14,7 +14,7 @@ set( SOURCES
 set( FORMS
    )
 
-set( RESOURCES resources.qrc )
+set( RESOURCES bineditorplugin.qrc )
 
 set( TS_FILES
     translations/bineditorplugin_cs.ts

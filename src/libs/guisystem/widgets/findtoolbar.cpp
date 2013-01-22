@@ -175,17 +175,17 @@ void FindToolBar::setupActions()
     d->closeAction->setShortcut(QKeySequence("Esc"));
 
     d->caseSensitiveAction = new QAction(this);
-    d->caseSensitiveAction->setIcon(QIcon(QLatin1String(":/icons/casesensitively.png")));
+    d->caseSensitiveAction->setIcon(QIcon(QLatin1String(":/guisystem/icons/casesensitively.png")));
     d->caseSensitiveAction->setCheckable(true);
     d->caseSensitiveAction->setChecked(false);
 
     d->wholeWordAction = new QAction(this);
-    d->wholeWordAction->setIcon(QIcon(QLatin1String(":/icons/wholewords.png")));
+    d->wholeWordAction->setIcon(QIcon(QLatin1String(":/guisystem/icons/wholewords.png")));
     d->wholeWordAction->setCheckable(true);
     d->wholeWordAction->setChecked(false);
 
     d->regularExpressionAction = new QAction(this);
-    d->regularExpressionAction->setIcon(QIcon(QLatin1String(":/icons/regexp.png")));
+    d->regularExpressionAction->setIcon(QIcon(QLatin1String(":/guisystem/icons/regexp.png")));
     d->regularExpressionAction->setCheckable(true);
     d->regularExpressionAction->setChecked(false);
 
@@ -216,7 +216,7 @@ void FindToolBar::setupUi()
     d->findLineEdit->setPlaceholderText(QString());
     d->findLineEdit->setButtonMenu(FancyLineEdit::Left, d->lineEditMenu);
     d->findLineEdit->setButtonVisible(FancyLineEdit::Left, true);
-    d->findLineEdit->setButtonPixmap(FancyLineEdit::Left, QPixmap(":/icons/magnifier.png"));
+    d->findLineEdit->setButtonPixmap(FancyLineEdit::Left, QPixmap(":/guisystem/icons/magnifier.png"));
     d->findLineEdit->setStyleSheet(QLatin1String("QLineEdit { border : 1px solid grey; border-radius : 10px; }"));
     int minimumHeight = d->findLineEdit->minimumSizeHint().height();
 
@@ -249,7 +249,7 @@ void FindToolBar::setupUi()
     d->closeButton->setObjectName(QLatin1String("closeButton"));
     d->closeButton->setDefaultAction(d->closeAction);
 //    d->closeButton->setStyleSheet("background-color:rgba(0,0,0,0);");
-    d->closeButton->setIcon(QIcon(QLatin1String(":/icons/cancelfind.png")));
+    d->closeButton->setIcon(QIcon(QLatin1String(":/guisystem/icons/cancelfind.png")));
     d->closeButton->setMaximumHeight(minimumHeight);
 
     d->replaceLineEdit = new FilterLineEdit(this);

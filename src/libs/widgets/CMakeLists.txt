@@ -37,7 +37,7 @@ set( SOURCES
    )
 set( FORMS
    )
-set( RESOURCES resources.qrc )
+set( RESOURCES widgets.qrc )
 set( TS_FILES
     translations/widgets_cs.ts
     translations/widgets_pt.ts
