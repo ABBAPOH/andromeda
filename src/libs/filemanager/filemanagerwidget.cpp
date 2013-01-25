@@ -934,7 +934,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
 
     FileSystemModel *model = new FileSystemModel(this);
-    model->setRootPath("/");
+    model->setRootPath(QDir::rootPath());
     model->setFilter(mBaseFilters);
     model->setReadOnly(false);
     d->setModel(model);
