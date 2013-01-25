@@ -6,6 +6,7 @@
 #include "filecopyreplacedialog.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QMetaEnum>
 #include <QtGui/QFileIconProvider>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
@@ -82,14 +83,17 @@ void FileCopyDialogPrivate::onDone()
     if (copiers.isEmpty())
         q_ptr->hide();
 }
-#include <QMetaEnum>
+
 void FileCopyDialogPrivate::handleError(int id, QFileCopier::Error error, bool stopped)
 {
     if (!stopped)
         return;
 
     QFileCopier *copier = static_cast<QFileCopier *>(sender());
-    QFileInfo destInfo(copier->destinationFilePath(id));
+    QString destinationPath = copier->destinationFilePath(id);
+    if (destinationPath.isEmpty()) // it is likely a remove operation
+        destinationPath = copier->sourceFilePath(id);
+    QFileInfo destInfo(destinationPath);
 
     if (error == QFileCopier::DestinationExists) {
         FileCopyReplaceDialog *dialog = new FileCopyReplaceDialog(q_func());
