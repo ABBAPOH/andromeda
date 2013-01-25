@@ -20,6 +20,7 @@
 #include <GuiSystem/ActionManager>
 #include <GuiSystem/constants.h>
 #include <IO/QDriveInfo>
+#include <IO/QFileCopier>
 #include <IO/QMimeDatabase>
 
 #include "filemanagerconstants.h"
@@ -1572,9 +1573,16 @@ void FileManagerWidget::remove()
     }
 
 #ifdef Q_OS_WIN
+    QStringList paths = selectedPaths();
+    int index = fileSystemManager()->remove(paths);
+    QFileCopier *copier = fileSystemManager()->copier(index);
+    QEventLoop loop;
+    connect(copier, SIGNAL(done(bool)), &loop, SLOT(quit()));
+    loop.exec();
+
     // this is slow, but otherwise QFSM bugs when we remove files via copier.
     Q_D(FileManagerWidget);
-    foreach (const QString &path, selectedPaths()) {
+    foreach (const QString &path, paths) {
         d->model->remove(d->model->index(path));
     }
 #else
