@@ -1571,7 +1571,15 @@ void FileManagerWidget::remove()
             return;
     }
 
+#ifdef Q_OS_WIN
+    // this is slow, but otherwise QFSM bugs when we remove files via copier.
+    Q_D(FileManagerWidget);
+    foreach (const QString &path, selectedPaths()) {
+        d->model->remove(d->model->index(path));
+    }
+#else
     fileSystemManager()->remove(selectedPaths());
+#endif
 }
 
 /*!
