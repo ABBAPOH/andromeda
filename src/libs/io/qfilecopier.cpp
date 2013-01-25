@@ -366,7 +366,7 @@ void QFileCopierThread::createRequest(Task t)
 
     if (!t.dest.isEmpty()) {
         QFileInfo destInfo(t.dest);
-        if ((destInfo.exists() && destInfo.isDir() && destInfo.fileName() != sourceInfo.fileName()) || t.dest.endsWith(QLatin1Char('/'))) {
+        if (destInfo.exists() && destInfo.isDir()) {
             if (!destInfo.exists())
                 QDir().mkpath(destInfo.absoluteFilePath());
             t.dest = destInfo.absoluteFilePath() + "/" + sourceInfo.fileName();
