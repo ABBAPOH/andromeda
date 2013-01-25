@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Andromeda</DisplayName>
+    <Description>Install Andromeda.</Description>
+    <Description xml:lang="ru_RU">Установить Andromeda.</Description>
+    <Version>0.3.0</Version>
+    <ReleaseDate>2013-01-24</ReleaseDate>
+    <Name>com.arch.andromeda</Name>
+    <Licenses>
+        <License name="Andromeda License" file="license.txt" />
+    </Licenses>
+    <Translations>
+    </Translations>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+    <ForcedInstallation>true</ForcedInstallation>
+</Package>

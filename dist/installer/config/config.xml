@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Andromeda</Name>
+    <Version>0.3.0</Version>
+    <Title>Andromeda Installer</Title>
+    <Publisher>arch</Publisher>
+    <StartMenuDir>andromeda</StartMenuDir>
+    <Logo>logo.png</Logo>
+    <Icon>icon</Icon>
+    <AllowSpaceInPath>true</AllowSpaceInPath>
+    <TargetDir>@rootDir@andromeda</TargetDir>
+</Installer>
