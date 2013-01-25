@@ -40,8 +40,6 @@ public:
     explicit PdfViewEditor(QWidget *parent = 0);
     ~PdfViewEditor();
 
-    GuiSystem::AbstractDocument *document() const;
-
     void close();
     QUrl url() const;
 
