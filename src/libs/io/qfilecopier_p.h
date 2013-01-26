@@ -122,7 +122,7 @@ private:
     bool link(const Request &, QFileCopier::Error *);
     bool remove(const Request &, QFileCopier::Error *);
     bool processRequest(const Request &, QFileCopier::Error *);
-    void handle(int id);
+    bool handle(int id, QFileCopier::Error *err);
     void overwriteChildren(int id);
 
 private:
@@ -149,7 +149,6 @@ private:
     bool renameAllRequest;
     bool mergeAllRequest;
 
-    bool hasError;
     QSet<QFileCopier::Error> skipAllError;
 
     qint64 m_totalProgress;

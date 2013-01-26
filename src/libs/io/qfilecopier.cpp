@@ -48,7 +48,6 @@ QFileCopierThread::QFileCopierThread(QObject *parent) :
     overwriteAllRequest(false),
     renameAllRequest(false),
     mergeAllRequest(false),
-    hasError(true),
     m_totalProgress(0),
     m_totalSize(0),
     autoReset(true)
@@ -295,6 +294,7 @@ void QFileCopierThread::mergeAll()
 void QFileCopierThread::run()
 {
     bool stop = false;
+    bool hasError = false;
 
     while (!stop) {
         lock.lockForWrite();
@@ -317,7 +317,6 @@ void QFileCopierThread::run()
                 } else {
                     setState(QFileCopier::Idle);
                     emit done(hasError);
-                    hasError = false;
                     waitForFinishedCondition.wakeOne();
                     if (autoReset) {
                         hasError = false;
@@ -334,7 +333,8 @@ void QFileCopierThread::run()
                 lock.unlock();
                 setState(QFileCopier::Copying);
                 int id = requestQueue.takeFirst(); // inner queue, no lock
-                handle(id);
+                QFileCopier::Error err = QFileCopier::NoError;
+                hasError = !handle(id, &err);
             }
         } else {
             setState(QFileCopier::Gathering);
@@ -674,7 +674,7 @@ bool QFileCopierThread::copy(const Request &r, QFileCopier::Error *err)
             return false;
 
         foreach (int id, r.childRequests) {
-            handle(id);
+            handle(id, err);
         }
 
     } else {
@@ -695,9 +695,12 @@ bool QFileCopierThread::move(const Request &r, QFileCopier::Error *err)
             if (!createDir(r, err))
                 return false;
 
+            bool ok = true;
             foreach (int id, r.childRequests) {
-                handle(id);
+                ok &= handle(id, err);
             }
+            if (!ok)
+                return false;
 
             if (!QDir().rmdir(r.source)) {
                 *err = QFileCopier::CannotRemoveSource;
@@ -735,10 +738,11 @@ bool QFileCopierThread::remove(const Request &r, QFileCopier::Error *err)
 
     if (r.isDir) {
 
+        bool ok = true;
         foreach (int id, r.childRequests) {
-            handle(id);
+            ok &= handle(id, err);
         }
-        result = QDir().rmdir(r.source);
+        result = ok && QDir().rmdir(r.source);
 
     } else {
         QFileInfo sourceInfo(r.source);
@@ -757,11 +761,6 @@ bool QFileCopierThread::remove(const Request &r, QFileCopier::Error *err)
 
 bool QFileCopierThread::processRequest(const Request &r, QFileCopier::Error *err)
 {
-    if (r.canceled) {
-        *err = QFileCopier::Canceled;
-        return true;
-    }
-
 // we skip this check to improve performance (if file removed after starting, we just coulnd't open/link it)
 //    if (!QFileInfo(r.source).exists()) {
 //        *err = QFileCopier::SourceNotExists;
@@ -794,7 +793,7 @@ bool QFileCopierThread::processRequest(const Request &r, QFileCopier::Error *err
     return true;
 }
 
-void QFileCopierThread::handle(int id)
+bool QFileCopierThread::handle(int id, QFileCopier::Error *err)
 {
     int parentId = m_currentId;
     {
@@ -804,21 +803,25 @@ void QFileCopierThread::handle(int id)
     }
 
     bool done = false;
-    QFileCopier::Error err = QFileCopier::NoError;
     while (!done) {
         Request r = request(id);
-        done = processRequest(r, &err);
-        done = interact(id, r, done, err);
-    }
 
-    if (err != QFileCopier::NoError)
-        hasError = true;
+        if (r.canceled) {
+            *err = QFileCopier::Canceled;
+            break;
+        }
+
+        done = processRequest(r, err);
+        done = interact(id, r, done, *err);
+    }
 
     {
         QWriteLocker l(&lock);
         m_currentId = parentId;
         emit finished(id);
     }
+
+    return *err == QFileCopier::NoError;
 }
 
 void QFileCopierPrivate::enqueueOperation(Task::Type operationType, const QStringList &sourcePaths,
