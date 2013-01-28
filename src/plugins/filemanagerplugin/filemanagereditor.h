@@ -50,9 +50,9 @@ private slots:
     void onPanelVisibleChanged(bool);
     void onStatusBarVisibleChanged(bool);
     void onSplitterMoved(int,int);
-    void openPaths(const QStringList &paths);
-    void openNewTab(const QStringList &paths);
-    void openNewWindow(const QStringList &paths);
+    void openPaths(const QStringList &paths, Qt::KeyboardModifiers modifiers);
+    void openNewTab();
+    void openNewWindow();
     void openEditor();
     void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
     void showContextMenu(const QPoint &pos);
@@ -69,6 +69,8 @@ private:
     FileExplorerWidget *m_widget;
 
     QSettings *m_settings;
+    QAction *m_openTabAction;
+    QAction *m_openWindowAction;
     QAction *m_openEditorAction;
 
     bool ignoreSignals;

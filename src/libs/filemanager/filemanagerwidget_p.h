@@ -92,8 +92,6 @@ public slots:
     void onCurrentItemIndexChanged(int index);
     void onSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
-    void openNewTab();
-    void openNewWindow();
     void toggleViewMode(bool);
     void toggleSortColumn(bool);
     void toggleSortOrder(bool descending);

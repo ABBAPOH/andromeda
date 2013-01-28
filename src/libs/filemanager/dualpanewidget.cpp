@@ -92,9 +92,8 @@ FileManagerWidget * DualPaneWidgetPrivate::createPane()
     pane->installEventFilter(q);
 
     QObject::connect(pane, SIGNAL(currentPathChanged(QString)), q, SIGNAL(currentPathChanged(QString)));
-    QObject::connect(pane, SIGNAL(openRequested(QStringList)), q, SIGNAL(openRequested(QStringList)));
-    QObject::connect(pane, SIGNAL(openNewTabRequested(QStringList)), q, SIGNAL(openNewTabRequested(QStringList)));
-    QObject::connect(pane, SIGNAL(openNewWindowRequested(QStringList)), q, SIGNAL(openNewWindowRequested(QStringList)));
+    QObject::connect(pane, SIGNAL(openRequested(QStringList,Qt::KeyboardModifiers)),
+                     q, SIGNAL(openRequested(QStringList, Qt::KeyboardModifiers)));
     QObject::connect(pane, SIGNAL(canRedoChanged(bool)), q, SIGNAL(canRedoChanged(bool)));
     QObject::connect(pane, SIGNAL(canUndoChanged(bool)), q, SIGNAL(canUndoChanged(bool)));
     QObject::connect(pane, SIGNAL(selectedPathsChanged()), SLOT(onSelectionChanged()));
@@ -131,26 +130,6 @@ void DualPaneWidgetPrivate::deleteRightPane()
     rightPaneState = panes[DualPaneWidget::RightPane]->saveState();
     delete panes[DualPaneWidget::RightPane];
     panes[DualPaneWidget::RightPane] = 0;
-}
-
-void DualPaneWidgetPrivate::openNewTab()
-{
-    Q_Q(DualPaneWidget);
-
-    QStringList paths = q->selectedPaths();
-
-    if (!paths.isEmpty())
-        emit q->openNewTabRequested(paths);
-}
-
-void DualPaneWidgetPrivate::openNewWindow()
-{
-    Q_Q(DualPaneWidget);
-
-    QStringList paths = q->selectedPaths();
-
-    if (!paths.isEmpty())
-        emit q->openNewWindowRequested(paths);
 }
 
 void DualPaneWidgetPrivate::toggleViewMode(bool toggled)

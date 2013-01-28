@@ -315,6 +315,8 @@ void FileManagerEditor::onSelectedPathsChanged()
     QStringList paths = m_widget->dualPane()->selectedPaths();;
     bool enabled = !paths.empty();
 
+    m_openTabAction->setEnabled(enabled);
+    m_openWindowAction->setEnabled(enabled);
     m_openEditorAction->setEnabled(enabled);
 }
 
@@ -391,7 +393,7 @@ void FileManagerEditor::onSplitterMoved(int, int)
 /*!
     \internal
 */
-void FileManagerEditor::openPaths(const QStringList &paths)
+void FileManagerEditor::openPaths(const QStringList &paths,Qt::KeyboardModifiers modifiers)
 {
     QStringList folders;
     foreach (const QString &path, paths) {
@@ -419,15 +421,25 @@ void FileManagerEditor::openPaths(const QStringList &paths)
         urls.append(QUrl::fromLocalFile(path));
     }
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->open(urls);
+    if (factory) {
+        if (modifiers == Qt::NoModifier)
+            factory->open(urls);
+        else if (modifiers == (Qt::ControlModifier | Qt::AltModifier))
+            factory->openNewWindow(urls);
+        else if (modifiers == (Qt::ControlModifier))
+            factory->openNewEditor(urls);
+    }
 }
 
 /*!
     \internal
 */
-void FileManagerEditor::openNewTab(const QStringList &paths)
+void FileManagerEditor::openNewTab()
 {
+    QStringList paths = m_widget->dualPane()->selectedPaths();
+    if (paths.isEmpty())
+        return;
+
     QList<QUrl> urls;
     foreach (const QString &path, paths) {
         urls.append(QUrl::fromLocalFile(path));
@@ -440,8 +452,12 @@ void FileManagerEditor::openNewTab(const QStringList &paths)
 /*!
     \internal
 */
-void FileManagerEditor::openNewWindow(const QStringList &paths)
+void FileManagerEditor::openNewWindow()
 {
+    QStringList paths = m_widget->dualPane()->selectedPaths();
+    if (paths.isEmpty())
+        return;
+
     QList<QUrl> urls;
     foreach (const QString &path, paths) {
         urls.append(QUrl::fromLocalFile(path));
@@ -486,16 +502,22 @@ void FileManagerEditor::showContextMenu(const QPoint &pos)
     QMenu *menu = widget->createStandardMenu(paths);
     QList<QAction *> actions = menu->actions();
 
-    OpenWithEditorMenu *openWithMenu = new OpenWithEditorMenu(menu);
-    openWithMenu->setPaths(paths);
-    connect(openWithMenu, SIGNAL(openRequested(QList<QUrl>,QByteArray)), SLOT(openEditor(QList<QUrl>,QByteArray)));
+    if (!paths.isEmpty()) {
+        QAction *actionBefore = actions.at(1);
 
-    if (!openWithMenu->isEmpty()) {
-        QAction *actionBefore = actions.at(4);
-        menu->insertSeparator(actionBefore);
-        menu->insertAction(actionBefore, m_openEditorAction);
-        if (openWithMenu->actions().count() > 1)
-            menu->insertMenu(actionBefore, openWithMenu);
+        menu->insertAction(actionBefore, m_openTabAction);
+        menu->insertAction(actionBefore, m_openWindowAction);
+
+        OpenWithEditorMenu *openWithMenu = new OpenWithEditorMenu(menu);
+        openWithMenu->setPaths(paths);
+        connect(openWithMenu, SIGNAL(openRequested(QList<QUrl>,QByteArray)), SLOT(openEditor(QList<QUrl>,QByteArray)));
+
+        if (!openWithMenu->isEmpty()) {
+            menu->insertSeparator(actionBefore);
+            menu->insertAction(actionBefore, m_openEditorAction);
+            if (openWithMenu->actions().count() > 1)
+                menu->insertMenu(actionBefore, openWithMenu);
+        }
     }
 
     menu->exec(widget->mapToGlobal(pos));
@@ -520,9 +542,8 @@ void FileManagerEditor::setupConnections()
 {
     DualPaneWidget *widget = m_widget->dualPane();
     connect(widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
-    connect(widget, SIGNAL(openRequested(QStringList)), SLOT(openPaths(QStringList)));
-    connect(widget, SIGNAL(openNewTabRequested(QStringList)), SLOT(openNewTab(QStringList)));
-    connect(widget, SIGNAL(openNewWindowRequested(QStringList)), SLOT(openNewWindow(QStringList)));
+    connect(widget, SIGNAL(openRequested(QStringList,Qt::KeyboardModifiers)),
+            this, SLOT(openPaths(QStringList,Qt::KeyboardModifiers)));
     connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
     connect(widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
     connect(widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
@@ -542,6 +563,18 @@ void FileManagerEditor::setupConnections()
 */
 void FileManagerEditor::createActions()
 {
+    m_openTabAction = new QAction(this);
+    m_openTabAction->setEnabled(false);
+    m_openTabAction->setObjectName(Constants::Actions::OpenInTab);
+    connect(m_openTabAction, SIGNAL(triggered()), SLOT(openNewTab()));
+    addAction(m_openTabAction);
+
+    m_openWindowAction = new QAction(this);
+    m_openWindowAction->setEnabled(false);
+    m_openWindowAction->setObjectName(Constants::Actions::OpenInWindow);
+    connect(m_openWindowAction, SIGNAL(triggered()), SLOT(openNewWindow()));
+    addAction(m_openWindowAction);
+
     m_openEditorAction = new QAction(this);
     m_openEditorAction->setEnabled(false);
     m_openEditorAction->setObjectName(Constants::Actions::OpenEditor);
@@ -555,6 +588,8 @@ void FileManagerEditor::createActions()
 
 void FileManagerEditor::retranslateUi()
 {
+    m_openTabAction->setText(tr("Open in new tab"));
+    m_openWindowAction->setText(tr("Open in new window"));
     m_openEditorAction->setText(tr("Open in internal editor"));
     m_openEditorAction->setToolTip(tr("Opens selected files in an internal editor"));
 }

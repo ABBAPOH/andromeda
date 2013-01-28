@@ -41,8 +41,6 @@ public:
     enum Column { NameColumn = 0, SizeColumn, TypeColumn, DateColumn, ColumnCount };
     enum Action { NoAction = -1,
                   Open,
-                  OpenInTab,
-                  OpenInWindow,
                   NewFolder,
                   Rename,
                   MoveToTrash,
@@ -135,9 +133,7 @@ signals:
     void sortingChanged();
     void viewModeChanged(FileManagerWidget::ViewMode mode);
 
-    void openRequested(const QStringList &paths);
-    void openNewTabRequested(const QStringList &paths);
-    void openNewWindowRequested(const QStringList &paths);
+    void openRequested(const QStringList &paths, Qt::KeyboardModifiers modifiers);
 
 public slots:
     void setCurrentPath(const QString &path);

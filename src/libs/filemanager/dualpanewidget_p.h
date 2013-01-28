@@ -26,8 +26,6 @@ public:
     void updateState();
 
 public slots:
-    void openNewTab();
-    void openNewWindow();
     void toggleViewMode(bool);
     void toggleOrientation(bool);
     void toggleSortColumn(bool);

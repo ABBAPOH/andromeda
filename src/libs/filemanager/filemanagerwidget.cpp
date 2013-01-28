@@ -245,16 +245,6 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::Open]->setObjectName(Constants::Actions::Open);
     connect(actions[FileManagerWidget::Open], SIGNAL(triggered()), q, SLOT(open()));
 
-    actions[FileManagerWidget::OpenInTab] = new QAction(this);
-    actions[FileManagerWidget::OpenInTab]->setEnabled(false);
-    actions[FileManagerWidget::OpenInTab]->setObjectName(Constants::Actions::OpenInTab);
-    connect(actions[FileManagerWidget::OpenInTab], SIGNAL(triggered()), this, SLOT(openNewTab()));
-
-    actions[FileManagerWidget::OpenInWindow] = new QAction(this);
-    actions[FileManagerWidget::OpenInWindow]->setEnabled(false);
-    actions[FileManagerWidget::OpenInWindow]->setObjectName(Constants::Actions::OpenInWindow);
-    connect(actions[FileManagerWidget::OpenInWindow], SIGNAL(triggered()), this, SLOT(openNewWindow()));
-
     actions[FileManagerWidget::NewFolder] = new QAction(this);
     actions[FileManagerWidget::NewFolder]->setObjectName(Constants::Actions::NewFolder);
     connect(actions[FileManagerWidget::NewFolder], SIGNAL(triggered()), q, SLOT(newFolder()));
@@ -379,8 +369,6 @@ void FileManagerWidgetPrivate::createActions()
 void FileManagerWidgetPrivate::retranslateUi()
 {
     actions[FileManagerWidget::Open]->setText(tr("Open"));
-    actions[FileManagerWidget::OpenInTab]->setText(tr("Open in new tab"));
-    actions[FileManagerWidget::OpenInWindow]->setText(tr("Open in new window"));
 
     actions[FileManagerWidget::NewFolder]->setText(tr("New Folder"));
     actions[FileManagerWidget::Rename]->setText(tr("Rename"));
@@ -643,26 +631,13 @@ void FileManagerWidgetPrivate::onActivated(const QModelIndex &index)
     Q_Q(FileManagerWidget);
 
     QString path = model->filePath(index);
-
-//    Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
-//#ifdef Q_OS_MAC
-//    if (modifiers & Qt::AltModifier) {
-//#else
-//    if (modifiers & Qt::MetaModifier) {
-//#endif
-//        emit q->openNewTabRequested(QStringList() << path);
-//        return;
-//    } else if (modifiers & Qt::ControlModifier) {
-//        emit q->openNewWindowRequested(QStringList() << path);
-//        return;
-//    }
-
-    QFileInfo info(path);
-    if (info.isDir() && !info.isBundle()) {
-        q->setCurrentPath(info.absoluteFilePath());
-    } else {
-        emit q->openRequested(QStringList() << path);
-    }
+    if (path.isEmpty())
+        return;
+    Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
+    if (modifiers == Qt::NoModifier)
+        q->setCurrentPath(path);
+    else
+        emit q->openRequested(QStringList() << path, modifiers);
 }
 
 // Triggers when current item in history changes
@@ -691,26 +666,6 @@ void FileManagerWidgetPrivate::onSortIndicatorChanged(int logicalIndex, Qt::Sort
     sortingOrder = order;
 
     emit q->sortingChanged();
-}
-
-void FileManagerWidgetPrivate::openNewTab()
-{
-    Q_Q(FileManagerWidget);
-
-    QStringList paths = q->selectedPaths();
-
-    if (!paths.isEmpty())
-        emit q->openNewTabRequested(paths);
-}
-
-void FileManagerWidgetPrivate::openNewWindow()
-{
-    Q_Q(FileManagerWidget);
-
-    QStringList paths = q->selectedPaths();
-
-    if (!paths.isEmpty())
-        emit q->openNewWindowRequested(paths);
 }
 
 void FileManagerWidgetPrivate::toggleViewMode(bool toggled)
@@ -750,8 +705,6 @@ void FileManagerWidgetPrivate::onSelectionChanged()
     bool enabled = !paths.empty();
 
     actions[FileManagerWidget::Open]->setEnabled(enabled);
-    actions[FileManagerWidget::OpenInTab]->setEnabled(enabled);
-    actions[FileManagerWidget::OpenInWindow]->setEnabled(enabled);
     actions[FileManagerWidget::Rename]->setEnabled(enabled);
     actions[FileManagerWidget::MoveToTrash]->setEnabled(enabled);
     actions[FileManagerWidget::Remove]->setEnabled(enabled);
@@ -840,12 +793,6 @@ static QDir::Filters mBaseFilters = QDir::AllEntries | QDir::NoDotAndDotDot | QD
 
     \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::Open
     Open current file in an external editor or folder in current widget.
-
-    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::OpenInTab
-    Open current file or folder in new tab.
-
-    \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::OpenInWindow
-    Open current file or folder in new window.
 
     \var FileManager::FileManagerWidget::Action FileManager::FileManagerWidget::NewFolder
     Create new folder in current dir.
@@ -1469,8 +1416,6 @@ QMenu * FileManagerWidget::createStandardMenu(const QStringList &paths)
         sortByMenu->addAction(d->actions[SortDescendingOrder]);
     } else {
         menu->addAction(d->actions[Open]);
-        menu->addAction(d->actions[OpenInTab]);
-        menu->addAction(d->actions[OpenInWindow]);
 
 #ifdef QT_DEBUG
         OpenWithMenu *openWithMenu = new OpenWithMenu(menu);
@@ -1524,18 +1469,8 @@ void FileManagerWidget::open()
             return;
         }
     }
-    emit openRequested(paths);
 
-//    foreach (const QString path, selectedPaths()) {
-//        // TODO: open all folders in windows/tabs
-//        QFileInfo info(path);
-//        if (info.isDir() && !info.isBundle()) {
-//            setCurrentPath(path);
-//            return;
-//        } else {
-//            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-//        }
-//    }
+    emit openRequested(paths, Qt::NoModifier);
 }
 
 /*!
@@ -1731,18 +1666,6 @@ void FileManagerWidget::showContextMenu(QPoint pos)
 }
 
 /*!
-    \fn void FileManagerWidget::openNewTabRequested(const QStringList &paths)
-    This signal is emitted when user triggers OpenInTab action; \a paths is the
-    list of currently selected files and/or folders.
-*/
-
-/*!
-    \fn void FileManagerWidget::openNewWindowRequested(const QStringList &paths)
-    This signal is emitted when user triggers OpenInWindow action; \a paths is the
-    list of currently selected files and/or folders.
-*/
-
-/*!
     \reimp
 */
 void FileManagerWidget::contextMenuEvent(QContextMenuEvent *e)
@@ -1761,6 +1684,17 @@ void FileManagerWidget::keyPressEvent(QKeyEvent *event)
         return;
 
     switch (event->key()) {
+    // we override default shortucts to handle activated() signal only on mouse events.
+    // this is needed to handle Qt::KeyboardModifiers correctly
+#ifndef Q_WS_MAC
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
+        open();
+        break;
+#endif
+#ifdef Q_WS_MAC
+    case Qt::Key_O:
+#endif
     case Qt::Key_Down:
         if (event->modifiers() & Qt::ControlModifier) {
             open();
