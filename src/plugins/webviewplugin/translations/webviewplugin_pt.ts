@@ -178,14 +178,12 @@
 <context>
     <name>PrivacySettingsPage</name>
     <message>
-        <location filename="../privacysettings.h" line="65"/>
         <source>Privacy</source>
-        <translation>Privacidade</translation>
+        <translation type="obsolete">Privacidade</translation>
     </message>
     <message>
-        <location filename="../privacysettings.h" line="68"/>
         <source>Web View</source>
-        <translation>Vista Web</translation>
+        <translation type="obsolete">Vista Web</translation>
     </message>
 </context>
 <context>
@@ -388,11 +386,39 @@
     </message>
 </context>
 <context>
+    <name>WebView::PrivacySettingsPage</name>
+    <message>
+        <location filename="../privacysettings.h" line="67"/>
+        <source>Privacy</source>
+        <translation>Privacidade</translation>
+    </message>
+    <message>
+        <location filename="../privacysettings.h" line="70"/>
+        <source>Web View</source>
+        <translation>Vista Web</translation>
+    </message>
+</context>
+<context>
+    <name>WebView::WebViewDocumentFactory</name>
+    <message>
+        <location filename="../webviewdocument.cpp" line="132"/>
+        <source>Web view</source>
+        <translation>Vista web</translation>
+    </message>
+</context>
+<context>
     <name>WebView::WebViewEditor</name>
     <message>
-        <location filename="../webvieweditor.cpp" line="250"/>
         <source>Find</source>
-        <translation>Procurar</translation>
+        <translation type="obsolete">Procurar</translation>
+    </message>
+</context>
+<context>
+    <name>WebView::WebViewPlugin</name>
+    <message>
+        <location filename="../webviewplugin.cpp" line="264"/>
+        <source>Show web inspector</source>
+        <translation>Mostrar inspector web</translation>
     </message>
 </context>
 </TS>

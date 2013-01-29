@@ -36,12 +36,26 @@
     </message>
 </context>
 <context>
-    <name>Bookmarks::BookmarksEditor</name>
+    <name>Bookmarks::BookmarksDocument</name>
     <message>
-        <location filename="../bookmarkseditor.cpp" line="71"/>
-        <location filename="../bookmarkseditor.cpp" line="76"/>
+        <location filename="../bookmarksdocument.cpp" line="15"/>
         <source>Bookmarks</source>
         <translation>Favoritos</translation>
+    </message>
+</context>
+<context>
+    <name>Bookmarks::BookmarksDocumentFactory</name>
+    <message>
+        <location filename="../bookmarksdocument.cpp" line="42"/>
+        <source>Bookmarks editor</source>
+        <translation>Editor de favoritos</translation>
+    </message>
+</context>
+<context>
+    <name>Bookmarks::BookmarksEditor</name>
+    <message>
+        <source>Bookmarks</source>
+        <translation type="obsolete">Favoritos</translation>
     </message>
 </context>
 <context>
@@ -91,6 +105,39 @@
     </message>
 </context>
 <context>
+    <name>Bookmarks::BookmarksPlugin</name>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="201"/>
+        <source>Add bookmark</source>
+        <translation>Adicionar favorito</translation>
+    </message>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="205"/>
+        <source>Add folder</source>
+        <translation>Adicionar pasta</translation>
+    </message>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="209"/>
+        <source>Show bookmarks</source>
+        <translation>Mostrar favoritos</translation>
+    </message>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="220"/>
+        <source>Show Bookmarks toolbar</source>
+        <translation>Mostrar barra de favoritos</translation>
+    </message>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="226"/>
+        <source>Bookmarks</source>
+        <translation>Favoritos</translation>
+    </message>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="267"/>
+        <source>New folder</source>
+        <translation>Nova pasta</translation>
+    </message>
+</context>
+<context>
     <name>Bookmarks::BookmarksToolBar</name>
     <message>
         <location filename="../bookmarkstoolbar.cpp" line="59"/>
@@ -116,6 +163,27 @@
         <location filename="../bookmarkstoolbar.cpp" line="75"/>
         <source>Add Folder...</source>
         <translation>Adicionar Pasta...</translation>
+    </message>
+</context>
+<context>
+    <name>Bookmarks::BookmarksToolBarContainer</name>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="78"/>
+        <source>Show bookmarks toolbar</source>
+        <translation>Mostrar barra dos favoritos</translation>
+    </message>
+    <message>
+        <location filename="../bookmarksplugin.cpp" line="94"/>
+        <source>Show bookmarks</source>
+        <translation>Mostrar favoritos</translation>
+    </message>
+</context>
+<context>
+    <name>Bookmarks::BookmarksToolModel</name>
+    <message>
+        <location filename="../bookmarkstoolmodel.cpp" line="12"/>
+        <source>Bookmarks</source>
+        <translation>Favoritos</translation>
     </message>
 </context>
 <context>
@@ -174,47 +242,39 @@
 <context>
     <name>BookmarksPlugin</name>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="193"/>
         <source>Add bookmark</source>
-        <translation>Adicionar favorito</translation>
+        <translation type="obsolete">Adicionar favorito</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="197"/>
         <source>Add folder</source>
-        <translation>Adicionar pasta</translation>
+        <translation type="obsolete">Adicionar pasta</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="201"/>
         <source>Show bookmarks</source>
-        <translation>Mostrar favoritos</translation>
+        <translation type="obsolete">Mostrar favoritos</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="212"/>
         <source>Show Bookmarks toolbar</source>
-        <translation>Mostrar barra de ferramentas de favoritos</translation>
+        <translation type="obsolete">Mostrar barra de ferramentas de favoritos</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="218"/>
         <source>Bookmarks</source>
-        <translation>Favoritos</translation>
+        <translation type="obsolete">Favoritos</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="259"/>
         <source>New folder</source>
-        <translation>Nova pasta</translation>
+        <translation type="obsolete">Nova pasta</translation>
     </message>
 </context>
 <context>
     <name>BookmarksToolBarContainer</name>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="74"/>
         <source>Show bookmarks toolbar</source>
-        <translation>Mostrar barra de ferramentas dos favoritos</translation>
+        <translation type="obsolete">Mostrar barra de ferramentas dos favoritos</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="90"/>
         <source>Show bookmarks</source>
-        <translation>Mostrar favoritos</translation>
+        <translation type="obsolete">Mostrar favoritos</translation>
     </message>
 </context>
 </TS>

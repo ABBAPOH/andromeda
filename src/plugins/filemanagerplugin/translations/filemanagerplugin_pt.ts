@@ -4,447 +4,500 @@
 <context>
     <name>FileCopyErrorDialog</name>
     <message>
-        <location filename="../filecopyerrordialog.ui" line="14"/>
         <source>Copying</source>
-        <translation>Cópia</translation>
+        <translation type="obsolete">Cópia</translation>
     </message>
 </context>
 <context>
     <name>FileCopyReplaceDialog</name>
     <message>
-        <location filename="../filecopyreplacedialog.ui" line="14"/>
         <source>Copying</source>
-        <translation>Cópia</translation>
+        <translation type="obsolete">Cópia</translation>
     </message>
     <message>
-        <location filename="../filecopyreplacedialog.ui" line="49"/>
         <source>Apply to All</source>
-        <translation>Aplicar a Todos</translation>
+        <translation type="obsolete">Aplicar a Todos</translation>
     </message>
     <message>
-        <location filename="../filecopyreplacedialog.ui" line="81"/>
         <source>Skip</source>
-        <translation>Ignorar</translation>
+        <translation type="obsolete">Ignorar</translation>
     </message>
     <message>
-        <location filename="../filecopyreplacedialog.ui" line="103"/>
         <source>Cancel</source>
-        <translation>Cancelar</translation>
+        <translation type="obsolete">Cancelar</translation>
     </message>
     <message>
-        <location filename="../filecopyreplacedialog.ui" line="119"/>
         <source>Overwrite</source>
-        <translation>Substituir</translation>
+        <translation type="obsolete">Substituir</translation>
     </message>
 </context>
 <context>
     <name>FileCopyWidget</name>
     <message>
-        <location filename="../filecopywidget.ui" line="14"/>
-        <source>Copying</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../filecopywidget.ui" line="107"/>
         <source>Bytes copied:</source>
-        <translation>Bytes copiados:</translation>
+        <translation type="obsolete">Bytes copiados:</translation>
     </message>
     <message>
-        <location filename="../filecopywidget.ui" line="124"/>
         <source>Bytes per second:</source>
-        <translation>Bytes por segundo:</translation>
+        <translation type="obsolete">Bytes por segundo:</translation>
     </message>
     <message>
-        <location filename="../filecopywidget.ui" line="141"/>
         <source>Objects copied:</source>
-        <translation>Objectos copiados:</translation>
+        <translation type="obsolete">Objectos copiados:</translation>
     </message>
     <message>
-        <location filename="../filecopywidget.ui" line="158"/>
         <source>Time left:</source>
-        <translation>Tempo restante:</translation>
+        <translation type="obsolete">Tempo restante:</translation>
     </message>
 </context>
 <context>
     <name>FileManager::DualPaneWidgetPrivate</name>
     <message>
-        <location filename="../dualpanewidget.cpp" line="177"/>
         <source>Open</source>
-        <translation>Abrir</translation>
+        <translation type="obsolete">Abrir</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="178"/>
         <source>Open in new tab</source>
-        <translation>Abrir em novo separador</translation>
+        <translation type="obsolete">Abrir em novo separador</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="179"/>
         <source>Open in new window</source>
-        <translation>Abrir em nova janela</translation>
+        <translation type="obsolete">Abrir em nova janela</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="181"/>
         <source>Select program...</source>
-        <translation>Seleccionar programa...</translation>
+        <translation type="obsolete">Seleccionar programa...</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="182"/>
         <source>New Folder</source>
-        <translation>Nova Pasta</translation>
+        <translation type="obsolete">Nova Pasta</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="209"/>
         <source>Vertical panes</source>
-        <translation>Painéis verticais</translation>
+        <translation type="obsolete">Painéis verticais</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="211"/>
         <source>Sync panes</source>
-        <translation>Sincronizar painéis</translation>
+        <translation type="obsolete">Sincronizar painéis</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="212"/>
         <source>Swap panes</source>
-        <translation>Trocar painéis</translation>
+        <translation type="obsolete">Trocar painéis</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="213"/>
         <source>Copy files</source>
-        <translation>Copiar Ficheiros</translation>
+        <translation type="obsolete">Copiar Ficheiros</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="214"/>
         <source>Move files</source>
-        <translation>Mover Ficheiros</translation>
+        <translation type="obsolete">Mover Ficheiros</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="183"/>
         <source>Rename</source>
-        <translation>Renomear</translation>
+        <translation type="obsolete">Renomear</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="184"/>
         <source>Move to trash</source>
-        <translation>Mover para o Lixo</translation>
+        <translation type="obsolete">Mover para o Lixo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="185"/>
         <source>Remove</source>
-        <translation>Remover</translation>
+        <translation type="obsolete">Remover</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="186"/>
         <source>File info</source>
-        <translation>Informações</translation>
+        <translation type="obsolete">Informações</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="188"/>
         <source>Redo</source>
-        <translation>Refazer</translation>
+        <translation type="obsolete">Refazer</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="189"/>
         <source>Undo</source>
-        <translation>Desfazer</translation>
+        <translation type="obsolete">Desfazer</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="190"/>
-        <location filename="../dualpanewidget.cpp" line="369"/>
         <source>Cut</source>
-        <translation>Cortar</translation>
+        <translation type="obsolete">Cortar</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="191"/>
-        <location filename="../dualpanewidget.cpp" line="370"/>
         <source>Copy</source>
-        <translation>Copiar</translation>
+        <translation type="obsolete">Copiar</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="192"/>
         <source>Paste</source>
-        <translation>Colar</translation>
+        <translation type="obsolete">Colar</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="193"/>
         <source>Select all</source>
-        <translation>Seleccionar tudo</translation>
+        <translation type="obsolete">Seleccionar tudo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="195"/>
         <source>Show hidden files</source>
-        <translation>Mostrar ficheiros escondidos</translation>
+        <translation type="obsolete">Mostrar ficheiros escondidos</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="197"/>
         <source>Icon view</source>
-        <translation>Vista por ícones</translation>
+        <translation type="obsolete">Vista por ícones</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="198"/>
         <source>Column view</source>
-        <translation>Vista por colunas</translation>
+        <translation type="obsolete">Vista por colunas</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="199"/>
         <source>Tree view</source>
-        <translation>Vista por detalhes</translation>
+        <translation type="obsolete">Vista por detalhes</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="200"/>
-        <source>Cover flow</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../dualpanewidget.cpp" line="202"/>
         <source>Sort by name</source>
-        <translation>Ordenar por nome</translation>
+        <translation type="obsolete">Ordenar por nome</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="203"/>
         <source>Sort by size</source>
-        <translation>Ordenar por tamanho</translation>
+        <translation type="obsolete">Ordenar por tamanho</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="204"/>
         <source>Sort by type</source>
-        <translation>Ordenar por tipo</translation>
+        <translation type="obsolete">Ordenar por tipo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="205"/>
         <source>Sort by date</source>
-        <translation>Ordenar por data</translation>
+        <translation type="obsolete">Ordenar por data</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="206"/>
         <source>Descending order</source>
-        <translation>Ordem descendente</translation>
+        <translation type="obsolete">Ordem descendente</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="208"/>
         <source>Enable dual pane</source>
-        <translation>Activar painel duplo</translation>
+        <translation type="obsolete">Activar painel duplo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="210"/>
         <source>Toggle active pane</source>
-        <translation>Alternar painel activo</translation>
+        <translation type="obsolete">Alternar painel activo</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="362"/>
         <source>Cut &quot;%1&quot;</source>
-        <translation>Cortar &quot;%1&quot;</translation>
+        <translation type="obsolete">Cortar &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="363"/>
         <source>Copy &quot;%1&quot;</source>
-        <translation>Copiar &quot;%1&quot;</translation>
+        <translation type="obsolete">Copiar &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="365"/>
         <source>Cut %1 items</source>
-        <translation>Cortar &quot;%1&quot; itens</translation>
+        <translation type="obsolete">Cortar &quot;%1&quot; itens</translation>
     </message>
     <message>
-        <location filename="../dualpanewidget.cpp" line="366"/>
         <source>Copy %1 items</source>
-        <translation>Copiar &quot;%1&quot; itens</translation>
+        <translation type="obsolete">Copiar &quot;%1&quot; itens</translation>
     </message>
 </context>
 <context>
     <name>FileManager::FileCopyDialogPrivate</name>
     <message>
-        <location filename="../filecopydialog.cpp" line="98"/>
         <source>%1 &quot;%2&quot; already exists. Would you like to replace it?</source>
-        <translation>%1 &quot;%2&quot; já existe. Deseja substituí-lo?</translation>
+        <translation type="obsolete">%1 &quot;%2&quot; já existe. Deseja substituí-lo?</translation>
     </message>
     <message>
-        <location filename="../filecopydialog.cpp" line="99"/>
-        <location filename="../filecopydialog.cpp" line="121"/>
         <source>Folder</source>
-        <translation>Pasta</translation>
+        <translation type="obsolete">Pasta</translation>
     </message>
     <message>
-        <location filename="../filecopydialog.cpp" line="99"/>
-        <location filename="../filecopydialog.cpp" line="121"/>
         <source>File</source>
-        <translation>Ficheiro</translation>
+        <translation type="obsolete">Ficheiro</translation>
     </message>
     <message>
-        <location filename="../filecopydialog.cpp" line="120"/>
         <source>Error occurred for %1 &quot;%2&quot;: %3</source>
-        <translation>Ocorreu um erro para %1 &quot;%2&quot;: %3</translation>
+        <translation type="obsolete">Ocorreu um erro para %1 &quot;%2&quot;: %3</translation>
     </message>
 </context>
 <context>
     <name>FileManager::FileDelegate</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="65"/>
         <source>Rename</source>
-        <translation>Renomear</translation>
+        <translation type="obsolete">Renomear</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="67"/>
         <source>Are you sure you want to change the extension from &quot;.%1&quot; to &quot;.%2&quot;?</source>
-        <translation>Tem a certeza que pretende alterar a extensão de &quot; %1&quot; para &quot; %2&quot;?</translation>
+        <translation type="obsolete">Tem a certeza que pretende alterar a extensão de &quot; %1&quot; para &quot; %2&quot;?</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="71"/>
         <source>Use &quot;.%1&quot;</source>
-        <translation>Usar &quot; %1&quot;</translation>
+        <translation type="obsolete">Usar &quot; %1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="72"/>
         <source>Keep &quot;.%1&quot;</source>
-        <translation>Manter &quot; %1&quot;</translation>
+        <translation type="obsolete">Manter &quot; %1&quot;</translation>
     </message>
 </context>
 <context>
     <name>FileManager::FileInfoDialog</name>
     <message>
-        <location filename="../fileinfodialog.cpp" line="89"/>
-        <source>%1 TB</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../fileinfodialog.cpp" line="91"/>
-        <source>%1 GB</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../fileinfodialog.cpp" line="93"/>
-        <source>%1 MB</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../fileinfodialog.cpp" line="95"/>
-        <source>%1 kB</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../fileinfodialog.cpp" line="96"/>
-        <source>%1 b</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../fileinfodialog.cpp" line="114"/>
         <source>&quot;%1&quot; info</source>
-        <translation>&quot;%1&quot; informações</translation>
+        <translation type="obsolete">&quot;%1&quot; informações</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="118"/>
         <source>Calculating...</source>
-        <translation>A calcular...</translation>
+        <translation type="obsolete">A calcular...</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="141"/>
         <source>File info</source>
-        <translation>Informações</translation>
+        <translation type="obsolete">Informações</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="174"/>
-        <location filename="../fileinfodialog.cpp" line="314"/>
         <source>General Info</source>
-        <translation>Informação Geral</translation>
+        <translation type="obsolete">Informação Geral</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="221"/>
-        <location filename="../fileinfodialog.cpp" line="315"/>
         <source>Drive Info</source>
-        <translation>Informação da Drive</translation>
+        <translation type="obsolete">Informação da Drive</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="267"/>
-        <location filename="../fileinfodialog.cpp" line="316"/>
         <source>Permissions</source>
-        <translation>Permissões</translation>
+        <translation type="obsolete">Permissões</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="302"/>
         <source>Size:</source>
-        <translation>Tamanho:</translation>
+        <translation type="obsolete">Tamanho:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="303"/>
         <source>Location:</source>
-        <translation>Localização:</translation>
+        <translation type="obsolete">Localização:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="304"/>
         <source>Created:</source>
-        <translation>Criado:</translation>
+        <translation type="obsolete">Criado:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="305"/>
         <source>Modified:</source>
-        <translation>Modificado:</translation>
+        <translation type="obsolete">Modificado:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="306"/>
         <source>Accessed:</source>
-        <translation>Acedido:</translation>
+        <translation type="obsolete">Acedido:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="308"/>
         <source>Drive:</source>
-        <translation>Dispositivo:</translation>
+        <translation type="obsolete">Dispositivo:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="309"/>
         <source>Total size:</source>
-        <translation>Tamanho Total:</translation>
+        <translation type="obsolete">Tamanho Total:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="310"/>
         <source>Available size:</source>
-        <translation>Tamanho disponível:</translation>
+        <translation type="obsolete">Tamanho disponível:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="311"/>
         <source>Mount point:</source>
-        <translation>Ponto de montagem:</translation>
+        <translation type="obsolete">Ponto de montagem:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="312"/>
         <source>File system:</source>
-        <translation>Sistema de ficheiros:</translation>
+        <translation type="obsolete">Sistema de ficheiros:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="318"/>
         <source>User:</source>
-        <translation>Utilizador:</translation>
+        <translation type="obsolete">Utilizador:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="319"/>
         <source>Group:</source>
-        <translation>Grupo:</translation>
+        <translation type="obsolete">Grupo:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="320"/>
         <source>Other:</source>
-        <translation>Outro:</translation>
+        <translation type="obsolete">Outro:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="323"/>
         <source>Read only</source>
-        <translation>Apenas leitura</translation>
+        <translation type="obsolete">Apenas leitura</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="323"/>
         <source>Read write</source>
-        <translation>Apenas escrita</translation>
+        <translation type="obsolete">Apenas escrita</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="432"/>
         <source>%2 for %3 objects</source>
-        <translation>%2 para %3 objectos</translation>
+        <translation type="obsolete">%2 para %3 objectos</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::FileManagerDocumentFactory</name>
+    <message>
+        <location filename="../filemanagerdocument.cpp" line="95"/>
+        <source>File manager</source>
+        <translation>Gestor de Ficheiros</translation>
     </message>
 </context>
 <context>
     <name>FileManager::FileManagerEditor</name>
     <message>
-        <location filename="../filemanagereditor.cpp" line="534"/>
+        <source>Show left panel</source>
+        <translation type="obsolete">Mostrar painel esquerdo</translation>
+    </message>
+    <message>
+        <location filename="../filemanagereditor.cpp" line="591"/>
+        <source>Open in new tab</source>
+        <translation>Abrir em novo separador</translation>
+    </message>
+    <message>
+        <location filename="../filemanagereditor.cpp" line="592"/>
+        <source>Open in new window</source>
+        <translation>Abrir em nova janela</translation>
+    </message>
+    <message>
+        <location filename="../filemanagereditor.cpp" line="593"/>
+        <source>Open in internal editor</source>
+        <translation>Abrir no editor interno</translation>
+    </message>
+    <message>
+        <location filename="../filemanagereditor.cpp" line="594"/>
+        <source>Opens selected files in an internal editor</source>
+        <translation>Abre os ficheiros seleccionados no editor interno</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::FileManagerPlugin</name>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="126"/>
+        <source>Open</source>
+        <translation>Abrir</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="134"/>
+        <source>Open in internal editor</source>
+        <translation>Abrir no editor interno</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="146"/>
+        <source>File info</source>
+        <translation>Informações</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="154"/>
+        <source>New folder</source>
+        <translation>Nova pasta</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="159"/>
+        <source>Rename</source>
+        <translation>Renomear</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="168"/>
+        <source>Move to trash</source>
+        <translation>Mover para o lixo</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="177"/>
+        <source>Remove</source>
+        <translation>Remover</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="195"/>
+        <source>Move object(s) here</source>
+        <translation>Move objecto(s) para aqui</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="209"/>
+        <source>Show Hidden Files</source>
+        <translation>Mostrar ficheiros escondidos</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="214"/>
         <source>Show left panel</source>
         <translation>Mostrar painel esquerdo</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="219"/>
+        <source>Show status bar</source>
+        <translation>Mostrar barra de estado</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="227"/>
+        <source>Icon View</source>
+        <translation>Vista de ícones</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="233"/>
+        <source>Column View</source>
+        <translation>Vista de colunas</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="239"/>
+        <source>Tree View</source>
+        <translation>Vista de detalhes</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="249"/>
+        <source>Sort by</source>
+        <translation>Ordenar por</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="254"/>
+        <source>Sort by name</source>
+        <translation>Ordenar por nome</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="260"/>
+        <source>Sort by size</source>
+        <translation>Ordenar por tamanho</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="266"/>
+        <source>Sort by type</source>
+        <translation>Ordenar por tipo</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="272"/>
+        <source>Sort by date</source>
+        <translation>Ordenar por data</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="280"/>
+        <source>Descending Order</source>
+        <translation>Ordem descendente</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="369"/>
+        <source>Panes</source>
+        <translation>Painéis</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="373"/>
+        <source>Dual Pane</source>
+        <translation>Duplo Painel</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="379"/>
+        <source>Vertical panes</source>
+        <translation>Painéis verticais</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="385"/>
+        <source>Toggle active pane</source>
+        <translation>Alternar painel activo</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="392"/>
+        <source>Sync panes</source>
+        <translation>Sincronizar painéis</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="396"/>
+        <source>Swap panes</source>
+        <translation>Trocar painéis</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="403"/>
+        <source>Copy files</source>
+        <translation>Copiar Ficheiros</translation>
+    </message>
+    <message>
+        <location filename="../filemanagerplugin.cpp" line="408"/>
+        <source>Move files</source>
+        <translation>Mover Ficheiros</translation>
     </message>
 </context>
 <context>
@@ -461,220 +514,200 @@
 <context>
     <name>FileManager::FileManagerWidget</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="841"/>
         <source>New Folder</source>
-        <translation>Nova Pasta</translation>
+        <translation type="obsolete">Nova Pasta</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="881"/>
         <source>Programs (*.exe *.cmd *.com *.bat);;All files (*)</source>
-        <translation>Programas (* exe *cmd *.com *.bat);;Todos os Ficheiros (*)</translation>
+        <translation type="obsolete">Programas (* exe *cmd *.com *.bat);;Todos os Ficheiros (*)</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="886"/>
         <source>Select program</source>
-        <translation>Seleccionar programa</translation>
+        <translation type="obsolete">Seleccionar programa</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="912"/>
         <source>Can&apos;t open files</source>
-        <translation>Não é possível abrir os ficheiros</translation>
+        <translation type="obsolete">Não é possível abrir os ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="913"/>
         <source>Andromeda failed to open some files :%1</source>
-        <translation>Andromeda falhou a abrir alguns ficheiros :%1</translation>
+        <translation type="obsolete">Andromeda falhou a abrir alguns ficheiros :%1</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1020"/>
         <source>Remove files</source>
-        <translation>Remover ficheiros</translation>
+        <translation type="obsolete">Remover ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1022"/>
         <source>Are you sure you want to delete selected item(s)?</source>
-        <translation>Tem a certeza que pretende apagar o(s) ficheiro(s) seleccionado(s)?</translation>
+        <translation type="obsolete">Tem a certeza que pretende apagar o(s) ficheiro(s) seleccionado(s)?</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1023"/>
         <source>This action can&apos;t be undone.</source>
-        <translation>Esta acção não poderá ser desfeita.</translation>
+        <translation type="obsolete">Esta acção não poderá ser desfeita.</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1141"/>
         <source>View Mode</source>
-        <translation>Modo de Visualização</translation>
+        <translation type="obsolete">Modo de Visualização</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1146"/>
         <source>Sort by</source>
-        <translation>Ordenar por</translation>
+        <translation type="obsolete">Ordenar por</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1158"/>
         <source>Open with</source>
-        <translation>Abrir com</translation>
+        <translation type="obsolete">Abrir com</translation>
     </message>
 </context>
 <context>
     <name>FileManager::FileManagerWidgetPrivate</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="228"/>
+        <source>Open</source>
+        <translation type="obsolete">Abrir</translation>
+    </message>
+    <message>
+        <source>Open in new tab</source>
+        <translation type="obsolete">Abrir em novo separador</translation>
+    </message>
+    <message>
+        <source>Open in new window</source>
+        <translation type="obsolete">Abrir em nova janela</translation>
+    </message>
+    <message>
+        <source>Select program...</source>
+        <translation type="obsolete">Seleccionar programa...</translation>
+    </message>
+    <message>
+        <source>New Folder</source>
+        <translation type="obsolete">Nova Pasta</translation>
+    </message>
+    <message>
+        <source>Rename</source>
+        <translation type="obsolete">Renomear</translation>
+    </message>
+    <message>
+        <source>Move to trash</source>
+        <translation type="obsolete">Mover para o Lixo</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="obsolete">Remover</translation>
+    </message>
+    <message>
+        <source>File info</source>
+        <translation type="obsolete">Informações</translation>
+    </message>
+    <message>
+        <source>Redo</source>
+        <translation type="obsolete">Refazer</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="obsolete">Desfazer</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="obsolete">Cortar</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="obsolete">Copiar</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="obsolete">Colar</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation type="obsolete">Seleccionar tudo</translation>
+    </message>
+    <message>
+        <source>Show hidden files</source>
+        <translation type="obsolete">Mostrar ficheiros escondidos</translation>
+    </message>
+    <message>
+        <source>Icon view</source>
+        <translation type="obsolete">Vista por ícones</translation>
+    </message>
+    <message>
+        <source>Column view</source>
+        <translation type="obsolete">Vista por colunas</translation>
+    </message>
+    <message>
+        <source>Tree view</source>
+        <translation type="obsolete">Vista por detalhes</translation>
+    </message>
+    <message>
+        <source>Sort by name</source>
+        <translation type="obsolete">Ordenar por nome</translation>
+    </message>
+    <message>
+        <source>Sort by size</source>
+        <translation type="obsolete">Ordenar por tamanho</translation>
+    </message>
+    <message>
+        <source>Sort by type</source>
+        <translation type="obsolete">Ordenar por tipo</translation>
+    </message>
+    <message>
+        <source>Sort by date</source>
+        <translation type="obsolete">Ordenar por data</translation>
+    </message>
+    <message>
+        <source>Descending order</source>
+        <translation type="obsolete">Ordem descendente</translation>
+    </message>
+    <message>
+        <source>Cut &quot;%1&quot;</source>
+        <translation type="obsolete">Cortar &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Copy &quot;%1&quot;</source>
+        <translation type="obsolete">Copiar &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Cut %1 items</source>
+        <translation type="obsolete">Cortar &quot;%1&quot; itens</translation>
+    </message>
+    <message>
+        <source>Copy %1 items</source>
+        <translation type="obsolete">Copiar &quot;%1&quot; itens</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::FileSystemToolModel</name>
+    <message>
+        <location filename="../filesystemtoolmodel.cpp" line="15"/>
+        <source>File system</source>
+        <translation>Sistema de ficheiros</translation>
+    </message>
+</context>
+<context>
+    <name>FileManager::FileSystemToolWidget</name>
+    <message>
+        <location filename="../filesystemtoolwidget.cpp" line="149"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="229"/>
+        <location filename="../filesystemtoolwidget.cpp" line="150"/>
         <source>Open in new tab</source>
         <translation>Abrir em novo separador</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="230"/>
+        <location filename="../filesystemtoolwidget.cpp" line="151"/>
         <source>Open in new window</source>
         <translation>Abrir em nova janela</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="232"/>
-        <source>Select program...</source>
-        <translation>Seleccionar programa...</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="233"/>
-        <source>New Folder</source>
-        <translation>Nova Pasta</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="234"/>
-        <source>Rename</source>
-        <translation>Renomear</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="235"/>
-        <source>Move to trash</source>
-        <translation>Mover para o Lixo</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="236"/>
-        <source>Remove</source>
-        <translation>Remover</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="237"/>
-        <source>File info</source>
-        <translation>Informações</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="239"/>
-        <source>Redo</source>
-        <translation>Refazer</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="240"/>
-        <source>Undo</source>
-        <translation>Desfazer</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="241"/>
-        <location filename="../filemanagerwidget.cpp" line="1011"/>
-        <source>Cut</source>
-        <translation>Cortar</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="242"/>
-        <location filename="../filemanagerwidget.cpp" line="1012"/>
-        <source>Copy</source>
-        <translation>Copiar</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="243"/>
-        <source>Paste</source>
-        <translation>Colar</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="244"/>
-        <source>Select all</source>
-        <translation>Seleccionar tudo</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="246"/>
-        <source>Show hidden files</source>
-        <translation>Mostrar ficheiros escondidos</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="248"/>
-        <source>Icon view</source>
-        <translation>Vista por ícones</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="249"/>
-        <source>Column view</source>
-        <translation>Vista por colunas</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="250"/>
-        <source>Tree view</source>
-        <translation>Vista por detalhes</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="251"/>
-        <source>Cover flow</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="253"/>
-        <source>Sort by name</source>
-        <translation>Ordenar por nome</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="254"/>
-        <source>Sort by size</source>
-        <translation>Ordenar por tamanho</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="255"/>
-        <source>Sort by type</source>
-        <translation>Ordenar por tipo</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="256"/>
-        <source>Sort by date</source>
-        <translation>Ordenar por data</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="257"/>
-        <source>Descending order</source>
-        <translation>Ordem descendente</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="1004"/>
-        <source>Cut &quot;%1&quot;</source>
-        <translation>Cortar &quot;%1&quot;</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="1005"/>
-        <source>Copy &quot;%1&quot;</source>
-        <translation>Copiar &quot;%1&quot;</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="1007"/>
-        <source>Cut %1 items</source>
-        <translation>Cortar &quot;%1&quot; itens</translation>
-    </message>
-    <message>
-        <location filename="../filemanagerwidget.cpp" line="1008"/>
-        <source>Copy %1 items</source>
-        <translation>Copiar &quot;%1&quot; itens</translation>
     </message>
 </context>
 <context>
     <name>FileManager::GlobalSettingsPage</name>
     <message>
-        <location filename="../globalsettings.cpp" line="56"/>
+        <location filename="../globalsettings.cpp" line="86"/>
         <source>Global</source>
         <translation>Global</translation>
     </message>
     <message>
-        <location filename="../globalsettings.cpp" line="61"/>
+        <location filename="../globalsettings.cpp" line="91"/>
         <source>File manager</source>
         <translation>Gestor de Ficheiros</translation>
     </message>
@@ -682,43 +715,38 @@
 <context>
     <name>FileManager::NavigationModel</name>
     <message>
-        <location filename="../navigationmodel.cpp" line="140"/>
         <source>Devices</source>
-        <translation>Dispositivos</translation>
+        <translation type="obsolete">Dispositivos</translation>
     </message>
     <message>
-        <location filename="../navigationmodel.cpp" line="141"/>
         <source>Network</source>
-        <translation>Rede</translation>
+        <translation type="obsolete">Rede</translation>
     </message>
     <message>
-        <location filename="../navigationmodel.cpp" line="142"/>
         <source>Folders</source>
-        <translation>Pastas</translation>
+        <translation type="obsolete">Pastas</translation>
     </message>
 </context>
 <context>
     <name>FileManager::NavigationPanel</name>
     <message>
-        <location filename="../navigationpanel.cpp" line="129"/>
         <source>Open</source>
-        <translation>Abrir</translation>
+        <translation type="obsolete">Abrir</translation>
     </message>
     <message>
-        <location filename="../navigationpanel.cpp" line="131"/>
         <source>Remove from panel</source>
-        <translation>Remover do painel</translation>
+        <translation type="obsolete">Remover do painel</translation>
     </message>
 </context>
 <context>
     <name>FileManager::ViewModesSettingsPage</name>
     <message>
-        <location filename="../viewmodessettings.cpp" line="210"/>
+        <location filename="../viewmodessettings.cpp" line="241"/>
         <source>View Modes</source>
         <translation>Modos de Visualização</translation>
     </message>
     <message>
-        <location filename="../viewmodessettings.cpp" line="215"/>
+        <location filename="../viewmodessettings.cpp" line="249"/>
         <source>File manager</source>
         <translation>Gestor de Ficheiros</translation>
     </message>
@@ -726,12 +754,12 @@
 <context>
     <name>FileManager::ViewModesSettingsWidget</name>
     <message>
-        <location filename="../viewmodessettings.cpp" line="56"/>
-        <location filename="../viewmodessettings.cpp" line="105"/>
-        <location filename="../viewmodessettings.cpp" line="114"/>
-        <location filename="../viewmodessettings.cpp" line="163"/>
-        <location filename="../viewmodessettings.cpp" line="166"/>
-        <location filename="../viewmodessettings.cpp" line="169"/>
+        <location filename="../viewmodessettings.cpp" line="76"/>
+        <location filename="../viewmodessettings.cpp" line="125"/>
+        <location filename="../viewmodessettings.cpp" line="134"/>
+        <location filename="../viewmodessettings.cpp" line="183"/>
+        <location filename="../viewmodessettings.cpp" line="186"/>
+        <location filename="../viewmodessettings.cpp" line="189"/>
         <source>Icon size: %1x%2</source>
         <translation>Tamanho dos ícones: %1x%2</translation>
     </message>
@@ -739,134 +767,104 @@
 <context>
     <name>FileManagerPlugin</name>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="104"/>
         <source>Open</source>
-        <translation>Abrir</translation>
+        <translation type="obsolete">Abrir</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="117"/>
         <source>File info</source>
-        <translation>Informações</translation>
+        <translation type="obsolete">Informações</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="125"/>
         <source>New folder</source>
-        <translation>Nova pasta</translation>
+        <translation type="obsolete">Nova pasta</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="351"/>
         <source>Toggle active pane</source>
-        <translation>Alternar painel activo</translation>
+        <translation type="obsolete">Alternar painel activo</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="358"/>
         <source>Sync panes</source>
-        <translation>Sincronizar painéis</translation>
+        <translation type="obsolete">Sincronizar painéis</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="362"/>
         <source>Swap panes</source>
-        <translation>Trocar painéis</translation>
+        <translation type="obsolete">Trocar painéis</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="369"/>
         <source>Copy files</source>
-        <translation>Copiar Ficheiros</translation>
+        <translation type="obsolete">Copiar Ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="374"/>
         <source>Move files</source>
-        <translation>Mover Ficheiros</translation>
+        <translation type="obsolete">Mover Ficheiros</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="130"/>
         <source>Rename</source>
-        <translation>Renomear</translation>
+        <translation type="obsolete">Renomear</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="139"/>
         <source>Move to trash</source>
-        <translation>Mover para o Lixo</translation>
+        <translation type="obsolete">Mover para o Lixo</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="148"/>
         <source>Remove</source>
-        <translation>Remover</translation>
+        <translation type="obsolete">Remover</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="166"/>
         <source>Show Hidden Files</source>
-        <translation>Mostrar ficheiros escondidos</translation>
+        <translation type="obsolete">Mostrar ficheiros escondidos</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="172"/>
         <source>Show left panel</source>
-        <translation>Mostrar painel esquerdo</translation>
+        <translation type="obsolete">Mostrar painel esquerdo</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="181"/>
         <source>Icon View</source>
-        <translation>Vista por ícones</translation>
+        <translation type="obsolete">Vista por ícones</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="188"/>
         <source>Column View</source>
-        <translation>Vista por colunas</translation>
+        <translation type="obsolete">Vista por colunas</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="195"/>
         <source>Tree View</source>
-        <translation>Vista por detalhes</translation>
+        <translation type="obsolete">Vista por detalhes</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="202"/>
-        <source>Cover flow</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../filemanagerplugin.cpp" line="334"/>
         <source>Panes</source>
-        <translation>Painéis</translation>
+        <translation type="obsolete">Painéis</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="339"/>
         <source>Dual Pane</source>
-        <translation>Duplo Painel</translation>
+        <translation type="obsolete">Duplo Painel</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="345"/>
         <source>Vertical panes</source>
-        <translation>Painéis verticais</translation>
+        <translation type="obsolete">Painéis verticais</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="213"/>
         <source>Sort by</source>
-        <translation>Ordenar por</translation>
+        <translation type="obsolete">Ordenar por</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="218"/>
         <source>Sort by name</source>
-        <translation>Ordenar por nome</translation>
+        <translation type="obsolete">Ordenar por nome</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="224"/>
         <source>Sort by size</source>
-        <translation>Ordenar por tamanho</translation>
+        <translation type="obsolete">Ordenar por tamanho</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="230"/>
         <source>Sort by type</source>
-        <translation>Ordenar por tipo</translation>
+        <translation type="obsolete">Ordenar por tipo</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="236"/>
         <source>Sort by date</source>
-        <translation>Ordenar por data</translation>
+        <translation type="obsolete">Ordenar por data</translation>
     </message>
     <message>
-        <location filename="../filemanagerplugin.cpp" line="244"/>
         <source>Descending Order</source>
-        <translation>Ordem descendente</translation>
+        <translation type="obsolete">Ordem descendente</translation>
     </message>
 </context>
 <context>
@@ -981,6 +979,19 @@
         <location filename="../globalsettings.ui" line="36"/>
         <source>Show warning before changing an extension</source>
         <translation>Mostrar aviso antes de alterar uma extensão</translation>
+    </message>
+</context>
+<context>
+    <name>OpenWithEditorMenu</name>
+    <message>
+        <location filename="../openwitheditormenu.cpp" line="11"/>
+        <source>Select editor</source>
+        <translation>Seleccionar editor</translation>
+    </message>
+    <message>
+        <location filename="../openwitheditormenu.cpp" line="44"/>
+        <source>%1 (default)</source>
+        <translation>%1 (por defeito)</translation>
     </message>
 </context>
 <context>
