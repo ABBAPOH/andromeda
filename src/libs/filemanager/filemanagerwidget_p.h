@@ -16,7 +16,6 @@
 #include <QtGui/QStackedLayout>
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QTableView>
-#include <QtGui/QTextEdit>
 #include <QtGui/QTreeView>
 #include <QtGui/QUndoCommand>
 #include <QtGui/QUndoStack>
@@ -25,36 +24,6 @@
 #include "filesystemmodel.h"
 
 namespace FileManager {
-
-class FileTextEdit : public QTextEdit
-{
-    Q_OBJECT
-    Q_DISABLE_COPY(FileTextEdit)
-public:
-    explicit FileTextEdit(QWidget *parent = 0);
-
-protected:
-    void resizeEvent(QResizeEvent *e);
-    void showEvent(QShowEvent *e);
-
-    void realignVCenter(QTextEdit *pTextEdit);
-};
-
-class FileItemDelegate : public QStyledItemDelegate
-{
-    Q_OBJECT
-    Q_DISABLE_COPY(FileItemDelegate)
-public:
-    explicit FileItemDelegate(QObject *parent = 0);
-
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-protected:
-    bool eventFilter(QObject *object, QEvent *event);
-};
 
 class FileManagerWidgetPrivate : public QObject
 {
