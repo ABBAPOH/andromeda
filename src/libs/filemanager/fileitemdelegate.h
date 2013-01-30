@@ -1,11 +1,13 @@
 #ifndef FILEITEMDELEGATE_H
 #define FILEITEMDELEGATE_H
 
+#include "filemanager_global.h"
+
 #include <QtGui/QStyledItemDelegate>
 
 namespace FileManager {
 
-class FileItemDelegate : public QStyledItemDelegate
+class FILEMANAGER_EXPORT FileItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
     Q_DISABLE_COPY(FileItemDelegate)
