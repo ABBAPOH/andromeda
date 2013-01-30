@@ -182,45 +182,6 @@
     </message>
 </context>
 <context>
-    <name>GuiSystem::MainWindow</name>
-    <message>
-        <source>Save as</source>
-        <translation type="obsolete">Guardar como</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="obsolete">Guardar</translation>
-    </message>
-    <message>
-        <source>Save as...</source>
-        <translation type="obsolete">Guardar como...</translation>
-    </message>
-    <message>
-        <source>Refresh</source>
-        <translation type="obsolete">Actualizar</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="obsolete">Cancelar</translation>
-    </message>
-    <message>
-        <source>Back</source>
-        <translation type="obsolete">Voltar</translation>
-    </message>
-    <message>
-        <source>Forward</source>
-        <translation type="obsolete">Avançar</translation>
-    </message>
-    <message>
-        <source>Next editor</source>
-        <translation type="obsolete">Próximo editor</translation>
-    </message>
-    <message>
-        <source>Previous editor</source>
-        <translation type="obsolete">Editor anterior</translation>
-    </message>
-</context>
-<context>
     <name>GuiSystem::MenuBarContainer</name>
     <message>
         <location filename="../menubarcontainer.cpp" line="204"/>
@@ -361,13 +322,6 @@
         <location filename="../menubarcontainer.cpp" line="245"/>
         <source>About Qt...</source>
         <translation>Acerca do Qt...</translation>
-    </message>
-</context>
-<context>
-    <name>GuiSystem::SettingsDialog</name>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Preferências</translation>
     </message>
 </context>
 <context>

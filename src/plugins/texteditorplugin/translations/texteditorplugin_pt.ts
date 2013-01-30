@@ -2,17 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="pt_PT">
 <context>
-    <name>HelloWorld::HelloWorldEditor</name>
-    <message>
-        <source>Hello World!</source>
-        <translation type="obsolete">Olá Mundo!</translation>
-    </message>
-    <message>
-        <source>Hello world</source>
-        <translation type="obsolete">Olá mundo</translation>
-    </message>
-</context>
-<context>
     <name>TextEditor::PlainTextDocumentFactory</name>
     <message>
         <location filename="../plaintextdocument.cpp" line="68"/>

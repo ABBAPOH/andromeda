@@ -52,13 +52,6 @@
     </message>
 </context>
 <context>
-    <name>Bookmarks::BookmarksEditor</name>
-    <message>
-        <source>Bookmarks</source>
-        <translation type="obsolete">Favoritos</translation>
-    </message>
-</context>
-<context>
     <name>Bookmarks::BookmarksMenu</name>
     <message>
         <location filename="../bookmarksmenu.cpp" line="70"/>
@@ -237,44 +230,6 @@
         <location filename="../bookmarkswidget.cpp" line="321"/>
         <source>Remove</source>
         <translation>Remover</translation>
-    </message>
-</context>
-<context>
-    <name>BookmarksPlugin</name>
-    <message>
-        <source>Add bookmark</source>
-        <translation type="obsolete">Adicionar favorito</translation>
-    </message>
-    <message>
-        <source>Add folder</source>
-        <translation type="obsolete">Adicionar pasta</translation>
-    </message>
-    <message>
-        <source>Show bookmarks</source>
-        <translation type="obsolete">Mostrar favoritos</translation>
-    </message>
-    <message>
-        <source>Show Bookmarks toolbar</source>
-        <translation type="obsolete">Mostrar barra de ferramentas de favoritos</translation>
-    </message>
-    <message>
-        <source>Bookmarks</source>
-        <translation type="obsolete">Favoritos</translation>
-    </message>
-    <message>
-        <source>New folder</source>
-        <translation type="obsolete">Nova pasta</translation>
-    </message>
-</context>
-<context>
-    <name>BookmarksToolBarContainer</name>
-    <message>
-        <source>Show bookmarks toolbar</source>
-        <translation type="obsolete">Mostrar barra de ferramentas dos favoritos</translation>
-    </message>
-    <message>
-        <source>Show bookmarks</source>
-        <translation type="obsolete">Mostrar favoritos</translation>
     </message>
 </context>
 </TS>

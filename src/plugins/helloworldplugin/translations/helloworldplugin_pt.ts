@@ -20,14 +20,6 @@
 <context>
     <name>HelloWorld::HelloWorldEditor</name>
     <message>
-        <source>Hello World!</source>
-        <translation type="obsolete">Olá Mundo!</translation>
-    </message>
-    <message>
-        <source>Hello world</source>
-        <translation type="obsolete">Olá mundo</translation>
-    </message>
-    <message>
         <location filename="../helloworldeditor.cpp" line="72"/>
         <source>Change text...</source>
         <translation>Mudar texto...</translation>

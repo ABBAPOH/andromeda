@@ -176,17 +176,6 @@
     </message>
 </context>
 <context>
-    <name>PrivacySettingsPage</name>
-    <message>
-        <source>Privacy</source>
-        <translation type="obsolete">Privacidade</translation>
-    </message>
-    <message>
-        <source>Web View</source>
-        <translation type="obsolete">Vista Web</translation>
-    </message>
-</context>
-<context>
     <name>PrivacySettingsWidget</name>
     <message>
         <location filename="../privacysettings.ui" line="14"/>
@@ -404,13 +393,6 @@
         <location filename="../webviewdocument.cpp" line="132"/>
         <source>Web view</source>
         <translation>Vista web</translation>
-    </message>
-</context>
-<context>
-    <name>WebView::WebViewEditor</name>
-    <message>
-        <source>Find</source>
-        <translation type="obsolete">Procurar</translation>
     </message>
 </context>
 <context>
