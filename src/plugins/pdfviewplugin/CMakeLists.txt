@@ -52,6 +52,7 @@ if( POPPLER_QT4_FOUND )
     set( TS_FILES
         translations/pdfviewplugin_cs.ts
         translations/pdfviewplugin_fr.ts
+        translations/pdfviewplugin_pt.ts
         translations/pdfviewplugin_ru.ts
        )
 

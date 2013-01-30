@@ -63,6 +63,7 @@ set( FORMS
 set( RESOURCES filemanager.qrc )
 set( TS_FILES
     translations/filemanager_cs.ts
+    translations/filemanager_pt.ts
     translations/filemanager_ru.ts
    )
 

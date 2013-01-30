@@ -18,6 +18,7 @@ set( RESOURCES bineditorplugin.qrc )
 
 set( TS_FILES
     translations/bineditorplugin_cs.ts
+    translations/bineditorplugin_pt.ts
     translations/bineditorplugin_ru.ts
    )
 

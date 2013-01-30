@@ -16,6 +16,7 @@ set( RESOURCES imageviewerplugin.qrc )
 
 set( TS_FILES
     translations/imageviewerplugin_cs.ts
+    translations/imageviewerplugin_pt.ts
     translations/imageviewerplugin_ru.ts
    )
 
