@@ -6,7 +6,7 @@
     <message>
         <location filename="../imageviewerdocument.cpp" line="48"/>
         <source>Image viewer</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualizador de imagens</translation>
     </message>
 </context>
 <context>
@@ -14,62 +14,62 @@
     <message>
         <location filename="../imageviewerplugin.cpp" line="36"/>
         <source>Image view</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualizador de imagens</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="39"/>
         <source>Move tool</source>
-        <translation type="unfinished"></translation>
+        <translation>Ferramenta de mover</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="40"/>
         <source>Selection tool</source>
-        <translation type="unfinished"></translation>
+        <translation>Ferramenta de selecção</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="43"/>
         <source>Zoom in</source>
-        <translation type="unfinished"></translation>
+        <translation>Ampliar</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="44"/>
         <source>Zoom out</source>
-        <translation type="unfinished"></translation>
+        <translation>Reduzir</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="45"/>
         <source>Fit in view</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustar à vista</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="46"/>
         <source>Normal size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho normal</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="49"/>
         <source>Rotate left</source>
-        <translation type="unfinished"></translation>
+        <translation>Rodar para esquerda</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="50"/>
         <source>Rotate right</source>
-        <translation type="unfinished"></translation>
+        <translation>Rodar para direita</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="51"/>
         <source>Flip horizontally</source>
-        <translation type="unfinished"></translation>
+        <translation>Inverter horizontalmente</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="52"/>
         <source>Flip vertically</source>
-        <translation type="unfinished"></translation>
+        <translation>Inverter verticalmente</translation>
     </message>
     <message>
         <location filename="../imageviewerplugin.cpp" line="53"/>
         <source>Reset original</source>
-        <translation type="unfinished"></translation>
+        <translation>Reiniciar original</translation>
     </message>
 </context>
 </TS>
