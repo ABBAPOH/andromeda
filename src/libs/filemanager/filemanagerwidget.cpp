@@ -341,7 +341,6 @@ QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::View
     view->setAcceptDrops(true);
     view->setDefaultDropAction(Qt::MoveAction);
     view->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
-    view->setTextElideMode(Qt::ElideMiddle);
     view->setItemDelegate(new FileItemDelegate(view));
     view->setIconSize(iconSizes[mode]);
     connect(view, SIGNAL(activated(QModelIndex)),
