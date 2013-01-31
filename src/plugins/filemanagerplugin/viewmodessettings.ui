@@ -149,14 +149,14 @@
       <item>
        <widget class="QLabel" name="gridSizeLabel">
         <property name="text">
-         <string>Grid size:</string>
+         <string>Grid size: 96x96</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QSlider" name="gridSizeSlider">
         <property name="minimum">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="maximum">
          <number>100</number>

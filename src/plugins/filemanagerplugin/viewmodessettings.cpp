@@ -103,6 +103,8 @@ void ViewModesSettingsWidget::onGridSizeChanged(int value)
     int iconSize = ui->iconSizeSlider->value()*4;
     int gridSize = calcGridSize(iconSize, value, iconMode);
 
+    ui->gridSizeLabel->setText(tr("Grid size: %1x%2").arg(gridSize).arg(gridSize));
+
     QSize size(gridSize, gridSize);
 
     m_settings->setValue(QLatin1String("gridSize"), size);
