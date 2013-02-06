@@ -220,6 +220,17 @@ public:
         QListView::dropEvent(e);
         doItemsLayout(); // fix for wrong layout after dropping
     }
+
+//    QRect visualRect(const QModelIndex &index) const
+//    {
+//        int w = gridSize().width();
+//        int h = gridSize().height();
+//        QRect rect = QListView::visualRect(index);
+//        w = (w - rect.width());
+//        h = (h - rect.height());
+//        rect.adjust(0, 0, w, h);
+//        return rect;
+//    }
 };
 
 void FileManagerWidgetPrivate::setFileSystemManager(FileSystemManager *manager)
