@@ -899,7 +899,7 @@ void FileItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionV
     if (QTextEdit *edit = qobject_cast<QTextEdit*>(editor)) {
         const QWidget *widget = d->widget(option);
         const QStyle *style = widget ? widget->style() : QApplication::style();
-        const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget);
+        const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget)+1;
         QTextFrame * frame = edit->document()->rootFrame();
         QTextFrameFormat format = frame->frameFormat();
         format.setLeftMargin(textMargin);
