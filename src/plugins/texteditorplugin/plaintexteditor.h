@@ -28,7 +28,6 @@ private:
     void setupUi();
 
     PlainTextEdit *m_editor;
-    QToolBar *m_toolBar;
     QString m_currentFile;
 };
 

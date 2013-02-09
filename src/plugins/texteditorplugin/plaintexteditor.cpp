@@ -44,13 +44,7 @@ void PlainTextEditor::setupUi()
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_toolBar = new QToolBar(this);
     m_editor = new PlainTextEdit(this);
-
-    m_toolBar->addAction(m_editor->action(PlainTextEdit::ZoomIn));
-    m_toolBar->addAction(m_editor->action(PlainTextEdit::ZoomOut));
-
-    layout->addWidget(m_toolBar);
     layout->addWidget(m_editor);
 }
 
