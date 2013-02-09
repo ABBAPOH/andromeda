@@ -24,6 +24,11 @@ TextFind::TextFind(QObject *parent) :
 {
 }
 
+bool TextFind::supportsReplace() const
+{
+    return true;
+}
+
 IFind::FindFlags TextFind::supportedFindFlags() const
 {
     return IFind::FindFlags(FindBackward | FindCaseSensitively | FindWholeWords /*| FindRegularExpression*/);
@@ -81,6 +86,45 @@ void TextFind::findStep(const QString &text, IFind::FindFlags findFlags)
 
     if (!cursor.isNull())
         setTextCursor(cursor);
+}
+
+void TextFind::replace(const QString &before, const QString &after, IFind::FindFlags findFlags)
+{
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection() && cursor.selectedText() == before ) {
+        cursor.removeSelectedText();
+        cursor.insertText(after);
+    }
+}
+
+bool TextFind::replaceStep(const QString &before, const QString &after, IFind::FindFlags findFlags)
+{
+    replace(before, after, findFlags);
+    findStep(before, findFlags);
+    return true;
+}
+
+int TextFind::replaceAll(const QString &before, const QString &after, IFind::FindFlags findFlags)
+{
+    QTextDocument::FindFlags flags = iFind2TextDocumentFlags(findFlags);
+    QTextCursor cursor = QTextCursor(m_document);
+    cursor.movePosition(QTextCursor::Start);
+    cursor = m_document->find(before, cursor, flags);
+
+    int count = 0;
+    while (!cursor.isNull()) {
+        count++;
+        if (count == 0)
+            cursor.beginEditBlock();
+        else
+            cursor.joinPreviousEditBlock();
+        cursor.removeSelectedText();
+        cursor.insertText(after);
+        cursor.endEditBlock();
+        cursor = m_document->find(before, cursor, flags);
+    }
+
+    return count;
 }
 
 void TextFind::setDocument(QTextDocument *document)

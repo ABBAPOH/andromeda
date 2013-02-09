@@ -14,6 +14,7 @@ class TextFind : public GuiSystem::IFind
 public:
     explicit TextFind(QObject *parent = 0);
 
+    bool supportsReplace() const;
     FindFlags supportedFindFlags() const;
 
     void clearResults();
@@ -23,6 +24,9 @@ public:
 
     void findIncremental(const QString &text, FindFlags findFlags);
     void findStep(const QString &txt, FindFlags findFlags);
+    void replace(const QString &before, const QString &after, FindFlags findFlags);
+    bool replaceStep(const QString &before, const QString &after, FindFlags findFlags);
+    int replaceAll(const QString &before, const QString &after, FindFlags findFlags);
 
     void setDocument(QTextDocument *document);
 
