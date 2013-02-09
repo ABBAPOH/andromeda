@@ -313,6 +313,10 @@ void FindToolBar::setupConnections()
     connect(d->findNextAction, SIGNAL(triggered()), SLOT(findNext()));
 
     connect(d->closeAction, SIGNAL(triggered()), SLOT(close()));
+
+    connect(d->replaceButton, SIGNAL(clicked()), SLOT(replace()));
+    connect(d->replaceNextButton, SIGNAL(clicked()), SLOT(replaceNext()));
+    connect(d->replaceAllButton, SIGNAL(clicked()), SLOT(replaceAll()));
 }
 
 void FindToolBar::updateUi()
