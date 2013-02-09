@@ -17,10 +17,15 @@ Global
    * Added Image Viewer plugin
    * Added BinEditor plugin
    * Added PdfView plugin
+   * Added TextEditor plugin
    * FileManager moved to a separate library
    * Added support for network transparency to allow opening files via http
      (currently works only for ImageViewer)
    * Fix crash with opening in internal editor
+   * Update Portuguese and Russian translation.
+   * Add Czech translation by Pavel Fric.
+   * Fix bug with lost icons in Linux.
+   * Added Bookmarks and Filesystem dock windows.
 
 BinEditor plugin
 
@@ -36,11 +41,16 @@ FileManager plugin
    * Temporarily disable open keyboard modifiers.
    * Fix opening executable files in Linux.
    * Fix double opening files via "enter" shortcut.
-   * Move filemanager code to separate library.
+   * Moved filemanager code to separate library.
+   * Added correct word wrapping to FileItemDelegate.
+   * Higly improved treeview mode performance.
+   * Fix file model sorting in Windows.
 
 Image Viewer plugin
 
 PdfView plugin
+
+TextEditor plugin
 
 Hello World plugin
    * Added possibility to change text via context menu:)
