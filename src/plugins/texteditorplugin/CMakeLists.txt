@@ -4,12 +4,14 @@ set( HEADERS
     plaintextedit.h
     plaintexteditor.h
     texteditorplugin.h
+    textfind.h
    )
 set( SOURCES
     plaintextdocument.cpp
     plaintextedit.cpp
     plaintexteditor.cpp
     texteditorplugin.cpp
+    textfind.cpp
    )
 set( FORMS
    )

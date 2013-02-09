@@ -12,6 +12,7 @@ class QToolBar;
 namespace TextEditor {
 
 class PlainTextEdit;
+class TextFind;
 
 class PlainTextDocument;
 class TEXTEDITOR_EXPORT PlainTextEditor : public GuiSystem::AbstractEditor
@@ -24,9 +25,16 @@ public:
 
     void setDocument(GuiSystem::AbstractDocument *document);
 
+    GuiSystem::IFind *find() const;
+
+private slots:
+    void onCursorChanged();
+    void onFindCursorChanged();
+
 private:
     void setupUi();
 
+    TextFind *m_find;
     PlainTextEdit *m_editor;
     QString m_currentFile;
 };

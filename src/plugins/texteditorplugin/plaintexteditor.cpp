@@ -6,6 +6,7 @@
 
 #include "plaintextdocument.h"
 #include "plaintextedit.h"
+#include "textfind.h"
 
 using namespace GuiSystem;
 using namespace TextEditor;
@@ -18,13 +19,18 @@ using namespace TextEditor;
     Creates PlainTextEditor with the given \a parent.
 */
 PlainTextEditor::PlainTextEditor(QWidget *parent) :
-    AbstractEditor(*new PlainTextDocument, parent)
+    AbstractEditor(*new PlainTextDocument, parent),
+    m_find(new TextFind(this))
 {
     document()->setParent(this);
     setupUi();
 
+    connect(m_editor, SIGNAL(cursorPositionChanged()), SLOT(onCursorChanged()));
+    connect(m_find, SIGNAL(cursorChanged()), SLOT(onFindCursorChanged()));
+
     PlainTextDocument *doc = static_cast<PlainTextDocument *>(document());
     m_editor->setDocument(doc->textDocument());
+    m_find->setDocument(doc->textDocument());
 }
 
 void PlainTextEditor::setDocument(AbstractDocument *document)
@@ -34,8 +40,26 @@ void PlainTextEditor::setDocument(AbstractDocument *document)
         return;
 
     m_editor->setDocument(textEditorDocument->textDocument());
+    m_find->setDocument(textEditorDocument->textDocument());
 
     AbstractEditor::setDocument(document);
+}
+
+IFind * PlainTextEditor::find() const
+{
+    return m_find;
+}
+
+void PlainTextEditor::onCursorChanged()
+{
+    bool bs = m_find->blockSignals(true); // prevent unneseccary recursion (small speedup)
+    m_find->setTextCursor(m_editor->textCursor());
+    m_find->blockSignals(bs);
+}
+
+void PlainTextEditor::onFindCursorChanged()
+{
+    m_editor->setTextCursor(m_find->textCursor());
 }
 
 void PlainTextEditor::setupUi()
