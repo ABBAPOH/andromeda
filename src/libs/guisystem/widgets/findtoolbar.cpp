@@ -85,7 +85,7 @@ IFind::FindFlags FindToolBar::currentFlags() const
 
     if (d->caseSensitiveAction->isChecked())
         result |= IFind::FindCaseSensitively;
-    if (d->caseSensitiveAction->isChecked())
+    if (d->wholeWordAction->isChecked())
         result |= IFind::FindWholeWords;
     if (d->regularExpressionAction->isChecked())
         result |= IFind::FindRegularExpression;
