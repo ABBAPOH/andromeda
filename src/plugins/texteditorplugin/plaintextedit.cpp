@@ -90,6 +90,9 @@ void PlainTextEdit::createActions()
     actions[PlainTextEdit::ZoomOut]->setText(tr("Zoom Out"));
     actions[PlainTextEdit::ZoomOut]->setIcon(QIcon::fromTheme("zoom-out"));
     connect(actions[PlainTextEdit::ZoomOut], SIGNAL(triggered()), this, SLOT(zoomOut()));
+
+    for (PlainTextEdit::Action i = PlainTextEdit::Action(0); i < PlainTextEdit::ActionsCount; i++)
+        addAction(actions[i]);
 }
 
 void PlainTextEdit::zoomIn()

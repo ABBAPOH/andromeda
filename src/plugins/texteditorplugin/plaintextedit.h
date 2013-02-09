@@ -16,6 +16,7 @@ public:
     explicit PlainTextEdit(QWidget *parent = 0);
 
     enum Action {
+        NoAction = -1,
         New,
         Save,
         SaveAs,
