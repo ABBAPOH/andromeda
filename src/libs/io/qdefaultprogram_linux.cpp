@@ -21,12 +21,15 @@ static QString findDesktopFile(const QString &application)
     paths.append(QLatin1String("/usr/local/share/applications"));
     paths.append(QLatin1String("/usr/share/applications"));
 
-    QString relativePath = application;
-    relativePath.replace(QLatin1Char('-'), QLatin1Char('/'));
+    QStringList relativePaths;
+    relativePaths.append(application);
+    relativePaths.append(QString(application).replace(QLatin1Char('-'), QLatin1Char('/')));
     foreach (const QString &path, paths) {
-        QString filePath = path + QLatin1Char('/') + relativePath;
-        if (QFile::exists(filePath))
-            return filePath;
+        foreach (const QString &relativePath, relativePaths) {
+            QString filePath = path + QLatin1Char('/') + relativePath;
+            if (QFile::exists(filePath))
+                return filePath;
+        }
     }
 
     return QString();
@@ -61,14 +64,6 @@ static QStringList sortByWeight(const QStringList & programs)
     qSort(result.begin(), result.end(), LessThan);
     return result;
 }
-
-static void printMap(const QMap<QString, QStringList> &map)
-{
-    for (auto it = map.begin(); it != map.end(); it++) {
-        qDebug() << "    " << it.key() << it.value();
-    }
-}
-
 
 static QMap<QString, QStringList> getDefaultPrograms()
 {
@@ -120,10 +115,6 @@ static QMap<QString, QStringList> getDefaultPrograms()
         result.insert(key, sortByWeight(result.value(key)));
     }
 
-    qDebug() << "found default programs";
-    printMap(result);
-    qDebug() << "=====";
-
     QFileInfo info(dataHome() + QLatin1String("/applications/") + "mimeapps.list");
     if (!info.exists())
         return result;
@@ -158,11 +149,6 @@ static QMap<QString, QStringList> getDefaultPrograms()
         }
         result.insert(mimeType, apps);
     }
-
-    qDebug() << "programs after user overrides";
-    printMap(result);
-    qDebug() << "=====";
-
 
     return result;
 }
@@ -395,8 +381,6 @@ static QStringList expandExecString(QSettings &desktopFile, const QList<QUrl> &u
 
 static QStringList defaultPrograms(const QString &mimeTypeName)
 {
-    qDebug() << "defaultPrograms" << mimeTypeName;
-
     QMimeDatabase db;
 
     QMap<QString, QStringList> programs = getDefaultPrograms();
@@ -409,14 +393,10 @@ static QStringList defaultPrograms(const QString &mimeTypeName)
     QStringList result;
 
     foreach (const QString &mimeType, mimeTypes) {
-        QStringList programsList = programs.value(mimeType);
-        qDebug() << "programs for mime type:" << mimeType << programsList;
-        result.append(programsList);
+        result.append(programs.value(mimeType));
     }
 
     result.removeDuplicates();
-
-    qDebug() << "all programs:" << result;
 
     return result;
 }
@@ -442,6 +422,7 @@ static QString whereis(const QString &binaryName)
 QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
 {
     QString desktopFilePath = findDesktopFile(application);
+
     if (desktopFilePath.isEmpty())
         return QDefaultProgram();
 
@@ -508,7 +489,6 @@ bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &
 
 QStringList QDefaultProgram::defaultPrograms(const QUrl &url)
 {
-    qDebug() << "QDefaultProgram::defaultPrograms" << url;
     QMimeDatabase db;
     QMimeType mimeType = db.mimeTypeForUrl(url);
     return ::defaultPrograms(mimeType.name());
