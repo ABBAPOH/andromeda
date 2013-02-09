@@ -71,19 +71,40 @@ static QMap<QString, QStringList> getDefaultPrograms()
                "/usr/local/share/applications/" <<
                dataHome() + QLatin1String("/applications");
     foreach (const QString &folder, folders) {
-        QFileInfo info(folder + "/" + "mimeinfo.cache");
-        if (!info.exists())
-            continue;
+        QFileInfo info;
 
-        KDESettings mimeCache(info.absoluteFilePath());
-        mimeCache.beginGroup("MIME Cache");
+        info = QFileInfo(folder + "/" + "mimeinfo.cache");
+        if (info.exists()) {
+            KDESettings mimeCache(info.absoluteFilePath());
+            mimeCache.beginGroup("MIME Cache");
 
-        foreach (const QString &mimeType, mimeCache.allKeys()) {
-            QStringList list = result.value(mimeType);
-            list.append(mimeCache.value(mimeType).toStringList()); // join programs from all caches
-            list.removeAll(QString(""));
-            list.removeDuplicates();
-            result.insert(mimeType, list);
+            foreach (const QString &mimeType, mimeCache.allKeys()) {
+                QStringList list = result.value(mimeType);
+
+                list.append(mimeCache.value(mimeType).toStringList()); // join programs from all caches
+                list.removeAll(QString(""));
+                list.removeDuplicates();
+
+                result.insert(mimeType, list);
+            }
+        }
+
+        // read stupid gnome apps
+        info = QFileInfo(folder + "/" + "defaults.list");
+        if (info.exists()) {
+            KDESettings defaultsList(info.absoluteFilePath());
+
+            defaultsList.beginGroup("Default Applications");
+            foreach (const QString &mimeType, defaultsList.allKeys()) {
+                QStringList list = result.value(mimeType);
+
+                list.append(defaultsList.value(mimeType).toStringList());
+                list.removeAll(QString(""));
+                list.removeDuplicates();
+
+                result.insert(mimeType, list);
+            }
+            defaultsList.endGroup();
         }
     }
 
