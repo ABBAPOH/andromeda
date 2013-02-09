@@ -340,7 +340,6 @@ FileInfoDialog::FileInfoDialog(QWidget *parent) :
     setWindowFlags(Qt::Window);
 
     setMinimumSize(300, 400);
-    setMaximumWidth(300);
 }
 
 /*!
