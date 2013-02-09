@@ -62,6 +62,14 @@ static QStringList sortByWeight(const QStringList & programs)
     return result;
 }
 
+static void printMap(const QMap<QString, QStringList> &map)
+{
+    for (auto it = map.begin(); it != map.end(); it++) {
+        qDebug() << "    " << it.key() << it.value();
+    }
+}
+
+
 static QMap<QString, QStringList> getDefaultPrograms()
 {
     QMap<QString, QStringList> result;
@@ -112,6 +120,10 @@ static QMap<QString, QStringList> getDefaultPrograms()
         result.insert(key, sortByWeight(result.value(key)));
     }
 
+    qDebug() << "found default programs";
+    printMap(result);
+    qDebug() << "=====";
+
     QFileInfo info(dataHome() + QLatin1String("/applications/") + "mimeapps.list");
     if (!info.exists())
         return result;
@@ -146,6 +158,11 @@ static QMap<QString, QStringList> getDefaultPrograms()
         }
         result.insert(mimeType, apps);
     }
+
+    qDebug() << "programs after user overrides";
+    printMap(result);
+    qDebug() << "=====";
+
 
     return result;
 }
@@ -378,6 +395,8 @@ static QStringList expandExecString(QSettings &desktopFile, const QList<QUrl> &u
 
 static QStringList defaultPrograms(const QString &mimeTypeName)
 {
+    qDebug() << "defaultPrograms" << mimeTypeName;
+
     QMimeDatabase db;
 
     QMap<QString, QStringList> programs = getDefaultPrograms();
@@ -390,10 +409,14 @@ static QStringList defaultPrograms(const QString &mimeTypeName)
     QStringList result;
 
     foreach (const QString &mimeType, mimeTypes) {
-        result.append(programs.value(mimeType));
+        QStringList programsList = programs.value(mimeType);
+        qDebug() << "programs for mime type:" << mimeType << programsList;
+        result.append(programsList);
     }
 
     result.removeDuplicates();
+
+    qDebug() << "all programs:" << result;
 
     return result;
 }
@@ -485,6 +508,7 @@ bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &
 
 QStringList QDefaultProgram::defaultPrograms(const QUrl &url)
 {
+    qDebug() << "QDefaultProgram::defaultPrograms" << url;
     QMimeDatabase db;
     QMimeType mimeType = db.mimeTypeForUrl(url);
     return ::defaultPrograms(mimeType.name());
