@@ -6,6 +6,8 @@
 #include <QtWebKit/QWebSecurityOrigin>
 #endif
 
+#include <IO/QMimeDatabase>
+
 using namespace ExtensionSystem;
 using namespace Andromeda;
 
@@ -15,6 +17,9 @@ void preloadLibraries()
 #ifndef QT_WEBKIT_NOT_FOUND
     QStringList schemes = QWebSecurityOrigin::localSchemes(); // preloading WebKit
 #endif
+
+    QMimeDatabase db;
+    db.mimeTypeForName("application/octet-stream");
 }
 
 int main(int argc, char *argv[])
