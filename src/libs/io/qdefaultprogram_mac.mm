@@ -175,6 +175,12 @@ bool QDefaultProgram::setDefaultProgram(const QString &qtMimeType, const QString
 
 QStringList QDefaultProgram::defaultPrograms(const QUrl &qurl)
 {
+    QStringList result;
+
+    QString defaultProgram = QDefaultProgram::defaultProgram(qurl);
+    if (!defaultProgram.isEmpty())
+        result.append(defaultProgram);
+
     QString qUrlString = qurl.toString();
     CFStringRef urlString = CFStringCreateWithCharacters(kCFAllocatorDefault,
                                                          (const UniChar*)qUrlString.constData(),
@@ -183,14 +189,12 @@ QStringList QDefaultProgram::defaultPrograms(const QUrl &qurl)
     CFURLRef url = CFURLCreateWithString(kCFAllocatorDefault, urlString, 0);
     CFRelease(urlString);
     if (!url)
-        return QStringList();
+        return result;
 
     CFArrayRef applications = LSCopyApplicationURLsForURL(url, kLSRolesAll);
     CFRelease(url);
     if (!applications)
-        return QStringList();
-
-    QStringList result;
+        return result;
 
     CFIndex count = CFArrayGetCount(applications);
 

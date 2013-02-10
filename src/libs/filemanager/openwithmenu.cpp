@@ -24,33 +24,19 @@ QList<QUrl> OpenWithMenu::urls() const
     return m_urls;
 }
 
-static void getPrograms(const QUrl &url, QString &defaultId, QStringList &defaultIds)
+static QList<QDefaultProgram> getPrograms(const QList<QUrl> &urls)
 {
-    defaultId = QDefaultProgram::defaultProgram(url);
-    defaultIds = QDefaultProgram::defaultPrograms(url);
-}
-
-static void getPrograms(const QList<QUrl> &urls, QDefaultProgram &defaultProgram, QList<QDefaultProgram> &defaultPrograms)
-{
-    defaultProgram = QDefaultProgram();
-    defaultPrograms.clear();
-
     if (urls.isEmpty())
-        return;
+        return QList<QDefaultProgram>();
 
-    QString defaultId;
-    QStringList defaultIds;
-    getPrograms(urls.first(), defaultId, defaultIds);
+    QStringList defaultIds = QDefaultProgram::defaultPrograms(urls.first());
 
     QSet<QString> defaultIdsSet = QSet<QString>::fromList(defaultIds);
 
-    defaultIdsSet.remove(defaultId);
-
-    if (!defaultId.isEmpty())
-        defaultProgram = QDefaultProgram::progamInfo(defaultId);
-
     if (defaultIdsSet.isEmpty())
-        return;
+        return QList<QDefaultProgram>();
+
+    QList<QDefaultProgram> defaultPrograms;
 
     // Try to save same order as was in the original list for first url. Best we can do
     for (int i = 0; i < defaultIds.count(); i++) {
@@ -61,6 +47,8 @@ static void getPrograms(const QList<QUrl> &urls, QDefaultProgram &defaultProgram
                 defaultPrograms.append(info);
         }
     }
+
+    return defaultPrograms;
 }
 
 void OpenWithMenu::setUrls(const QList<QUrl> &urls)
@@ -73,8 +61,9 @@ void OpenWithMenu::setUrls(const QList<QUrl> &urls)
     clear();
 
     QDefaultProgram defaultProgram;
-    QList<QDefaultProgram> defaultPrograms;
-    getPrograms(urls, defaultProgram, defaultPrograms);
+    QList<QDefaultProgram> defaultPrograms = getPrograms(urls);
+    if (!defaultPrograms.isEmpty())
+        defaultProgram = defaultPrograms.takeFirst();
 
     if (defaultProgram.isValid()) {
         QAction *act = addAction(defaultProgram.icon(), tr("%1 (default)").arg(defaultProgram.name()));
