@@ -19,4 +19,10 @@ public:
     QString version;
 };
 
+class QDefaultProgramPrivate
+{
+public:
+    static void removeDuplicates(QDefaultProgramList &list);
+};
+
 #endif // QDEFAULTPROGRAM_P_H

@@ -14,6 +14,7 @@ set( HEADERS
     fileimageprovider.h
     kdesettings.h
     qdefaultprogram.h
+    qdefaultprogram_p.h
     qdrivecontroller.h
     qdrivecontroller_p.h
     qdriveinfo.h

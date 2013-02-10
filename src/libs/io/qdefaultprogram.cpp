@@ -3,6 +3,16 @@
 
 #include "qmimedatabase.h"
 
+void QDefaultProgramPrivate::removeDuplicates(QDefaultProgramList &list)
+{
+    QDefaultProgramList result;
+    foreach (const QDefaultProgram &program, list) {
+        if (!result.contains(program))
+            result.append(program);
+    }
+    qSwap(result, list);
+}
+
 QDefaultProgram::QDefaultProgram() :
     d(new QDefaultProgramData)
 {
@@ -76,6 +86,48 @@ QString QDefaultProgram::version() const
     return d->version;
 }
 
+bool QDefaultProgram::operator ==(const QDefaultProgram &other) const
+{
+#ifdef Q_OS_WIN // stupid windows
+    return d->path.compare(other.d->path, Qt::CaseInsensitive) == 0;
+#else
+    return d->path == other.d->path;
+#endif
+}
+
+static uint qHash(const QDefaultProgram &program)
+{
+    return qHash(program.path());
+}
+
+QDefaultProgramList QDefaultProgram::defaultPrograms(const QList<QUrl> &urls)
+{
+    if (urls.isEmpty())
+        return QList<QDefaultProgram>();
+
+    QList<QDefaultProgram> programs = QDefaultProgram::defaultPrograms(urls.first());
+
+    QSet<QDefaultProgram> programsSet = programs.toSet();
+
+
+    for (int i = 1; i < urls.count(); ++i) {
+        const QUrl &url = urls.at(i);
+
+        QList<QDefaultProgram> newPrograms = QDefaultProgram::defaultPrograms(url);
+        QSet<QDefaultProgram> newSet = newPrograms.toSet();
+        programsSet.intersect(newSet);
+    }
+
+    QList<QDefaultProgram> result;
+    for (int i = 0; i < programs.count(); ++i) {
+        const QDefaultProgram &program = programs.at(i);
+        if (programsSet.contains(program))
+            result.append(program);
+    }
+
+    return result;
+}
+
 QDebug operator<<(QDebug s, const QDefaultProgram &info)
 {
     s << "QDefaultProgram" << "(" <<
@@ -101,24 +153,29 @@ QDebug operator<<(QDebug s, const QDefaultProgram &info)
 /*!
   \brief Returns id of the default program that is capable to open given \a url.
 */
-QString QDefaultProgram::defaultProgram(const QUrl &url)
+QDefaultProgram QDefaultProgram::defaultProgram(const QUrl &url)
 {
-    QMimeDatabase db;
-    QMimeType mimeType = db.mimeTypeForUrl(url);
+    QDefaultProgramList programs = defaultPrograms(url);
+    if (programs.isEmpty())
+        return QDefaultProgram();
+    return programs.first();
 
-//    if (!mimeType.isValid())
-//        return;
+//    QMimeDatabase db;
+//    QMimeType mimeType = db.mimeTypeForUrl(url);
 
-//    QMimeType mt = mimeType;
-//    while (mt.isValid()) {
-//        qDebug() << mt.name();
-//        qDebug() << QDefaultProgram::defaultProgram(mt.name());
-//        if (mt.parentMimeTypes().isEmpty())
-//            break;
-//        mt = db.mimeTypeForName(mt.parentMimeTypes().first());
-//    }
+////    if (!mimeType.isValid())
+////        return;
 
-    return defaultProgram(mimeType.name());
+////    QMimeType mt = mimeType;
+////    while (mt.isValid()) {
+////        qDebug() << mt.name();
+////        qDebug() << QDefaultProgram::defaultProgram(mt.name());
+////        if (mt.parentMimeTypes().isEmpty())
+////            break;
+////        mt = db.mimeTypeForName(mt.parentMimeTypes().first());
+////    }
+
+//    return defaultProgram(mimeType.name());
 }
 
 /*!

@@ -11,6 +11,11 @@
 #include <QtCore/QDebug>
 #include <QtGui/QIcon>
 
+#define NO_DEFAULT_PROGRAM
+
+class QDefaultProgram;
+typedef QList<QDefaultProgram> QDefaultProgramList;
+
 class QDefaultProgramData;
 class IO_EXPORT QDefaultProgram
 {
@@ -31,18 +36,20 @@ public:
     QString path() const;
     QString version() const;
 
-    static QDefaultProgram progamInfo(const QString &application);
+    bool operator ==(const QDefaultProgram &other) const;
 
-    static QString defaultProgram(const QString &mimeType);
-    static QString defaultProgram(const QUrl &url);
+    static QDefaultProgram defaultProgram(const QUrl &url);
+#ifndef NO_DEFAULT_PROGRAM
+    static QDefaultProgram defaultProgram(const QString &mimeType);
     static bool setDefaultProgram(const QString &mimeType, const QString &program);
-//    static QStringList defaultPrograms(const QString &mimeType); // deprecated
-    static QStringList defaultPrograms(const QUrl &url);
+#endif
+    static QDefaultProgramList defaultPrograms(const QUrl &url);
+    static QDefaultProgramList defaultPrograms(const QList<QUrl> &urls);
 
-    static bool openUrlWith(const QUrl &url, const QString &application);
-    static bool openUrlsWith(const QList<QUrl> &urls, const QString &application);
+    bool openUrl(const QUrl &url) const;
+    bool openUrls(const QList<QUrl> &urls) const;
 
-protected:
+public:
     explicit QDefaultProgram(const QDefaultProgramData &data);
 
 private:

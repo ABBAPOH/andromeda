@@ -12,18 +12,6 @@
 
 #include "qmimedatabase.h"
 
-static CFStringRef copyBundleUrl(CFStringRef bundle)
-{
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSString *string = [[NSWorkspace
-            sharedWorkspace]
-            absolutePathForAppBundleWithIdentifier:(NSString*)bundle];
-
-    CFStringRef result = string ? CFStringCreateCopy(kCFAllocatorDefault, (CFStringRef)string) : 0;
-    [pool release];
-    return (CFStringRef)result;
-}
-
 static QString getQString(CFStringRef string)
 {
     if (!string)
@@ -38,6 +26,87 @@ static QString getQString(CFStringRef string)
     return result;
 }
 
+static QDefaultProgram progamInfo(CFBundleRef bundle)
+{
+    CFURLRef url = CFBundleCopyBundleURL(bundle);
+    CFStringRef cfPath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+    CFRelease(url);
+    QString path = getQString(cfPath);
+    CFRelease(cfPath);
+
+    CFStringRef identifier = CFBundleGetIdentifier(bundle);
+    CFStringRef copyright = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleGetInfoString"));
+    CFStringRef name = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleDisplayName"));
+    CFStringRef version = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleShortVersionString"));
+//    CFStringRef icon = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleIconFile"));
+
+    QFileInfo info(path);
+
+    QDefaultProgramData data;
+    data.comment = QString();
+    data.copyright = getQString(copyright);
+    data.genericName = QString();
+    data.path = info.absoluteFilePath();
+    // we can't use QIcon because it doesn't supports .icns format
+    data.icon = QFileIconProvider().icon(info);
+//    data.icon = QIcon(data.path + "/Contents/Resources/" + getQString(icon));
+    data.identifier = getQString(identifier);
+    data.name = getQString(name);
+    if (data.name.isEmpty())
+        data.name = info.baseName();
+    data.version = getQString(version);
+
+    if (data.path.isEmpty())
+        return QDefaultProgram();
+
+    return QDefaultProgram(data);
+}
+
+// deprecated
+#if 0
+static CFStringRef copyBundleUrl(CFStringRef bundle)
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSString *string = [[NSWorkspace
+            sharedWorkspace]
+            absolutePathForAppBundleWithIdentifier:(NSString*)bundle];
+
+    CFStringRef result = string ? CFStringCreateCopy(kCFAllocatorDefault, (CFStringRef)string) : 0;
+    [pool release];
+    return (CFStringRef)result;
+}
+
+QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
+{
+    CFStringRef id = CFStringCreateWithCharacters(kCFAllocatorDefault,
+                                                  (const UniChar*)application.constData(),
+                                                  application.length());
+    CFStringRef path = copyBundleUrl(id);
+    CFRelease(id);
+    if (!path)
+        return QDefaultProgram();
+
+    CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
+                                                 path,
+                                                 kCFURLPOSIXPathStyle,
+                                                 true);
+    CFRelease(path);
+
+    if (!url)
+        return QDefaultProgram();
+
+    CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, url);
+    CFRelease(url);
+    if (!bundle)
+        return QDefaultProgram();
+
+    QDefaultProgram result = ::progamInfo(bundle);
+    CFRelease(bundle);
+    return result;
+}
+#endif
+
+#ifndef NO_DEFAULT_PROGRAM
 static QString defaultProgramForExtension(const QString &qtExtension)
 {
     QString result;
@@ -65,80 +134,12 @@ static QString defaultProgramForExtension(const QString &qtExtension)
     return result;
 }
 
-static QString applicationPath(const QString &application)
+QDefaultProgram QDefaultProgram::defaultProgram(const QString &qtMimeType)
 {
-    CFStringRef handler = CFStringCreateWithCString(kCFAllocatorDefault,
-                                                    application.toUtf8().constData(),
-                                                    kCFStringEncodingUTF8);
-    CFStringRef appPath = copyBundleUrl(handler);
-    if (!appPath) {
-        CFRelease(handler);
-        return QString();
-    }
-
-    QString result = getQString(appPath);
-    CFRelease(appPath);
-    CFRelease(handler);
-    return result;
-}
-
-QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
-{
-    CFStringRef id = CFStringCreateWithCharacters(kCFAllocatorDefault,
-                                                  (const UniChar*)application.constData(),
-                                                  application.length());
-    CFStringRef path = copyBundleUrl(id);
-    CFRelease(id);
-    if (!path)
-        return QDefaultProgram();
-
-    CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                                 path,
-                                                 kCFURLPOSIXPathStyle,
-                                                 true);
-    QFileInfo info(getQString(path));
-    CFRelease(path);
-
-    if (!url)
-        return QDefaultProgram();
-
-    CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, url);
-    CFRelease(url);
-    if (!bundle)
-        return QDefaultProgram();
-
-    CFStringRef copyright = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleGetInfoString"));
-    CFStringRef name = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleDisplayName"));
-    CFStringRef version = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleShortVersionString"));
-//    CFStringRef icon = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleIconFile"));
-
-    QDefaultProgramData data;
-    data.comment = QString();
-    data.copyright = getQString(copyright);
-    data.genericName = QString();
-    data.path = info.filePath();
-    // we can't use QIcon because it doesn't supports .icns format
-    data.icon = QFileIconProvider().icon(info);
-//    data.icon = QIcon(data.path + "/Contents/Resources/" + getQString(icon));
-    data.identifier = application;
-    data.name = getQString(name);
-    if (data.name.isEmpty())
-        data.name = info.baseName();
-    data.version = getQString(version);
-
-    CFRelease(bundle);
-
-    if (data.path.isEmpty())
-        return QDefaultProgram();
-
-    return QDefaultProgram(data);
-}
-
-QString QDefaultProgram::defaultProgram(const QString &qtMimeType)
-{
+    // TODO: use LSCopyApplicationForMIMEType
     QMimeDatabase db;
     QString extension = db.mimeTypeForName(qtMimeType).preferredSuffix();
-    return defaultProgramForExtension(extension);
+    return progamInfo(defaultProgramForExtension(extension));
 }
 
 bool QDefaultProgram::setDefaultProgram(const QString &qtMimeType, const QString &program)
@@ -172,15 +173,10 @@ bool QDefaultProgram::setDefaultProgram(const QString &qtMimeType, const QString
 
     return result == noErr;
 }
+#endif
 
-QStringList QDefaultProgram::defaultPrograms(const QUrl &qurl)
+QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &qurl)
 {
-    QStringList result;
-
-    QString defaultProgram = QDefaultProgram::defaultProgram(qurl);
-    if (!defaultProgram.isEmpty())
-        result.append(defaultProgram);
-
     QString qUrlString = qurl.toString();
     CFStringRef urlString = CFStringCreateWithCharacters(kCFAllocatorDefault,
                                                          (const UniChar*)qUrlString.constData(),
@@ -189,7 +185,26 @@ QStringList QDefaultProgram::defaultPrograms(const QUrl &qurl)
     CFURLRef url = CFURLCreateWithString(kCFAllocatorDefault, urlString, 0);
     CFRelease(urlString);
     if (!url)
-        return result;
+        return QDefaultProgramList();
+
+    QDefaultProgramList result;
+
+    // TODO: move to separate method?
+    // get the default application
+    CFURLRef defaultApp;
+    LSGetApplicationForURL((CFURLRef)url, kLSRolesAll, NULL, &defaultApp);
+    if (defaultApp) {
+        CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, defaultApp);
+        if (bundle) {
+
+            QDefaultProgram program = ::progamInfo(bundle);
+            if (program.isValid())
+                result.append(program);
+
+            CFRelease(bundle);
+        }
+        CFRelease(defaultApp);
+    }
 
     CFArrayRef applications = LSCopyApplicationURLsForURL(url, kLSRolesAll);
     CFRelease(url);
@@ -200,28 +215,27 @@ QStringList QDefaultProgram::defaultPrograms(const QUrl &qurl)
 
     for (CFIndex index = 0; index < count; index++) {
         CFURLRef url = (CFURLRef)CFArrayGetValueAtIndex(applications, index);
-        CFShow(url);
 
         CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, url);
         if (!bundle)
             continue;
 
-        CFStringRef bundleId = CFBundleGetIdentifier(bundle);
-        if (bundleId) {
-            result.append(getQString(bundleId).toLower());
-        }
+        QDefaultProgram program = ::progamInfo(bundle);
+        if (program.isValid())
+            result.append(program);
 
         CFRelease(bundle);
     }
 
     CFRelease(applications);
 
-    result.removeDuplicates();
+    // TODO: filter by name & version, but not path?
+    QDefaultProgramPrivate::removeDuplicates(result);
 
     return result;
 }
 
-bool QDefaultProgram::openUrlWith(const QUrl &qurl, const QString &application)
+bool QDefaultProgram::openUrl(const QUrl &qurl) const
 {
     QString qUrlString = qurl.toString();
 
@@ -243,7 +257,7 @@ bool QDefaultProgram::openUrlWith(const QUrl &qurl, const QString &application)
 
     OSStatus result;
     FSRef fs;
-    result = FSPathMakeRef((const UInt8*)applicationPath(application).toUtf8().constData(), &fs, 0);
+    result = FSPathMakeRef((const UInt8*)path().toUtf8().constData(), &fs, 0);
     if (result != noErr) {
         CFRelease(urls);
         CFRelease(url);
@@ -266,11 +280,11 @@ bool QDefaultProgram::openUrlWith(const QUrl &qurl, const QString &application)
     return result == noErr;
 }
 
-bool QDefaultProgram::openUrlsWith(const QList<QUrl> &urls, const QString &application)
+bool QDefaultProgram::openUrls(const QList<QUrl> &urls) const
 {
     bool result = true;
     foreach (const QUrl &url, urls) {
-        result &= openUrlWith(url, application);
+        result &= openUrl(url);
     }
     return result;
 }

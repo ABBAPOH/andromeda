@@ -255,7 +255,7 @@ static QString urlToString(const QUrl &url)
     return url.toString();
 }
 
-QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
+static QDefaultProgram progamInfo(const QString &application)
 {
     QDefaultProgramData data;
 
@@ -275,25 +275,20 @@ QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
     return QDefaultProgram(data);
 }
 
-QString QDefaultProgram::defaultProgram(const QString &mimeType)
+#ifndef NO_DEFAULT_PROGRAM
+QDefaultProgram QDefaultProgram::defaultProgram(const QString &mimeType)
 {
     QMimeDatabase db;
 
     QString extension = QLatin1String(".") + db.mimeTypeForName(mimeType).preferredSuffix();
     if (extension == QLatin1String("."))
-        return QString();
+        return QDefaultProgram();
 
     QString result = getDefaultProgram(extension);
-    if (!result.isEmpty())
-        return result;
+    if (result.isEmpty())
+        return QDefaultProgram();
 
-    // TODO: try detect from extension in HCLR?
-
-    QStringList list = defaultPrograms(mimeType);
-    if (!list.isEmpty())
-        return list.first();
-
-    return QString();
+    return progamInfo(result);
 }
 
 bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &program)
@@ -306,23 +301,33 @@ bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &
 
     return ::setDefaultProgram(extension, program);
 }
+#endif
 
-QStringList QDefaultProgram::defaultPrograms(const QUrl &url)
+QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &url)
 {
     QFileInfo info(url.path());
     QString extension = QLatin1Char('.') + info.suffix();
 
-    QStringList result;
-    result.append(getExplorerDefaultPrograms(extension));
-    result.append(getExtensionDefaultPrograms(extension));
-    result.removeDuplicates();
+    QStringList ids;
+    ids.append(getExplorerDefaultPrograms(extension));
+    ids.append(getExtensionDefaultPrograms(extension));
+    ids.removeDuplicates();
 
-    return removeDuplicates(result);
+    QDefaultProgramList result;
+    foreach (const QString &id, ids) {
+        QDefaultProgram program = progamInfo(id);
+        if (program.isValid())
+            result.append(program);
+    }
+
+    QDefaultProgramPrivate::removeDuplicates(result);
+
+    return result;
 }
 
-bool QDefaultProgram::openUrlWith(const QUrl &url, const QString &application)
+bool QDefaultProgram::openUrl(const QUrl &url) const
 {
-    QString command = getAppOpenCommand(application);
+    QString command = getAppOpenCommand(identifier());
     QStringList arguments = splitCommand(command);
     for (int i = 0; i < arguments.count(); i++) {
         if (arguments[i] == QLatin1String("%1"))
@@ -341,11 +346,11 @@ bool QDefaultProgram::openUrlWith(const QUrl &url, const QString &application)
     return QProcess::startDetached(arguments.first(), arguments.mid(1));
 }
 
-bool QDefaultProgram::openUrlsWith(const QList<QUrl> &urls, const QString &application)
+bool QDefaultProgram::openUrls(const QList<QUrl> &urls) const
 {
     bool result = true;
     foreach (const QUrl &url, urls) {
-        result &= openUrlWith(url, application);
+        result &= openUrl(url);
     }
     return result;
 }

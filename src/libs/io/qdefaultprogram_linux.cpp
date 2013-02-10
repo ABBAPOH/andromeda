@@ -14,6 +14,27 @@
 
 //#include <QDebug>
 
+struct DesktopEntry
+{
+    DesktopEntry() {}
+
+    bool read(const QString &application);
+    QDefaultProgram toDefaultProgram() const;
+
+    QString comment;
+    QString copyright;
+    QString genericName;
+    QIcon icon;
+    QString identifier;
+    QString name;
+    QString path;
+    QString version;
+
+    int weight;
+};
+
+typedef QList<DesktopEntry *> DesktopEntryList;
+
 static QString findDesktopFile(const QString &application)
 {
     QStringList paths;
@@ -35,121 +56,157 @@ static QString findDesktopFile(const QString &application)
     return QString();
 }
 
-static bool LessThan(const QString s1, const QString s2)
+static QStringList getApplicationFolders()
 {
-    int w1 = 0, w2 = 0;
-
-    QString file;
-    file = findDesktopFile(s1);
-    if (!file.isEmpty()) {
-        KDESettings s(file);
-        s.beginGroup("Desktop Entry");
-        w1 = s.value("InitialPreference", 5).toInt();
-    }
-
-    file = findDesktopFile(s2);
-    if (!file.isEmpty()) {
-        KDESettings s(file);
-        s.beginGroup("Desktop Entry");
-        w2 = s.value("InitialPreference", 5).toInt();
-    }
-
-    return w1 >= w2;
+    return { "/usr/share/applications/",
+            "/usr/local/share/applications/",
+            dataHome() + "/applications" };
 }
 
-// TODO : speedup this hell
-static QStringList sortByWeight(const QStringList & programs)
+static DesktopEntry *getEntry(QHash<QString, DesktopEntry *> &entryMap, const QString &app)
 {
-    QStringList result = programs;
-    qSort(result.begin(), result.end(), LessThan);
-    return result;
+    if (app.isEmpty())
+        return 0;
+
+    DesktopEntry *entry = entryMap.value(app);
+    if (!entry) {
+        entry = new DesktopEntry;
+        if (entry->read(app)) {
+            entryMap.insert(app, entry);
+        } else {
+            delete entry;
+            entry = 0;
+        }
+    }
+    return entry;
 }
 
-static QMap<QString, QStringList> getDefaultPrograms()
+static void readCacheFile(QHash<QString, DesktopEntry *> &entryMap,
+                          QHash<QString, DesktopEntryList> &mimeTypeMap,
+                          const QStringList &mimeTypes,
+                          const QString &file,
+                          const QString &defaultGroup)
 {
-    QMap<QString, QStringList> result;
-    QStringList folders;
+    QFileInfo info(file);
 
-    folders << "/usr/share/applications/" <<
-               "/usr/local/share/applications/" <<
-               dataHome() + QLatin1String("/applications");
-    foreach (const QString &folder, folders) {
-        QFileInfo info;
-
-        info = QFileInfo(folder + "/" + "mimeinfo.cache");
-        if (info.exists()) {
-            KDESettings mimeCache(info.absoluteFilePath());
-            mimeCache.beginGroup("MIME Cache");
-
-            foreach (const QString &mimeType, mimeCache.allKeys()) {
-                QStringList list = result.value(mimeType);
-
-                list.append(mimeCache.value(mimeType).toStringList()); // join programs from all caches
-                list.removeAll(QString(""));
-                list.removeDuplicates();
-
-                result.insert(mimeType, list);
-            }
-        }
-
-        // read stupid gnome apps
-        info = QFileInfo(folder + "/" + "defaults.list");
-        if (info.exists()) {
-            KDESettings defaultsList(info.absoluteFilePath());
-
-            defaultsList.beginGroup("Default Applications");
-            foreach (const QString &mimeType, defaultsList.allKeys()) {
-                QStringList list = result.value(mimeType);
-
-                list.append(defaultsList.value(mimeType).toStringList());
-                list.removeAll(QString(""));
-                list.removeDuplicates();
-
-                result.insert(mimeType, list);
-            }
-            defaultsList.endGroup();
-        }
-    }
-
-    foreach (const QString &key, result.keys()) {
-        result.insert(key, sortByWeight(result.value(key)));
-    }
-
-    QFileInfo info(dataHome() + QLatin1String("/applications/") + "mimeapps.list");
     if (!info.exists())
-        return result;
+        return;
+
+    KDESettings mimeCache(info.absoluteFilePath());
+    mimeCache.beginGroup(defaultGroup);
+
+    foreach (const QString &mimeType, mimeTypes) {
+        DesktopEntryList list = mimeTypeMap.value(mimeType);
+
+        QStringList apps = mimeCache.value(mimeType).toStringList();
+
+        foreach (const QString &app, apps) {
+            DesktopEntry *entry = getEntry(entryMap, app);
+            if (!entry)
+                continue;
+
+            if (!list.contains(entry))
+                list.append(entry);
+        }
+
+        mimeTypeMap.insert(mimeType, list);
+    }
+}
+
+static void readMimeAppsFile(QHash<QString, DesktopEntry *> &entryMap,
+                             QHash<QString, DesktopEntryList> &mimeTypeMap,
+                             const QStringList &mimeTypes,
+                             const QString &file)
+{
+    QFileInfo info(file);
+    if (!info.exists())
+        return;
 
     KDESettings mimeApps(info.absoluteFilePath());
+    // should be prepended to sorted list
     mimeApps.beginGroup("Added Associations");
 
-    foreach (const QString &mimeType, mimeApps.allKeys()) {
-        QStringList list = mimeApps.value(mimeType).toStringList();
-        list.removeAll(QString(""));
-        result.insert(mimeType, list);
-    }
+    foreach (const QString &mimeType, mimeTypes) {
+        DesktopEntryList list = mimeTypeMap.value(mimeType);
 
-    mimeApps.endGroup();
+        QStringList apps = mimeApps.value(mimeType).toStringList();
 
-    mimeApps.beginGroup("Default Applications");
+        DesktopEntryList newList;
 
-    foreach (const QString &mimeType, mimeApps.allKeys()) {
-        QStringList list = mimeApps.value(mimeType).toStringList();
-        list.removeAll(QString(""));
-        result.insert(mimeType, list);
-    }
+        foreach (const QString &app, apps) {
+            DesktopEntry *entry = getEntry(entryMap, app);
+            if (!entry)
+                continue;
 
-    mimeApps.endGroup();
-
-    mimeApps.beginGroup("Removed Associations");
-    foreach (const QString &mimeType, mimeApps.allKeys()) {
-        QStringList apps = result.value(mimeType);
-        QStringList removedApps = mimeApps.value(mimeType).toStringList();
-        foreach (const QString &app, removedApps) {
-            apps.removeAll(app);
+            list.removeOne(entry);
+            newList.append(entry);
         }
-        result.insert(mimeType, apps);
+
+        newList.append(list);
+        mimeTypeMap.insert(mimeType, newList);
     }
 
+    mimeApps.endGroup();
+
+    // entries should be removed from mime type map
+    mimeApps.beginGroup("Removed Associations");
+    foreach (const QString &mimeType, mimeTypes) {
+        DesktopEntryList list = mimeTypeMap.value(mimeType);
+
+        QStringList apps = mimeApps.value(mimeType).toStringList();
+
+        foreach (const QString &app, apps) {
+            DesktopEntry *entry = getEntry(entryMap, app);
+            if (!entry)
+                continue;
+
+            list.removeOne(entry);
+        }
+
+        mimeTypeMap.insert(mimeType, list);
+    }
+
+}
+
+static QList<QDefaultProgram> programs(const QStringList &mimeTypes)
+{
+    QHash<QString, DesktopEntry *> entryMap;
+    QHash<QString, DesktopEntryList> mimeTypeMap;
+
+    QStringList folders = getApplicationFolders();
+
+    foreach (const QString &folder, folders) {
+        readCacheFile(entryMap,
+                      mimeTypeMap,
+                      mimeTypes,
+                      folder + "/" + "mimeinfo.cache",
+                      "MIME Cache");
+
+        readCacheFile(entryMap,
+                      mimeTypeMap,
+                      mimeTypes,
+                      folder + "/" + "defaults.list",
+                      "Default Applications");
+    }
+
+    // now we should sort map using weight
+    foreach (const QString &key, mimeTypeMap.keys()) {
+        DesktopEntryList &entries = mimeTypeMap[key];
+        auto lessThan = [](DesktopEntry *a, DesktopEntry *b) {
+            return a->weight >= b->weight;
+        };
+        qSort(entries.begin(), entries.end(), lessThan);
+    }
+
+    const QString userAppsFile = dataHome() + QLatin1String("/applications/") + "mimeapps.list";
+    readMimeAppsFile(entryMap, mimeTypeMap, mimeTypes, userAppsFile);
+
+    QList<QDefaultProgram> result;
+    foreach (const QString &mimeType, mimeTypes) {
+        foreach (DesktopEntry *entry, mimeTypeMap.value(mimeType)) {
+            result.append(entry->toDefaultProgram());
+        }
+    }
     return result;
 }
 
@@ -379,26 +436,16 @@ static QStringList expandExecString(QSettings &desktopFile, const QList<QUrl> &u
     return result;
 }
 
-static QStringList defaultPrograms(const QString &mimeTypeName)
+static QList<QDefaultProgram> programs(const QMimeType &mimeType)
 {
-    QMimeDatabase db;
-
-    QMap<QString, QStringList> programs = getDefaultPrograms();
-
     QStringList mimeTypes;
-    QMimeType mimeType = db.mimeTypeForName(mimeTypeName);
+
     mimeTypes.append(mimeType.name());
+    // TODO: correctly add aliases
+//    mimeTypes.append(mimeType.aliases());
     mimeTypes.append(mimeType.allAncestors());
 
-    QStringList result;
-
-    foreach (const QString &mimeType, mimeTypes) {
-        result.append(programs.value(mimeType));
-    }
-
-    result.removeDuplicates();
-
-    return result;
+    return programs(mimeTypes);
 }
 
 static QString whereis(const QString &binaryName)
@@ -419,7 +466,9 @@ static QString whereis(const QString &binaryName)
     return QString();
 }
 
-QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
+// deprecated
+#if 0
+static QDefaultProgram progamInfo(const QString &application)
 {
     QString desktopFilePath = findDesktopFile(application);
 
@@ -448,14 +497,63 @@ QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
 
     return QDefaultProgram(data);
 }
+#endif
 
-QString QDefaultProgram::defaultProgram(const QString &mimeType)
+bool DesktopEntry::read(const QString &application)
+{
+    QString desktopFilePath = findDesktopFile(application);
+
+    if (desktopFilePath.isEmpty())
+        return false;
+
+    KDESettings desktopFile(desktopFilePath);
+    desktopFile.beginGroup("Desktop Entry");
+
+    if (desktopFile.status() != QSettings::NoError)
+        return false;
+
+    DesktopEntry &data = *this;
+
+    QStringList args = parseCombinedArgString(desktopFile.value("Exec").toString());
+    QString binaryName = !args.isEmpty() ? args.first() : QString();
+
+    data.comment = localizedValue(desktopFile, "Comment").toString();
+    data.copyright = QString();
+    data.genericName = localizedValue(desktopFile, "GenericName").toString();
+    data.icon = QIcon::fromTheme(desktopFile.value("Icon").toString(), QIcon());
+    data.identifier = application;
+    data.name = localizedValue(desktopFile, "Name").toString();
+    data.path = whereis(binaryName);
+    data.version = desktopFile.value("Version").toString();
+    data.weight = desktopFile.value("InitialPreference", 5).toInt();
+
+    return true;
+}
+
+QDefaultProgram DesktopEntry::toDefaultProgram() const
+{
+    QDefaultProgramData data;
+
+    data.comment = comment;
+    data.copyright = copyright;
+    data.genericName = genericName;
+    data.icon = icon;
+    data.identifier = identifier;
+    data.name = name;
+    data.path = path;
+    data.version = version;
+
+    return QDefaultProgram(data);
+}
+
+#ifndef NO_DEFAULT_PROGRAM
+QDefaultProgram QDefaultProgram::defaultProgram(const QString &mimeType)
 {
     QStringList programs = ::defaultPrograms(mimeType);
     if (programs.isEmpty())
-        return QString();
+        return QDefaultProgram();
 
-    return programs.first();
+    return progamInfo(programs.first());
 }
 
 bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &program)
@@ -486,25 +584,27 @@ bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &
 
     return mimeApps.status() == QSettings::NoError;
 }
+#endif
 
-QStringList QDefaultProgram::defaultPrograms(const QUrl &url)
+QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &url)
 {
     QMimeDatabase db;
     QMimeType mimeType = db.mimeTypeForUrl(url);
-    return ::defaultPrograms(mimeType.name());
+
+    return programs(mimeType);
 }
 
-bool QDefaultProgram::openUrlWith(const QUrl &url, const QString &application)
+bool QDefaultProgram::openUrl(const QUrl &url) const
 {
-    return openUrlsWith(QList<QUrl>() << url, application);
+    return openUrls(QList<QUrl>() << url);
 }
 
-bool QDefaultProgram::openUrlsWith(const QList<QUrl> &urls, const QString &application)
+bool QDefaultProgram::openUrls(const QList<QUrl> &urls) const
 {
     if (urls.isEmpty())
         return false;
 
-    QString filePath = findDesktopFile(application);
+    QString filePath = path();
     if (filePath.isEmpty())
         return false;
 

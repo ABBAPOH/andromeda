@@ -7,6 +7,8 @@
 
 #include <QtGui/QMenu>
 
+#include <IO/QDefaultProgram>
+
 class FILEMANAGER_EXPORT OpenWithMenu : public QMenu
 {
     Q_OBJECT
@@ -29,6 +31,7 @@ private slots:
 
 private:
     QList<QUrl> m_urls;
+    QDefaultProgramList m_programs;
 };
 
 #endif // OPENWITHMENU_H
