@@ -1,38 +1,38 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/
+** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** GNU Lesser General Public License Usage
-** This file may be used under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation and
-** appearing in the file LICENSE.LGPL included in the packaging of this
-** file. Please review the following information to ensure the GNU Lesser
-** General Public License version 2.1 requirements will be met:
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
-** In addition, as a special exception, Nokia gives you certain additional
-** rights. These rights are described in the Nokia Qt LGPL Exception
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU Lesser General Public License version 2.1 requirements
+** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU General
-** Public License version 3.0 as published by the Free Software Foundation
-** and appearing in the file LICENSE.GPL included in the packaging of this
-** file. Please review the following information to ensure the GNU General
-** Public License version 3.0 requirements will be met:
-** http://www.gnu.org/copyleft/gpl.html.
-**
-** Other Usage
-** Alternatively, this file may be used in accordance with the terms and
-** conditions contained in a signed written agreement between you and Nokia.
-**
-**
-**
-**
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
 **
 **
 ** $QT_END_LICENSE$
@@ -54,15 +54,8 @@
 
 QT_BEGIN_NAMESPACE
 
-bool qt_isQMimeTypeDebuggingActivated (false);
-
-#ifndef QT_NO_DEBUG_OUTPUT
-#define DBG() if (qt_isQMimeTypeDebuggingActivated) qDebug() << static_cast<const void *>(this) << Q_FUNC_INFO
-#else
-#define DBG() if (0) qDebug() << static_cast<const void *>(this) << Q_FUNC_INFO
-#endif
-
 QMimeTypePrivate::QMimeTypePrivate()
+    : loaded(false)
 {}
 
 QMimeTypePrivate::QMimeTypePrivate(const QMimeType &other)
@@ -70,7 +63,8 @@ QMimeTypePrivate::QMimeTypePrivate(const QMimeType &other)
         localeComments(other.d->localeComments),
         genericIconName(other.d->genericIconName),
         iconName(other.d->iconName),
-        globPatterns(other.d->globPatterns)
+        globPatterns(other.d->globPatterns),
+        loaded(other.d->loaded)
 {}
 
 void QMimeTypePrivate::clear()
@@ -80,30 +74,7 @@ void QMimeTypePrivate::clear()
     genericIconName.clear();
     iconName.clear();
     globPatterns.clear();
-}
-
-/*!
-    \fn bool QMimeTypePrivate::operator==(const QMimeTypePrivate &other) const;
-    Returns true if \a other equals this QMimeTypePrivate object, otherwise returns false.
- */
-bool QMimeTypePrivate::operator==(const QMimeTypePrivate &other) const
-{
-    DBG();
-    if (name == other.name &&
-            localeComments == other.localeComments &&
-            genericIconName == other.genericIconName &&
-            iconName == other.iconName &&
-            globPatterns == other.globPatterns) {
-        return true;
-    }
-
-    DBG() << name << other.name << (name == other.name);
-    //DBG() << comment << other.comment << (comment == other.comment);
-    DBG() << localeComments << other.localeComments << (localeComments == other.localeComments);
-    DBG() << genericIconName << other.genericIconName << (genericIconName == other.genericIconName);
-    DBG() << iconName << other.iconName << (iconName == other.iconName);
-    DBG() << globPatterns << other.globPatterns << (globPatterns == other.globPatterns);
-    return false;
+    loaded = false;
 }
 
 void QMimeTypePrivate::addGlobPattern(const QString &pattern)
@@ -113,6 +84,8 @@ void QMimeTypePrivate::addGlobPattern(const QString &pattern)
 
 /*!
     \class QMimeType
+    \inmodule QtCore
+    \ingroup shared
     \brief The QMimeType class describes types of file or data, represented by a MIME type string.
 
     \since 5.0
@@ -142,14 +115,6 @@ void QMimeTypePrivate::addGlobPattern(const QString &pattern)
 QMimeType::QMimeType() :
         d(new QMimeTypePrivate())
 {
-    DBG() << "name():" << name();
-    //DBG() << "aliases():" << aliases();
-    //DBG() << "comment():" << comment();
-    DBG() << "genericIconName():" << genericIconName();
-    DBG() << "iconName():" << iconName();
-    DBG() << "globPatterns():" << globPatterns();
-    DBG() << "suffixes():" << suffixes();
-    DBG() << "preferredSuffix():" << preferredSuffix();
 }
 
 /*!
@@ -159,14 +124,6 @@ QMimeType::QMimeType() :
 QMimeType::QMimeType(const QMimeType &other) :
         d(other.d)
 {
-    DBG() << "name():" << name();
-    //DBG() << "aliases():" << aliases();
-    //DBG() << "comment():" << comment();
-    DBG() << "genericIconName():" << genericIconName();
-    DBG() << "iconName():" << iconName();
-    DBG() << "globPatterns():" << globPatterns();
-    DBG() << "suffixes():" << suffixes();
-    DBG() << "preferredSuffix():" << preferredSuffix();
 }
 
 /*!
@@ -183,18 +140,11 @@ QMimeType &QMimeType::operator=(const QMimeType &other)
 /*!
     \fn QMimeType::QMimeType(const QMimeTypePrivate &dd);
     Assigns the data of the QMimeTypePrivate \a dd to this QMimeType object, and returns a reference to this object.
+    \internal
  */
 QMimeType::QMimeType(const QMimeTypePrivate &dd) :
         d(new QMimeTypePrivate(dd))
 {
-    DBG() << "name():" << name();
-    //DBG() << "aliases():" << aliases();
-    //DBG() << "comment():" << comment();
-    DBG() << "genericIconName():" << genericIconName();
-    DBG() << "iconName():" << iconName();
-    DBG() << "globPatterns():" << globPatterns();
-    DBG() << "suffixes():" << suffixes();
-    DBG() << "preferredSuffix():" << preferredSuffix();
 }
 
 /*!
@@ -215,23 +165,17 @@ QMimeType::QMimeType(const QMimeTypePrivate &dd) :
  */
 QMimeType::~QMimeType()
 {
-    DBG() << "name():" << name();
-    //DBG() << "aliases():" << aliases();
-    //DBG() << "comment():" << comment();
-    DBG() << "genericIconName():" << genericIconName();
-    DBG() << "iconName():" << iconName();
-    DBG() << "globPatterns():" << globPatterns();
-    DBG() << "suffixes():" << suffixes();
-    DBG() << "preferredSuffix():" << preferredSuffix();
 }
 
 /*!
     \fn bool QMimeType::operator==(const QMimeType &other) const;
     Returns true if \a other equals this QMimeType object, otherwise returns false.
+    The name is the unique identifier for a mimetype, so two mimetypes with
+    the same name, are equal.
  */
 bool QMimeType::operator==(const QMimeType &other) const
 {
-    return d == other.d || *d == *other.d;
+    return d == other.d || d->name == other.d->name;
 }
 
 /*!
@@ -408,8 +352,24 @@ QStringList QMimeType::allAncestors() const
 }
 
 /*!
-    \fn QStringList QMimeType::suffixes() const;
+    Return the list of aliases of this mimetype.
+
+    For instance, for text/csv, the returned list would be:
+    text/x-csv, text/x-comma-separated-values.
+
+    Note that all QMimeType instances refer to proper mimetypes,
+    never to aliases directly.
+
+    The order of the aliases in the list is undefined.
+*/
+QStringList QMimeType::aliases() const
+{
+    return QMimeDatabasePrivate::instance()->provider()->listAliases(d->name);
+}
+
+/*!
     Returns the known suffixes for the MIME type.
+    No leading dot is included, so for instance this would return "jpg", "jpeg" for image/jpeg.
  */
 QStringList QMimeType::suffixes() const
 {
@@ -417,7 +377,7 @@ QStringList QMimeType::suffixes() const
 
     QStringList result;
     foreach (const QString &pattern, d->globPatterns) {
-        // Not a simple suffix if if looks like: README or *. or *.* or *.JP*G or *.JP?
+        // Not a simple suffix if it looks like: README or *. or *.* or *.JP*G or *.JP?
         if (pattern.startsWith(QLatin1String("*.")) &&
             pattern.length() > 2 &&
             pattern.indexOf(QLatin1Char('*'), 2) < 0 && pattern.indexOf(QLatin1Char('?'), 2) < 0) {
@@ -430,8 +390,9 @@ QStringList QMimeType::suffixes() const
 }
 
 /*!
-    \fn QString QMimeType::preferredSuffix() const;
     Returns the preferred suffix for the MIME type.
+    No leading dot is included, so for instance this would return "pdf" for application/pdf.
+    The return value can be empty, for mime types which do not have any suffixes associated.
  */
 QString QMimeType::preferredSuffix() const
 {
@@ -473,7 +434,5 @@ bool QMimeType::inherits(const QString &mimeTypeName) const
         return true;
     return QMimeDatabasePrivate::instance()->inherits(d->name, mimeTypeName);
 }
-
-#undef DBG
 
 QT_END_NAMESPACE
