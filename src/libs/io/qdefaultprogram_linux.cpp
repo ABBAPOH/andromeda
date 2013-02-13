@@ -207,6 +207,9 @@ static QList<QDefaultProgram> programs(const QStringList &mimeTypes)
             result.append(entry->toDefaultProgram());
         }
     }
+
+    qDeleteAll(entryMap);
+
     return result;
 }
 
