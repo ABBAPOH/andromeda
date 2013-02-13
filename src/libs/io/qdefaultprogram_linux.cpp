@@ -438,14 +438,24 @@ static QStringList expandExecString(QSettings &desktopFile, const QList<QUrl> &u
 
 static QList<QDefaultProgram> programs(const QMimeType &mimeType)
 {
-    QStringList mimeTypes;
+    QMimeDatabase db;
 
-    mimeTypes.append(mimeType.name());
-    // TODO: correctly add aliases
-//    mimeTypes.append(mimeType.aliases());
-    mimeTypes.append(mimeType.allAncestors());
+    QList<QMimeType> mimeTypes;
+    mimeTypes.append(mimeType);
+    foreach (const QString &ancestor, mimeType.allAncestors()) {
+        QMimeType type = db.mimeTypeForName(ancestor);
+        mimeTypes.append(type);
+    }
 
-    return programs(mimeTypes);
+    QStringList mimeTypeNames;
+    foreach (const QMimeType &mimeType, mimeTypes) {
+        mimeTypeNames.append(mimeType.name());
+        // TODO: correctly add aliases
+        mimeTypeNames.append(mimeType.aliases());
+    }
+    mimeTypeNames.removeDuplicates();
+
+    return programs(mimeTypeNames);
 }
 
 static QString whereis(const QString &binaryName)
