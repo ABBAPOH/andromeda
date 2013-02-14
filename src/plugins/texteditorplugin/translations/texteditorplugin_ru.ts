@@ -4,7 +4,7 @@
 <context>
     <name>TextEditor::PlainTextDocumentFactory</name>
     <message>
-        <location filename="../plaintextdocument.cpp" line="67"/>
+        <location filename="../plaintextdocument.cpp" line="68"/>
         <source>Text editor</source>
         <translation>Тестовый редактор</translation>
     </message>

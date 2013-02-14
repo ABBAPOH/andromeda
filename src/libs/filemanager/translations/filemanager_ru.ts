@@ -106,24 +106,24 @@
 <context>
     <name>FileManager::FileCopyDialogPrivate</name>
     <message>
-        <location filename="../filecopydialog.cpp" line="98"/>
+        <location filename="../filecopydialog.cpp" line="102"/>
         <source>%1 &quot;%2&quot; already exists. Would you like to replace it?</source>
         <translation>%1 &quot;%2&quot; уже существует. Заменить?</translation>
     </message>
     <message>
-        <location filename="../filecopydialog.cpp" line="99"/>
-        <location filename="../filecopydialog.cpp" line="121"/>
+        <location filename="../filecopydialog.cpp" line="103"/>
+        <location filename="../filecopydialog.cpp" line="125"/>
         <source>Folder</source>
         <translation>Папка</translation>
     </message>
     <message>
-        <location filename="../filecopydialog.cpp" line="99"/>
-        <location filename="../filecopydialog.cpp" line="121"/>
+        <location filename="../filecopydialog.cpp" line="103"/>
+        <location filename="../filecopydialog.cpp" line="125"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../filecopydialog.cpp" line="120"/>
+        <location filename="../filecopydialog.cpp" line="124"/>
         <source>Error occurred for %1 &quot;%2&quot;: %3</source>
         <translation>Произошла ошибка для %1 &quot;%2&quot;: %3</translation>
     </message>
@@ -264,7 +264,7 @@
         <translation>Диск:</translation>
     </message>
     <message>
-        <location filename="../fileinfodialog.cpp" line="425"/>
+        <location filename="../fileinfodialog.cpp" line="424"/>
         <source>%2 for %3 objects</source>
         <translation>%2 для %3 объектов</translation>
     </message>
@@ -272,22 +272,22 @@
 <context>
     <name>FileManager::FileItemDelegate</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="170"/>
+        <location filename="../fileitemdelegate.cpp" line="864"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="172"/>
+        <location filename="../fileitemdelegate.cpp" line="866"/>
         <source>Are you sure you want to change the extension from &quot;.%1&quot; to &quot;.%2&quot;?</source>
         <translation>Вы уверены, что хотите сменить расширение с&quot;.%1&quot; на &quot;.%2&quot;?</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="176"/>
+        <location filename="../fileitemdelegate.cpp" line="870"/>
         <source>Use &quot;.%1&quot;</source>
         <translation>Использовать &quot;.%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="177"/>
+        <location filename="../fileitemdelegate.cpp" line="871"/>
         <source>Keep &quot;.%1&quot;</source>
         <translation>Оставить &quot;.%1&quot;</translation>
     </message>
@@ -295,177 +295,175 @@
 <context>
     <name>FileManager::FileManagerWidget</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1497"/>
+        <location filename="../filemanagerwidget.cpp" line="1263"/>
         <source>New Folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1559"/>
+        <location filename="../filemanagerwidget.cpp" line="1315"/>
         <source>Remove files</source>
         <translation>Удаление файлов</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1561"/>
+        <location filename="../filemanagerwidget.cpp" line="1317"/>
         <source>Are you sure you want to delete selected item(s)?</source>
         <translation>Вы уверены что хотите удалить выбранный(е) элемент(ы)?</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1562"/>
+        <location filename="../filemanagerwidget.cpp" line="1318"/>
         <source>This action can&apos;t be undone.</source>
         <translation>Это действие невозможно отменить.</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1453"/>
+        <location filename="../filemanagerwidget.cpp" line="1223"/>
         <source>View Mode</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="1457"/>
+        <location filename="../filemanagerwidget.cpp" line="1227"/>
         <source>Sort by</source>
-        <translation>Сортировкать по</translation>
+        <translation>Сортировать по</translation>
     </message>
 </context>
 <context>
     <name>FileManager::FileManagerWidgetPrivate</name>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="380"/>
+        <location filename="../filemanagerwidget.cpp" line="184"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="381"/>
         <source>Open in new tab</source>
-        <translation>Открыть в новой вкладке</translation>
+        <translation type="obsolete">Открыть в новой вкладке</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="382"/>
         <source>Open in new window</source>
-        <translation>Открыть в новом окне</translation>
+        <translation type="obsolete">Открыть в новом окне</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="384"/>
+        <location filename="../filemanagerwidget.cpp" line="186"/>
         <source>New Folder</source>
         <translation>Новая папка</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="385"/>
+        <location filename="../filemanagerwidget.cpp" line="187"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="386"/>
+        <location filename="../filemanagerwidget.cpp" line="188"/>
         <source>Move to trash</source>
         <translation>Переместить в корзину</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="387"/>
+        <location filename="../filemanagerwidget.cpp" line="189"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="388"/>
+        <location filename="../filemanagerwidget.cpp" line="190"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="390"/>
+        <location filename="../filemanagerwidget.cpp" line="192"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="391"/>
+        <location filename="../filemanagerwidget.cpp" line="193"/>
         <source>Undo</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="392"/>
-        <location filename="../filemanagerwidget.cpp" line="768"/>
+        <location filename="../filemanagerwidget.cpp" line="194"/>
+        <location filename="../filemanagerwidget.cpp" line="540"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="393"/>
-        <location filename="../filemanagerwidget.cpp" line="769"/>
+        <location filename="../filemanagerwidget.cpp" line="195"/>
+        <location filename="../filemanagerwidget.cpp" line="541"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="394"/>
+        <location filename="../filemanagerwidget.cpp" line="196"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="395"/>
+        <location filename="../filemanagerwidget.cpp" line="197"/>
         <source>Move object(s) here</source>
         <translation>Переместить объект(ы) сюда</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="396"/>
+        <location filename="../filemanagerwidget.cpp" line="198"/>
         <source>Select all</source>
         <translation>Выделить все</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="398"/>
+        <location filename="../filemanagerwidget.cpp" line="200"/>
         <source>Show hidden files</source>
         <translation>Показывать скрытые файлы</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="400"/>
+        <location filename="../filemanagerwidget.cpp" line="202"/>
         <source>Icon view</source>
         <translation>Иконки</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="401"/>
+        <location filename="../filemanagerwidget.cpp" line="203"/>
         <source>Column view</source>
         <translation>Колонки</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="402"/>
+        <location filename="../filemanagerwidget.cpp" line="204"/>
         <source>Tree view</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="404"/>
+        <location filename="../filemanagerwidget.cpp" line="206"/>
         <source>Sort by name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="405"/>
+        <location filename="../filemanagerwidget.cpp" line="207"/>
         <source>Sort by size</source>
         <translation>Сортировать по размеру</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="406"/>
+        <location filename="../filemanagerwidget.cpp" line="208"/>
         <source>Sort by type</source>
         <translation>Сортировать по типу</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="407"/>
+        <location filename="../filemanagerwidget.cpp" line="209"/>
         <source>Sort by date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="408"/>
+        <location filename="../filemanagerwidget.cpp" line="210"/>
         <source>Descending order</source>
         <translation>В обратном порядке</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="761"/>
+        <location filename="../filemanagerwidget.cpp" line="533"/>
         <source>Cut &quot;%1&quot;</source>
         <translation>Вырезать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="762"/>
+        <location filename="../filemanagerwidget.cpp" line="534"/>
         <source>Copy &quot;%1&quot;</source>
         <translation>Копировать &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="764"/>
+        <location filename="../filemanagerwidget.cpp" line="536"/>
         <source>Cut %1 items</source>
         <translation>Вырезать %1 элементов</translation>
     </message>
     <message>
-        <location filename="../filemanagerwidget.cpp" line="765"/>
+        <location filename="../filemanagerwidget.cpp" line="537"/>
         <source>Copy %1 items</source>
         <translation>Копировать %1 элементов</translation>
     </message>
@@ -519,37 +517,37 @@
 <context>
     <name>OpenWithMenu</name>
     <message>
-        <location filename="../openwithmenu.cpp" line="17"/>
+        <location filename="../openwithmenu.cpp" line="16"/>
         <source>Open with</source>
         <translation>Открыть с помощью</translation>
     </message>
     <message>
-        <location filename="../openwithmenu.cpp" line="80"/>
+        <location filename="../openwithmenu.cpp" line="43"/>
         <source>%1 (default)</source>
         <translation>%1 (по умолчанию)</translation>
     </message>
     <message>
-        <location filename="../openwithmenu.cpp" line="91"/>
+        <location filename="../openwithmenu.cpp" line="60"/>
         <source>Select program...</source>
         <translation>Выбрать программу...</translation>
     </message>
     <message>
-        <location filename="../openwithmenu.cpp" line="131"/>
+        <location filename="../openwithmenu.cpp" line="100"/>
         <source>Programs (*.exe *.cmd *.com *.bat);;All files (*)</source>
         <translation>Программы (*.exe *.cmd *.com *.bat);;Все файлы (*)</translation>
     </message>
     <message>
-        <location filename="../openwithmenu.cpp" line="136"/>
+        <location filename="../openwithmenu.cpp" line="105"/>
         <source>Select program</source>
         <translation>Выбрать программу</translation>
     </message>
     <message>
-        <location filename="../openwithmenu.cpp" line="168"/>
+        <location filename="../openwithmenu.cpp" line="137"/>
         <source>Can&apos;t open files</source>
         <translation>Невозможно открыть файлы</translation>
     </message>
     <message>
-        <location filename="../openwithmenu.cpp" line="169"/>
+        <location filename="../openwithmenu.cpp" line="138"/>
         <source>Andromeda failed to open some files: %1</source>
         <translation>Andromeda не может открыть некоторые файлы: %1</translation>
     </message>

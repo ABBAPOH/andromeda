@@ -12,12 +12,22 @@
 <context>
     <name>FileManager::FileManagerEditor</name>
     <message>
-        <location filename="../filemanagereditor.cpp" line="558"/>
+        <location filename="../filemanagereditor.cpp" line="591"/>
+        <source>Open in new tab</source>
+        <translation type="unfinished">Открыть в новой вкладке</translation>
+    </message>
+    <message>
+        <location filename="../filemanagereditor.cpp" line="592"/>
+        <source>Open in new window</source>
+        <translation type="unfinished">Открыть в новом окне</translation>
+    </message>
+    <message>
+        <location filename="../filemanagereditor.cpp" line="593"/>
         <source>Open in internal editor</source>
         <translation>Открыть во встроенном редакторе</translation>
     </message>
     <message>
-        <location filename="../filemanagereditor.cpp" line="559"/>
+        <location filename="../filemanagereditor.cpp" line="594"/>
         <source>Opens selected files in an internal editor</source>
         <translation>Открывает выделенные файлы во встроенном редакторе</translation>
     </message>
@@ -207,12 +217,12 @@
 <context>
     <name>FileManager::ViewModesSettingsPage</name>
     <message>
-        <location filename="../viewmodessettings.cpp" line="241"/>
+        <location filename="../viewmodessettings.cpp" line="243"/>
         <source>View Modes</source>
         <translation>Режимы просмотра</translation>
     </message>
     <message>
-        <location filename="../viewmodessettings.cpp" line="249"/>
+        <location filename="../viewmodessettings.cpp" line="251"/>
         <source>File manager</source>
         <translation>Файловый менеджер</translation>
     </message>
@@ -221,13 +231,18 @@
     <name>FileManager::ViewModesSettingsWidget</name>
     <message>
         <location filename="../viewmodessettings.cpp" line="76"/>
-        <location filename="../viewmodessettings.cpp" line="125"/>
-        <location filename="../viewmodessettings.cpp" line="134"/>
-        <location filename="../viewmodessettings.cpp" line="183"/>
-        <location filename="../viewmodessettings.cpp" line="186"/>
-        <location filename="../viewmodessettings.cpp" line="189"/>
+        <location filename="../viewmodessettings.cpp" line="127"/>
+        <location filename="../viewmodessettings.cpp" line="136"/>
+        <location filename="../viewmodessettings.cpp" line="185"/>
+        <location filename="../viewmodessettings.cpp" line="188"/>
+        <location filename="../viewmodessettings.cpp" line="191"/>
         <source>Icon size: %1x%2</source>
         <translation>Размер иконки: %1x%2</translation>
+    </message>
+    <message>
+        <location filename="../viewmodessettings.cpp" line="106"/>
+        <source>Grid size: %1x%2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -335,8 +350,12 @@
     </message>
     <message>
         <location filename="../viewmodessettings.ui" line="152"/>
+        <source>Grid size: 96x96</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Grid size:</source>
-        <translation>Размер сетки:</translation>
+        <translation type="obsolete">Размер сетки:</translation>
     </message>
     <message>
         <location filename="../viewmodessettings.ui" line="188"/>

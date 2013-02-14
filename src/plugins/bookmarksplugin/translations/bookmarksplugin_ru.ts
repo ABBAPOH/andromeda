@@ -125,7 +125,7 @@
         <translation>Закладки</translation>
     </message>
     <message>
-        <location filename="../bookmarksplugin.cpp" line="269"/>
+        <location filename="../bookmarksplugin.cpp" line="267"/>
         <source>New folder</source>
         <translation>Новая папка</translation>
     </message>
