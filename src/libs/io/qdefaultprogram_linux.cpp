@@ -201,11 +201,17 @@ static QList<QDefaultProgram> programs(const QStringList &mimeTypes)
     const QString userAppsFile = dataHome() + QLatin1String("/applications/") + "mimeapps.list";
     readMimeAppsFile(entryMap, mimeTypeMap, mimeTypes, userAppsFile);
 
-    QList<QDefaultProgram> result;
+    DesktopEntryList entryList;
     foreach (const QString &mimeType, mimeTypes) {
         foreach (DesktopEntry *entry, mimeTypeMap.value(mimeType)) {
-            result.append(entry->toDefaultProgram());
+            if (!entryList.contains(entry))
+                entryList.append(entry);
         }
+    }
+
+    QList<QDefaultProgram> result;
+    foreach (DesktopEntry *entry, entryList) {
+        result.append(entry->toDefaultProgram());
     }
 
     qDeleteAll(entryMap);
