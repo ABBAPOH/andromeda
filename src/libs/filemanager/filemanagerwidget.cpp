@@ -343,9 +343,14 @@ QAbstractItemView * FileManagerWidgetPrivate::createView(FileManagerWidget::View
     view->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
     view->setItemDelegate(new FileItemDelegate(view));
     view->setIconSize(iconSizes[mode]);
-    connect(view, SIGNAL(activated(QModelIndex)),
-            this, SLOT(onActivated(QModelIndex)),
-            Qt::QueuedConnection);
+    if (mode != FileManagerWidget::ColumnView)
+        connect(view, SIGNAL(activated(QModelIndex)),
+                this, SLOT(onActivated(QModelIndex)),
+                Qt::QueuedConnection);
+    else
+        connect(view, SIGNAL(doubleClicked(QModelIndex)),
+                this, SLOT(onActivated(QModelIndex)),
+                Qt::QueuedConnection);
     if (model) {
         view->setModel(model);
         QTreeView *treeView = qobject_cast<QTreeView *>(view);
