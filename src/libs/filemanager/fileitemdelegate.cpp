@@ -269,7 +269,8 @@ void FileItemDelegatePrivate::drawDisplay(QPainter *painter, const QStyleOptionV
     if (textRect.width() < textLayoutSize.width()
         || textRect.height() < textLayoutSize.height()) {
         QString elided;
-        int maxLines = textRect.height() / opt.fontMetrics.height();
+
+        int maxLines = qMin(textRect.height() / opt.fontMetrics.height(), textLayout.lineCount());
         for (int i = 0; i < maxLines - 1; ++i) {
             QTextLine line = textLayout.lineAt(i);
             elided += text.mid(line.textStart(), line.textLength());
