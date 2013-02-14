@@ -534,7 +534,8 @@ QRect FileItemDelegatePrivate::rect(const QStyleOptionViewItem &option, const QM
             QString text = displayText(value, locale);
             value = index.data(Qt::FontRole);
             QFont fnt = qvariant_cast<QFont>(value).resolve(option.font);
-            return textRectangle(0, textLayoutBounds(option), fnt, text); }
+            return textRectangle(0, textLayoutBounds(option), fnt, text);
+        }
         }
     }
     return QRect();
@@ -777,11 +778,14 @@ QSize FileItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
     if (value.isValid())
         return qvariant_cast<QSize>(value);
 
-    QRect decorationRect = d->rect(option, index, Qt::DecorationRole);
-    QRect displayRect = d->rect(option, index, Qt::DisplayRole);
-    QRect checkRect = d->rect(option, index, Qt::CheckStateRole);
+    QStyleOptionViewItemV4 opt(option);
+    opt.rect = QRect();
 
-    d->doLayout(option, &checkRect, &decorationRect, &displayRect, true);
+    QRect decorationRect = d->rect(opt, index, Qt::DecorationRole);
+    QRect displayRect = d->rect(opt, index, Qt::DisplayRole);
+    QRect checkRect = d->rect(opt, index, Qt::CheckStateRole);
+
+    d->doLayout(opt, &checkRect, &decorationRect, &displayRect, true);
 
     return (decorationRect|displayRect|checkRect).size();
 }
