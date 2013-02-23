@@ -978,7 +978,9 @@ QStringList FileManagerWidget::selectedPaths() const
     foreach (const QModelIndex &index, d->selectedIndexes()) {
         result.append(d->model->filePath(index));
     }
-    return QStringList(result);
+    // TODO: remove hack when QColumnView will work correctly
+    result.removeDuplicates();
+    return result;
 }
 
 /*!
