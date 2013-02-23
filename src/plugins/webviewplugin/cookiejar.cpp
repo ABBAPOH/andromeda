@@ -185,7 +185,7 @@ bool CookieJar::setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const
                 cookie.setExpirationDate(now.addDays(m_sessionLength));
             }
 
-            if (!(m_filterTrackingCookies && cookie.name().startsWith("__utm"))) {
+            if (m_filterTrackingCookies && cookie.name().startsWith("__utm")) {
 #if 0
                     qDebug() << "Cookie treated as tracking cookie" << cookie;
 #endif
