@@ -36,7 +36,8 @@ public:
     QString path() const;
     QString version() const;
 
-    bool operator ==(const QDefaultProgram &other) const;
+    bool operator==(const QDefaultProgram &other) const;
+    inline bool operator!=(const QDefaultProgram &other) const { return !operator==(other); }
 
     static QDefaultProgram defaultProgram(const QUrl &url);
 #ifndef NO_DEFAULT_PROGRAM_FOR_MIMETYPE
