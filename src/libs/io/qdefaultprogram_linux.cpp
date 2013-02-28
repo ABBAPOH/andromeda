@@ -565,10 +565,10 @@ QDefaultProgram DesktopEntry::toDefaultProgram() const
     return QDefaultProgram(data);
 }
 
-#ifndef NO_DEFAULT_PROGRAM
+#ifndef NO_DEFAULT_PROGRAM_FOR_MIMETYPE
 QDefaultProgram QDefaultProgram::defaultProgram(const QString &mimeType)
 {
-    QStringList programs = ::defaultPrograms(mimeType);
+    QStringList programs = ::programs(mimeType);
     if (programs.isEmpty())
         return QDefaultProgram();
 
@@ -605,7 +605,7 @@ bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &
 }
 #endif
 
-QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &url)
+QDefaultProgramList QDefaultProgram::programsForUrl(const QUrl &url)
 {
     QMimeDatabase db;
     QMimeType mimeType = db.mimeTypeForUrl(url);
@@ -613,12 +613,12 @@ QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &url)
     return programs(mimeType);
 }
 
-bool QDefaultProgram::openUrl(const QUrl &url) const
+bool QDefaultProgram::open(const QUrl &url) const
 {
-    return openUrls(QList<QUrl>() << url);
+    return open(QList<QUrl>() << url);
 }
 
-bool QDefaultProgram::openUrls(const QList<QUrl> &urls) const
+bool QDefaultProgram::open(const QList<QUrl> &urls) const
 {
     if (urls.isEmpty())
         return false;

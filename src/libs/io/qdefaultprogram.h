@@ -1,5 +1,5 @@
-#ifndef QDefaultProgram_H
-#define QDefaultProgram_H
+#ifndef QDEFAULT_PROGRAM_H
+#define QDEFAULT_PROGRAM_H
 
 #include "io_global.h"
 
@@ -11,7 +11,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QIcon>
 
-#define NO_DEFAULT_PROGRAM
+#define NO_DEFAULT_PROGRAM_FOR_MIMETYPE
 
 class QDefaultProgram;
 typedef QList<QDefaultProgram> QDefaultProgramList;
@@ -39,15 +39,15 @@ public:
     bool operator ==(const QDefaultProgram &other) const;
 
     static QDefaultProgram defaultProgram(const QUrl &url);
-#ifndef NO_DEFAULT_PROGRAM
+#ifndef NO_DEFAULT_PROGRAM_FOR_MIMETYPE
     static QDefaultProgram defaultProgram(const QString &mimeType);
     static bool setDefaultProgram(const QString &mimeType, const QString &program);
 #endif
-    static QDefaultProgramList defaultPrograms(const QUrl &url);
-    static QDefaultProgramList defaultPrograms(const QList<QUrl> &urls);
+    static QDefaultProgramList programsForUrl(const QUrl &url);
+    static QDefaultProgramList programsForUrls(const QList<QUrl> &urls);
 
-    bool openUrl(const QUrl &url) const;
-    bool openUrls(const QList<QUrl> &urls) const;
+    bool open(const QUrl &url) const;
+    bool open(const QList<QUrl> &urls) const;
 
 public:
     explicit QDefaultProgram(const QDefaultProgramData &data);
@@ -60,4 +60,4 @@ private:
 QDebug IO_EXPORT operator<<(QDebug s, const QDefaultProgram &info);
 #endif // QT_NO_DEBUG_STREAM
 
-#endif // QDefaultProgram_H
+#endif // QDEFAULT_PROGRAM_H

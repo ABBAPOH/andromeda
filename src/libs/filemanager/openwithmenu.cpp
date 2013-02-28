@@ -33,11 +33,11 @@ void OpenWithMenu::setUrls(const QList<QUrl> &urls)
     clear();
 
     QDefaultProgram defaultProgram;
-    QList<QDefaultProgram> defaultPrograms = QDefaultProgram::defaultPrograms(urls);
-    m_programs = defaultPrograms;
+    QList<QDefaultProgram> programs = QDefaultProgram::programsForUrls(urls);
+    m_programs = programs;
 
-    if (!defaultPrograms.isEmpty())
-        defaultProgram = defaultPrograms.takeFirst();
+    if (!programs.isEmpty())
+        defaultProgram = programs.takeFirst();
 
     if (defaultProgram.isValid()) {
         QAction *act = addAction(defaultProgram.icon(), tr("%1 (default)").arg(defaultProgram.name()));
@@ -48,10 +48,10 @@ void OpenWithMenu::setUrls(const QList<QUrl> &urls)
     auto lessThan = [](const QDefaultProgram &a, const QDefaultProgram &b) {
         return a.name() < b.name();
     };
-    qSort(defaultPrograms.begin(), defaultPrograms.end(), lessThan);
+    qSort(programs.begin(), programs.end(), lessThan);
 
-    for (int i = 0; i < defaultPrograms.count(); ++i) {
-        const QDefaultProgram &program = defaultPrograms.at(i);
+    for (int i = 0; i < programs.count(); ++i) {
+        const QDefaultProgram &program = programs.at(i);
         QAction *act = addAction(program.icon(), program.name());
         act->setData(i + 1);
     }
@@ -76,7 +76,7 @@ void OpenWithMenu::onTriggered(QAction *action)
 {
     const QDefaultProgram &program = m_programs.at(action->data().toInt());
 
-    program.openUrls(m_urls);
+    program.open(m_urls);
 }
 
 void OpenWithMenu::selectProgram()

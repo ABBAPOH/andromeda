@@ -86,7 +86,7 @@ static QString getAppFromProgId(const QString &progId)
     return QFileInfo(replaceVariables(appPath)).fileName();
 }
 
-static QStringList getSystemFileAssociationsDefaultPrograms(const QString &type)
+static QStringList getSystemFileAssociationsPrograms(const QString &type)
 {
     QSettings reg("HKEY_CLASSES_ROOT\\SystemFileAssociations", QSettings::NativeFormat);
 
@@ -96,7 +96,7 @@ static QStringList getSystemFileAssociationsDefaultPrograms(const QString &type)
     return reg.childGroups();
 }
 
-static QStringList getDefaultPrograms(const QString &scope, const QString &group, const QString &extension)
+static QStringList getPrograms(const QString &scope, const QString &group, const QString &extension)
 {
     QStringList result;
 
@@ -132,25 +132,25 @@ static QStringList getDefaultPrograms(const QString &scope, const QString &group
 
     QString contentType = reg.value("PerceivedType").toString();
     if (!contentType.isEmpty()) {
-        result.append(getSystemFileAssociationsDefaultPrograms(contentType));
+        result.append(getSystemFileAssociationsPrograms(contentType));
     }
 
     return result;
 }
 
-static QStringList getExtensionDefaultPrograms(const QString &extension)
+static QStringList getExtensionPrograms(const QString &extension)
 {
     QStringList result;
-    result.append(getDefaultPrograms("HKEY_CURENT_USER", "SOFTWARE\\Classes", extension));
-    result.append(getDefaultPrograms("HKEY_LOCAL_MACHINE", "SOFTWARE\\Classes", extension));
+    result.append(getPrograms("HKEY_CURENT_USER", "SOFTWARE\\Classes", extension));
+    result.append(getPrograms("HKEY_LOCAL_MACHINE", "SOFTWARE\\Classes", extension));
     return result;
 }
 
-static QStringList getExplorerDefaultPrograms(const QString &extension)
+static QStringList getExplorerPrograms(const QString &extension)
 {
     QStringList result;
-    result.append(getDefaultPrograms("HKEY_CURRENT_USER", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts", extension));
-    result.append(getDefaultPrograms("HKEY_LOCAL_MACHINE", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts", extension));
+    result.append(getPrograms("HKEY_CURRENT_USER", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts", extension));
+    result.append(getPrograms("HKEY_LOCAL_MACHINE", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts", extension));
     return result;
 }
 
@@ -275,7 +275,7 @@ static QDefaultProgram progamInfo(const QString &application)
     return QDefaultProgram(data);
 }
 
-#ifndef NO_DEFAULT_PROGRAM
+#ifndef NO_DEFAULT_PROGRAM_FOR_MIMETYPE
 QDefaultProgram QDefaultProgram::defaultProgram(const QString &mimeType)
 {
     QMimeDatabase db;
@@ -303,14 +303,14 @@ bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &
 }
 #endif
 
-QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &url)
+QDefaultProgramList QDefaultProgram::programsForUrl(const QUrl &url)
 {
     QFileInfo info(url.path());
     QString extension = QLatin1Char('.') + info.suffix();
 
     QStringList ids;
-    ids.append(getExplorerDefaultPrograms(extension));
-    ids.append(getExtensionDefaultPrograms(extension));
+    ids.append(getExplorerPrograms(extension));
+    ids.append(getExtensionPrograms(extension));
     ids.removeDuplicates();
 
     QDefaultProgramList result;
@@ -325,7 +325,7 @@ QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &url)
     return result;
 }
 
-bool QDefaultProgram::openUrl(const QUrl &url) const
+bool QDefaultProgram::open(const QUrl &url) const
 {
     QString command = getAppOpenCommand(identifier());
     QStringList arguments = splitCommand(command);
@@ -346,11 +346,11 @@ bool QDefaultProgram::openUrl(const QUrl &url) const
     return QProcess::startDetached(arguments.first(), arguments.mid(1));
 }
 
-bool QDefaultProgram::openUrls(const QList<QUrl> &urls) const
+bool QDefaultProgram::open(const QList<QUrl> &urls) const
 {
     bool result = true;
     foreach (const QUrl &url, urls) {
-        result &= openUrl(url);
+        result &= open(url);
     }
     return result;
 }

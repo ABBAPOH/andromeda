@@ -106,7 +106,7 @@ QDefaultProgram QDefaultProgram::progamInfo(const QString &application)
 }
 #endif
 
-#ifndef NO_DEFAULT_PROGRAM
+#ifndef NO_DEFAULT_PROGRAM_FOR_MIMETYPE
 static QString defaultProgramForExtension(const QString &qtExtension)
 {
     QString result;
@@ -175,7 +175,7 @@ bool QDefaultProgram::setDefaultProgram(const QString &qtMimeType, const QString
 }
 #endif
 
-QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &qurl)
+QDefaultProgramList QDefaultProgram::programsForUrl(const QUrl &qurl)
 {
     QString qUrlString = qurl.toString();
     CFStringRef urlString = CFStringCreateWithCharacters(kCFAllocatorDefault,
@@ -235,7 +235,7 @@ QDefaultProgramList QDefaultProgram::defaultPrograms(const QUrl &qurl)
     return result;
 }
 
-bool QDefaultProgram::openUrl(const QUrl &qurl) const
+bool QDefaultProgram::open(const QUrl &qurl) const
 {
     QString qUrlString = qurl.toString();
 
@@ -280,11 +280,11 @@ bool QDefaultProgram::openUrl(const QUrl &qurl) const
     return result == noErr;
 }
 
-bool QDefaultProgram::openUrls(const QList<QUrl> &urls) const
+bool QDefaultProgram::open(const QList<QUrl> &urls) const
 {
     bool result = true;
     foreach (const QUrl &url, urls) {
-        result &= openUrl(url);
+        result &= open(url);
     }
     return result;
 }

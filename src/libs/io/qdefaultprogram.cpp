@@ -100,12 +100,12 @@ static uint qHash(const QDefaultProgram &program)
     return qHash(program.path());
 }
 
-QDefaultProgramList QDefaultProgram::defaultPrograms(const QList<QUrl> &urls)
+QDefaultProgramList QDefaultProgram::programsForUrls(const QList<QUrl> &urls)
 {
     if (urls.isEmpty())
         return QList<QDefaultProgram>();
 
-    QList<QDefaultProgram> programs = QDefaultProgram::defaultPrograms(urls.first());
+    QList<QDefaultProgram> programs = QDefaultProgram::programsForUrl(urls.first());
 
     QSet<QDefaultProgram> programsSet = programs.toSet();
 
@@ -113,7 +113,7 @@ QDefaultProgramList QDefaultProgram::defaultPrograms(const QList<QUrl> &urls)
     for (int i = 1; i < urls.count(); ++i) {
         const QUrl &url = urls.at(i);
 
-        QList<QDefaultProgram> newPrograms = QDefaultProgram::defaultPrograms(url);
+        QList<QDefaultProgram> newPrograms = QDefaultProgram::programsForUrl(url);
         QSet<QDefaultProgram> newSet = newPrograms.toSet();
         programsSet.intersect(newSet);
     }
@@ -139,10 +139,15 @@ QDebug operator<<(QDebug s, const QDefaultProgram &info)
 }
 
 /*!
-  \fn QDefaultProgram QDefaultProgram::progamInfo(const QString &application);
-
-  \brief Returns information for a given \a application
+  \brief Returns id of the default program that is capable to open given \a url.
 */
+QDefaultProgram QDefaultProgram::defaultProgram(const QUrl &url)
+{
+    QDefaultProgramList programs = programsForUrl(url);
+    if (programs.isEmpty())
+        return QDefaultProgram();
+    return programs.first();
+}
 
 /*!
   \fn QString QDefaultProgram::defaultProgram(const QString &mimeType);
@@ -151,55 +156,35 @@ QDebug operator<<(QDebug s, const QDefaultProgram &info)
 */
 
 /*!
-  \brief Returns id of the default program that is capable to open given \a url.
-*/
-QDefaultProgram QDefaultProgram::defaultProgram(const QUrl &url)
-{
-    QDefaultProgramList programs = defaultPrograms(url);
-    if (programs.isEmpty())
-        return QDefaultProgram();
-    return programs.first();
-
-//    QMimeDatabase db;
-//    QMimeType mimeType = db.mimeTypeForUrl(url);
-
-////    if (!mimeType.isValid())
-////        return;
-
-////    QMimeType mt = mimeType;
-////    while (mt.isValid()) {
-////        qDebug() << mt.name();
-////        qDebug() << QDefaultProgram::defaultProgram(mt.name());
-////        if (mt.parentMimeTypes().isEmpty())
-////            break;
-////        mt = db.mimeTypeForName(mt.parentMimeTypes().first());
-////    }
-
-//    return defaultProgram(mimeType.name());
-}
-
-/*!
   \fn bool QDefaultProgram::setDefaultProgram(const QString &mimeType, const QString &program);
 
   \brief Sets path to default program to open files with the given \a mimeType.
 */
 
 /*!
-  \fn QStringList QDefaultProgram::defaultPrograms(const QString &mimeType);
-
-  \brief Returns list of programs capabale of opening files with the given \a mimeType.
-*/
-
-/*!
-  \fn QStringList QDefaultProgram::defaultPrograms(const QUrl &url);
+  \fn QDefaultProgramList QDefaultProgram::programsForUrl(const QUrl &url);
 
   \brief Returns list of programs capabale of opening given \a url.
 */
 
 /*!
-  \fn bool QDefaultProgram::openFile(const QString &file, const QString &application);
+  \fn QDefaultProgramList QDefaultProgram::programsForUrls(const QList<QUrl> &urls);
 
-  \brief Opens \a file in an \a application.
+  \brief Returns list of programs capabale of opening given \a urls.
+*/
+
+/*!
+  \fn bool QDefaultProgram::open(const QUrl &url) const;
+
+  \brief Opens \a url in an current application.
+
+  Returns true if successful.
+*/
+
+/*!
+  \fn bool QDefaultProgram::open(const QList<QUrl> &urls) const;
+
+  \brief Opens list of \a urls in an current application.
 
   Returns true if successful.
 */
