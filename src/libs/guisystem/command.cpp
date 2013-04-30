@@ -1,4 +1,5 @@
 #include "command.h"
+#include "abstractcommand_p.h"
 
 #include <QtGui/QAction>
 #include <QtGui/QKeySequence>
@@ -8,10 +9,11 @@
 
 namespace GuiSystem {
 
-class CommandPrivate
+class CommandPrivate : public AbstractCommandPrivate
 {
+    Q_DECLARE_PUBLIC(Command)
 public:
-    CommandPrivate(const QByteArray &id, Command *qq);
+    CommandPrivate(Command *qq) : AbstractCommandPrivate(qq) {}
 
     ProxyAction *action;
     QAction *realAction;
@@ -20,24 +22,23 @@ public:
     Command::CommandContext context;
 
     QKeySequence defaultShortcut;
-    QIcon defaultIcon;
-    QString defaultText;
     bool isSeparator;
     QKeySequence shortcut;
 
-    QByteArray id;
-
+    void init();
     void update();
+    void setText(const QString &text);
+    void setIcon(const QIcon &icon);
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
 
-CommandPrivate::CommandPrivate(const QByteArray &id, Command *qq)
+void CommandPrivate::init()
 {
-    this->id = id;
-    action = new ProxyAction(qq);
+    Q_Q(Command);
+    action = new ProxyAction(q);
     action->setEnabled(false);
     realAction = 0;
     isSeparator = false;
@@ -49,12 +50,36 @@ void CommandPrivate::update()
 //    if (attributes & Command::AttributeHide)
 //        action->setVisible((bool)realAction);
     if (attributes & Command::AttributeUpdateText && !realAction)
-        action->setText(defaultText);
+        action->setText(text);
     if (attributes & Command::AttributeUpdateIcon && !realAction)
-        action->setIcon(defaultIcon);
+        action->setIcon(icon);
     if (attributes & Command::AttributeUpdateShortcut && !realAction) {
         action->setShortcut(defaultShortcut);
     }
+}
+
+void CommandPrivate::setText(const QString &text)
+{
+    Q_Q(Command);
+
+    if (this->text == text)
+        return;
+
+    this->text = text;
+    if (!realAction || !(attributes & Command::AttributeUpdateText))
+        action->setText(text);
+
+    emit q->changed();
+}
+
+void CommandPrivate::setIcon(const QIcon &icon)
+{
+    Q_Q(Command);
+    this->icon = icon;
+    if (!realAction || !(attributes & Command::AttributeUpdateIcon))
+        action->setIcon(icon);
+
+    emit q->changed();
 }
 
 /*!
@@ -73,12 +98,14 @@ Command::Command(const QByteArray &id,
                  const QKeySequence &key,
                  const QString &text,
                  QObject *parent) :
-    QObject(parent),
-    d_ptr(new CommandPrivate(id, this))
+    AbstractCommand(*new CommandPrivate(this), id, parent)
 {
-    setDefaultIcon(icon);
+    Q_D(Command);
+    d->init();
+
+    setIcon(icon);
     setDefaultShortcut(key);
-    setDefaultText(text);
+    setText(text);
 
     ActionManager::instance()->registerCommand(this);
 }
@@ -87,11 +114,13 @@ Command::Command(const QByteArray &id,
                  const QKeySequence &key,
                  const QString &text,
                  QObject *parent) :
-    QObject(parent),
-    d_ptr(new CommandPrivate(id, this))
+    AbstractCommand(*new CommandPrivate(this), id, parent)
 {
+    Q_D(Command);
+    d->init();
+
     setDefaultShortcut(key);
-    setDefaultText(text);
+    setText(text);
 
     ActionManager::instance()->registerCommand(this);
 }
@@ -99,10 +128,12 @@ Command::Command(const QByteArray &id,
 Command::Command(const QByteArray &id,
                  const QString &text,
                  QObject *parent) :
-    QObject(parent),
-    d_ptr(new CommandPrivate(id, this))
+    AbstractCommand(*new CommandPrivate(this), id, parent)
 {
-    setDefaultText(text);
+    Q_D(Command);
+    d->init();
+
+    setText(text);
 
     ActionManager::instance()->registerCommand(this);
 }
@@ -111,9 +142,11 @@ Command::Command(const QByteArray &id,
     \brief Constructs Command with \a id and register it in ActionManager.
 */
 Command::Command(const QByteArray &id, QObject *parent) :
-    QObject(parent),
-    d_ptr(new CommandPrivate(id, this))
+    AbstractCommand(*new CommandPrivate(this), id, parent)
 {
+    Q_D(Command);
+    d->init();
+
     ActionManager::instance()->registerCommand(this);
 }
 
@@ -123,8 +156,6 @@ Command::Command(const QByteArray &id, QObject *parent) :
 Command::~Command()
 {
     ActionManager::instance()->unregisterCommand(this);
-
-    delete d_ptr;
 }
 
 /*!
@@ -244,56 +275,6 @@ void Command::setDefaultShortcut(const QKeySequence &key)
     }
 }
 
-/*!
-    \property Command::defaultIcon
-
-    \brief Default Command's icon
-
-    It is used as an icon for this command if Command::AttributeUpdateIcon is not set, otherwised is used
-    action's icon.
-*/
-QIcon Command::defaultIcon() const
-{
-    return d_func()->defaultIcon;
-}
-
-void Command::setDefaultIcon(const QIcon &icon)
-{
-    Q_D(Command);
-
-    d->defaultIcon = icon;
-    if (!d->realAction || !(d->attributes & AttributeUpdateIcon))
-        d->action->setIcon(icon);
-
-    emit changed();
-}
-
-/*!
-    \property Command::defaultText
-
-    \brief Default Command's text
-
-    It is used as a text for this command if Command::AttributeUpdateText is not set, otherwised is used
-    action's text.
-*/
-QString Command::defaultText() const
-{
-    return d_func()->defaultText;
-}
-
-void Command::setDefaultText(const QString &text)
-{
-    Q_D(Command);
-
-    if (d->defaultText != text) {
-        d->defaultText = text;
-        if (!d->realAction || !(d->attributes & AttributeUpdateText))
-            d->action->setText(text);
-
-        emit changed();
-    }
-}
-
 bool Command::isSeparator() const
 {
     Q_D(const Command);
@@ -364,16 +345,6 @@ QVariant Command::data() const
 void Command::setData(const QVariant & data)
 {
     d_func()->action->setData(data);
-}
-
-/*!
-    \property Command::id
-
-    \brief Command's id, which is used to identify commands.
-*/
-QByteArray Command::id() const
-{
-    return d_func()->id;
 }
 
 QAction *Command::realAction() const

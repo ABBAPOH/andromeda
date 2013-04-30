@@ -32,17 +32,6 @@ void AbstractCommandPrivate::setIcon(const QIcon &icon)
 /*!
     \internal
 */
-AbstractCommand::AbstractCommand(const QByteArray &id, QObject *parent) :
-    QObject(parent),
-    d_ptr(new AbstractCommandPrivate(this))
-{
-    Q_D(AbstractCommand);
-    d->id = id;
-}
-
-/*!
-    \internal
-*/
 AbstractCommand::AbstractCommand(AbstractCommandPrivate &dd, const QByteArray &id, QObject *parent) :
     QObject(parent),
     d_ptr(&dd)

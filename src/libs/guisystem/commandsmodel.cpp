@@ -52,7 +52,7 @@ void CommandsModelPrivate::build()
             continue;
 
         CommandsModelItem *categoryItem = new CommandsModelItem(CommandsModelItem::Folder, rootItem);
-        categoryItem->name = container->title();
+        categoryItem->name = container->text();
 
         foreach (Command *c, commands) {
             if (c->isSeparator())
@@ -124,7 +124,7 @@ QVariant CommandsModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         if (item->type() == CommandsModelItem::Leaf) {
             switch (column) {
-            case 0: return item->cmd->defaultText();
+            case 0: return item->cmd->text();
             case 1: return item->cmd->shortcut();
             }
         } else {

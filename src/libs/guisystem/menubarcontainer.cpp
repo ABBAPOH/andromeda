@@ -26,7 +26,7 @@ void MenuBarContainerPrivate::createFileMenu()
     Q_Q(MenuBarContainer);
 
     containers[MenuBarContainer::FileMenu] = new CommandContainer(q->standardContainerName(MenuBarContainer::FileMenu), q);
-    containers[MenuBarContainer::MenuBar]->addContainer(containers[MenuBarContainer::FileMenu]);
+    containers[MenuBarContainer::MenuBar]->addCommand(containers[MenuBarContainer::FileMenu]);
 
     // New window
     createCommand(MenuBarContainer::FileMenu,
@@ -201,13 +201,13 @@ void MenuBarContainerPrivate::createHelpMenu()
 
 void MenuBarContainerPrivate::retranslateContainers()
 {
-    containers[MenuBarContainer::MenuBar]->setTitle(MenuBarContainer::tr("Menu bar"));
+    containers[MenuBarContainer::MenuBar]->setText(MenuBarContainer::tr("Menu bar"));
 
-    containers[MenuBarContainer::FileMenu]->setTitle(MenuBarContainer::tr("File"));
-    containers[MenuBarContainer::EditMenu]->setTitle(MenuBarContainer::tr("Edit"));
-    containers[MenuBarContainer::ViewMenu]->setTitle(MenuBarContainer::tr("View"));
-    containers[MenuBarContainer::ToolsMenu]->setTitle(MenuBarContainer::tr("Tools"));
-    containers[MenuBarContainer::HelpMenu]->setTitle(MenuBarContainer::tr("Help"));
+    containers[MenuBarContainer::FileMenu]->setText(MenuBarContainer::tr("File"));
+    containers[MenuBarContainer::EditMenu]->setText(MenuBarContainer::tr("Edit"));
+    containers[MenuBarContainer::ViewMenu]->setText(MenuBarContainer::tr("View"));
+    containers[MenuBarContainer::ToolsMenu]->setText(MenuBarContainer::tr("Tools"));
+    containers[MenuBarContainer::HelpMenu]->setText(MenuBarContainer::tr("Help"));
 }
 
 void MenuBarContainerPrivate::retranslateCommands()
@@ -251,7 +251,7 @@ void MenuBarContainerPrivate::createMenu(MenuBarContainer::StandardContainer men
 
     CommandContainer * c = new CommandContainer(q->standardContainerName(menu), q);
     containers[menu] = c;
-    containers[MenuBarContainer::MenuBar]->addContainer(c);
+    containers[MenuBarContainer::MenuBar]->addCommand(c);
 }
 
 void MenuBarContainerPrivate::createCommand(MenuBarContainer::StandardContainer menu,
@@ -272,7 +272,7 @@ void MenuBarContainerPrivate::createCommand(MenuBarContainer::StandardContainer 
 
 void MenuBarContainerPrivate::retranslateCommand(MenuBarContainer::StandardCommand command, const QString &defaultText)
 {
-    commands[command]->setDefaultText(defaultText);
+    commands[command]->setText(defaultText);
 }
 
 MenuBarContainer::MenuBarContainer(QObject *parent) :

@@ -35,7 +35,6 @@ signals:
     void changed();
 
 protected:
-    explicit AbstractCommand(const QByteArray &id, QObject *parent = 0);
     explicit AbstractCommand(AbstractCommandPrivate &dd, const QByteArray &id, QObject *parent = 0);
 
 protected:

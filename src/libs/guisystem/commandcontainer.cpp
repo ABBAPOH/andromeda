@@ -1,4 +1,5 @@
 #include "commandcontainer.h"
+#include "abstractcommand_p.h"
 
 #include "actionmanager.h"
 #include "command.h"
@@ -9,40 +10,55 @@
 
 namespace GuiSystem {
 
-class CommandContainerPrivate
+class CommandContainerPrivate : public AbstractCommandPrivate
 {
+    Q_DECLARE_PUBLIC(CommandContainer)
 public:
-    explicit CommandContainerPrivate(CommandContainer *qq) : menu(0), q(qq) {}
+    explicit CommandContainerPrivate(CommandContainer *qq) :
+        AbstractCommandPrivate(qq),
+        menu(0)
+    {}
 
-    void addObject(QObject *o, const QByteArray &weight);
+    void addAbstractCommand(AbstractCommand *cmd, const QByteArray &weight);
+    void setText(const QString &text);
 
 public:
-    QByteArray id;
-    QString title;
-
-    QObjectList objects;
+    QList<AbstractCommand *> commands;
     QList<QByteArray> weights;
     mutable QMenu *menu;
-
-private:
-    CommandContainer *q;
 };
 
 } // namespace GuiSystem
 
 using namespace GuiSystem;
 
-void CommandContainerPrivate::addObject(QObject *o, const QByteArray &weight)
+void CommandContainerPrivate::addAbstractCommand(AbstractCommand *cmd, const QByteArray &weight)
 {
+    Q_Q(CommandContainer);
+
     QByteArray w = weight;
     if (w.isEmpty())
-        w = QString("%1").arg(objects.count(), 2, 10, QLatin1Char('0')).toLatin1();
+        w = QString("%1").arg(commands.count(), 2, 10, QLatin1Char('0')).toLatin1();
 
     QList<QByteArray>::iterator i = qLowerBound(weights.begin(), weights.end(), w);
     int index = i - weights.begin();
-    objects.insert(index, o);
+    commands.insert(index, cmd);
     weights.insert(index, w);
-    QObject::connect(o, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
+    QObject::connect(cmd, SIGNAL(destroyed(QObject*)), q, SLOT(onDestroy(QObject*)));
+}
+
+void CommandContainerPrivate::setText(const QString &text)
+{
+    Q_Q(CommandContainer);
+
+    if (this->text == text)
+        return;
+
+    this->text = text;
+    if (menu)
+        menu->setTitle(text);
+
+    emit q->changed();
 }
 
 /*!
@@ -59,13 +75,8 @@ void CommandContainerPrivate::addObject(QObject *o, const QByteArray &weight)
     \brief Constructs CommandContainer with \a id and register it in ActionManager.
 */
 CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
-    QObject(parent),
-    d_ptr(new CommandContainerPrivate(this))
+    AbstractCommand(*new CommandContainerPrivate(this), id, parent)
 {
-    Q_D(CommandContainer);
-
-    d->id = id;
-
     ActionManager::instance()->registerContainer(this);
 }
 
@@ -75,8 +86,6 @@ CommandContainer::CommandContainer(const QByteArray &id, QObject *parent) :
 CommandContainer::~CommandContainer()
 {
     ActionManager::instance()->unregisterContainer(this);
-
-    delete d_ptr;
 }
 
 bool commandLessThen(QObject *o1, QObject *o2)
@@ -93,27 +102,14 @@ bool commandLessThen(QObject *o1, QObject *o2)
 /*!
     \brief Adds \a command to a \a group.
 */
-void CommandContainer::addCommand(Command *c, const QByteArray &weight)
+void CommandContainer::addCommand(AbstractCommand *c, const QByteArray &weight)
 {
     if (!c)
         return;
 
     Q_D(CommandContainer);
 
-    d->addObject(c, weight);
-}
-
-/*!
-    \brief Adds \a container to a \a group.
-*/
-void CommandContainer::addContainer(CommandContainer *c, const QByteArray &weight)
-{
-    if (!c)
-        return;
-
-    Q_D(CommandContainer);
-
-    d->addObject(c, weight);
+    d->addAbstractCommand(c, weight);
 }
 
 /*!
@@ -123,7 +119,7 @@ void CommandContainer::clear()
 {
     Q_D(CommandContainer);
 
-    d->objects.clear();
+    d->commands.clear();
     d->weights.clear();
 }
 
@@ -135,7 +131,7 @@ QList<Command *> CommandContainer::commands() const
     Q_D(const CommandContainer);
 
     QList<Command *> result;
-    foreach (QObject *o, d->objects) {
+    foreach (QObject *o, d->commands) {
         Command *cmd = qobject_cast<Command *>(o);
         if (cmd)
             result.append(cmd);
@@ -151,22 +147,12 @@ QList<Command *> CommandContainer::commands(const QByteArray &id) const
     Q_D(const CommandContainer);
 
     QList<Command *> result;
-    foreach (QObject *o, d->objects) {
+    foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
             result.append(cmd);
         }
     }
     return result;
-}
-
-/*!
-    \property CommandContainer::id
-
-    \brief CommandContainer's id, which is used to identify containers.
-*/
-QByteArray CommandContainer::id() const
-{
-    return d_func()->id;
 }
 
 /*!
@@ -182,8 +168,8 @@ QMenu * CommandContainer::menu(QWidget *parent) const
     Q_D(const CommandContainer);
 
     QMenu *menu = createMenu(parent);
-    menu->setTitle(title());
-    foreach (QObject *o, d->objects) {
+    menu->setTitle(text());
+    foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
             menu->addAction(cmd->commandAction());
         } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
@@ -207,7 +193,7 @@ QMenuBar * CommandContainer::menuBar() const
     Q_D(const CommandContainer);
 
     QMenuBar *menuBar = new QMenuBar;
-    foreach (QObject *o, d->objects) {
+    foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
             menuBar->addAction(cmd->commandAction());
         } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
@@ -230,7 +216,7 @@ QToolBar * CommandContainer::toolBar(QWidget *parent) const
     Q_D(const CommandContainer);
 
     QToolBar *toolBar = createToolBar(parent);
-    foreach (QObject *o, d->objects) {
+    foreach (QObject *o, d->commands) {
         if (Command *cmd = qobject_cast<Command *>(o)) {
             toolBar->addAction(cmd->commandAction());
         }
@@ -238,31 +224,13 @@ QToolBar * CommandContainer::toolBar(QWidget *parent) const
     return toolBar;
 }
 
-/*!
-    \property CommandContainer::title()
-
-    \brief CommandContainer's title, which is displayed as a menu's title.
-*/
-QString CommandContainer::title() const
-{
-    return d_func()->title;
-}
-
-void CommandContainer::setTitle(const QString &title)
-{
-    Q_D(CommandContainer);
-
-    d->title = title;
-    if (d->menu)
-        d->menu->setTitle(title);
-}
-
 void CommandContainer::onDestroy(QObject *o)
 {
     Q_D(CommandContainer);
 
-    int index = d->objects.indexOf(o);
-    d->objects.removeAt(index);
+    AbstractCommand *c = static_cast<AbstractCommand *>(o);
+    int index = d->commands.indexOf(c);
+    d->commands.removeAt(index);
     d->weights.removeAt(index);
 }
 

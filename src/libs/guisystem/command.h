@@ -3,7 +3,8 @@
 
 #include "guisystem_global.h"
 
-#include <QtCore/QObject>
+#include "abstractcommand.h"
+
 #include <QtCore/QVariant>
 
 #include <QtGui/QIcon>
@@ -15,7 +16,7 @@ class QIcon;
 namespace GuiSystem {
 
 class CommandPrivate;
-class GUISYSTEM_EXPORT Command : public QObject
+class GUISYSTEM_EXPORT Command : public AbstractCommand
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Command)
@@ -24,12 +25,9 @@ class GUISYSTEM_EXPORT Command : public QObject
     Q_PROPERTY(Attributes attributes READ attributes WRITE setAttributes)
     Q_PROPERTY(CommandContext context READ context WRITE setContext)
     Q_PROPERTY(QKeySequence defaultShortcut READ defaultShortcut WRITE setDefaultShortcut)
-    Q_PROPERTY(QIcon defaultIcon READ defaultIcon WRITE setDefaultIcon)
-    Q_PROPERTY(QString defaultText READ defaultText WRITE setDefaultText)
     Q_PROPERTY(bool isSeparator READ isSeparator WRITE setSeparator)
     Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut)
     Q_PROPERTY(QVariant data READ data WRITE setData)
-    Q_PROPERTY(QByteArray id READ id)
 
 public:
     enum Attribute {
@@ -76,33 +74,20 @@ public:
     QKeySequence defaultShortcut() const;
     void setDefaultShortcut(const QKeySequence &key);
 
-    QIcon defaultIcon() const;
-    void setDefaultIcon(const QIcon &icon);
-
-    QString defaultText() const;
-    void setDefaultText(const QString &text);
-
     bool isSeparator() const;
     void setSeparator(bool b);
 
     QKeySequence shortcut() const;
     void setShortcut(const QKeySequence &key);
 
-    QByteArray id() const;
-
     void setData(const QVariant &data);
     QVariant data() const;
-
-signals:
-    void changed();
 
 protected:
     QAction *realAction() const;
     void setRealAction(QAction *commandAction);
 
 protected:
-    CommandPrivate *d_ptr;
-
     friend class ActionManager;
     friend class CommandContainer;
 };

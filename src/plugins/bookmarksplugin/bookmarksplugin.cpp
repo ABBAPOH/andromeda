@@ -223,13 +223,13 @@ void BookmarksPlugin::createActions()
 
     // ================ Bookmarks Menu ================
     BookmarksMenuContainer *menu = new BookmarksMenuContainer(Constants::Menus::Bookmarks, this);
-    menu->setTitle(tr("Bookmarks"));
+    menu->setText(tr("Bookmarks"));
     menu->bookmarksMenu()->setInitialActions(actions);
     menu->bookmarksMenu()->setModel(m_model);
     connect(menu->bookmarksMenu(), SIGNAL(open(QUrl)), SLOT(open(QUrl)));
     connect(menu->bookmarksMenu(), SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
     connect(menu->bookmarksMenu(), SIGNAL(openInWindow(QList<QUrl>)), SLOT(openInWindow(QList<QUrl>)));
-    menuBarContainer->addContainer(menu, "027");
+    menuBarContainer->addCommand(menu, "027");
     addObject(menu);
 
     BookmarksToolBarContainer *toolBar = new BookmarksToolBarContainer(Constants::Objects::AlternateToolbar, this);

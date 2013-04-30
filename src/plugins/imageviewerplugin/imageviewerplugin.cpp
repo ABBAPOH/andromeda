@@ -33,8 +33,8 @@ void ImageViewerPlugin::createActions()
     CommandContainer *toolsMenu = menuBar->container(MenuBarContainer::ToolsMenu);
 
     imageViewMenu = new CommandContainer("ImageViewMenu", this);
-    imageViewMenu->setTitle(tr("Image view"));
-    toolsMenu->addContainer(imageViewMenu);
+    imageViewMenu->setText(tr("Image view"));
+    toolsMenu->addCommand(imageViewMenu);
 
     createAction("MoveTool", tr("Move tool"), QKeySequence("Ctrl+1"));
     createAction("SelectionTool", tr("Selection tool"), QKeySequence("Ctrl+2"));
@@ -56,7 +56,7 @@ void ImageViewerPlugin::createActions()
 void ImageViewerPlugin::createAction(const QByteArray &id, const QString &text, const QKeySequence &shortcut)
 {
     Command *c = new Command(id, this);
-    c->setDefaultText(text);
+    c->setText(text);
     c->setDefaultShortcut(shortcut);
     imageViewMenu->addCommand(c);
 }

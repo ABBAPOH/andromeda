@@ -42,8 +42,8 @@ Action::Action(const QByteArray &id, QObject *parent) :
 
     Command *c = am->command(id);
     if (c) {
-        setText(c->defaultText());
-        setIcon(c->defaultIcon());
+        setText(c->text());
+        setIcon(c->icon());
         updateActionContext(c->context(), this);
     }
 }
@@ -60,7 +60,7 @@ Action::Action(const QString &text, const QByteArray &id, QObject *parent) :
 
     Command *c = am->command(id);
     if (c) {
-        setIcon(c->defaultIcon());
+        setIcon(c->icon());
         updateActionContext(c->context(), this);
     }
 }

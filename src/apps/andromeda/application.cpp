@@ -541,7 +541,7 @@ void Application::createGoToMenu()
 
     // ================ GoTo Menu ================
     CommandContainer *goToMenu = new CommandContainer(Constants::Menus::GoTo, this);
-    menuBar->addContainer(goToMenu, "025");
+    menuBar->addCommand(goToMenu, "025");
 
     // ================ GoTo Menu (default) ================
     c = new Command(Constants::Actions::Back, this);
@@ -565,11 +565,11 @@ void Application::retranslateGoToMenu()
 {
     ActionManager *manager = ActionManager::instance();
     CommandContainer *goToMenu = manager->container(Constants::Menus::GoTo);
-    goToMenu->setTitle(tr("Go to"));
+    goToMenu->setText(tr("Go to"));
 
-    manager->command(Constants::Actions::Back)->setDefaultText(tr("Back"));
-    manager->command(Constants::Actions::Forward)->setDefaultText(tr("Forward"));
-    manager->command(Constants::Actions::Up)->setDefaultText(tr("Up one level"));
+    manager->command(Constants::Actions::Back)->setText(tr("Back"));
+    manager->command(Constants::Actions::Forward)->setText(tr("Forward"));
+    manager->command(Constants::Actions::Up)->setText(tr("Up one level"));
 }
 
 void Application::createWindowsMenu()
@@ -577,8 +577,8 @@ void Application::createWindowsMenu()
     MenuBarContainer *menuBar = MenuBarContainer::instance();
 
     CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
-    windowsMenu->setTitle(tr("Windows"));
-    menuBar->addContainer(windowsMenu, "035");
+    windowsMenu->setText(tr("Windows"));
+    menuBar->addCommand(windowsMenu, "035");
 }
 
 void Application::createToolsMenu()
@@ -594,14 +594,14 @@ void Application::createToolsMenu()
 
 #ifdef QT_DEBUG
     Command *plugins = new Command(Constants::Actions::Plugins, this);
-    plugins->setDefaultText(tr("Plugins..."));
+    plugins->setText(tr("Plugins..."));
     plugins->setContext(Command::ApplicationCommand);
     toolsMenu->addCommand(plugins);
 #endif
 
 #ifdef QT_DEBUG
     Command *settings = new Command(Constants::Actions::Settings, this);
-    settings->setDefaultText(tr("View all settings..."));
+    settings->setText(tr("View all settings..."));
     settings->setContext(Command::ApplicationCommand);
     toolsMenu->addCommand(settings);
 #endif
@@ -617,7 +617,7 @@ void Application::createDockMenu()
 
     CommandContainer *dock = new DockContainer(Constants::Menus::Dock, this);
 #ifdef Q_OS_MAC
-    dock->setTitle(tr("Dock menu"));
+    dock->setText(tr("Dock menu"));
 #else
     dock->setTitle(tr("Tray menu"));
 #endif
