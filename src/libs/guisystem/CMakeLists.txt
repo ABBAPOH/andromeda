@@ -29,6 +29,8 @@ set( HEADERS
     widgets/toolwidget.h
     widgets/toolwidgetfactory.h
     widgets/toolwidgetmanager.h
+    abstractcommand.h
+    abstractcommand_p.h
     action.h
     actionmanager.h
     command.h
@@ -69,6 +71,7 @@ set( SOURCES
     widgets/toolwidget.cpp
     widgets/toolwidgetfactory.cpp
     widgets/toolwidgetmanager.cpp
+    abstractcommand.cpp
     action.cpp
     actionmanager.cpp
     command.cpp
