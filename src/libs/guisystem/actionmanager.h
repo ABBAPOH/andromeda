@@ -26,9 +26,9 @@ public:
     explicit ActionManager(QObject *parent = 0);
     ~ActionManager();
 
-    Command *command(const QString &id);
+    Command *command(const QByteArray &id);
     QList<Command *> commands() const;
-    CommandContainer *container(const QString &id);
+    CommandContainer *container(const QByteArray &id);
     QList<CommandContainer *> containers() const;
 
     static ActionManager *instance();

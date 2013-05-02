@@ -22,7 +22,7 @@ class ActionManagerPrivate
 public:
     ActionManagerPrivate() {}
 
-    QHash<QString, QObject *> objects;
+    QHash<QByteArray, AbstractCommand *> commands;
     QSettings *settings;
 };
 
@@ -63,7 +63,7 @@ ActionManager::~ActionManager()
 {
     Q_D(ActionManager);
 
-    foreach (QObject *o, d->objects.values()) {
+    foreach (AbstractCommand *o, d->commands.values()) {
         if (o->parent() == this)
             delete o;
     }
@@ -74,12 +74,14 @@ ActionManager::~ActionManager()
 /*!
     Returns pointer to Command previously created with \id
 */
-Command * ActionManager::command(const QString &id)
+Command * ActionManager::command(const QByteArray &id)
 {
     Q_D(ActionManager);
 
-    Command *c = qobject_cast<Command *>(d->objects.value(id));
-    Q_ASSERT_X(c, "ActionManager::command", QString("Can't find command with id %1").arg(id).toUtf8());
+    Command *c = qobject_cast<Command *>(d->commands.value(id));
+    Q_ASSERT_X(c,
+               "ActionManager::command",
+               QString("Can't find command with id %1").arg(QString::fromUtf8(id)).toUtf8());
     if (!c)
         qWarning() << "ActionManager::command :" << "Can't find command with id" << id;
 
@@ -94,7 +96,7 @@ QList<Command *> ActionManager::commands() const
     Q_D(const ActionManager);
 
     QList<Command *> result;
-    foreach (QObject *object, d->objects) {
+    foreach (AbstractCommand *object, d->commands) {
         Command *c = qobject_cast<Command *>(object);
         if (c)
             result.append(c);
@@ -105,12 +107,14 @@ QList<Command *> ActionManager::commands() const
 /*!
     Returns pointer to CommandContainer previously created with \id
 */
-CommandContainer * ActionManager::container(const QString &id)
+CommandContainer * ActionManager::container(const QByteArray &id)
 {
     Q_D(ActionManager);
 
-    CommandContainer *c = qobject_cast<CommandContainer *>(d->objects.value(id));
-    Q_ASSERT_X(c, "ActionManager::container", QString("Can't find container with id %1").arg(id).toUtf8());
+    CommandContainer *c = qobject_cast<CommandContainer *>(d->commands.value(id));
+    Q_ASSERT_X(c,
+               "ActionManager::container",
+               QString("Can't find container with id %1").arg(QString::fromUtf8(id)).toUtf8());
     if (!c)
         qWarning() << "ActionManager::container :" << "Can't find command with id" << id;
 
@@ -125,7 +129,7 @@ QList<CommandContainer *> ActionManager::containers() const
     Q_D(const ActionManager);
 
     QList<CommandContainer *> result;
-    foreach (QObject *object, d->objects) {
+    foreach (QObject *object, d->commands) {
         CommandContainer *c = qobject_cast<CommandContainer *>(object);
         if (c)
             result.append(c);
@@ -209,7 +213,7 @@ bool ActionManager::importShortcuts(QIODevice *device)
                     return false;
 
                 const QXmlStreamAttributes attributes = r.attributes();
-                Command *c = command(currentId);
+                Command *c = command(currentId.toUtf8());
                 if (attributes.hasAttribute(QLatin1String("value"))) {
                     const QString keyString = attributes.value(QLatin1String("value")).toString();
                     if (c) {
@@ -243,9 +247,9 @@ void ActionManager::registerCommand(Command *cmd)
 {
     Q_D(ActionManager);
 
-    Q_ASSERT(!d->objects.contains(cmd->id()));
+    Q_ASSERT(!d->commands.contains(cmd->id()));
 
-    d->objects.insert(cmd->id(), cmd);
+    d->commands.insert(cmd->id(), cmd);
     if (!cmd->parent())
         cmd->setParent(this);
 
@@ -259,9 +263,9 @@ void ActionManager::registerContainer(CommandContainer *c)
 {
     Q_D(ActionManager);
 
-    Q_ASSERT(!d->objects.contains(c->id()));
+    Q_ASSERT(!d->commands.contains(c->id()));
 
-    d->objects.insert(c->id(), c);
+    d->commands.insert(c->id(), c);
     if (!c->parent())
         c->setParent(this);
 }
@@ -273,7 +277,7 @@ void ActionManager::unregisterCommand(Command *cmd)
 {
     Q_D(ActionManager);
 
-    d->objects.remove(cmd->id());
+    d->commands.remove(cmd->id());
     if (cmd->parent() == this)
         cmd->deleteLater();
 }
@@ -285,7 +289,7 @@ void ActionManager::unregisterContainer(CommandContainer *c)
 {
     Q_D(ActionManager);
 
-    d->objects.remove(c->id());
+    d->commands.remove(c->id());
     if (c->parent() == this)
         c->deleteLater();
 }
@@ -352,9 +356,9 @@ void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Command::Command
     Q_D(ActionManager);
 
     foreach (QAction *action, w->actions()) {
-        QString id = action->objectName();
+        QByteArray id = action->objectName().toUtf8();
         if (!id.isEmpty()) {
-            Command *c = qobject_cast<Command *>(d->objects.value(id));
+            Command *c = qobject_cast<Command *>(d->commands.value(id));
             if (c && c->context() == context) {
                 if (enabled) {
                     c->setRealAction(action);
