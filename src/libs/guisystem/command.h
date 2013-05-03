@@ -28,6 +28,7 @@ class GUISYSTEM_EXPORT Command : public AbstractCommand
     Q_PROPERTY(bool isSeparator READ isSeparator WRITE setSeparator)
     Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut)
     Q_PROPERTY(QVariant data READ data WRITE setData)
+    Q_PROPERTY(QString toolTip READ toolTip WRITE setToolTip)
 
 public:
     enum Attribute {
@@ -79,6 +80,9 @@ public:
 
     QKeySequence shortcut() const;
     void setShortcut(const QKeySequence &key);
+
+    QString toolTip() const;
+    void setToolTip(const QString &toolTip);
 
     void setData(const QVariant &data);
     QVariant data() const;

@@ -24,6 +24,7 @@ public:
     QKeySequence defaultShortcut;
     bool isSeparator;
     QKeySequence shortcut;
+    QString toolTip;
 
     void init();
     void update();
@@ -328,6 +329,26 @@ void Command::setShortcut(const QKeySequence &key)
             d->action->setShortcut(d->defaultShortcut);
         d->action->setAttributes(ProxyAction::Attributes((int)(d->attributes)));
     }
+}
+
+QString Command::toolTip() const
+{
+    Q_D(const Command);
+    return d->toolTip;
+}
+
+void Command::setToolTip(const QString &toolTip)
+{
+    Q_D(Command);
+
+    if (d->toolTip == toolTip)
+        return;
+
+    d->toolTip = toolTip;
+    if (!d->realAction || !(d->attributes & Command::AttributeUpdateText))
+        d->action->setToolTip(toolTip);
+
+    emit changed();
 }
 
 /*!
