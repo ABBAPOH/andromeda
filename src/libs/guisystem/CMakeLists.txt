@@ -48,6 +48,8 @@ set( HEADERS
     settingswindow.h
     sharedproperties.h
     sharedproperties_p.h
+    standardcommands.h
+    standardcommands_p.h
    )
 set( SOURCES
     core/abstractdocument.cpp
@@ -84,6 +86,7 @@ set( SOURCES
     settingspagemanager.cpp
     settingswindow.cpp
     sharedproperties.cpp
+    standardcommands.cpp
    )
 set( FORMS
     commandssettingswidget.ui
