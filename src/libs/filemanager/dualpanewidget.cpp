@@ -68,6 +68,7 @@ void DualPaneWidgetPrivate::createActions()
     connect(actions[DualPaneWidget::MoveFiles], SIGNAL(triggered()), q, SLOT(moveFiles()));
 
     for (int i = 0; i < DualPaneWidget::ActionCount; i++) {
+        actions[i]->setShortcutContext(Qt::WidgetWithChildrenShortcut);
         q->addAction(actions[i]);
     }
 }

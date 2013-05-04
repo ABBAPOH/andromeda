@@ -335,7 +335,6 @@ void FileManagerPlugin::createGoToDirCommand(QDesktopServices::StandardLocation 
         cmd->setIcon(icon);
 
     cmd->setData(dir.absolutePath());
-    cmd->setContext(Command::ApplicationCommand);
 
     container->addCommand(cmd);
 }
@@ -372,29 +371,24 @@ void FileManagerPlugin::createPanesMenu()
     cmd = new Command(Constants::Actions::DualPane, this);
     cmd->setText(tr("Dual Pane"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+U")));
-    cmd->setContext(Command::WindowCommand);
     panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::VerticalPanels, this);
     cmd->setText(tr("Vertical panes"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+U")));
-    cmd->setContext(Command::WindowCommand);
     panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::ToggleActivePane, this);
     cmd->setText(tr("Toggle active pane"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+U")));
-    cmd->setContext(Command::WindowCommand);
     panesMenu->addCommand(cmd);
 
     panesMenu->addCommand(new Separator(this));
 
     cmd = new Command(Constants::Actions::SyncPanes, tr("Sync panes"), this);
-    cmd->setContext(Command::WindowCommand);
     panesMenu->addCommand(cmd);
 
     cmd = new Command(Constants::Actions::SwapPanes, tr("Swap panes"), this);
-    cmd->setContext(Command::WindowCommand);
     panesMenu->addCommand(cmd);
 
     panesMenu->addCommand(new Separator(this));

@@ -19,7 +19,6 @@ public:
     QAction *realAction;
 
     Command::Attributes attributes;
-    Command::CommandContext context;
 
     QKeySequence defaultShortcut;
     bool isSeparator;
@@ -43,7 +42,6 @@ void CommandPrivate::init()
     action->setEnabled(false);
     realAction = 0;
     isSeparator = false;
-    context = Command::WidgetWithChildrenCommand;
 }
 
 void CommandPrivate::update()
@@ -57,6 +55,9 @@ void CommandPrivate::update()
     if (attributes & Command::AttributeUpdateShortcut && !realAction) {
         action->setShortcut(defaultShortcut);
     }
+
+    if (!realAction)
+        action->setEnabled((attributes & Command::AttributeUpdateEnabled));
 }
 
 void CommandPrivate::setText(const QString &text)
@@ -216,35 +217,11 @@ void Command::setAttributes(Attributes attrs)
 //        if (attrs & AttributeHide && !d->realAction)
 //            d->action->setVisible(false);
         d->action->setAttributes(ProxyAction::Attributes((int)attrs >> 1));
+        if (!d->realAction)
+            d->action->setEnabled(attrs & AttributeUpdateEnabled);
 
         emit changed();
     }
-}
-
-/*!
-    \property Command::context
-
-    \brief Command's context
-
-    Default value is Command::WidgetWithChildrenCommand.
-*/
-Command::CommandContext Command::context() const
-{
-    return d_func()->context;
-}
-
-void Command::setContext(Command::CommandContext context)
-{
-    Q_D(Command);
-    if (d->context == ApplicationCommand) {
-        d->action->setEnabled(false);
-    }
-
-    if (context == ApplicationCommand) {
-        d->action->setEnabled(true);
-    }
-
-    d->context = context;
 }
 
 /*!

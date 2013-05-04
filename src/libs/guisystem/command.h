@@ -23,7 +23,6 @@ class GUISYSTEM_EXPORT Command : public AbstractCommand
     Q_DISABLE_COPY(Command)
 
     Q_PROPERTY(Attributes attributes READ attributes WRITE setAttributes)
-    Q_PROPERTY(CommandContext context READ context WRITE setContext)
     Q_PROPERTY(QKeySequence defaultShortcut READ defaultShortcut WRITE setDefaultShortcut)
     Q_PROPERTY(bool isSeparator READ isSeparator WRITE setSeparator)
     Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut)
@@ -36,17 +35,10 @@ public:
         AttributeHide = 0x2,
         AttributeUpdateText = 0x4,
         AttributeUpdateIcon = 0x8,
-        AttributeUpdateShortcut = 0x10
+        AttributeUpdateShortcut = 0x10,
+        AttributeUpdateEnabled = 0x20
     };
     Q_DECLARE_FLAGS(Attributes, Attribute)
-
-    enum CommandContext {
-        WidgetCommand,
-        WidgetWithChildrenCommand,
-        WindowCommand,
-        ApplicationCommand
-    };
-    Q_ENUMS(CommandContext)
 
     Command(const QByteArray &id,
             const QIcon &icon,
@@ -68,9 +60,6 @@ public:
     Attributes attributes() const;
     bool hasAttribute(Attribute attr) const;
     void setAttributes(Attributes attr);
-
-    CommandContext context() const;
-    void setContext(CommandContext context);
 
     QKeySequence defaultShortcut() const;
     void setDefaultShortcut(const QKeySequence &key);

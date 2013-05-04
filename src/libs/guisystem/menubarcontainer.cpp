@@ -31,53 +31,44 @@ void MenuBarContainerPrivate::createFileMenu()
     // New window
     createCommand(MenuBarContainer::FileMenu,
                   MenuBarContainer::NewWindow,
-                  QKeySequence::New,
-                  Command::ApplicationCommand);
+                  QKeySequence::New);
 
     // New tab
     createCommand(MenuBarContainer::FileMenu,
                   MenuBarContainer::NewTab,
-                  QKeySequence("Ctrl+T"),
-                  Command::WindowCommand);
+                  QKeySequence("Ctrl+T"));
 
     commands[MenuBarContainer::OpenFile] = new Command(q->standardCommandName(MenuBarContainer::OpenFile), q);
     commands[MenuBarContainer::OpenFile]->setDefaultShortcut(QKeySequence("Ctrl+O"));
-    commands[MenuBarContainer::OpenFile]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::OpenFile]);
 
     commands[MenuBarContainer::Close] = new Command(q->standardCommandName(MenuBarContainer::Close), q);
     commands[MenuBarContainer::Close]->setDefaultShortcut(QKeySequence("Ctrl+W"));
-    commands[MenuBarContainer::Close]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Close]);
 
     containers[MenuBarContainer::FileMenu]->addCommand(new Separator(q));
 
     commands[MenuBarContainer::Save] = new Command(q->standardCommandName(MenuBarContainer::Save), q);
     commands[MenuBarContainer::Save]->setDefaultShortcut(QKeySequence("Ctrl+S"));
-    commands[MenuBarContainer::Save]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Save]);
 
     commands[MenuBarContainer::SaveAs] = new Command(q->standardCommandName(MenuBarContainer::SaveAs), q);
     commands[MenuBarContainer::SaveAs]->setDefaultShortcut(QKeySequence("Ctrl+Shift+S"));
-    commands[MenuBarContainer::SaveAs]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::SaveAs]);
 
     containers[MenuBarContainer::FileMenu]->addCommand(new Separator(q));
 
     commands[MenuBarContainer::Refresh] = new Command(q->standardCommandName(MenuBarContainer::Refresh), q);
     commands[MenuBarContainer::Refresh]->setDefaultShortcut(QKeySequence("Ctrl+R"));
-    commands[MenuBarContainer::Refresh]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Refresh]);
 
     commands[MenuBarContainer::Cancel] = new Command(q->standardCommandName(MenuBarContainer::Cancel), q);
-    commands[MenuBarContainer::Cancel]->setContext(Command::WindowCommand);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Cancel]);
 
     containers[MenuBarContainer::FileMenu]->addCommand(new Separator(q), "98");
 
     commands[MenuBarContainer::Quit] = new Command(q->standardCommandName(MenuBarContainer::Quit), q);
     commands[MenuBarContainer::Quit]->setDefaultShortcut(QKeySequence("Ctrl+Q"));
-    commands[MenuBarContainer::Quit]->setContext(Command::ApplicationCommand);
     commands[MenuBarContainer::Quit]->setAttributes(Command::AttributeNonConfigurable);
     commands[MenuBarContainer::Quit]->commandAction()->setMenuRole(QAction::QuitRole);
     containers[MenuBarContainer::FileMenu]->addCommand(commands[MenuBarContainer::Quit], "99");
@@ -93,14 +84,12 @@ void MenuBarContainerPrivate::createEditMenu()
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Undo,
                   QKeySequence::Undo,
-                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
 
     // Redo
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Redo,
                   QKeySequence::Redo,
-                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
 
     containers[MenuBarContainer::EditMenu]->addCommand(new Separator(q));
@@ -109,13 +98,11 @@ void MenuBarContainerPrivate::createEditMenu()
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Cut,
                   QKeySequence::Cut,
-                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
     // Copy
     createCommand(MenuBarContainer::EditMenu,
                   MenuBarContainer::Copy,
                   QKeySequence::Copy,
-                  Command::WidgetWithChildrenCommand,
                   Command::AttributeUpdateText);
 
     // Paste
@@ -171,7 +158,6 @@ void MenuBarContainerPrivate::createToolsMenu()
 
     c = new Command(q->standardCommandName(MenuBarContainer::Preferences), q);
     c->setDefaultShortcut(QKeySequence::Preferences);
-    c->setContext(Command::ApplicationCommand);
     c->setAttributes(Command::AttributeNonConfigurable);
     c->commandAction()->setMenuRole(QAction::PreferencesRole);
     commands[MenuBarContainer::Preferences] = c;
@@ -186,7 +172,6 @@ void MenuBarContainerPrivate::createHelpMenu()
     createCommand(MenuBarContainer::HelpMenu,
                   MenuBarContainer::About,
                   QKeySequence(),
-                  Command::ApplicationCommand,
                   Command::AttributeNonConfigurable);
     commands[MenuBarContainer::About]->commandAction()->setMenuRole(QAction::AboutRole);
 
@@ -194,7 +179,6 @@ void MenuBarContainerPrivate::createHelpMenu()
     createCommand(MenuBarContainer::HelpMenu,
                   MenuBarContainer::AboutQt,
                   QKeySequence(),
-                  Command::ApplicationCommand,
                   Command::AttributeNonConfigurable);
     commands[MenuBarContainer::AboutQt]->commandAction()->setMenuRole(QAction::AboutQtRole);
 }
@@ -257,14 +241,12 @@ void MenuBarContainerPrivate::createMenu(MenuBarContainer::StandardContainer men
 void MenuBarContainerPrivate::createCommand(MenuBarContainer::StandardContainer menu,
                                             MenuBarContainer::StandardCommand command,
                                             const QKeySequence &shortcut,
-                                            Command::CommandContext context,
                                             Command::Attributes attributes)
 {
     Q_Q(MenuBarContainer);
 
     Command *c = new Command(q->standardCommandName(command), q);
     c->setDefaultShortcut(shortcut);
-    c->setContext(context);
     c->setAttributes(attributes);
     commands[command] = c;
     containers[menu]->addCommand(c);

@@ -4,6 +4,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMetaEnum>
 #include <QtCore/QtAlgorithms>
+#include <QtGui/QAction>
 
 #include "actionmanager.h"
 #include "command.h"

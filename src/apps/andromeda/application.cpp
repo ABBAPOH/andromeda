@@ -595,14 +595,14 @@ void Application::createToolsMenu()
 #ifdef QT_DEBUG
     Command *plugins = new Command(Constants::Actions::Plugins, this);
     plugins->setText(tr("Plugins..."));
-    plugins->setContext(Command::ApplicationCommand);
+    plugins->setAttributes(Command::AttributeUpdateEnabled);
     toolsMenu->addCommand(plugins);
 #endif
 
 #ifdef QT_DEBUG
     Command *settings = new Command(Constants::Actions::Settings, this);
     settings->setText(tr("View all settings..."));
-    settings->setContext(Command::ApplicationCommand);
+    settings->setAttributes(Command::AttributeUpdateEnabled);
     toolsMenu->addCommand(settings);
 #endif
 }

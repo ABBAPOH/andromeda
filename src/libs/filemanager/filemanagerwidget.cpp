@@ -176,6 +176,7 @@ void FileManagerWidgetPrivate::createActions()
     connect(actions[FileManagerWidget::SortDescendingOrder], SIGNAL(triggered(bool)), SLOT(toggleSortOrder(bool)));
 
     for (int i = 0; i < FileManagerWidget::ActionCount; i++) {
+        actions[i]->setShortcutContext(Qt::WidgetWithChildrenShortcut);
         q->addAction(actions[i]);
     }
 }

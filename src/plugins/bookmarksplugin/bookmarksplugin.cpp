@@ -218,7 +218,7 @@ void BookmarksPlugin::createActions()
     // ================ View Menu ================
     CommandContainer *viewMenu = MenuBarContainer::instance()->container(MenuBarContainer::ViewMenu);
     Command *c = new Command(Constants::Actions::ShowBookmarks, QKeySequence(), tr("Show Bookmarks toolbar"), this);
-    c->setContext(Command::WindowCommand);
+    c->setAttributes(Command::AttributeUpdateEnabled);
     viewMenu->addCommand(c);
 
     // ================ Bookmarks Menu ================

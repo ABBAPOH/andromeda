@@ -151,11 +151,6 @@ ActionManager *ActionManager::instance()
 void ActionManager::registerAction(QAction *action, const QByteArray &id)
 {
     action->setObjectName(QString(id));
-
-    Command *c = command(id);
-    if (c && c->context() == Command::ApplicationCommand) {
-        c->setRealAction(action);
-    }
 }
 
 bool ActionManager::exportShortcuts(QIODevice *device) const
@@ -306,17 +301,17 @@ bool ActionManager::eventFilter(QObject *o, QEvent *e)
 
         if (e->type() == QEvent::Show) {
             if (w->isActiveWindow()) {
-                setActionsEnabled(w, true, Command::WindowCommand);
+                setActionsEnabled(w, true, Qt::WindowShortcut);
             }
         } else if (e->type() == QEvent::Hide) {
-            setActionsEnabled(w, false, Command::WindowCommand);
+            setActionsEnabled(w, false, Qt::WindowShortcut);
         } else if (e->type() == QEvent::ActivationChange) {
             bool enable = w->isActiveWindow();
             QWidgetList widgets = w->findChildren<QWidget*>();
             widgets.prepend(w);
             foreach (QWidget *w, widgets) {
                 if (w->isVisible())
-                    setActionsEnabled(w, enable, Command::WindowCommand);
+                    setActionsEnabled(w, enable, Qt::WindowShortcut);
             }
         }
     }
@@ -331,17 +326,17 @@ void ActionManager::onFocusChanged(QWidget *old, QWidget *newWidget)
 
     QWidget *w = old;
     if (w)
-        setActionsEnabled(w, false, Command::WidgetCommand);
+        setActionsEnabled(w, false, Qt::WidgetShortcut);
     while (w) {
-        setActionsEnabled(w, false, Command::WidgetWithChildrenCommand);
+        setActionsEnabled(w, false, Qt::WidgetWithChildrenShortcut);
         w = w->parentWidget();
     }
 
     w = newWidget;
     if (w)
-        setActionsEnabled(w, true, Command::WidgetCommand);
+        setActionsEnabled(w, true, Qt::WidgetShortcut);
     while (w) {
-        setActionsEnabled(w, true, Command::WidgetWithChildrenCommand);
+        setActionsEnabled(w, true, Qt::WidgetWithChildrenShortcut);
         w = w->parentWidget();
     }
 }
@@ -351,7 +346,7 @@ void ActionManager::onFocusChanged(QWidget *old, QWidget *newWidget)
 
     Connects actions for widget \w to Commands with id equal to actions' objectNames.
 */
-void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Command::CommandContext context)
+void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Qt::ShortcutContext context)
 {
     Q_D(ActionManager);
 
@@ -359,7 +354,7 @@ void ActionManager::setActionsEnabled(QWidget *w, bool enabled, Command::Command
         QByteArray id = action->objectName().toUtf8();
         if (!id.isEmpty()) {
             Command *c = qobject_cast<Command *>(d->commands.value(id));
-            if (c && c->context() == context) {
+            if (c && action->shortcutContext() == context) {
                 if (enabled) {
                     c->setRealAction(action);
                 } else {

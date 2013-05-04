@@ -263,7 +263,6 @@ void WebViewPlugin::createActions()
     Command *inspectorCommand = new Command(Constants::Actions::ShowWebInspector, this);
     inspectorCommand->setText(tr("Show web inspector"));
     inspectorCommand->setDefaultShortcut(QKeySequence("Ctrl+Alt+I"));
-    inspectorCommand->setContext(Command::WindowCommand);
     toolsContainer->addCommand(inspectorCommand);
 }
 

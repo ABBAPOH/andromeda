@@ -48,7 +48,7 @@ protected:
     bool eventFilter(QObject *o, QEvent *e);
 
 protected:
-    void setActionsEnabled(QWidget *w, bool enable, Command::CommandContext context);
+    void setActionsEnabled(QWidget *w, bool enable, Qt::ShortcutContext context);
 
 protected slots:
     void onFocusChanged(QWidget*,QWidget*);

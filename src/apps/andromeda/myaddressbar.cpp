@@ -37,6 +37,7 @@ void MyAddressBar::createActions()
     connect(actions[SelectAll], SIGNAL(triggered()), SLOT(selectAll()));
 
     for (int i = 0; i < ActionCount; i++) {
+        actions[SelectAll]->setShortcutContext(Qt::WidgetWithChildrenShortcut);
         addAction(actions[i]);
     }
 }
