@@ -25,7 +25,6 @@ public:
 
     void createActions();
     void retranslateUi();
-    void registerActions();
     void initGeometry();
     void createTools();
     QDockWidget *createTool(ToolWidgetFactory *factory);

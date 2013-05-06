@@ -31,7 +31,6 @@ set( HEADERS
     widgets/toolwidgetmanager.h
     abstractcommand.h
     abstractcommand_p.h
-    action.h
     actionmanager.h
     command.h
     commandcontainer.h
@@ -72,7 +71,6 @@ set( SOURCES
     widgets/toolwidgetfactory.cpp
     widgets/toolwidgetmanager.cpp
     abstractcommand.cpp
-    action.cpp
     actionmanager.cpp
     command.cpp
     commandcontainer.cpp

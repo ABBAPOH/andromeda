@@ -49,7 +49,6 @@ EditorWindow::EditorWindow(QWidget *parent) :
     d->editor = 0;
     d->createActions();
     d->retranslateUi();
-    d->registerActions();
 
 #ifndef Q_OS_MAC
     setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
@@ -406,12 +405,15 @@ void EditorWindowPrivate::createActions()
     actions[EditorWindow::OpenFile] = new QAction(q);
 
     actions[EditorWindow::Close] = new QAction(q);
+    actions[EditorWindow::Close]->setObjectName(Constants::Actions::Close);
     QObject::connect(actions[EditorWindow::Close], SIGNAL(triggered()), q, SLOT(close()));
 
     actions[EditorWindow::Save] = new QAction(q);
+    actions[EditorWindow::Save]->setObjectName(Constants::Actions::Save);
     QObject::connect(actions[EditorWindow::Save], SIGNAL(triggered()), q, SLOT(save()));
 
     actions[EditorWindow::SaveAs] = new QAction(q);
+    actions[EditorWindow::SaveAs]->setObjectName(Constants::Actions::SaveAs);
     QObject::connect(actions[EditorWindow::SaveAs], SIGNAL(triggered()), q, SLOT(saveAs()));
 
     actions[EditorWindow::Reload] = new QAction(q);
@@ -421,6 +423,7 @@ void EditorWindowPrivate::createActions()
     QObject::connect(actions[EditorWindow::Stop], SIGNAL(triggered()), q, SLOT(stop()));
 
     actions[EditorWindow::ShowMenu] = new QAction(q);
+    actions[EditorWindow::ShowMenu]->setObjectName("ShowMenu");
     actions[EditorWindow::ShowMenu]->setCheckable(true);
     actions[EditorWindow::ShowMenu]->setChecked(true);
     QObject::connect(actions[EditorWindow::ShowMenu], SIGNAL(triggered(bool)), q, SLOT(setMenuVisible(bool)));
@@ -436,18 +439,6 @@ void EditorWindowPrivate::retranslateUi()
     actions[EditorWindow::SaveAs]->setText(EditorWindow::tr("Save as..."));
     actions[EditorWindow::Reload]->setText(EditorWindow::tr("Refresh"));
     actions[EditorWindow::Stop]->setText(EditorWindow::tr("Cancel"));
-}
-
-void EditorWindowPrivate::registerActions()
-{
-    ActionManager *manager = ActionManager::instance();
-    manager->registerAction(actions[EditorWindow::Close], Constants::Actions::Close);
-    manager->registerAction(actions[EditorWindow::Save], Constants::Actions::Save);
-    manager->registerAction(actions[EditorWindow::SaveAs], Constants::Actions::SaveAs);
-
-#ifndef Q_OS_MAC
-    manager->registerAction(actions[EditorWindow::ShowMenu], "ShowMenu");
-#endif
 }
 
 void EditorWindowPrivate::initGeometry()

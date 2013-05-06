@@ -12,7 +12,6 @@
 #include <QtGui/QClipboard>
 #endif
 
-#include <GuiSystem/Action>
 #include <GuiSystem/ActionManager>
 #include <GuiSystem/Command>
 #include <GuiSystem/CommandContainer>

@@ -17,7 +17,6 @@
 #include <ExtensionSystem/PluginManager>
 #include <ExtensionSystem/PluginView>
 
-#include <GuiSystem/Action>
 #include <GuiSystem/ActionManager>
 #include <GuiSystem/Command>
 #include <GuiSystem/CommandContainer>
@@ -723,6 +722,7 @@ void Application::setupApplicationActions()
 
 void Application::createAction(const QByteArray &id, const char *slot)
 {
-    Action *action = new Action(id, this);
+    QAction *action = new QAction(id, this);
+    action->setObjectName(id);
     connect(action, SIGNAL(triggered()), slot);
 }

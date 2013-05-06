@@ -33,18 +33,18 @@ void BrowserWindowPrivate::setupActions()
 {
     Q_Q(BrowserWindow);
 
-    ActionManager *actionManager = ActionManager::instance();
-
     actions[BrowserWindow::NewTab] = new QAction(q);
+    actions[BrowserWindow::NewTab]->setObjectName(Constants::Actions::NewTab);
     connect(actions[BrowserWindow::NewTab], SIGNAL(triggered()), q, SLOT(newTab()));
     q->addAction(actions[BrowserWindow::NewTab]);
-    actionManager->registerAction(actions[BrowserWindow::NewTab], Constants::Actions::NewTab);
 
     // ToolBar
-    actions[BrowserWindow::Up] = new QAction(QIcon::fromTheme("go-up", QIcon(":/andromeda/icons/up.png")), tr("Up one level"), q);
+    actions[BrowserWindow::Up] = new QAction(q);
+    actions[BrowserWindow::Up]->setText(tr("Up one level"));
+    actions[BrowserWindow::Up]->setIcon(QIcon::fromTheme("go-up", QIcon(":/andromeda/icons/up.png")));
+    actions[BrowserWindow::Up]->setObjectName(Constants::Actions::Up);
     connect(actions[BrowserWindow::Up], SIGNAL(triggered()), q, SLOT(up()));
     q->addAction(actions[BrowserWindow::Up]);
-    actionManager->registerAction(actions[BrowserWindow::Up], Constants::Actions::Up);
 
     actions[BrowserWindow::NextTab] = new QAction(q);
 #ifdef Q_OS_MAC
@@ -80,15 +80,15 @@ void BrowserWindowPrivate::setupActions()
     wa->setDefaultWidget(backButton);
     actions[BrowserWindow::Back] = wa;
     actions[BrowserWindow::Back]->setEnabled(false);
+    actions[BrowserWindow::Back]->setObjectName(Constants::Actions::Back);
     QObject::connect(actions[BrowserWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
-    actionManager->registerAction(actions[BrowserWindow::Back], "Back");
 
     wa = new QWidgetAction(q);
     wa->setDefaultWidget(forwardButton);
     actions[BrowserWindow::Forward] = wa;
     actions[BrowserWindow::Forward]->setEnabled(false);
+    actions[BrowserWindow::Forward]->setObjectName(Constants::Actions::Forward);
     QObject::connect(actions[BrowserWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
-    actionManager->registerAction(actions[BrowserWindow::Forward], "Forward");
 
     QObject::connect(history, SIGNAL(canGoBackChanged(bool)),
                      actions[BrowserWindow::Back], SLOT(setEnabled(bool)));

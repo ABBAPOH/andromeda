@@ -148,11 +148,6 @@ ActionManager *ActionManager::instance()
     return get_instance();
 }
 
-void ActionManager::registerAction(QAction *action, const QByteArray &id)
-{
-    action->setObjectName(QString(id));
-}
-
 bool ActionManager::exportShortcuts(QIODevice *device) const
 {
     if (device->openMode() != QIODevice::WriteOnly)

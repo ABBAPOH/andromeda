@@ -2,12 +2,12 @@
 
 #include <QtCore/QSettings>
 
+#include <QtGui/QAction>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QUndoStack>
 
 #include <ExtensionSystem/PluginManager>
 
-#include <GuiSystem/ActionManager>
 #include <GuiSystem/EditorWindow>
 #include <GuiSystem/EditorWindowFactory>
 #include <GuiSystem/constants.h>
@@ -96,14 +96,13 @@ void BookmarksEditor::init()
     connect(m_widget, SIGNAL(openInWindow(QUrl)), SLOT(openInWindowTriggered(QUrl)));
     connect(m_widget, SIGNAL(stateChanged()), SLOT(onStateChanged()));
 
-    ActionManager *actionManager = ActionManager::instance();
     redoAction = m_widget->model()->undoStack()->createRedoAction(m_widget);
+    redoAction->setObjectName(Constants::Actions::Redo);
     m_widget->addAction(redoAction);
-    actionManager->registerAction(redoAction, Constants::Actions::Redo);
 
     undoAction = m_widget->model()->undoStack()->createUndoAction(m_widget);
+    undoAction->setObjectName(Constants::Actions::Undo);
     m_widget->addAction(undoAction);
-    actionManager->registerAction(undoAction, Constants::Actions::Undo);
 }
 
 /*!

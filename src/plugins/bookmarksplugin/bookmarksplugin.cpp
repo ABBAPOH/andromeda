@@ -12,7 +12,6 @@
 #include <ExtensionSystem/PluginManager>
 
 #include <GuiSystem/AbstractDocument>
-#include <GuiSystem/ActionManager>
 #include <GuiSystem/EditorWindow>
 #include <GuiSystem/EditorWindowFactory>
 #include <GuiSystem/Command>
@@ -59,8 +58,6 @@ BookmarksToolBarContainer::~BookmarksToolBarContainer()
 
 QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
 {
-    ActionManager *am = ActionManager::instance();
-
     BookmarksModel *model = BookmarksPlugin::instance()->sharedDocument()->model();
 
     BookmarksToolBar *toolBar = new BookmarksToolBar(parent);
@@ -75,12 +72,12 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
 
     if (parent) {
         QAction *act = new QAction(tr("Show bookmarks toolbar"), parent);
+        act->setObjectName(Constants::Actions::ShowBookmarks);
         parent->addAction(act);
         act->setCheckable(true);
         act->setChecked(visible);
         connect(act, SIGNAL(triggered(bool)), toolBar, SLOT(setVisible(bool)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(storeVisibility(bool)));
-        am->registerAction(act, "ShowBookmarks");
     }
 
     connect(toolBar, SIGNAL(open(QUrl)), SIGNAL(open(QUrl)));

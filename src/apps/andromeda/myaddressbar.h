@@ -25,7 +25,6 @@ public:
 private:
     void createActions();
     void retranslateUi();
-    void registerActions();
 
 private:
     QAction *actions[ActionCount];

@@ -158,18 +158,15 @@ void FindToolBar::openFind()
     d->findLineEdit->setFocus();
 }
 
-#include "actionmanager.h"
 void FindToolBar::setupActions()
 {
-    ActionManager *manager = ActionManager::instance();
-
     d->findPrevAction = new QAction(this);
+    d->findPrevAction->setObjectName("FindPrevious");
     d->findPrevAction->setShortcut(QKeySequence::FindPrevious);
-    manager->registerAction(d->findPrevAction, "FindPrevious");
 
     d->findNextAction = new QAction(this);
+    d->findNextAction->setObjectName("FindNext");
     d->findNextAction->setShortcut(QKeySequence::FindNext);
-    manager->registerAction(d->findNextAction, "FindNext");
 
     d->closeAction = new QAction(this);
     d->closeAction->setShortcut(QKeySequence("Esc"));
