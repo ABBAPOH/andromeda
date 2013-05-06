@@ -22,7 +22,6 @@
 #include <GuiSystem/Command>
 #include <GuiSystem/CommandContainer>
 #include <GuiSystem/EditorWindowFactory>
-#include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/SettingsPageManager>
 #include <GuiSystem/SettingsWindow>
 #include <GuiSystem/StandardCommands>

@@ -2,9 +2,9 @@
 
 #include <QtCore/QtPlugin>
 #include <GuiSystem/ActionManager>
+#include <GuiSystem/CommandContainer>
 #include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
-#include <GuiSystem/MenuBarContainer>
 
 #include "imageviewerdocument.h"
 #include "imageviewereditor.h"

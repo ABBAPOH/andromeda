@@ -15,7 +15,6 @@
 #include <GuiSystem/ActionManager>
 #include <GuiSystem/EditorWindow>
 #include <GuiSystem/EditorWindowFactory>
-#include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/Command>
 #include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>

@@ -21,7 +21,6 @@
 #include <GuiSystem/constants.h>
 #include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
-#include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/SettingsPageManager>
 #include <GuiSystem/StandardCommands>
 #include <GuiSystem/ToolWidgetManager>

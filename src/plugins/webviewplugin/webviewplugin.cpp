@@ -12,7 +12,6 @@
 #include <GuiSystem/ActionManager>
 #include <GuiSystem/Command>
 #include <GuiSystem/CommandContainer>
-#include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/SettingsPageManager>

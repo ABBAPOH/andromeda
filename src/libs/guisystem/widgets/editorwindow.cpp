@@ -9,7 +9,6 @@
 #include "history.h"
 #include "historybutton.h"
 #include "editorwindowfactory.h"
-#include "menubarcontainer.h"
 #include "toolmodel.h"
 #include "toolwidget.h"
 #include "toolwidgetfactory.h"

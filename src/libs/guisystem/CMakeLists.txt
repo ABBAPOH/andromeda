@@ -40,8 +40,6 @@ set( HEADERS
     commandssettingswidget.h
     commandssettingswidget_p.h
     constants.h
-    menubarcontainer.h
-    menubarcontainer_p.h
     proxyaction.h
     settingspage.h
     settingspagemanager.h
@@ -80,7 +78,6 @@ set( SOURCES
     commandcontainer.cpp
     commandsmodel.cpp
     commandssettingswidget.cpp
-    menubarcontainer.cpp
     proxyaction.cpp
     settingspage.cpp
     settingspagemanager.cpp

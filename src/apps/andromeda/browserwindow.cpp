@@ -22,7 +22,6 @@
 #include <GuiSystem/CommandContainer>
 #include <GuiSystem/IHistory>
 #include <GuiSystem/History>
-#include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/constants.h>
 
 using namespace GuiSystem;
