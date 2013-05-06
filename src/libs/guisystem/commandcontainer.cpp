@@ -112,6 +112,11 @@ void CommandContainer::addCommand(AbstractCommand *c, const QByteArray &weight)
     d->addAbstractCommand(c, weight);
 }
 
+void CommandContainer::addSeparator()
+{
+    addCommand(new Separator(this));
+}
+
 /*!
     \brief Destroys all gorups and remove added Commands.
 */

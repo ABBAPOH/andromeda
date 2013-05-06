@@ -24,6 +24,7 @@ public:
     ~CommandContainer();
 
     void addCommand(AbstractCommand *command, const QByteArray &weight = QByteArray());
+    void addSeparator();
 
     void clear();
 
