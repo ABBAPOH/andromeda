@@ -20,6 +20,7 @@ class PluginView;
 } // namespace ExtensionSystem
 
 namespace GuiSystem {
+class CommandContainer;
 class SettingsPageManager;
 class SettingsWindow;
 } // namespace GuiSystem
@@ -70,13 +71,18 @@ private:
     void loadSettings();
     void saveSettings();
 
-    void createActions();
+    void createMenus();
+    void createFileMenu();
+    void createEditMenu();
+    void createViewMenu();
     void createGoToMenu();
-    void retranslateGoToMenu();
-    void createWindowsMenu();
+    void createBookmarksMenu();
+    void createPanesMenu();
     void createToolsMenu();
+    void createWindowsMenu();
+    void createHelpMenu();
     void createDockMenu();
-    void registerAtions();
+    void setupApplicationActions();
 
     void createAction(const QByteArray &id, const char *slot);
 
@@ -91,8 +97,10 @@ private:
     QSettings *m_settings;
     bool m_firstStart;
 #ifdef Q_OS_MAC
-    QMenuBar *menuBar;
+    QMenuBar *macMenuBar;
 #endif
+
+    GuiSystem::CommandContainer *menuBar;
 };
 
 } // namespace Andromeda

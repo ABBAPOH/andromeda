@@ -256,14 +256,9 @@ QWebSettings* WebViewPlugin::webSettings()
 
 void WebViewPlugin::createActions()
 {
-    CommandContainer *toolsContainer = MenuBarContainer::instance()->container(MenuBarContainer::ToolsMenu);
-
-    toolsContainer->addCommand(new Separator(this));
-
     Command *inspectorCommand = new Command(Constants::Actions::ShowWebInspector, this);
     inspectorCommand->setText(tr("Show web inspector"));
     inspectorCommand->setDefaultShortcut(QKeySequence("Ctrl+Alt+I"));
-    toolsContainer->addCommand(inspectorCommand);
 }
 
 WebHistoryInterface *staticHistory = 0;

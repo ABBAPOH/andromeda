@@ -29,23 +29,19 @@ bool ImageViewerPlugin::initialize()
 
 void ImageViewerPlugin::createActions()
 {
-    MenuBarContainer *menuBar = MenuBarContainer::instance();
-    CommandContainer *toolsMenu = menuBar->container(MenuBarContainer::ToolsMenu);
-
     imageViewMenu = new CommandContainer("ImageViewMenu", this);
     imageViewMenu->setText(tr("Image view"));
-    toolsMenu->addCommand(imageViewMenu);
 
     createAction("MoveTool", tr("Move tool"), QKeySequence("Ctrl+1"));
     createAction("SelectionTool", tr("Selection tool"), QKeySequence("Ctrl+2"));
 
-    imageViewMenu->addCommand(new Separator(this));
+    imageViewMenu->addSeparator();
     createAction("ZoomIn", tr("Zoom in"), QKeySequence("Ctrl+="));
     createAction("ZoomOut", tr("Zoom out"), QKeySequence("Ctrl+-"));
     createAction("FitInView", tr("Fit in view"), QKeySequence("Ctrl+9"));
     createAction("NormalSize", tr("Normal size"), QKeySequence("Ctrl+0"));
 
-    imageViewMenu->addCommand(new Separator(this));
+    imageViewMenu->addSeparator();
     createAction("RotateLeft", tr("Rotate left"), QKeySequence("Ctrl+L"));
     createAction("RotateRight", tr("Rotate right"), QKeySequence("Ctrl+R"));
     createAction("FlipHorizontally", tr("Flip horizontally"), QKeySequence("Ctrl+Shift+H"));

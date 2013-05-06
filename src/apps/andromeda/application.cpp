@@ -25,7 +25,12 @@
 #include <GuiSystem/MenuBarContainer>
 #include <GuiSystem/SettingsPageManager>
 #include <GuiSystem/SettingsWindow>
+#include <GuiSystem/StandardCommands>
 #include <GuiSystem/constants.h>
+
+#include <bookmarksplugin/bookmarksconstants.h>
+#include <filemanager/filemanagerconstants.h>
+#include <webviewplugin/webviewconstants.h>
 
 #include <Widgets/WindowsMenu>
 
@@ -155,6 +160,7 @@ QMenu * WindowsContainer::createMenu(QWidget *parent) const
 Application::Application(int &argc, char **argv) :
     QtSingleApplication("Andromeda", argc, argv),
     m_pluginManager(0),
+    dockMenu(0),
     m_firstStart(true)
 {
     setOrganizationName("arch");
@@ -176,7 +182,6 @@ Application::Application(int &argc, char **argv) :
                                      "guisystem" <<
                                      "imageviewer" <<
                                      "widgets");
-    connect(m_pluginManager, SIGNAL(pluginsLoaded()), SLOT(restoreSession()));
 
     EditorWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
 
@@ -186,15 +191,9 @@ Application::Application(int &argc, char **argv) :
     m_settingsPageManager->addPage(new CommandsSettingsPage(this));
     m_pluginManager->addObject(m_settingsPageManager);
 
-    createActions();
-
     connect(this, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));
 #ifndef Q_OS_MAC
     connect(this, SIGNAL(lastWindowClosed()), SLOT(exit()));
-#endif
-
-#ifdef Q_OS_MAC
-    setTrayIconVisible(false);
 #endif
 }
 
@@ -203,7 +202,7 @@ Application::~Application()
     delete dockMenu;
     delete trayIcon;
 #ifdef Q_OS_MAC
-    delete menuBar;
+    delete macMenuBar;
 #endif
 }
 
@@ -224,8 +223,9 @@ bool Application::loadPlugins()
 {
     m_pluginManager->loadPlugins();
 
-    MenuBarContainer::instance()->retranslateUi();
-    retranslateGoToMenu();
+    createMenus();
+    setupApplicationActions();
+    restoreSession();
 
     QStringList args = arguments().mid(1);
     args.prepend(QDir::currentPath());
@@ -311,7 +311,7 @@ void Application::restoreSession()
 {
 #ifdef Q_OS_MAC
     // Create menu bar now
-    menuBar = MenuBarContainer::instance()->menuBar();
+    macMenuBar = menuBar->menuBar();
 #endif
 
     loadSettings();
@@ -521,90 +521,149 @@ void Application::saveSettings()
     m_settings->setValue("geometry", BrowserWindow::windowGeometry());
 }
 
-void Application::createActions()
+void Application::createMenus()
 {
-    MenuBarContainer *menuBar = new MenuBarContainer(this);
-    menuBar->createMenus();
-
+    menuBar = new CommandContainer("MenuBar", this);
+    createFileMenu();
+    createEditMenu();
+    createViewMenu();
     createGoToMenu();
+    createBookmarksMenu();
+    createPanesMenu();
     createToolsMenu();
     createWindowsMenu();
+    createHelpMenu();
     createDockMenu();
-    registerAtions();
+}
+
+void Application::createFileMenu()
+{
+    ActionManager *am = ActionManager::instance();
+    CommandContainer *fileMenu = new CommandContainer(Constants::Menus::File, this);
+    fileMenu->setText(tr("File"));
+    menuBar->addCommand(fileMenu);
+
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::NewWindow));
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::NewTab));
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Open));
+    fileMenu->addCommand(am->command(Constants::Actions::OpenEditor));
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Close));
+    fileMenu->addSeparator();
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Save));
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::SaveAs));
+    fileMenu->addSeparator();
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Refresh));
+    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Cancel));
+    fileMenu->addSeparator();
+    fileMenu->addCommand(am->command(Constants::Actions::ShowFileInfo));
+    fileMenu->addSeparator();
+    fileMenu->addCommand(am->command(Constants::Actions::NewFolder));
+    fileMenu->addCommand(am->command(Constants::Actions::Rename));
+    fileMenu->addCommand(am->command(Constants::Actions::MoveToTrash));
+    fileMenu->addCommand(am->command(Constants::Actions::Remove));
+}
+
+void Application::createEditMenu()
+{
+    ActionManager *am = ActionManager::instance();
+    CommandContainer *editMenu = new CommandContainer(Constants::Menus::Edit, this);
+    editMenu->setText(tr("Edit"));
+    menuBar->addCommand(editMenu);
+
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Undo));
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Redo));
+    editMenu->addSeparator();
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Cut));
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Copy));
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Paste));
+    editMenu->addCommand(am->command(Constants::Actions::MoveHere));
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::SelectAll));
+    editMenu->addSeparator();
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Find));
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::FindNext));
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::FindPrev));
+    editMenu->addSeparator();
+    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Preferences));
+}
+
+void Application::createViewMenu()
+{
+    ActionManager *am = ActionManager::instance();
+    CommandContainer *viewMenu = new CommandContainer(Constants::Menus::View, this);
+    viewMenu->setText(tr("View"));
+    menuBar->addCommand(viewMenu);
+
+    viewMenu->addCommand(am->command(Constants::Actions::ShowHiddenFiles));
+    viewMenu->addCommand(StandardCommands::standardCommand(StandardCommands::ShowLeftPanel));
+    viewMenu->addCommand(StandardCommands::standardCommand(StandardCommands::ShowStatusBar));
+    viewMenu->addCommand(am->command(Constants::Actions::ShowBookmarks));
+    viewMenu->addSeparator();
+    viewMenu->addCommand(am->command(Constants::Actions::IconMode));
+    viewMenu->addCommand(am->command(Constants::Actions::ColumnMode));
+    viewMenu->addCommand(am->command(Constants::Actions::TreeMode));
+    viewMenu->addSeparator();
+    viewMenu->addCommand(am->container(Constants::Menus::SortBy));
 }
 
 void Application::createGoToMenu()
 {
-    MenuBarContainer *menuBar = MenuBarContainer::instance();
-
-    Command *c = 0;
-
-    // ================ GoTo Menu ================
-    CommandContainer *goToMenu = new CommandContainer(Constants::Menus::GoTo, this);
-    menuBar->addCommand(goToMenu, "025");
-
-    // ================ GoTo Menu (default) ================
-    c = new Command(Constants::Actions::Back, this);
-    c->setDefaultShortcut(QKeySequence::Back);
-    goToMenu->addCommand(c);
-
-    c = new Command(Constants::Actions::Forward, this);
-    c->setDefaultShortcut(QKeySequence::Forward);
-    goToMenu->addCommand(c);
-
-#ifdef Q_OS_MAC
-    c = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Ctrl+Up")), tr("Up one level"), this);
-#else
-    c = new Command(Constants::Actions::Up, QKeySequence(QLatin1String("Alt+Up")), tr("Up one level"), this);
-#endif
-    goToMenu->addCommand(c);
-    retranslateGoToMenu();
+    ActionManager *am = ActionManager::instance();
+    menuBar->addCommand(am->container(Constants::Menus::GoTo));
 }
 
-void Application::retranslateGoToMenu()
+void Application::createBookmarksMenu()
 {
-    ActionManager *manager = ActionManager::instance();
-    CommandContainer *goToMenu = manager->container(Constants::Menus::GoTo);
-    goToMenu->setText(tr("Go to"));
-
-    manager->command(Constants::Actions::Back)->setText(tr("Back"));
-    manager->command(Constants::Actions::Forward)->setText(tr("Forward"));
-    manager->command(Constants::Actions::Up)->setText(tr("Up one level"));
+    ActionManager *am = ActionManager::instance();
+    menuBar->addCommand(am->container(Constants::Menus::Bookmarks));
 }
 
-void Application::createWindowsMenu()
+void Application::createPanesMenu()
 {
-    MenuBarContainer *menuBar = MenuBarContainer::instance();
-
-    CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
-    windowsMenu->setText(tr("Windows"));
-    menuBar->addCommand(windowsMenu, "035");
+    ActionManager *am = ActionManager::instance();
+    menuBar->addCommand(am->container(Constants::Menus::Panes));
 }
 
 void Application::createToolsMenu()
 {
-#ifdef QT_DEBUG
-    MenuBarContainer *menuBar = MenuBarContainer::instance();
-#endif
+    ActionManager *am = ActionManager::instance();
+    CommandContainer *toolsMenu = new CommandContainer(Constants::Menus::Tools, this);
+    toolsMenu->setText(tr("Tools"));
+    menuBar->addCommand(toolsMenu);
 
-    // ================ Tools Menu ================
-#ifdef QT_DEBUG
-    CommandContainer *toolsMenu = menuBar->container(MenuBarContainer::ToolsMenu);
-#endif
+    toolsMenu->addCommand(am->container("ImageViewMenu"));
 
 #ifdef QT_DEBUG
-    Command *plugins = new Command(Constants::Actions::Plugins, this);
+    Command *plugins = new Command("Plugins", this);
     plugins->setText(tr("Plugins..."));
     plugins->setAttributes(Command::AttributeUpdateEnabled);
     toolsMenu->addCommand(plugins);
-#endif
+    connect(plugins->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
 
-#ifdef QT_DEBUG
-    Command *settings = new Command(Constants::Actions::Settings, this);
+    Command *settings = new Command("Settings", this);
     settings->setText(tr("View all settings..."));
     settings->setAttributes(Command::AttributeUpdateEnabled);
     toolsMenu->addCommand(settings);
+    connect(settings->commandAction(), SIGNAL(triggered()), SLOT(showSettings()));
 #endif
+    toolsMenu->addSeparator();
+    toolsMenu->addCommand(am->command(Constants::Actions::ShowWebInspector));
+}
+
+void Application::createWindowsMenu()
+{
+    CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
+    windowsMenu->setText(tr("Windows"));
+    menuBar->addCommand(windowsMenu);
+}
+
+void Application::createHelpMenu()
+{
+    CommandContainer *helpMenu = new WindowsContainer(Constants::Menus::Help, this);
+    helpMenu->setText(tr("Help"));
+    menuBar->addCommand(helpMenu);
+
+    helpMenu->addCommand(StandardCommands::standardCommand(StandardCommands::About));
+    helpMenu->addCommand(StandardCommands::standardCommand(StandardCommands::AboutQt));
 }
 
 #ifdef Q_OS_MAC
@@ -613,19 +672,17 @@ void qt_mac_set_dock_menu(QMenu *menu);
 
 void Application::createDockMenu()
 {
-    MenuBarContainer *menuBar = MenuBarContainer::instance();
-
     CommandContainer *dock = new DockContainer(Constants::Menus::Dock, this);
 #ifdef Q_OS_MAC
     dock->setText(tr("Dock menu"));
 #else
-    dock->setTitle(tr("Tray menu"));
+    dock->setText(tr("Tray menu"));
 #endif
 
-    dock->addCommand(menuBar->command(MenuBarContainer::NewWindow));
+    dock->addCommand(StandardCommands::standardCommand(StandardCommands::NewWindow));
 #ifndef Q_OS_MAC
-    dock->addCommand(new Separator(this));
-    dock->addCommand(menuBar->command(MenuBarContainer::Quit));
+    dock->addSeparator();
+    dock->addCommand(StandardCommands::standardCommand(StandardCommands::Quit));
 #endif
 
     dockMenu = dock->menu();
@@ -637,18 +694,32 @@ void Application::createDockMenu()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/andromeda/icons/andromeda.png"));
     trayIcon->setContextMenu(dockMenu);
-    trayIcon->show();
+#ifdef Q_OS_MAC
+    setTrayIconVisible(false);
+#else
+    setTrayIconVisible(true);
+#endif
 }
 
-void Application::registerAtions()
+void Application::setupApplicationActions()
 {
-    createAction(Constants::Actions::NewWindow, SLOT(newWindow()));
-    createAction(Constants::Actions::Quit, SLOT(exit()));
-    createAction(Constants::Actions::Plugins, SLOT(showPluginView()));
-    createAction(Constants::Actions::Settings, SLOT(showSettings()));
-    createAction(Constants::Actions::Preferences, SLOT(preferences()));
-    createAction(Constants::Actions::About, SLOT(about()));
-    createAction(Constants::Actions::AboutQt, SLOT(aboutQt()));
+    struct ConnectInfo {
+        StandardCommands::StandardCommand id;
+        const char *slot;
+    };
+    static ConnectInfo infos[] = {
+        { StandardCommands::NewWindow, SLOT(newWindow()) },
+        { StandardCommands::Quit, SLOT(exit()) },
+        { StandardCommands::Preferences, SLOT(preferences()) },
+        { StandardCommands::About, SLOT(about()) },
+        { StandardCommands::AboutQt, SLOT(aboutQt()) }
+    };
+
+    for (size_t i = 0; i < sizeof(infos)/sizeof(ConnectInfo); ++i) {
+        Command *c = StandardCommands::standardCommand(infos[i].id);
+        c->setAttributes(Command::AttributeUpdateEnabled);
+        connect(c->commandAction(), SIGNAL(triggered(bool)), infos[i].slot);
+    }
 }
 
 void Application::createAction(const QByteArray &id, const char *slot)

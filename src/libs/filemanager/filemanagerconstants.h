@@ -10,22 +10,9 @@ const char * const Panes = "Panes";
 
 } // namespace Menus
 
-namespace MenuGroups {
-
-const char * const FileInfo = "FileMenu 3";
-const char * const FileChange = "FileMenu 4";
-
-const char * const ViewViewMode = "ViewMenu 1";
-const char * const ViewSortBy = "ViewMenu 2";
-const char * const ViewSortByOrder = "ViewMenu 3";
-
-const char * const Locations = "GotoMenu 1";
-
-} // namespace Groups
-
 namespace Actions {
 
-const char * const OpenEditor = "Edit";
+const char * const OpenEditor = "OpenEditor";
 const char * const SyncPanes = "SyncPanes";
 const char * const SwapPanes = "SwapPanes";
 

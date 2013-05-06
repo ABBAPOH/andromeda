@@ -81,7 +81,7 @@ QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
         act->setChecked(visible);
         connect(act, SIGNAL(triggered(bool)), toolBar, SLOT(setVisible(bool)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(storeVisibility(bool)));
-        am->registerAction(act, Constants::Actions::ShowBookmarks);
+        am->registerAction(act, "ShowBookmarks");
     }
 
     connect(toolBar, SIGNAL(open(QUrl)), SIGNAL(open(QUrl)));
@@ -196,8 +196,6 @@ void BookmarksPlugin::addFolder()
 
 void BookmarksPlugin::createActions()
 {
-    MenuBarContainer *menuBarContainer = MenuBarContainer::instance();
-
     addBookmarkAction = new QAction(tr("Add bookmark"), this);
     addBookmarkAction->setShortcut(QKeySequence(QLatin1String("Ctrl+D")));
     connect(addBookmarkAction, SIGNAL(triggered()), SLOT(addBookmark()));
@@ -216,10 +214,8 @@ void BookmarksPlugin::createActions()
     actions.append(showBookmarksAction);
 
     // ================ View Menu ================
-    CommandContainer *viewMenu = MenuBarContainer::instance()->container(MenuBarContainer::ViewMenu);
     Command *c = new Command(Constants::Actions::ShowBookmarks, QKeySequence(), tr("Show Bookmarks toolbar"), this);
     c->setAttributes(Command::AttributeUpdateEnabled);
-    viewMenu->addCommand(c);
 
     // ================ Bookmarks Menu ================
     BookmarksMenuContainer *menu = new BookmarksMenuContainer(Constants::Menus::Bookmarks, this);
@@ -229,7 +225,6 @@ void BookmarksPlugin::createActions()
     connect(menu->bookmarksMenu(), SIGNAL(open(QUrl)), SLOT(open(QUrl)));
     connect(menu->bookmarksMenu(), SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
     connect(menu->bookmarksMenu(), SIGNAL(openInWindow(QList<QUrl>)), SLOT(openInWindow(QList<QUrl>)));
-    menuBarContainer->addCommand(menu, "027");
     addObject(menu);
 
     BookmarksToolBarContainer *toolBar = new BookmarksToolBarContainer(Constants::Objects::AlternateToolbar, this);

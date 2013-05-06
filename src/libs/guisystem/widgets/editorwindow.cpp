@@ -15,6 +15,8 @@
 #include "toolwidgetfactory.h"
 #include "toolwidgetmanager.h"
 
+#include <GuiSystem/constants.h>
+
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
@@ -55,7 +57,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
 #endif
 
     d->menuBarButton = new QToolButton(this);
-    d->menuBarButton->setMenu(MenuBarContainer::instance()->menu(d->menuBarButton));
+    d->menuBarButton->setMenu(ActionManager::instance()->container("MenuBar")->menu(d->menuBarButton));
     d->menuBarButton->setPopupMode(QToolButton::InstantPopup);
     d->menuBarButton->setText(tr("Menu"));
     d->menuBarButton->setIcon(QIcon(":/guisystem/icons/menu.png"));
@@ -440,12 +442,12 @@ void EditorWindowPrivate::retranslateUi()
 void EditorWindowPrivate::registerActions()
 {
     ActionManager *manager = ActionManager::instance();
-    manager->registerAction(actions[EditorWindow::Close], MenuBarContainer::standardCommandName(MenuBarContainer::Close));
-    manager->registerAction(actions[EditorWindow::Save], MenuBarContainer::standardCommandName(MenuBarContainer::Save));
-    manager->registerAction(actions[EditorWindow::SaveAs], MenuBarContainer::standardCommandName(MenuBarContainer::SaveAs));
+    manager->registerAction(actions[EditorWindow::Close], Constants::Actions::Close);
+    manager->registerAction(actions[EditorWindow::Save], Constants::Actions::Save);
+    manager->registerAction(actions[EditorWindow::SaveAs], Constants::Actions::SaveAs);
 
 #ifndef Q_OS_MAC
-    manager->registerAction(actions[EditorWindow::ShowMenu], MenuBarContainer::standardCommandName(MenuBarContainer::ShowMenu));
+    manager->registerAction(actions[EditorWindow::ShowMenu], "ShowMenu");
 #endif
 }
 

@@ -33,15 +33,12 @@ private slots:
 
 private:
     void createActions();
-    void createFileMenu();
-    void createEditMenu();
-    void createViewMenu();
+    void createSortByMenu();
     void createGoToMenu();
     void createGoToDirCommand(QDesktopServices::StandardLocation location,
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());
-    void createGoToActions();
-    void createSortByActons();
+    void connectGoToActions();
     void createPanesMenu();
 
     void loadSettings();

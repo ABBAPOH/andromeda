@@ -303,7 +303,7 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
     d->retranslateUi();
 
 #ifndef Q_OS_MAC
-    setMenuBar(MenuBarContainer::instance()->menuBar());
+    setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
     menuBar()->setVisible(menuVisible());
 #endif
     setAttribute(Qt::WA_DeleteOnClose);

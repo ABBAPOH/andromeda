@@ -17,7 +17,7 @@ const char * const Bookmarks = "bookmarks";
 
 namespace Menus {
 
-const char * const Bookmarks = "Menus:45.Bookmarks";
+const char * const Bookmarks = "BookmarksMenu";
 
 } // namespace Menus
 
@@ -27,8 +27,8 @@ namespace MenuGroups {
 
 namespace Actions {
 
-const char * const ShowBookmarks = "Actions.ShowBookmarks";
-const char * const AddBookmark = "Actions.AddBookmark";
+const char * const ShowBookmarks = "ShowBookmarks";
+const char * const AddBookmark = "AddBookmark";
 
 } // namespace Actions
 

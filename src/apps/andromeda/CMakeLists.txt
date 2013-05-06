@@ -53,6 +53,8 @@ qt4_wrap_ts( QM_FILES ${TS_FILES} )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${PROJECT_SOURCE_DIR}/include )
+include_directories( ${PROJECT_SOURCE_DIR}/src/libs )
+include_directories( ${PROJECT_SOURCE_DIR}/src/plugins )
 include_directories( ${PROJECT_SOURCE_DIR}/src/shared/qtsingleapplication )
 
 # on macosx the icons has to be part of sources. Bummer.
