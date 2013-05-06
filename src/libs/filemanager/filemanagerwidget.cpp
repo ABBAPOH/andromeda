@@ -167,6 +167,7 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::SortBySize]->setObjectName(Constants::Actions::SortBySize);
     actions[FileManagerWidget::SortByType]->setObjectName(Constants::Actions::SortByType);
     actions[FileManagerWidget::SortByDate]->setObjectName(Constants::Actions::SortByDate);
+    actions[FileManagerWidget::SortDescendingOrder]->setObjectName(Constants::Actions::SortByDescendingOrder);
 
     connect(actions[FileManagerWidget::SortByName], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
     connect(actions[FileManagerWidget::SortBySize], SIGNAL(triggered(bool)), SLOT(toggleSortColumn(bool)));
