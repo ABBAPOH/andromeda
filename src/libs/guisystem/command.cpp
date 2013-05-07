@@ -370,6 +370,12 @@ void Command::setRealAction(QAction *action)
     }
 }
 
+QAction * Command::createAction(QObject * /*parent*/) const
+{
+    Q_D(const Command);
+    return d->action;
+}
+
 /*!
     \class GuiSystem::Separator
 

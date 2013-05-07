@@ -36,9 +36,12 @@ signals:
 
 protected:
     explicit AbstractCommand(AbstractCommandPrivate &dd, const QByteArray &id, QObject *parent = 0);
+    virtual QAction *createAction(QObject *parent = 0) const = 0;
 
 protected:
     AbstractCommandPrivate *d_ptr;
+
+    friend class CommandContainer;
 };
 
 } // namespace GuiSystem

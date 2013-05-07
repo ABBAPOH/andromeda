@@ -41,6 +41,7 @@ private slots:
 protected:
     virtual QMenu *createMenu(QWidget *parent) const;
     virtual QToolBar *createToolBar(QWidget *parent) const;
+    QAction *createAction(QObject *parent) const;
 };
 
 } // namespace GuiSystem

@@ -80,6 +80,8 @@ protected:
     QAction *realAction() const;
     void setRealAction(QAction *commandAction);
 
+    QAction *createAction(QObject *parent) const;
+
 protected:
     friend class ActionManager;
     friend class CommandContainer;

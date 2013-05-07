@@ -174,12 +174,8 @@ QMenu * CommandContainer::menu(QWidget *parent) const
 
     QMenu *menu = createMenu(parent);
     menu->setTitle(text());
-    foreach (QObject *o, d->commands) {
-        if (Command *cmd = qobject_cast<Command *>(o)) {
-            menu->addAction(cmd->commandAction());
-        } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
-            menu->addMenu(container->menu());
-        }
+    foreach (AbstractCommand *command, d->commands) {
+        menu->addAction(command->createAction(menu));
     }
 
     return menu;
@@ -198,12 +194,8 @@ QMenuBar * CommandContainer::menuBar() const
     Q_D(const CommandContainer);
 
     QMenuBar *menuBar = new QMenuBar;
-    foreach (QObject *o, d->commands) {
-        if (Command *cmd = qobject_cast<Command *>(o)) {
-            menuBar->addAction(cmd->commandAction());
-        } else if (CommandContainer *container = qobject_cast<CommandContainer *>(o)) {
-            menuBar->addMenu(container->menu());
-        }
+    foreach (AbstractCommand *command, d->commands) {
+        menuBar->addAction(command->createAction(menuBar));
     }
     return menuBar;
 }
@@ -221,10 +213,8 @@ QToolBar * CommandContainer::toolBar(QWidget *parent) const
     Q_D(const CommandContainer);
 
     QToolBar *toolBar = createToolBar(parent);
-    foreach (QObject *o, d->commands) {
-        if (Command *cmd = qobject_cast<Command *>(o)) {
-            toolBar->addAction(cmd->commandAction());
-        }
+    foreach (AbstractCommand *command, d->commands) {
+        toolBar->addAction(command->createAction(toolBar));
     }
     return toolBar;
 }
@@ -252,4 +242,9 @@ QMenu * CommandContainer::createMenu(QWidget *parent) const
 QToolBar * CommandContainer::createToolBar(QWidget *parent) const
 {
     return new QToolBar(parent);
+}
+
+QAction * CommandContainer::createAction(QObject *parent) const
+{
+    return menu(qobject_cast<QWidget*>(parent))->menuAction();
 }
