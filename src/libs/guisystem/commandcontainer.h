@@ -29,7 +29,6 @@ public:
     void clear();
 
     QList<Command*> commands() const;
-    QList<Command*> commands(const QByteArray &id) const;
 
     QMenu *menu(QWidget *parent = 0) const;
     QMenuBar *menuBar() const;

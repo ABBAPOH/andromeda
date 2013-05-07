@@ -145,22 +145,6 @@ QList<Command *> CommandContainer::commands() const
 }
 
 /*!
-    \brief Returns list of Commands in group specified by \a id.
-*/
-QList<Command *> CommandContainer::commands(const QByteArray &id) const
-{
-    Q_D(const CommandContainer);
-
-    QList<Command *> result;
-    foreach (QObject *o, d->commands) {
-        if (Command *cmd = qobject_cast<Command *>(o)) {
-            result.append(cmd);
-        }
-    }
-    return result;
-}
-
-/*!
     \brief Constructs QMenu that represents this CommandContainer.
 
     QMenu will contain all groups within this container; each group is separated.
