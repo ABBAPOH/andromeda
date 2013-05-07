@@ -97,8 +97,6 @@ bool commandLessThen(QObject *o1, QObject *o2)
     return weight1 < weight2;
 }
 
-#include <QDebug>
-
 /*!
     \brief Adds \a command to a \a group.
 */
