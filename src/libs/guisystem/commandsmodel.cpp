@@ -47,14 +47,17 @@ void CommandsModelPrivate::build()
     ActionManager *am = ActionManager::instance();
 
     foreach (CommandContainer *container, am->containers()) {
-        QList<Command *> commands = container->commands();
+        QList<AbstractCommand *> commands = container->commands();
         if (commands.isEmpty())
             continue;
 
         CommandsModelItem *categoryItem = new CommandsModelItem(CommandsModelItem::Folder, rootItem);
         categoryItem->name = container->text();
 
-        foreach (Command *c, commands) {
+        foreach (AbstractCommand *cmd, commands) {
+            Command *c = qobject_cast<Command*>(cmd);
+            if (!c)
+                continue;
             if (c->isSeparator())
                 continue;
 

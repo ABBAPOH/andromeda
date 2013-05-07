@@ -129,17 +129,10 @@ void CommandContainer::clear()
 /*!
     \brief Returns list all Commands in this container.
 */
-QList<Command *> CommandContainer::commands() const
+QList<AbstractCommand *> CommandContainer::commands() const
 {
     Q_D(const CommandContainer);
-
-    QList<Command *> result;
-    foreach (QObject *o, d->commands) {
-        Command *cmd = qobject_cast<Command *>(o);
-        if (cmd)
-            result.append(cmd);
-    }
-    return result;
+    return d->commands;
 }
 
 /*!
