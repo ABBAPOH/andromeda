@@ -29,24 +29,24 @@ set( HEADERS
     widgets/toolwidget.h
     widgets/toolwidgetfactory.h
     widgets/toolwidgetmanager.h
-    abstractcommand.h
-    abstractcommand_p.h
-    actionmanager.h
-    command.h
-    commandcontainer.h
-    commandsmodel.h
-    commandsmodel_p.h
-    commandssettingswidget.h
-    commandssettingswidget_p.h
+    actionmanager/abstractcommand.h
+    actionmanager/abstractcommand_p.h
+    actionmanager/actionmanager.h
+    actionmanager/command.h
+    actionmanager/commandcontainer.h
+    actionmanager/commandsmodel.h
+    actionmanager/commandsmodel_p.h
+    actionmanager/commandssettingswidget.h
+    actionmanager/commandssettingswidget_p.h
+    actionmanager/proxyaction.h
+    actionmanager/standardcommands.h
+    actionmanager/standardcommands_p.h
     constants.h
-    proxyaction.h
     settingspage.h
     settingspagemanager.h
     settingswindow.h
     sharedproperties.h
     sharedproperties_p.h
-    standardcommands.h
-    standardcommands_p.h
    )
 set( SOURCES
     core/abstractdocument.cpp
@@ -70,21 +70,21 @@ set( SOURCES
     widgets/toolwidget.cpp
     widgets/toolwidgetfactory.cpp
     widgets/toolwidgetmanager.cpp
-    abstractcommand.cpp
-    actionmanager.cpp
-    command.cpp
-    commandcontainer.cpp
-    commandsmodel.cpp
-    commandssettingswidget.cpp
-    proxyaction.cpp
+    actionmanager/abstractcommand.cpp
+    actionmanager/actionmanager.cpp
+    actionmanager/command.cpp
+    actionmanager/commandcontainer.cpp
+    actionmanager/commandsmodel.cpp
+    actionmanager/commandssettingswidget.cpp
+    actionmanager/proxyaction.cpp
+    actionmanager/standardcommands.cpp
     settingspage.cpp
     settingspagemanager.cpp
     settingswindow.cpp
     sharedproperties.cpp
-    standardcommands.cpp
    )
 set( FORMS
-    commandssettingswidget.ui
+    actionmanager/commandssettingswidget.ui
    )
 set( RESOURCES guisystem.qrc )
 set( TS_FILES

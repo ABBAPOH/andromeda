@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/commandssettingswidget.h"
+#include "../../src/libs/guisystem/actionmanager/commandssettingswidget.h"

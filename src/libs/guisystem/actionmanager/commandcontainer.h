@@ -1,7 +1,7 @@
 #ifndef COMMANDCONTAINER_H
 #define COMMANDCONTAINER_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include "abstractcommand.h"
 

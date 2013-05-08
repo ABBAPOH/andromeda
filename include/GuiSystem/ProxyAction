@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/proxyaction.h"
+#include "../../src/libs/guisystem/actionmanager/proxyaction.h"

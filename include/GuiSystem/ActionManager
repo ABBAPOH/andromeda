@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/actionmanager.h"
+#include "../../src/libs/guisystem/actionmanager/actionmanager.h"

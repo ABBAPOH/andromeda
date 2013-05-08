@@ -1,7 +1,7 @@
 #ifndef COMMANDSMODEL_H
 #define COMMANDSMODEL_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QAbstractItemModel>
 

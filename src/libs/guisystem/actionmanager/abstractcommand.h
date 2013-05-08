@@ -1,7 +1,7 @@
 #ifndef ABSTRACTCOMMAND_H
 #define ABSTRACTCOMMAND_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QIcon>

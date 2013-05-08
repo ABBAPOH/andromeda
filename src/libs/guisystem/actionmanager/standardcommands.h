@@ -1,7 +1,7 @@
 #ifndef STANDARDCOMMANDS_H
 #define STANDARDCOMMANDS_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QObject>
 

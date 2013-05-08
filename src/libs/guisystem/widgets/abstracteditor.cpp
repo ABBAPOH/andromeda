@@ -4,7 +4,6 @@
 #include <QtCore/QUrl>
 
 #include "abstractdocument.h"
-#include "actionmanager.h"
 
 using namespace GuiSystem;
 

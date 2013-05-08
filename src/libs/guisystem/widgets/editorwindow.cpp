@@ -1,11 +1,11 @@
 #include "editorwindow.h"
 #include "editorwindow_p.h"
 
+#include "actionmanager/actionmanager.h"
+#include "actionmanager/commandcontainer.h"
 #include "abstractdocument.h"
 #include "abstracteditor.h"
-#include "actionmanager.h"
 #include "ihistory.h"
-#include "commandcontainer.h"
 #include "history.h"
 #include "historybutton.h"
 #include "editorwindowfactory.h"

@@ -1,7 +1,7 @@
 #ifndef PROXYACTION_H
 #define PROXYACTION_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QPointer>
 #include <QtGui/QAction>
