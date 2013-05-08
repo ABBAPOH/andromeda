@@ -290,6 +290,9 @@ void FileManagerPlugin::connectGoToActions()
     connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(goTo(QString)));
     foreach (AbstractCommand *c, gotoMenu->commands()) {
         Command *cmd = qobject_cast<Command *>(c);
+        // TODO: refactor
+        if (!cmd->id().startsWith("Goto "))
+            continue;
         QAction *action = cmd->commandAction();
         gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
