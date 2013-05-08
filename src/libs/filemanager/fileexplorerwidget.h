@@ -10,7 +10,7 @@ class QToolBar;
 
 namespace FileManager {
 
-class DualPaneWidget;
+class FileManagerWidget;
 class NavigationModel;
 class NavigationPanel;
 
@@ -30,7 +30,7 @@ public:
     bool isPanelVisible() const;
     bool isStatusBarVisible() const;
 
-    DualPaneWidget *dualPane() const;
+    FileManagerWidget *widget() const;
     NavigationPanel *panel() const;
     QToolBar *statusBar() const;
     QSplitter *splitter() const;

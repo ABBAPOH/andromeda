@@ -527,7 +527,6 @@ void Application::createMenus()
     createViewMenu();
     createGoToMenu();
     createBookmarksMenu();
-    createPanesMenu();
     createToolsMenu();
     createWindowsMenu();
     createHelpMenu();
@@ -613,12 +612,6 @@ void Application::createBookmarksMenu()
 {
     ActionManager *am = ActionManager::instance();
     menuBar->addCommand(am->container(Constants::Menus::Bookmarks));
-}
-
-void Application::createPanesMenu()
-{
-    ActionManager *am = ActionManager::instance();
-    menuBar->addCommand(am->container(Constants::Menus::Panes));
 }
 
 void Application::createToolsMenu()

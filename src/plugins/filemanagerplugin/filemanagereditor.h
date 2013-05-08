@@ -13,7 +13,6 @@ namespace FileManager {
 
 class FileManagerDocument;
 class FileManagerWidget;
-class DualPaneWidget;
 class NavigationPanel;
 class FileExplorerWidget;
 
@@ -44,9 +43,6 @@ private slots:
     void onSelectedPathsChanged();
     void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
-    void onOrientationChanged(Qt::Orientation orientation);
-    void onDualPaneModeChanged(bool);
-    void initRightPane(bool);
     void onPanelVisibleChanged(bool);
     void onStatusBarVisibleChanged(bool);
     void onSplitterMoved(int,int);

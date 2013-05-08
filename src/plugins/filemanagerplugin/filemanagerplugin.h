@@ -39,7 +39,6 @@ private:
                               const QIcon &icon = QIcon(),
                               const QKeySequence &key = QKeySequence());
     void connectGoToActions();
-    void createPanesMenu();
 
     void loadSettings();
     void saveSettings();

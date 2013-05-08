@@ -173,7 +173,6 @@ void FileManagerPlugin::createActions()
     viewGroup->addAction(cmd->commandAction());
 
     createSortByMenu();
-    createPanesMenu();
     createGoToMenu();
     connectGoToActions();
 }
@@ -297,49 +296,6 @@ void FileManagerPlugin::connectGoToActions()
         gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
     }
-}
-
-void FileManagerPlugin::createPanesMenu()
-{
-    Command *cmd = 0;
-
-    CommandContainer *panesMenu = new CommandContainer("Panes", this);
-    panesMenu->setText(tr("Panes"));
-
-    cmd = new Command(Constants::Actions::DualPane, this);
-    cmd->setText(tr("Dual Pane"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+U")));
-    panesMenu->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::VerticalPanels, this);
-    cmd->setText(tr("Vertical panes"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Shift+U")));
-    panesMenu->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::ToggleActivePane, this);
-    cmd->setText(tr("Toggle active pane"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+U")));
-    panesMenu->addCommand(cmd);
-
-    panesMenu->addCommand(new Separator(this));
-
-    cmd = new Command(Constants::Actions::SyncPanes, tr("Sync panes"), this);
-    panesMenu->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::SwapPanes, tr("Swap panes"), this);
-    panesMenu->addCommand(cmd);
-
-    panesMenu->addCommand(new Separator(this));
-
-    cmd = new Command(Constants::Actions::CopyFiles, this);
-    cmd->setText(tr("Copy files"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("F5")));
-    panesMenu->addCommand(cmd);
-
-    cmd = new Command(Constants::Actions::MoveFiles, this);
-    cmd->setText(tr("Move files"));
-    cmd->setDefaultShortcut(QKeySequence(QLatin1String("F6")));
-    panesMenu->addCommand(cmd);
 }
 
 void FileManagerPlugin::loadSettings()

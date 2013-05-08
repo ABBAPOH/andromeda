@@ -20,7 +20,6 @@
 #include <GuiSystem/constants.h>
 #include <Widgets/MiniSplitter>
 
-#include <FileManager/DualPaneWidget>
 #include <FileManager/FileExplorerWidget>
 #include <FileManager/FileInfoDialog>
 #include <FileManager/FileManagerHistory>
@@ -38,82 +37,49 @@ using namespace FileManager;
 
 FileManagerEditorHistory::FileManagerEditorHistory(QObject *parent) :
     IHistory(parent),
-    m_widget(0),
-    m_currentItemIndex(-1),
-    m_pane(0)
+    m_widget(0)
 {
 }
 
-void FileManagerEditorHistory::setDualPaneWidget(DualPaneWidget *widget)
+void FileManagerEditorHistory::setDualPaneWidget(FileManagerWidget *widget)
 {
     m_widget = widget;
-    connect(m_widget, SIGNAL(activePaneChanged(DualPaneWidget::Pane)),
-            SLOT(onActivePaneChanged(DualPaneWidget::Pane)));
-
-    connect(m_widget->leftWidget()->history(), SIGNAL(currentItemIndexChanged(int)), SLOT(onLocalIndexChanged(int)));
+    connect(widget->history(), SIGNAL(currentItemIndexChanged(int)),
+            this, SIGNAL(currentItemIndexChanged(int)));
 }
 
 void FileManagerEditorHistory::clear()
 {
-    // TODO: implement
-    m_widget->leftWidget()->history()->clear();
-    m_widget->rightWidget()->history()->clear();
+    m_widget->history()->clear();
 }
 
 void FileManagerEditorHistory::erase()
 {
-    m_indexes.clear();
-    m_currentItemIndex = -1;
-    m_pane = DualPaneWidget::LeftPane;
+//    m_indexes.clear();
 }
 
 int FileManagerEditorHistory::count() const
 {
-    return m_indexes.count();
+    return m_widget->history()->count();
 }
 
 int FileManagerEditorHistory::currentItemIndex() const
 {
-    return m_currentItemIndex;
+    return m_widget->history()->currentItemIndex();
 }
 
 void FileManagerEditorHistory::setCurrentItemIndex(int index)
 {
-    if (m_currentItemIndex == index)
-        return;
-
-    if (index < 0 || index >= count())
-        return;
-
-    m_currentItemIndex = index;
-
-    int localIndex = m_indexes[index];
-    if (localIndex >= 0) {
-        m_pane = DualPaneWidget::LeftPane;
-        m_widget->setActivePane(DualPaneWidget::LeftPane);
-        m_widget->leftWidget()->history()->setCurrentItemIndex(localIndex);
-    } else {
-        m_pane = DualPaneWidget::RightPane;
-        m_widget->setDualPaneModeEnabled(true);
-        m_widget->setActivePane(DualPaneWidget::RightPane);
-        m_widget->rightWidget()->history()->setCurrentItemIndex(-localIndex - 2);
-    }
-
-    emit currentItemIndexChanged(m_currentItemIndex);
+    m_widget->history()->setCurrentItemIndex(index);
 }
 
 HistoryItem FileManagerEditorHistory::itemAt(int index) const
 {
-    if (index < 0 || index >= m_indexes.count())
+    if (index < 0 || index >= count())
         return HistoryItem();
 
     FileManagerHistoryItem item;
-    int localIndex = m_indexes[index];
-    if (localIndex >= 0) {
-        item = m_widget->leftWidget()->history()->itemAt(localIndex);
-    } else {
-        item = m_widget->rightWidget()->history()->itemAt(-localIndex - 2);
-    }
+    item = m_widget->history()->itemAt(index);
     HistoryItem result;
     result.setUrl(QUrl::fromLocalFile(item.path()));
 
@@ -125,11 +91,7 @@ QByteArray FileManagerEditorHistory::store() const
     QByteArray history;
     QDataStream s(&history, QIODevice::WriteOnly);
 
-    s << m_currentItemIndex;
-    s << m_indexes;
-    s << *(m_widget->leftWidget()->history());
-    if (m_widget->rightWidget())
-        s << *(m_widget->rightWidget()->history());
+    s << *(m_widget->history());
 
     return history;
 }
@@ -139,53 +101,9 @@ void FileManagerEditorHistory::restore(const QByteArray &arr)
     QByteArray history(arr);
     QDataStream s(&history, QIODevice::ReadOnly);
 
-    s >> m_currentItemIndex;
-    s >> m_indexes;
-    s >> *(m_widget->leftWidget()->history());
-    if (m_widget->rightWidget())
-        s >> *(m_widget->rightWidget()->history());
+    s >> *(m_widget->history());
 
-    emit currentItemIndexChanged(m_currentItemIndex);
-}
-
-void FileManagerEditorHistory::onLocalIndexChanged(int index)
-{
-    QObject *object = sender();
-    int localIndex = m_currentItemIndex == -1 ? -1 : m_indexes[m_currentItemIndex];
-    if (object == m_widget->leftWidget()->history()) {
-    } else {
-        if (index == 0)
-            return;
-
-        index = -index - 2;
-    }
-
-    if (localIndex == index)
-        return;
-
-    m_indexes.erase(m_indexes.begin() + m_currentItemIndex + 1, m_indexes.end());
-    m_indexes.append(index);
-    m_currentItemIndex++;
-
-    emit currentItemIndexChanged(m_currentItemIndex);
-}
-
-void FileManagerEditorHistory::onActivePaneChanged(DualPaneWidget::Pane pane)
-{
-    if (m_pane == pane)
-        return;
-
-    m_pane = pane;
-
-    m_indexes.erase(m_indexes.begin() + m_currentItemIndex + 1, m_indexes.end());
-    if (pane == DualPaneWidget::LeftPane) {
-        m_indexes.append(m_widget->leftWidget()->history()->currentItemIndex());
-    } else {
-        m_indexes.append(-m_widget->rightWidget()->history()->currentItemIndex() - 2);
-    }
-    m_currentItemIndex++;
-
-    emit currentItemIndexChanged(m_currentItemIndex);
+    emit currentItemIndexChanged(currentItemIndex());
 }
 
 /*!
@@ -242,18 +160,14 @@ void FileManagerEditor::restoreDefaults()
         m_widget->splitter()->setSizes(QList<int>() << 200 << 600);
     }
 
-    DualPaneWidget *widget = m_widget->dualPane();
+    FileManagerWidget *widget = m_widget->widget();
     widget->blockSignals(true);
     int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder"), Qt::AscendingOrder).toInt();
     int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn"), FileManagerWidget::NameColumn).toInt();
-    int viewModeLeft = m_settings->value(QLatin1String("fileManager/viewModeLeft"), FileManagerWidget::IconView).toInt();
-    bool dualPaneModeEnabled = m_settings->value(QLatin1String("fileManager/dualPaneModeEnabled"), false).toInt();
-    int orientation = m_settings->value(QLatin1String("fileManager/orientation"), Qt::Horizontal).toInt();
-    widget->setViewMode((FileManagerWidget::ViewMode)viewModeLeft);
+    int viewMode = m_settings->value(QLatin1String("fileManager/viewMode"), FileManagerWidget::IconView).toInt();
+    widget->setViewMode((FileManagerWidget::ViewMode)viewMode);
     widget->setSortingOrder((Qt::SortOrder)sortOrder);
     widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
-    widget->setDualPaneModeEnabled(dualPaneModeEnabled);
-    widget->setOrientation((Qt::Orientation)orientation);
     widget->blockSignals(false);
 }
 
@@ -275,15 +189,13 @@ bool FileManagerEditor::restoreState(const QByteArray &arr)
     // we have to block signals to not rewrite user settings
     bool bs0 = m_widget->blockSignals(true);
     bool bs1 = m_widget->splitter()->blockSignals(true);
-    bool bs2 = m_widget->dualPane()->blockSignals(true);
+    bool bs2 = m_widget->widget()->blockSignals(true);
     bool bs3 = m_widget->statusBar()->blockSignals(true);
     ok |= m_widget->restoreState(widgetState);
     m_widget->blockSignals(bs0);
     m_widget->splitter()->blockSignals(bs1);
-    m_widget->dualPane()->blockSignals(bs2);
+    m_widget->widget()->blockSignals(bs2);
     m_widget->statusBar()->blockSignals(bs3);
-
-    initRightPane(m_widget->dualPane()->dualPaneModeEnabled());
 
     return ok;
 }
@@ -312,7 +224,7 @@ void FileManagerEditor::resizeEvent(QResizeEvent *e)
 
 void FileManagerEditor::onSelectedPathsChanged()
 {
-    QStringList paths = m_widget->dualPane()->selectedPaths();;
+    QStringList paths = m_widget->widget()->selectedPaths();;
     bool enabled = !paths.empty();
 
     m_openTabAction->setEnabled(enabled);
@@ -322,11 +234,7 @@ void FileManagerEditor::onSelectedPathsChanged()
 
 void FileManagerEditor::onViewModeChanged(FileManagerWidget::ViewMode mode)
 {
-    int pane = m_widget->dualPane()->activePane();
-    if (pane == DualPaneWidget::LeftPane)
-        m_settings->setValue(QLatin1String("fileManager/viewModeLeft"), mode);
-    else
-        m_settings->setValue(QLatin1String("fileManager/viewModeRight"), mode);
+    m_settings->setValue(QLatin1String("fileManager/viewMode"), mode);
 }
 
 /*!
@@ -334,36 +242,11 @@ void FileManagerEditor::onViewModeChanged(FileManagerWidget::ViewMode mode)
 */
 void FileManagerEditor::onSortingChanged()
 {
-    int sortOrder = m_widget->dualPane()->sortingOrder();
-    int sortColumn = m_widget->dualPane()->sortingColumn();
+    int sortOrder = m_widget->widget()->sortingOrder();
+    int sortColumn = m_widget->widget()->sortingColumn();
 
     m_settings->setValue(QLatin1String("fileManager/sortingOrder"), sortOrder);
     m_settings->setValue(QLatin1String("fileManager/sortingColumn"), sortColumn);
-}
-
-/*!
-    \internal
-*/
-void FileManagerEditor::onOrientationChanged(Qt::Orientation orientation)
-{
-    m_settings->setValue(QLatin1String("fileManager/orientation"), orientation);
-}
-
-void FileManagerEditor::onDualPaneModeChanged(bool enabled)
-{
-    m_settings->setValue(QLatin1String("fileManager/dualPaneModeEnabled"), enabled);
-}
-
-void FileManagerEditor::initRightPane(bool enabled)
-{
-    if (enabled) {
-        FileManagerWidget *widget = m_widget->dualPane()->rightWidget();
-        registerWidgetActions(widget);
-        connect(widget->history(), SIGNAL(currentItemIndexChanged(int)),
-                document()->history(), SLOT(onLocalIndexChanged(int)));
-        int viewModeRight = m_settings->value(QLatin1String("fileManager/viewModeRight"), FileManagerWidget::IconView).toInt();
-        widget->setViewMode((FileManagerWidget::ViewMode)viewModeRight);
-    }
 }
 
 /*!
@@ -436,7 +319,7 @@ void FileManagerEditor::openPaths(const QStringList &paths,Qt::KeyboardModifiers
 */
 void FileManagerEditor::openNewTab()
 {
-    QStringList paths = m_widget->dualPane()->selectedPaths();
+    QStringList paths = m_widget->widget()->selectedPaths();
     if (paths.isEmpty())
         return;
 
@@ -454,7 +337,7 @@ void FileManagerEditor::openNewTab()
 */
 void FileManagerEditor::openNewWindow()
 {
-    QStringList paths = m_widget->dualPane()->selectedPaths();
+    QStringList paths = m_widget->widget()->selectedPaths();
     if (paths.isEmpty())
         return;
 
@@ -470,7 +353,7 @@ void FileManagerEditor::openNewWindow()
 
 void FileManagerEditor::openEditor()
 {
-    QStringList paths = m_widget->dualPane()->selectedPaths();
+    QStringList paths = m_widget->widget()->selectedPaths();
     if (paths.isEmpty())
         return;
 
@@ -540,15 +423,12 @@ void FileManagerEditor::setupUi()
 */
 void FileManagerEditor::setupConnections()
 {
-    DualPaneWidget *widget = m_widget->dualPane();
+    FileManagerWidget *widget = m_widget->widget();
     connect(widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
     connect(widget, SIGNAL(openRequested(QStringList,Qt::KeyboardModifiers)),
             this, SLOT(openPaths(QStringList,Qt::KeyboardModifiers)));
     connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
     connect(widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
-    connect(widget, SIGNAL(orientationChanged(Qt::Orientation)), SLOT(onOrientationChanged(Qt::Orientation)));
-    connect(widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(onDualPaneModeChanged(bool)));
-    connect(widget, SIGNAL(dualPaneModeChanged(bool)), SLOT(initRightPane(bool)));
 
     connect(m_widget->panel(), SIGNAL(triggered(QString)), widget, SLOT(setCurrentPath(QString)));
 
@@ -581,9 +461,7 @@ void FileManagerEditor::createActions()
     connect(m_openEditorAction, SIGNAL(triggered()), SLOT(openEditor()));
     addAction(m_openEditorAction);
 
-    DualPaneWidget *widget = m_widget->dualPane();
-    // TODO: register panes when created
-    registerWidgetActions(widget->leftWidget());
+    registerWidgetActions(m_widget->widget());
 }
 
 void FileManagerEditor::retranslateUi()
@@ -604,11 +482,11 @@ void FileManagerEditor::connectDocument(FileManagerDocument *document)
 {
     Q_ASSERT(document);
 
-    document->fmhistory()->setDualPaneWidget(m_widget->dualPane());
+    document->fmhistory()->setDualPaneWidget(m_widget->widget());
 
     connect(document, SIGNAL(currentPathChanged(QString)),
-            m_widget->dualPane(), SLOT(setCurrentPath(QString)));
-    connect(m_widget->dualPane(), SIGNAL(currentPathChanged(QString)),
+            m_widget->widget(), SLOT(setCurrentPath(QString)));
+    connect(m_widget->widget(), SIGNAL(currentPathChanged(QString)),
             document, SLOT(setCurrentPath(QString)));
 }
 

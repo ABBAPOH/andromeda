@@ -8,7 +8,7 @@
 #include <Widgets/MiniSplitter>
 
 #include <GuiSystem/constants.h>
-#include "dualpanewidget.h"
+#include "filemanagerwidget.h"
 #include "navigationmodel.h"
 #include "navigationpanel.h"
 
@@ -26,7 +26,7 @@ public:
 
 public:
     MiniSplitter *splitter;
-    DualPaneWidget *dualPane;
+    FileManagerWidget *fileManagerWidget;
     NavigationPanel *panel;
 
     QToolBar *statusBar;
@@ -80,14 +80,13 @@ void FileExplorerWidgetPrivate::init()
     rightLayout->setContentsMargins(0, 0, 0, 0);
     rightLayout->setSpacing(0);
 
-    dualPane = new DualPaneWidget(widget);
-    dualPane->setFocus();
-    dualPane->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    rightLayout->addWidget(dualPane);
+    fileManagerWidget = new FileManagerWidget(widget);
+    fileManagerWidget->setFocus();
+    fileManagerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    rightLayout->addWidget(fileManagerWidget);
 
     statusBar = new QToolBar(widget);
     statusBar->addAction(showLeftPanelAction);
-    statusBar->addAction(dualPane->action(DualPaneWidget::EnableDualPane));
 
     statusLabel = new QLabel(statusBar);
     statusLabel->setAlignment(Qt::AlignCenter);
@@ -99,7 +98,7 @@ void FileExplorerWidgetPrivate::init()
     splitter->addWidget(panel);
     splitter->addWidget(widget);
 
-    q->connect(dualPane, SIGNAL(selectedPathsChanged()), q, SLOT(onSelectedPathsChanged()));
+    q->connect(fileManagerWidget, SIGNAL(selectedPathsChanged()), q, SLOT(onSelectedPathsChanged()));
 
     retranslateUi();
 }
@@ -234,11 +233,11 @@ void FileExplorerWidget::setStatusBarVisible(bool visible)
 /*!
     Returns pointer to the file browser widget.
 */
-DualPaneWidget * FileExplorerWidget::dualPane() const
+FileManagerWidget * FileExplorerWidget::widget() const
 {
     Q_D(const FileExplorerWidget);
 
-    return d->dualPane;
+    return d->fileManagerWidget;
 }
 
 /*!
@@ -320,7 +319,7 @@ bool FileExplorerWidget::restoreState(const QByteArray &arr)
     setPanelVisible(panelVisible);
     setStatusBarVisible(statusBarVisible);
     ok |= d->splitter->restoreState(splitterState);
-    ok |= d->dualPane->restoreState(widgetState);
+    ok |= d->fileManagerWidget->restoreState(widgetState);
 
     return ok;
 }
@@ -340,7 +339,7 @@ QByteArray FileExplorerWidget::saveState() const
     s << isPanelVisible();
     s << isStatusBarVisible();
     s << d->splitter->saveState();
-    s << d->dualPane->saveState();
+    s << d->fileManagerWidget->saveState();
 
     return state;
 }
@@ -352,7 +351,7 @@ void FileExplorerWidget::onSelectedPathsChanged()
 {
     Q_D(FileExplorerWidget);
 
-    QStringList paths = d->dualPane->selectedPaths();
+    QStringList paths = d->fileManagerWidget->selectedPaths();
     int count = paths.count();
     QString text = count == 1 ? tr("Selected 1 object") : tr("Selected %1 objects").arg(count);
     d->statusLabel->setText(text);

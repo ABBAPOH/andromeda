@@ -5,7 +5,6 @@
 
 #include <GuiSystem/HistoryItem>
 #include <GuiSystem/IHistory>
-#include <FileManager/DualPaneWidget>
 
 namespace FileManager {
 
@@ -17,7 +16,7 @@ class FileManagerEditorHistory : public GuiSystem::IHistory
 public:
     explicit FileManagerEditorHistory(QObject *parent = 0);
 
-    void setDualPaneWidget(DualPaneWidget *widget);
+    void setDualPaneWidget(FileManagerWidget *widget);
 
     void clear();
     void erase();
@@ -31,16 +30,8 @@ public:
     QByteArray store() const;
     void restore(const QByteArray &history);
 
-private slots:
-    void onLocalIndexChanged(int index);
-    void onActivePaneChanged(DualPaneWidget::Pane m_pane);
-
 private:
-    DualPaneWidget *m_widget;
-
-    QList<int> m_indexes;
-    int m_currentItemIndex;
-    int m_pane;
+    FileManagerWidget *m_widget;
 };
 
 } //namespace FileManager

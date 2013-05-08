@@ -77,7 +77,6 @@ private:
     void createViewMenu();
     void createGoToMenu();
     void createBookmarksMenu();
-    void createPanesMenu();
     void createToolsMenu();
     void createWindowsMenu();
     void createHelpMenu();

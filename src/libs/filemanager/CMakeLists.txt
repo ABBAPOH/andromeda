@@ -2,8 +2,6 @@ set( CPP_HEADERS
     filemanager_global.h
 )
 set( HEADERS
-    dualpanewidget.h
-    dualpanewidget_p.h
     filecopyerrordialog.h
     filecopyreplacedialog.h
 #    filecopytask.h
@@ -36,7 +34,6 @@ set( HEADERS
     permissionswidget.h
    )
 set( SOURCES
-    dualpanewidget.cpp
     filecopyerrordialog.cpp
     filecopyreplacedialog.cpp
     filecopytask.cpp

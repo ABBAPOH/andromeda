@@ -171,8 +171,6 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
     FileManagerWidgetPrivate *d_ptr;
-
-    friend class DualPaneWidget;
 };
 
 } // namespace FileManager

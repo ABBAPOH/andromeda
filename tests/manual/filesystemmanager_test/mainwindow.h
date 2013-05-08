@@ -5,7 +5,6 @@
 
 namespace FileManager {
 class FileManagerWidget;
-class DualPaneWidget;
 }
 
 class QModelIndex;
@@ -24,8 +23,7 @@ private slots:
 
 private:
     QFileSystemModel *model;
-    FileManager::FileManagerWidget *view;
-    FileManager::DualPaneWidget *dualPane;
+    FileManager::FileManagerWidget *widget;
 };
 
 #endif // MAINWINDOW_H
