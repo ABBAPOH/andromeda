@@ -18,18 +18,23 @@ public:
     explicit SharedProperties(QObject *parent = 0);
     ~SharedProperties();
 
-    bool addObject(const QString &key, QObject *object);
-    bool addObject(const QString &key, QObject *object, const QByteArray &propertyName);
-    void removeObject(QObject *object);
+    bool addProperty(const QString &key, QObject *object);
+    bool addProperty(const QString &key, QObject *object, const QByteArray &propertyName);
+    void removeProperty(const QString &key, QObject *object);
+    void removeProperty(const QString &key, QObject *object, const QByteArray &propertyName);
+    void removeProperties(QObject *object);
     void removeAll();
 
     QVariant value(const QString &key, const QVariant &defaulValue = QVariant()) const;
-    void setValue(const QString &key, const QVariant &value);
-    void clear();
 
     QString group() const;
     void beginGroup(const QString &group);
     void endGroup();
+
+public slots:
+    void setValue(const QString &key, const QVariant &value);
+    void updateValue(const QString &key, const QVariant &value);
+    void clear();
 
 signals:
     void valueChanged(const QString &key, const QVariant &value);

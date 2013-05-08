@@ -9,6 +9,7 @@ class Object : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString property READ property WRITE setProperty NOTIFY propertyChanged)
+    Q_PROPERTY(QString propertyNoNotify READ property WRITE setProperty)
 public:
     explicit Object(QObject *parent = 0) : QObject(parent) {}
 
@@ -37,12 +38,45 @@ public:
 
 private Q_SLOTS:
     void testGroup();
+    void testAddProperty();
+    void testDefaultValue();
     void testSetValue();
+    void testUpdateValue();
     void testNotification();
+    void testRemoveProperty();
 };
 
 SharedPropertiesTest::SharedPropertiesTest()
 {
+}
+
+void SharedPropertiesTest::testAddProperty()
+{
+    SharedProperties props;
+    Object o1;
+
+    // test invalid property first
+    QVERIFY(!props.addProperty("size", &o1));
+
+    // test valid property without notifier signal
+    QVERIFY(!props.addProperty("propertyNoNotify", &o1));
+
+    // test valid property
+    QVERIFY(props.addProperty("property", &o1));
+}
+
+void SharedPropertiesTest::testDefaultValue()
+{
+    QString key = "property";
+    QString value = "value";
+    SharedProperties props;
+    Object o1;
+
+    props.setValue(key, value);
+
+    QCOMPARE(o1.property(), QString());
+    QVERIFY(props.addProperty(key, &o1));
+    QCOMPARE(o1.property(), value);
 }
 
 void SharedPropertiesTest::testSetValue()
@@ -55,13 +89,34 @@ void SharedPropertiesTest::testSetValue()
     QCOMPARE(o1.property(), QString());
     QCOMPARE(o2.property(), QString());
 
-    props.addObject(key, &o1);
+    QVERIFY(props.addProperty(key, &o1));
     QCOMPARE(o1.property(), QString());
     props.setValue(key, value);
+    QCOMPARE(props.value(key).toString(), value);
     QCOMPARE(o1.property(), value);
 
-    props.addObject(key, &o2);
+    QVERIFY(props.addProperty(key, &o2));
     QCOMPARE(o2.property(), value);
+}
+
+void SharedPropertiesTest::testUpdateValue()
+{
+    QString key = "property";
+    QString value = "value";
+    SharedProperties props;
+    Object o1, o2;
+
+    QCOMPARE(o1.property(), QString());
+    QCOMPARE(o2.property(), QString());
+
+    QVERIFY(props.addProperty(key, &o1));
+    QCOMPARE(o1.property(), QString());
+    props.updateValue(key, value);
+    QCOMPARE(props.value(key).toString(), value);
+    QCOMPARE(o1.property(), QString()); // check if value didn't change
+
+    QVERIFY(props.addProperty(key, &o2));
+    QCOMPARE(o2.property(), value); // check if value assigned to new objects
 }
 
 void SharedPropertiesTest::testNotification()
@@ -74,16 +129,38 @@ void SharedPropertiesTest::testNotification()
     QCOMPARE(o1.property(), QString());
     QCOMPARE(o2.property(), QString());
 
-    props.addObject(key, &o1);
+    props.addProperty(key, &o1);
     QCOMPARE(o1.property(), QString());
 
     o1.setProperty(value);
     QCOMPARE(props.value(key).toString(), value);
     QCOMPARE(o1.property(), value);
-    QCOMPARE(o2.property(), QString());
 
-    props.addObject(key, &o2);
+    props.addProperty(key, &o2);
     QCOMPARE(o2.property(), value);
+}
+
+void SharedPropertiesTest::testRemoveProperty()
+{
+    QString key = "property";
+    QString value = "value";
+    QString value2 = "value2";
+    SharedProperties props;
+    Object o1, o2;
+
+    QCOMPARE(o1.property(), QString());
+
+    props.addProperty(key, &o1);
+    props.addProperty(key, &o2);
+    QCOMPARE(o1.property(), QString());
+    QCOMPARE(o2.property(), QString());
+    props.setValue(key, value);
+    QCOMPARE(o1.property(), value);
+    QCOMPARE(o2.property(), value);
+    props.removeProperty(key, &o1);
+    props.setValue(key, value2);
+    QCOMPARE(o1.property(), value);
+    QCOMPARE(o2.property(), value2);
 }
 
 void SharedPropertiesTest::testGroup()

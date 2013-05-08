@@ -15,19 +15,30 @@ typedef SharedPropertiesPrivate::Notifier Notifier;
 
 static const char * const OnValueChangedSlot = "onValueChanged()";
 
-static QString shortKey(const QString &longKey)
+static inline QString shortKey(const QString &longKey)
 {
     int index = longKey.lastIndexOf('/');
 
     return longKey.mid(index + 1);
 }
 
-static QString longKey(const QString &group, const QString &shortKey)
+static inline QString longKey(const QString &group, const QString &shortKey)
 {
     if (group.isEmpty())
         return shortKey;
 
     return group + '/' + shortKey;
+}
+
+static QMetaProperty objectProperty(const QObject *object, const QByteArray &propertyName)
+{
+    const QMetaObject *metaObject = object->metaObject();
+    int propertyId = metaObject->indexOfProperty(propertyName.constData());
+
+    if (propertyId == -1)
+        return QMetaProperty();
+
+    return metaObject->property(propertyId);
 }
 
 SharedPropertiesPrivate::SharedPropertiesPrivate(SharedProperties *qq) :
@@ -109,53 +120,77 @@ SharedProperties::~SharedProperties()
     delete d_ptr;
 }
 
-bool SharedProperties::addObject(const QString &key, QObject *object)
+bool SharedProperties::addProperty(const QString &key, QObject *object)
 {
-    return addObject(key, object, shortKey(key).toLatin1());
+    return addProperty(key, object, shortKey(key).toLatin1());
 }
 
-bool SharedProperties::addObject(const QString &key, QObject *object, const QByteArray &propertyName)
+bool SharedProperties::addProperty(const QString &key, QObject *object, const QByteArray &propertyName)
 {
     Q_D(SharedProperties);
 
     QString longKey = ::longKey(d->group, key);
 
-    const QMetaObject *metaObject = object->metaObject();
-    int propertyId = metaObject->indexOfProperty(propertyName.constData());
-
-    if (propertyId == -1) {
+    QMetaProperty metaProperty = ::objectProperty(object, propertyName);
+    if (!metaProperty.isValid()) {
         qWarning() << "SharedProperties::addObject :" << "Object" << object << "doesn't have property" << propertyName;
         return false;
     }
 
-    Property propertyKey(object, propertyId);
-    d->mapKeyToProperty.insert(longKey, propertyKey);
-
-    QMetaProperty metaProperty = metaObject->property(propertyId);
-    metaProperty.write(object, value(longKey));
-
-    int notifierId = metaProperty.notifySignalIndex();
-    if (notifierId == -1) {
+    QMetaMethod notifierMethod = metaProperty.notifySignal();
+    if (notifierMethod.methodIndex() == -1) {
         qWarning() << "SharedProperties::addObject :" << "Property" << propertyName << "doesn't have notifier signal";
         return false;
     }
 
-    Notifier notifierKey(object, notifierId);
+    Property propertyKey(object, metaProperty.propertyIndex());
+    d->mapKeyToProperty.insert(longKey, propertyKey);
+
+    metaProperty.write(object, value(longKey));
+
+    Notifier notifierKey(object, notifierMethod.methodIndex());
     d->mapNotifierToKey.insert(notifierKey, longKey);
-    QMetaMethod notifierMethod = metaObject->method(notifierId);
 
-    QMetaMethod handlerMethod = d->handlerMethod();
-
-    connect(object, notifierMethod, this, handlerMethod);
+    connect(object, notifierMethod, this, d->handlerMethod());
 
     return true;
 }
 
-void SharedProperties::removeObject(QObject *object)
+void SharedProperties::removeProperty(const QString &key, QObject *object)
+{
+    removeProperty(key, object, ::shortKey(key).toLatin1());
+}
+
+void SharedProperties::removeProperty(const QString &key, QObject *object, const QByteArray &propertyName)
 {
     Q_D(SharedProperties);
 
-    d->removeObject(object);
+    QString longKey = ::longKey(d->group, key);
+
+    QMetaProperty metaProperty = ::objectProperty(object, propertyName);
+    if (!metaProperty.isValid()) {
+        qWarning() << "SharedProperties::addObject :" << "Object" << object << "doesn't have property" << propertyName;
+        return;
+    }
+
+    QMetaMethod notifierMethod = metaProperty.notifySignal();
+    if (notifierMethod.methodIndex() == -1) {
+        qWarning() << "SharedProperties::addObject :" << "Property" << propertyName << "doesn't have notifier signal";
+        return;
+    }
+
+    Property propertyKey(object, metaProperty.propertyIndex());
+    d->mapKeyToProperty.remove(longKey, propertyKey);
+
+    Notifier notifierKey(object, notifierMethod.methodIndex());
+    d->mapNotifierToKey.remove(notifierKey/*, longKey*/);
+
+    disconnect(object, notifierMethod, this, d->handlerMethod());
+}
+
+void SharedProperties::removeProperties(QObject *object)
+{
+    Q_D(SharedProperties);
 
     QMapIterator<Notifier, QString> it(d->mapNotifierToKey);
     while (it.hasNext()) {
@@ -163,6 +198,8 @@ void SharedProperties::removeObject(QObject *object)
         if (it.key().object == object)
             d->disconnectNotifier(it.key());
     }
+
+    d->removeObject(object);
 }
 
 void SharedProperties::removeAll()
@@ -192,17 +229,24 @@ void SharedProperties::setValue(const QString &key, const QVariant &value)
     Q_D(SharedProperties);
 
     QString longKey = ::longKey(d->group, key);
-    bool changed = false;
+    if (d->values.value(longKey) == value)
+        return;
 
-    if (d->values.value(longKey) != value) {
-        d->values.insert(longKey, value);
-        changed = true;
-    }
+    d->values.insert(longKey, value);
+    d->notifyValueChanged(longKey, value);
+    emit valueChanged(longKey, value);
+}
 
-    if (changed) {
-        d->notifyValueChanged(longKey, value);
-        emit valueChanged(longKey, value);
-    }
+void SharedProperties::updateValue(const QString &key, const QVariant &value)
+{
+    Q_D(SharedProperties);
+
+    QString longKey = ::longKey(d->group, key);
+    if (d->values.value(longKey) == value)
+        return;
+
+    d->values.insert(longKey, value);
+    emit valueChanged(longKey, value);
 }
 
 void SharedProperties::clear()
