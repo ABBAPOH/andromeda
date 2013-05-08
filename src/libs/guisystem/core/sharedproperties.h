@@ -1,7 +1,7 @@
 #ifndef SHAREDPROPERTIES_H
 #define SHAREDPROPERTIES_H
 
-#include "guisystem_global.h"
+#include "../guisystem_global.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>

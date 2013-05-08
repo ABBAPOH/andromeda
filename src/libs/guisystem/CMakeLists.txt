@@ -14,6 +14,8 @@ set( HEADERS
     core/ifind.h
     core/ihistory.h
     core/toolmodel.h
+    core/sharedproperties.h
+    core/sharedproperties_p.h
     widgets/abstracteditor.h
     widgets/abstracteditorfactory.h
     widgets/editormanager.h
@@ -45,8 +47,6 @@ set( HEADERS
     settingspage.h
     settingspagemanager.h
     settingswindow.h
-    sharedproperties.h
-    sharedproperties_p.h
    )
 set( SOURCES
     core/abstractdocument.cpp
@@ -58,6 +58,7 @@ set( SOURCES
     core/ifind.cpp
     core/ihistory.cpp
     core/toolmodel.cpp
+    core/sharedproperties.cpp
     widgets/abstracteditor.cpp
     widgets/abstracteditorfactory.cpp
     widgets/editormanager.cpp
@@ -81,7 +82,6 @@ set( SOURCES
     settingspage.cpp
     settingspagemanager.cpp
     settingswindow.cpp
-    sharedproperties.cpp
    )
 set( FORMS
     actionmanager/commandssettingswidget.ui

@@ -1,7 +1,7 @@
 #include <QtCore/QString>
 #include <QtTest/QtTest>
 
-#include <sharedproperties.h>
+#include <GuiSystem/SharedProperties>
 
 using namespace GuiSystem;
 

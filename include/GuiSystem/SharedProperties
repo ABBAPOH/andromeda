@@ -1,1 +1,1 @@
-#include "../../src/libs/guisystem/sharedproperties.h"
+#include "../../src/libs/guisystem/core/sharedproperties.h"
