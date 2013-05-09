@@ -31,6 +31,7 @@ class FILEMANAGER_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
     Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
     Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY selectedPathsChanged)
+    Q_PROPERTY(bool showHiddenFiles READ showHiddenFiles WRITE setShowHiddenFiles NOTIFY showHiddenFilesChanged)
     Q_PROPERTY(Column sortingColumn READ sortingColumn WRITE setSortingColumn NOTIFY sortingChanged)
     Q_PROPERTY(Qt::SortOrder sortingOrder READ sortingOrder WRITE setSortingOrder NOTIFY sortingChanged)
     Q_PROPERTY(ViewMode viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
@@ -97,9 +98,10 @@ public:
     void setIconSize(FileManagerWidget::ViewMode mode, QSize size);
 
     bool itemsExpandable() const;
-    void setItemsExpandable(bool expandable);
 
     QStringList selectedPaths() const;
+
+    bool showHiddenFiles() const;
 
     Column sortingColumn() const;
     void setSortingColumn(Column column);
@@ -130,6 +132,7 @@ signals:
     void canUndoChanged(bool);
     void currentPathChanged(const QString &path);
     void selectedPathsChanged();
+    void showHiddenFilesChanged(bool show);
     void sortingChanged();
     void viewModeChanged(FileManagerWidget::ViewMode mode);
 
@@ -156,7 +159,8 @@ public slots:
     void forward();
     void up();
 
-    void showHiddenFiles(bool show);
+    void setItemsExpandable(bool expandable);
+    void setShowHiddenFiles(bool show);
     void showContextMenu(QPoint pos);
 
 protected:

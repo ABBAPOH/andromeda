@@ -85,6 +85,7 @@ public:
 
     bool alternatingRowColors;
     bool itemsExpandable;
+    bool showHiddenFiles;
 
     FileManagerWidget::Column sortingColumn;
     Qt::SortOrder sortingOrder;

@@ -117,7 +117,7 @@ void FileManagerWidgetPrivate::createActions()
     actions[FileManagerWidget::ShowHiddenFiles] = new QAction(this);
     actions[FileManagerWidget::ShowHiddenFiles]->setCheckable(true);
     actions[FileManagerWidget::ShowHiddenFiles]->setObjectName(Constants::Actions::ShowHiddenFiles);
-    connect(actions[FileManagerWidget::ShowHiddenFiles], SIGNAL(triggered(bool)), q, SLOT(showHiddenFiles(bool)));
+    connect(actions[FileManagerWidget::ShowHiddenFiles], SIGNAL(triggered(bool)), q, SLOT(setShowHiddenFiles(bool)));
 
     viewModeGroup = new QActionGroup(this);
 
@@ -696,6 +696,7 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->sortingOrder = (Qt::SortOrder)-1;
     d->itemsExpandable = true;
     d->alternatingRowColors = true;
+    d->showHiddenFiles = false;
 
     d->history = new FileManagerHistory(this);
     connect(d->history, SIGNAL(currentItemIndexChanged(int)), d, SLOT(onCurrentItemIndexChanged(int)));
@@ -984,6 +985,42 @@ QStringList FileManagerWidget::selectedPaths() const
     result.removeDuplicates();
     return result;
 }
+
+/*!
+    \property FileManagerWidget::showHiddenFiles
+    Holds whether show hidden files or not.
+*/
+bool FileManagerWidget::showHiddenFiles() const
+{
+    Q_D(const FileManagerWidget);
+    return d->showHiddenFiles;
+}
+
+/*!
+    Enables or disables showing of hidden files.
+*/
+void FileManagerWidget::setShowHiddenFiles(bool show)
+{
+    Q_D(FileManagerWidget);
+
+    if (d->showHiddenFiles == show)
+        return;
+
+    d->showHiddenFiles = show;
+
+    if (show)
+        d->model->setFilter(mBaseFilters | QDir::Hidden);
+    else
+        d->model->setFilter(mBaseFilters);
+
+    emit showHiddenFilesChanged(show);
+}
+
+/*!
+    \fn void FileManagerWidget::showHiddenFilesChanged(bool show)
+    This signal is emitted when showHiddenFiles property is changed.
+*/
+
 
 /*!
     \fn void FileManagerWidget::selectedPathsChanged()
@@ -1458,19 +1495,6 @@ void FileManagerWidget::up()
     QDir dir(d->currentPath);
     dir.cdUp();
     setCurrentPath(dir.path());
-}
-
-/*!
-    Enables or disables showing of hidden files.
-*/
-void FileManagerWidget::showHiddenFiles(bool show)
-{
-    Q_D(FileManagerWidget);
-
-    if (show)
-        d->model->setFilter(mBaseFilters | QDir::Hidden);
-    else
-        d->model->setFilter(mBaseFilters);
 }
 
 /*!
