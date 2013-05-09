@@ -30,6 +30,7 @@ class FILEMANAGER_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
     Q_PROPERTY(Flow flow READ flow WRITE setFlow)
     Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
+    Q_PROPERTY(bool itemsExpandable READ itemsExpandable WRITE setItemsExpandable NOTIFY itemsExpandableChanged)
     Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY selectedPathsChanged)
     Q_PROPERTY(bool showHiddenFiles READ showHiddenFiles WRITE setShowHiddenFiles NOTIFY showHiddenFilesChanged)
     Q_PROPERTY(Column sortingColumn READ sortingColumn WRITE setSortingColumn NOTIFY sortingChanged)
@@ -131,6 +132,7 @@ signals:
     void canRedoChanged(bool);
     void canUndoChanged(bool);
     void currentPathChanged(const QString &path);
+    void itemsExpandableChanged(bool expandable);
     void selectedPathsChanged();
     void showHiddenFilesChanged(bool show);
     void sortingChanged();

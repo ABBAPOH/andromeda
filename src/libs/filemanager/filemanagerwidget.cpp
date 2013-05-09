@@ -967,6 +967,8 @@ void FileManagerWidget::setItemsExpandable(bool expandable)
             view->setItemsExpandable(true);
         }
     }
+
+    emit itemsExpandableChanged(expandable);
 }
 
 /*!
