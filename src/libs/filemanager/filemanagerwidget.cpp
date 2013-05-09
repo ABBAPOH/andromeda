@@ -34,6 +34,9 @@
 using namespace GuiSystem;
 using namespace FileManager;
 
+static const quint32 fmMagicNumber = 0x46313574; // "F15t"
+static const quint8 fmVersion = 1;
+
 void FileManagerWidgetPrivate::setupUi()
 {
     Q_Q(FileManagerWidget);
@@ -1201,20 +1204,48 @@ bool FileManagerWidget::restoreState(const QByteArray &state)
     QByteArray tmpState = state;
     QDataStream s(&tmpState, QIODevice::ReadOnly);
 
-    quint8 tmp;
-    QSize size;
-    s >> tmp;
-    setFlow((Flow)tmp);
-    s >> size;
-    setGridSize(size);
-    s >> size;
-    setIconSize(IconView, size);
-    s >> tmp;
-    setViewMode((FileManagerWidget::ViewMode)tmp);
-    s >> tmp;
-    setSortingColumn((FileManagerWidget::Column)tmp);
-    s >> tmp;
-    setSortingOrder((Qt::SortOrder)tmp);
+    quint32 magic;
+    quint8 version;
+
+    s >> magic;
+    if (magic != fmMagicNumber)
+        return false;
+
+    s >> version;
+    if (version != fmVersion)
+        return false;
+
+    QString path;
+    bool alternate, expandable, showHiddenFiles;
+    quint8 flow, viewMode, sortColumn, sortOrder;
+    QSize gridSize, iconSizes[MaxViews];
+
+    s >> path;
+    s >> alternate;
+    s >> expandable;
+    s >> showHiddenFiles;
+    s >> flow;
+    s >> gridSize;
+    for (int i = 0; i < MaxViews; i++)
+        s >> iconSizes[i];
+    s >> viewMode;
+    s >> sortColumn;
+    s >> sortOrder;
+
+    if (s.status() != QDataStream::Ok)
+        return false;
+
+    setCurrentPath(path);
+    setAlternatingRowColors(alternate);
+    setItemsExpandable(expandable);
+    setShowHiddenFiles(showHiddenFiles);
+    setFlow((Flow)flow);
+    setGridSize(gridSize);
+    for (int i = 0; i < MaxViews; i++)
+        setIconSize(ViewMode(i), iconSizes[i]);
+    setViewMode((FileManagerWidget::ViewMode)viewMode);
+    setSortingColumn((FileManagerWidget::Column)sortColumn);
+    setSortingOrder((Qt::SortOrder)sortOrder);
     return true;
 }
 
@@ -1227,9 +1258,16 @@ QByteArray FileManagerWidget::saveState() const
     QByteArray state;
     QDataStream s(&state, QIODevice::WriteOnly);
 
+    s << fmMagicNumber;
+    s << fmVersion;
+    s << currentPath();
+    s << alternatingRowColors();
+    s << itemsExpandable();
+    s << showHiddenFiles();
     s << (quint8)flow();
     s << gridSize();
-    s << iconSize(IconView);
+    for (int i = 0; i < MaxViews; i++)
+        s << iconSize(ViewMode(i));
     s << (quint8)viewMode();
     s << (quint8)sortingColumn();
     s << (quint8)sortingOrder();
