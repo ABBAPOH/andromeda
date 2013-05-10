@@ -28,6 +28,7 @@ public:
     void removeAll();
 
     QVariant value(const QString &key, const QVariant &defaulValue = QVariant()) const;
+    QVariantMap values() const;
 
     QString group() const;
     void beginGroup(const QString &group);

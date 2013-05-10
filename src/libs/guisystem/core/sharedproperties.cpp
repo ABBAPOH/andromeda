@@ -226,6 +226,12 @@ QVariant SharedProperties::value(const QString &key, const QVariant &defaulValue
     return d->values.value(longKey, defaulValue);
 }
 
+QVariantMap SharedProperties::values() const
+{
+    Q_D(const SharedProperties);
+    return d->values;
+}
+
 void SharedProperties::setValue(const QString &key, const QVariant &value)
 {
     Q_D(SharedProperties);
