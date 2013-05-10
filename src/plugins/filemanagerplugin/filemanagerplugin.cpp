@@ -42,9 +42,17 @@ using namespace ExtensionSystem;
 using namespace GuiSystem;
 using namespace FileManager;
 
+FileManagerPlugin *m_instance = 0;
+
 FileManagerPlugin::FileManagerPlugin(QObject *parent) :
     ExtensionSystem::IPlugin()
 {
+    m_instance = this;
+}
+
+FileManagerPlugin::~FileManagerPlugin()
+{
+    m_instance = 0;
 }
 
 bool FileManagerPlugin::initialize()
@@ -81,6 +89,14 @@ void FileManagerPlugin::shutdown()
     qApp->clipboard()->clear();
 #endif
     saveSettings();
+}
+
+FileManagerPlugin * FileManagerPlugin::instance()
+{
+    Q_ASSERT_X(m_instance,
+               "FileManagerPlugin::instance",
+               "Must construct FileManagerPlugin before calling instance()");
+    return m_instance;
 }
 
 void FileManagerPlugin::goTo(const QString &s)

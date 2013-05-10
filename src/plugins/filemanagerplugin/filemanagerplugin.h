@@ -23,9 +23,12 @@ class FileManagerPlugin : public ExtensionSystem::IPlugin
 
 public:
     explicit FileManagerPlugin(QObject *parent = 0);
+    ~FileManagerPlugin();
 
     bool initialize();
     void shutdown();
+
+    static FileManagerPlugin *instance();
 
 private slots:
     void goTo(const QString &s);
