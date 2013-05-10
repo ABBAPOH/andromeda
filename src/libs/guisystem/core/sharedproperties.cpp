@@ -4,6 +4,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMetaObject>
 #include <QtCore/QMetaProperty>
+#include <QtCore/QSettings>
 #include <QtCore/QThread>
 
 #include <QtGui/QApplication>
@@ -276,7 +277,9 @@ void SharedProperties::beginGroup(const QString &group)
     Q_D(SharedProperties);
 
     d->groupStack.append(group);
-    d->group = d->groupStack.join("/");
+    QStringList tmp = d->groupStack;
+    tmp.removeAll(QString());
+    d->group = tmp.join("/");
 }
 
 void SharedProperties::endGroup()
@@ -290,6 +293,34 @@ void SharedProperties::endGroup()
 
     d->groupStack.takeLast();
     d->group = d->groupStack.join("/");
+}
+
+void SharedProperties::read(const QSettings *settings)
+{
+    Q_D(SharedProperties);
+
+    if (!settings)
+        return;
+
+    d->values.clear();
+    foreach (const QString &key, settings->allKeys()) {
+        setValue(key, settings->value(key));
+    }
+}
+
+void SharedProperties::write(QSettings *settings)
+{
+    Q_D(SharedProperties);
+
+    if (!settings)
+        return;
+
+    QMapIterator<QString, QVariant> it(d->values);
+    while (it.hasNext()) {
+        it.next();
+        settings->setValue(it.key(), it.value());
+    }
+
 }
 
 void SharedProperties::onDestroyed(QObject *object)

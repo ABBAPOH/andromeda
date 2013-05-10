@@ -44,6 +44,8 @@ private Q_SLOTS:
     void testUpdateValue();
     void testNotification();
     void testRemoveProperty();
+    void testReadWrite_data();
+    void testReadWrite();
 };
 
 SharedPropertiesTest::SharedPropertiesTest()
@@ -161,6 +163,34 @@ void SharedPropertiesTest::testRemoveProperty()
     props.setValue(key, value2);
     QCOMPARE(o1.property(), value);
     QCOMPARE(o2.property(), value2);
+}
+
+void SharedPropertiesTest::testReadWrite_data()
+{
+    QTest::addColumn<QString>("key");
+    QTest::addColumn<QVariant>("value");
+
+    QTest::newRow("1") << "key" << QVariant("value");
+    QTest::newRow("2") << "group/key" << QVariant("value");
+}
+
+void SharedPropertiesTest::testReadWrite()
+{
+    QFETCH(QString, key);
+    QFETCH(QVariant, value);
+
+    QSettings settings;
+    settings.setValue(key, value);
+
+    SharedProperties props;
+    props.read(&settings);
+    QVERIFY(props.value(key).isValid());
+    QCOMPARE(props.value(key), settings.value(key));
+
+    settings.clear();
+    props.write(&settings);
+    QVERIFY(settings.value(key).isValid());
+    QCOMPARE(settings.value(key), props.value(key));
 }
 
 void SharedPropertiesTest::testGroup()

@@ -6,6 +6,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
+class QSettings;
+
 namespace GuiSystem {
 
 class SharedPropertiesPrivate;
@@ -30,6 +32,9 @@ public:
     QString group() const;
     void beginGroup(const QString &group);
     void endGroup();
+
+    void read(const QSettings *settings);
+    void write(QSettings *settings);
 
 public slots:
     void setValue(const QString &key, const QVariant &value);
