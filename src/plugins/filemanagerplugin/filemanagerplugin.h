@@ -46,7 +46,6 @@ private:
 private:
     QSignalMapper *gotoMapper;
 
-    QSettings *m_settings;
     FileManager::FileManagerSettings *m_fileManagerSettings;
     FileManager::NavigationPanelSettings *m_panelSettings;
 };

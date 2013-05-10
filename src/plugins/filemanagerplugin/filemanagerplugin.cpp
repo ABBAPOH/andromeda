@@ -300,8 +300,9 @@ void FileManagerPlugin::connectGoToActions()
 
 void FileManagerPlugin::loadSettings()
 {
-    m_settings = new QSettings(this);
-    m_settings->beginGroup(QLatin1String("fileManager"));
+    QSettings settings;
+    settings.beginGroup(QLatin1String("fileManager"));
+
     m_fileManagerSettings = FileManagerSettings::globalSettings();
     m_panelSettings = NavigationPanelSettings::globalSettings();
 
@@ -314,14 +315,14 @@ void FileManagerPlugin::loadSettings()
     bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
     bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
 
-    iconSize = m_settings->value(QLatin1String("iconMode"), iconSize).toSize();
-    columnIconSize = m_settings->value(QLatin1String("columnIconSize"), columnIconSize).toSize();
-    treeIconSize = m_settings->value(QLatin1String("treeIconSize"), treeIconSize).toSize();
-    gridSize = m_settings->value(QLatin1String("gridSize"), gridSize).toSize();
-    flow = m_settings->value(QLatin1String("flow"), flow).toInt();
-    itemsExpandable = m_settings->value(QLatin1String("itemsExpandable"), itemsExpandable).toBool();
-    warnOnFileRemove = m_settings->value(QLatin1String("warnOnFileRemove"), warnOnFileRemove).toBool();
-    warnOnExtensionChange = m_settings->value(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange).toBool();
+    iconSize = settings.value(QLatin1String("iconMode"), iconSize).toSize();
+    columnIconSize = settings.value(QLatin1String("columnIconSize"), columnIconSize).toSize();
+    treeIconSize = settings.value(QLatin1String("treeIconSize"), treeIconSize).toSize();
+    gridSize = settings.value(QLatin1String("gridSize"), gridSize).toSize();
+    flow = settings.value(QLatin1String("flow"), flow).toInt();
+    itemsExpandable = settings.value(QLatin1String("itemsExpandable"), itemsExpandable).toBool();
+    warnOnFileRemove = settings.value(QLatin1String("warnOnFileRemove"), warnOnFileRemove).toBool();
+    warnOnExtensionChange = settings.value(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange).toBool();
 
     m_fileManagerSettings->setIconSize(FileManagerSettings::IconView, iconSize);
     m_fileManagerSettings->setIconSize(FileManagerSettings::ColumnView, columnIconSize);
@@ -334,7 +335,7 @@ void FileManagerPlugin::loadSettings()
 
     NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
 
-    locations = NavigationModel::StandardLocations(m_settings->value(QLatin1String("standardLocations"),
+    locations = NavigationModel::StandardLocations(settings.value(QLatin1String("standardLocations"),
                                                                      (int)locations).toInt());
 
     m_panelSettings->setStandardLocations(locations);
@@ -351,18 +352,20 @@ void FileManagerPlugin::saveSettings()
     bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
     bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
 
-    m_settings->setValue(QLatin1String("iconMode"), iconSize);
-    m_settings->setValue(QLatin1String("columnIconSize"), columnIconSize);
-    m_settings->setValue(QLatin1String("treeIconSize"), treeIconSize);
-    m_settings->setValue(QLatin1String("gridSize"), gridSize);
-    m_settings->setValue(QLatin1String("flow"), flow);
-    m_settings->setValue(QLatin1String("itemsExpandable"), itemsExpandable);
-    m_settings->setValue(QLatin1String("warnOnFileRemove"), warnOnFileRemove);
-    m_settings->setValue(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange);
+    QSettings settings;
+    settings.beginGroup(QLatin1String("fileManager"));
+    settings.setValue(QLatin1String("iconMode"), iconSize);
+    settings.setValue(QLatin1String("columnIconSize"), columnIconSize);
+    settings.setValue(QLatin1String("treeIconSize"), treeIconSize);
+    settings.setValue(QLatin1String("gridSize"), gridSize);
+    settings.setValue(QLatin1String("flow"), flow);
+    settings.setValue(QLatin1String("itemsExpandable"), itemsExpandable);
+    settings.setValue(QLatin1String("warnOnFileRemove"), warnOnFileRemove);
+    settings.setValue(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange);
 
     NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
 
-    m_settings->setValue(QLatin1String("standardLocations"), (int)locations);
+    settings.setValue(QLatin1String("standardLocations"), (int)locations);
 }
 
 Q_EXPORT_PLUGIN(FileManagerPlugin)
