@@ -147,7 +147,8 @@ bool SharedProperties::addProperty(const QString &key, QObject *object, const QB
     Property propertyKey(object, metaProperty.propertyIndex());
     d->mapKeyToProperty.insert(longKey, propertyKey);
 
-    metaProperty.write(object, value(longKey));
+    if (d->values.contains(longKey))
+        metaProperty.write(object, d->values.value(longKey));
 
     Notifier notifierKey(object, notifierMethod.methodIndex());
     d->mapNotifierToKey.insert(notifierKey, longKey);
