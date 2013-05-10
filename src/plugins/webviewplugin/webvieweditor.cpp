@@ -14,6 +14,7 @@
 #include <QtWebKit/QWebHistory>
 #include <QtWebKit/QWebInspector>
 
+#include <GuiSystem/EditorWindowFactory>
 #include <GuiSystem/constants.h>
 
 #include <Widgets/MiniSplitter>
@@ -236,7 +237,8 @@ IFind *WebViewEditor::find() const
 
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
-    document()->setUrl(url);
+    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
+    factory->open(url);
 }
 
 void WebViewEditor::showWebInspector(bool show)
