@@ -15,21 +15,6 @@ class FILEMANAGER_EXPORT FileManagerSettings
 public:
     static FileManagerSettings *globalSettings();
 
-    enum Flow { LeftToRight = 0, TopToBottom = 1 };
-    enum ViewMode { IconView = 0, ColumnView, TreeView, ViewCount };
-
-    QSize gridSize() const;
-    void setGridSize(QSize size);
-
-    Flow flow() const;
-    void setFlow(Flow flow);
-
-    QSize iconSize(ViewMode mode) const;
-    void setIconSize(ViewMode mode, QSize size);
-
-    bool itemsExpandable() const;
-    void setItemsExpandable(bool expandable);
-
     bool warnOnFileRemove() const;
     void setWarnOnFileRemove(bool);
 

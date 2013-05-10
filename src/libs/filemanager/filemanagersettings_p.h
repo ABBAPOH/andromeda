@@ -11,16 +11,6 @@ class FileManagerWidget;
 class FileManagerSettingsPrivate
 {
 public:
-    void addWidget(FileManagerWidget *widget);
-    void removeWidget(FileManagerWidget *widget);
-
-public:
-    QList<FileManagerWidget *> widgets;
-
-    QSize gridSize;
-    FileManagerSettings::Flow flow;
-    QSize iconSizes[FileManagerSettings::ViewCount];
-    bool itemsExpandable;
     bool warnOnFileRemove;
     bool warnOnExtensionChange;
 };

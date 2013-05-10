@@ -17,6 +17,7 @@
 #include <ExtensionSystem/PluginManager>
 #include <GuiSystem/AbstractEditor>
 #include <GuiSystem/EditorWindowFactory>
+#include <GuiSystem/SharedProperties>
 #include <GuiSystem/constants.h>
 #include <Widgets/MiniSplitter>
 
@@ -30,6 +31,7 @@
 #include <FileManager/constants.h>
 
 #include "filemanagerdocument.h"
+#include "filemanagerplugin.h"
 #include "openwitheditormenu.h"
 
 using namespace GuiSystem;
@@ -111,11 +113,11 @@ void FileManagerEditorHistory::restore(const QByteArray &arr)
 */
 FileManagerEditor::FileManagerEditor(QWidget *parent) :
     AbstractEditor(*new FileManagerDocument, parent),
-    m_settings(new QSettings(this)),
     ignoreSignals(false)
 {
     document()->setParent(this);
     setupUi();
+    setupPropetries();
     setupConnections();
     createActions();
     retranslateUi();
@@ -144,31 +146,13 @@ void FileManagerEditor::setDocument(AbstractDocument *document)
 */
 void FileManagerEditor::restoreDefaults()
 {
-    bool showLeftPanel = true;
-
-    showLeftPanel = m_settings->value(QLatin1String("fileManager/showLeftPanel"), true).toBool();
-
-    bool showStatusBar = m_settings->value(QLatin1String("fileManager/showStatusBar"), false).toBool();
-    QVariant value = m_settings->value(QLatin1String("fileManager/splitterState"));
-
-    m_widget->setPanelVisible(showLeftPanel);
-    m_widget->setStatusBarVisible(showStatusBar);
+    QVariant value = m_properties->value("splitterState");
 
     if (value.isValid()) {
         m_widget->splitter()->restoreState(value.toByteArray());
     } else {
         m_widget->splitter()->setSizes(QList<int>() << 200 << 600);
     }
-
-    FileManagerWidget *widget = m_widget->widget();
-    widget->blockSignals(true);
-    int sortOrder = m_settings->value(QLatin1String("fileManager/sortingOrder"), Qt::AscendingOrder).toInt();
-    int sortColumn = m_settings->value(QLatin1String("fileManager/sortingColumn"), FileManagerWidget::NameColumn).toInt();
-    int viewMode = m_settings->value(QLatin1String("fileManager/viewMode"), FileManagerWidget::IconView).toInt();
-    widget->setViewMode((FileManagerWidget::ViewMode)viewMode);
-    widget->setSortingOrder((Qt::SortOrder)sortOrder);
-    widget->setSortingColumn((FileManagerWidget::Column)sortColumn);
-    widget->blockSignals(false);
 }
 
 /*!
@@ -232,37 +216,16 @@ void FileManagerEditor::onSelectedPathsChanged()
     m_openEditorAction->setEnabled(enabled);
 }
 
-void FileManagerEditor::onViewModeChanged(FileManagerWidget::ViewMode mode)
-{
-    m_settings->setValue(QLatin1String("fileManager/viewMode"), mode);
-}
-
 /*!
     \internal
 */
 void FileManagerEditor::onSortingChanged()
 {
-    int sortOrder = m_widget->widget()->sortingOrder();
     int sortColumn = m_widget->widget()->sortingColumn();
+    int sortOrder = m_widget->widget()->sortingOrder();
 
-    m_settings->setValue(QLatin1String("fileManager/sortingOrder"), sortOrder);
-    m_settings->setValue(QLatin1String("fileManager/sortingColumn"), sortColumn);
-}
-
-/*!
-    \internal
-*/
-void FileManagerEditor::onPanelVisibleChanged(bool visible)
-{
-    m_settings->setValue(QLatin1String("fileManager/showLeftPanel"), visible);
-}
-
-/*!
-    \internal
-*/
-void FileManagerEditor::onStatusBarVisibleChanged(bool visible)
-{
-    m_settings->setValue(QLatin1String("fileManager/showStatusBar"), visible);
+    m_properties->setValue("sortingColumn", sortColumn);
+    m_properties->setValue("sortingOrder", sortOrder);
 }
 
 /*!
@@ -270,7 +233,7 @@ void FileManagerEditor::onStatusBarVisibleChanged(bool visible)
 */
 void FileManagerEditor::onSplitterMoved(int, int)
 {
-    m_settings->setValue("fileManager/splitterState", m_widget->splitter()->saveState());
+    m_properties->setValue("splitterState", m_widget->splitter()->saveState());
 }
 
 /*!
@@ -421,6 +384,28 @@ void FileManagerEditor::setupUi()
 /*!
     \internal
 */
+void FileManagerEditor::setupPropetries()
+{
+    m_properties = FileManagerPlugin::instance()->properties();
+
+    FileManagerWidget *widget = m_widget->widget();
+    m_properties->addProperty("flow", widget);
+    m_properties->addProperty("gridSize", widget);
+    m_properties->addProperty("iconSize", widget);
+    m_properties->addProperty("iconSizeColumn", widget);
+    m_properties->addProperty("iconSizeTree", widget);
+    m_properties->addProperty("itemsExpandable", widget);
+    m_properties->addProperty("sortingColumn", widget);
+    m_properties->addProperty("sortingOrder", widget);
+    m_properties->addProperty("viewMode", widget);
+
+    m_properties->addProperty("panelVisible", m_widget);
+    m_properties->addProperty("statusBarVisible", m_widget);
+}
+
+/*!
+    \internal
+*/
 void FileManagerEditor::setupConnections()
 {
     FileManagerWidget *widget = m_widget->widget();
@@ -428,14 +413,10 @@ void FileManagerEditor::setupConnections()
     connect(widget, SIGNAL(openRequested(QStringList,Qt::KeyboardModifiers)),
             this, SLOT(openPaths(QStringList,Qt::KeyboardModifiers)));
     connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
-    connect(widget, SIGNAL(viewModeChanged(FileManagerWidget::ViewMode)), SLOT(onViewModeChanged(FileManagerWidget::ViewMode)));
 
     connect(m_widget->panel(), SIGNAL(triggered(QString)), widget, SLOT(setCurrentPath(QString)));
 
     connect(m_widget->splitter(), SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
-
-    connect(m_widget, SIGNAL(panelVisibleChanged(bool)), SLOT(onPanelVisibleChanged(bool)));
-    connect(m_widget, SIGNAL(statusBarVisibleChanged(bool)), SLOT(onStatusBarVisibleChanged(bool)));
 }
 
 /*!

@@ -12,6 +12,10 @@
 class QSignalMapper;
 class QSettings;
 
+namespace GuiSystem {
+class SharedProperties;
+}
+
 namespace FileManager {
 
 class FileManagerSettings;
@@ -29,6 +33,7 @@ public:
     void shutdown();
 
     static FileManagerPlugin *instance();
+    GuiSystem::SharedProperties *properties() const;
 
 private slots:
     void goTo(const QString &s);
@@ -49,6 +54,7 @@ private:
 private:
     QSignalMapper *gotoMapper;
 
+    GuiSystem::SharedProperties *m_properties;
     FileManager::FileManagerSettings *m_fileManagerSettings;
     FileManager::NavigationPanelSettings *m_panelSettings;
 };

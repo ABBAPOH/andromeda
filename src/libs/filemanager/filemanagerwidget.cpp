@@ -715,18 +715,19 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
     d->setModel(model);
     d->setFileSystemManager(FileSystemManager::instance());
 
-    FileManagerSettings *settings = FileManagerSettings::globalSettings();
-
     setViewMode(IconView);
-    setFlow((Flow)settings->flow());
-    setIconSize(IconView, settings->iconSize(FileManagerSettings::IconView));
-    setIconSize(ColumnView, settings->iconSize(FileManagerSettings::ColumnView));
-    setIconSize(TreeView, settings->iconSize(FileManagerSettings::TreeView));
-    setGridSize(settings->gridSize());
-    setItemsExpandable(settings->itemsExpandable());
+    setFlow(LeftToRight);
+#ifdef Q_OS_MAC
+    setIconSize(IconView, QSize(64, 64));
+    setGridSize(QSize(128, 128));
+#else
+    setIconSize(IconView, QSize(32, 32));
+    setGridSize(QSize(96, 96));
+#endif
+    setIconSize(ColumnView, QSize(16, 16));
+    setIconSize(TreeView, QSize(16, 16));
+    setItemsExpandable(true);
     setSorting(NameColumn, Qt::AscendingOrder);
-
-    FileManagerSettings::globalSettings()->d_func()->addWidget(this);
 }
 
 /*!
@@ -734,8 +735,6 @@ FileManagerWidget::FileManagerWidget(QWidget *parent) :
 */
 FileManagerWidget::~FileManagerWidget()
 {
-    FileManagerSettings::globalSettings()->d_func()->removeWidget(this);
-
     delete d_ptr;
 }
 
@@ -870,6 +869,8 @@ void FileManagerWidget::setFlow(FileManagerWidget::Flow flow)
     QListView *view = qobject_cast<QListView*>(d->currentView);
     if (view)
         d->updateListViewFlow(view);
+
+    emit flowChanged(flow);
 }
 
 /*!
@@ -899,6 +900,38 @@ void FileManagerWidget::setGridSize(QSize s)
             s.setWidth(256);
         view->setGridSize(s);
     }
+
+    emit gridSizeChanged(s);
+}
+
+QSize FileManagerWidget::iconSize() const
+{
+    return iconSize(IconView);
+}
+
+void FileManagerWidget::setIconSize(QSize size)
+{
+    setIconSize(IconView, size);
+}
+
+QSize FileManagerWidget::iconSizeColumn() const
+{
+    return iconSize(ColumnView);
+}
+
+void FileManagerWidget::setIconSizeColumn(QSize size)
+{
+    setIconSize(ColumnView, size);
+}
+
+QSize FileManagerWidget::iconSizeTree() const
+{
+    return iconSize(TreeView);
+}
+
+void FileManagerWidget::setIconSizeTree(QSize size)
+{
+    setIconSize(TreeView, size);
 }
 
 /*!
@@ -934,6 +967,19 @@ void FileManagerWidget::setIconSize(FileManagerWidget::ViewMode mode, QSize size
     QAbstractItemView *view = d->testCurrentView(mode);
     if (view)
         view->setIconSize(size);
+    switch (mode) {
+    case IconView:
+        emit iconSizeChanged(size);
+        break;
+    case ColumnView:
+        emit iconSizeColumnChanged(size);
+        break;
+    case TreeView:
+        emit iconSizeTreeChanged(size);
+        break;
+    default:
+        break;
+    }
 }
 
 /*!

@@ -28,8 +28,11 @@ class FILEMANAGER_EXPORT FileManagerWidget : public QWidget
     Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
     Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
     Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath NOTIFY currentPathChanged)
-    Q_PROPERTY(Flow flow READ flow WRITE setFlow)
-    Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize)
+    Q_PROPERTY(Flow flow READ flow WRITE setFlow NOTIFY flowChanged)
+    Q_PROPERTY(QSize gridSize READ gridSize WRITE setGridSize NOTIFY gridSizeChanged)
+    Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize NOTIFY iconSizeChanged)
+    Q_PROPERTY(QSize iconSizeColumn READ iconSizeColumn WRITE setIconSizeColumn NOTIFY iconSizeColumnChanged)
+    Q_PROPERTY(QSize iconSizeTree READ iconSizeTree WRITE setIconSizeTree NOTIFY iconSizeTreeChanged)
     Q_PROPERTY(bool itemsExpandable READ itemsExpandable WRITE setItemsExpandable NOTIFY itemsExpandableChanged)
     Q_PROPERTY(QStringList selectedPaths READ selectedPaths NOTIFY selectedPathsChanged)
     Q_PROPERTY(bool showHiddenFiles READ showHiddenFiles WRITE setShowHiddenFiles NOTIFY showHiddenFilesChanged)
@@ -95,6 +98,15 @@ public:
     QSize gridSize() const;
     void setGridSize(QSize s);
 
+    QSize iconSize() const;
+    void setIconSize(QSize size);
+
+    QSize iconSizeColumn() const;
+    void setIconSizeColumn(QSize size);
+
+    QSize iconSizeTree() const;
+    void setIconSizeTree(QSize size);
+
     QSize iconSize(FileManagerWidget::ViewMode mode) const;
     void setIconSize(FileManagerWidget::ViewMode mode, QSize size);
 
@@ -132,6 +144,11 @@ signals:
     void canRedoChanged(bool);
     void canUndoChanged(bool);
     void currentPathChanged(const QString &path);
+    void flowChanged(Flow flow);
+    void gridSizeChanged(QSize size);
+    void iconSizeChanged(QSize size);
+    void iconSizeColumnChanged(QSize size);
+    void iconSizeTreeChanged(QSize size);
     void itemsExpandableChanged(bool expandable);
     void selectedPathsChanged();
     void showHiddenFilesChanged(bool show);

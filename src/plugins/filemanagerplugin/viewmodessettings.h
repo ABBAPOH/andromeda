@@ -14,6 +14,10 @@ namespace Ui {
     class ViewModesSettingsWidget;
 }
 
+namespace GuiSystem {
+class SharedProperties;
+}
+
 namespace FileManager {
 
 class FileManagerSettings;
@@ -46,7 +50,7 @@ private:
 private:
     Ui::ViewModesSettingsWidget *ui;
 
-    QSettings *m_settings;
+    GuiSystem::SharedProperties *m_properties;
     FileManager::FileManagerSettings *m_fileManagerSettings;
     FileManager::NavigationPanelSettings *m_panelSettings;
 };

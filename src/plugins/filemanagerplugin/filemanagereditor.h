@@ -9,6 +9,10 @@
 class MiniSplitter;
 class QSettings;
 
+namespace GuiSystem {
+class SharedProperties;
+}
+
 namespace FileManager {
 
 class FileManagerDocument;
@@ -41,10 +45,7 @@ protected:
 
 private slots:
     void onSelectedPathsChanged();
-    void onViewModeChanged(FileManagerWidget::ViewMode mode);
     void onSortingChanged();
-    void onPanelVisibleChanged(bool);
-    void onStatusBarVisibleChanged(bool);
     void onSplitterMoved(int,int);
     void openPaths(const QStringList &paths, Qt::KeyboardModifiers modifiers);
     void openNewTab();
@@ -55,6 +56,7 @@ private slots:
 
 private:
     void setupUi();
+    void setupPropetries();
     void setupConnections();
     void createActions();
     void retranslateUi();
@@ -64,7 +66,7 @@ private:
 private:
     FileExplorerWidget *m_widget;
 
-    QSettings *m_settings;
+    GuiSystem::SharedProperties *m_properties;
     QAction *m_openTabAction;
     QAction *m_openWindowAction;
     QAction *m_openEditorAction;

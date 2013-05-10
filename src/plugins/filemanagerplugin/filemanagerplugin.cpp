@@ -21,6 +21,7 @@
 #include <GuiSystem/DocumentManager>
 #include <GuiSystem/EditorManager>
 #include <GuiSystem/SettingsPageManager>
+#include <GuiSystem/SharedProperties>
 #include <GuiSystem/StandardCommands>
 #include <GuiSystem/ToolWidgetManager>
 
@@ -57,6 +58,7 @@ FileManagerPlugin::~FileManagerPlugin()
 
 bool FileManagerPlugin::initialize()
 {
+    m_properties = new SharedProperties(this);
     DocumentManager::instance()->addFactory(new FileManagerDocumentFactory(this));
     EditorManager::instance()->addFactory(new FileManagerEditorFactory(this));
     ToolWidgetManager::instance()->addFactory(new FileSystemToolWidgetFactory(this));
@@ -97,6 +99,11 @@ FileManagerPlugin * FileManagerPlugin::instance()
                "FileManagerPlugin::instance",
                "Must construct FileManagerPlugin before calling instance()");
     return m_instance;
+}
+
+SharedProperties * FileManagerPlugin::properties() const
+{
+    return m_properties;
 }
 
 void FileManagerPlugin::goTo(const QString &s)
@@ -318,34 +325,17 @@ void FileManagerPlugin::loadSettings()
 {
     QSettings settings;
     settings.beginGroup(QLatin1String("fileManager"));
+    m_properties->read(&settings);
 
     m_fileManagerSettings = FileManagerSettings::globalSettings();
     m_panelSettings = NavigationPanelSettings::globalSettings();
 
-    QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
-    QSize columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView);
-    QSize treeIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::TreeView);
-    QSize gridSize = m_fileManagerSettings->gridSize();
-    int flow = m_fileManagerSettings->flow();
-    bool itemsExpandable = m_fileManagerSettings->itemsExpandable();
     bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
     bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
 
-    iconSize = settings.value(QLatin1String("iconMode"), iconSize).toSize();
-    columnIconSize = settings.value(QLatin1String("columnIconSize"), columnIconSize).toSize();
-    treeIconSize = settings.value(QLatin1String("treeIconSize"), treeIconSize).toSize();
-    gridSize = settings.value(QLatin1String("gridSize"), gridSize).toSize();
-    flow = settings.value(QLatin1String("flow"), flow).toInt();
-    itemsExpandable = settings.value(QLatin1String("itemsExpandable"), itemsExpandable).toBool();
     warnOnFileRemove = settings.value(QLatin1String("warnOnFileRemove"), warnOnFileRemove).toBool();
     warnOnExtensionChange = settings.value(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange).toBool();
 
-    m_fileManagerSettings->setIconSize(FileManagerSettings::IconView, iconSize);
-    m_fileManagerSettings->setIconSize(FileManagerSettings::ColumnView, columnIconSize);
-    m_fileManagerSettings->setIconSize(FileManagerSettings::TreeView, treeIconSize);
-    m_fileManagerSettings->setGridSize(gridSize);
-    m_fileManagerSettings->setFlow((FileManagerSettings::Flow)flow);
-    m_fileManagerSettings->setItemsExpandable(itemsExpandable);
     m_fileManagerSettings->setWarnOnFileRemove(warnOnFileRemove);
     m_fileManagerSettings->setWarnOnExtensionChange(warnOnExtensionChange);
 
@@ -359,23 +349,13 @@ void FileManagerPlugin::loadSettings()
 
 void FileManagerPlugin::saveSettings()
 {
-    QSize iconSize = m_fileManagerSettings->iconSize(FileManagerSettings::IconView);
-    QSize columnIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::ColumnView);
-    QSize treeIconSize = m_fileManagerSettings->iconSize(FileManagerSettings::TreeView);
-    QSize gridSize = m_fileManagerSettings->gridSize();
-    FileManagerSettings::Flow flow = m_fileManagerSettings->flow();
-    bool itemsExpandable = m_fileManagerSettings->itemsExpandable();
     bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
     bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
 
     QSettings settings;
     settings.beginGroup(QLatin1String("fileManager"));
-    settings.setValue(QLatin1String("iconMode"), iconSize);
-    settings.setValue(QLatin1String("columnIconSize"), columnIconSize);
-    settings.setValue(QLatin1String("treeIconSize"), treeIconSize);
-    settings.setValue(QLatin1String("gridSize"), gridSize);
-    settings.setValue(QLatin1String("flow"), flow);
-    settings.setValue(QLatin1String("itemsExpandable"), itemsExpandable);
+    m_properties->write(&settings);
+
     settings.setValue(QLatin1String("warnOnFileRemove"), warnOnFileRemove);
     settings.setValue(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange);
 
