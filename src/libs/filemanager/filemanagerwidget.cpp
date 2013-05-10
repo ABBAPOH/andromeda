@@ -456,10 +456,7 @@ void FileManagerWidgetPrivate::onActivated(const QModelIndex &index)
     if (path.isEmpty())
         return;
     Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
-    if (modifiers == Qt::NoModifier)
-        q->setCurrentPath(path);
-    else
-        emit q->openRequested(QStringList() << path, modifiers);
+    emit q->openRequested(QStringList() << path, modifiers);
 }
 
 // Triggers when current item in history changes
@@ -1401,18 +1398,7 @@ void FileManagerWidget::newFolder()
 */
 void FileManagerWidget::open()
 {
-    QStringList paths = selectedPaths();
-
-    if (paths.count() == 1) {
-        const QString &path = paths.first();
-        QFileInfo info(path);
-        if (info.isDir() && !info.isBundle()) {
-            setCurrentPath(path);
-            return;
-        }
-    }
-
-    emit openRequested(paths, Qt::NoModifier);
+    emit openRequested(selectedPaths(), Qt::NoModifier);
 }
 
 /*!
