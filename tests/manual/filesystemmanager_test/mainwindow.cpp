@@ -3,7 +3,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QDockWidget>
-#include <QTreewidget>
+#include <QTreeWidget>
 #include <QFileSystemModel>
 #include <QDesktopServices>
 #include <QMenuBar>
