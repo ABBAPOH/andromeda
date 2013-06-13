@@ -2,18 +2,22 @@ To build Andromeda, make sure that Qt is installed on your system.
 You can download Qt from http://qt.nokia.com/downloads
 On Linux, you can also install it using package manager.
 
-Also you need to install CMake - http://www.cmake.org/cmake/resources/software.html
+Also you need to install or build QBS. Source code can be found at http://gitorious.org/qt-labs.
+Instructions for building and using QBS are here http://doc-snapshot.qt-project.org/qbs/
 
-After preparations, open terminal, cd to andromeda source folder and run following commands:
+To clone Andromeda repository, open terminal and run following commands from
+the directory you want to use:
+$ git clone git@gitorious.org:andromeda/andromeda.git
+(OR '$ git clone git@github.com:ABBAPOH/andromeda.git')
+$ cd andromeda
+$ git submodule init
+$ git submodule update
 
-$ mkdir build
-$ cd build
-$ cmake ../
-$ make
+After cloning, you can build Andromeda:
+$ cd .. (one dir up from sources)
+$ mkdir andromeda-build
+$ cd andromeda-build
+$ qbs install -f ../andromeda/andromeda.qbs release
 
-Note: on Windows, instead of running make, you have to run "mingw32-make" (if using MinGW)
-or "nmake" (if using VS)
-
-On Linux, after that, run:
-
-$ make install
+QBS will create directory with the name of you default QBS profile and install
+Andromeda to the 'install_root' folder within that directory.

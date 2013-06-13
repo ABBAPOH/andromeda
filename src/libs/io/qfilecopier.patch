@@ -1,8 +1,0 @@
-4c4
-< #include "qfilecopier_global.h"
----
-> #include "io_global.h"
-9c9
-< class QFILECOPIERSHARED_EXPORT QFileCopier : public QObject
----
-> class IO_EXPORT QFileCopier : public QObject

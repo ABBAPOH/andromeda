@@ -1,9 +1,0 @@
-/*!
-    \namespace ExtensionSystem
-
-    \brief The ExtensionSystem namespace contains classes for a plugin system library.
-
-    This namespace includes interface for a plugin, plugin manager for loading plugins,
-    classes for retrieving and modifyng plugins information and a lot of widgets
-    for displaying and editing plugins information.
-*/

@@ -5,15 +5,14 @@ function update {
 }
 
 function main {
-    for lib in src/libs/* ; do
+    for lib in libs/src/* ; do
         update $lib $1 $2
     done
-    for plugin in src/plugins/* ; do
+    for plugin in src/plugins/parts/* ; do
         update $plugin $1 $2
     done
-    for app in src/apps/* ; do
-        update $app $1 $2
-    done
+
+    update src/app $1 $2
 }
 
 if [ -z "$1" ]; then
