@@ -27,6 +27,7 @@ Part {
         "bookmarksmodel_p.h",
         "bookmarksplugin.cpp",
         "bookmarksplugin.h",
+        "bookmarksplugin_p.h",
         "bookmarksplugin.qrc",
         "bookmarkstoolbar.cpp",
         "bookmarkstoolbar.h",

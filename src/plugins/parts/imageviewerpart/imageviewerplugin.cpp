@@ -2,6 +2,7 @@
 
 #include <QtCore/QtPlugin>
 #include <Parts/ActionManager>
+#include <Parts/ContextCommand>
 #include <Parts/CommandContainer>
 #include <Parts/DocumentManager>
 #include <Parts/EditorManager>
@@ -51,7 +52,7 @@ void ImageViewerPlugin::createActions()
 
 void ImageViewerPlugin::createAction(const QByteArray &id, const QString &text, const QKeySequence &shortcut)
 {
-    Command *c = new Command(id, this);
+    ContextCommand *c = new ContextCommand(id, this);
     c->setText(text);
     c->setDefaultShortcut(shortcut);
     imageViewMenu->addCommand(c);

@@ -25,7 +25,8 @@
 #endif
 
 #include <Parts/ActionManager>
-#include <Parts/Command>
+#include <Parts/ApplicationCommand>
+#include <Parts/ContextCommand>
 #include <Parts/CommandContainer>
 #include <Parts/EditorWindow>
 
@@ -142,23 +143,24 @@ void FileManagerPlugin::onPathsDropped(const QString &destination, const QString
 
 void FileManagerPlugin::createActions()
 {
-    Command *cmd = 0;
-    cmd = new Command(Constants::Actions::OpenEditor, tr("Open in internal editor"), this);
+    ContextCommand *cmd = 0;
+    cmd = new ContextCommand(Constants::Actions::OpenEditor, this);
+    cmd->setText(tr("Open in internal editor"));
 #ifdef Q_OS_MAC
     cmd->setDefaultShortcut(QKeySequence("Ctrl+E"));
 #else
     cmd->setDefaultShortcut(QKeySequence("F4"));
 #endif
 
-    cmd = new Command(Constants::Actions::ShowFileInfo, this);
+    cmd = new ContextCommand(Constants::Actions::ShowFileInfo, this);
     cmd->setText(tr("File info"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+I"));
 
-    cmd = new Command(Constants::Actions::NewFolder, this);
+    cmd = new ContextCommand(Constants::Actions::NewFolder, this);
     cmd->setText(tr("New folder"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+Shift+N"));
 
-    cmd = new Command(Constants::Actions::Rename, this);
+    cmd = new ContextCommand(Constants::Actions::Rename, this);
     cmd->setText(tr("Rename"));
 #ifdef Q_OS_MAC
 //    cmd->setDefaultShortcut(QKeySequence("Return")); // Can't set shorcut to prevent overriding edit triggers
@@ -166,7 +168,7 @@ void FileManagerPlugin::createActions()
     cmd->setDefaultShortcut(QKeySequence("F2"));
 #endif
 
-    cmd = new Command(Constants::Actions::MoveToTrash, this);
+    cmd = new ContextCommand(Constants::Actions::MoveToTrash, this);
     cmd->setText(tr("Move to trash"));
 #ifdef Q_OS_MAC
     cmd->setDefaultShortcut(QKeySequence("Ctrl+Backspace"));
@@ -174,7 +176,7 @@ void FileManagerPlugin::createActions()
     cmd->setDefaultShortcut(QKeySequence("Del"));
 #endif
 
-    cmd = new Command(Constants::Actions::Remove, this);
+    cmd = new ContextCommand(Constants::Actions::Remove, this);
     cmd->setText(tr("Remove"));
 #ifdef Q_OS_MAC
     cmd->setDefaultShortcut(QKeySequence("Ctrl+Shift+Backspace"));
@@ -182,27 +184,27 @@ void FileManagerPlugin::createActions()
     cmd->setDefaultShortcut(QKeySequence("Shift+Del"));
 #endif
 
-    cmd = new Command(Constants::Actions::MoveHere, this);
+    cmd = new ContextCommand(Constants::Actions::MoveHere, this);
     cmd->setText(tr("Move object(s) here"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+Shift+V"));
 
-    cmd = new Command(Constants::Actions::ShowHiddenFiles, this);
+    cmd = new ContextCommand(Constants::Actions::ShowHiddenFiles, this);
     cmd->setText(tr("Show Hidden Files"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+."));
 
     QActionGroup * viewGroup = new QActionGroup(this);
 
-    cmd = new Command(Constants::Actions::IconMode, this);
+    cmd = new ContextCommand(Constants::Actions::IconMode, this);
     cmd->setText(tr("Icon View"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+1"));
     viewGroup->addAction(cmd->commandAction());
 
-    cmd = new Command(Constants::Actions::ColumnMode, this);
+    cmd = new ContextCommand(Constants::Actions::ColumnMode, this);
     cmd->setText(tr("Column View"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+2"));
     viewGroup->addAction(cmd->commandAction());
 
-    cmd = new Command(Constants::Actions::TreeMode, this);
+    cmd = new ContextCommand(Constants::Actions::TreeMode, this);
     cmd->setText(tr("Tree View"));
     cmd->setDefaultShortcut(QKeySequence("Ctrl+3"));
     viewGroup->addAction(cmd->commandAction());
@@ -214,31 +216,31 @@ void FileManagerPlugin::createActions()
 
 void FileManagerPlugin::createSortByMenu()
 {
-    Command *cmd = 0;
+    ContextCommand *cmd = 0;
     QActionGroup * sortGroup = new QActionGroup(this);
 
     CommandContainer *sortByMenu = new CommandContainer(Constants::Menus::SortBy, this);
     sortByMenu->setText(tr("Sort by"));
 
-    cmd = new Command(Constants::Actions::SortByName, this);
+    cmd = new ContextCommand(Constants::Actions::SortByName, this);
     cmd->setText(tr("Sort by name"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+1")));
     sortByMenu->addCommand(cmd);
     sortGroup->addAction(cmd->commandAction());
 
-    cmd = new Command(Constants::Actions::SortBySize, this);
+    cmd = new ContextCommand(Constants::Actions::SortBySize, this);
     cmd->setText(tr("Sort by size"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+2")));
     sortByMenu->addCommand(cmd);
     sortGroup->addAction(cmd->commandAction());
 
-    cmd = new Command(Constants::Actions::SortByType, this);
+    cmd = new ContextCommand(Constants::Actions::SortByType, this);
     cmd->setText(tr("Sort by type"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+3")));
     sortByMenu->addCommand(cmd);
     sortGroup->addAction(cmd->commandAction());
 
-    cmd = new Command(Constants::Actions::SortByDate, this);
+    cmd = new ContextCommand(Constants::Actions::SortByDate, this);
     cmd->setText(tr("Sort by date"));
     cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
     sortByMenu->addCommand(cmd);
@@ -246,7 +248,7 @@ void FileManagerPlugin::createSortByMenu()
 
     sortByMenu->addSeparator();
 
-    cmd = new Command(Constants::Actions::SortByDescendingOrder, this);
+    cmd = new ContextCommand(Constants::Actions::SortByDescendingOrder, this);
     cmd->setText(tr("Descending Order"));
 //    cmd->setDefaultShortcut(QKeySequence(QLatin1String("Ctrl+Alt+4")));
     sortByMenu->addCommand(cmd);
@@ -257,9 +259,9 @@ void FileManagerPlugin::createGoToMenu()
     CommandContainer *goToMenu = new CommandContainer(Constants::Menus::GoTo, this);
     goToMenu->setText(tr("Go to"));
 
-    goToMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Back));
-    goToMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Forward));
-    goToMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Up));
+    goToMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Back));
+    goToMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Forward));
+    goToMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Up));
     goToMenu->addSeparator();
 
     // ================ GoTo Menu (Locations) ================
@@ -292,8 +294,7 @@ void FileManagerPlugin::createGoToDirCommand(QStandardPaths::StandardLocation lo
         return;
 
     QString id = QString(QLatin1String(Constants::Actions::Goto)).arg(location);
-    Command *cmd = new Command(id.toLatin1(), this);
-    cmd->setAttributes(Command::AttributeUpdateEnabled);
+    ApplicationCommand *cmd = new ApplicationCommand(id.toLatin1(), this);
     cmd->setData(dir.absolutePath());
     QString displayName(QStandardPaths::displayName(location));
     // fir for broken linux Qt
@@ -323,11 +324,13 @@ void FileManagerPlugin::connectGoToActions()
     gotoMapper = new QSignalMapper(this);
     connect(gotoMapper, SIGNAL(mapped(QString)), this, SLOT(goTo(QString)));
     foreach (AbstractCommand *c, gotoMenu->commands()) {
-        Command *cmd = qobject_cast<Command *>(c);
+        ApplicationCommand *cmd = qobject_cast<ApplicationCommand *>(c);
+        if (!cmd)
+            continue;
         // TODO: refactor
         if (!cmd->id().startsWith("Goto "))
             continue;
-        QAction *action = cmd->commandAction();
+        QAction *action = const_cast<QAction *>(cmd->action());
         gotoMapper->setMapping(action, cmd->data().toString());
         connect(action, SIGNAL(triggered()), gotoMapper, SLOT(map()));
     }

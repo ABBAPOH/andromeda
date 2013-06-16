@@ -16,7 +16,6 @@
 #define qApp Application::instance()
 
 class QMenu;
-class QMenuBar;
 class QSettings;
 class QSystemTrayIcon;
 
@@ -27,6 +26,8 @@ class PluginView;
 
 namespace Parts {
 class CommandContainer;
+class Menu;
+class MenuBar;
 class SettingsPageManager;
 class SettingsWindow;
 } // namespace Parts
@@ -83,6 +84,7 @@ private:
     void loadSettings();
     void saveSettings();
 
+    void createToolBar();
     void createMenus();
     void createFileMenu();
     void createEditMenu();
@@ -103,15 +105,16 @@ private:
 
     QPointer<Parts::SettingsWindow> settingsWindow;
     QByteArray settingsWindowState;
-    QMenu *dockMenu;
+    Parts::Menu *dockMenu;
     QSystemTrayIcon *trayIcon;
     QSettings *m_settings;
     bool m_firstStart;
 #ifdef Q_OS_MAC
-    QMenuBar *macMenuBar;
+    Parts::MenuBar *macMenuBar;
 #endif
 
     Parts::CommandContainer *menuBar;
+    Parts::CommandContainer *toolBar;
 };
 
 } // namespace Andromeda

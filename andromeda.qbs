@@ -48,6 +48,7 @@ Project {
         "libs/tests/extensionsystem/pluginspec/pluginspec.qbs",
         "libs/tests/filemanager/filemanagerwidget/filemanagerwidget.qbs",
         "libs/tests/io/kdesettings/kdesettings.qbs",
+        "libs/tests/parts/actionmanager/actionmanager.qbs",
         "libs/tests/parts/sharedproperties/sharedproperties.qbs",
         "src/app/app.qbs",
         "src/plugins/parts/bineditorpart/bineditorpart.qbs",

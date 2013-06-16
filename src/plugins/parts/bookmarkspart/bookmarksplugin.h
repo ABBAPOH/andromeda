@@ -29,11 +29,14 @@ public:
     void shutdown();
 
     BookmarksDocument *sharedDocument() const;
+    Bookmarks::BookmarksModel *model() const { return m_model; }
 
 private slots:
     void open(const QUrl &url);
     void openInTabs(const QList<QUrl> &urls);
     void openInWindow(const QList<QUrl> &urls);
+    void onToolBarTriggered(const QModelIndex &index);
+    void onBookmarksButtonTriggered();
 
     void showBookmarks();
     void addBookmark();
@@ -51,34 +54,6 @@ private:
     QAction *addBookmarkAction;
     QAction *addFolderAction;
     QAction *showBookmarksAction;
-};
-
-class BookmarksToolBarContainer : public Parts::CommandContainer
-{
-    Q_OBJECT
-
-public:
-    explicit BookmarksToolBarContainer(const QByteArray &id, QObject *parent = 0) :
-        CommandContainer(id, parent)
-    {}
-    ~BookmarksToolBarContainer();
-
-    QToolBar *createToolBar(QWidget *parent) const;
-
-signals:
-    void open(const QUrl &url);
-    void openInTabs(const QList<QUrl> &urls);
-
-    void showBookmarksTriggered();
-    void addBookmarkTriggered();
-    void addFolderTriggered();
-
-private slots:
-    void storeVisibility(bool visible);
-    void onDestroy(QObject *);
-
-private:
-    QList<QObject *> toolBars;
 };
 
 } // namespace Bookmarks

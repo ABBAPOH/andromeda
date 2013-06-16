@@ -33,6 +33,7 @@
 #include <Parts/CommandContainer>
 #include <Parts/IHistory>
 #include <Parts/History>
+#include <Parts/ToolBar>
 #include <Parts/constants.h>
 
 using namespace Parts;
@@ -111,28 +112,35 @@ void BrowserWindowPrivate::setupToolBar()
 {
     Q_Q(BrowserWindow);
 
-    toolBar = new QToolBar(q);
+    ToolBar *toolBar = new ToolBar(q);
+    this->toolBar = toolBar;
+    toolBar->setContainer("ToolBar");
     toolBar->setFloatable(false);
     toolBar->setMovable(false);
     toolBar->setObjectName("toolBar");
     toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    toolBar->addAction(q->action(BrowserWindow::Back));
-    toolBar->addAction(q->action(BrowserWindow::Forward));
-    toolBar->addAction(actions[BrowserWindow::Up]);
+//    toolBar->addAction(q->action(BrowserWindow::Back));
+//    toolBar->addAction(q->action(BrowserWindow::Forward));
+//    toolBar->addAction(actions[BrowserWindow::Up]);
 
-    toolBar->addSeparator();
-    toolBar->addWidget(lineEdit);
+//    toolBar->addSeparator();
+//    toolBar->addWidget(lineEdit);
 
+#ifndef Q_OS_MAC
     actions[BrowserWindow::MenuBar] = toolBar->addWidget(q->menuBarButton());
+#else
+    actions[BrowserWindow::MenuBar] = 0;
+#endif
     connect(q, SIGNAL(menuVisibleChanged(bool)), this, SLOT(onMenuVisibleChanged(bool)));
 
-    q->addToolBar(toolBar);
+    q->addToolBar(Qt::TopToolBarArea, toolBar);
     // TODO: fix Qt bugs
-    q->setUnifiedTitleAndToolBarOnMac(true);
+//    q->setUnifiedTitleAndToolBarOnMac(true);
 
     for (int i = 0; i < BrowserWindow::ActionCount; i++) {
-        q->addAction(actions[i]);
+        if (actions[i])
+            q->addAction(actions[i]);
     }
 }
 
@@ -144,12 +152,19 @@ void BrowserWindowPrivate::setupAlternateToolBar()
     if (!c)
         return;
 
-    QToolBar *toolBar = c->toolBar(q);
+    ToolBar *toolBar = new ToolBar(q);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    toolBar->setFloatable(false);
+    toolBar->setMovable(false);
+    toolBar->setObjectName("AlternateToolBar");
+    toolBar->setContainer(c);
+    toolBar->setIconSize(QSize(16, 16));
 
-    if (!toolBar)
-        return;
+//    if (!toolBar)
+//        return;
 
-#if defined(Q_WS_MAC)
+#if 0
+//#if defined(Q_WS_MAC)
     QWidget *centralWidget = new QWidget(q);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -185,10 +200,8 @@ void BrowserWindowPrivate::setupAlternateToolBar()
 //    layout->addWidget(tabWidget);
     q->setCentralWidget(centralWidget);
 #else
-    toolBar->setMovable(false);
-    toolBar->setFloatable(false);
     q->addToolBarBreak();
-    q->addToolBar(toolBar);
+    q->addToolBar(Qt::TopToolBarArea, toolBar);
 #endif
 }
 
@@ -227,8 +240,8 @@ void BrowserWindowPrivate::setupUi()
 
 void BrowserWindowPrivate::retranslateUi()
 {
-    backButton->setText(EditorWindow::tr("Back"));
-    forwardButton->setText(EditorWindow::tr("Forward"));
+//    backButton->setText(EditorWindow::tr("Back"));
+//    forwardButton->setText(EditorWindow::tr("Forward"));
 }
 
 void BrowserWindowPrivate::onMenuVisibleChanged(bool visible)
@@ -312,10 +325,6 @@ BrowserWindow::BrowserWindow(QWidget *parent) :
     d->setupAlternateToolBar();
     d->retranslateUi();
 
-#ifndef Q_OS_MAC
-    setMenuBar(ActionManager::instance()->container("MenuBar")->menuBar());
-    menuBar()->setVisible(menuVisible());
-#endif
     setAttribute(Qt::WA_DeleteOnClose);
 
 //    if ( !(m_windowGeometry.isNull() || m_windowGeometry.isEmpty()) ) {
@@ -339,6 +348,12 @@ QAction * BrowserWindow::action(Action action) const
 
     Q_D(const BrowserWindow);
     return d->actions[action];
+}
+
+History * BrowserWindow::history() const
+{
+    Q_D(const BrowserWindow);
+    return d->history;
 }
 
 void BrowserWindow::setEditor(AbstractEditor *editor)
@@ -541,6 +556,7 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
     d->actions[BrowserWindow::Up]->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
     d->lineEdit->setUrl(url);
     EditorWindow::onUrlChanged(url);
+    emit urlChanged(url);
 }
 
 /*!

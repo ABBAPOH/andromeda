@@ -14,11 +14,13 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSystemTrayIcon>
+#include <QtWidgets/QWidgetAction>
 #else
 #include <IO/QStandardPaths>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMessageBox>
 #include <QtGui/QSystemTrayIcon>
+#include <QtGui/QWidgetAction>
 #endif
 
 #include <ExtensionSystem/ErrorsDialog>
@@ -26,12 +28,15 @@
 #include <ExtensionSystem/PluginView>
 
 #include <Parts/ActionManager>
-#include <Parts/Command>
+#include <Parts/ApplicationCommand>
+#include <Parts/ContextCommand>
 #include <Parts/CommandContainer>
 #include <Parts/EditorWindowFactory>
 #include <Parts/SettingsPageManager>
 #include <Parts/SettingsWindow>
 #include <Parts/StandardCommands>
+#include <Parts/Menu>
+#include <Parts/MenuBar>
 #include <Parts/constants.h>
 
 #include <bookmarkspart/bookmarksconstants.h>
@@ -89,6 +94,18 @@ static inline QString getDataLocationPath()
     return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 }
 
+template <class T>
+static T *findParent(QObject *object)
+{
+    while (object) {
+        T *result = qobject_cast<T*>(object);
+        if (result)
+            return result;
+        object = object->parent();
+    }
+    return 0;
+}
+
 static const qint32 andromedaAppMagic = 0x6330386e; // "c08n"
 static const qint8 andromedaAppVersion = 1;
 
@@ -118,7 +135,7 @@ public:
     explicit DockContainer(const QByteArray &id, QObject *parent = 0);
     ~DockContainer();
 
-    QMenu *createMenu(QWidget *parent) const;
+    QAction *createAction(QObject *parent) const;
 
 private:
     QPointer<WindowsMenu> m_menu;
@@ -130,11 +147,84 @@ public:
     explicit WindowsContainer(const QByteArray &id, QObject *parent = 0);
     ~WindowsContainer();
 
-    QMenu *createMenu(QWidget *parent) const;
+    QAction *createAction(QObject *parent) const;
 
 private:
     QPointer<WindowsMenu> m_menu;
 };
+
+class AddressBarCommand : public AbstractCommand
+{
+public:
+    explicit AddressBarCommand(const QByteArray &id, QObject *parent = 0);
+//    ~AddressBarCommand();
+
+    QAction *createAction(QObject *parent) const;
+};
+
+class HistoryButtonCommand : public AbstractCommand
+{
+public:
+    explicit HistoryButtonCommand(HistoryButton::Direction direction, QObject *parent = 0);
+//    ~AddressBarCommand();
+
+    QAction *createAction(QObject *parent) const;
+
+private:
+    HistoryButton::Direction m_direction;
+};
+
+HistoryButtonCommand::HistoryButtonCommand(HistoryButton::Direction direction, QObject *parent) :
+    AbstractCommand(direction == HistoryButton::Back ? "ButtonBack" : "ButtonForward", parent),
+    m_direction(direction)
+{
+
+}
+
+QAction *HistoryButtonCommand::createAction(QObject *parent) const
+{
+    BrowserWindow *window = ::findParent<BrowserWindow>(parent);
+    if (!window)
+        return 0;
+
+    HistoryButton *button = new HistoryButton;
+    button->setHistory(window->history());
+    button->setDirection(m_direction);
+    QIcon icon;
+    if (m_direction == HistoryButton::Back)
+        icon = QIcon::fromTheme("go-previous", QIcon(":/guisystem/icons/go-previous.png"));
+    else
+        icon = QIcon::fromTheme("go-next", QIcon(":/guisystem/icons/go-next.png"));
+    button->setIcon(icon);
+
+    QWidgetAction *action = new QWidgetAction(parent);
+    action->setDefaultWidget(button);
+    return action;
+}
+
+AddressBarCommand::AddressBarCommand(const QByteArray &id, QObject *parent) :
+    AbstractCommand(id, parent)
+{
+}
+
+QAction * AddressBarCommand::createAction(QObject *parent) const
+{
+    BrowserWindow *window = ::findParent<BrowserWindow>(parent);
+    if (!window)
+        return 0;
+
+    AddressBar *lineEdit = new MyAddressBar();
+    lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
+//    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
+    connect(lineEdit, SIGNAL(open(QUrl)), window, SLOT(open(QUrl)));
+    connect(lineEdit, SIGNAL(refresh()), window, SLOT(reload()));
+    connect(lineEdit, SIGNAL(canceled()), window, SLOT(stop()));
+    connect(window, SIGNAL(urlChanged(QUrl)), lineEdit, SLOT(setUrl(QUrl)));
+
+    QWidgetAction *action = new QWidgetAction(parent);
+    action->setDefaultWidget(lineEdit);
+    return action;
+}
 
 DockContainer::DockContainer(const QByteArray &id, QObject *parent) :
     CommandContainer(id, parent),
@@ -147,9 +237,9 @@ DockContainer::~DockContainer()
     delete m_menu;
 }
 
-QMenu * DockContainer::createMenu(QWidget * /*parent*/) const
+QAction * DockContainer::createAction(QObject * /*parent*/) const
 {
-    return m_menu;
+    return m_menu->menuAction();
 }
 
 WindowsContainer::WindowsContainer(const QByteArray &id, QObject *parent) :
@@ -163,9 +253,9 @@ WindowsContainer::~WindowsContainer()
     delete m_menu;
 }
 
-QMenu * WindowsContainer::createMenu(QWidget * /*parent*/) const
+QAction * WindowsContainer::createAction(QObject * /*parent*/) const
 {
-    return m_menu;
+    return m_menu->menuAction();
 }
 
 Application::Application(int &argc, char **argv) :
@@ -244,6 +334,7 @@ bool Application::loadPlugins()
     m_pluginManager->loadPlugins();
 
     createMenus();
+    createToolBar();
     setupApplicationActions();
     restoreSession();
 
@@ -338,7 +429,8 @@ void Application::restoreSession()
 {
 #ifdef Q_OS_MAC
     // Create menu bar now
-    macMenuBar = menuBar->menuBar();
+    macMenuBar = new MenuBar;
+    macMenuBar->setContainer("MenuBar");
 #endif
 
     loadSettings();
@@ -548,6 +640,18 @@ void Application::saveSettings()
     m_settings->setValue("geometry", BrowserWindow::windowGeometry());
 }
 
+void Application::createToolBar()
+{
+    toolBar = new CommandContainer("ToolBar", this);
+    toolBar->addCommand(new HistoryButtonCommand(HistoryButton::Back));
+    toolBar->addCommand(new HistoryButtonCommand(HistoryButton::Forward));
+//    toolBar->addCommand(StandardCommands::contextCommand(StandardCommands::Back));
+//    toolBar->addCommand(StandardCommands::contextCommand(StandardCommands::Forward));
+    toolBar->addCommand(StandardCommands::contextCommand(StandardCommands::Up));
+    toolBar->addSeparator();
+    toolBar->addCommand(new AddressBarCommand("AddressBar", toolBar));
+}
+
 void Application::createMenus()
 {
     menuBar = new CommandContainer("MenuBar", this);
@@ -569,17 +673,17 @@ void Application::createFileMenu()
     fileMenu->setText(tr("File"));
     menuBar->addCommand(fileMenu);
 
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::NewWindow));
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::NewTab));
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Open));
+    fileMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::NewWindow));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::NewTab));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Open));
     fileMenu->addCommand(am->command(Constants::Actions::OpenEditor));
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Close));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Close));
     fileMenu->addSeparator();
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Save));
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::SaveAs));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Save));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::SaveAs));
     fileMenu->addSeparator();
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Refresh));
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Cancel));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Refresh));
+    fileMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Cancel));
     fileMenu->addSeparator();
     fileMenu->addCommand(am->command(Constants::Actions::ShowFileInfo));
     fileMenu->addSeparator();
@@ -588,7 +692,7 @@ void Application::createFileMenu()
     fileMenu->addCommand(am->command(Constants::Actions::MoveToTrash));
     fileMenu->addCommand(am->command(Constants::Actions::Remove));
     fileMenu->addSeparator();
-    fileMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Quit));
+    fileMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::Quit));
 }
 
 void Application::createEditMenu()
@@ -598,20 +702,20 @@ void Application::createEditMenu()
     editMenu->setText(tr("Edit"));
     menuBar->addCommand(editMenu);
 
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Undo));
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Redo));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Undo));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Redo));
     editMenu->addSeparator();
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Cut));
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Copy));
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Paste));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Cut));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Copy));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Paste));
     editMenu->addCommand(am->command(Constants::Actions::MoveHere));
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::SelectAll));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::SelectAll));
     editMenu->addSeparator();
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Find));
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::FindNext));
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::FindPrev));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::Find));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::FindNext));
+    editMenu->addCommand(StandardCommands::contextCommand(StandardCommands::FindPrev));
     editMenu->addSeparator();
-    editMenu->addCommand(StandardCommands::standardCommand(StandardCommands::Preferences));
+    editMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::Preferences));
 }
 
 void Application::createViewMenu()
@@ -622,8 +726,8 @@ void Application::createViewMenu()
     menuBar->addCommand(viewMenu);
 
     viewMenu->addCommand(am->command(Constants::Actions::ShowHiddenFiles));
-    viewMenu->addCommand(StandardCommands::standardCommand(StandardCommands::ShowLeftPanel));
-    viewMenu->addCommand(StandardCommands::standardCommand(StandardCommands::ShowStatusBar));
+    viewMenu->addCommand(StandardCommands::contextCommand(StandardCommands::ShowLeftPanel));
+    viewMenu->addCommand(StandardCommands::contextCommand(StandardCommands::ShowStatusBar));
     viewMenu->addCommand(am->command(Constants::Actions::ShowBookmarks));
     viewMenu->addSeparator();
     viewMenu->addCommand(am->command(Constants::Actions::IconMode));
@@ -655,17 +759,15 @@ void Application::createToolsMenu()
     toolsMenu->addCommand(am->container("ImageViewMenu"));
 
 #ifdef QT_DEBUG
-    Command *plugins = new Command("Plugins", this);
+    Command *plugins = new ApplicationCommand("Plugins", this);
     plugins->setText(tr("Plugins..."));
-    plugins->setAttributes(Command::AttributeUpdateEnabled);
     toolsMenu->addCommand(plugins);
-    connect(plugins->commandAction(), SIGNAL(triggered()), SLOT(showPluginView()));
+    connect(plugins, SIGNAL(triggered()), SLOT(showPluginView()));
 
-    Command *settings = new Command("Settings", this);
+    Command *settings = new ApplicationCommand("Settings", this);
     settings->setText(tr("View all settings..."));
-    settings->setAttributes(Command::AttributeUpdateEnabled);
     toolsMenu->addCommand(settings);
-    connect(settings->commandAction(), SIGNAL(triggered()), SLOT(showSettings()));
+    connect(settings, SIGNAL(triggered()), SLOT(showSettings()));
 #endif
     toolsMenu->addSeparator();
     toolsMenu->addCommand(am->command(Constants::Actions::ShowWebInspector));
@@ -673,9 +775,9 @@ void Application::createToolsMenu()
 
 void Application::createWindowsMenu()
 {
-    CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
-    windowsMenu->setText(tr("Windows"));
-    menuBar->addCommand(windowsMenu);
+//    CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
+//    windowsMenu->setText(tr("Windows"));
+//    menuBar->addCommand(windowsMenu);
 }
 
 void Application::createHelpMenu()
@@ -684,8 +786,8 @@ void Application::createHelpMenu()
     helpMenu->setText(tr("Help"));
     menuBar->addCommand(helpMenu);
 
-    helpMenu->addCommand(StandardCommands::standardCommand(StandardCommands::About));
-    helpMenu->addCommand(StandardCommands::standardCommand(StandardCommands::AboutQt));
+    helpMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::About));
+    helpMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::AboutQt));
 }
 
 #if defined(Q_OS_MAC) && QT_VERSION < 0x050000
@@ -701,13 +803,14 @@ void Application::createDockMenu()
     dock->setText(tr("Tray menu"));
 #endif
 
-    dock->addCommand(StandardCommands::standardCommand(StandardCommands::NewWindow));
+    dock->addCommand(StandardCommands::applicationCommand(StandardCommands::NewWindow));
 #ifndef Q_OS_MAC
     dock->addSeparator();
-    dock->addCommand(StandardCommands::standardCommand(StandardCommands::Quit));
+    dock->addCommand(StandardCommands::applicationCommand(StandardCommands::Quit));
 #endif
 
-    dockMenu = dock->menu();
+    dockMenu = new Menu;
+    dockMenu->setContainer(dock);
 
 #if defined(Q_OS_MAC) && QT_VERSION < 0x050000
     qt_mac_set_dock_menu(dockMenu);
@@ -738,9 +841,8 @@ void Application::setupApplicationActions()
     };
 
     for (size_t i = 0; i < sizeof(infos)/sizeof(ConnectInfo); ++i) {
-        Command *c = StandardCommands::standardCommand(infos[i].id);
-        c->setAttributes(Command::AttributeUpdateEnabled);
-        connect(c->commandAction(), SIGNAL(triggered(bool)), infos[i].slot);
+        ApplicationCommand *c = StandardCommands::applicationCommand(infos[i].id);
+        connect(c, SIGNAL(triggered(bool)), infos[i].slot);
     }
 }
 

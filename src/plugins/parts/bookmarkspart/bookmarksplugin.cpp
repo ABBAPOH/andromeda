@@ -1,5 +1,5 @@
 #include "bookmarksplugin.h"
-#include "bookmarkseditor.h"
+#include "bookmarksplugin_p.h"
 
 #include <QtCore/QtPlugin>
 #include <QtCore/QSettings>
@@ -21,16 +21,17 @@
 #include <Parts/AbstractDocument>
 #include <Parts/EditorWindow>
 #include <Parts/EditorWindowFactory>
-#include <Parts/Command>
+#include <Parts/ContextCommand>
 #include <Parts/DocumentManager>
 #include <Parts/EditorManager>
+#include <Parts/Separator>
 #include <Parts/ToolWidgetManager>
 #include <Parts/constants.h>
 
 #include "bookmarksconstants.h"
 #include "bookmarkdialog.h"
-#include "bookmarksmenu.h"
 #include "bookmarksdocument.h"
+#include "bookmarkseditor.h"
 #include "bookmarksmodel.h"
 #include "bookmarkstoolbar.h"
 #include "bookmarkstoolwidget.h"
@@ -40,77 +41,28 @@ using namespace ExtensionSystem;
 using namespace Parts;
 using namespace Bookmarks;
 
-class BookmarksMenuContainer : public CommandContainer
+BookmarksButtonCommand::BookmarksButtonCommand(QObject *parent) :
+    AbstractCommand("Bookmarks", parent)
 {
-public:
-    explicit BookmarksMenuContainer(const QByteArray &id, QObject *parent = 0) :
-        CommandContainer(id, parent),
-        m_menu(new BookmarksMenuBarMenu)
-    {}
-
-    ~BookmarksMenuContainer() { delete m_menu; }
-
-    QMenu *createMenu(QWidget * = 0) const { return m_menu; }
-    inline BookmarksMenuBarMenu *bookmarksMenu() const { return m_menu; }
-
-private:
-    BookmarksMenuBarMenu *m_menu;
-};
-
-BookmarksToolBarContainer::~BookmarksToolBarContainer()
-{
-    QList<QObject *> toolBars = this->toolBars;
-    qDeleteAll(toolBars);
 }
 
-QToolBar *BookmarksToolBarContainer::createToolBar(QWidget *parent) const
+QAction * BookmarksButtonCommand::createAction(QObject *parent) const
 {
-    BookmarksModel *model = BookmarksPlugin::instance()->sharedDocument()->model();
-
-    BookmarksToolBar *toolBar = new BookmarksToolBar(parent);
-    toolBar->setObjectName(QLatin1String("bookmarksToolbar"));
-    toolBar->setModel(model);
-    toolBar->setRootIndex(model->toolBar());
-
-    QSettings settings;
-    settings.beginGroup(QLatin1String("bookmarks"));
-    bool visible = settings.value(QLatin1String("toolbarVisible"), true).toBool();
-    toolBar->setVisible(visible);
-
-    if (parent) {
-        QAction *act = new QAction(tr("Show bookmarks toolbar"), parent);
-        act->setObjectName(Constants::Actions::ShowBookmarks);
-        parent->addAction(act);
-        act->setCheckable(true);
-        act->setChecked(visible);
-        connect(act, SIGNAL(triggered(bool)), toolBar, SLOT(setVisible(bool)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(storeVisibility(bool)));
-    }
-
-    connect(toolBar, SIGNAL(open(QUrl)), SIGNAL(open(QUrl)));
-    connect(toolBar, SIGNAL(openInTabs(QList<QUrl>)), SIGNAL(openInTabs(QList<QUrl>)));
-    connect(toolBar, SIGNAL(addBookmarkTriggered()), SIGNAL(addBookmarkTriggered()));
-    connect(toolBar, SIGNAL(addFolderTriggered()), SIGNAL(addFolderTriggered()));
-
-    QToolButton *button = new QToolButton(toolBar);
+    QToolButton *button = new QToolButton;
     button->setIcon(QIcon(":/bookmarks/icons/bookmarks.png"));
     button->setToolTip(tr("Show bookmarks"));
-    connect(button, SIGNAL(clicked()), SIGNAL(showBookmarksTriggered()));
+    connect(button, SIGNAL(clicked()), BookmarksPlugin::instance(), SLOT(showBookmarks()));
 
-    QWidgetAction *action = new QWidgetAction(toolBar);
+    QWidgetAction *action = new QWidgetAction(parent);
     action->setDefaultWidget(button);
-
-    QList<QAction*> actions;
-    actions.append(action);
-    toolBar->setInitialActions(actions);
-    connect(toolBar, SIGNAL(destroyed(QObject*)), SLOT(onDestroy(QObject*)));
-    const_cast<BookmarksToolBarContainer*>(this)->toolBars.append(toolBar);
-    return toolBar;
+    return action;
 }
 
-void BookmarksToolBarContainer::onDestroy(QObject *o)
+BookmarksToolBarContainer::BookmarksToolBarContainer(const QByteArray &id, QObject *parent) :
+    ModelContainer(id, parent)
 {
-    toolBars.removeAll(o);
+    BookmarksModel *model = BookmarksPlugin::instance()->model();
+    setModel(model, model->toolBar());
 }
 
 static BookmarksPlugin *m_instance = 0;
@@ -179,6 +131,16 @@ void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
     }
 }
 
+void BookmarksPlugin::onToolBarTriggered(const QModelIndex &index)
+{
+    open(index.data(BookmarksModel::UrlRole).toUrl());
+}
+
+void BookmarksPlugin::onBookmarksButtonTriggered()
+{
+
+}
+
 void BookmarksPlugin::showBookmarks()
 {
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
@@ -199,6 +161,10 @@ void BookmarksPlugin::addFolder()
 
 void BookmarksPlugin::createActions()
 {
+    BookmarksToolBarContainer * toolBar = new BookmarksToolBarContainer("AlternateToolbar", this);
+    toolBar->addCommand(new BookmarksButtonCommand(toolBar), toolBar->firstSeparator());
+    connect(toolBar, SIGNAL(triggered(QModelIndex)), this, SLOT(onToolBarTriggered(QModelIndex)));
+
     addBookmarkAction = new QAction(tr("Add bookmark"), this);
     addBookmarkAction->setShortcut(QKeySequence(QLatin1String("Ctrl+D")));
     connect(addBookmarkAction, SIGNAL(triggered()), SLOT(addBookmark()));
@@ -217,8 +183,10 @@ void BookmarksPlugin::createActions()
     actions.append(showBookmarksAction);
 
     // ================ View Menu ================
-    Command *c = new Command(Constants::Actions::ShowBookmarks, QKeySequence(), tr("Show Bookmarks toolbar"), this);
-    c->setAttributes(Command::AttributeUpdateEnabled);
+    ContextCommand *c = new ContextCommand(Constants::Actions::ShowBookmarks, this);
+    c->setShortcut(QKeySequence());
+    c->setText(tr("Show Bookmarks toolbar"));
+    c->setAttributes(ContextCommand::AttributeUpdateEnabled);
 
     // ================ Bookmarks Menu ================
     BookmarksMenuContainer *menu = new BookmarksMenuContainer(Constants::Menus::Bookmarks, this);
@@ -229,14 +197,6 @@ void BookmarksPlugin::createActions()
     connect(menu->bookmarksMenu(), SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
     connect(menu->bookmarksMenu(), SIGNAL(openInWindow(QList<QUrl>)), SLOT(openInWindow(QList<QUrl>)));
     addObject(menu);
-
-    BookmarksToolBarContainer *toolBar = new BookmarksToolBarContainer(Constants::Objects::AlternateToolbar, this);
-    connect(toolBar, SIGNAL(open(QUrl)), SLOT(open(QUrl)));
-    connect(toolBar, SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
-    connect(toolBar, SIGNAL(showBookmarksTriggered()), SLOT(showBookmarks()));
-    connect(toolBar, SIGNAL(addBookmarkTriggered()), SLOT(addBookmark()));
-    connect(toolBar, SIGNAL(addFolderTriggered()), SLOT(addFolder()));
-    addObject(toolBar);
 }
 
 void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder)
@@ -283,13 +243,6 @@ void BookmarksPlugin::addDefaultBookmarks()
     m_model->addBookmark(bookmark("Google", QUrl("http://google.com")), toolBar);
     m_model->addBookmark(bookmark("YouTube", QUrl("http://www.youtube.com/")), toolBar);
     m_model->addBookmark(bookmark("Wikipedia", QUrl("http://www.wikipedia.org/")), toolBar);
-}
-
-void BookmarksToolBarContainer::storeVisibility(bool visible)
-{
-    QSettings settings;
-    settings.beginGroup(QLatin1String("bookmarks"));
-    settings.setValue(QLatin1String("toolbarVisible"), visible);
 }
 
 #if QT_VERSION < 0x050000

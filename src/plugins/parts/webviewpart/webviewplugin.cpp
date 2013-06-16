@@ -14,7 +14,7 @@
 #include <QtWebKit/QWebSettings>
 
 #include <Parts/ActionManager>
-#include <Parts/Command>
+#include <Parts/ContextCommand>
 #include <Parts/CommandContainer>
 #include <Parts/DocumentManager>
 #include <Parts/EditorManager>
@@ -259,7 +259,7 @@ QWebSettings* WebViewPlugin::webSettings()
 
 void WebViewPlugin::createActions()
 {
-    Command *inspectorCommand = new Command(Constants::Actions::ShowWebInspector, this);
+    ContextCommand *inspectorCommand = new ContextCommand(Constants::Actions::ShowWebInspector, this);
     inspectorCommand->setText(tr("Show web inspector"));
     inspectorCommand->setDefaultShortcut(QKeySequence("Ctrl+Alt+I"));
 }

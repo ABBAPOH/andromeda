@@ -9,6 +9,7 @@ class QUrl;
 namespace Parts {
 class AbstractEditor;
 class EditorView;
+class History;
 }
 
 namespace Andromeda {
@@ -35,6 +36,8 @@ public:
     ~BrowserWindow();
 
     QAction *action(Action action) const;
+
+    Parts::History *history() const;
 
     void setEditor(Parts::AbstractEditor *editor);
 
@@ -69,6 +72,9 @@ public slots:
 
     void onProgressChanged(int progress);
     void onStateChanged(Parts::AbstractDocument::State state);
+
+signals:
+    void urlChanged(const QUrl &url);
 
 protected:
     void moveEvent(QMoveEvent *);
