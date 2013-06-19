@@ -1,6 +1,7 @@
 #include "bookmarksdocument.h"
 
-#include "bookmarksmodel.h"
+#include <Bookmarks/BookmarksModel>
+
 #include "bookmarksplugin.h"
 #include "bookmarksconstants.h"
 

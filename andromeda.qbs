@@ -39,6 +39,7 @@ Project {
 
     references: [
         "libs/src/3rdparty/qtsingleapplication/qtsingleapplication.qbs",
+        "libs/src/bookmarks/bookmarks.qbs",
         "libs/src/extensionsystem/extensionsystem.qbs",
         "libs/src/filemanager/filemanager.qbs",
         "libs/src/imageviewer/imageviewer.qbs",

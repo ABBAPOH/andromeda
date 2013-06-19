@@ -28,14 +28,13 @@
 #include <Parts/ToolWidgetManager>
 #include <Parts/constants.h>
 
+#include <Bookmarks/BookmarksDialog>
+#include <Bookmarks/BookmarksModel>
+
 #include "bookmarksconstants.h"
-#include "bookmarkdialog.h"
 #include "bookmarksdocument.h"
 #include "bookmarkseditor.h"
-#include "bookmarksmodel.h"
-#include "bookmarkstoolbar.h"
 #include "bookmarkstoolwidget.h"
-#include "bookmarkswidget.h"
 
 using namespace ExtensionSystem;
 using namespace Parts;

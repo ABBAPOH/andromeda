@@ -18,11 +18,12 @@
 #include <Parts/EditorWindowFactory>
 #include <Parts/constants.h>
 
+#include <Bookmarks/BookmarksModel>
+#include <Bookmarks/BookmarksWidget>
+
 #include "bookmarksconstants.h"
 #include "bookmarksdocument.h"
-#include "bookmarksmodel.h"
 #include "bookmarksplugin.h"
-#include "bookmarkswidget.h"
 
 using namespace Bookmarks;
 using namespace Parts;

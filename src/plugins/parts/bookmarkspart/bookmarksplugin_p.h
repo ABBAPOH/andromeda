@@ -5,7 +5,7 @@
 
 #include <Parts/ModelContainer>
 
-#include "bookmarksmenu.h"
+#include <Bookmarks/BookmarksMenu>
 
 namespace Bookmarks {
 

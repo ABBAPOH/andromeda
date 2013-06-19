@@ -1,8 +1,6 @@
 #ifndef BOOKMARKSDOCUMENT_H
 #define BOOKMARKSDOCUMENT_H
 
-#include "bookmarks_global.h"
-
 #include <Parts/AbstractDocument>
 #include <Parts/AbstractDocumentFactory>
 
@@ -10,7 +8,7 @@ namespace Bookmarks {
 
 class BookmarksModel;
 
-class BOOKMARKS_EXPORT BookmarksDocument : public Parts::AbstractDocument
+class BookmarksDocument : public Parts::AbstractDocument
 {
     Q_OBJECT
     Q_DISABLE_COPY(BookmarksDocument)

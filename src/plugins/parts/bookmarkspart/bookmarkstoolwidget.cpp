@@ -14,7 +14,8 @@
 #include <Parts/EditorWindowFactory>
 #include <Parts/ToolModel>
 
-#include "bookmarksmodel.h"
+#include <Bookmarks/BookmarksModel>
+
 #include "bookmarksplugin.h"
 #include "bookmarkstoolmodel.h"
 

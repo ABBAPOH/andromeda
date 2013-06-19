@@ -1,8 +1,6 @@
 #ifndef HELLOWORLDEDITOR_H
 #define HELLOWORLDEDITOR_H
 
-#include "bookmarks_global.h"
-
 #include <Parts/AbstractEditor>
 #include <Parts/AbstractEditorFactory>
 
@@ -17,7 +15,7 @@ namespace Bookmarks {
 
 class BookmarksDocument;
 
-class BOOKMARKS_EXPORT BookmarksEditor : public Parts::AbstractEditor
+class BookmarksEditor : public Parts::AbstractEditor
 {
     Q_OBJECT
     Q_DISABLE_COPY(BookmarksEditor)
