@@ -19,9 +19,9 @@ public:
 
     ~BookmarksMenuContainer() { delete m_menu; }
 
-    QMenu *createMenu(QWidget * = 0) const { return m_menu; }
     inline BookmarksMenuBarMenu *bookmarksMenu() const { return m_menu; }
 
+    QAction *createAction(QObject *) const { return m_menu->menuAction(); }
 private:
     BookmarksMenuBarMenu *m_menu;
 };
