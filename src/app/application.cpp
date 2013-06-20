@@ -11,12 +11,16 @@
 
 #if QT_VERSION >= 0x050000
 #include <QtCore/QStandardPaths>
+#include <QtWidgets/QCompleter>
+#include <QtWidgets/QDirModel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSystemTrayIcon>
 #include <QtWidgets/QWidgetAction>
 #else
 #include <IO/QStandardPaths>
+#include <QtGui/QCompleter>
+#include <QtGui/QDirModel>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMessageBox>
 #include <QtGui/QSystemTrayIcon>
@@ -220,6 +224,18 @@ QAction * AddressBarCommand::createAction(QObject *parent) const
     connect(lineEdit, SIGNAL(refresh()), window, SLOT(reload()));
     connect(lineEdit, SIGNAL(canceled()), window, SLOT(stop()));
     connect(window, SIGNAL(urlChanged(QUrl)), lineEdit, SLOT(setUrl(QUrl)));
+
+    // ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
+    // This is an example how to use completers to help directory listing.
+    // I'm not sure if it shouldn't be a part of plugins (standalone for web...)
+    // TODO/FIXME: QFileSystemModel is probably broken for qcompleter so the obsolete
+    //             QDirModel is used here.
+    //    QFileSystemModel * dirModel = new QFileSystemModel(this);
+    QDirModel *dirModel = new QDirModel(lineEdit);
+    //    dirModel->setRootPath(QDir::rootPath());
+    QCompleter *completer = new QCompleter(dirModel, lineEdit);
+    completer->setCompletionMode(QCompleter::InlineCompletion);
+    lineEdit->setCompleter(completer);
 
     QWidgetAction *action = new QWidgetAction(parent);
     action->setDefaultWidget(lineEdit);

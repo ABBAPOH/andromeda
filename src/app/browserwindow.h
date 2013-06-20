@@ -22,8 +22,6 @@ class BrowserWindow : public Parts::EditorWindow
     Q_DISABLE_COPY(BrowserWindow)
 public:
     enum Action { NoAction = -1,
-                  Back,
-                  Forward,
                   Up,
                   NewTab,
                   PrevTab,

@@ -8,8 +8,6 @@
 #if QT_VERSION >= 0x050000
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QCompleter>
-#include <QtWidgets/QDirModel>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QMenuBar>
@@ -18,8 +16,6 @@
 #else
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
-#include <QtGui/QCompleter>
-#include <QtGui/QDirModel>
 #include <QtGui/QFileDialog>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QMenuBar>
@@ -50,7 +46,6 @@ void BrowserWindowPrivate::setupActions()
     connect(actions[BrowserWindow::NewTab], SIGNAL(triggered()), q, SLOT(newTab()));
     q->addAction(actions[BrowserWindow::NewTab]);
 
-    // ToolBar
     actions[BrowserWindow::Up] = new QAction(q);
     actions[BrowserWindow::Up]->setText(tr("Up one level"));
     actions[BrowserWindow::Up]->setIcon(QIcon::fromTheme("go-up", QIcon(":/andromeda/icons/up.png")));
@@ -75,37 +70,6 @@ void BrowserWindowPrivate::setupActions()
 #endif
     connect(actions[BrowserWindow::PrevTab], SIGNAL(triggered()), q, SLOT(previousTab()));
     q->addAction(actions[BrowserWindow::PrevTab]);
-
-    backButton = new HistoryButton;
-    backButton->setHistory(history);
-    backButton->setDirection(HistoryButton::Back);
-    backButton->setIcon(QIcon::fromTheme("go-previous", QIcon(":/andromeda/icons/back.png")));
-
-    forwardButton = new HistoryButton;
-    forwardButton->setHistory(history);
-    forwardButton->setDirection(HistoryButton::Forward);
-    forwardButton->setIcon(QIcon::fromTheme("go-next", QIcon(":/andromeda/icons/forward.png")));
-
-    QWidgetAction *wa;
-
-    wa = new QWidgetAction(q);
-    wa->setDefaultWidget(backButton);
-    actions[BrowserWindow::Back] = wa;
-    actions[BrowserWindow::Back]->setEnabled(false);
-    actions[BrowserWindow::Back]->setObjectName(Constants::Actions::Back);
-    QObject::connect(actions[BrowserWindow::Back], SIGNAL(triggered()), q, SLOT(back()));
-
-    wa = new QWidgetAction(q);
-    wa->setDefaultWidget(forwardButton);
-    actions[BrowserWindow::Forward] = wa;
-    actions[BrowserWindow::Forward]->setEnabled(false);
-    actions[BrowserWindow::Forward]->setObjectName(Constants::Actions::Forward);
-    QObject::connect(actions[BrowserWindow::Forward], SIGNAL(triggered()), q, SLOT(forward()));
-
-    QObject::connect(history, SIGNAL(canGoBackChanged(bool)),
-                     actions[BrowserWindow::Back], SLOT(setEnabled(bool)));
-    QObject::connect(history, SIGNAL(canGoForwardChanged(bool)),
-                     actions[BrowserWindow::Forward], SLOT(setEnabled(bool)));
 }
 
 void BrowserWindowPrivate::setupToolBar()
@@ -119,13 +83,6 @@ void BrowserWindowPrivate::setupToolBar()
     toolBar->setMovable(false);
     toolBar->setObjectName("toolBar");
     toolBar->setContextMenuPolicy(Qt::CustomContextMenu);
-
-//    toolBar->addAction(q->action(BrowserWindow::Back));
-//    toolBar->addAction(q->action(BrowserWindow::Forward));
-//    toolBar->addAction(actions[BrowserWindow::Up]);
-
-//    toolBar->addSeparator();
-//    toolBar->addWidget(lineEdit);
 
 #ifndef Q_OS_MAC
     actions[BrowserWindow::MenuBar] = toolBar->addWidget(q->menuBarButton());
@@ -209,31 +166,12 @@ void BrowserWindowPrivate::setupUi()
 {
     Q_Q(BrowserWindow);
 
-    lineEdit = new MyAddressBar(q);
-    lineEdit->setContextMenuPolicy(Qt::ActionsContextMenu);
-//    lineEdit->setStyleSheet("QLineEdit { border-radius: 2px; }");
-    connect(lineEdit, SIGNAL(open(QUrl)), q, SLOT(open(QUrl)));
-    connect(lineEdit, SIGNAL(refresh()), q, SLOT(reload()));
-    connect(lineEdit, SIGNAL(canceled()), q, SLOT(stop()));
-
     tabWidget = new BrowserTabWidget(/*q*/);
     connect(tabWidget, SIGNAL(editorChanged()), q, SLOT(onEditorChanged()));
     connect(tabWidget, SIGNAL(currentChanged(int)), q, SLOT(onTabChanged()));
 //    q->setEditor(container);
 //    q->onEditorChanged();
     q->setCentralWidget(tabWidget);
-
-// ### fixme QDirModel is used in QCompleter because QFileSystemModel seems broken
-// This is an example how to use completers to help directory listing.
-// I'm not sure if it shouldn't be a part of plugins (standalone for web...)
-// TODO/FIXME: QFileSystemModel is probably broken for qcompleter so the obsolete
-//             QDirModel is used here.
-//    QFileSystemModel * dirModel = new QFileSystemModel(this);
-    QDirModel *dirModel = new QDirModel(this);
-//    dirModel->setRootPath(QDir::rootPath());
-    QCompleter *completer = new QCompleter(dirModel, lineEdit);
-    completer->setCompletionMode(QCompleter::InlineCompletion);
-    lineEdit->setCompleter(completer);
 
     q->resize(800, 600);
 }
@@ -554,7 +492,6 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
     Q_D(BrowserWindow);
 
     d->actions[BrowserWindow::Up]->setEnabled(!(url.path().isEmpty() || url.path() == "/"));
-    d->lineEdit->setUrl(url);
     EditorWindow::onUrlChanged(url);
     emit urlChanged(url);
 }
@@ -565,7 +502,11 @@ void BrowserWindow::onUrlChanged(const QUrl &url)
 void BrowserWindow::onProgressChanged(int progress)
 {
     Q_D(BrowserWindow);
-    d->lineEdit->setLoadProgress(progress);
+
+    AddressBar *bar = d->toolBar->findChild<AddressBar *>();
+    if (!bar)
+        return;
+    bar->setLoadProgress(progress);
     EditorWindow::onProgressChanged(progress);
 }
 
@@ -575,10 +516,14 @@ void BrowserWindow::onProgressChanged(int progress)
 void BrowserWindow::onStateChanged(AbstractDocument::State state)
 {
     Q_D(BrowserWindow);
+    AddressBar *bar = d->toolBar->findChild<AddressBar *>();
+    if (!bar)
+        return;
+
     if (state == AbstractDocument::OpenningState) {
-        d->lineEdit->startLoad();
+        bar->startLoad();
     } else if (state == AbstractDocument::OpenningState) {
-        d->lineEdit->finishLoad();
+        bar->finishLoad();
     }
     EditorWindow::onStateChanged(state);
 }

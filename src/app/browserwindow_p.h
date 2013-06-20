@@ -30,13 +30,10 @@ public:
     BrowserWindowPrivate(BrowserWindow *qq) : q_ptr(qq) {}
     ~BrowserWindowPrivate() {}
 
-    MyAddressBar *lineEdit;
     QToolBar *toolBar;
     BrowserTabWidget *tabWidget;
     Parts::History *history;
 
-    Parts::HistoryButton *backButton;
-    Parts::HistoryButton *forwardButton;
     QAction *actions[BrowserWindow::ActionCount];
 
     void setupActions();
