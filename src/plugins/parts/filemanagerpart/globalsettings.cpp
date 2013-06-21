@@ -14,7 +14,6 @@
 
 #include <FileManager/FileManagerSettings>
 #include <FileManager/NavigationModel>
-#include <FileManager/NavigationPanelSettings>
 
 using namespace FileManager;
 

@@ -57,7 +57,6 @@ private:
 
     Parts::SharedProperties *m_properties;
     FileManager::FileManagerSettings *m_fileManagerSettings;
-    FileManager::NavigationPanelSettings *m_panelSettings;
 };
 
 class ViewModesSettingsPage : public Parts::SettingsPage

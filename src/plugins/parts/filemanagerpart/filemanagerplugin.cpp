@@ -44,7 +44,6 @@
 #include <FileManager/FileSystemManager>
 #include <FileManager/FileSystemModel>
 #include <FileManager/NavigationModel>
-#include <FileManager/NavigationPanelSettings>
 
 #include "filemanagerdocument.h"
 #include "filemanagereditor.h"
@@ -78,6 +77,7 @@ bool FileManagerPlugin::initialize()
 
     NavigationModel *navigationModel = new NavigationModel;
     navigationModel->setObjectName("navigationModel");
+    m_properties->addProperty("standardLocations", navigationModel);
     addObject(navigationModel);
     connect(navigationModel, SIGNAL(pathsDropped(QString,QStringList,Qt::DropAction)),
             SLOT(onPathsDropped(QString,QStringList,Qt::DropAction)));
@@ -343,7 +343,6 @@ void FileManagerPlugin::loadSettings()
     m_properties->read(&settings);
 
     m_fileManagerSettings = FileManagerSettings::globalSettings();
-    m_panelSettings = NavigationPanelSettings::globalSettings();
 
     bool warnOnFileRemove = m_fileManagerSettings->warnOnFileRemove();
     bool warnOnExtensionChange = m_fileManagerSettings->warnOnExtensionChange();
@@ -353,13 +352,6 @@ void FileManagerPlugin::loadSettings()
 
     m_fileManagerSettings->setWarnOnFileRemove(warnOnFileRemove);
     m_fileManagerSettings->setWarnOnExtensionChange(warnOnExtensionChange);
-
-    NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
-
-    locations = NavigationModel::StandardLocations(settings.value(QLatin1String("standardLocations"),
-                                                                     (int)locations).toInt());
-
-    m_panelSettings->setStandardLocations(locations);
 }
 
 void FileManagerPlugin::saveSettings()
@@ -373,10 +365,6 @@ void FileManagerPlugin::saveSettings()
 
     settings.setValue(QLatin1String("warnOnFileRemove"), warnOnFileRemove);
     settings.setValue(QLatin1String("warnOnExtensionChange"), warnOnExtensionChange);
-
-    NavigationModel::StandardLocations locations = m_panelSettings->standardLocations();
-
-    settings.setValue(QLatin1String("standardLocations"), (int)locations);
 }
 
 #if QT_VERSION < 0x050000

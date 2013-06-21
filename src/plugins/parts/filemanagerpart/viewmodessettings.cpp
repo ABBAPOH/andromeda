@@ -19,7 +19,6 @@
 #include <FileManager/FileManagerSettings>
 #include <FileManager/FileManagerWidget>
 #include <FileManager/NavigationModel>
-#include <FileManager/NavigationPanelSettings>
 
 #include "filemanagerplugin.h"
 
@@ -45,8 +44,7 @@ ViewModesSettingsWidget::ViewModesSettingsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ViewModesSettingsWidget),
     m_properties(FileManagerPlugin::instance()->properties()),
-    m_fileManagerSettings(FileManagerSettings::globalSettings()),
-    m_panelSettings(NavigationPanelSettings::globalSettings())
+    m_fileManagerSettings(FileManagerSettings::globalSettings())
 {
     ui->setupUi(this);
 
@@ -67,14 +65,14 @@ ViewModesSettingsWidget::~ViewModesSettingsWidget()
 
 void ViewModesSettingsWidget::onChecked(bool checked)
 {
-    int flags = m_panelSettings->standardLocations();
+    int flags = m_properties->value("standardLocations").toInt();
 
     if (checked)
         flags = flags | sender()->property("flag").toInt();
     else
         flags = flags & ~sender()->property("flag").toInt();
 
-    m_panelSettings->setStandardLocations(NavigationModel::StandardLocations(flags));
+    m_properties->setValue("standardLocations", int(flags));
 }
 
 void ViewModesSettingsWidget::onIconSizeChanged(int value)
@@ -149,7 +147,8 @@ void ViewModesSettingsWidget::onItemsExpandableChecked(bool checked)
 
 void ViewModesSettingsWidget::setupLeftPanel()
 {
-    int flags = m_panelSettings->standardLocations();
+//    int flags = m_panelSettings->standardLocations();
+    int flags = m_properties->value("standardLocations").toInt();
 
     ui->applicationsCheckBox->setChecked(flags & NavigationModel::ApplicationsLocation);
     ui->desktopCheckBox->setChecked(flags & NavigationModel::DesktopLocation);
