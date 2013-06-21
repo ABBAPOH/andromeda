@@ -89,7 +89,6 @@ void ProxySettingsWidget::saveSettings()
     QNetworkProxy proxy;
     bool ok;
 
-    qDebug() << ui->proxyType->currentIndex();
     if (ui->proxySupport->isChecked()) {
         switch(ui->proxyType->currentIndex()) {
         case 0:
