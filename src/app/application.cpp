@@ -196,9 +196,9 @@ QAction *HistoryButtonCommand::createAction(QObject *parent) const
     button->setDirection(m_direction);
     QIcon icon;
     if (m_direction == HistoryButton::Back)
-        icon = QIcon::fromTheme("go-previous", QIcon(":/guisystem/icons/go-previous.png"));
+        icon = QIcon::fromTheme("go-previous", QIcon(":/parts/icons/go-previous.png"));
     else
-        icon = QIcon::fromTheme("go-next", QIcon(":/guisystem/icons/go-next.png"));
+        icon = QIcon::fromTheme("go-next", QIcon(":/parts/icons/go-next.png"));
     button->setIcon(icon);
 
     QWidgetAction *action = new QWidgetAction(parent);
