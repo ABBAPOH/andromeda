@@ -11,7 +11,7 @@ DynamicLibrary {
     cpp.dynamicLibraryPrefix: "lib"
 
     Properties {
-        condition: qbs.targetOS == "mac"
+        condition: qbs.targetOS.contains("osx")
         cpp.installNamePrefix: "@executable_path/../Frameworks/"
     }
 

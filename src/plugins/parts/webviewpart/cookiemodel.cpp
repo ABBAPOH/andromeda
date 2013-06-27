@@ -5,6 +5,8 @@
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 
+#include <QtNetwork/QNetworkCookie>
+
 CookieModel::CookieModel(QObject *parent) :
     QAbstractTableModel(parent),
     m_cookieJar(0)

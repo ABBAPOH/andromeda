@@ -15,6 +15,7 @@
 #include <IO/QStandardPaths>
 #endif
 
+#include <QtNetwork/QNetworkCookie>
 #include <QtWebKit/QWebSettings>
 
 static const unsigned int JAR_VERSION = 23;
