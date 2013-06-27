@@ -64,7 +64,7 @@ Application {
     Group {
         name: "andromeda.icns"
         condition: qbs.targetOS == "mac"
-        files: "andromeda.icns"
+        files: "Andromeda.icns"
         qbs.install: true
         qbs.installDir: install_data_path
     }
