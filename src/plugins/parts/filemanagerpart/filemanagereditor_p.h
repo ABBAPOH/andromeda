@@ -16,7 +16,7 @@ class FileManagerEditorHistory : public Parts::IHistory
 public:
     explicit FileManagerEditorHistory(QObject *parent = 0);
 
-    void setDualPaneWidget(FileManagerWidget *widget);
+    void setHistory(FileManagerHistory *history);
 
     void clear();
     void erase();
@@ -31,7 +31,7 @@ public:
     void restore(const QByteArray &history);
 
 private:
-    FileManagerWidget *m_widget;
+    FileManagerHistory *m_history;
 };
 
 } //namespace FileManager

@@ -47,7 +47,7 @@ private slots:
     void onSelectedPathsChanged();
     void onSortingChanged();
     void onSplitterMoved(int,int);
-    void openPaths(const QStringList &paths, Qt::KeyboardModifiers modifiers);
+    void openPaths(const QList<QUrl> &urls, Qt::KeyboardModifiers modifiers);
     void openNewTab();
     void openNewWindow();
     void openEditor();

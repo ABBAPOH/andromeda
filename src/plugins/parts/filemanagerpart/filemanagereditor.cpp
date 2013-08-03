@@ -33,6 +33,7 @@
 #include <FileManager/FileExplorerWidget>
 #include <FileManager/FileInfoDialog>
 #include <FileManager/FileManagerHistory>
+#include <FileManager/FileManagerModel>
 #include <FileManager/FileSystemManager>
 #include <FileManager/FileSystemModel>
 #include <FileManager/NavigationModel>
@@ -48,20 +49,23 @@ using namespace FileManager;
 
 FileManagerEditorHistory::FileManagerEditorHistory(QObject *parent) :
     IHistory(parent),
-    m_widget(0)
+    m_history(0)
 {
 }
 
-void FileManagerEditorHistory::setDualPaneWidget(FileManagerWidget *widget)
+void FileManagerEditorHistory::setHistory(FileManagerHistory *history)
 {
-    m_widget = widget;
-    connect(widget->history(), SIGNAL(currentItemIndexChanged(int)),
+    Q_ASSERT(!m_history);
+    Q_ASSERT(history);
+
+    m_history = history;
+    connect(m_history, SIGNAL(currentItemIndexChanged(int)),
             this, SIGNAL(currentItemIndexChanged(int)));
 }
 
 void FileManagerEditorHistory::clear()
 {
-    m_widget->history()->clear();
+    m_history->clear();
 }
 
 void FileManagerEditorHistory::erase()
@@ -71,17 +75,17 @@ void FileManagerEditorHistory::erase()
 
 int FileManagerEditorHistory::count() const
 {
-    return m_widget->history()->count();
+    return m_history->count();
 }
 
 int FileManagerEditorHistory::currentItemIndex() const
 {
-    return m_widget->history()->currentItemIndex();
+    return m_history->currentItemIndex();
 }
 
 void FileManagerEditorHistory::setCurrentItemIndex(int index)
 {
-    m_widget->history()->setCurrentItemIndex(index);
+    m_history->setCurrentItemIndex(index);
 }
 
 HistoryItem FileManagerEditorHistory::itemAt(int index) const
@@ -90,9 +94,9 @@ HistoryItem FileManagerEditorHistory::itemAt(int index) const
         return HistoryItem();
 
     FileManagerHistoryItem item;
-    item = m_widget->history()->itemAt(index);
+    item = m_history->itemAt(index);
     HistoryItem result;
-    result.setUrl(QUrl::fromLocalFile(item.path()));
+    result.setUrl(item.url());
 
     return result;
 }
@@ -102,7 +106,7 @@ QByteArray FileManagerEditorHistory::store() const
     QByteArray history;
     QDataStream s(&history, QIODevice::WriteOnly);
 
-    s << *(m_widget->history());
+    s << *(m_history);
 
     return history;
 }
@@ -112,7 +116,7 @@ void FileManagerEditorHistory::restore(const QByteArray &arr)
     QByteArray history(arr);
     QDataStream s(&history, QIODevice::ReadOnly);
 
-    s >> *(m_widget->history());
+    s >> *(m_history);
 
     emit currentItemIndexChanged(currentItemIndex());
 }
@@ -217,7 +221,7 @@ void FileManagerEditor::resizeEvent(QResizeEvent *e)
 
 void FileManagerEditor::onSelectedPathsChanged()
 {
-    QStringList paths = m_widget->widget()->selectedPaths();;
+    QList<QUrl> paths = m_widget->widget()->selectedUrls();;
     bool enabled = !paths.empty();
 
     m_openTabAction->setEnabled(enabled);
@@ -230,8 +234,8 @@ void FileManagerEditor::onSelectedPathsChanged()
 */
 void FileManagerEditor::onSortingChanged()
 {
-    int sortColumn = m_widget->widget()->sortingColumn();
-    int sortOrder = m_widget->widget()->sortingOrder();
+    int sortColumn = m_widget->widget()->model()->sortColumn();
+    int sortOrder = m_widget->widget()->model()->sortOrder();
 
     m_properties->setValue("sortingColumn", sortColumn);
     m_properties->setValue("sortingOrder", sortOrder);
@@ -248,41 +252,38 @@ void FileManagerEditor::onSplitterMoved(int, int)
 /*!
     \internal
 */
-void FileManagerEditor::openPaths(const QStringList &paths,Qt::KeyboardModifiers modifiers)
+void FileManagerEditor::openPaths(const QList<QUrl> &urls, Qt::KeyboardModifiers modifiers)
 {
-    QStringList folders;
-    foreach (const QString &path, paths) {
+    QList<QUrl> folders;
+    foreach (const QUrl &url, urls) {
+        Q_ASSERT(url.isLocalFile());
+        QString path = url.toLocalFile();
         QFileInfo info(path);
         if (info.isDir() && !info.isBundle()) {
-            folders.append(path);
+            folders.append(url);
         } else {
 #ifdef Q_OS_LINUX
-            QFileInfo info(path);
             if (info.isExecutable()) {
                 QProcess::startDetached(path);
                 return;
             }
 #endif
             // TODO: allow to open default editor instead
-            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+            QDesktopServices::openUrl(url);
         }
     }
 
     if (folders.isEmpty())
         return;
 
-    QList<QUrl> urls;
-    foreach (const QString &path, folders) {
-        urls.append(QUrl::fromLocalFile(path));
-    }
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory) {
         if (modifiers == Qt::NoModifier)
-            factory->open(urls);
+            factory->open(folders);
         else if (modifiers == (Qt::ControlModifier | Qt::AltModifier))
-            factory->openNewWindow(urls);
+            factory->openNewWindow(folders);
         else if (modifiers == (Qt::ControlModifier))
-            factory->openNewEditor(urls);
+            factory->openNewEditor(folders);
     }
 }
 
@@ -291,14 +292,10 @@ void FileManagerEditor::openPaths(const QStringList &paths,Qt::KeyboardModifiers
 */
 void FileManagerEditor::openNewTab()
 {
-    QStringList paths = m_widget->widget()->selectedPaths();
-    if (paths.isEmpty())
+    QList<QUrl> urls = m_widget->widget()->selectedUrls();
+    if (urls.isEmpty())
         return;
 
-    QList<QUrl> urls;
-    foreach (const QString &path, paths) {
-        urls.append(QUrl::fromLocalFile(path));
-    }
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
         factory->openNewEditor(urls);
@@ -309,14 +306,9 @@ void FileManagerEditor::openNewTab()
 */
 void FileManagerEditor::openNewWindow()
 {
-    QStringList paths = m_widget->widget()->selectedPaths();
-    if (paths.isEmpty())
+    QList<QUrl> urls = m_widget->widget()->selectedUrls();
+    if (urls.isEmpty())
         return;
-
-    QList<QUrl> urls;
-    foreach (const QString &path, paths) {
-        urls.append(QUrl::fromLocalFile(path));
-    }
 
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
@@ -325,14 +317,9 @@ void FileManagerEditor::openNewWindow()
 
 void FileManagerEditor::openEditor()
 {
-    QStringList paths = m_widget->widget()->selectedPaths();
-    if (paths.isEmpty())
+    QList<QUrl> urls = m_widget->widget()->selectedUrls();
+    if (urls.isEmpty())
         return;
-
-    QList<QUrl> urls;
-    foreach (const QString &path, paths) {
-        urls.append(QUrl::fromLocalFile(path));
-    }
 
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
     if (factory)
@@ -353,18 +340,18 @@ void FileManagerEditor::showContextMenu(const QPoint &pos)
     FileManagerWidget *widget = qobject_cast<FileManagerWidget *>(sender());
     Q_ASSERT(widget);
 
-    QStringList paths = widget->selectedPaths();
-    QMenu *menu = widget->createStandardMenu(paths);
+    QList<QUrl> urls = widget->selectedUrls();
+    QMenu *menu = widget->createStandardMenu(urls);
     QList<QAction *> actions = menu->actions();
 
-    if (!paths.isEmpty()) {
+    if (!urls.isEmpty()) {
         QAction *actionBefore = actions.at(1);
 
         menu->insertAction(actionBefore, m_openTabAction);
         menu->insertAction(actionBefore, m_openWindowAction);
 
         OpenWithEditorMenu *openWithMenu = new OpenWithEditorMenu(menu);
-        openWithMenu->setPaths(paths);
+        openWithMenu->setUrls(urls);
         connect(openWithMenu, SIGNAL(openRequested(QList<QUrl>,QByteArray)), SLOT(openEditor(QList<QUrl>,QByteArray)));
 
         if (!openWithMenu->isEmpty()) {
@@ -404,8 +391,8 @@ void FileManagerEditor::setupPropetries()
     m_properties->addProperty("iconSizeColumn", widget);
     m_properties->addProperty("iconSizeTree", widget);
     m_properties->addProperty("itemsExpandable", widget);
-    m_properties->addProperty("sortingColumn", widget);
-    m_properties->addProperty("sortingOrder", widget);
+    m_properties->addProperty("sortColumn", widget->model());
+    m_properties->addProperty("sortOrder", widget->model());
     m_properties->addProperty("viewMode", widget);
 
     m_properties->addProperty("panelVisible", m_widget);
@@ -419,11 +406,9 @@ void FileManagerEditor::setupConnections()
 {
     FileManagerWidget *widget = m_widget->widget();
     connect(widget, SIGNAL(selectedPathsChanged()), SLOT(onSelectedPathsChanged()));
-    connect(widget, SIGNAL(openRequested(QStringList,Qt::KeyboardModifiers)),
-            this, SLOT(openPaths(QStringList,Qt::KeyboardModifiers)));
-    connect(widget, SIGNAL(sortingChanged()), SLOT(onSortingChanged()));
-
-    connect(m_widget->panel(), SIGNAL(triggered(QString)), widget, SLOT(setCurrentPath(QString)));
+    connect(widget, SIGNAL(openRequested(QList<QUrl>,Qt::KeyboardModifiers)),
+            this, SLOT(openPaths(QList<QUrl>,Qt::KeyboardModifiers)));
+    connect(widget->model(), SIGNAL(sortingChanged(int,Qt::SortOrder)), SLOT(onSortingChanged()));
 
     connect(m_widget->splitter(), SIGNAL(splitterMoved(int,int)), SLOT(onSplitterMoved(int,int)));
 }
@@ -472,12 +457,12 @@ void FileManagerEditor::connectDocument(FileManagerDocument *document)
 {
     Q_ASSERT(document);
 
-    document->fmhistory()->setDualPaneWidget(m_widget->widget());
+    document->fmhistory()->setHistory(m_widget->widget()->model()->history());
 
-    connect(document, SIGNAL(currentPathChanged(QString)),
-            m_widget->widget(), SLOT(setCurrentPath(QString)));
-    connect(m_widget->widget(), SIGNAL(currentPathChanged(QString)),
-            document, SLOT(setCurrentPath(QString)));
+    connect(document, SIGNAL(urlChanged(QUrl)),
+            m_widget->widget(), SLOT(setUrl(QUrl)));
+    connect(m_widget->widget(), SIGNAL(urlChanged(QUrl)),
+            document, SLOT(setUrl(QUrl)));
 }
 
 /*!

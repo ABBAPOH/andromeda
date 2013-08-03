@@ -20,8 +20,6 @@ public:
     QList<QUrl> urls() const;
     void setUrls(const QList<QUrl> &urls);
 
-    void setPaths(const QStringList &paths);
-
 signals:
     void urlsChanged(const QList<QUrl> &urls);
     void openRequested(const QList<QUrl> &urls, const QByteArray &editor);

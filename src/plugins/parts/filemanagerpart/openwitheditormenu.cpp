@@ -52,15 +52,6 @@ void OpenWithEditorMenu::setUrls(const QList<QUrl> &urls)
     }
 }
 
-void OpenWithEditorMenu::setPaths(const QStringList &paths)
-{
-    QList<QUrl> urls;
-    foreach (const QString &path, paths) {
-        urls.append(QUrl::fromLocalFile(path));
-    }
-    setUrls(urls);
-}
-
 void OpenWithEditorMenu::onTriggered(QAction *action)
 {
     QByteArray editor = action->data().toByteArray();
