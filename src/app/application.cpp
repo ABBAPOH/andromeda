@@ -311,7 +311,7 @@ Application::Application(int &argc, char **argv) :
     m_settingsPageManager->setObjectName("settingsPageManager");
     m_settingsPageManager->addPage(new GeneralSettingsPage(this));
     m_settingsPageManager->addPage(new CommandsSettingsPage(this));
-    m_pluginManager->addObject(m_settingsPageManager);
+    m_pluginManager->objectPool()->addObject(m_settingsPageManager);
 
 #if QT_VERSION < 0x050000
     connect(this, SIGNAL(messageReceived(QString)), SLOT(handleMessage(QString)));

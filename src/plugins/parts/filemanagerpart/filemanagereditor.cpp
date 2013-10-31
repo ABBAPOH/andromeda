@@ -372,7 +372,7 @@ void FileManagerEditor::showContextMenu(const QPoint &pos)
 void FileManagerEditor::setupUi()
 {
     ExtensionSystem::PluginManager *pm = ExtensionSystem::PluginManager::instance();
-    NavigationModel *model = pm->object<NavigationModel>("navigationModel");
+    NavigationModel *model = pm->objectPool()->object<NavigationModel>("navigationModel");
 
     m_widget = new FileExplorerWidget(model, this);
 }
