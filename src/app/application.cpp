@@ -357,7 +357,6 @@ bool Application::loadPlugins()
     QStringList args = arguments().mid(1);
     args.prepend(QDir::currentPath());
     handleArguments(args);
-    m_pluginManager->postInitialize(arguments().mid(1));
 
     if (m_pluginManager->hasErrors()) {
         ErrorsDialog dlg;
@@ -549,7 +548,6 @@ void Application::handleMessage(const QString &message)
         return;
 
     handleArguments(arguments);
-    m_pluginManager->postInitialize(arguments.mid(1));
 }
 
 void Application::handleArguments(const QStringList &arguments)
