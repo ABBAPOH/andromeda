@@ -11,7 +11,7 @@ Project {
         else
             return install_app_path
     }
-    property string lib_suffix: qbs.targetOS.contains("linux") ? (qbs.architecture == "x86_64" ? "64" : "") : ""
+    property string lib_suffix: ""
     property string install_library_path: {
         if (qbs.targetOS.contains("osx"))
             return app_target + ".app/Contents/Frameworks"

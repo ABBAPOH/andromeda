@@ -16,7 +16,7 @@ DynamicLibrary {
     }
 
     Properties {
-         condition: qbs.targetOS == "linux" || qbs.targetOS == "unix"
+         condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
          cpp.rpaths: "$ORIGIN/../.."
     }
 

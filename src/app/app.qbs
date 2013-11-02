@@ -25,7 +25,7 @@ Application {
     ]
 
     Properties {
-        condition: qbs.targetOS == "linux" || qbs.targetOS == "unix"
+        condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
         cpp.rpaths: [ "$ORIGIN/../lib" + project.lib_suffix + "/" + project.app_target ]
     }
 
@@ -75,14 +75,14 @@ Application {
     }
     Group {
         name: "andromeda.desktop"
-        condition: qbs.targetOS == "linux" || qbs.targetOS == "unix"
+        condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
         files: "andromeda.desktop"
         qbs.install: true
         qbs.installDir: "share/applications"
     }
     Group {
         name: "andromeda.png"
-        condition: qbs.targetOS == "linux" || qbs.targetOS == "unix"
+        condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
         files: "andromeda.png"
         qbs.install: true
         qbs.installDir: "share/pixmaps"
