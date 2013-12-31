@@ -25,7 +25,7 @@
 
 #include <ExtensionSystem/PluginManager>
 #include <Parts/AbstractEditor>
-#include <Parts/EditorWindowFactory>
+#include <Parts/OpenStrategy>
 #include <Parts/SharedProperties>
 #include <Parts/constants.h>
 #include <Widgets/MiniSplitter>
@@ -133,7 +133,6 @@ FileManagerEditor::FileManagerEditor(QWidget *parent) :
     setupPropetries();
     setupConnections();
     createActions();
-    retranslateUi();
 
     connectDocument(qobject_cast<FileManagerDocument *>(document()));
 }
@@ -221,12 +220,12 @@ void FileManagerEditor::resizeEvent(QResizeEvent *e)
 
 void FileManagerEditor::onSelectedPathsChanged()
 {
-    QList<QUrl> paths = m_widget->widget()->selectedUrls();;
-    bool enabled = !paths.empty();
+    QList<QUrl> urls = m_widget->widget()->selectedUrls();;
 
-    m_openTabAction->setEnabled(enabled);
-    m_openWindowAction->setEnabled(enabled);
-    m_openEditorAction->setEnabled(enabled);
+    foreach (const StrategyAction &action, strategyActions) {
+        bool enabled = action.first->canOpen(urls);
+        action.second->setEnabled(enabled);
+    }
 }
 
 /*!
@@ -276,63 +275,25 @@ void FileManagerEditor::openPaths(const QList<QUrl> &urls, Qt::KeyboardModifiers
     if (folders.isEmpty())
         return;
 
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory) {
-        if (modifiers == Qt::NoModifier)
-            factory->open(folders);
-        else if (modifiers == (Qt::ControlModifier | Qt::AltModifier))
-            factory->openNewWindow(folders);
-        else if (modifiers == (Qt::ControlModifier))
-            factory->openNewEditor(folders);
-    }
+    OpenStrategy *strategy = OpenStrategy::strategy(modifiers);
+    if (strategy)
+        strategy->open(folders);
 }
 
-/*!
-    \internal
-*/
-void FileManagerEditor::openNewTab()
+void FileManagerEditor::openStrategy()
 {
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (!action)
+        return;
+
     QList<QUrl> urls = m_widget->widget()->selectedUrls();
     if (urls.isEmpty())
         return;
 
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->openNewEditor(urls);
-}
-
-/*!
-    \internal
-*/
-void FileManagerEditor::openNewWindow()
-{
-    QList<QUrl> urls = m_widget->widget()->selectedUrls();
-    if (urls.isEmpty())
-        return;
-
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->openNewWindow(urls);
-}
-
-void FileManagerEditor::openEditor()
-{
-    QList<QUrl> urls = m_widget->widget()->selectedUrls();
-    if (urls.isEmpty())
-        return;
-
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->open(urls);
-}
-
-void FileManagerEditor::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
-{
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (!factory)
-        return;
-
-    factory->openEditor(urls, editor);
+    QByteArray id = action->objectName().toUtf8();
+    OpenStrategy *strategy = OpenStrategy::strategy(id);
+    if (strategy)
+        strategy->open(urls);
 }
 
 void FileManagerEditor::showContextMenu(const QPoint &pos)
@@ -346,20 +307,10 @@ void FileManagerEditor::showContextMenu(const QPoint &pos)
 
     if (!urls.isEmpty()) {
         QAction *actionBefore = actions.at(1);
+        menu->removeAction(actions.at(0));
 
-        menu->insertAction(actionBefore, m_openTabAction);
-        menu->insertAction(actionBefore, m_openWindowAction);
-
-        OpenWithEditorMenu *openWithMenu = new OpenWithEditorMenu(menu);
-        openWithMenu->setUrls(urls);
-        connect(openWithMenu, SIGNAL(openRequested(QList<QUrl>,QByteArray)), SLOT(openEditor(QList<QUrl>,QByteArray)));
-
-        if (!openWithMenu->isEmpty()) {
-            menu->insertSeparator(actionBefore);
-            menu->insertAction(actionBefore, m_openEditorAction);
-            if (openWithMenu->actions().count() > 1)
-                menu->insertMenu(actionBefore, openWithMenu);
-        }
+        foreach (const StrategyAction &action, strategyActions)
+            menu->insertAction(actionBefore, action.second);
     }
 
     menu->exec(widget->mapToGlobal(pos));
@@ -418,33 +369,19 @@ void FileManagerEditor::setupConnections()
 */
 void FileManagerEditor::createActions()
 {
-    m_openTabAction = new QAction(this);
-    m_openTabAction->setEnabled(false);
-    m_openTabAction->setObjectName(Constants::Actions::OpenInTab);
-    connect(m_openTabAction, SIGNAL(triggered()), SLOT(openNewTab()));
-    addAction(m_openTabAction);
-
-    m_openWindowAction = new QAction(this);
-    m_openWindowAction->setEnabled(false);
-    m_openWindowAction->setObjectName(Constants::Actions::OpenInWindow);
-    connect(m_openWindowAction, SIGNAL(triggered()), SLOT(openNewWindow()));
-    addAction(m_openWindowAction);
-
-    m_openEditorAction = new QAction(this);
-    m_openEditorAction->setEnabled(false);
-    m_openEditorAction->setObjectName(Constants::Actions::OpenEditor);
-    connect(m_openEditorAction, SIGNAL(triggered()), SLOT(openEditor()));
-    addAction(m_openEditorAction);
+    foreach (OpenStrategy *strategy, OpenStrategy::strategies()) {
+        QAction *action = new QAction(this);
+        action->setShortcut(strategy->keySequence());
+        action->setText(strategy->text());
+        action->setToolTip(strategy->toolTip());
+        action->setObjectName(strategy->id());
+        action->setEnabled(false);
+        connect(action, SIGNAL(triggered()), SLOT(openStrategy()));
+        addAction(action);
+        strategyActions.append(qMakePair(strategy, action));
+    }
 
     registerWidgetActions(m_widget->widget());
-}
-
-void FileManagerEditor::retranslateUi()
-{
-    m_openTabAction->setText(tr("Open in new tab"));
-    m_openWindowAction->setText(tr("Open in new window"));
-    m_openEditorAction->setText(tr("Open in internal editor"));
-    m_openEditorAction->setToolTip(tr("Opens selected files in an internal editor"));
 }
 
 void FileManagerEditor::registerWidgetActions(FileManagerWidget *widget)

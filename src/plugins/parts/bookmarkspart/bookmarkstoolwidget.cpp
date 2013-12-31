@@ -11,7 +11,7 @@
 #include <QtGui/QVBoxLayout>
 #endif
 
-#include <Parts/EditorWindowFactory>
+#include <Parts/OpenStrategy>
 #include <Parts/ToolModel>
 
 #include <Bookmarks/BookmarksModel>
@@ -79,8 +79,8 @@ void BookmarksToolWidget::onActivated(const QModelIndex &index)
 
     QUrl url = index.data(BookmarksModel::UrlRole).toUrl();
 
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->open(url);
+    OpenStrategy *strategy = OpenStrategy::defaultStrategy();
+    if (!strategy)
+        return;
+    strategy->open(url);
 }
-

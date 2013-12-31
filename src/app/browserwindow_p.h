@@ -11,7 +11,6 @@
 #include <QtGui/QToolBar>
 #endif
 
-#include <Parts/EditorWindowFactory>
 #include <Parts/EditorView>
 #include <Parts/HistoryButton>
 #include <Widgets/TabBar>
@@ -45,20 +44,6 @@ public:
 public slots:
     void onMenuVisibleChanged(bool visible);
 
-};
-
-class BrowserWindowFactory : public Parts::EditorWindowFactory
-{
-    Q_OBJECT
-public:
-    explicit BrowserWindowFactory(QObject *parent = 0);
-
-    Parts::EditorWindow *create();
-
-    void open(const QList<QUrl> &urls);
-    void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
-    void openNewEditor(const QList<QUrl> &urls);
-    void openNewWindow(const QList<QUrl> &urls);
 };
 
 } // namespace Andromeda

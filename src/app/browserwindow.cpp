@@ -187,57 +187,6 @@ void BrowserWindowPrivate::onMenuVisibleChanged(bool visible)
     actions[BrowserWindow::MenuBar]->setVisible(!visible);
 }
 
-BrowserWindowFactory::BrowserWindowFactory(QObject *parent) :
-    EditorWindowFactory(parent)
-{
-}
-
-EditorWindow *BrowserWindowFactory::create()
-{
-    return new BrowserWindow;
-}
-
-void BrowserWindowFactory::open(const QList<QUrl> &urls)
-{
-    BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
-    if (window) {
-        if (urls.count() == 1)
-            window->open(urls.first());
-        else
-            window->openNewTabs(urls); // TODO: setting to open in windows instead
-    } else {
-        BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
-        window->openNewTabs(urls); // TODO: setting to open in windows instead
-        window->show();
-    }
-}
-
-void BrowserWindowFactory::openNewEditor(const QList<QUrl> &urls)
-{
-    BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
-    if (window) {
-        window->openNewTabs(urls);
-    } else {
-        BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
-        window->openNewTabs(urls);
-        window->show();
-    }
-}
-
-void BrowserWindowFactory::openNewWindow(const QList<QUrl> &urls)
-{
-    BrowserWindow *window = qobject_cast<BrowserWindow*>(create());
-    window->openNewTabs(urls); // TODO: setting to open in windows instead
-    window->show();
-}
-
-void BrowserWindowFactory::openEditor(const QList<QUrl> &urls, const QByteArray &editor)
-{
-    BrowserWindow *window = qobject_cast<BrowserWindow*>(m_activeWindow);
-    if (window)
-        window->openEditor(urls, editor);
-}
-
 /*!
     \class Andromeda::BrowserWindow
 
@@ -455,7 +404,10 @@ void BrowserWindow::newTab()
 void BrowserWindow::newWindow()
 {
     QUrl url = QUrl::fromLocalFile(QDir::homePath());
-    EditorWindow::openNewWindow(url);
+
+    BrowserWindow *window = new BrowserWindow;
+    window->open(url);
+    window->show();
 }
 
 /*!

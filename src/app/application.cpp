@@ -37,7 +37,6 @@
 #include <Parts/ApplicationCommand>
 #include <Parts/ContextCommand>
 #include <Parts/CommandContainer>
-#include <Parts/EditorWindowFactory>
 #include <Parts/SettingsPageManager>
 #include <Parts/SettingsWindow>
 #include <Parts/StandardCommands>
@@ -55,6 +54,7 @@
 #include "browserwindow_p.h"
 #include "commandssettingspage.h"
 #include "generalsettingspage.h"
+#include "openstrategies.h"
 #include "settingsmodel.h"
 #include "settingswidget.h"
 
@@ -322,8 +322,6 @@ Application::Application(int &argc, char **argv) :
                                      "imageviewer" <<
                                      "widgets");
 
-    EditorWindowFactory::setDefaultfactory(new BrowserWindowFactory(this));
-
     m_settingsPageManager = new SettingsPageManager(this);
     m_settingsPageManager->setObjectName("settingsPageManager");
     m_settingsPageManager->addPage(new GeneralSettingsPage(this));
@@ -336,6 +334,7 @@ Application::Application(int &argc, char **argv) :
 #ifndef Q_OS_MAC
     connect(this, SIGNAL(lastWindowClosed()), SLOT(exit()));
 #endif
+    createStrategies();
 }
 
 Application::~Application()
@@ -778,7 +777,7 @@ void Application::createViewMenu()
     viewMenu->addCommand(am->command(Constants::Actions::ShowHiddenFiles));
     viewMenu->addCommand(StandardCommands::contextCommand(StandardCommands::ShowLeftPanel));
     viewMenu->addCommand(StandardCommands::contextCommand(StandardCommands::ShowStatusBar));
-    viewMenu->addCommand(am->command(Constants::Actions::ShowBookmarks));
+    viewMenu->addCommand(am->command(Constants::Actions::ShowBookmarksToolbar));
     viewMenu->addSeparator();
     viewMenu->addCommand(am->command(Constants::Actions::IconMode));
     viewMenu->addCommand(am->command(Constants::Actions::ColumnMode));
@@ -901,4 +900,12 @@ void Application::createAction(const QByteArray &id, const char *slot)
     QAction *action = new QAction(id, this);
     action->setObjectName(id);
     connect(action, SIGNAL(triggered()), slot);
+}
+
+void Application::createStrategies()
+{
+    new OpenCurrentWindowStrategy(this);
+    new OpenNewTabStrategy(this);
+    new OpenNewWindowStrategy(this);
+    new OpenEditorStrategy(this);
 }

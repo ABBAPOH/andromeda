@@ -3,28 +3,7 @@
 
 #include "bookmarksplugin.h"
 
-#include <Parts/ModelContainer>
-
-#include <Bookmarks/BookmarksMenu>
-
 namespace Bookmarks {
-
-class BookmarksMenuContainer : public Parts::CommandContainer
-{
-public:
-    explicit BookmarksMenuContainer(const QByteArray &id, QObject *parent = 0) :
-        CommandContainer(id, parent),
-        m_menu(new BookmarksMenuBarMenu)
-    {}
-
-    ~BookmarksMenuContainer() { delete m_menu; }
-
-    inline BookmarksMenuBarMenu *bookmarksMenu() const { return m_menu; }
-
-    QAction *createAction(QObject *) const { return m_menu->menuAction(); }
-private:
-    BookmarksMenuBarMenu *m_menu;
-};
 
 class BookmarksButtonCommand : public Parts::AbstractCommand
 {
@@ -32,12 +11,6 @@ public:
     explicit BookmarksButtonCommand(QObject *parent = 0);
 
     QAction *createAction(QObject *parent) const;
-};
-
-class BookmarksToolBarContainer : public Parts::ModelContainer
-{
-public:
-    explicit BookmarksToolBarContainer(const QByteArray &id, QObject *parent = 0);
 };
 
 } // namespace Bookmarks

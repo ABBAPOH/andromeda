@@ -27,7 +27,7 @@ namespace MenuGroups {
 
 namespace Actions {
 
-const char * const ShowBookmarks = "ShowBookmarks";
+const char * const ShowBookmarksToolbar = "ShowBookmarksToolbar";
 const char * const AddBookmark = "AddBookmark";
 
 } // namespace Actions

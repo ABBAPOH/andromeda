@@ -48,6 +48,8 @@ Application {
         "main.cpp",
         "myaddressbar.cpp",
         "myaddressbar.h",
+        "openstrategies.cpp",
+        "openstrategies.h",
         "settingsmodel.cpp",
         "settingsmodel.h",
         "settingsmodel_p.h",

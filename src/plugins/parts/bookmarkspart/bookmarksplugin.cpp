@@ -20,10 +20,11 @@
 
 #include <Parts/AbstractDocument>
 #include <Parts/EditorWindow>
-#include <Parts/EditorWindowFactory>
 #include <Parts/ContextCommand>
 #include <Parts/DocumentManager>
 #include <Parts/EditorManager>
+#include <Parts/ModelContainer>
+#include <Parts/OpenStrategy>
 #include <Parts/Separator>
 #include <Parts/ToolWidgetManager>
 #include <Parts/constants.h>
@@ -34,6 +35,7 @@
 #include "bookmarksconstants.h"
 #include "bookmarksdocument.h"
 #include "bookmarkseditor.h"
+#include "bookmarksmenucontainer.h"
 #include "bookmarkstoolwidget.h"
 
 using namespace ExtensionSystem;
@@ -41,7 +43,7 @@ using namespace Parts;
 using namespace Bookmarks;
 
 BookmarksButtonCommand::BookmarksButtonCommand(QObject *parent) :
-    AbstractCommand("Bookmarks", parent)
+    AbstractCommand("BookmarksButton", parent)
 {
 }
 
@@ -55,13 +57,6 @@ QAction * BookmarksButtonCommand::createAction(QObject *parent) const
     QWidgetAction *action = new QWidgetAction(parent);
     action->setDefaultWidget(button);
     return action;
-}
-
-BookmarksToolBarContainer::BookmarksToolBarContainer(const QByteArray &id, QObject *parent) :
-    ModelContainer(id, parent)
-{
-    BookmarksModel *model = BookmarksPlugin::instance()->model();
-    setModel(model, model->toolBar());
 }
 
 static BookmarksPlugin *m_instance = 0;
@@ -108,44 +103,40 @@ BookmarksDocument * BookmarksPlugin::sharedDocument() const
 
 void BookmarksPlugin::open(const QUrl &url)
 {
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory) {
-        factory->open(url);
-    }
+    OpenStrategy *strategy = OpenStrategy::defaultStrategy();
+    if (!strategy)
+        return;
+    strategy->open(url);
 }
 
 void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
 {
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory) {
-        factory->openNewEditor(urls);
-    }
+    // TODO: remove?
+    OpenStrategy *strategy = OpenStrategy::strategy(OpenStrategy::TypeOpenNewTab);
+    if (!strategy)
+        return;
+    strategy->open(urls);
 }
 
 void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
 {
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory) {
-        factory->openNewWindow(urls);
-    }
+    OpenStrategy *strategy = OpenStrategy::strategy(OpenStrategy::TypeOpenNewWindow);
+    if (!strategy)
+        return;
+    strategy->open(urls);
 }
 
-void BookmarksPlugin::onToolBarTriggered(const QModelIndex &index)
+void BookmarksPlugin::onIndexTriggered(const QModelIndex &index)
 {
     open(index.data(BookmarksModel::UrlRole).toUrl());
 }
 
-void BookmarksPlugin::onBookmarksButtonTriggered()
-{
-
-}
-
 void BookmarksPlugin::showBookmarks()
 {
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory) {
-        factory->openEditor(Constants::Editors::Bookmarks);
-    }
+    OpenStrategy *strategy = OpenStrategy::defaultStrategy();
+    if (!strategy)
+        return;
+    strategy->open(AbstractEditor::editorUrl(Constants::Editors::Bookmarks));
 }
 
 void BookmarksPlugin::addBookmark()
@@ -160,42 +151,43 @@ void BookmarksPlugin::addFolder()
 
 void BookmarksPlugin::createActions()
 {
-    BookmarksToolBarContainer * toolBar = new BookmarksToolBarContainer("AlternateToolbar", this);
+    BookmarksModel *model = this->model();
+
+    ModelContainer * toolBar = new ModelContainer("AlternateToolbar", this);
+    toolBar->setModel(model, model->toolBar());
     toolBar->addCommand(new BookmarksButtonCommand(toolBar), toolBar->firstSeparator());
-    connect(toolBar, SIGNAL(triggered(QModelIndex)), this, SLOT(onToolBarTriggered(QModelIndex)));
-
-    addBookmarkAction = new QAction(tr("Add bookmark"), this);
-    addBookmarkAction->setShortcut(QKeySequence(QLatin1String("Ctrl+D")));
-    connect(addBookmarkAction, SIGNAL(triggered()), SLOT(addBookmark()));
-
-    addFolderAction = new QAction(tr("Add folder"), this);
-    addFolderAction->setShortcut(QKeySequence(QLatin1String("Ctrl+Alt+F")));
-    connect(addFolderAction, SIGNAL(triggered()), SLOT(addFolder()));
-
-    showBookmarksAction = new QAction(tr("Show bookmarks"), this);
-    showBookmarksAction->setShortcut(QKeySequence(QLatin1String("Alt+Ctrl+B")));
-    connect(showBookmarksAction, SIGNAL(triggered()), SLOT(showBookmarks()));
-
-    QList<QAction*> actions;
-    actions.append(addBookmarkAction);
-    actions.append(addFolderAction);
-    actions.append(showBookmarksAction);
-
-    // ================ View Menu ================
-    ContextCommand *c = new ContextCommand(Constants::Actions::ShowBookmarks, this);
-    c->setShortcut(QKeySequence());
-    c->setText(tr("Show Bookmarks toolbar"));
-    c->setAttributes(ContextCommand::AttributeUpdateEnabled);
+    connect(toolBar, SIGNAL(triggered(QModelIndex)), this, SLOT(onIndexTriggered(QModelIndex)));
 
     // ================ Bookmarks Menu ================
     BookmarksMenuContainer *menu = new BookmarksMenuContainer(Constants::Menus::Bookmarks, this);
     menu->setText(tr("Bookmarks"));
-    menu->bookmarksMenu()->setInitialActions(actions);
-    menu->bookmarksMenu()->setModel(m_model);
-    connect(menu->bookmarksMenu(), SIGNAL(open(QUrl)), SLOT(open(QUrl)));
-    connect(menu->bookmarksMenu(), SIGNAL(openInTabs(QList<QUrl>)), SLOT(openInTabs(QList<QUrl>)));
-    connect(menu->bookmarksMenu(), SIGNAL(openInWindow(QList<QUrl>)), SLOT(openInWindow(QList<QUrl>)));
+    menu->setModel(model, model->menu());
+    connect(menu, SIGNAL(triggered(QModelIndex)), this, SLOT(onIndexTriggered(QModelIndex)));
     addObject(menu);
+
+    ApplicationCommand *addBookmark = new ApplicationCommand("AddBookmark", this);
+    addBookmark->setText(tr("Add bookmark"));
+    addBookmark->setShortcut(QKeySequence("Ctrl+D"));
+    connect(addBookmark, SIGNAL(triggered()), SLOT(addBookmark()));
+    menu->addCommand(addBookmark, menu->firstSeparator());
+
+    ApplicationCommand *addFolder = new ApplicationCommand("AddFolder", this);
+    addFolder->setText(tr("Add folder"));
+    addFolder->setShortcut(QKeySequence("Ctrl+Alt+F"));
+    connect(addFolder, SIGNAL(triggered()), SLOT(addFolder()));
+    menu->addCommand(addFolder, menu->firstSeparator());
+
+    ApplicationCommand *showBookmarks = new ApplicationCommand("ShowBookmarks", this);
+    showBookmarks->setText(tr("Show bookmarks"));
+    showBookmarks->setShortcut(QKeySequence("Ctrl+Alt+B"));
+    connect(showBookmarks, SIGNAL(triggered()), SLOT(showBookmarks()));
+    menu->addCommand(showBookmarks, menu->firstSeparator());
+
+    // ================ View Menu ================
+    ContextCommand *c = new ContextCommand(Constants::Actions::ShowBookmarksToolbar, this);
+    c->setShortcut(QKeySequence());
+    c->setText(tr("Show Bookmarks toolbar"));
+    c->setAttributes(ContextCommand::AttributeUpdateEnabled);
 }
 
 void BookmarksPlugin::showBookmarkDialog(const QModelIndex &index, bool isFolder)

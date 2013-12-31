@@ -10,6 +10,7 @@ class MiniSplitter;
 class QSettings;
 
 namespace Parts {
+class OpenStrategy;
 class SharedProperties;
 }
 
@@ -48,10 +49,7 @@ private slots:
     void onSortingChanged();
     void onSplitterMoved(int,int);
     void openPaths(const QList<QUrl> &urls, Qt::KeyboardModifiers modifiers);
-    void openNewTab();
-    void openNewWindow();
-    void openEditor();
-    void openEditor(const QList<QUrl> &urls, const QByteArray &editor);
+    void openStrategy();
     void showContextMenu(const QPoint &pos);
 
 private:
@@ -59,7 +57,6 @@ private:
     void setupPropetries();
     void setupConnections();
     void createActions();
-    void retranslateUi();
     void registerWidgetActions(FileManagerWidget *widget);
     void connectDocument(FileManagerDocument *document);
 
@@ -67,9 +64,8 @@ private:
     FileExplorerWidget *m_widget;
 
     Parts::SharedProperties *m_properties;
-    QAction *m_openTabAction;
-    QAction *m_openWindowAction;
-    QAction *m_openEditorAction;
+    typedef QPair<Parts::OpenStrategy *, QAction*> StrategyAction;
+    QList<StrategyAction> strategyActions;
 
     bool ignoreSignals;
 };

@@ -14,7 +14,7 @@
 #include <QtGui/QVBoxLayout>
 #endif
 
-#include <Parts/EditorWindowFactory>
+#include <Parts/OpenStrategy>
 #include <FileManager/FileSystemModel>
 
 #include "filesystemtoolmodel.h"
@@ -86,9 +86,10 @@ void FileSystemToolWidget::onActivated(const QModelIndex &index)
     if (!model->isDir(index))
         return;
 
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->open(url);
+    OpenStrategy *strategy = OpenStrategy::defaultStrategy();
+    if (!strategy)
+        return;
+    strategy->open(url);
 }
 
 void FileSystemToolWidget::onUrlChanged(const QUrl &url)
@@ -121,31 +122,28 @@ void FileSystemToolWidget::open()
         return;
     }
 
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->open(url);
+    OpenStrategy *strategy = OpenStrategy::defaultStrategy();
+    if (!strategy)
+        return;
+    strategy->open(url);
 }
 
-void FileSystemToolWidget::openInTab()
+void FileSystemToolWidget::openStrategy()
 {
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (!action)
+        return;
+
+    QByteArray id = action->objectName().toUtf8();
+    OpenStrategy *strategy = OpenStrategy::strategy(id);
+    if (!strategy)
+        return;
     QModelIndex index = m_view->currentIndex();
+    if (!index.isValid())
+        return;
     QString path = index.data(QFileSystemModel::FilePathRole).toString();
     QUrl url = QUrl::fromLocalFile(path);
-
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->openNewEditor(url);
-}
-
-void FileSystemToolWidget::openInWindow()
-{
-    QModelIndex index = m_view->currentIndex();
-    QString path = index.data(QFileSystemModel::FilePathRole).toString();
-    QUrl url = QUrl::fromLocalFile(path);
-
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->openNewWindow(url);
+    strategy->open(url);
 }
 
 void FileSystemToolWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -153,9 +151,21 @@ void FileSystemToolWidget::contextMenuEvent(QContextMenuEvent *event)
     QModelIndex index = m_view->currentIndex();
     if (!index.isValid())
         return;
+
+    QString path = index.data(QFileSystemModel::FilePathRole).toString();
+    QUrl url = QUrl::fromLocalFile(path);
+
     QMenu menu;
-    menu.addAction(tr("Open"), this, SLOT(open()));
-    menu.addAction(tr("Open in new tab"), this, SLOT(openInTab()));
-    menu.addAction(tr("Open in new window"), this, SLOT(openInWindow()));
+    foreach (OpenStrategy *strategy, OpenStrategy::strategies()) {
+        if (!strategy->canOpen(QList<QUrl>() << url))
+            continue;
+        QAction *action = new QAction(&menu);
+        action->setToolTip(strategy->toolTip());
+        action->setText(strategy->text());
+        action->setShortcut(strategy->keySequence());
+        action->setObjectName(strategy->id());
+        connect(action, SIGNAL(triggered()), SLOT(openStrategy()));
+        menu.addAction(action);
+    }
     menu.exec(event->globalPos());
 }

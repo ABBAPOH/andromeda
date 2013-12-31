@@ -15,6 +15,8 @@ Part {
         "bookmarksdocument.h",
         "bookmarkseditor.cpp",
         "bookmarkseditor.h",
+        "bookmarksmenucontainer.cpp",
+        "bookmarksmenucontainer.h",
         "bookmarksplugin.cpp",
         "bookmarksplugin.h",
         "bookmarksplugin_p.h",

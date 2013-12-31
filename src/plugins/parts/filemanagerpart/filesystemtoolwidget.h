@@ -21,8 +21,7 @@ private slots:
     void onActivated(const QModelIndex &index);
     void onUrlChanged(const QUrl &url);
     void open();
-    void openInTab();
-    void openInWindow();
+    void openStrategy();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);

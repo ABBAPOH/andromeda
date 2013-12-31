@@ -23,8 +23,8 @@
 
 #include <QtWebKit/QWebHistory>
 
-#include <Parts/EditorWindowFactory>
 #include <Parts/constants.h>
+#include <Parts/OpenStrategy>
 
 #include <Widgets/MiniSplitter>
 
@@ -246,8 +246,10 @@ IFind *WebViewEditor::find() const
 
 void WebViewEditor::onUrlClicked(const QUrl &url)
 {
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    factory->open(url);
+    OpenStrategy *strategy = OpenStrategy::defaultStrategy();
+    if (!strategy)
+        return;
+    strategy->open(url);
 }
 
 void WebViewEditor::showWebInspector(bool show)

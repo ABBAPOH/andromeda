@@ -35,8 +35,7 @@ private slots:
     void open(const QUrl &url);
     void openInTabs(const QList<QUrl> &urls);
     void openInWindow(const QList<QUrl> &urls);
-    void onToolBarTriggered(const QModelIndex &index);
-    void onBookmarksButtonTriggered();
+    void onIndexTriggered(const QModelIndex &index);
 
     void showBookmarks();
     void addBookmark();
@@ -50,10 +49,6 @@ private:
 private:
     Bookmarks::BookmarksModel *m_model;
     BookmarksDocument *m_document;
-
-    QAction *addBookmarkAction;
-    QAction *addFolderAction;
-    QAction *showBookmarksAction;
 };
 
 } // namespace Bookmarks

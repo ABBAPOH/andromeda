@@ -100,6 +100,7 @@ private:
     void setupApplicationActions();
 
     void createAction(const QByteArray &id, const char *slot);
+    void createStrategies();
 
 private:
     ExtensionSystem::PluginManager *m_pluginManager;

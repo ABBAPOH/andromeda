@@ -29,6 +29,8 @@ public:
 
 private slots:
     void openTriggered(const QList<QUrl> &urls);
+    void openStrategy();
+    void showContextMenu(const QPoint &pos);
 
 protected:
     void resizeEvent(QResizeEvent *);
