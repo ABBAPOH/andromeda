@@ -11,6 +11,7 @@
 
 #if QT_VERSION >= 0x050000
 #include <QtCore/QStandardPaths>
+#include <QtCore/QMimeDatabase>
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QDirModel>
 #include <QtWidgets/QMenuBar>
@@ -25,6 +26,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QSystemTrayIcon>
 #include <QtGui/QWidgetAction>
+#include <IO/QMimeDatabase>
 #endif
 
 #include <ExtensionSystem/ErrorsDialog>
@@ -55,6 +57,10 @@
 #include "generalsettingspage.h"
 #include "settingsmodel.h"
 #include "settingswidget.h"
+
+#ifndef QT_WEBKIT_NOT_FOUND
+#include <QtWebKit/QWebSecurityOrigin>
+#endif
 
 using namespace ExtensionSystem;
 using namespace Parts;
@@ -96,6 +102,17 @@ static inline QString getPluginPath()
 static inline QString getDataLocationPath()
 {
     return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+}
+
+// we need this to prevent libraries from unloading when they are not used
+void preloadLibraries()
+{
+#ifndef QT_WEBKIT_NOT_FOUND
+    QStringList schemes = QWebSecurityOrigin::localSchemes(); // preloading WebKit
+#endif
+
+    QMimeDatabase db;
+    db.mimeTypeForName("application/octet-stream");
 }
 
 template <class T>
@@ -386,6 +403,25 @@ bool Application::isTrayIconVisible() const
 void Application::setTrayIconVisible(bool visible)
 {
     trayIcon->setVisible(visible);
+}
+
+int Application::exec()
+{
+#if QT_VERSION >= 0x050000
+#else
+    if (isRunning()) {
+        if (!activateApplication())
+            return 2;
+        return 0;
+    }
+#endif
+
+    preloadLibraries();
+
+    if (!loadPlugins())
+        return 1;
+
+    return QApplication::exec();
 }
 
 /*!

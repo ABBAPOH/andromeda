@@ -56,6 +56,8 @@ public:
     bool isTrayIconVisible() const;
     void setTrayIconVisible(bool visible);
 
+    int exec();
+
 public slots:
     void newWindow();
     void showPluginView();
