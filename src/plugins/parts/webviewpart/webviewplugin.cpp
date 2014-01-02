@@ -56,7 +56,7 @@ bool WebViewPlugin::initialize()
     SettingsPageManager *pageManager = object<SettingsPageManager>("settingsPageManager");
 
     pageManager->addPage(new AppearanceSettingsPage(this));
-    pageManager->addPage(new PrivacySettingsPage);
+    pageManager->addPage(new PrivacySettingsPage(this));
     pageManager->addPage(new ProxySettingsPage(this));
 
     DocumentManager::instance()->addFactory(new WebViewDocumentFactory(this));
