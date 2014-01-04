@@ -55,31 +55,12 @@ bool BookmarksEditor::restoreState(const QByteArray &state)
     return true;
 }
 
-void BookmarksEditor::openTriggered(const QUrl &url)
-{
-    EditorWindow *window = EditorWindow::currentWindow();
-    if (window)
-        window->open(url);
-}
-
-void BookmarksEditor::openInTabTriggered(const QUrl &url)
+void BookmarksEditor::openTriggered(const QList<QUrl> &urls)
 {
     EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory) {
-        factory->openNewEditor(url);
-    }
-}
-
-void BookmarksEditor::openInWindowTriggered(const QUrl &url)
-{
-    EditorWindowFactory *factory = EditorWindowFactory::defaultFactory();
-    if (factory)
-        factory->openNewWindow(url);
-}
-
-void BookmarksEditor::onStateChanged()
-{
-    m_settings->setValue(QLatin1String("bookmarksEditor/lastState"), m_widget->saveState());
+    if (!factory)
+        return;
+    factory->open(urls);
 }
 
 void BookmarksEditor::resizeEvent(QResizeEvent *e)
@@ -98,10 +79,7 @@ void BookmarksEditor::init()
     if (value.isValid())
         m_widget->restoreState(value.toByteArray());
 
-    connect(m_widget, SIGNAL(open(QUrl)), SLOT(openTriggered(QUrl)));
-    connect(m_widget, SIGNAL(openInTab(QUrl)), SLOT(openInTabTriggered(QUrl)));
-    connect(m_widget, SIGNAL(openInWindow(QUrl)), SLOT(openInWindowTriggered(QUrl)));
-    connect(m_widget, SIGNAL(stateChanged()), SLOT(onStateChanged()));
+    connect(m_widget, SIGNAL(openRequested(QList<QUrl>)), SLOT(openTriggered(QList<QUrl>)));
 
     redoAction = m_widget->model()->undoStack()->createRedoAction(m_widget);
     redoAction->setObjectName(Constants::Actions::Redo);

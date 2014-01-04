@@ -28,11 +28,7 @@ public:
     bool restoreState(const QByteArray &state);
 
 private slots:
-    void openTriggered(const QUrl &url);
-    void openInTabTriggered(const QUrl &url);
-    void openInWindowTriggered(const QUrl &url);
-
-    void onStateChanged();
+    void openTriggered(const QList<QUrl> &urls);
 
 protected:
     void resizeEvent(QResizeEvent *);
