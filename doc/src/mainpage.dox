@@ -1,0 +1,39 @@
+/*!
+    \mainpage Andromeda
+
+    ## Architecture
+
+    Andromeda has a plugin architecture. That is, almost all code is located in
+    plugins called "parts". Plugins are based on an ExtensionSystem module,
+    which is very similar to the ExtensionSystem module in Qt Creator (but
+    slightly different and has some features that Qt Creator lacks - like hot
+    loading/unloading of plugins). "Parts" are based on a Parts module that
+    implements Model-View pattern. Main classes in that module are
+    Parts::AbstractDocument (or Parts::FileDocument) and Parts::AbstractEditor.
+    Each document/editor is capable of opening an url of some type - for
+    example, "http://" url or url with mimetype "image/jpeg".
+
+    Andomeda itself is a simple launcher that loads plugins, creates main menu
+    bar and common settings pages (like keyboard shortcuts). Everything else
+    (like Part settings or menus) is located in plugins. When Andromeda
+    starts, an instance of an Andromeda::Application class is created.
+    This intance creates ExtensionSystem::PluginManager and menu bar. Then,
+    Andromeda::Application::exec() is called, which loads plugins and restores
+    application session. In case if there is no session, new instance of an
+    Andromeda::BrowserWindow is created with the default url (normally, it is
+    an url, pointing to user home directory).
+
+    Andromeda uses specific framework to populate and cofigure menus, menu bar
+    and toolbars - ActionManager framework. Instead of using directly QAction
+    QMenu and QToolBar, menus should be described using Commands and
+    CommandContainers - classes that inherit Parts::AbstractCommand. Commands
+    serves as models for QAction/QMenu objects - there could be several
+    instances of a QToolBar class (in different windows, for example), but only
+    one instance of a CommandContainer. Also, ActionManager automatically
+    connects actions, added to the widgets within window with actions in a menu
+    bar, so when action in a menu is triggered, it triggers widgets's action;
+    when widget's action state changes (for example, it becomes disabled), menu
+    bar's state changes too. This is usefull when there are multiple tabs in
+    same window with same actions in each tab ("copy", "paste") - each tab only
+    controls it's action and should know nothing about existance of other tabs.
+*/
