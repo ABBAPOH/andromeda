@@ -42,6 +42,8 @@ class Application : public QtSingleApplication
 {
     Q_OBJECT
     Q_DISABLE_COPY(Application)
+
+    Q_PROPERTY(bool trayIconVisible READ isTrayIconVisible WRITE setTrayIconVisible)
 public:
     explicit Application(int &argc, char **argv);
     ~Application();

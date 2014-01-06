@@ -291,6 +291,22 @@ QAction * WindowsContainer::createAction(QObject * /*parent*/) const
     return m_menu->menuAction();
 }
 
+/*!
+    \class Andromeda::Application
+    Main application class. Application object is created in main() function
+    and exec() is called. This object lives as long as application is running
+    and owns different singletone objects - ExtensionSystem::PluginManager and
+    Parts::SettingsPageManager.
+
+    Applicaion creates main menu bar and common menus - File, Edit, etc.
+
+    Also Application class provides typical slots like about(), showSettings()
+    and so on.
+*/
+
+/*!
+    Creates Application with the given \a argc and \a argv.
+*/
 Application::Application(int &argc, char **argv) :
 #if QT_VERSION >= 0x050000
     QApplication(argc, argv),
@@ -337,6 +353,9 @@ Application::Application(int &argc, char **argv) :
     createStrategies();
 }
 
+/*!
+    Destroys Application.
+*/
 Application::~Application()
 {
     delete dockMenu;
@@ -346,6 +365,9 @@ Application::~Application()
 #endif
 }
 
+/*!
+    Returns object created in main() funciton.
+*/
 Application *Application::instance()
 {
     return qobject_cast<Application *>(QApplication::instance());
@@ -361,6 +383,9 @@ bool Application::activateApplication()
 }
 #endif
 
+/*!
+    \internal
+*/
 bool Application::loadPlugins()
 {
     m_pluginManager->loadPlugins();
@@ -394,6 +419,12 @@ bool Application::loadPlugins()
     return true;
 }
 
+/*!
+    \property Application::trayIconVisible
+
+    This property holds if tray icon is visible or not.
+*/
+
 bool Application::isTrayIconVisible() const
 {
     return trayIcon->isVisible();
@@ -404,6 +435,12 @@ void Application::setTrayIconVisible(bool visible)
     trayIcon->setVisible(visible);
 }
 
+/*!
+    Overrides QApplication::exec(). This method should perform all operations
+    that can fail - i.e loading plugins, restoring session and so on.
+
+    Should return 0 on success or non-zero value in case of an error.
+*/
 int Application::exec()
 {
 #if QT_VERSION >= 0x050000
@@ -432,7 +469,7 @@ void Application::newWindow()
 }
 
 /*!
-    Shows plugins list.
+    Shows plugins in a ExtensionSystem::PluginView widget.
 */
 void Application::showPluginView()
 {
@@ -441,7 +478,7 @@ void Application::showPluginView()
 }
 
 /*!
-    Shows all settings.
+    Shows all settings in a SettingsWidget.
 */
 void Application::showSettings()
 {
@@ -457,7 +494,7 @@ void Application::showSettings()
 }
 
 /*!
-    Shows preferences window.
+    Shows applicaion preferences in a Parts::SettingsWindow.
 */
 void Application::preferences()
 {
@@ -475,6 +512,9 @@ void Application::preferences()
     }
 }
 
+/*!
+    Restores aplication sesion.
+*/
 void Application::restoreSession()
 {
 #ifdef Q_OS_MAC
@@ -504,6 +544,9 @@ void Application::restoreSession()
         newWindow();
 }
 
+/*!
+    Saves aplication sesion.
+*/
 void Application::saveSession()
 {
     QString dataPath = ::getDataLocationPath();
@@ -566,6 +609,9 @@ void Application::aboutQt()
     QMessageBox::aboutQt(0);
 }
 
+/*!
+    \reimp
+*/
 bool Application::eventFilter(QObject *object, QEvent *event)
 {
     if (object == settingsWindow) {
@@ -576,6 +622,9 @@ bool Application::eventFilter(QObject *object, QEvent *event)
     return false;
 }
 
+/*!
+    \internal
+*/
 void Application::handleMessage(const QString &message)
 {
     QStringList arguments = message.split("\n");
@@ -585,6 +634,9 @@ void Application::handleMessage(const QString &message)
     handleArguments(arguments);
 }
 
+/*!
+    \internal
+*/
 void Application::handleArguments(const QStringList &arguments)
 {
     Q_ASSERT(arguments.count() > 0);
@@ -607,6 +659,9 @@ void Application::handleArguments(const QStringList &arguments)
     m_firstStart = false;
 }
 
+/*!
+    \internal
+*/
 bool Application::restoreApplicationState(const QByteArray &arr)
 {
     QByteArray state = arr;
@@ -649,6 +704,9 @@ bool Application::restoreApplicationState(const QByteArray &arr)
     return true;
 }
 
+/*!
+    \internal
+*/
 QByteArray Application::saveApplicationState() const
 {
     QByteArray state;
@@ -674,6 +732,9 @@ QByteArray Application::saveApplicationState() const
     return state;
 }
 
+/*!
+    \internal
+*/
 void Application::loadSettings()
 {
     m_settings = new QSettings(this);
@@ -684,11 +745,17 @@ void Application::loadSettings()
         BrowserWindow::setWindowGeometry(geometry);
 }
 
+/*!
+    \internal
+*/
 void Application::saveSettings()
 {
     m_settings->setValue("geometry", BrowserWindow::windowGeometry());
 }
 
+/*!
+    \internal
+*/
 void Application::createToolBar()
 {
     toolBar = new CommandContainer("ToolBar", this);
@@ -701,6 +768,9 @@ void Application::createToolBar()
     toolBar->addCommand(new AddressBarCommand("AddressBar", toolBar));
 }
 
+/*!
+    \internal
+*/
 void Application::createMenus()
 {
     menuBar = new CommandContainer("MenuBar", this);
@@ -715,6 +785,9 @@ void Application::createMenus()
     createDockMenu();
 }
 
+/*!
+    \internal
+*/
 void Application::createFileMenu()
 {
     ActionManager *am = ActionManager::instance();
@@ -744,6 +817,9 @@ void Application::createFileMenu()
     fileMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::Quit));
 }
 
+/*!
+    \internal
+*/
 void Application::createEditMenu()
 {
     ActionManager *am = ActionManager::instance();
@@ -767,6 +843,9 @@ void Application::createEditMenu()
     editMenu->addCommand(StandardCommands::applicationCommand(StandardCommands::Preferences));
 }
 
+/*!
+    \internal
+*/
 void Application::createViewMenu()
 {
     ActionManager *am = ActionManager::instance();
@@ -786,18 +865,27 @@ void Application::createViewMenu()
     viewMenu->addCommand(am->container(Constants::Menus::SortBy));
 }
 
+/*!
+    \internal
+*/
 void Application::createGoToMenu()
 {
     ActionManager *am = ActionManager::instance();
     menuBar->addCommand(am->container(Constants::Menus::GoTo));
 }
 
+/*!
+    \internal
+*/
 void Application::createBookmarksMenu()
 {
     ActionManager *am = ActionManager::instance();
     menuBar->addCommand(am->container(Constants::Menus::Bookmarks));
 }
 
+/*!
+    \internal
+*/
 void Application::createToolsMenu()
 {
     ActionManager *am = ActionManager::instance();
@@ -822,6 +910,9 @@ void Application::createToolsMenu()
     toolsMenu->addCommand(am->command(Constants::Actions::ShowWebInspector));
 }
 
+/*!
+    \internal
+*/
 void Application::createWindowsMenu()
 {
 //    CommandContainer *windowsMenu = new WindowsContainer(Constants::Menus::Windows, this);
@@ -829,6 +920,9 @@ void Application::createWindowsMenu()
 //    menuBar->addCommand(windowsMenu);
 }
 
+/*!
+    \internal
+*/
 void Application::createHelpMenu()
 {
     CommandContainer *helpMenu = new WindowsContainer(Constants::Menus::Help, this);
@@ -843,6 +937,9 @@ void Application::createHelpMenu()
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
 
+/*!
+    \internal
+*/
 void Application::createDockMenu()
 {
     CommandContainer *dock = new DockContainer(Constants::Menus::Dock, this);
@@ -875,6 +972,9 @@ void Application::createDockMenu()
 #endif
 }
 
+/*!
+    \internal
+*/
 void Application::setupApplicationActions()
 {
     struct ConnectInfo {
@@ -895,6 +995,9 @@ void Application::setupApplicationActions()
     }
 }
 
+/*!
+    \internal
+*/
 void Application::createAction(const QByteArray &id, const char *slot)
 {
     QAction *action = new QAction(id, this);
@@ -902,6 +1005,9 @@ void Application::createAction(const QByteArray &id, const char *slot)
     connect(action, SIGNAL(triggered()), slot);
 }
 
+/*!
+    \internal
+*/
 void Application::createStrategies()
 {
     new OpenCurrentWindowStrategy(this);
