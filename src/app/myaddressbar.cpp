@@ -10,6 +10,14 @@
 
 using namespace Andromeda;
 
+/*!
+    \class Andromeda::MyAddressBar
+    Addressbar with actions connected to menu via Parts::ActionManager.
+*/
+
+/*!
+    Creates MyAddressBar with the given \a parent.
+*/
 MyAddressBar::MyAddressBar(QWidget *parent) :
     AddressBar(parent)
 {
@@ -17,6 +25,9 @@ MyAddressBar::MyAddressBar(QWidget *parent) :
     retranslateUi();
 }
 
+/*!
+    \internal
+*/
 void MyAddressBar::createActions()
 {
     actions[Redo] = new QAction(this);
@@ -49,6 +60,9 @@ void MyAddressBar::createActions()
     }
 }
 
+/*!
+    \internal
+*/
 void MyAddressBar::retranslateUi()
 {
     actions[Redo]->setText(tr("Redo"));
