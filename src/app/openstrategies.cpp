@@ -12,7 +12,7 @@ using namespace Parts;
 using namespace Andromeda;
 
 /*!
-    \class OpenCurrentWindowStrategy
+    \class Andromeda::OpenCurrentWindowStrategy
     Opens urls in current window.
 */
 OpenCurrentWindowStrategy::OpenCurrentWindowStrategy(QObject *parent) :
@@ -20,6 +20,9 @@ OpenCurrentWindowStrategy::OpenCurrentWindowStrategy(QObject *parent) :
 {
 }
 
+/*!
+    \reimp
+*/
 bool OpenCurrentWindowStrategy::canOpen(const QList<QUrl> &urls)
 {
     return !urls.isEmpty();
@@ -27,6 +30,9 @@ bool OpenCurrentWindowStrategy::canOpen(const QList<QUrl> &urls)
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QDesktopServices>
+/*!
+    \reimp
+*/
 void OpenCurrentWindowStrategy::open(const QList<QUrl> &urls)
 {
     QList<QUrl> folders;
@@ -68,13 +74,16 @@ void OpenCurrentWindowStrategy::open(const QList<QUrl> &urls)
     m_activeWindow->show();
 }
 
+/*!
+    \reimp
+*/
 QString OpenCurrentWindowStrategy::text() const
 {
     return tr("Open");
 }
 
 /*!
-    \class OpenNewTabStrategy
+    \class Andromeda::OpenNewTabStrategy
     Opens urls in new tabs in current window.
 */
 OpenNewTabStrategy::OpenNewTabStrategy(QObject *parent) :
@@ -82,11 +91,17 @@ OpenNewTabStrategy::OpenNewTabStrategy(QObject *parent) :
 {
 }
 
+/*!
+    \reimp
+*/
 bool OpenNewTabStrategy::canOpen(const QList<QUrl> &urls)
 {
     return !urls.isEmpty();
 }
 
+/*!
+    \reimp
+*/
 void OpenNewTabStrategy::open(const QList<QUrl> &urls)
 {
     BrowserWindow *m_activeWindow = qobject_cast<BrowserWindow *>(QApplication::activeWindow());
@@ -101,18 +116,24 @@ void OpenNewTabStrategy::open(const QList<QUrl> &urls)
     m_activeWindow->show();
 }
 
+/*!
+    \reimp
+*/
 QString OpenNewTabStrategy::text() const
 {
     return tr("Open in tab");
 }
 
+/*!
+    \reimp
+*/
 Qt::KeyboardModifiers OpenNewTabStrategy::modifiers() const
 {
     return Qt::AltModifier;
 }
 
 /*!
-    \class OpenNewWindowStrategy
+    \class Andromeda::OpenNewWindowStrategy
     Opens urls in new windows.
 */
 OpenNewWindowStrategy::OpenNewWindowStrategy(QObject *parent) :
@@ -120,11 +141,17 @@ OpenNewWindowStrategy::OpenNewWindowStrategy(QObject *parent) :
 {
 }
 
+/*!
+    \reimp
+*/
 bool OpenNewWindowStrategy::canOpen(const QList<QUrl> &urls)
 {
     return !urls.isEmpty();
 }
 
+/*!
+    \reimp
+*/
 void OpenNewWindowStrategy::open(const QList<QUrl> &urls)
 {
     foreach (const QUrl &url, urls) {
@@ -134,18 +161,24 @@ void OpenNewWindowStrategy::open(const QList<QUrl> &urls)
     }
 }
 
+/*!
+    \reimp
+*/
 QString OpenNewWindowStrategy::text() const
 {
     return tr("Open in window");
 }
 
+/*!
+    \reimp
+*/
 Qt::KeyboardModifiers OpenNewWindowStrategy::modifiers() const
 {
     return Qt::ControlModifier | Qt::AltModifier;
 }
 
 /*!
-    \class OpenEditorStrategy
+    \class Andromeda::OpenEditorStrategy
     Opens urls in an editor.
 */
 OpenEditorStrategy::OpenEditorStrategy(QObject *parent):
@@ -153,12 +186,18 @@ OpenEditorStrategy::OpenEditorStrategy(QObject *parent):
 {
 }
 
+/*!
+    \reimp
+*/
 bool OpenEditorStrategy::canOpen(const QList<QUrl> &urls)
 {
     // TODO: return false for directories
     return !urls.isEmpty();
 }
 
+/*!
+    \reimp
+*/
 void OpenEditorStrategy::open(const QList<QUrl> &urls)
 {
     DocumentManager *manager = DocumentManager::instance();
@@ -176,11 +215,17 @@ void OpenEditorStrategy::open(const QList<QUrl> &urls)
     m_activeWindow->show();
 }
 
+/*!
+    \reimp
+*/
 QString OpenEditorStrategy::text() const
 {
     return tr("Open in editor");
 }
 
+/*!
+    \reimp
+*/
 QKeySequence OpenEditorStrategy::keySequence() const
 {
     return QKeySequence("Ctrl+E");
