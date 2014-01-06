@@ -15,7 +15,6 @@ public:
     bool canOpen(const QList<QUrl> &urls);
     void open(const QList<QUrl> &urls);
     QString text() const;
-    StrategyType type() const { return TypeOpenCurrentWindow; }
 };
 
 class OpenNewTabStrategy : public Parts::OpenStrategy
@@ -29,7 +28,6 @@ public:
     void open(const QList<QUrl> &urls);
     QString text() const;
     Qt::KeyboardModifiers modifiers() const;
-    StrategyType type() const { return TypeOpenNewTab; }
 };
 
 class OpenNewWindowStrategy : public Parts::OpenStrategy
@@ -43,7 +41,6 @@ public:
     void open(const QList<QUrl> &urls);
     QString text() const;
     Qt::KeyboardModifiers modifiers() const;
-    StrategyType type() const { return TypeOpenNewWindow; }
 };
 
 class OpenEditorStrategy : public Parts::OpenStrategy

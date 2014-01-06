@@ -32,9 +32,6 @@ public:
     Bookmarks::BookmarksModel *model() const { return m_model; }
 
 private slots:
-    void open(const QUrl &url);
-    void openInTabs(const QList<QUrl> &urls);
-    void openInWindow(const QList<QUrl> &urls);
     void onIndexTriggered(const QModelIndex &index);
 
     void showBookmarks();

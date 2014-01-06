@@ -101,34 +101,14 @@ BookmarksDocument * BookmarksPlugin::sharedDocument() const
     return m_document;
 }
 
-void BookmarksPlugin::open(const QUrl &url)
+void BookmarksPlugin::onIndexTriggered(const QModelIndex &index)
 {
+    const QUrl url = index.data(BookmarksModel::UrlRole).toUrl();
+
     OpenStrategy *strategy = OpenStrategy::defaultStrategy();
     if (!strategy)
         return;
     strategy->open(url);
-}
-
-void BookmarksPlugin::openInTabs(const QList<QUrl> &urls)
-{
-    // TODO: remove?
-    OpenStrategy *strategy = OpenStrategy::strategy(OpenStrategy::TypeOpenNewTab);
-    if (!strategy)
-        return;
-    strategy->open(urls);
-}
-
-void BookmarksPlugin::openInWindow(const QList<QUrl> &urls)
-{
-    OpenStrategy *strategy = OpenStrategy::strategy(OpenStrategy::TypeOpenNewWindow);
-    if (!strategy)
-        return;
-    strategy->open(urls);
-}
-
-void BookmarksPlugin::onIndexTriggered(const QModelIndex &index)
-{
-    open(index.data(BookmarksModel::UrlRole).toUrl());
 }
 
 void BookmarksPlugin::showBookmarks()
