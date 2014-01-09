@@ -1,5 +1,6 @@
 #include "openstrategies.h"
 
+#include <QtCore/QProcess>
 #include <QApplication>
 
 #include <Parts/AbstractDocumentFactory>
